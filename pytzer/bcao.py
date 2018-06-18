@@ -1,4 +1,6 @@
-import numpy as np
+import autograd.numpy as np
+
+##### SODIUM CHLORIDE #########################################################
 
 def NaCl_A92ii(T=np.array([298.15])):
 
@@ -140,9 +142,62 @@ def NaCl_A92ii(T=np.array([298.15])):
             200 / (650 - T)**3          ] # 24
 
     # Alpha and omega values
-    ao = np.tile([0, 2.0, 0, 0, 2.5],(np.size(T),1))
+    ao = np.tile([0, 2.0, -9, 0, 2.5],(np.size(T),1))
 
     # Validity range
     valid = np.logical_and(T >= 250, T <= 600)
 
     return np.matmul(np.transpose(pTmx),bCmx), ao, valid
+
+##### POTASSIUM CHLORIDE ######################################################
+
+def KCl_A99(t=np.array([298.15])):
+
+    # Set KCl t parameters from A99 Table 4
+    bC_b0 = np.array( \
+           [ 0.413229483398493  ,
+            -0.0870121476114027 ,
+             0.101413736179231  ,
+            -0.0199822538522801 ,
+            -0.0998120581680816 ,
+             0                  ])
+
+    bC_b1 = np.array( \
+           [ 0.206691413598171  ,
+             0.102544606022162  ,
+             0,
+             0,
+             0,
+            -0.00188349608000903])
+
+    bC_b2 = np.zeros(np.size(bC_b0))
+
+    bC_C0 = np.array( \
+           [-0.00133515934994478,
+             0,
+             0,
+             0.00234117693834228,
+            -0.00075896583546707,
+             0                  ])
+
+    bC_C1 = np.zeros(np.size(bC_b0))
+
+    bCmx = np.stack((bC_b0, bC_b1, bC_b2, bC_C0, bC_C1)).transpose()
+
+    # Set up p/t matrix
+    tref  = np.float_(298.15)
+    Tmx = [np.ones(np.size(t))        , # 1
+           (t - tref)    * 1e-2       , # 2
+           (t - tref)**2 * 1e-5       , # 3
+           1e2 / (t - 225)            , # 4
+           1e3 / t                    , # 5
+           1e6 / (t - 225)**3         ] # 6
+
+    # Alpha and omega values
+    ao = np.tile([0, 2.0, -9, 0, -9],(np.size(t),1))
+
+    # Validity range
+    valid = np.logical_and(t >= 260,t <= 420)
+
+    # bC values
+    return np.matmul(np.transpose(Tmx),bCmx), ao, valid

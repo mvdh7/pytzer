@@ -1,5 +1,6 @@
-import numpy as np
-from scipy.misc import derivative
+import autograd.numpy as np
+#from scipy.misc import derivative
+from autograd import elementwise_grad as egrad
 from pytzer import bcao, dh, fx
 from pytzer.constants import b
 
@@ -31,10 +32,12 @@ def Gex(T,tNa=None,tK=None,tCl=None):
     
     # Get Pitzer model coefficients
     bC_NaCl,ao_NaCl,_ = bcao.NaCl_A92ii(T)
+    bC_KCl ,ao_KCl ,_ = bcao.KCl_A99   (T)
     
     # Calculate excess Gibbs energy
     Gex = fG(T,I) \
-        + mNa*mCl * (2*fx.B(bC_NaCl,ao_NaCl,I) + Z*fx.CT(bC_NaCl,ao_NaCl,I))
+        + mNa*mCl * (2*fx.B(bC_NaCl,ao_NaCl,I) + Z*fx.CT(bC_NaCl,ao_NaCl,I)) \
+        + mK *mCl * (2*fx.B(bC_KCl ,ao_KCl ,I) + Z*fx.CT(bC_KCl ,ao_KCl ,I))
     
     return Gex  
 
@@ -48,20 +51,25 @@ def ln_act(T,tNa=None,tK=None,tCl=None):
     if tCl is None: tCl = np.zeros_like(T)
     
     ln_act = np.full((np.size(T),3),np.nan)
-    dx = 1e-8
+#    dx = 1e-8
+#    
+#    for i,t in enumerate(T):
+#        ln_act[i,0] = derivative(lambda tX: \
+#              Gex(np.array([t]),tNa=tX,tK=tK[i],tCl=tCl[i]), tNa[i], dx=dx)[0]
+#        ln_act[i,1] = derivative(lambda tX: \
+#              Gex(np.array([t]),tNa=tNa[i],tK=tX,tCl=tCl[i]), tK[i], dx=dx)[0]
+#        ln_act[i,2] = derivative(lambda tX: \
+#              Gex(np.array([t]),tNa=tNa[i],tK=tK[i],tCl=tX), tCl[i], dx=dx)[0]
+   
+    ln_act[0] = egrad(lambda tX: Gex(T,tNa=tX ,tK=tK ,tCl=tCl))(tNa)
+    ln_act[1] = egrad(lambda tX: Gex(T,tNa=tNa,tK=tX ,tCl=tCl))(tK )
+    ln_act[2] = egrad(lambda tX: Gex(T,tNa=tNa,tK=tK ,tCl=tX ))(tCl)
     
-    for i,t in enumerate(T):
-        ln_act[i,0] = derivative(lambda tX: \
-              Gex(np.array([t]),tNa=tX,tK=tK[i],tCl=tCl[i]), tNa[i], dx=dx)[0]
-        ln_act[i,1] = derivative(lambda tX: \
-              Gex(np.array([t]),tNa=tNa[i],tK=tX,tCl=tCl[i]), tK[i], dx=dx)[0]
-        ln_act[i,2] = derivative(lambda tX: \
-              Gex(np.array([t]),tNa=tNa[i],tK=tK[i],tCl=tX), tCl[i], dx=dx)[0]
     return ln_act
 
 T = np.array([298.15,298.15,298.15])
-tNa = np.array([1.,2.,3.])
-tCl = np.array([1.,2.,3.])
+tNa = np.array([0.1,2.,3.])
+tCl = np.array([0.1,2.,3.])
 test = Gex(T,tNa=tNa,tCl=tCl)
 
 tln_act = ln_act(T,tNa=tNa,tCl=tCl)

@@ -1,4 +1,4 @@
-import numpy as np
+import autograd.numpy as np
 
 def Aosm_CRP94(t): # CRP94 Appendix II
 
