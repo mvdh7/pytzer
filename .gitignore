@@ -105,3 +105,4 @@ venv.bak/
 
 # I/O files
 *.csv
+*~$*.xlsx

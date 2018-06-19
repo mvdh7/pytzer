@@ -82,90 +82,33 @@ def getbC_M88(T,cation,anion):
 
 # +++ bs and Cs +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-bCa = {}
-alp  = {}
+bCdf = {coeff:pd.read_excel('M88.xlsx', sheet_name=coeff) \
+        for coeff in ['b0','b1','Cphi']}
 
-# --- Sodium ------------------------------------------------------------------
-bCa['Na'] = {}
-alp['Na'] = {}
+bCa = {cation:{} for cation in bCdf['b0'].cation}
+alp = {cation:{} for cation in bCdf['b0'].cation}
 
-# Na-Cl: M88 Table 1
-alp['Na']['Cl'] = np.float_(2)
-bCa['Na']['Cl'] = np.float_([[ 1.43783204e+1,
-                               5.60767406e-3,
-                              -4.22185236e+2,
-                              -2.51226677e00,
-                               0            ,
-                              -2.61718135e-6,
-                               4.43854508e00,
-                              -1.70502337e00],
-                             [-4.83060685e-1,
-                               1.40677479e-3,
-                               1.19311989e+2,
-                               0            ,
-                               0            ,
-                               0            ,
-                               0            ,
-                              -4.23433299e00],
-                             [-1.00588714e-1,
-                              -1.80529413e-5,
-                               8.61185543e00,
-                               1.24880954e-2,
-                               0            ,
-                               3.41172108e-8,
-                               6.83040995e-2,
-                               2.93922611e-1]])
+alist = ['a'+str(n) for n in range(1,9)]
 
-# --- Potassium ---------------------------------------------------------------
-bCa['K'] = {}
-alp['K'] = {}
-
-# K-Cl: GM89 Table 1
-alp['K']['Cl']  = np.float_(2)
-bCa['K']['Cl']  = np.float_([[ 2.67375563e+1,
-                               1.00721050e-2,
-                              -7.58485453e+2,
-                              -4.70624175e00,
-                               0            ,
-                              -3.75994338e-6,
-                               0            ,
-                               0            ],
-                             [-7.41559626e00,
-                               0            ,
-                               3.22892989e+2,
-                               1.16438557e00,
-                               0            ,
-                               0            ,
-                               0            ,
-                              -5.94578140e00],
-                             [-3.30531334e00,
-                              -1.29807848e-3,
-                               9.12712100e+1,
-                               5.86450181e-1,
-                               0            ,
-                               4.95713573e-7,
-                               0            ,
-                               0            ]])
+for C,cation in enumerate(bCdf['b0'].cation):
+    bCa[cation][bCdf['b0'].anion[C]] = np.array([ \
+        bCdf['b0'][alist].loc[C].values,
+        bCdf['b1'][alist].loc[C].values,
+        bCdf['Cphi'][alist].loc[C].values])
+    alp[cation][bCdf['b0'].anion[C]] = np.float_(bCdf['b1'].alpha[C])
 
 # +++ Thetas ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
 def getTh_M88(T,ion0,ion1):
     return param_M88(T,tha[ion0][ion1])
 
-tha = {ion:{} for ion in ['Na','K']}
+thdf = pd.read_excel('M88.xlsx', sheet_name='theta')
 
-# --- Cations -----------------------------------------------------------------
+tha = {ion:{} for ion in pd.concat((thdf.ion0,thdf.ion1)).unique()}
 
-# Na-K: GM89 Table 2
-tha['Na']['K'] = np.float_([-5.02312111e-2,
-                             0            ,
-                             1.40213141e+1,
-                             0            ,
-                             0            ,
-                             0            ,
-                             0            ,
-                             0            ])
-tha['K']['Na'] = tha['Na']['K']
+for I,ion0 in enumerate(thdf.ion0):
+    tha[ion0][thdf.ion1[I]] = thdf[alist].values[0]
+    tha[thdf.ion1[I]][ion0] = thdf[alist].values[0]
     
 ##### EXCESS GIBBS ENERGY #####################################################
         
