@@ -29,6 +29,7 @@ def getCharges(ions):
     
     z['Na'] = np.float_(+1)
     z['K' ] = np.float_(+1)
+    z['Ca'] = np.float_(+2)
     
     z['Cl'] = np.float_(-1)
     
@@ -97,7 +98,7 @@ for C,cation in enumerate(bCdf['b0'].cation):
         bCdf['Cphi'][alist].loc[C].values])
     alp[cation][bCdf['b0'].anion[C]] = np.float_(bCdf['b1'].alpha[C])
 
-# +++ Thetas ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# +++ thetas and psis +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
 def getTh_M88(T,ion0,ion1):
     return param_M88(T,tha[ion0][ion1])
@@ -105,10 +106,22 @@ def getTh_M88(T,ion0,ion1):
 thdf = pd.read_excel('M88.xlsx', sheet_name='theta')
 
 tha = {ion:{} for ion in pd.concat((thdf.ion0,thdf.ion1)).unique()}
+psa = {ion:{} for ion in pd.concat((thdf.ion0,thdf.ion1)).unique()}
 
 for I,ion0 in enumerate(thdf.ion0):
     tha[ion0][thdf.ion1[I]] = thdf[alist].values[0]
     tha[thdf.ion1[I]][ion0] = thdf[alist].values[0]
+    psa[ion0][thdf.ion1[I]] = {}
+    psa[thdf.ion1[I]][ion0] = {}
+    
+def getPs_M88(T,ion0,ion1,xion):
+    return param_M88(T,psa[ion0][ion1][xion])
+    
+psdf = pd.read_excel('M88.xlsx', sheet_name='psi')
+
+for I,ion0 in enumerate(psdf.ion0):
+    psa[ion0][psdf.ion1[I]][psdf.xion[I]] = psdf[alist].values[0]
+    psa[psdf.ion1[I]][ion0][psdf.xion[I]] = psdf[alist].values[0]
     
 ##### EXCESS GIBBS ENERGY #####################################################
         
@@ -148,6 +161,14 @@ def Gex_nRT(T,tots,ions):
             
             Gex_nRT = Gex_nRT + cats[:,C0] * cats[:,C1] \
                 * 2 * (thC)# + pz.etheta(t,zC[C0],zC[C1],I))
+    
+    # c-c'-a interactions
+            for A in range(len(anions)):
+                
+                psC = getPs_M88(T,cations[C0],cations[C1],anions[A])
+                
+                Gex_nRT = Gex_nRT + cats[:,C0] * cats[:,C1] \
+                    * anis[:,A] * psC
     
     return Gex_nRT
 
