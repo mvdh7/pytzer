@@ -1,25 +1,82 @@
 import autograd.numpy as np
-from autograd import elementwise_grad as egrad
 import pandas as pd
+from autograd import elementwise_grad as egrad
+import time
 
 ##### FILE I/O ################################################################
 
 def getIons(filename):
   
     # Import input conditions from .csv
-    df = pd.read_csv(filename)
+    idf = pd.read_csv(filename)
         
     # Get temperatures
-    T = df.temp.values
+    T = idf.temp.values
     
     # Get ionic concentrations
-    df_tots = df[df.keys()[df.keys() != 'temp']]
-    tots = df_tots.values
+    idf_tots = idf[idf.keys()[idf.keys() != 'temp']]
+    tots = idf_tots.values
     
     # Get list of ions
-    ions = df_tots.keys()
+    ions = idf_tots.keys()
        
-    return T, tots, ions, df
+    return T, tots, ions, idf
+
+##### PITZER MODEL COEFFICIENTS ###############################################
+
+b = np.float_(1.2)
+
+alist = ['a'+str(n) for n in range(8)]
+ilist = ['ion'+str(n) for n in range(1,4)]
+
+def getCoeffbase(filename):
+    
+    # Import .csv file of coefficient values
+    cdf = pd.read_csv(filename, header=1)
+    
+    # Convert missing alphas to -9
+    cdf['alpha'] = cdf.alpha.fillna(-9)
+    
+    # Convert missing coefficients to 0
+    cdf[alist] = cdf[alist].fillna(0)
+    
+    # Convert missing ions to ''
+    cdf[ilist] = cdf[ilist].fillna('')
+    
+    # Get ion combination as single sorted string
+    cdf['ions'] = ''
+    for i in range(cdf.shape[0]):
+        ions = list(cdf[ilist].loc[i])
+        ions.sort()
+        cdf.loc[i,'ions'] = ''.join(ions)
+    
+    return cdf
+
+def evalCoeffs(T,a): # M88 Eq. (II-13) = GM89 Eq. (3)
+    
+    return a[0] + a[1]*T + a[2]/T + a[3]*np.log(T) + a[4]/(T-263.) \
+        + a[5]*T**2 + a[6]/(680.-T) + a[7]/(T-227.)
+
+def getCoeffs(cdf,T):
+    
+    # Evaluate temperature-sensitive coefficients
+    cf = {coeff: {ions:evalCoeffs(T,cdf[alist].loc[i].values) \
+                  for i,ions in enumerate(cdf.ions) \
+                  if cdf.coefficient[i] == coeff} \
+          for coeff in ['Aosm','b0','b1','b2','Cphi','theta','psi']}
+
+    # Get alphas
+    cf['a1'] = {ions:cdf.alpha[i] \
+                for i,ions in enumerate(cdf.ions) \
+                if cdf.coefficient[i] == 'b1'}
+    cf['a2'] = {ions:cdf.alpha[i] \
+                for i,ions in enumerate(cdf.ions) \
+                if cdf.coefficient[i] == 'b2'}
+    
+    # Unlayer Aosm
+    cf['Aosm'] = cf['Aosm']['']
+    
+    return cf
 
 ##### IONIC CHARGES ###########################################################
 
@@ -35,176 +92,113 @@ def getCharges(ions):
     
     return np.array([z[ion] for ion in ions])
 
-##### PITZER MODEL SUBFUNCTIONS ###############################################
-
-def g(x):  # CRP94 Eq. (AI13)
-    return 2 * (1 - (1 + x) * np.exp(-x)) / x**2
-
-def B(b0,b1,a,I): # CRP94 Eq. (AI8)
-    return b0 + b1 * g(a*np.sqrt(I))
-
-def CT(Cphi,z1,z2): # P91 Ch. 3 Eq. (53)
-    return Cphi / (2 * np.sqrt(np.abs(z1*z2)))
-
-def fG(T,I): # CRP94 Eq. (AI1)
-    return -4 * Aosm_M88(T) * I * np.log(1 + b*np.sqrt(I)) / b
-   
 ##### DEBYE-HUECKEL SLOPE #####################################################
 
-def param_M88(T,a): # M88 Eq. (II-13) = GM89 Eq. (3)
-    return a[0] + a[1]*T + a[2]/T + a[3]*np.log(T) + a[4]/(T-263.) \
-        + a[5]*T**2 + a[6]/(680.-T) + a[7]/(T-227.)
-
-def Aosm_M88(T):
+def fG(Aosm,I): # CRP94 Eq. (AI1)
     
-    # Coefficients from M88 Table 1
-    a = np.float_([ 3.36901532e-1,
-                   -6.32100430e-4,
-                    9.14252359e00,
-                   -1.35143986e-2,
-                    2.26089488e-3,
-                    1.92118597e-6,
-                    4.52586464e+1,
-                    0            ])
-    
-    return param_M88(T,a)
+    return -4 * Aosm * I * np.log(1 + b*np.sqrt(I)) / b
 
-##### PITZER MODEL COEFFICIENTS ###############################################
+##### PITZER MODEL SUBFUNCTIONS ###############################################
 
-b = np.float_(1.2)
+def g(x): # CRP94 Eq. (AI13)
+    return 2 * (1 - (1 + x) * np.exp(-x)) / x**2
 
-def getbC_M88(T,cation,anion):
-    
-    b0   = param_M88(T,bCa[cation][anion][0])
-    b1   = param_M88(T,bCa[cation][anion][1])
-    Cphi = param_M88(T,bCa[cation][anion][2])
-    
-    return b0,b1,Cphi,alp[cation][anion]
+def B(cf,iset,I): # CRP94 Eq. (AI8)
+    B = cf['b0'][iset] + cf['b1'][iset] * g(cf['a1'][iset]*np.sqrt(I))
+    if iset in cf['b2']:
+        B = B + cf['b2'][iset] * g(cf['a2'][iset]*np.sqrt(I))
+    return B
 
-# +++ bs and Cs +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def CT(cf,iset,z1,z2): # P91 Ch. 3 Eq. (53)
+    return cf['Cphi'][iset] / (2 * np.sqrt(np.abs(z1*z2)))
 
-bCdf = {coeff:pd.read_excel('M88.xlsx', sheet_name=coeff) \
-        for coeff in ['b0','b1','Cphi']}
-
-bCa = {cation:{} for cation in bCdf['b0'].cation}
-alp = {cation:{} for cation in bCdf['b0'].cation}
-
-alist = ['a'+str(n) for n in range(1,9)]
-
-for C,cation in enumerate(bCdf['b0'].cation):
-    bCa[cation][bCdf['b0'].anion[C]] = np.array([ \
-        bCdf['b0'][alist].loc[C].values,
-        bCdf['b1'][alist].loc[C].values,
-        bCdf['Cphi'][alist].loc[C].values])
-    alp[cation][bCdf['b0'].anion[C]] = np.float_(bCdf['b1'].alpha[C])
-
-# +++ thetas and psis +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    
-def getTh_M88(T,ion0,ion1):
-    return param_M88(T,tha[ion0][ion1])
-
-thdf = pd.read_excel('M88.xlsx', sheet_name='theta')
-
-tha = {ion:{} for ion in pd.concat((thdf.ion0,thdf.ion1)).unique()}
-psa = {ion:{} for ion in pd.concat((thdf.ion0,thdf.ion1)).unique()}
-
-for I,ion0 in enumerate(thdf.ion0):
-    tha[ion0][thdf.ion1[I]] = thdf[alist].values[0]
-    tha[thdf.ion1[I]][ion0] = thdf[alist].values[0]
-    psa[ion0][thdf.ion1[I]] = {}
-    psa[thdf.ion1[I]][ion0] = {}
-    
-def getPs_M88(T,ion0,ion1,xion):
-    return param_M88(T,psa[ion0][ion1][xion])
-    
-psdf = pd.read_excel('M88.xlsx', sheet_name='psi')
-
-for I,ion0 in enumerate(psdf.ion0):
-    psa[ion0][psdf.ion1[I]][psdf.xion[I]] = psdf[alist].values[0]
-    psa[psdf.ion1[I]][ion0][psdf.xion[I]] = psdf[alist].values[0]
-    
 ##### EXCESS GIBBS ENERGY #####################################################
-        
-def Gex_nRT(T,tots,ions):
     
-    zs = getCharges(ions)
+def Gex_nRT(mols,ions,cf):
     
     # Ionic strength etc.
-    I = 0.5 * (np.sum(tots * zs**2, 1))
-    Z = np.sum(tots * np.abs(zs), 1)
-
-    # Separate cations and anions
-    cats    = tots[:,zs > 0]
-    cations = ions[  zs > 0]
-    zCs     = zs  [  zs > 0]
-    anis    = tots[:,zs < 0]
-    anions  = ions[  zs < 0]
-    zAs     = zs  [  zs < 0]
-
-    # Debye-Hueckel
-    Gex_nRT = fG(T,I)
+    zs = getCharges(ions)
+    I = 0.5 * (np.sum(mols * zs**2, 1))
+    Z = np.sum(mols * np.abs(zs), 1)
     
-    # c-a interactions
+    # Separate cations and anions
+    CL = zs > 0
+    cats    = mols[:,CL]
+    cations = ions[  CL]
+    zCs     = zs  [  CL]
+    AL = zs < 0
+    anis    = mols[:,AL]
+    anions  = ions[  AL]
+    zAs     = zs  [  AL]
+    
+    # Begin with Debye-Hueckel component
+    Gex_nRT = fG(cf['Aosm'],I)
+    
+    # Add c-a interactions
     for C,cation in enumerate(cations):
         for A,anion in enumerate(anions):
-            
-            b0,b1,Cphi,a = getbC_M88(T,cation,anion)
+
+            iset = [cation,anion]
+            iset.sort()
+            iset= ''.join(iset)
             
             Gex_nRT = Gex_nRT + cats[:,C] * anis[:,A] \
-                * (2*B(b0,b1,a,I) + Z*CT(Cphi,zCs[C],zAs[A]))
+                * (2*B(cf,iset,I) + Z*CT(cf,iset,zCs[C],zAs[A]))
     
-    # c-c' interactions
+    # Add c-c' interactions
     for C0 in range(len(cations)):
         for C1 in range(C0+1,len(cations)):
             
-            thC = getTh_M88(T,cations[C0],cations[C1])
+            iset = [cations[C0],cations[C1]]
+            iset.sort()
+            iset= ''.join(iset)
+            
+            if iset in cf['theta']:
+                theta = cf['theta'][iset]
+            else:
+                theta = 0
+                print('WARNING: no theta value for ' + cations[C0] + '-' \
+                      + cations[C1] + ' found; defaulting to zero')
             
             Gex_nRT = Gex_nRT + cats[:,C0] * cats[:,C1] \
-                * 2 * (thC)# + pz.etheta(t,zC[C0],zC[C1],I))
+                * (2 * theta)# + pz.etheta(t,zC[C0],zC[C1],I))
     
-    # c-c'-a interactions
+    # Add c-c'-a interactions
             for A in range(len(anions)):
                 
-                psC = getPs_M88(T,cations[C0],cations[C1],anions[A])
-                
+                iset = [cations[C0],cations[C1],anions[A]]
+                iset.sort()
+                iset= ''.join(iset)
+            
+                if iset in cf['psi']:
+                    psi = cf['psi'][iset]
+                else:
+                    psi = 0
+                    print('WARNING: no psi value for ' + cations[C0] + '-' \
+                          + cations[C1] + '-' + anions[A] \
+                          + ' found; defaulting to zero')
+                    
                 Gex_nRT = Gex_nRT + cats[:,C0] * cats[:,C1] \
-                    * anis[:,A] * psC
+                    * anis[:,A] * psi
     
     return Gex_nRT
 
-##### IONIC ACTIVITIES ########################################################
-
-facts = egrad(lambda tots:Gex_nRT(T,tots,ions))
+# Derive activity coefficient function
+ln_acfs = egrad(Gex_nRT)
 
 ##### TEST AREA ###############################################################
+    
+go = time.time()
 
-T, tots,ions,df = getIons('ions_in.csv')
+T,tots,ions,idf = getIons('ions_in.csv')
 
-Gex = Gex_nRT(T,tots,ions)
+cdf = getCoeffbase('coefficients.csv')
 
-ln_acts = facts(tots)
-acts = np.exp(ln_acts)
+cf = getCoeffs(cdf,T)
 
-#test, z = Gex_nRT(T,tots,ions)
+Gex = Gex_nRT(tots,ions,cf)
 
-#def gradtest(v1,v2,v3):
-#    return v1**2 + v2 + 3. + v3**3
-#v1 = np.array([1.5,2.5])
-#v2 = np.array([2.1,2.4])
-#v3 = np.array([5.6,1.3])
-#
-#x = gradtest(v1,v2,v3)
-#
-#gtest = egrad(gradtest)
-#
-#dx = gtest(v1,v2,v3)
-#
-#def gtest2(vrs):
-#    return vrs[:,0]**2 + vrs[:,1] + 3. + vrs[:,2]**3
-#dgtest2 = egrad(gtest2)
-#
-#vrs = np.vstack((v1,v2,v3)).transpose()
-#
-#x2 = gtest2(vrs)
-#
-#dx2 = dgtest2(vrs)
+acfs = np.exp(ln_acfs(tots,ions,cf))
+
+stop = time.time()
+print('Execution time: %.4f seconds' % (stop-go))
