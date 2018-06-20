@@ -104,5 +104,4 @@ venv.bak/
 .mypy_cache/
 
 # I/O files
-*.csv
-*~$*.xlsx
+*.xlsx
