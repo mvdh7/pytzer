@@ -8,7 +8,7 @@ import time
 def getIons(filename):
   
     # Import input conditions from .csv
-    idf = pd.read_csv(filename)
+    idf = pd.read_csv(filename, float_precision='round_trip')
         
     # Get temperatures
     T = idf.temp.values
@@ -26,13 +26,13 @@ def getIons(filename):
 
 b = np.float_(1.2)
 
-alist = ['a'+str(n) for n in range(8)]
+alist = ['a'+str(n) for n in range(16)]
 ilist = ['ion'+str(n) for n in range(1,4)]
 
 def getCoeffbase(filename):
     
     # Import .csv file of coefficient values
-    cdf = pd.read_csv(filename, header=1)
+    cdf = pd.read_csv(filename, header=1, float_precision='round_trip')
     
     # Convert missing alphas to -9
     cdf['alpha'] = cdf.alpha.fillna(-9)
@@ -52,10 +52,28 @@ def getCoeffbase(filename):
     
     return cdf
 
-def evalCoeffs(T,a): # M88 Eq. (II-13) = GM89 Eq. (3)
+def evalCoeffs(T,a): # 0-7 are M88 Eq. (II-13) = GM89 Eq. (3)
+                     # 8-13 are extra terms from PP87 for NaOH with P in bar
+                     # 14-15 are extras from MP98
     
-    return a[0] + a[1]*T + a[2]/T + a[3]*np.log(T) + a[4]/(T-263.) \
-        + a[5]*T**2 + a[6]/(680.-T) + a[7]/(T-227.)
+    Pbar = np.float_(1.01325)
+    
+    return a[0] \
+         + a[1]  * T \
+         + a[2]  / T \
+         + a[3]  * np.log(T) \
+         + a[4]  / (T-263.) \
+         + a[5]  * T**2 \
+         + a[6]  / (680.-T) \
+         + a[7]  / (T-227.) \
+         + a[8]  * Pbar \
+         + a[9]  * Pbar/T \
+         + a[10] * Pbar*T \
+         + a[11] * Pbar*T**2 \
+         + a[12] / (647.-T) \
+         + a[13] * Pbar/(647.-T) \
+         + a[14] * (T-298.15) \
+         + a[15] * (T-298.15)**2
 
 def getCoeffs(cdf,T):
     
@@ -78,16 +96,38 @@ def getCoeffs(cdf,T):
     
     return cf
 
+##### DISSOCIATION CONSTANTS ##################################################
+
+def getDissocbase(filename):
+    
+    # Import .csv file of coefficient values
+    ddf = pd.read_csv(filename, float_precision='round_trip')
+    
+    # Convert missing coefficients to 0
+    ddf = ddf.fillna(0)
+    
+    return ddf
+
+def evalDissocs(ddf,T,acid): # MP98 Eq. (23)
+    
+    L = ddf.acid == acid
+    lnK = ddf.A[L].values + ddf.B[L].values/T + ddf.C[L].values*np.log(T) \
+        + ddf.D[L].values*T
+    
+    return np.exp(lnK)
+
 ##### IONIC CHARGES ###########################################################
 
 def getCharges(ions):
 
     z = {}
     
+    z['H' ] = np.float_(+1)
     z['Na'] = np.float_(+1)
     z['K' ] = np.float_(+1)
     z['Ca'] = np.float_(+2)
     
+    z['OH'] = np.float_(-1)
     z['Cl'] = np.float_(-1)
     
     return np.array([z[ion] for ion in ions])
@@ -104,13 +144,44 @@ def g(x): # CRP94 Eq. (AI13)
     return 2 * (1 - (1 + x) * np.exp(-x)) / x**2
 
 def B(cf,iset,I): # CRP94 Eq. (AI8)
-    B = cf['b0'][iset] + cf['b1'][iset] * g(cf['a1'][iset]*np.sqrt(I))
+    
+    if iset in cf['b0']:
+        b0 = cf['b0'][iset]
+    else:
+        b0 = 0
+        print('WARNING: no b0 value for ' + iset \
+              + ' found; defaulting to zero')
+        
+    if iset in cf['b1']:
+        b1 = cf['b1'][iset]
+        a1 = cf['a1'][iset]
+    else:
+        b1 = 0
+        a1 = -9
+        print('WARNING: no b1 value for ' + iset \
+              + ' found; defaulting to zero')
+        
     if iset in cf['b2']:
-        B = B + cf['b2'][iset] * g(cf['a2'][iset]*np.sqrt(I))
-    return B
+        b2 = cf['b2'][iset]
+        a2 = cf['a2'][iset]
+    else:
+        b2 = 0
+        a2 = -9
+        print('WARNING: no b2 value for ' + iset \
+              + ' found; defaulting to zero')
+
+    return b0 + b1 * g(a1*np.sqrt(I)) + b2 * g(a2*np.sqrt(I))
 
 def CT(cf,iset,z1,z2): # P91 Ch. 3 Eq. (53)
-    return cf['Cphi'][iset] / (2 * np.sqrt(np.abs(z1*z2)))
+    
+    if iset in cf['Cphi']:
+        Cphi = cf['Cphi'][iset]
+    else:
+        Cphi = 0
+        print('WARNING: no Cphi value for ' + iset \
+              + ' found; defaulting to zero')
+    
+    return Cphi / (2 * np.sqrt(np.abs(z1*z2)))
 
 ##### EXCESS GIBBS ENERGY #####################################################
     
@@ -193,12 +264,37 @@ go = time.time()
 T,tots,ions,idf = getIons('ions_in.csv')
 
 cdf = getCoeffbase('coefficients.csv')
+ddf = getDissocbase('dissociations.csv')
 
 cf = getCoeffs(cdf,T)
 
-Gex = Gex_nRT(tots,ions,cf)
+#mols = np.copy(tots)
+#
+#Gex = Gex_nRT(mols,ions,cf)
+#
+#acfs = np.exp(ln_acfs(mols,ions,cf))
 
-acfs = np.exp(ln_acfs(tots,ions,cf))
+def minifun(pH,Kw):
+    
+    mH = 10.**-pH
+    mOH = mH * 1.
+    
+    mols = np.concatenate((tots,np.vstack(mH),np.vstack(mOH)),axis=1)
+    ions = np.array(['Na','Cl','H','OH'])
+    
+    acfs  = ln_acfs(mols,ions,cf)
+    
+    aH  = np.exp(acfs[:,2])
+    aOH = np.exp(acfs[:,3])
+    
+    DG = np.log(mH*aH * mOH*aOH) - np.log(Kw)
+    
+    return DG**2
+
+Kw = evalDissocs(ddf,T,'H2O')
+DGDG = minifun(np.array([8.,8.,8.,8.,8.,8.,8.,8.,8.]),Kw)
+
+#DGDG = minifun(8.,)
 
 stop = time.time()
 print('Execution time: %.4f seconds' % (stop-go))
