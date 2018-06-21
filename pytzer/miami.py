@@ -1,37 +1,7 @@
 import autograd.numpy as np
 from autograd import elementwise_grad as egrad
 import pandas as pd
-from scipy.misc import derivative
-import coeffs
-from constants import b, R, Mw
-
-##### DICT OF COEFFICIENT FUNCTIONS ###########################################
-
-# Set up dict of coefficient functions
-cf = {coeff:{} for coeff in ['bC', 'theta', 'psi', 'dissoc']}
-
-# Debye-Hueckel slope
-cf['Aosm'] = coeffs.Aosm_M88
-
-# betas and Cs as cf['bC']['cation-anion']
-cf['bC']['Ca-Cl']  = coeffs.CaCl_M88
-cf['bC']['Ca-SO4'] = coeffs.CaSO4_M88
-cf['bC']['Na-Cl']  = coeffs.NaCl_M88
-cf['bC']['Na-SO4'] = coeffs.NaSO4_M88
-
-# thetas as cf['theta']['cation1-cation2'] with cations in alphabetical order
-cf['theta']['Ca-Na']  = coeffs.CaNa_M88
-cf['theta']['Cl-SO4'] = coeffs.ClSO4_M88
-
-# psis as cf['psi']['cation1-cation2-anion'] with cations in alphabetical order
-#   or as cf['psi']['cation-anion1-anion2']  with anions  in alphabetical order
-cf['psi']['Ca-Na-Cl']  = coeffs.CaNaCl_M88
-cf['psi']['Ca-Na-SO4'] = coeffs.CaNaSO4_M88
-cf['psi']['Ca-Cl-SO4'] = coeffs.CaClSO4_M88
-cf['psi']['Na-Cl-SO4'] = coeffs.NaClSO4_M88
-
-# Dissociation constants
-cf['dissoc']['Kw'] = coeffs.Kw_M88
+from .constants import b
 
 ##### FILE I/O ################################################################
 
@@ -100,7 +70,7 @@ def CT(T,I,cf,iset): # P91 Ch. 3 Eq. (53)
 
 ##### EXCESS GIBBS ENERGY #####################################################
     
-def Gex_nRT(mols,ions,T):
+def Gex_nRT(mols,ions,T,cf):
     
     # Ionic strength etc.
     zs = getCharges(ions)
@@ -173,26 +143,7 @@ def Gex_nRT(mols,ions,T):
 
 # Derive activity coefficient function
 fx_ln_acfs = egrad(Gex_nRT)
-fx_osmD = egrad(lambda ww,Tw: ww * R*Tw * Gex_nRT(mols/ww,ions,Tw))
 
-##### TEST AREA ###############################################################
-    
-T,tots,ions,idf = getIons('M88 Table 4.csv')
-mols = np.copy(tots)
-
-Gexs = Gex_nRT(mols,ions,T)
-acfs = np.exp(fx_ln_acfs(mols,ions,T))
-
-# Test osmotic coefficient - NaCl compares well with Archer (1992)
-# M88 Table 4 also works almost perfectly, without yet including unsymm. terms!
-
+# Derive osmotic coefficient function
 # autograd doesn't seem to work due to broadcasting issues for osm derivative
-# hence scipy derivation here
-osmD = np.full_like(T,np.nan)
-for i in range(len(T)):
-    osmD[i] = derivative(lambda ww: 
-        ww * R*T[i] * Gex_nRT(np.array([mols[i,:]/ww]),ions,T[i]),
-                         np.array([1.]), dx=1e-8)[0]
-osm = 1 - osmD / (R * T * (np.sum(mols,axis=1)))
-
-aw = np.exp(-osm * Mw * np.sum(mols,axis=1))
+#fx_osmD = egrad(lambda ww,Tw: ww * R*Tw * Gex_nRT(mols/ww,ions,Tw))
