@@ -1,7 +1,9 @@
 import autograd.numpy as np
 from autograd import elementwise_grad as egrad
 import pandas as pd
+from scipy.misc import derivative
 import coeffs
+from constants import b, R, Mw
 
 ##### DICT OF COEFFICIENT FUNCTIONS ###########################################
 
@@ -72,8 +74,6 @@ def getCharges(ions):
 
 ##### DEBYE-HUECKEL SLOPE #####################################################
 
-b = np.float_(1.2)
-
 def fG(T,I,cf): # CRP94 Eq. (AI1)
     
     return -4 * cf['Aosm'](T)[0] * I * np.log(1 + b*np.sqrt(I)) / b
@@ -100,7 +100,7 @@ def CT(T,I,cf,iset): # P91 Ch. 3 Eq. (53)
 
 ##### EXCESS GIBBS ENERGY #####################################################
     
-def Gex_nRT(mols,ions):
+def Gex_nRT(mols,ions,T):
     
     # Ionic strength etc.
     zs = getCharges(ions)
@@ -172,12 +172,27 @@ def Gex_nRT(mols,ions):
     return Gex_nRT
 
 # Derive activity coefficient function
-ln_acfs = egrad(Gex_nRT)
+fx_ln_acfs = egrad(Gex_nRT)
+fx_osmD = egrad(lambda ww,Tw: ww * R*Tw * Gex_nRT(mols/ww,ions,Tw))
 
 ##### TEST AREA ###############################################################
     
-T,tots,ions,idf = getIons('ions_in.csv')
+T,tots,ions,idf = getIons('M88 Table 4.csv')
 mols = np.copy(tots)
 
-Gexs = Gex_nRT(mols,ions)
-acfs = np.exp(ln_acfs(mols,ions))
+Gexs = Gex_nRT(mols,ions,T)
+acfs = np.exp(fx_ln_acfs(mols,ions,T))
+
+# Test osmotic coefficient - NaCl compares well with Archer (1992)
+# M88 Table 4 also works almost perfectly, without yet including unsymm. terms!
+
+# autograd doesn't seem to work due to broadcasting issues for osm derivative
+# hence scipy derivation here
+osmD = np.full_like(T,np.nan)
+for i in range(len(T)):
+    osmD[i] = derivative(lambda ww: 
+        ww * R*T[i] * Gex_nRT(np.array([mols[i,:]/ww]),ions,T[i]),
+                         np.array([1.]), dx=1e-8)[0]
+osm = 1 - osmD / (R * T * (np.sum(mols,axis=1)))
+
+aw = np.exp(-osm * Mw * np.sum(mols,axis=1))
