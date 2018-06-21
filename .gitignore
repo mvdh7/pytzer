@@ -105,3 +105,4 @@ venv.bak/
 
 # I/O files
 *.xlsx
+*.mat

@@ -1,6 +1,8 @@
 import autograd.numpy as np
 import pandas as pd
 from autograd import elementwise_grad as egrad
+from scipy.optimize import minimize
+from scipy import io
 import time
 
 ##### FILE I/O ################################################################
@@ -251,6 +253,42 @@ def Gex_nRT(mols,ions,cf):
                     
                 Gex_nRT = Gex_nRT + cats[:,C0] * cats[:,C1] \
                     * anis[:,A] * psi
+                    
+    # Add a-a' interactions
+    for A0 in range(len(anions)):
+        for A1 in range(A0+1,len(anions)):
+            
+            iset = [anions[A0],anions[A1]]
+            iset.sort()
+            iset= ''.join(iset)
+            
+            if iset in cf['theta']:
+                theta = cf['theta'][iset]
+            else:
+                theta = 0
+                print('WARNING: no theta value for ' + anions[A0] + '-' \
+                      + anions[A1] + ' found; defaulting to zero')
+            
+            Gex_nRT = Gex_nRT + anis[:,A0] * anis[:,A1] \
+                * (2 * theta)# + pz.etheta(t,zC[C0],zC[C1],I))
+    
+    # Add c-a-a' interactions
+            for C in range(len(cations)):
+                
+                iset = [anions[A0],anions[A1],cations[C]]
+                iset.sort()
+                iset= ''.join(iset)
+            
+                if iset in cf['psi']:
+                    psi = cf['psi'][iset]
+                else:
+                    psi = 0
+                    print('WARNING: no psi value for ' + anions[A0] + '-' \
+                          + anions[A1] + '-' + cations[C] \
+                          + ' found; defaulting to zero')
+                    
+                Gex_nRT = Gex_nRT + anis[:,A0] * anis[:,A1] \
+                    * cats[:,C] * psi
     
     return Gex_nRT
 
@@ -268,33 +306,63 @@ ddf = getDissocbase('dissociations.csv')
 
 cf = getCoeffs(cdf,T)
 
-#mols = np.copy(tots)
-#
-#Gex = Gex_nRT(mols,ions,cf)
-#
-#acfs = np.exp(ln_acfs(mols,ions,cf))
+mols = np.copy(tots)
+
+Gex = Gex_nRT(mols,ions,cf)
+
+acfs = np.exp(ln_acfs(mols,ions,cf))
 
 def minifun(pH,Kw):
     
     mH = 10.**-pH
-    mOH = mH * 1.
+#    mOH = Kw / mH
     
-    mols = np.concatenate((tots,np.vstack(mH),np.vstack(mOH)),axis=1)
-    ions = np.array(['Na','Cl','H','OH'])
+    mNa = np.array([6.])
+    mCl = np.array([6.])
+    
+    mOH = mH + mNa - mCl
+    
+    mols = np.vstack((mH,mOH,mNa,mCl)).transpose()
+    ions = np.array(['H','OH','Na','Cl'])
     
     acfs  = ln_acfs(mols,ions,cf)
     
-    aH  = np.exp(acfs[:,2])
-    aOH = np.exp(acfs[:,3])
+    aH  = np.exp(acfs[:,0])
+    aOH = np.exp(acfs[:,1])
     
     DG = np.log(mH*aH * mOH*aOH) - np.log(Kw)
     
-    return DG**2
+#    print(acfs)
+    
+    return DG, mols, ions, acfs
 
-Kw = evalDissocs(ddf,T,'H2O')
-DGDG = minifun(np.array([8.,8.,8.,8.,8.,8.,8.,8.,8.]),Kw)
+Kw = evalDissocs(ddf,np.array([298.15]),'H2O')
+#DGDG = minifun(np.array([8.,8.,8.,8.,8.,8.,8.,8.,8.]),Kw)
 
-#DGDG = minifun(8.,)
+
+sol = minimize(lambda pH:minifun(pH,Kw)[0]**2,[7.], method='Nelder-Mead')
 
 stop = time.time()
 print('Execution time: %.4f seconds' % (stop-go))
+print('pH = ' + str(sol['x'][0]))
+
+DG,mols,ions,acfs = minifun(sol['x'][0],Kw)
+
+mH  = mols[:,0]
+mOH = mols[:,1]
+
+aH  = acfs[:,0]
+aOH = acfs[:,1]
+
+#DGDG = minifun(8.,)
+
+print(mH*mOH * aH*aOH)
+print(DG)
+
+xpH = np.linspace(-14,14,141)
+xDG = np.zeros_like(xpH)
+for X,xval in enumerate(xpH):
+    xDG[X] = minifun(xval,Kw)[0]
+    
+io.savemat('xpHDG.mat',{'pH':xpH, 'DG':xDG})
+
