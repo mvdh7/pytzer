@@ -1,7 +1,8 @@
 import autograd.numpy as np
 from autograd import elementwise_grad as egrad
+from scipy.misc import derivative
 import pandas as pd
-from .constants import b
+from .constants import b, Mw, R
 
 ##### FILE I/O ################################################################
 
@@ -21,7 +22,7 @@ def getIons(filename):
     tots = idf_tots.values
     
     # Get list of ions
-    ions = idf_tots.keys()
+    ions = np.array(idf_tots.keys())
        
     return T, tots, ions, idf
 
@@ -142,8 +143,23 @@ def Gex_nRT(mols,ions,T,cf):
     return Gex_nRT
 
 # Derive activity coefficient function
-fx_ln_acfs = egrad(Gex_nRT)
+ln_acfs = egrad(Gex_nRT)
 
 # Derive osmotic coefficient function
+def osm(mols,ions,T,cf):
+    osmD = np.full_like(T,np.nan)
+    for i in range(len(T)):
+        osmD[i] = derivative(lambda ww: 
+            ww * R*T[i] * Gex_nRT(np.array([mols[i,:]/ww]),ions,T[i],cf),
+            np.array([1.]), dx=1e-8)[0]
+    osm = 1 - osmD / (R * T * (np.sum(mols,axis=1)))
+    
+    return osm
+
+# Convert osmotic coefficient to water activity
+def osm2aw(mols,osm):
+    return np.exp(-osm * Mw * np.sum(mols,axis=1))
+
 # autograd doesn't seem to work due to broadcasting issues for osm derivative
+#  hence scipy derivation here for now (which does work great)
 #fx_osmD = egrad(lambda ww,Tw: ww * R*Tw * Gex_nRT(mols/ww,ions,Tw))

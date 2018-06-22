@@ -1,6 +1,40 @@
 import autograd.numpy as np
 
 ###############################################################################
+# === ZERO FUNCTIONS ==========================================================
+
+def zero_bC(T):
+    
+    b0    = np.zeros_like(T)
+    b1    = np.zeros_like(T)
+    b2    = np.zeros_like(T)
+    C0    = np.zeros_like(T)
+    C1    = np.zeros_like(T)
+    alph1 = np.full_like(T,-9)
+    alph2 = np.full_like(T,-9)
+    omega = np.full_like(T,-9)
+    valid = T > 0
+    
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def zero_theta(T):
+    
+    theta = np.zeros_like(T)
+    valid = T > 0
+    
+    return theta, valid
+
+def zero_psi(T):
+    
+    psi   = np.zeros_like(T)
+    valid = T > 0
+    
+    return psi, valid
+
+# === ZERO FUNCTIONS ==========================================================
+###############################################################################
+    
+###############################################################################
 # === MOLLER 1988 =============================================================
 
 def M88_eq13(T,a):
@@ -292,3 +326,338 @@ def Kw_M88(T):
 
 # === MOLLER 1988 =============================================================
 ###############################################################################
+
+###############################################################################
+# === GREENBERG & MOLLER 1989 =================================================
+    
+# --- inherit from M88 --------------------------------------------------------
+    
+GM89_eq3 = M88_eq13
+
+# --- bC: calcium chloride ----------------------------------------------------
+
+def CaCl_GM89(T):
+    
+    b0,b1,b2,_,C1,alph1,alph2,omega,valid = CaCl_M88(T)
+    
+    Cphi  = GM89_eq3(T,
+                     np.float_([ 1.93056024e+1,
+                                 9.77090932e-3,
+                                -4.28383748e+2,
+                                -3.57996343e00,
+                                 8.82068538e-2,
+                                -4.62270238e-6,
+                                 9.91113465e00,
+                                 0            ]))
+    
+    zCa   = np.float_(+2)
+    zCl   = np.float_(-1)
+    C0    = Cphi / (2 * np.sqrt(np.abs(zCa*zCl)))
+    
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+# --- bC: potassium chloride --------------------------------------------------
+
+def KCl_GM89(T):
+    
+    b0    = GM89_eq3(T,
+                     np.float_([ 2.67375563e+1,
+                                 1.00721050e-2,
+                                -7.58485453e+2,
+                                -4.70624175e00,
+                                 0            ,
+                                -3.75994338e-6,
+                                 0            ,
+                                 0            ]))
+    
+    b1    = GM89_eq3(T,
+                     np.float_([-7.41559626e00,
+                                 0            ,
+                                 3.22892989e+2,
+                                 1.16438557e00,
+                                 0            ,
+                                 0            ,
+                                 0            ,
+                                -5.94578140e00]))
+    
+    b2    = np.zeros_like(T)
+    
+    Cphi  = GM89_eq3(T,
+                     np.float_([-3.30531334e00,
+                                -1.29807848e-3,
+                                 9.12712100e+1,
+                                 5.86450181e-1,
+                                 0            ,
+                                 4.95713573e-7,
+                                 0            ,
+                                 0            ]))
+    
+    zK    = np.float_(+1)
+    zCl   = np.float_(-1)
+    C0    = Cphi / (2 * np.sqrt(np.abs(zK*zCl)))
+    
+    C1    = np.zeros_like(T)
+    
+    alph1 = np.float_(2)
+    alph2 = -9
+    omega = -9
+    
+    valid = np.logical_and(T >= 273.15, T <= 523.15)
+    
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+# --- bC: potassium sulfate ---------------------------------------------------
+
+def KSO4_GM89(T):
+    
+    b0    = GM89_eq3(T,
+                     np.float_([ 4.07908797e+1,
+                                 8.26906675e-3,
+                                -1.41842998e+3,
+                                -6.74728848e00,
+                                 0            ,
+                                 0            ,
+                                 0            ,
+                                 0            ]))
+    
+    b1    = GM89_eq3(T,
+                     np.float_([-1.31669651e+1,
+                                 2.35793239e-2,
+                                 2.06712594e+3,
+                                 0            ,
+                                 0            ,
+                                 0            ,
+                                 0            ,
+                                 0            ]))
+    
+    b2    = np.zeros_like(T)
+    
+    Cphi  = np.full_like(T,-0.0188, dtype='float64')
+    
+    zK    = np.float_(+1)
+    zSO4  = np.float_(-2)
+    C0    = Cphi / (2 * np.sqrt(np.abs(zK*zSO4)))
+    
+    C1    = np.zeros_like(T)
+    
+    alph1 = np.float_(2)
+    alph2 = -9
+    omega = -9
+    
+    valid = np.logical_and(T >= 273.15, T <= 523.15)
+    
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+# --- theta: calcium potassium ------------------------------------------------
+
+def CaK_GM89(T):
+    
+    theta = np.full_like(T,0.1156, dtype='float64')
+    
+    valid = np.logical_and(T >= 273.15, T <= 523.15)
+    
+    return theta, valid
+
+# --- theta: potassium sodium -------------------------------------------------
+    
+def KNa_GM89(T):
+    
+    theta = GM89_eq3(T,
+                     np.float_([-5.02312111e-2,
+                                 0            ,
+                                 1.40213141e+1,
+                                 0            ,
+                                 0            ,
+                                 0            ,
+                                 0            ,
+                                 0            ]))
+    
+    valid = np.logical_and(T >= 273.15, T <= 523.15)
+    
+    return theta, valid
+
+# --- psi: calcium potassium chloride -----------------------------------------
+    
+def CaKCl_GM89(T):
+    
+    psi   = GM89_eq3(T,
+                     np.float_([ 4.76278977e-2,
+                                 0            ,
+                                -2.70770507e+1,
+                                 0            ,
+                                 0            ,
+                                 0            ,
+                                 0            ,
+                                 0            ]))
+    
+    valid = np.logical_and(T >= 273.15, T <= 523.15)
+    
+    return psi, valid
+
+# --- psi: calcium potassium sulfate ------------------------------------------
+
+def CaKSO4_GM89(T):
+    
+    theta = np.zeros_like(T)
+    
+    valid = np.logical_and(T >= 273.15, T <= 523.15)
+    
+    return theta, valid
+
+# --- psi: potassium sodium chloride ------------------------------------------
+    
+def KNaCl_GM89(T):
+    
+    psi   = GM89_eq3(T,
+                     np.float_([ 1.34211308e-2,
+                                 0            ,
+                                -5.10212917e00,
+                                 0            ,
+                                 0            ,
+                                 0            ,
+                                 0            ,
+                                 0            ]))
+    
+    valid = np.logical_and(T >= 273.15, T <= 523.15)
+    
+    return psi, valid
+
+# --- psi: potassium sodium sulfate -------------------------------------------
+    
+def KNaSO4_GM89(T):
+    
+    psi   = GM89_eq3(T,
+                     np.float_([ 3.48115174e-2,
+                                 0            ,
+                                -8.21656777e00,
+                                 0            ,
+                                 0            ,
+                                 0            ,
+                                 0            ,
+                                 0            ]))
+    
+    valid = np.logical_and(T >= 273.15, T <= 423.15)
+    
+    return psi, valid
+
+# --- psi: potassium chloride sulfate -----------------------------------------
+    
+def KClSO4_GM89(T):
+    
+    psi   = GM89_eq3(T,
+                     np.float_([-2.12481475e-1,
+                                 2.84698333e-4,
+                                 3.75619614e+1,
+                                 0            ,
+                                 0            ,
+                                 0            ,
+                                 0            ,
+                                 0            ]))
+    
+    valid = np.logical_and(T >= 273.15, T <= 523.15)
+    
+    return psi, valid
+
+# === GREENBERG & MOLLER 1989 =================================================
+###############################################################################
+
+###############################################################################
+# === CAMPBELL ET AL 1993 =====================================================
+
+# --- inherit from M88 --------------------------------------------------------
+    
+CMR93_eq31 = M88_eq13
+
+# --- bC: potassium chloride --------------------------------------------------
+
+def HCl_CMR93(T):
+    
+    b0    = CMR93_eq31(T,
+                       np.float_([   1.2859     ,
+                                  -  1.1197e-3  ,
+                                  -142.5877     ,
+                                     0          ,
+                                     0          ,
+                                     0          ,
+                                     0          ,
+                                     0          ]))
+    
+    b1    = CMR93_eq31(T,
+                       np.float_([-  4.4474     ,
+                                     8.425698e-3,
+                                   665.7882     ,
+                                     0          ,
+                                     0          ,
+                                     0          ,
+                                     0          ,
+                                     0          ]))
+    
+    b2    = np.zeros_like(T)
+    
+    Cphi  = CMR93_eq31(T,
+                       np.float_([-  0.305156   ,
+                                     5.16e-4    ,
+                                    45.52154    ,
+                                     0          ,
+                                     0          ,
+                                     0          ,
+                                     0          ,
+                                     0          ]))
+    
+    zH    = np.float_(+1)
+    zCl   = np.float_(-1)
+    C0    = Cphi / (2 * np.sqrt(np.abs(zH*zCl)))
+    
+    C1    = np.zeros_like(T)
+    
+    alph1 = np.float_(2)
+    alph2 = -9
+    omega = -9
+    
+    valid = np.logical_and(T >= 273.15, T <= 328.15)
+    
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+# --- theta: hydrogen potassium -----------------------------------------------
+
+def HK_CMR93(T):
+    
+    theta = np.float_(0.005) - np.float_(0.0002275) * T
+    
+    valid = np.logical_and(T >= 273.15, T <= 328.15)
+    
+    return theta, valid
+
+# --- theta: hydrogen sodium --------------------------------------------------
+
+def HNa_CMR93(T):
+    
+    theta = np.float_(0.0342) - np.float_(0.000209) * T
+    
+    valid = np.logical_and(T >= 273.15, T <= 328.15)
+    
+    return theta, valid
+
+# --- psi: hydrogen potassium chloride ----------------------------------------
+
+def HKCl_CMR93(T):
+    
+    psi   = np.zeros_like(T)
+    
+    valid = np.logical_and(T >= 273.15, T <= 523.15)
+    
+    return psi, valid
+
+# --- psi: hydrogen sodium chloride -------------------------------------------
+
+def HNaCl_CMR93(T):
+    
+    psi   = np.zeros_like(T)
+    
+    valid = np.logical_and(T >= 273.15, T <= 523.15)
+    
+    return psi, valid
+
+# === CAMPBELL ET AL 1993 =====================================================
+###############################################################################
+    
