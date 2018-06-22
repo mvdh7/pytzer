@@ -9,15 +9,15 @@ import pytzer as pz
 cf = pz.cdicts.GM89
 
 for ca in ['Ca-OH','H-Cl','H-OH','H-SO4','Na-OH']:
-    cf['bC'][ca]    = pz.coeffs.zero_bC
+    cf.bC[ca]    = pz.coeffs.zero_bC
 
 for ii in ['H-Na','Ca-H','Cl-OH','OH-SO4']:
-    cf['theta'][ii] = pz.coeffs.zero_theta
+    cf.theta[ii] = pz.coeffs.zero_theta
 
 for iij in ['Ca-Na-OH','H-Na-Cl','H-Na-SO4','H-Na-OH','Ca-H-Cl','Ca-H-SO4',
             'Ca-H-OH','H-Cl-SO4','Na-Cl-OH','Ca-Cl-OH','H-Cl-OH','Na-OH-SO4',
             'Ca-OH-SO4','H-OH-SO4']:
-    cf['psi'][iij]  = pz.coeffs.zero_psi
+    cf.psi[iij]  = pz.coeffs.zero_psi
 
 # Import test dataset
 T,tots,ions,idf = pz.miami.getIons('M88 Table 4.csv')
@@ -54,7 +54,7 @@ def minifun(pH,mols,ions,T,cf):
     
     # Set up DG equation
     DG = np.log(gH*mH.ravel() * gOH*mOH.ravel()) \
-        - np.log(cf['dissoc']['Kw'](T)[0])
+        - np.log(cf.K['H2O'](T)[0])
     
     return DG
 
@@ -66,19 +66,3 @@ for i in range(len(EQ)):
     
     EQ[i] = minimize(lambda pH:minifun(pH,imols,ions,iT,cf)**2,7.)['x'][0]
 
-
-class cdict:
-    def __init__(self):
-        self.bC    = {}
-        self.theta = {}
-        self.psi   = {}
-        self.K     = {}
-
-class Dog:
-
-    def __init__(self, name):
-        self.name = name
-        self.tricks = []    # creates a new empty list for each dog
-
-    def add_trick(self, trick):
-        self.tricks.append(trick)

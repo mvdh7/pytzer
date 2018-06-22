@@ -47,7 +47,7 @@ def getCharges(ions):
 
 def fG(T,I,cf): # CRP94 Eq. (AI1)
     
-    return -4 * cf['Aosm'](T)[0] * I * np.log(1 + b*np.sqrt(I)) / b
+    return -4 * cf.Aosm(T)[0] * I * np.log(1 + b*np.sqrt(I)) / b
 
 ##### PITZER MODEL SUBFUNCTIONS ###############################################
 
@@ -59,13 +59,13 @@ def h(x):  # CRP94 Eq. (AI15)
 
 def B(T,I,cf,iset): # CRP94 Eq. (AI8)
     
-    b0,b1,b2,_,_,a1,a2,_,_ = cf['bC'][iset](T)
+    b0,b1,b2,_,_,a1,a2,_,_ = cf.bC[iset](T)
 
     return b0 + b1 * g(a1*np.sqrt(I)) + b2 * g(a2*np.sqrt(I))
 
 def CT(T,I,cf,iset): # P91 Ch. 3 Eq. (53)
     
-    _,_,_,C0,C1,_,_,o,_ = cf['bC'][iset](T)
+    _,_,_,C0,C1,_,_,o,_ = cf.bC[iset](T)
     
     return C0 + 4 * C1 * h(o*np.sqrt(I))
 
@@ -111,7 +111,7 @@ def Gex_nRT(mols,ions,T,cf):
             iset= '-'.join(iset)
             
             Gex_nRT = Gex_nRT + cats[:,C0] * cats[:,C1] \
-                * (2 * cf['theta'][iset](T)[0])# + pz.etheta(t,zC[C0],zC[C1],I))
+                * (2 * cf.theta[iset](T)[0])# + pz.etheta(t,zC[C0],zC[C1],I))
                 
     # Add c-c'-a interactions
             for A in range(len(anions)):
@@ -119,7 +119,7 @@ def Gex_nRT(mols,ions,T,cf):
                 itri = '-'.join([iset,anions[A]])
                                 
                 Gex_nRT = Gex_nRT + cats[:,C0] * cats[:,C1] \
-                    * anis[:,A] * cf['psi'][itri](T)[0]
+                    * anis[:,A] * cf.psi[itri](T)[0]
 
     # Add a-a' interactions
     for A0 in range(len(anions)):
@@ -130,7 +130,7 @@ def Gex_nRT(mols,ions,T,cf):
             iset= '-'.join(iset)
             
             Gex_nRT = Gex_nRT + anis[:,A0] * anis[:,A1] \
-                * (2 * cf['theta'][iset](T)[0])# + pz.etheta(t,zC[C0],zC[C1],I))
+                * (2 * cf.theta[iset](T)[0])# + pz.etheta(t,zC[C0],zC[C1],I))
 
     # Add c-a-a' interactions
             for C in range(len(cations)):
@@ -138,7 +138,7 @@ def Gex_nRT(mols,ions,T,cf):
                 itri = '-'.join([cations[C],iset])
                                 
                 Gex_nRT = Gex_nRT + anis[:,A0] * anis[:,A1] \
-                    * cats[:,C] * cf['psi'][itri](T)[0]
+                    * cats[:,C] * cf.psi[itri](T)[0]
 
     return Gex_nRT
 
