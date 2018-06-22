@@ -42,6 +42,8 @@ def P75_eq47(x):
 
 # === Harvie's method as described by Pitzer (1991) Ch. 3, pp. 124-125 ========
 
+# This function works in isolation, but autograd doesn't like it!
+
 def Harvie(x):
     
     J  = np.full_like(x,np.nan, dtype='float64')

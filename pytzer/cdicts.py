@@ -1,10 +1,11 @@
-from . import coeffs
+from . import coeffs, jfuncs
 
 class cdict:
     def __init__(self):
         self.Aosm  = []
         self.bC    = {}
         self.theta = {}
+        self.jfunc = []
         self.psi   = {}
         self.K     = {}
 
@@ -26,8 +27,8 @@ M88.theta['Ca-Na' ] = coeffs.CaNa_M88
 # a-a'
 M88.theta['Cl-SO4'] = coeffs.ClSO4_M88
 
-## Unsymmetrical mixing terms
-#M88['etheta'] = 
+# Unsymmetrical mixing terms
+M88.jfunc = jfuncs.P75_eq47
 
 # psis as cf.psi['cation1-cation2-anion'] with cations in alph. order
 #   or as cf.psi['cation-anion1-anion2']  with anions  in alph. order
@@ -63,8 +64,8 @@ GM89.theta['K-Na'  ] = coeffs.KNa_GM89
 # a-a'
 GM89.theta['Cl-SO4'] = coeffs.ClSO4_M88
 
-## Unsymmetrical mixing terms
-#GM89['etheta'] = 
+# Unsymmetrical mixing terms
+GM89.jfunc = jfuncs.P75_eq47
 
 # psis as cf.psi['cation1-cation2-anion'] with cations in alph. order
 #   or as cf.psi['cation-anion1-anion2']  with anions  in alph. order

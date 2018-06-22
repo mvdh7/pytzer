@@ -4,6 +4,7 @@ from scipy.misc import derivative
 import pandas as pd
 from .constants import b, Mw, R
 
+
 ##### FILE I/O ################################################################
 
 def getIons(filename):
@@ -26,6 +27,7 @@ def getIons(filename):
        
     return T, tots, ions, idf
 
+
 ##### IONIC CHARGES ###########################################################
 
 def getCharges(ions):
@@ -43,11 +45,13 @@ def getCharges(ions):
     
     return np.array([z[ion] for ion in ions])
 
+
 ##### DEBYE-HUECKEL SLOPE #####################################################
 
 def fG(T,I,cf): # CRP94 Eq. (AI1)
     
     return -4 * cf.Aosm(T)[0] * I * np.log(1 + b*np.sqrt(I)) / b
+
 
 ##### PITZER MODEL SUBFUNCTIONS ###############################################
 
@@ -56,6 +60,7 @@ def g(x): # CRP94 Eq. (AI13)
 
 def h(x):  # CRP94 Eq. (AI15)
     return (6 - (6 + x*(6 + 3*x + x**2)) * np.exp(-x)) / x**4
+
 
 def B(T,I,cf,iset): # CRP94 Eq. (AI8)
     
@@ -68,6 +73,25 @@ def CT(T,I,cf,iset): # P91 Ch. 3 Eq. (53)
     _,_,_,C0,C1,_,_,o,_ = cf.bC[iset](T)
     
     return C0 + 4 * C1 * h(o*np.sqrt(I))
+
+
+##### UNSYMMETRIC MIXING ######################################################
+    
+def xij(T,I,z0,z1,cf):
+    
+    return 6 * z0*z1 * cf.Aosm(T)[0] * np.sqrt(I)
+
+def etheta(T,I,z0,z1,cf):
+    
+    x00 = xij(T,I,z0,z0,cf)
+    x01 = xij(T,I,z0,z1,cf)
+    x11 = xij(T,I,z1,z1,cf)
+    
+    etheta = z0*z1 * (cf.jfunc(x01)[0] \
+                      - 0.5 * (cf.jfunc(x00)[0] + cf.jfunc(x11)[0])) / (4 * I)
+    
+    return etheta
+
 
 ##### EXCESS GIBBS ENERGY #####################################################
     
@@ -82,7 +106,7 @@ def Gex_nRT(mols,ions,T,cf):
     CL = zs > 0
     cats    = mols[:,CL]
     cations = ions[  CL]
-#    zCs     = zs  [  CL]
+    zCs     = zs  [  CL]
     AL = zs < 0
     anis    = mols[:,AL]
     anions  = ions[  AL]
@@ -90,8 +114,6 @@ def Gex_nRT(mols,ions,T,cf):
     
     # Begin with Debye-Hueckel component
     Gex_nRT = fG(T,I,cf)
-    
-    
     
     # Add c-a interactions
     for C,cation in enumerate(cations):
@@ -111,7 +133,12 @@ def Gex_nRT(mols,ions,T,cf):
             iset= '-'.join(iset)
             
             Gex_nRT = Gex_nRT + cats[:,C0] * cats[:,C1] \
-                * (2 * cf.theta[iset](T)[0])# + pz.etheta(t,zC[C0],zC[C1],I))
+                * 2 * cf.theta[iset](T)[0]
+                
+            if zCs[C0] != zCs[C1]:
+                
+                Gex_nRT = Gex_nRT + cats[:,C0] * cats[:,C1] \
+                    * etheta(T,I,zCs[C0],zCs[C1],cf)
                 
     # Add c-c'-a interactions
             for A in range(len(anions)):
