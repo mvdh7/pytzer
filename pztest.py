@@ -58,11 +58,16 @@ def minifun(pH,mols,ions,T,cf):
     
     return DG
 
-EQ = np.full_like(T,np.nan)
-for i in range(len(EQ)):
-    
-    iT = np.array([T[i]])
-    imols = np.array([mols[i,:]])
-    
-    EQ[i] = minimize(lambda pH:minifun(pH,imols,ions,iT,cf)**2,7.)['x'][0]
+#EQ = np.full_like(T,np.nan)
+#for i in range(len(EQ)):
+#    
+#    iT = np.array([T[i]])
+#    imols = np.array([mols[i,:]])
+#    
+#    EQ[i] = minimize(lambda pH:minifun(pH,imols,ions,iT,cf)**2,7.)['x'][0]
 
+x = np.array([0.05,1.,1.2,28.])
+
+JH  = pz.etheta.Harvie(x)[0]
+JP1 = pz.etheta.P75_eq46(x)[0]
+JP2 = pz.etheta.P75_eq47(x)[0]
