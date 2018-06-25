@@ -175,8 +175,12 @@ def Gex_nRT(mols,ions,T,cf):
 
     return Gex_nRT
 
-# Derive activity coefficient function
+# Determine activity coefficient function
 ln_acfs = egrad(Gex_nRT)
+
+# autograd doesn't seem to work due to broadcasting issues for osm derivative
+#  hence scipy derivation below for now (which does work great)
+#fx_osmD = egrad(lambda ww,Tw: ww * R*Tw * Gex_nRT(mols/ww,ions,Tw))
 
 # Derive osmotic coefficient function
 def osm(mols,ions,T,cf):
@@ -192,7 +196,3 @@ def osm(mols,ions,T,cf):
 # Convert osmotic coefficient to water activity
 def osm2aw(mols,osm):
     return np.exp(-osm * Mw * np.sum(mols,axis=1))
-
-# autograd doesn't seem to work due to broadcasting issues for osm derivative
-#  hence scipy derivation here for now (which does work great)
-#fx_osmD = egrad(lambda ww,Tw: ww * R*Tw * Gex_nRT(mols/ww,ions,Tw))

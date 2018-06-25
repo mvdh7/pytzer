@@ -1,6 +1,7 @@
 import autograd.numpy as np
 from autograd import elementwise_grad as egrad
 #from scipy.misc import derivative
+from scipy import optimize
 from scipy.optimize import minimize
 import pytzer as pz
 #from pytzer.constants import R, Mw
@@ -26,49 +27,87 @@ import pytzer as pz
 cf = pz.cdicts.CRP94
 cf.bC['H-OH'] = pz.coeffs.zero_bC
     
-T,tots,ions,idf = pz.miami.getIons('CRP94 checks.csv')
-mols = np.copy(tots)
+T,tots,ions,idf = pz.miami.getIons('CRP94 solver.csv')
+#mols = np.copy(tots)
+#
+## Calculate excess Gibbs energy and activity coeffs (no dissociation)
+#Gexs = pz.miami.Gex_nRT(mols,ions,T,cf)
+#acfs = np.exp(pz.miami.ln_acfs(mols,ions,T,cf))
+#
+## Test osmotic coefficients - NaCl compares well with Archer (1992)
+## M88 Table 4 also works almost perfectly, without yet including unsymm. terms!
+#osm = pz.miami.osm(mols,ions,T,cf)
+#aw  = pz.miami.osm2aw(mols,osm)
+#
+#osmST = osm * np.sum(mols,axis=1) / (3 * np.sum(mols[:,1:],axis=1))
+#
+## Differentiate fG wrt I
+#dfG_dI = egrad(pz.miami.fG, argnum=1)
+#dfG = dfG_dI(np.array([298.15]),np.array([6.]),cf)
+#
+## Get mean activity coefficient (CRP94)
+#acf_mean = np.cbrt(acfs[:,0]**2 * acfs[:,2] * mols[:,0]**2 * mols[:,2] \
+#    / (4 * np.sum(mols[:,1:],axis=1)**3))
 
-# Calculate excess Gibbs energy and activity coeffs (no dissociation)
-Gexs = pz.miami.Gex_nRT(mols,ions,T,cf)
-acfs = np.exp(pz.miami.ln_acfs(mols,ions,T,cf))
+## Solve for pH - M88 system
+#def minifun(pH,mols,ions,T,cf):
+#    
+#    # Calculate [H+] and [OH-]
+#    mH  = np.vstack(np.full_like(mols[:,0],-np.log10(pH)))
+#    mOH = np.copy(mH)
+#    
+#    # Add them to main arrays
+#    mols = np.concatenate((mols,mH,mOH), axis=1)
+#    ions = np.append(ions,['H','OH'])
+#    
+#    # Calculate activity coefficients
+#    ln_acfs = pz.miami.ln_acfs(mols,ions,T,cf)
+#    gH  = np.exp(ln_acfs[:,4])
+#    gOH = np.exp(ln_acfs[:,5])
+#    
+#    # Set up DG equation
+#    DG = np.log(gH*mH.ravel() * gOH*mOH.ravel()) \
+#        - np.log(cf.K['H2O'](T)[0])
+#    
+#    return DG
 
-# Test osmotic coefficients - NaCl compares well with Archer (1992)
-# M88 Table 4 also works almost perfectly, without yet including unsymm. terms!
-osm = pz.miami.osm(mols,ions,T,cf)
-aw  = pz.miami.osm2aw(mols,osm)
-
-osmST = osm * np.sum(mols,axis=1) / (3 * np.sum(mols[:,1:],axis=1))
-
-# Differentiate fG wrt I
-dfG_dI = egrad(pz.miami.fG, argnum=1)
-dfG = dfG_dI(np.array([298.15]),np.array([6.]),cf)
-
-# Get mean activity coefficient (CRP94)
-acf_mean = np.cbrt(acfs[:,0]**2 * acfs[:,2] * mols[:,0]**2 * mols[:,2] \
-    / (4 * np.sum(mols[:,1:],axis=1)**3))
-
-# Solve for pH
-def minifun(pH,mols,ions,T,cf):
+# Solve for pH - CRP94 system
+def minifun(mH,tots,ions,T,cf):
     
-    # Calculate [H+] and [OH-]
-    mH  = np.vstack(np.full_like(mols[:,0],10**-pH))
-    mOH = np.copy(mH)
+    # Calculate [H+] and ionic speciation
+#    mH = np.vstack(-np.log10(pH))
+    mH = np.vstack(mH)
+    mHSO4 = 2*tots - mH
+    mSO4  = mH - tots
     
-    # Add them to main arrays
-    mols = np.concatenate((mols,mH,mOH), axis=1)
-    ions = np.append(ions,['H','OH'])
+    # Create molality & ions arrays
+    mols = np.concatenate((mH,mHSO4,mSO4), axis=1)
+    ions = np.array(['H','HSO4','SO4'])
     
     # Calculate activity coefficients
     ln_acfs = pz.miami.ln_acfs(mols,ions,T,cf)
-    gH  = np.exp(ln_acfs[:,4])
-    gOH = np.exp(ln_acfs[:,5])
-    
+    gH    = np.exp(ln_acfs[:,0])
+    gHSO4 = np.exp(ln_acfs[:,1])
+    gSO4  = np.exp(ln_acfs[:,2])
+
     # Set up DG equation
-    DG = np.log(gH*mH.ravel() * gOH*mOH.ravel()) \
-        - np.log(cf.K['H2O'](T)[0])
+    DG = np.log(gH*mH.ravel() * gSO4*mSO4.ravel() / (gHSO4*mHSO4.ravel())) \
+        - np.log(cf.K['HSO4'](T)[0])
     
     return DG
+
+EQ = np.full_like(T,np.nan)
+for i in range(len(EQ)):
+    
+    iT = np.array([T[i]])
+    itots = np.array([tots[i,:]])
+    
+#    EQ[i] = minimize(lambda pH:minifun(pH,itots,ions,iT,cf),1., \
+#                     method='Nelder-Mead')['x'][0]
+    
+    EQ[i] = optimize.least_squares(lambda mH: minifun(mH,itots,ions,iT,cf),
+                                   1.5*itots[0],
+                                   bounds=(itots[0],2*itots[0]))['x']
 
 #EQ = np.full_like(T,np.nan)
 #for i in range(len(EQ)):
@@ -77,25 +116,3 @@ def minifun(pH,mols,ions,T,cf):
 #    imols = np.array([mols[i,:]])
 #    
 #    EQ[i] = minimize(lambda pH:minifun(pH,imols,ions,iT,cf)**2,7.)['x'][0]
-
-mH    = np.float_([1.5])
-mHSO4 = np.float_([0.5])
-mSO4  = np.float_([0.5])
-T     = np.float_([298.15])
-
-mols = np.array([np.hstack([mH,mHSO4,mSO4])])
-ions = np.array(['H', 'HSO4', 'SO4'])
-
-zs = pz.miami.getCharges(ions)
-I = 0.5 * (np.sum(mols * zs**2, 1))
-Z = np.sum(mols * np.abs(zs), 1)
-
-#print(pz.miami.CT(T,I,cf,'H-HSO4'))
-#print(pz.miami.CT(T,I,cf,'H-SO4'))
-
-#print(pz.miami.etheta(T,I,+1.,+2.,cf))
-
-#print(pz.miami.Gex_nRT(mols,ions,T,cf))
-
-print(np.exp(pz.miami.ln_acfs(mols,ions,T,cf)))
-

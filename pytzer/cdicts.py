@@ -97,3 +97,5 @@ CRP94.theta['HSO4-SO4'] = coeffs.HSO4_SO4_CRP94
 CRP94.jfunc = jfuncs.P75_eq47
 
 CRP94.psi['H-HSO4-SO4'] = coeffs.H_HSO4_SO4_CRP94
+
+CRP94.K['HSO4'] = coeffs.KHSO4_CRP94
