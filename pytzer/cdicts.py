@@ -1,3 +1,4 @@
+import autograd.numpy as np
 from . import coeffs, jfuncs
 
 class cdict:
@@ -8,6 +9,27 @@ class cdict:
         self.jfunc = []
         self.psi   = {}
         self.K     = {}
+        
+    def getKeq(self,T, mH=None,gH=None, mOH=None,gOH=None, 
+               mHSO4=None,gHSO4=None, mSO4=None,gSO4=None):
+        
+        # Find which equilibria are stored in dict
+        Klist = self.K.keys()
+        
+        # Initialise Keq equation
+        Keq = np.zeros_like(T, dtype='float64')
+        
+        if 'H2O' in Klist:
+            Keq = Keq + np.log(gH*mH.ravel() * gOH*mOH.ravel()) \
+                - np.log(self.K['H2O'](T)[0])
+        
+        if 'HSO4' in Klist:
+            Keq = Keq + np.log(gH*mH.ravel() * gSO4*mSO4.ravel() \
+                / (gHSO4*mHSO4.ravel())) \
+                - np.log(self.K['HSO4'](T)[0])
+            
+        return Keq
+        
 
 # === MOLLER 1988 =============================================================
 M88 = cdict()

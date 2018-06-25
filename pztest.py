@@ -5,6 +5,7 @@ from scipy import optimize
 from scipy.optimize import minimize
 import pytzer as pz
 #from pytzer.constants import R, Mw
+import time
 
 ## Set dict of coefficient functions
 #cf = pz.cdicts.GM89
@@ -91,10 +92,15 @@ def minifun(mH,tots,ions,T,cf):
     gSO4  = np.exp(ln_acfs[:,2])
 
     # Set up DG equation
-    DG = np.log(gH*mH.ravel() * gSO4*mSO4.ravel() / (gHSO4*mHSO4.ravel())) \
-        - np.log(cf.K['HSO4'](T)[0])
+#    DG = np.log(gH*mH.ravel() * gSO4*mSO4.ravel() / (gHSO4*mHSO4.ravel())) \
+#        - np.log(cf.K['HSO4'](T)[0])
+    
+    DG = cf.getKeq(T, mH=mH,gH=gH, mHSO4=mHSO4,gHSO4=gHSO4, 
+                   mSO4=mSO4,gSO4=gSO4)
     
     return DG
+
+#go = time.time()
 
 EQ = np.full_like(T,np.nan)
 for i in range(len(EQ)):
@@ -107,7 +113,11 @@ for i in range(len(EQ)):
     
     EQ[i] = optimize.least_squares(lambda mH: minifun(mH,itots,ions,iT,cf),
                                    1.5*itots[0],
-                                   bounds=(itots[0],2*itots[0]))['x']
+                                   bounds=(itots[0],2*itots[0]),
+                                   method='trf',
+                                   xtol=1e-12)['x']
+
+#print(time.time()-go)
 
 #EQ = np.full_like(T,np.nan)
 #for i in range(len(EQ)):
