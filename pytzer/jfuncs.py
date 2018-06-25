@@ -1,7 +1,6 @@
 import autograd.numpy as np
 from autograd import elementwise_grad as egrad
 
-
 # === Pitzer (1975) Eq. (46) ==================================================
 
 def P75_eq46(x):
@@ -38,7 +37,6 @@ def P75_eq47(x):
     Jp = egrad(J)
     
     return J(x), Jp(x)
-
 
 # === Harvie's method as described by Pitzer (1991) Ch. 3, pp. 124-125 ========
 

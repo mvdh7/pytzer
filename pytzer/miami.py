@@ -34,14 +34,15 @@ def getCharges(ions):
 
     z = {}
     
-    z['Ca']  = np.float_(+2)
-    z['H' ]  = np.float_(+1)
-    z['K' ]  = np.float_(+1)
-    z['Na']  = np.float_(+1)
+    z['Ca']   = np.float_(+2)
+    z['H' ]   = np.float_(+1)
+    z['K' ]   = np.float_(+1)
+    z['Na']   = np.float_(+1)
 
-    z['Cl']  = np.float_(-1)    
-    z['OH']  = np.float_(-1)
-    z['SO4'] = np.float_(-2)
+    z['Cl']   = np.float_(-1)    
+    z['OH']   = np.float_(-1)
+    z['HSO4'] = np.float_(-1)
+    z['SO4']  = np.float_(-2)
     
     return np.array([z[ion] for ion in ions])
 
@@ -110,7 +111,7 @@ def Gex_nRT(mols,ions,T,cf):
     AL = zs < 0
     anis    = mols[:,AL]
     anions  = ions[  AL]
-#    zAs     = zs  [  AL]
+    zAs     = zs  [  AL]
     
     # Begin with Debye-Hueckel component
     Gex_nRT = fG(T,I,cf)
@@ -138,7 +139,7 @@ def Gex_nRT(mols,ions,T,cf):
             if zCs[C0] != zCs[C1]:
                 
                 Gex_nRT = Gex_nRT + cats[:,C0] * cats[:,C1] \
-                    * etheta(T,I,zCs[C0],zCs[C1],cf)
+                    * 2 * etheta(T,I,zCs[C0],zCs[C1],cf)
                 
     # Add c-c'-a interactions
             for A in range(len(anions)):
@@ -157,7 +158,12 @@ def Gex_nRT(mols,ions,T,cf):
             iset= '-'.join(iset)
             
             Gex_nRT = Gex_nRT + anis[:,A0] * anis[:,A1] \
-                * (2 * cf.theta[iset](T)[0])# + pz.etheta(t,zC[C0],zC[C1],I))
+                * 2 * cf.theta[iset](T)[0]
+                
+            if zAs[A0] != zAs[A1]:
+                
+                Gex_nRT = Gex_nRT + anis[:,A0] * anis[:,A1] \
+                    * 2 * etheta(T,I,zAs[A0],zAs[A1],cf)
 
     # Add c-a-a' interactions
             for C in range(len(cations)):

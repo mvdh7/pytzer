@@ -62,7 +62,7 @@ def PP87_eqNaOH(T,a):
          + a[10] / (647.-T)     \
          + a[11] * P / (647.-T)
 
-def NaOH_PP87(T):
+def Na_OH_PP87(T):
     
     b0    = PP87_eqNaOH(T,
                         np.float_([ 2.7682478e+2,
@@ -159,7 +159,7 @@ def Aosm_M88(T):
 
 # --- bC: calcium chloride ----------------------------------------------------
 
-def CaCl_M88(T):
+def Ca_Cl_M88(T):
     
     b0    = M88_eq13(T,
                      np.float_([-9.41895832e+1,
@@ -209,7 +209,7 @@ def CaCl_M88(T):
 
 # --- bC: calcium sulfate -----------------------------------------------------
 
-def CaSO4_M88(T):
+def Ca_SO4_M88(T):
     
     b0    = np.full_like(T,0.15, dtype='float64')
     
@@ -239,7 +239,7 @@ def CaSO4_M88(T):
 
 # --- bC: sodium chloride -----------------------------------------------------
 
-def NaCl_M88(T):
+def Na_Cl_M88(T):
     
     b0    = M88_eq13(T,
                      np.float_([ 1.43783204e+1,
@@ -289,7 +289,7 @@ def NaCl_M88(T):
 
 # --- bC: sodium sulfate ------------------------------------------------------
 
-def NaSO4_M88(T):
+def Na_SO4_M88(T):
     
     b0    = M88_eq13(T,
                      np.float_([ 8.16920027e+1,
@@ -339,7 +339,7 @@ def NaSO4_M88(T):
 
 # --- theta: calcium sodium ---------------------------------------------------
     
-def CaNa_M88(T):
+def Ca_Na_M88(T):
     
     theta = np.full_like(T,0.05, dtype='float64')
     
@@ -349,7 +349,7 @@ def CaNa_M88(T):
 
 # --- theta: chloride sulfate -------------------------------------------------
     
-def ClSO4_M88(T):
+def Cl_SO4_M88(T):
     
     theta = np.full_like(T,0.07, dtype='float64')
     
@@ -359,7 +359,7 @@ def ClSO4_M88(T):
 
 # --- psi: calcium sodium chloride --------------------------------------------
     
-def CaNaCl_M88(T):
+def Ca_Na_Cl_M88(T):
     
     psi = np.full_like(T,-0.003, dtype='float64')
     
@@ -369,7 +369,7 @@ def CaNaCl_M88(T):
 
 # --- psi: calcium sodium sulfate ---------------------------------------------
     
-def CaNaSO4_M88(T):
+def Ca_Na_SO4_M88(T):
     
     psi = np.full_like(T,-0.012, dtype='float64')
     
@@ -379,7 +379,7 @@ def CaNaSO4_M88(T):
 
 # --- psi: calcium chloride sulfate -------------------------------------------
     
-def CaClSO4_M88(T):
+def Ca_Cl_SO4_M88(T):
     
     psi = np.full_like(T,-0.018, dtype='float64')
     
@@ -389,7 +389,7 @@ def CaClSO4_M88(T):
 
 # --- psi: sodium chloride sulfate --------------------------------------------
     
-def NaClSO4_M88(T):
+def Na_Cl_SO4_M88(T):
     
     psi = np.full_like(T,-0.009, dtype='float64')
     
@@ -427,9 +427,9 @@ GM89_eq3 = M88_eq13
 
 # --- bC: calcium chloride ----------------------------------------------------
 
-def CaCl_GM89(T):
+def Ca_Cl_GM89(T):
     
-    b0,b1,b2,_,C1,alph1,alph2,omega,valid = CaCl_M88(T)
+    b0,b1,b2,_,C1,alph1,alph2,omega,valid = Ca_Cl_M88(T)
     
     Cphi  = GM89_eq3(T,
                      np.float_([ 1.93056024e+1,
@@ -449,7 +449,7 @@ def CaCl_GM89(T):
 
 # --- bC: potassium chloride --------------------------------------------------
 
-def KCl_GM89(T):
+def K_Cl_GM89(T):
     
     b0    = GM89_eq3(T,
                      np.float_([ 2.67375563e+1,
@@ -499,7 +499,7 @@ def KCl_GM89(T):
 
 # --- bC: potassium sulfate ---------------------------------------------------
 
-def KSO4_GM89(T):
+def K_SO4_GM89(T):
     
     b0    = GM89_eq3(T,
                      np.float_([ 4.07908797e+1,
@@ -541,7 +541,7 @@ def KSO4_GM89(T):
 
 # --- theta: calcium potassium ------------------------------------------------
 
-def CaK_GM89(T):
+def Ca_K_GM89(T):
     
     theta = np.full_like(T,0.1156, dtype='float64')
     
@@ -551,7 +551,7 @@ def CaK_GM89(T):
 
 # --- theta: potassium sodium -------------------------------------------------
     
-def KNa_GM89(T):
+def K_Na_GM89(T):
     
     theta = GM89_eq3(T,
                      np.float_([-5.02312111e-2,
@@ -569,7 +569,7 @@ def KNa_GM89(T):
 
 # --- psi: calcium potassium chloride -----------------------------------------
     
-def CaKCl_GM89(T):
+def Ca_K_Cl_GM89(T):
     
     psi   = GM89_eq3(T,
                      np.float_([ 4.76278977e-2,
@@ -587,7 +587,7 @@ def CaKCl_GM89(T):
 
 # --- psi: calcium potassium sulfate ------------------------------------------
 
-def CaKSO4_GM89(T):
+def Ca_K_SO4_GM89(T):
     
     theta = np.zeros_like(T)
     
@@ -597,7 +597,7 @@ def CaKSO4_GM89(T):
 
 # --- psi: potassium sodium chloride ------------------------------------------
     
-def KNaCl_GM89(T):
+def K_Na_Cl_GM89(T):
     
     psi   = GM89_eq3(T,
                      np.float_([ 1.34211308e-2,
@@ -615,7 +615,7 @@ def KNaCl_GM89(T):
 
 # --- psi: potassium sodium sulfate -------------------------------------------
     
-def KNaSO4_GM89(T):
+def K_Na_SO4_GM89(T):
     
     psi   = GM89_eq3(T,
                      np.float_([ 3.48115174e-2,
@@ -633,7 +633,7 @@ def KNaSO4_GM89(T):
 
 # --- psi: potassium chloride sulfate -----------------------------------------
     
-def KClSO4_GM89(T):
+def K_Cl_SO4_GM89(T):
     
     psi   = GM89_eq3(T,
                      np.float_([-2.12481475e-1,
@@ -661,7 +661,7 @@ CMR93_eq31 = M88_eq13
 
 # --- bC: potassium chloride --------------------------------------------------
 
-def HCl_CMR93(T):
+def H_Cl_CMR93(T):
     
     b0    = CMR93_eq31(T,
                        np.float_([   1.2859     ,
@@ -711,7 +711,7 @@ def HCl_CMR93(T):
 
 # --- theta: hydrogen potassium -----------------------------------------------
 
-def HK_CMR93(T):
+def H_K_CMR93(T):
     
     theta = np.float_(0.005) - np.float_(0.0002275) * T
     
@@ -721,7 +721,7 @@ def HK_CMR93(T):
 
 # --- theta: hydrogen sodium --------------------------------------------------
 
-def HNa_CMR93(T):
+def H_Na_CMR93(T):
     
     theta = np.float_(0.0342) - np.float_(0.000209) * T
     
@@ -731,7 +731,7 @@ def HNa_CMR93(T):
 
 # --- psi: hydrogen potassium chloride ----------------------------------------
 
-def HKCl_CMR93(T):
+def H_K_Cl_CMR93(T):
     
     psi   = np.zeros_like(T)
     
@@ -741,7 +741,7 @@ def HKCl_CMR93(T):
 
 # --- psi: hydrogen sodium chloride -------------------------------------------
 
-def HNaCl_CMR93(T):
+def H_Na_Cl_CMR93(T):
     
     psi   = np.zeros_like(T)
     
@@ -750,5 +750,164 @@ def HNaCl_CMR93(T):
     return psi, valid
 
 # === CAMPBELL ET AL 1993 =====================================================
+###############################################################################
+
+###############################################################################
+# === CLEGG ET AL 1994 ========================================================    
+
+def Aosm_CRP94(T): # CRP94 Appendix II
+
+    # Transform temperature
+    X = (2 * T - 373.15 - 234.15) / (373.15 - 234.15)
+
+    # Set coefficients - CRP94 Table 11
+    a_Aosm = np.float_( \
+             [ 0.797256081240 / 2,
+               0.573389669896e-1,
+               0.977632177788e-3,
+               0.489973732417e-2,
+              -0.313151784342e-2,
+               0.179145971002e-2,
+              -0.920584241844e-3,
+               0.443862726879e-3,
+              -0.203661129991e-3,
+               0.900924147948e-4,
+              -0.388189392385e-4,
+               0.164245088592e-4,
+              -0.686031972567e-5,
+               0.283455806377e-5,
+              -0.115641433004e-5,
+               0.461489672579e-6,
+              -0.177069754948e-6,
+               0.612464488231e-7,
+              -0.175689013085e-7])
+
+    # Set up T matrix - CRP94 Eq. (AII2)
+    Tmx = np.full((np.size(T),np.size(a_Aosm)),1.)
+    Tmx[:,1] = X
+    for C in range(2,np.size(a_Aosm)):
+        Tmx[:,C] = 2 * X * Tmx[:,C-1] - Tmx[:,C-2]
+
+    # Solve for Aosm (CRP94 E.AII1)
+    Aosm = np.matmul(Tmx,a_Aosm)
+
+    # Validity range
+    valid = np.logical_and(T >= 234.15, T <= 373.15)
+
+    return Aosm, valid
+
+
+CRP94_Tr = np.float_(328.15) # K
+
+def CRP94_eq24(T,q):
+    return q[0] + 1e-3 *                 \
+        ( (T-CRP94_Tr)    * q[1]         \
+        + (T-CRP94_Tr)**2 * q[2] / 2.    \
+        + (T-CRP94_Tr)**3 * q[3] / 6.)
+
+def H_HSO4_CRP94(T):
+
+    # Evaluate coefficients, parameters from CRP94 Table 6
+    b0 = CRP94_eq24(T,
+                    np.float_([  0.227784933   ,
+                               - 3.78667718    ,
+                               - 0.124645729   ,
+                               - 0.00235747806 ]))
+    
+    b1 = CRP94_eq24(T,
+                    np.float_([  0.372293409   ,
+                                 1.50          ,
+                                 0.207494846   ,
+                                 0.00448526492 ]))  
+    
+    b2    = np.zeros_like(T)
+    
+    C0 = CRP94_eq24(T,
+                    np.float_([- 0.00280032520 ,
+                                 0.216200279   ,
+                                 0.0101500824  ,
+                                 0.000208682230]))
+    
+    C1 = CRP94_eq24(T,
+                    np.float_([- 0.025         ,
+                                18.1728946     ,
+                                 0.382383535   ,
+                                 0.0025        ]))
+    
+    alph1 = np.float_(2)
+    alph2 = -9
+    omega = np.float_(2.5)
+
+    valid = np.logical_and(T >= 273.15, T <= 328.15)
+
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def H_SO4_CRP94(T):
+
+    # Evaluate coefficients, parameters from CRP94 Table 6
+    b0 = CRP94_eq24(T,
+                    np.float_([  0.0348925351  ,
+                                 4.97207803    ,
+                                 0.317555182   ,
+                                 0.00822580341 ]))
+    
+    b1 = CRP94_eq24(T,
+                    np.float_([- 1.06641231    ,
+                               -74.6840429     ,
+                               - 2.26268944    ,
+                               - 0.0352968547  ]))
+    
+    b2    = np.zeros_like(T)
+    
+    C0 = CRP94_eq24(T,
+                    np.float_([  0.00764778951 ,
+                               - 0.314698817   ,
+                               - 0.0211926525  ,
+                               - 0.000586708222]))
+    
+    C1 = CRP94_eq24(T,
+                    np.float_([  0.0           ,
+                               - 0.176776695   ,
+                               - 0.731035345   ,
+                                 0.0           ]))
+
+    alph1 = 2 - 1842.843 * (1/T - 1/298.15)
+    alph2 = -9
+    omega = np.float_(2.5)
+
+    valid = np.logical_and(T >= 273.15, T <= 328.15)
+
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+# --- theta: bisulfate sulfate ------------------------------------------------
+    
+def HSO4_SO4_CRP94(T):
+    
+    theta = np.zeros_like(T)
+    
+    valid = np.logical_and(T >= 273.15, T <= 328.15)
+    
+    return theta, valid
+
+# --- psi: hydrogen bisulfate sulfate -----------------------------------------
+    
+def H_HSO4_SO4_CRP94(T):
+    
+    psi   = np.zeros_like(T)
+    
+    valid = np.logical_and(T >= 273.15, T <= 328.15)
+    
+    return psi, valid
+
+# --- dissociation: bisulfate -------------------------------------------------
+
+def KHSO4_CRP94(T):
+    
+    valid = np.logical_and(T >= 273.15, T <= 328.15)
+    
+    return 10**(562.69486 - 102.5154 * np.log(T) \
+        - 1.117033e-4 * T**2 + 0.2477538*T - 13273.75/T), valid
+
+# === CLEGG ET AL 1994 ========================================================    
 ###############################################################################
     
