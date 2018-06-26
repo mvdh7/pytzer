@@ -63,13 +63,13 @@ def h(x):  # CRP94 Eq. (AI15)
     return (6 - (6 + x*(6 + 3*x + x**2)) * np.exp(-x)) / x**4
 
 
-def B(T,I,cf,iset): # CRP94 Eq. (AI8)
+def B(T,I,cf,iset): # CRP94 Eq. (AI7)
     
     b0,b1,b2,_,_,a1,a2,_,_ = cf.bC[iset](T)
 
     return b0 + b1 * g(a1*np.sqrt(I)) + b2 * g(a2*np.sqrt(I))
 
-def CT(T,I,cf,iset): # P91 Ch. 3 Eq. (53)
+def CT(T,I,cf,iset): # CRP94 Eq. (AI10)
     
     _,_,_,C0,C1,_,_,o,_ = cf.bC[iset](T)
     
