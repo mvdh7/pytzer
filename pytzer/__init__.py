@@ -1,5 +1,5 @@
 name = 'pytzer'
 
-__all__ = ['cdicts', 'coeffs', 'constants', 'jfuncs', 'miami']
+__all__ = ['cdicts', 'coeffs', 'constants', 'fitting', 'jfuncs', 'miami']
 
-from . import cdicts, coeffs, constants, jfuncs, miami
+from . import cdicts, coeffs, constants, fitting, jfuncs, miami

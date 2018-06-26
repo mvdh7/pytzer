@@ -181,6 +181,9 @@ ln_acfs = egrad(Gex_nRT)
 # autograd doesn't seem to work due to broadcasting issues for osm derivative
 #  hence scipy derivation below for now (which does work great)
 #fx_osmD = egrad(lambda ww,Tw: ww * R*Tw * Gex_nRT(mols/ww,ions,Tw))
+#
+# NOTE: ^^ this problem is now solved in pz.fitting! [2018-06-26]
+#          & the solution there should work here too
 
 # Derive osmotic coefficient function
 def osm(mols,ions,T,cf):
