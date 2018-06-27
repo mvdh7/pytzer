@@ -180,6 +180,11 @@ def Gex_nRT(mols,ions,T,cf):
 # Determine activity coefficient function
 ln_acfs = egrad(Gex_nRT)
 
+# Get mean activity coefficient for an M_(nM)X_(nX) electrolyte
+def ln_acf2ln_acf_MX(ln_acfM,ln_acfX,nM,nX):
+    
+    return (nM * ln_acfM + nX * ln_acfX) / (nM + nX)
+
 ##### OSMOTIC COEFFICIENTS ####################################################
 
 # Osmotic coefficient derivative function - single electrolyte

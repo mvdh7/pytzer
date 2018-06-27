@@ -21,7 +21,7 @@ C1 = 0
 
 alph1 = np.float_(2.0)
 alph2 = -9
-omega = -9
+omega = np.float_(2.5)
 
 nC = np.float_(1)
 nA = np.float_(1)
@@ -35,18 +35,5 @@ tosm = pz.fitting.osm   (mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega)
 tacw = pz.model.osm2aw  (mCmA,tosm)
 tmaf = pz.fitting.acf_MX(mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega,nC,nA)
 
-# Do fitting!
-topt = optimize.least_squares(lambda bC: 
-    pz.fitting.acf_MX(mCmA,zC,zA,T,bC[0],bC[1],b2,bC[2],C1,
-                      alph1,alph2,omega,nC,nA) - tmaf,
-    np.float_([0,0,0]), jac='3-point')
-
-b0_fit = topt['x'][0]
-b1_fit = topt['x'][1]
-C0_fit = topt['x'][2]
-
-# Get covariance matrix
-mse = np.mean((pz.fitting.acf_MX(mCmA,zC,zA,T,b0_fit,b1_fit,b2,C0_fit,C1,
-                                 alph1,alph2,omega,nC,nA) - tmaf)**2)
-hess = topt.jac.transpose() @ topt.jac
-bCmx = np.linalg.inv(hess) * mse
+b0f,b1f,b2f,C0f,C1f,bCmx,mse \
+    = pz.fitting.bC_acfMX(mCmA,zC,zA,T,alph1,alph2,omega,nC,nA,tmaf,'b0b1C0')

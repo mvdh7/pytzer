@@ -1,7 +1,10 @@
 from autograd import numpy as np
 from autograd import elementwise_grad as egrad
+from scipy import optimize
 from .constants import b, R
 from . import coeffs, model
+
+##### PITZER MODEL FUNCTIONS ##################################################
 
 # Define f function
 def fG(T,I,Aosm):
@@ -64,3 +67,60 @@ def osm(mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega):
     
     return 1 - osmD(ww,mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega) \
         / (R * T * (np.sum(mCmA,axis=1)))
+
+##### FITTING FUNCTIONS #######################################################
+
+# Input: mean activity coefficient only
+def bC_acfMX(mCmA,zC,zA,T,alph1,alph2,omega,nC,nA,acfMX,which_bCs):
+    
+    # Optimisation settings
+    ojac    = '3-point'
+    oloss   = 'linear'
+    omethod = 'trf'
+    
+    b2 = 0
+    C1 = 0
+    
+    # Do optimisation
+    if which_bCs == 'b0b1C0':
+        
+        topt = optimize.least_squares(lambda bC: 
+            acf_MX(mCmA,zC,zA,T,bC[0],bC[1],0,bC[2],0,
+                   alph1,alph2,omega,nC,nA) - acfMX,
+            np.float_([0,0,0]), jac=ojac, loss=oloss, method=omethod)
+        
+        b0 = topt['x'][0]
+        b1 = topt['x'][1]
+        C0 = topt['x'][2]
+        
+    elif which_bCs == 'b0b1C0C1':
+        
+        topt = optimize.least_squares(lambda bC: 
+            acf_MX(mCmA,zC,zA,T,bC[0],bC[1],0,bC[2],bC[3],
+                   alph1,alph2,omega,nC,nA) - acfMX,
+            np.float_([0,0,0,0]), jac=ojac, loss=oloss, method=omethod)
+        
+        b0 = topt['x'][0]
+        b1 = topt['x'][1]
+        C0 = topt['x'][2]
+        C1 = topt['x'][3]
+        
+    else:
+        
+        topt = optimize.least_squares(lambda bC: 
+            acf_MX(mCmA,zC,zA,T,bC[0],bC[1],bC[2],bC[3],bC[4],
+                   alph1,alph2,omega,nC,nA) - acfMX,
+            np.float_([0,0,0,0,0]), jac=ojac, loss=oloss, method=omethod)
+        
+        b0 = topt['x'][0]
+        b1 = topt['x'][1]
+        b2 = topt['x'][2]
+        C0 = topt['x'][3]
+        C1 = topt['x'][4]
+    
+    # Get covariance matrix
+    mse  = topt.cost * 2 / np.size(T)
+    hess = topt.jac.transpose() @ topt.jac
+    bCmx = np.linalg.inv(hess) * mse
+    
+    return b0,b1,b2,C0,C1,bCmx,mse
