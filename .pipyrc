@@ -1,0 +1,7 @@
+[distutils]
+index-servers =
+    pypi
+
+[pypi]
+repository: http://www.python.org/pypi
+username: mvdh
