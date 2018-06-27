@@ -219,3 +219,7 @@ def osm(mols,ions,T,cf):
 # Convert osmotic coefficient to water activity
 def osm2aw(mols,osm):
     return np.exp(-osm * Mw * np.sum(mols,axis=1))
+
+# Convert water activity to osmotic coefficient
+def aw2osm(mols,aw):
+    return -np.log(aw) / (Mw * np.sum(mols,axis=1))

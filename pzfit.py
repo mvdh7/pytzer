@@ -1,5 +1,4 @@
 from autograd import numpy as np
-from scipy import optimize
 import pytzer as pz
 
 m = np.array([.1,.5,1.,2.,3.,4.,5.,6.], dtype='float64')
@@ -33,7 +32,12 @@ tlaf = pz.fitting.ln_acf(mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega)
 tacf = pz.fitting.acf   (mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega)
 tosm = pz.fitting.osm   (mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega)
 tacw = pz.model.osm2aw  (mCmA,tosm)
-tmaf = pz.fitting.acf_MX(mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega,nC,nA)
+tmaf = pz.fitting.acfMX (mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega,nC,nA)
 
+#b0f,b1f,b2f,C0f,C1f,bCmx,mse \
+#    = pz.fitting.bC_acfMX(mCmA,zC,zA,T,alph1,alph2,omega,nC,nA,tmaf,'b0b1C0')
+    
 b0f,b1f,b2f,C0f,C1f,bCmx,mse \
-    = pz.fitting.bC_acfMX(mCmA,zC,zA,T,alph1,alph2,omega,nC,nA,tmaf,'b0b1C0')
+    = pz.fitting.bC(mCmA,zC,zA,T,alph1,alph2,omega,nC,nA,tosm,
+                    'b0b1C0','osm')
+    
