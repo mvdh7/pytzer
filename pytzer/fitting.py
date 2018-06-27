@@ -1,7 +1,7 @@
 from autograd import numpy as np
 from autograd import elementwise_grad as egrad
 from .constants import b, R
-from . import coeffs, miami
+from . import coeffs, model
 
 # Define f function
 def fG(T,I,Aosm):
@@ -19,8 +19,8 @@ def Gex_MX(mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega):
 
     Aosm = coeffs.Aosm_CRP94(T)[0]
     
-    B  = b0 + b1 * miami.g(alph1*np.sqrt(I)) + b2 * miami.g(alph2*np.sqrt(I))
-    CT = C0 + C1 * miami.h(omega*np.sqrt(I)) * 4
+    B  = b0 + b1 * model.g(alph1*np.sqrt(I)) + b2 * model.g(alph2*np.sqrt(I))
+    CT = C0 + C1 * model.h(omega*np.sqrt(I)) * 4
     
     Gex_nRT = fG(T,I,Aosm) + mC*mA * (2*B + Z*CT)
     
@@ -64,4 +64,3 @@ def osm(mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega):
     
     return 1 - osmD(ww,mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega) \
         / (R * T * (np.sum(mCmA,axis=1)))
-

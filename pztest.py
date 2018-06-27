@@ -22,28 +22,28 @@ import time
 #    cf.psi[iij]  = pz.coeffs.zero_psi
 #
 ## Import test dataset
-#T,tots,ions,idf = pz.miami.getIons('M88 Table 4.csv')
+#T,tots,ions,idf = pz.model.getIons('M88 Table 4.csv')
 #mols = np.copy(tots)
 
 cf = pz.cdicts.CRP94
 cf.bC['H-OH'] = pz.coeffs.zero_bC
     
-T,tots,ions,idf = pz.miami.getIons('CRP94 solver.csv')
+T,tots,ions,idf = pz.model.getIons('CRP94 solver.csv')
 #mols = np.copy(tots)
 #
 ## Calculate excess Gibbs energy and activity coeffs (no dissociation)
-#Gexs = pz.miami.Gex_nRT(mols,ions,T,cf)
-#acfs = np.exp(pz.miami.ln_acfs(mols,ions,T,cf))
+#Gexs = pz.model.Gex_nRT(mols,ions,T,cf)
+#acfs = np.exp(pz.model.ln_acfs(mols,ions,T,cf))
 #
 ## Test osmotic coefficients - NaCl compares well with Archer (1992)
 ## M88 Table 4 also works almost perfectly, without yet including unsymm. terms!
-#osm = pz.miami.osm(mols,ions,T,cf)
-#aw  = pz.miami.osm2aw(mols,osm)
+#osm = pz.model.osm(mols,ions,T,cf)
+#aw  = pz.model.osm2aw(mols,osm)
 #
 #osmST = osm * np.sum(mols,axis=1) / (3 * np.sum(mols[:,1:],axis=1))
 #
 ## Differentiate fG wrt I
-#dfG_dI = egrad(pz.miami.fG, argnum=1)
+#dfG_dI = egrad(pz.model.fG, argnum=1)
 #dfG = dfG_dI(np.array([298.15]),np.array([6.]),cf)
 #
 ## Get mean activity coefficient (CRP94)
@@ -62,7 +62,7 @@ T,tots,ions,idf = pz.miami.getIons('CRP94 solver.csv')
 #    ions = np.append(ions,['H','OH'])
 #    
 #    # Calculate activity coefficients
-#    ln_acfs = pz.miami.ln_acfs(mols,ions,T,cf)
+#    ln_acfs = pz.model.ln_acfs(mols,ions,T,cf)
 #    gH  = np.exp(ln_acfs[:,4])
 #    gOH = np.exp(ln_acfs[:,5])
 #    
@@ -86,7 +86,7 @@ def minifun(mH,tots,ions,T,cf):
     ions = np.array(['H','HSO4','SO4'])
     
     # Calculate activity coefficients
-    ln_acfs = pz.miami.ln_acfs(mols,ions,T,cf)
+    ln_acfs = pz.model.ln_acfs(mols,ions,T,cf)
     gH    = np.exp(ln_acfs[:,0])
     gHSO4 = np.exp(ln_acfs[:,1])
     gSO4  = np.exp(ln_acfs[:,2])

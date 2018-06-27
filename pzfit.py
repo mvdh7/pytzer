@@ -32,7 +32,7 @@ tgex = pz.fitting.Gex_MX(mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega)
 tlaf = pz.fitting.ln_acf(mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega)
 tacf = pz.fitting.acf   (mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega)
 tosm = pz.fitting.osm   (mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega)
-tacw = pz.miami.osm2aw  (mCmA,tosm)
+tacw = pz.model.osm2aw  (mCmA,tosm)
 tmaf = pz.fitting.acf_MX(mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega,nC,nA)
 
 # Do fitting!
