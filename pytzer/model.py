@@ -1,6 +1,6 @@
 import autograd.numpy as np
 from autograd import elementwise_grad as egrad
-from scipy.misc import derivative
+#from scipy.misc import derivative
 import pandas as pd
 from .constants import b, Mw, R
 
@@ -175,26 +175,41 @@ def Gex_nRT(mols,ions,T,cf):
 
     return Gex_nRT
 
+##### SOLUTE ACTIVITY COEFFICIENTS ############################################
+
 # Determine activity coefficient function
 ln_acfs = egrad(Gex_nRT)
 
-# autograd doesn't seem to work due to broadcasting issues for osm derivative
-#  hence scipy derivation below for now (which does work great)
-#fx_osmD = egrad(lambda ww,Tw: ww * R*Tw * Gex_nRT(mols/ww,ions,Tw))
-#
-# NOTE: ^^ this problem is now solved in pz.fitting! [2018-06-26]
-#          & the solution there should work here too
+##### OSMOTIC COEFFICIENTS ####################################################
 
-# Derive osmotic coefficient function
-def osm(mols,ions,T,cf):
-    osmD = np.full_like(T,np.nan)
-    for i in range(len(T)):
-        osmD[i] = derivative(lambda ww: 
-            ww * R*T[i] * Gex_nRT(np.array([mols[i,:]/ww]),ions,T[i],cf),
-            np.array([1.]), dx=1e-8)[0]
-    osm = 1 - osmD / (R * T * (np.sum(mols,axis=1)))
+# Osmotic coefficient derivative function - single electrolyte
+def osmfunc(ww,mols,ions,T,cf):
     
-    return osm
+    mols_ww = np.array([mols[:,E]/ww \
+                        for E in range(np.shape(mols)[1])]).transpose()
+    
+    return ww * R * T * Gex_nRT(mols_ww,ions,T,cf)
+
+# Osmotic coefficient derivative - single electrolyte
+osmD = egrad(osmfunc)
+
+# Osmotic coefficient - single electrolyte
+def osm(mols,ions,T,cf):
+    
+    ww = np.full_like(T,1, dtype='float64')
+    
+    return 1 - osmD(ww,mols,ions,T,cf) / (R * T * (np.sum(mols,axis=1)))
+
+## Osmotic coefficient function - scipy derivative version
+#def osm(mols,ions,T,cf):
+#    osmD = np.full_like(T,np.nan)
+#    for i in range(len(T)):
+#        osmD[i] = derivative(lambda ww: 
+#            ww * R*T[i] * Gex_nRT(np.array([mols[i,:]/ww]),ions,T[i],cf),
+#            np.array([1.]), dx=1e-8)[0]
+#    osm = 1 - osmD / (R * T * (np.sum(mols,axis=1)))
+#    
+#    return osm
 
 # Convert osmotic coefficient to water activity
 def osm2aw(mols,osm):

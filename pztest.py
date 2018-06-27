@@ -7,39 +7,39 @@ import pytzer as pz
 #from pytzer.constants import R, Mw
 import time
 
-## Set dict of coefficient functions
-#cf = pz.cdicts.GM89
-#
-#for ca in ['Ca-OH','H-Cl','H-OH','H-SO4','Na-OH']:
-#    cf.bC[ca]    = pz.coeffs.zero_bC
-#
-#for ii in ['H-Na','Ca-H','Cl-OH','OH-SO4']:
-#    cf.theta[ii] = pz.coeffs.zero_theta
-#
-#for iij in ['Ca-Na-OH','H-Na-Cl','H-Na-SO4','H-Na-OH','Ca-H-Cl','Ca-H-SO4',
-#            'Ca-H-OH','H-Cl-SO4','Na-Cl-OH','Ca-Cl-OH','H-Cl-OH','Na-OH-SO4',
-#            'Ca-OH-SO4','H-OH-SO4']:
-#    cf.psi[iij]  = pz.coeffs.zero_psi
-#
-## Import test dataset
-#T,tots,ions,idf = pz.model.getIons('M88 Table 4.csv')
+# Set dict of coefficient functions
+cf = pz.cdicts.GM89
+
+for ca in ['Ca-OH','H-Cl','H-OH','H-SO4','Na-OH']:
+    cf.bC[ca]    = pz.coeffs.zero_bC
+
+for ii in ['H-Na','Ca-H','Cl-OH','OH-SO4']:
+    cf.theta[ii] = pz.coeffs.zero_theta
+
+for iij in ['Ca-Na-OH','H-Na-Cl','H-Na-SO4','H-Na-OH','Ca-H-Cl','Ca-H-SO4',
+            'Ca-H-OH','H-Cl-SO4','Na-Cl-OH','Ca-Cl-OH','H-Cl-OH','Na-OH-SO4',
+            'Ca-OH-SO4','H-OH-SO4']:
+    cf.psi[iij]  = pz.coeffs.zero_psi
+
+# Import test dataset
+T,tots,ions,idf = pz.model.getIons('M88 Table 4.csv')
+mols = np.copy(tots)
+
+#cf = pz.cdicts.CRP94
+#cf.bC['H-OH'] = pz.coeffs.zero_bC
+#    
+#T,tots,ions,idf = pz.model.getIons('CRP94 solver.csv')
 #mols = np.copy(tots)
 
-cf = pz.cdicts.CRP94
-cf.bC['H-OH'] = pz.coeffs.zero_bC
-    
-T,tots,ions,idf = pz.model.getIons('CRP94 solver.csv')
-#mols = np.copy(tots)
-#
-## Calculate excess Gibbs energy and activity coeffs (no dissociation)
-#Gexs = pz.model.Gex_nRT(mols,ions,T,cf)
-#acfs = np.exp(pz.model.ln_acfs(mols,ions,T,cf))
-#
-## Test osmotic coefficients - NaCl compares well with Archer (1992)
-## M88 Table 4 also works almost perfectly, without yet including unsymm. terms!
-#osm = pz.model.osm(mols,ions,T,cf)
-#aw  = pz.model.osm2aw(mols,osm)
-#
+# Calculate excess Gibbs energy and activity coeffs (no dissociation)
+Gexs = pz.model.Gex_nRT(mols,ions,T,cf)
+acfs = np.exp(pz.model.ln_acfs(mols,ions,T,cf))
+
+# Test osmotic coefficients - NaCl compares well with Archer (1992)
+# M88 Table 4 also works almost perfectly, without yet including unsymm. terms!
+osm = pz.model.osm(mols,ions,T,cf)
+aw  = pz.model.osm2aw(mols,osm)
+
 #osmST = osm * np.sum(mols,axis=1) / (3 * np.sum(mols[:,1:],axis=1))
 #
 ## Differentiate fG wrt I
@@ -102,20 +102,20 @@ def minifun(mH,tots,ions,T,cf):
 
 #go = time.time()
 
-EQ = np.full_like(T,np.nan)
-for i in range(len(EQ)):
-    
-    iT = np.array([T[i]])
-    itots = np.array([tots[i,:]])
-    
-#    EQ[i] = minimize(lambda pH:minifun(pH,itots,ions,iT,cf),1., \
-#                     method='Nelder-Mead')['x'][0]
-    
-    EQ[i] = optimize.least_squares(lambda mH: minifun(mH,itots,ions,iT,cf),
-                                   1.5*itots[0],
-                                   bounds=(itots[0],2*itots[0]),
-                                   method='trf',
-                                   xtol=1e-12)['x']
+#EQ = np.full_like(T,np.nan)
+#for i in range(len(EQ)):
+#    
+#    iT = np.array([T[i]])
+#    itots = np.array([tots[i,:]])
+#    
+##    EQ[i] = minimize(lambda pH:minifun(pH,itots,ions,iT,cf),1., \
+##                     method='Nelder-Mead')['x'][0]
+#    
+#    EQ[i] = optimize.least_squares(lambda mH: minifun(mH,itots,ions,iT,cf),
+#                                   1.5*itots[0],
+#                                   bounds=(itots[0],2*itots[0]),
+#                                   method='trf',
+#                                   xtol=1e-12)['x']
 
 #print(time.time()-go)
 
