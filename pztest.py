@@ -1,11 +1,11 @@
 import autograd.numpy as np
-from autograd import elementwise_grad as egrad
+#from autograd import elementwise_grad as egrad
 #from scipy.misc import derivative
-from scipy import optimize
-from scipy.optimize import minimize
+#from scipy import optimize
+#from scipy.optimize import minimize
 import pytzer as pz
 #from pytzer.constants import R, Mw
-import time
+#import time
 
 # Set dict of coefficient functions
 cf = pz.cdicts.GM89
@@ -22,13 +22,13 @@ for iij in ['Ca-Na-OH','H-Na-Cl','H-Na-SO4','H-Na-OH','Ca-H-Cl','Ca-H-SO4',
     cf.psi[iij]  = pz.coeffs.zero_psi
 
 # Import test dataset
-T,tots,ions,idf = pz.model.getIons('M88 Table 4.csv')
+T,tots,ions,idf = pz.io.getIons('M88 Table 4.csv')
 mols = np.copy(tots)
 
 #cf = pz.cdicts.CRP94
 #cf.bC['H-OH'] = pz.coeffs.zero_bC
 #    
-#T,tots,ions,idf = pz.model.getIons('CRP94 solver.csv')
+#T,tots,ions,idf = pz.io.getIons('CRP94 solver.csv')
 #mols = np.copy(tots)
 
 # Calculate excess Gibbs energy and activity coeffs (no dissociation)
