@@ -28,13 +28,13 @@ def fG(T,I,cf): # CRP94 Eq. (AI1)
     
     return -4 * cf.dh['Aosm'](T)[0] * I * np.log(1 + b*np.sqrt(I)) / b
 
-dfG_dT = egrad(fG)
+dfG_T_dT = egrad(lambda T,I,cf: fG(T,I,cf)/T)
 
 def fL(T,I,cf):
     
     nu = np.float_(2)
     
-    return nu * cf.AH(T)[0] * np.log(1 + b*np.sqrt(I)) / (2*b)
+    return nu * cf.dh['AH'](T)[0] * np.log(1 + b*np.sqrt(I)) / (2*b)
 
 
 ##### PITZER MODEL SUBFUNCTIONS ###############################################
