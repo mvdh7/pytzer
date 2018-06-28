@@ -7,14 +7,13 @@ def f(x):
     return x**2 + 3*x + 5
 
 def f_vjp(ans,x):
-    x_shape = x.shape
-    return lambda g: np.full(x_shape,g) * (2*x + 3)
+    return lambda g: g * (2*x + 3)
 
 defvjp(f,f_vjp)
 
 df = egrad(f)
 
-x = np.float_(2)
+x = np.float_([[3,2],[4,5]])
 
 fx = f(x)
 dfx = df(x)

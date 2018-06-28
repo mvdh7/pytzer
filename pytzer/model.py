@@ -1,5 +1,6 @@
 import autograd.numpy as np
 from autograd import elementwise_grad as egrad
+from autograd.extend import primitive, defvjp
 #from scipy.misc import derivative
 from .constants import b, Mw, R
 
@@ -24,16 +25,28 @@ def getCharges(ions):
 
 ##### DEBYE-HUECKEL SLOPE #####################################################
 
-def fG(T,I,cf): # CRP94 Eq. (AI1)
+def fG(T,I,cf): # dev version
     
-    return -4 * cf.dh['Aosm'](T)[0] * I * np.log(1 + b*np.sqrt(I)) / b
+    # Override autograd differentiation of Aosm wrt. T by using AH, if AH is
+    #  present in cf.dh
+    if 'AH' in cf.dh.keys():
+        @primitive
+        def Aosm(T):
+            return cf.dh['Aosm'](T)[0]
+        def Aosm_vjp(ans,T):
+            return lambda g: g * cf.dh['AH'](T)[0] / (4 * R * T**2)   
+        defvjp(Aosm,Aosm_vjp)
+    
+    # Just use autograd if AH is not provided
+    else:
+        Aosm = lambda T: cf.dh['Aosm'](T)[0]
+    
+    return -4 * Aosm(T) * I * np.log(1 + b*np.sqrt(I)) / b
 
-dfG_T_dT = egrad(lambda T,I,cf: fG(T,I,cf)/T)
+dfG_T_dT = egrad(lambda T,I,cf: fG(T,I,cf) * R)
 
-def fL(T,I,cf):
-    
-    nu = np.float_(2)
-    
+def fL(T,I,cf,nu): # for testing purposes only
+
     return nu * cf.dh['AH'](T)[0] * np.log(1 + b*np.sqrt(I)) / (2*b)
 
 
