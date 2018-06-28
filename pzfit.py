@@ -1,5 +1,6 @@
 from autograd import numpy as np
 import pytzer as pz
+import pickle
 
 m = np.array([.1,.5,1.,2.,3.,4.,5.,6.], dtype='float64')
 T = np.full_like(m,298.15, dtype='float64')
@@ -37,7 +38,12 @@ tmaf = pz.fitting.acfMX (mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega,nC,nA)
 #b0f,b1f,b2f,C0f,C1f,bCmx,mse \
 #    = pz.fitting.bC_acfMX(mCmA,zC,zA,T,alph1,alph2,omega,nC,nA,tmaf,'b0b1C0')
     
+uosm = tosm + np.random.normal(scale=0.01)
+
 b0f,b1f,b2f,C0f,C1f,bCmx,mse \
-    = pz.fitting.bC(mCmA,zC,zA,T,alph1,alph2,omega,nC,nA,tosm,
+    = pz.fitting.bC(mCmA,zC,zA,T,alph1,alph2,omega,nC,nA,uosm,
                     'b0b1C0','osm')
+    
+with open('testbCmx.pkl','wb') as f:
+    pickle.dump(bCmx,f)
     
