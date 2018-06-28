@@ -81,7 +81,8 @@ BCD_vr_fail0 = np.sqrt(BCdmol_var**2 + BCd_vr**2) # nope
 
 # Get Jacobian
 J_BC = jac(lambda i: fx_BC(i[0],i[1],i[2],a1,
-                           fx_I(i[3],zC,i[3],zA),fx_Z(i[3],zC,i[3],zA)))
+                           fx_I(i[3],zC,i[3],zA),
+                           fx_Z(i[3],zC,i[3],zA)))
 testJ = J_BC(np.array([b0,b1,C0,1.2]))
 
 # Add covariance between molality and bCs (i.e. zero) to the matrix
