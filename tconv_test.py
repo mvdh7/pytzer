@@ -23,4 +23,8 @@ dAosm = egrad(lambda T: pz.coeffs.Aosm_M88(T)[0])
 dAosm_dT_autograd = dAosm(T)
 dAosm_dT_from_AH  = cf.dh['AH'](T)[0] / (4 * pz.constants.R * T**2)
 
-# is I still differentiated correctly?
+# is I still differentiated correctly? - yes!
+dfG_dI = egrad(pz.model.fG,argnum=1)
+
+print(dfG_dI(T,I,cf))
+print(pz.model.fG(T,I+1e-6,cf) - pz.model.fG(T,I,cf))
