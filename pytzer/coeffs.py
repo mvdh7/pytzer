@@ -911,3 +911,87 @@ def KHSO4_CRP94(T):
 # === CLEGG ET AL 1994 ========================================================    
 ###############################################################################
     
+###############################################################################
+# === UNPUBLISHED =============================================================
+
+# --- DH lim. slope: app. molar heat capacity @ const. P ----------------------
+
+def AC_MPH(T):
+    
+    # Centre and scale temperature
+    mu_T    = np.float_(318.15   )
+    sigma_T = np.float_( 33.91165)
+    Tn = (T - mu_T) / sigma_T
+
+    # Define polynomial coefficients
+    aCi = np.float_( \
+          [ 38.46378      ,
+            10.58136      ,
+             0.4002028    ,
+             1.428966     ,
+           - 1.022148     ,
+             0.6230761    ,
+           - 0.0006836758 ,
+             0.00003146005,
+           - 0.1415504    ,
+             0.05742008   ])
+
+    # Evaluate AH
+    AC =  aCi[0]         \
+        + aCi[1] * Tn    \
+        + aCi[2] * Tn**2 \
+        + aCi[3] * Tn**3 \
+        + aCi[4] * Tn**4 \
+        + aCi[5] * Tn**5 \
+        + aCi[6] * Tn**6 \
+        + aCi[7] * Tn**7 \
+        + aCi[8] * Tn**8 \
+        + aCi[9] * Tn**9
+
+    # Check temperature is in range
+    valid = np.logical_and(T >= 263.15,T <= 373.15)
+
+    return AC, valid
+
+# --- DH lim. slope: app. molar enthalpy --------------------------------------
+
+def AH_MPH(T):
+
+    # Centre and scale temperature
+    mu_T    = np.float_(318.15   )
+    sigma_T = np.float_( 33.91165)
+    Tn = (T - mu_T) / sigma_T
+
+    # Define polynomial coefficients
+    aHi = np.float_( \
+          [ 2.693456    ,
+            1.30448     ,
+            0.1786872   ,
+            0.004058462 ,
+            0.01450615  ,
+           -0.006302474 ,
+            0.0008198109,
+           -0.0003247116,
+            0.001233857 ,
+           -0.0004777861]) * 1e3
+
+    # Evaluate AH
+    AH =  aHi[0]         \
+        + aHi[1] * Tn    \
+        + aHi[2] * Tn**2 \
+        + aHi[3] * Tn**3 \
+        + aHi[4] * Tn**4 \
+        + aHi[5] * Tn**5 \
+        + aHi[6] * Tn**6 \
+        + aHi[7] * Tn**7 \
+        + aHi[8] * Tn**8 \
+        + aHi[9] * Tn**9
+
+    # Check temperature is in range
+    valid = np.logical_and(T >= 263.15,T <= 373.15)
+
+    return AH, valid
+
+# === UNPUBLISHED =============================================================    
+###############################################################################
+                    
