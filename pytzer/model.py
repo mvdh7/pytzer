@@ -25,7 +25,7 @@ def getCharges(ions):
 
 ##### DEBYE-HUECKEL SLOPE #####################################################
 
-def fG(T,I,cf): # dev version
+def fG(T,I,cf): # from CRP94 Eq. (AI1)
     
     # Override autograd differentiation of Aosm wrt. T by using AH, if AH is
     #  present in cf.dh
@@ -33,7 +33,7 @@ def fG(T,I,cf): # dev version
         @primitive
         def Aosm(T):
             return cf.dh['Aosm'](T)[0]
-        def Aosm_vjp(ans,T):
+        def Aosm_vjp(ans,T): # P91 Ch. 3 Eq. (84)
             return lambda g: g * cf.dh['AH'](T)[0] / (4 * R * T**2)   
         defvjp(Aosm,Aosm_vjp)
     
@@ -43,7 +43,8 @@ def fG(T,I,cf): # dev version
     
     return -4 * Aosm(T) * I * np.log(1 + b*np.sqrt(I)) / b
 
-dfG_T_dT = egrad(lambda T,I,cf: fG(T,I,cf) * R)
+###
+dfG_T_dT = egrad(lambda T,I,cf: fG(T,I,cf) * R) # for testing purposes only
 
 def fL(T,I,cf,nu): # for testing purposes only
 
@@ -219,3 +220,12 @@ def osm2aw(mols,osm):
 # Convert water activity to osmotic coefficient
 def aw2osm(mols,aw):
     return -np.log(aw) / (Mw * np.sum(mols,axis=1))
+
+##### ENTHALPY ################################################################
+    
+# Gex/T differential wrt. T
+dGex_T_dT = egrad(Gex_nRT, argnum=2)
+
+# Apparent relative molal enthalpy
+def Lapp(mols,ions,T,cf,tot):
+    return -T**2 * dGex_T_dT(mols,ions,T,cf) * R / tot

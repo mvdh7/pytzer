@@ -4,7 +4,7 @@ import pytzer as pz
 
 T = np.float_(298.15)
 
-m = np.float_(0.5)
+m = np.float_(6)
 
 I = m
 nu = np.float_(2)
@@ -28,3 +28,13 @@ dfG_dI = egrad(pz.model.fG,argnum=1)
 
 print(dfG_dI(T,I,cf))
 print(pz.model.fG(T,I+1e-6,cf) - pz.model.fG(T,I,cf))
+
+mols = np.array([[6.,6.]])
+ions = np.array(['Na','Cl'])
+tot  = mols[:,0]
+
+dGex_T_dT = egrad(pz.model.Gex_nRT, argnum=2)
+
+Lphi = -T**2 * dGex_T_dT(mols,ions,T,cf) * pz.constants.R / m
+
+Lphi_pz = pz.model.Lapp(mols,ions,T,cf,tot)
