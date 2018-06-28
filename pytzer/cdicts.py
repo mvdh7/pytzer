@@ -3,7 +3,7 @@ from . import coeffs, jfuncs
 
 class cdict:
     def __init__(self):
-        self.Aosm  = []
+        self.dh    = {}
         self.bC    = {}
         self.theta = {}
         self.jfunc = []
@@ -34,8 +34,8 @@ class cdict:
 # === MOLLER 1988 =============================================================
 M88 = cdict()
 
-# Debye-Hueckel slope as cf.Aosm
-M88.Aosm = coeffs.Aosm_M88
+# Debye-Hueckel slope as cf.dh['Aosm']
+M88.dh['Aosm'] = coeffs.Aosm_M88
 
 # betas and Cs as cf.bC['cation-anion']
 M88.bC['Ca-Cl' ] = coeffs.Ca_Cl_M88
@@ -67,8 +67,8 @@ M88.K['H2O'] = coeffs.Kw_M88
 # === GREENBERG & MOLLER 1989 =================================================
 GM89 = cdict()
 
-# Debye-Hueckel slope as cf.Aosm
-GM89.Aosm = coeffs.Aosm_M88
+# Debye-Hueckel slope
+GM89.dh['Aosm'] = coeffs.Aosm_M88
 
 # betas and Cs as cf.bC['cation-anion']
 GM89.bC['Ca-Cl' ] = coeffs.Ca_Cl_GM89
@@ -109,7 +109,7 @@ GM89.K['H2O'] = coeffs.Kw_M88
 # === CLEGG ET AL 1994======= =================================================
 CRP94 = cdict()
 
-CRP94.Aosm = coeffs.Aosm_CRP94
+CRP94.dh['Aosm'] = coeffs.Aosm_CRP94
 
 CRP94.bC['H-HSO4'] = coeffs.H_HSO4_CRP94
 CRP94.bC['H-SO4' ] = coeffs.H_SO4_CRP94

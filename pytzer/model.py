@@ -26,7 +26,15 @@ def getCharges(ions):
 
 def fG(T,I,cf): # CRP94 Eq. (AI1)
     
-    return -4 * cf.Aosm(T)[0] * I * np.log(1 + b*np.sqrt(I)) / b
+    return -4 * cf.dh['Aosm'](T)[0] * I * np.log(1 + b*np.sqrt(I)) / b
+
+dfG_dT = egrad(fG)
+
+def fL(T,I,cf):
+    
+    nu = np.float_(2)
+    
+    return nu * cf.AH(T)[0] * np.log(1 + b*np.sqrt(I)) / (2*b)
 
 
 ##### PITZER MODEL SUBFUNCTIONS ###############################################
@@ -55,7 +63,7 @@ def CT(T,I,cf,iset): # CRP94 Eq. (AI10)
     
 def xij(T,I,z0,z1,cf):
     
-    return 6 * z0*z1 * cf.Aosm(T)[0] * np.sqrt(I)
+    return 6 * z0*z1 * cf.dh['Aosm'](T)[0] * np.sqrt(I)
 
 def etheta(T,I,z0,z1,cf):
     
