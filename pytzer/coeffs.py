@@ -1,4 +1,5 @@
 import autograd.numpy as np
+from autograd.extend import primitive, defvjp
 from .constants import Patm_bar
 
 ###############################################################################
@@ -1120,6 +1121,7 @@ def AC_MPH(T):
 
 # --- DH lim. slope: app. molar enthalpy --------------------------------------
 
+@primitive
 def AH_MPH(T):
 
     # Centre and scale temperature
@@ -1152,10 +1154,18 @@ def AH_MPH(T):
         + aHi[8] * Tn**8 \
         + aHi[9] * Tn**9
 
-    # Check temperature is in range
-    valid = np.logical_and(T >= 263.15,T <= 373.15)
+# !!!!! NOTE !!!!!!!
+# Needed to remove valid output to get primitive grad to work
 
-    return AH, valid
+#    # Check temperature is in range
+#    valid = np.logical_and(T >= 263.15,T <= 373.15)
+
+    return AH#, valid
+
+# Set AC as AH's temperature derivative
+def AH_vjp(ans,T):    
+    return lambda g: g * AC_MPH(T)[0]
+defvjp(AH_MPH,AH_vjp)
 
 # === UNPUBLISHED =============================================================    
 ###############################################################################

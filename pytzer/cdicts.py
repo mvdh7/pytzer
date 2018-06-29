@@ -4,14 +4,14 @@ from . import coeffs, jfuncs
 class cdict:
     def __init__(self):
         self.dh    = {}
-        self.bC    = {}
+        self.bC    = {'H-OH': coeffs.zero_bC}
         self.theta = {}
         self.jfunc = []
         self.psi   = {}
         self.K     = {}
         
-    def getKeq(self,T, mH=None,gH=None, mOH=None,gOH=None, 
-               mHSO4=None,gHSO4=None, mSO4=None,gSO4=None):
+    def getKeq(self,T, mH=None, gH=None, mOH=None, gOH=None, 
+               mHSO4=None, gHSO4=None, mSO4=None, gSO4=None):
         
         # Find which equilibria are stored in dict
         Klist = self.K.keys()

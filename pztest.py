@@ -10,7 +10,7 @@ import pytzer as pz
 # Set dict of coefficient functions
 cf = pz.cdicts.GM89
 
-for ca in ['Ca-OH','H-Cl','H-OH','H-SO4','Na-OH']:
+for ca in ['Ca-OH','H-Cl','H-SO4','Na-OH']:
     cf.bC[ca]    = pz.coeffs.zero_bC
 
 for ii in ['H-Na','Ca-H','Cl-OH','OH-SO4']:
