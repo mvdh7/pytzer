@@ -38,18 +38,28 @@ def minifun(mH,tots,ions,T,cf):
 
 go = time.time()
 
-mH = np.vstack(np.full_like(T,np.nan))
-for i in range(len(mH)):
+def get_mH(tots,ions,T,cf):
     
-    iT = np.array([T[i]])
-    itots = np.array([tots[i,:]])
+    fgo = time.time()
     
-    mH[i] = optimize.least_squares(lambda mH: minifun(mH,itots,ions,iT,cf),
-                                   1.5*itots[0],
-                                   bounds=(itots[0],2*itots[0]),
-                                   method='trf',
-                                   xtol=1e-12)['x']
+    mH = np.vstack(np.full_like(T,np.nan))
+    for i in range(len(mH)):
+        
+        iT = np.array([T[i]])
+        itots = np.array([tots[i,:]])
+        
+        mH[i] = optimize.least_squares(lambda mH: minifun(mH,itots,ions,iT,cf),
+                                       1.5*itots[0],
+                                       bounds=(itots[0],2*itots[0]),
+                                       method='trf',
+                                       xtol=1e-12)['x']
     
+        print(time.time()-fgo)
+    
+    return mH    
+
+mH = get_mH(tots,ions,T,cf)
+
 print(time.time()-go)
 
 # Get solution - all looking good in test case
@@ -78,19 +88,7 @@ data = pd.DataFrame({'T':T, 'TSO4':tots.ravel(), 'alpha':alpha.ravel(),
 s_TSO4 = np.vstack(np.arange(0.01,np.sqrt(6),0.01, dtype='float64')**2)
 s_T = np.full_like(s_TSO4.ravel(),298.15, dtype='float64')
 
-s_mH = np.full_like(s_TSO4,np.nan)
-for i in range(len(s_mH)):
-    
-    print(i)
-    
-    iT = np.array([s_T[i]])
-    itots = np.array([s_TSO4[i,:]])
-    
-    s_mH[i] = optimize.least_squares(lambda mH: minifun(mH,itots,ions,iT,cf),
-                                     1.5*itots[0],
-                                     bounds=(itots[0],2*itots[0]),
-                                     method='trf',
-                                     xtol=1e-12)['x']
+s_mH = get_mH(s_TSO4,ions,s_T,cf)
 
-with open('sulfit.pkl','wb') as f:
-    pickle.dump((s_T,s_TSO4,s_mH),f)
+#with open('sulfit.pkl','wb') as f:
+#    pickle.dump((s_T,s_TSO4,s_mH),f)
