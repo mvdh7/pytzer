@@ -177,6 +177,10 @@ def Gex_nRT(mols,ions,T,cf):
 # Determine activity coefficient function
 ln_acfs = egrad(Gex_nRT)
 
+def acfs(mols,ions,T,cf):
+    
+    return np.exp(ln_acfs(mols,ions,T,cf))
+
 # Get mean activity coefficient for an M_(nM)X_(nX) electrolyte
 def ln_acf2ln_acf_MX(ln_acfM,ln_acfX,nM,nX):
     
