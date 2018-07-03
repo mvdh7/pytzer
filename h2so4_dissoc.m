@@ -11,7 +11,7 @@ figure(1); clf; hold on
 
 us = unique(s);
 
-marks = {'o' 'sq' 'v' '^' 'd' 'x' '+'};
+marks = {'o' 'sq' 'v' '^' 'd' 'x' '+' '.'};
 
 for S = 1:numel(us)
 
