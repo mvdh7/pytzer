@@ -1,3 +1,5 @@
+% Training data obtained on 2018-07-03 from
+%  http://www.aim.env.uea.ac.uk/aim/density/density_electrolyte.php
 mol = [0; 1; 2; 3; 4; 5; 6; 7;
        0; 1; 2; 3; 4; 5; 6; 7;
        0; 1; 2; 3; 4; 5; 6; 7];
@@ -11,22 +13,27 @@ tmp = [273.15; 273.15; 273.15; 273.15; 273.15; 273.15; 273.15; 273.15;
        298.15; 298.15; 298.15; 298.15; 298.15; 298.15; 298.15; 298.15;
        323.15; 323.15; 323.15; 323.15; 323.15; 323.15; 323.15; 323.15];
 
+% Do fitting
 ftype = 'purequadratic';
+fitFULL = regstats(dens,[mol tmp],ftype,{'beta' 'yhat' 'adjrsquare'});
 
-fit25 = regstats(dens,[mol tmp],ftype,{'beta' 'yhat' 'adjrsquare'});
+% Round fit results
+fitRND = fitFULL;
+fitRND.beta = round(fitFULL.beta,5,'significant');
 
+% Plot results
 fx = (0:0.01:7)';
 
 figure(1); clf
 
 subplot(2,1,1); hold on
     scatter(mol,dens,50,tmp,'filled');
-    plot(fx,x2fx([fx 273.15*ones(size(fx))],ftype)*fit25.beta,'k');
-    plot(fx,x2fx([fx 298.15*ones(size(fx))],ftype)*fit25.beta,'k');
-    plot(fx,x2fx([fx 323.15*ones(size(fx))],ftype)*fit25.beta,'k');
+    plot(fx,x2fx([fx 273.15*ones(size(fx))],ftype)*fitRND.beta,'k');
+    plot(fx,x2fx([fx 298.15*ones(size(fx))],ftype)*fitRND.beta,'k');
+    plot(fx,x2fx([fx 323.15*ones(size(fx))],ftype)*fitRND.beta,'k');
     grid on
 
 subplot(2,1,2); hold on
-    scatter(mol,x2fx([mol tmp],ftype)*fit25.beta - dens,50,tmp,'filled');
+    scatter(mol,x2fx([mol tmp],ftype)*fitRND.beta - dens,50,tmp,'filled');
     plot(get(gca,'xlim'),[0 0],'k');
     grid on
