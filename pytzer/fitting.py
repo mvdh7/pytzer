@@ -271,11 +271,19 @@ def bC_MNX(TSO4,alpha,T,b0_MX,b1_MX,C0_MX,C1_MX,b0_MY,b1_MY,C0_MY,C1_MY):
     return mH.ravel() * TSO4.ravel() / (KHSO4 * gHSO4 / (gH * gSO4) \
                     + mH.ravel()) - mHSO4.ravel()
     
-# This is fitting given alpha speciation values
-
+# This is fitting given alpha speciation values, for H2SO4
 def bC_MNX_from_alpha(TSO4,alpha,T):
 
-    return optimize.least_squares(lambda bCs: bC_MNX(TSO4,alpha,T,
+    ofit = optimize.least_squares(lambda bCs: bC_MNX(TSO4,alpha,T,
         bCs[0],bCs[1],bCs[2],bCs[3],bCs[4],bCs[5],bCs[6],bCs[7]),
         np.zeros(8), jac=ojac, loss=oloss, method=omethod)
+    
+    bC = ofit['x']
+        
+    # Get covariance matrix
+    mse  = ofit.cost * 2 / np.size(T)
+    hess = ofit.jac.transpose() @ ofit.jac
+    bCmx = np.linalg.inv(hess) * mse
+    
+    return bC, bCmx
     

@@ -1,6 +1,7 @@
 from autograd import numpy as np
 import pytzer as pz
 import pickle
+from scipy import io as scio
 
 # Import coefficients dict
 cf = pz.cdicts.CRP94
@@ -32,8 +33,8 @@ b0_MY,b1_MY,_,C0_MY,C1_MY,_,_,_,_ = pz.coeffs.H_SO4_CRP94 (T[0])
 test0 = pz.fitting.bC_MNX(TSO4,alpha,T,b0_MX,b1_MX,C0_MX,C1_MX,
                                        b0_MY,b1_MY,C0_MY,C1_MY)
 
-tfit = pz.fitting.bC_MNX_from_alpha(TSO4,alpha,T)
-bCs = tfit['x']
+bCs,bCmx = pz.fitting.bC_MNX_from_alpha(TSO4,alpha,T)
+scio.savemat('H2SO4_bCs',{'bCs':bCs, 'bCmx':bCmx})
 
 # Now, fitting given mean activity coeff?
 

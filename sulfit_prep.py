@@ -85,11 +85,12 @@ data = pd.DataFrame({'T':T, 'TSO4':tots.ravel(), 'alpha':alpha.ravel(),
                      'mSO4':mSO4.ravel(), 'gTSO4':acfPM,
                      'gH':acfs[:,0], 'gHSO4':acfs[:,1], 'gSO4':acfs[:,2]})
 
-## Simulate and pickle a dataset for fit testing
-#s_TSO4 = np.vstack(np.arange(0.01,np.sqrt(6),0.01, dtype='float64')**2)
-#s_T = np.full_like(s_TSO4.ravel(),298.15, dtype='float64')
-#
+# Simulate and pickle a dataset for fit testing
+s_TSO4 = np.vstack(np.arange(0.01,np.sqrt(6),0.01, dtype='float64')**2)
+s_T = np.full_like(s_TSO4.ravel(),298.15, dtype='float64')
+
 #s_mH = get_mH(s_TSO4,ions,s_T,cf)
-#
-#with open('sulfit.pkl','wb') as f:
+s_mH = pz.data.dis_sim_H2SO4(s_TSO4,s_T,cf)
+
+#with open('pickles/sulfit.pkl','wb') as f:
 #    pickle.dump((s_T,s_TSO4,s_mH),f)
