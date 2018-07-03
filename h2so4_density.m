@@ -23,7 +23,7 @@ temp = [273.15; 273.15; 273.15; 273.15; 273.15; 273.15; 273.15; 273.15;
 ftype = 'purequadratic';
 fitFULL = regstats(dens,[mol temp],ftype,{'beta' 'yhat' 'adjrsquare'});
 
-% Round fit results
+% Round fit results for use in Excel etc.
 fitRND = fitFULL;
 fitRND.beta = round(fitFULL.beta,5,'significant');
 
