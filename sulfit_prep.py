@@ -40,7 +40,7 @@ go = time.time()
 
 def get_mH(tots,ions,T,cf):
     
-    fgo = time.time()
+#    fgo = time.time()
     
     mH = np.vstack(np.full_like(T,np.nan))
     for i in range(len(mH)):
@@ -54,7 +54,7 @@ def get_mH(tots,ions,T,cf):
                                        method='trf',
                                        xtol=1e-12)['x']
     
-        print(time.time()-fgo)
+#        print(time.time()-fgo)
     
     return mH    
 
@@ -90,5 +90,5 @@ s_T = np.full_like(s_TSO4.ravel(),298.15, dtype='float64')
 
 s_mH = get_mH(s_TSO4,ions,s_T,cf)
 
-#with open('sulfit.pkl','wb') as f:
-#    pickle.dump((s_T,s_TSO4,s_mH),f)
+with open('sulfit.pkl','wb') as f:
+    pickle.dump((s_T,s_TSO4,s_mH),f)
