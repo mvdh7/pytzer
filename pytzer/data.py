@@ -1,20 +1,72 @@
 from  autograd import numpy as np
 import pandas as pd
+from scipy import optimize
 from .constants import Mw
-from . import tconv
+from . import model, tconv
 
-###############################################################################
+##### DEGREE OF DISSOCIATION #################################################
 
+# Dataset loading
 def dis(datapath):
     
     disbase = pd.read_excel(datapath+'dis.xlsx', sheet_name='DIS data',
                             header=0, skiprows=2, usecols=5)
-    
     disbase = prep(disbase)
+    
+    # Calculate bisulfate speciation
+    L = disbase.ele == 'H2SO4'
+    for var in ['TSO4','mSO4','mHSO4','mH']:
+        disbase[var] = np.nan
+    disbase.loc[L,'TSO4' ] = disbase.m[L]
+    disbase.loc[L,'mSO4' ] = disbase.TSO4[L] * disbase.a_bisulfate[L]
+    disbase.loc[L,'mHSO4'] = disbase.TSO4[L] - disbase.mSO4[L]
+    disbase.loc[L,'mH'   ] = disbase.TSO4[L] + disbase.mSO4[L]
     
     return disbase
 
-###############################################################################
+# Simulate expected values - CRP94 system H2SO4
+def dis_sim_H2SO4(TSO4,T,cf):
+    
+    # Define minimisation function
+    def minifun(mH,TSO4,T,cf):
+        
+        # Calculate [H+] and ionic speciation
+        mH = np.vstack(mH)
+        mHSO4 = 2*TSO4 - mH
+        mSO4  = mH - TSO4
+        
+        # Create molality & ions arrays
+        mols = np.concatenate((mH,mHSO4,mSO4), axis=1)
+        ions = np.array(['H','HSO4','SO4'])
+        
+        # Calculate activity coefficients
+        ln_acfs = model.ln_acfs(mols,ions,T,cf)
+        gH    = np.exp(ln_acfs[:,0])
+        gHSO4 = np.exp(ln_acfs[:,1])
+        gSO4  = np.exp(ln_acfs[:,2])
+        
+        # Evaluate residuals
+        return cf.getKeq(T, mH=mH,gH=gH, mHSO4=mHSO4,gHSO4=gHSO4, 
+                       mSO4=mSO4,gSO4=gSO4)
+        
+    # Solve for mH
+    mH = np.vstack(np.full_like(T,np.nan))
+    
+    for i in range(len(mH)):
+        
+        iT = np.array([T[i]])
+        itots = np.array([TSO4[i,:]])
+        
+        mH[i] = optimize.least_squares(lambda mH: minifun(mH,itots,iT,cf),
+                                       1.5*itots[0],
+                                       bounds=(itots[0],2*itots[0]),
+                                       method='trf',
+                                       xtol=1e-12)['x']
+
+    return mH
+
+
+##### FREEZING POINT DEPRESSION ###############################################
 
 def fpd(datapath):
 
@@ -32,7 +84,7 @@ def fpd(datapath):
 
     return fpdbase
 
-###############################################################################
+##### VAPOUR PRESSURE LOWERING ################################################
 
 def vpl(datapath):
 
@@ -45,7 +97,8 @@ def vpl(datapath):
 
     return vplbase
 
-###############################################################################
+##### GENERIC FUNCTIONS #######################################################
+    
 def prep(xxxbase):
 
     # Add extra variables
