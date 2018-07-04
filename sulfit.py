@@ -7,7 +7,7 @@ from scipy import io as scio
 cf = pz.cdicts.CRP94
 
 # Load simulated dataset
-with open('sulfit.pkl','rb') as f:
+with open('pickles/sulfit.pkl','rb') as f:
     T,TSO4,mH = pickle.load(f)
     
 # Calculate parameters to be fitted

@@ -26,9 +26,10 @@ def H_SO4_fit(T):
            2 - 1842.843 * (1/T - 1/298.15), \
            -9, np.float_(2.5), np.zeros_like(T, dtype='bool')
 
-# Insert new bC functions into a new cdict
+# Get original cdict
 cf     = pz.cdicts.CRP94
 
+# Insert new bC functions into a new cdict
 cf_fit = pz.cdicts.cdict()
 cf_fit.dh['Aosm'] = pz.coeffs.Aosm_CRP94
 cf_fit.bC['H-HSO4'] = H_HSO4_fit 
@@ -67,15 +68,19 @@ ions = np.array(['H','HSO4','SO4'])
 acfs     = pz.model.acfs(mols    ,ions,T,cf    )
 acfs_fit = pz.model.acfs(mols_fit,ions,T,cf_fit)
 
+# Load real data
+with open('pickles/disbase.pkl','rb') as f:
+    disbase = pickle.load(f)
+
 # Plot results
 fig,ax = plt.subplots(2,2)
 
 ax[0,0].plot(sqTSO4,alpha)
 ax[0,0].plot(sqTSO4,alpha_fit, c='r')
 ax[0,0].set_ylabel(chr(945))
+disbase.plot.scatter('sqm','a_bisulfate', ax=ax[0,0])
 
-ax[1,0].plot(sqTSO4,acfs    )
+ax[1,0].plot(sqTSO4,acfs)
 ax[1,0].set_ylim((0,5))
 
 ax[1,0].plot(sqTSO4,acfs_fit, ls='--')
-

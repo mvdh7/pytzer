@@ -24,7 +24,7 @@ def dis(datapath):
     
     return disbase
 
-# Simulate expected values - CRP94 system H2SO4
+# Simulate expected values - H2SO4
 def dis_sim_H2SO4(TSO4,T,cf):
     
     # Define minimisation function
@@ -64,6 +64,48 @@ def dis_sim_H2SO4(TSO4,T,cf):
                                        xtol=1e-12)['x']
 
     return mH
+
+# Simulate expected values - H2SO4, solving for alpha
+def dis_sim_H2SO4_alpha(TSO4,T,cf):
+    
+    # Define minimisation function solving for alpha
+    def minifun(alpha,TSO4,T,cf):
+        
+        # Calculate [H+] and ionic speciation
+        mSO4  = TSO4 * alpha
+        mH    = TSO4 + mSO4
+        mHSO4 = TSO4 - mSO4
+        
+        # Create molality & ions arrays
+        mols = np.concatenate((mH,mHSO4,mSO4), axis=1)
+        ions = np.array(['H','HSO4','SO4'])
+        
+        # Calculate activity coefficients
+        ln_acfs = model.ln_acfs(mols,ions,T,cf)
+        gH    = np.exp(ln_acfs[:,0])
+        gHSO4 = np.exp(ln_acfs[:,1])
+        gSO4  = np.exp(ln_acfs[:,2])
+        
+        # Evaluate residuals
+        return cf.getKeq(T, mH=mH,gH=gH, mHSO4=mHSO4,gHSO4=gHSO4, 
+                       mSO4=mSO4,gSO4=gSO4)
+        
+    # Solve for alpha
+    alpha = np.vstack(np.full_like(T,np.nan))
+    
+    for i in range(len(alpha)):
+        
+        iT = np.array([T[i]])
+        itots = np.array([TSO4[i,:]])
+        
+        alpha[i] = optimize.least_squares(
+                lambda alpha: minifun(alpha,itots,iT,cf),
+                0.5,
+                bounds=(0,1),
+                method='trf',
+                xtol=1e-12)['x']
+
+    return alpha
 
 
 ##### FREEZING POINT DEPRESSION ###############################################
