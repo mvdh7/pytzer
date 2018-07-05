@@ -11,17 +11,42 @@ fpdbase = pz.data.fpd('E:/Dropbox/_UEA_MPH/pitzer-spritzer/python/datasets/')
 
 # Select data for analysis
 fpdbase = fpdbase[fpdbase.smooth == 0]
-fpdbase = fpdbase[xnp.logical_or.reduce((fpdbase.ele == 'NaCl',
-                                         fpdbase.ele == 'KCl'))]#,
-#                                         fpdbase.ele == 'CaCl2'))]
+#fpdbase = fpdbase[xnp.logical_or.reduce((fpdbase.ele == 'NaCl',
+#                                         fpdbase.ele == 'KCl'))]#,
+##                                         fpdbase.ele == 'CaCl2'))]
+fpdbase = fpdbase[fpdbase.ele == 'NaCl']
+
+ions = np.array(['Na','Cl'])
+
+# Prepare model cdict
+cf = pz.cdicts.cdict()
+cf.bC['Na-Cl'] = pz.coeffs.Na_Cl_A92ii
+cf.dh['Aosm']  = pz.coeffs.Aosm_M88
+cf.dh['AH']    = pz.coeffs.AH_MPH
 
 # Convert temperatures to 298.15 K
 fpdbase['t25']   = np.full_like(fpdbase.t,298.15, dtype='float64')
-#fpdbase['osm25'] = pweb.frz.osm2osm(fpdbase.ele,
-#                                    fpdbase.m,
-#                                    fpdbase.t,
-#                                    fpdbase.t25,
-#                                    fpdbase.osm)
+
+def pd2np(series):
+    return np.vstack(series.values)
+
+fpdbase['Lapp'] = pz.model.Lapp(pd2np(fpdbase.m),
+                                pd2np(fpdbase.nC),
+                                pd2np(fpdbase.nA),
+                                ions,
+                                pd2np(fpdbase.t),
+                                cf)
+
+#fpdbase['osm25'] = pz.tconv.osm2osm(fpdbase.m.values,
+#                                    fpdbase.nC.values,
+#                                    fpdbase.nA.values,
+#                                    ions,
+#                                    fpdbase.t.values,
+#                                    fpdbase.t25.values,
+#                                    fpdbase.t25.values,
+#                                    cf,
+#                                    fpdbase.osm.values)
+
 
 ## Calculate model osmotic coefficient at 298.15 K
 #fpdbase['osm25_calc'] = pweb.pz.osm(fpdbase.ele,fpdbase.m,fpdbase.t25)

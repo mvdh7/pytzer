@@ -71,6 +71,11 @@ def L2(tot,nC,nA,ions,T,cf): # HO58 Ch. 8 Eq. (8-4-7)
 # Osmotic coefficient
 def osm2osm(tot,nC,nA,ions,T0,T1,TR,cf,osm_T0):
     
+    tot = np.vstack(tot)
+    T0  = np.vstack(T0)
+    T1  = np.vstack(T1)
+    TR  = np.vstack(TR)
+    
     lnAW_T0 = -osm_T0 * tot * (nC + nA) * Mw
     
     lnAW_T1 = lnAW_T0 - y(T0,T1) * L1(tot,nC,nA,ions,TR,cf) \
@@ -81,6 +86,11 @@ def osm2osm(tot,nC,nA,ions,T0,T1,TR,cf,osm_T0):
     
 # Solute mean activity coefficient
 def acf2acf(tot,nC,nA,ions,T0,T1,TR,cf,acf_T0):
+    
+    tot = np.vstack(tot)
+    T0  = np.vstack(T0)
+    T1  = np.vstack(T1)
+    TR  = np.vstack(TR)
     
     ln_acf_T0 = np.log(acf_T0)
     

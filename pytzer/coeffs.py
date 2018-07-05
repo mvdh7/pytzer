@@ -924,6 +924,7 @@ def H_Na_Cl_CMR93(T):
 def Aosm_CRP94(T): # CRP94 Appendix II
 
     # Transform temperature
+    T = T.ravel()
     X = (2 * T - 373.15 - 234.15) / (373.15 - 234.15)
 
     # Set coefficients - CRP94 Table 11

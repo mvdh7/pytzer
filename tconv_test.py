@@ -2,7 +2,7 @@ from autograd import numpy as np
 from autograd import elementwise_grad as egrad
 import pytzer as pz
 
-T = np.float_(298.15)
+T = np.float_([298.15])
 
 m = np.float_(6)
 
