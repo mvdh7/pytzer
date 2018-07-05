@@ -691,7 +691,7 @@ def A92ii_eq36(T,p,a):
 def Na_Cl_A92ii(T):
 
     # Pressure can be varied
-    p = np.full_like(T,0.101325, dtype='float64') # MPa
+    p = np.float_(0.101325) # MPa
 
     # Coefficients from A92ii Table 2
     

@@ -1,5 +1,9 @@
 from autograd import numpy as np
+from autograd import elementwise_grad as egrad
 from . import model
+from .constants import Mw, R
+
+##### FREEZING POINT DEPRESSION ###############################################
 
 # Convert freezing point depression to water activity
 def fpd2aw(fpd):
@@ -21,3 +25,67 @@ def fpd2aw(fpd):
 # Convert freezing point depression to osmotic coefficient
 def fpd2osm(mols,fpd):
     return model.aw2osm(mols,fpd2aw(fpd))
+
+##### TEMPERATURE CONVERSION ##################################################
+
+# --- Temperature subfunctions ------------------------------------------------
+    
+def y(T0,T1):
+    return (T1 - T0) / (R * T0 * T1)
+
+def z(T0,T1):
+    return T1 * y(T0,T1) - np.log(T1 / T0) / R
+
+def O(T0,T1):
+    return T1 * (z(T0,T1) + (T0 - T1)*y(T0,T1) / 2)
+
+# --- Heat capacity derivatives -----------------------------------------------
+
+# wrt. molality
+dCpapp_dm = egrad(model.Cpapp)
+
+def J1(tot,nC,nA,ions,T,cf): # HO58 Ch. 8 Eq. (8-4-9)
+    return -Mw * tot**2 * dCpapp_dm(tot,nC,nA,ions,T,cf)
+
+def J2(tot,nC,nA,ions,T,cf): # HO58 Ch. 8 Eq. (8-4-7)
+    return tot * dCpapp_dm(tot,nC,nA,ions,T,cf)
+
+# wrt. temperature
+G1 = egrad(J1, argnum=4)
+G2 = egrad(J2, argnum=4)
+
+# --- Enthalpy derivatives ----------------------------------------------------
+    
+# wrt. molality
+dLapp_dm = egrad(model.Lapp)
+
+def L1(tot,nC,nA,ions,T,cf): # HO58 Ch. 8 Eq. (8-4-9)
+    return -Mw * tot**2 * dLapp_dm(tot,nC,nA,ions,T,cf)
+
+def L2(tot,nC,nA,ions,T,cf): # HO58 Ch. 8 Eq. (8-4-7)
+    return    model.Lapp(tot,nC,nA,ions,T,cf) \
+        + tot * dLapp_dm(tot,nC,nA,ions,T,cf)
+
+# --- Execute temperature conversion ------------------------------------------
+
+# Osmotic coefficient
+def osm2osm(tot,nC,nA,ions,T0,T1,TR,cf,osm_T0):
+    
+    lnAW_T0 = -osm_T0 * tot * (nC + nA) * Mw
+    
+    lnAW_T1 = lnAW_T0 - y(T0,T1) * L1(tot,nC,nA,ions,TR,cf) \
+                      + z(T0,T1) * J1(tot,nC,nA,ions,TR,cf) \
+                      - O(T0,T1) * G1(tot,nC,nA,ions,TR,cf)
+
+    return -lnAW_T1 / (tot * (nC + nA) * Mw)
+    
+# Solute mean activity coefficient
+def acf2acf(tot,nC,nA,ions,T0,T1,TR,cf,acf_T0):
+    
+    ln_acf_T0 = np.log(acf_T0)
+    
+    ln_acf_T1 = ln_acf_T0 + (- y(T0,T1) * L2(tot,nC,nA,ions,TR,cf) \
+                          + z(T0,T1) * J2(tot,nC,nA,ions,TR,cf) \
+                          - O(T0,T1) * G2(tot,nC,nA,ions,TR,cf)) / (nC + nA)
+    
+    return np.exp(ln_acf_T1)

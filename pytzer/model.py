@@ -23,7 +23,7 @@ def getCharges(ions):
     return np.array([z[ion] for ion in ions])
 
 
-##### DEBYE-HUECKEL SLOPE #####################################################
+##### DEBYE-HUECKEL SLOPES ####################################################
 
 def fG(T,I,cf): # from CRP94 Eq. (AI1)
     
@@ -34,7 +34,7 @@ def fG(T,I,cf): # from CRP94 Eq. (AI1)
         def Aosm(T):
             return cf.dh['Aosm'](T)[0]
         def Aosm_vjp(ans,T): # P91 Ch. 3 Eq. (84)
-            return lambda g: g * cf.dh['AH'](T)[0] / (4 * R * T**2)   
+            return lambda g: g * cf.dh['AH'](T) / (4 * R * T**2)   
         defvjp(Aosm,Aosm_vjp)
     
     # Just use autograd if AH is not provided
@@ -48,7 +48,7 @@ dfG_T_dT = egrad(lambda T,I,cf: fG(T,I,cf) * R) # for testing purposes only
 
 def fL(T,I,cf,nu): # for testing purposes only
 
-    return nu * cf.dh['AH'](T)[0] * np.log(1 + b*np.sqrt(I)) / (2*b)
+    return nu * cf.dh['AH'](T) * np.log(1 + b*np.sqrt(I)) / (2*b)
 
 
 ##### PITZER MODEL SUBFUNCTIONS ###############################################
@@ -172,7 +172,7 @@ def Gex_nRT(mols,ions,T,cf):
 
     return Gex_nRT
 
-##### SOLUTE ACTIVITY COEFFICIENTS ############################################
+##### SOLUTE ACTIVITY COEFFICIENT #############################################
 
 # Determine activity coefficient function
 ln_acfs = egrad(Gex_nRT)
@@ -186,7 +186,7 @@ def ln_acf2ln_acf_MX(ln_acfM,ln_acfX,nM,nX):
     
     return (nM * ln_acfM + nX * ln_acfX) / (nM + nX)
 
-##### OSMOTIC COEFFICIENTS ####################################################
+##### OSMOTIC COEFFICIENT and SOLVENT ACTIVITY ################################
 
 # Osmotic coefficient derivative function - single electrolyte
 def osmfunc(ww,mols,ions,T,cf):
@@ -225,11 +225,19 @@ def osm2aw(mols,osm):
 def aw2osm(mols,aw):
     return -np.log(aw) / (Mw * np.sum(mols,axis=1))
 
-##### ENTHALPY ################################################################
+##### ENTHALPY and HEAT CAPACITY ##############################################
     
 # Gex/T differential wrt. T
 dGex_T_dT = egrad(Gex_nRT, argnum=2)
 
-# Apparent relative molal enthalpy
-def Lapp(mols,ions,T,cf,tot):
+# Apparent relative molal enthalpy (single electrolyte)
+def Lapp(tot,nC,nA,ions,T,cf):
+    
+    mC = tot * nC
+    mA = tot * nA
+    mols = np.concatenate((mC,mA), axis=1)
+    
     return -T**2 * dGex_T_dT(mols,ions,T,cf) * R / tot
+
+# Apparent relative molal heat capacity (i.e. dL/dT; does not include Cp0 term)
+Cpapp = egrad(Lapp, argnum=4)
