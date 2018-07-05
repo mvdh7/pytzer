@@ -233,11 +233,11 @@ dGex_T_dT = egrad(Gex_nRT, argnum=2)
 # Apparent relative molal enthalpy (single electrolyte)
 def Lapp(tot,nC,nA,ions,T,cf):
     
-    mC = tot * nC
-    mA = tot * nA
-    mols = np.concatenate((mC,mA), axis=1)
+    mC = tot.ravel() * nC
+    mA = tot.ravel() * nA
+    mols = np.vstack((mC,mA))
     
-    return -T**2 * dGex_T_dT(mols,ions,T,cf) * R / tot
+    return -T**2 * dGex_T_dT(mols.transpose(),ions,T,cf) * R / tot
 
 # Apparent relative molal heat capacity (i.e. dL/dT; does not include Cp0 term)
 Cpapp = egrad(Lapp, argnum=4)
