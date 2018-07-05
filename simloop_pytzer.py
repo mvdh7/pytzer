@@ -57,17 +57,17 @@ def Eopt(rseed=None):
 
     b0,b1,b2,C0,C1,bCmx,mse \
         = pz.fitting.bC(EmCmA,zC,zA,T,alph1,alph2,omega,nC,nA,Uosm,Efc,'osm')
-        
+
     return b0,b1,b2,C0,C1
-                 
+
 if __name__ == '__main__':
-    
+
     # Set initial random seed (for reproducibility)
     np.random.seed(295)
 
     # Generate seeds for random number generator
     rseeds = np.random.randint(0,2**32,size=Ureps,dtype='int64')
-    
+
     Xtstart = time.time() # begin timer - multiprocessing
 
     with Pool() as pool:
@@ -84,8 +84,8 @@ if __name__ == '__main__':
     # Calculate and print processing time
     print('multiprocessing %s: %d reps in %.2f seconds' \
         % (ele,Ureps,(Xtend - Xtstart)))
-    
+
     # Pickle results
-    with open('E:\Dropbox\_UEA_MPH\pitzer-spritzer\python\pickles' \
+    with open('E:\Dropbox\_UEA_MPH\pytzer\pickles' \
               + '\simloop_pytzer_bC_' + ele + '.pkl','wb') as f:
         pickle.dump((bCpool_cv,ele,Ureps),f)
