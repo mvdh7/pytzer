@@ -33,7 +33,7 @@ def fx_BC(b0,b1,C0,a1,I,Z):
 BCx = fx_BC(b0,b1,C0,a1,I,Z)
 BCm = (bC_mults @ bC_coeffs).ravel()
 
-with open('testbCmx.pkl','rb') as f:
+with open('pickles/testbCmx.pkl','rb') as f:
     bCmx = pickle.load(f) * 1e-5 # *1e-5 is to scale uncertainty from this to
                                  #  match uncertainty from molality magnitude
 
