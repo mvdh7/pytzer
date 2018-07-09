@@ -1,5 +1,6 @@
 from autograd import numpy as np
 from autograd import jacobian as jac
+from autograd import hessian as hess
 from autograd import elementwise_grad as egrad
 import pandas as pd
 import pytzer as pz
@@ -192,11 +193,16 @@ qtest = egrad(qacfPM, argnum=1)
 JqacfPM = fx_JqacfPM(T,q,tot,mols)
 JlnqacfPM = fx_JlnqacfPM(T,q,tot,mols)
 
+# estimate Hessian... but don't know what to do with it after! See:
+# https://en.wikipedia.org/wiki/
+#     Taylor_expansions_for_the_moments_of_functions_of_random_variables
+HlnqacfPM = JlnqacfPM.transpose() @ JlnqacfPM
+
 crp94['acfPM_unc'] = np.diagonal(JqacfPM @ qmx @ JqacfPM.transpose())
 crp94['lnacfPM_unc'] = np.diagonal(JlnqacfPM @ qmx @ JlnqacfPM.transpose())
 
 # Monte-Carlo propagation
-Ureps = int(1e4)
+Ureps = int(1e2)
 UacfPM   = np.full((np.size(T),Ureps),np.nan)
 UlnacfPM = np.full((np.size(T),Ureps),np.nan)
 
@@ -209,9 +215,9 @@ for i in range(Ureps):
 UacfPM_var   = np.var(UacfPM  , axis=1)
 UlnacfPM_var = np.var(UlnacfPM, axis=1)
 
-# Pickle results for plotting
-with open('pickles/h2so4_prop.pkl','wb') as f:
-    pickle.dump((crp94,UlnacfPM,UlnacfPM_var,UacfPM,UacfPM_var),f)
+## Pickle results for plotting
+#with open('pickles/h2so4_prop.pkl','wb') as f:
+#    pickle.dump((crp94,UlnacfPM,UlnacfPM_var,UacfPM,UacfPM_var),f)
 
 ## Visualise results
 #fig,ax = plt.subplots(1,1)
