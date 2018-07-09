@@ -27,6 +27,8 @@ def getCharges(ions):
 
 def fG(T,I,cf): # from CRP94 Eq. (AI1)
     
+    # T and I inputs must have the same shape for correct broadcasting
+    
     # Override autograd differentiation of Aosm wrt. T by using AH, if AH is
     #  present in cf.dh
     if 'AH' in cf.dh.keys():
@@ -97,8 +99,8 @@ def Gex_nRT(mols,ions,T,cf):
     
     # Ionic strength etc.
     zs = getCharges(ions)
-    I = 0.5 * (np.sum(mols * zs**2, 1))
-    Z = np.sum(mols * np.abs(zs), 1)
+    I = np.vstack(0.5 * (np.sum(mols * zs**2, 1)))
+    Z = np.vstack(np.sum(mols * np.abs(zs), 1))
     
     # Separate cations and anions
     CL = zs > 0
@@ -119,7 +121,7 @@ def Gex_nRT(mols,ions,T,cf):
 
             iset= '-'.join([cation,anion])
 
-            Gex_nRT = Gex_nRT + cats[:,C] * anis[:,A] \
+            Gex_nRT = Gex_nRT + np.vstack(cats[:,C] * anis[:,A]) \
                 * (2*B(T,I,cf,iset) + Z*CT(T,I,cf,iset))
                 
     # Add c-c' interactions
@@ -191,7 +193,7 @@ def ln_acf2ln_acf_MX(ln_acfM,ln_acfX,nM,nX):
 # Osmotic coefficient derivative function - single electrolyte
 def osmfunc(ww,mols,ions,T,cf):
     
-    mols_ww = np.array([mols[:,E]/ww \
+    mols_ww = np.array([mols[:,E]/ww.ravel() \
                         for E in range(np.shape(mols)[1])]).transpose()
     
     return ww * R * T * Gex_nRT(mols_ww,ions,T,cf)
@@ -204,7 +206,8 @@ def osm(mols,ions,T,cf):
     
     ww = np.full_like(T,1, dtype='float64')
     
-    return 1 - osmD(ww,mols,ions,T,cf) / (R * T * (np.sum(mols,axis=1)))
+    return 1 - osmD(ww,mols,ions,T,cf) \
+        / (R * T * np.vstack(np.sum(mols,axis=1)))
 
 ## Osmotic coefficient function - scipy derivative version
 #def osm(mols,ions,T,cf):
@@ -235,9 +238,9 @@ def Lapp(tot,nC,nA,ions,T,cf):
     
     mC = tot.ravel() * nC
     mA = tot.ravel() * nA
-    mols = np.vstack((mC,mA))
+    mols = np.vstack((mC,mA)).transpose()
     
-    return -T**2 * dGex_T_dT(mols.transpose(),ions,T,cf) * R / tot
+    return -T**2 * dGex_T_dT(mols,ions,T,cf) * R / tot
 
 # Apparent relative molal heat capacity (i.e. dL/dT; does not include Cp0 term)
 Cpapp = egrad(Lapp, argnum=4)

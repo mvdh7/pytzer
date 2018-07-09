@@ -22,7 +22,7 @@ for iij in ['Ca-Na-OH','H-Na-Cl','H-Na-SO4','H-Na-OH','Ca-H-Cl','Ca-H-SO4',
     cf.psi[iij]  = pz.coeffs.zero_psi
 
 # Import test dataset
-T,tots,ions,idf = pz.io.getIons('M88 Table 4.csv')
+T,tots,ions,idf = pz.io.getIons('datasets/M88 Table 4.csv')
 mols = np.copy(tots)
 
 #cf = pz.cdicts.CRP94
