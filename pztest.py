@@ -25,6 +25,8 @@ for iij in ['Ca-Na-OH','H-Na-Cl','H-Na-SO4','H-Na-OH','Ca-H-Cl','Ca-H-SO4',
 T,tots,ions,idf = pz.io.getIons('datasets/M88 Table 4.csv')
 mols = np.copy(tots)
 
+T = np.vstack(T)
+
 #cf = pz.cdicts.CRP94
 #cf.bC['H-OH'] = pz.coeffs.zero_bC
 #    

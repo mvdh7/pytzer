@@ -43,7 +43,7 @@ def fG(T,I,cf): # from CRP94 Eq. (AI1)
     else:
         Aosm = lambda T: cf.dh['Aosm'](T)[0]
     
-    return -4 * Aosm(T) * I * np.log(1 + b*np.sqrt(I)) / b
+    return -4 * np.vstack(Aosm(T)) * I * np.log(1 + b*np.sqrt(I)) / b
 
 ###
 dfG_T_dT = egrad(lambda T,I,cf: fG(T,I,cf) * R) # for testing purposes only
@@ -79,7 +79,7 @@ def CT(T,I,cf,iset): # CRP94 Eq. (AI10)
     
 def xij(T,I,z0,z1,cf):
     
-    return 6 * z0*z1 * cf.dh['Aosm'](T)[0] * np.sqrt(I)
+    return 6 * z0*z1 * np.vstack(cf.dh['Aosm'](T)[0]) * np.sqrt(I)
 
 def etheta(T,I,z0,z1,cf):
     
@@ -132,12 +132,12 @@ def Gex_nRT(mols,ions,T,cf):
             iset.sort()
             iset= '-'.join(iset)
             
-            Gex_nRT = Gex_nRT + cats[:,C0] * cats[:,C1] \
+            Gex_nRT = Gex_nRT + np.vstack(cats[:,C0] * cats[:,C1]) \
                 * 2 * cf.theta[iset](T)[0]
                 
             if zCs[C0] != zCs[C1]:
                 
-                Gex_nRT = Gex_nRT + cats[:,C0] * cats[:,C1] \
+                Gex_nRT = Gex_nRT + np.vstack(cats[:,C0] * cats[:,C1]) \
                     * 2 * etheta(T,I,zCs[C0],zCs[C1],cf)
                 
     # Add c-c'-a interactions
@@ -145,8 +145,8 @@ def Gex_nRT(mols,ions,T,cf):
                 
                 itri = '-'.join([iset,anions[A]])
                                 
-                Gex_nRT = Gex_nRT + cats[:,C0] * cats[:,C1] \
-                    * anis[:,A] * cf.psi[itri](T)[0]
+                Gex_nRT = Gex_nRT + np.vstack(cats[:,C0] * cats[:,C1] \
+                    * anis[:,A]) * cf.psi[itri](T)[0]
 
     # Add a-a' interactions
     for A0 in range(len(anions)):
@@ -156,12 +156,12 @@ def Gex_nRT(mols,ions,T,cf):
             iset.sort()
             iset= '-'.join(iset)
             
-            Gex_nRT = Gex_nRT + anis[:,A0] * anis[:,A1] \
+            Gex_nRT = Gex_nRT + np.vstack(anis[:,A0] * anis[:,A1]) \
                 * 2 * cf.theta[iset](T)[0]
                 
             if zAs[A0] != zAs[A1]:
                 
-                Gex_nRT = Gex_nRT + anis[:,A0] * anis[:,A1] \
+                Gex_nRT = Gex_nRT + np.vstack(anis[:,A0] * anis[:,A1]) \
                     * 2 * etheta(T,I,zAs[A0],zAs[A1],cf)
 
     # Add c-a-a' interactions
@@ -169,8 +169,8 @@ def Gex_nRT(mols,ions,T,cf):
                 
                 itri = '-'.join([cations[C],iset])
                                 
-                Gex_nRT = Gex_nRT + anis[:,A0] * anis[:,A1] \
-                    * cats[:,C] * cf.psi[itri](T)[0]
+                Gex_nRT = Gex_nRT + np.vstack(anis[:,A0] * anis[:,A1] \
+                    * cats[:,C]) * cf.psi[itri](T)[0]
 
     return Gex_nRT
 
@@ -222,11 +222,11 @@ def osm(mols,ions,T,cf):
 
 # Convert osmotic coefficient to water activity
 def osm2aw(mols,osm):
-    return np.exp(-osm * Mw * np.sum(mols,axis=1))
+    return np.exp(-osm * Mw * np.vstack(np.sum(mols,axis=1)))
 
 # Convert water activity to osmotic coefficient
 def aw2osm(mols,aw):
-    return -np.log(aw) / (Mw * np.sum(mols,axis=1))
+    return -np.log(aw) / (Mw * np.vstack(np.sum(mols,axis=1)))
 
 ##### ENTHALPY and HEAT CAPACITY ##############################################
     
