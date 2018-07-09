@@ -92,7 +92,7 @@ JBC_H_HSO4 = fx_JBC_H_HSO4(T,I,Z,q).ravel()
 UBC_H_HSO4_dir = JBC_H_HSO4 @ qmx @ JBC_H_HSO4.transpose()
 
 # Monte-Carlo for BC uncertainty - CORRECT!
-Ureps = int(1e3)
+Ureps = int(1e2)
 BC_H_HSO4_mc = np.full(Ureps,np.nan)
 
 for i in range(Ureps):
@@ -102,3 +102,21 @@ for i in range(Ureps):
     
 UBC_H_HSO4_mc = np.var(BC_H_HSO4_mc)
     
+# Covariance between b0 and b1 (for example)
+Ureps = int(1e3)
+b0 = np.full(Ureps,np.nan)
+b1 = np.full(Ureps,np.nan)
+
+for i in range(Ureps):
+    iq = np.random.multivariate_normal(q,qmx)
+    b0[i],b1[i],_,_,_,_,_ ,_ ,_ ,_ ,_ ,_ = CRP94new(T,iq)
+
+CV_b0_b1_mc = np.cov(b0,b1)
+
+fx_Jb0 = jac(lambda q: CRP94new(T,q)[0])
+Jb0 = fx_Jb0(q).ravel()
+
+fx_Jb1 = jac(lambda q: CRP94new(T,q)[1])
+Jb1 = fx_Jb1(q).ravel()
+
+#CV_b0_b1_dir = Jb0 @ qmx @ Jb1.transpose()
