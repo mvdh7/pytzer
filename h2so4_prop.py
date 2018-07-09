@@ -21,11 +21,11 @@ import pytzer as pz
 #mHSO4 = tot - mSO4
 #mH    = tot + mSO4
 #mols = np.concatenate((mH,mHSO4,mSO4), axis=1)
-#
-#zH    = np.float_(+1)
-#zHSO4 = np.float_(-1)
-#zSO4  = np.float_(-2)
-#
+
+zH    = np.float_(+1)
+zHSO4 = np.float_(-1)
+zSO4  = np.float_(-2)
+
 ## Calculate ionic strength etc.
 #I = (mH*zH**2 + mHSO4*zHSO4**2 + mSO4*zSO4**2) / 2
 #Z = mH*np.abs(zH) + mHSO4*np.abs(zHSO4) + mSO4*np.abs(zHSO4)
@@ -135,10 +135,30 @@ T = np.vstack(crp94.temp.values)
 ions = np.array(['H','HSO4','SO4'])
 cf = pz.cdicts.CRP94
 
+Gex = pz.model.Gex_nRT(mols,ions,T,cf)
 acfs = pz.model.acfs(mols,ions,T,cf)
 
 crp94['acfPM_pz'] = np.cbrt((acfs[:,0]*mols[:,0])**2 * acfs[:,2]*mols[:,2] \
     / (4 * crp94.tot.values**3))
+
+# _x = target values following CRP94, as a sanity check
+b0_H_HSO4_x,b1_H_HSO4_x,_,C0_H_HSO4_x,C1_H_HSO4_x,alph1_H_HSO4_x,_, \
+    omega_H_HSO4_x,_ = pz.coeffs.H_HSO4_CRP94(T)
+b0_H_SO4_x,b1_H_SO4_x,_,C0_H_SO4_x,C1_H_SO4_x,alph1_H_SO4_x,_, \
+    omega_H_SO4_x,_ = pz.coeffs.H_SO4_CRP94(T)
+
+# Re-evaluate using pz.fitting functions
+Gex2 = pz.fitting.Gex_MXY(mols,zH,zHSO4,zSO4,T,
+    b0_H_HSO4_x,b1_H_HSO4_x,0,C0_H_HSO4_x,C1_H_HSO4_x,
+    alph1_H_HSO4_x,-9,omega_H_HSO4_x,
+    b0_H_SO4_x,b1_H_SO4_x,0,C0_H_SO4_x,C1_H_SO4_x,
+    alph1_H_SO4_x,-9,omega_H_SO4_x)
+
+acfs2 = np.exp(pz.fitting.ln_acfs_MXY(mols,zH,zHSO4,zSO4,T,
+    b0_H_HSO4_x,b1_H_HSO4_x,0,C0_H_HSO4_x,C1_H_HSO4_x,
+    alph1_H_HSO4_x,-9,omega_H_HSO4_x,
+    b0_H_SO4_x,b1_H_SO4_x,0,C0_H_SO4_x,C1_H_SO4_x,
+    alph1_H_SO4_x,-9,omega_H_SO4_x))
 
 ## Monte-Carlo for BC uncertainty - CORRECT!
 #Ureps = int(1e3)

@@ -73,7 +73,7 @@ def osm(mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega,nC=None,nA=None):
 # Unsymmetric mixing functions
 def xij(T,I,z0,z1):
     
-    return 6 * z0*z1 * coeffs.Aosm_CRP94(T)[0] * np.sqrt(I)
+    return 6 * z0*z1 * np.vstack(coeffs.Aosm_CRP94(T)[0]) * np.sqrt(I)
 
 def etheta(T,I,z0,z1):
     
@@ -93,14 +93,14 @@ def Gex_MXY(mols,zM,zX,zY,T,
             b0_MX,b1_MX,b2_MX,C0_MX,C1_MX,alph1_MX,alph2_MX,omega_MX,
             b0_MY,b1_MY,b2_MY,C0_MY,C1_MY,alph1_MY,alph2_MY,omega_MY):
     
-    mM = mols[:,0]
-    mX = mols[:,1]
-    mY = mols[:,2]
+    mM = np.vstack(mols[:,0])
+    mX = np.vstack(mols[:,1])
+    mY = np.vstack(mols[:,2])
     
     I = (mM*zM**2 + mX*zX**2 + mY*zY**2) / 2
     Z = mM*np.abs(zM) + mX*np.abs(zX) + mY*np.abs(zY)
 
-    Aosm = coeffs.Aosm_CRP94(T)[0]
+    Aosm = np.vstack(coeffs.Aosm_CRP94(T)[0])
     
     B_MX  = b0_MX + b1_MX * model.g(alph1_MX*np.sqrt(I)) \
                   + b2_MX * model.g(alph2_MX*np.sqrt(I))
