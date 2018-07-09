@@ -1,16 +1,19 @@
 from autograd import numpy as np
-#from autograd import jacobian as jac
+from autograd import jacobian as jac
+from autograd import elementwise_grad as egrad
 import pandas as pd
 import pytzer as pz
+#from matplotlib import pyplot as plt
+import pickle
 
-## Import coefficients
-#q = np.loadtxt('datasets/allmt_coeffs.res', skiprows=9)
-#q = q[:27,1]
-#
-## Import their covariance matrix
-#qmx = np.loadtxt('datasets/allmt_stats.res', skiprows=17)
-#qmx = qmx[:27,:27]
-#
+# Import coefficients
+q = np.loadtxt('datasets/allmt_coeffs.res', skiprows=9)
+q = q[:27,1]
+
+# Import their covariance matrix
+qmx = np.loadtxt('datasets/allmt_stats.res', skiprows=17)
+qmx = qmx[:27,:27]
+
 ## Define test conditions
 #tot = np.vstack([1.6])
 #T   = np.vstack([323.15])
@@ -29,35 +32,35 @@ zSO4  = np.float_(-2)
 ## Calculate ionic strength etc.
 #I = (mH*zH**2 + mHSO4*zHSO4**2 + mSO4*zSO4**2) / 2
 #Z = mH*np.abs(zH) + mHSO4*np.abs(zHSO4) + mSO4*np.abs(zHSO4)
-#
-## Set up function to evaluate new fit (ie. imported coefficients)
-#def CRP94new(T,q):
-#    
-#    # H-HSO4
-#    b0_H_HSO4 = pz.coeffs.CRP94_eq24(T,q[:4])
-#    b1_H_HSO4 = pz.coeffs.CRP94_eq24(T,np.array([q[4], 1.5, q[5], q[6]]))
-#    C0_H_HSO4 = pz.coeffs.CRP94_eq24(T,q[ 7:11]) / 2
-#    C1_H_HSO4 = pz.coeffs.CRP94_eq24(T,np.array([-0.025,
-#                                                 q[23],
-#                                                 q[24],
-#                                                 0.0025])) / 2
-#    alph1_H_HSO4 = np.float_(2)
-#    omega_H_HSO4 = np.float_(2.5)
-#    
-#    # H-SO4
-#    b0_H_SO4  = pz.coeffs.CRP94_eq24(T,q[11:15])
-#    b1_H_SO4  = pz.coeffs.CRP94_eq24(T,q[15:19])
-#    C0_H_SO4  = pz.coeffs.CRP94_eq24(T,q[19:23]) / (2 * np.sqrt(2))
-#    C1_H_SO4  = pz.coeffs.CRP94_eq24(T,np.array([0,
-#                                                 -0.176776695,
-#                                                 q[25],
-#                                                 0])) / (2 * np.sqrt(2))
-#    alph1_H_SO4 = 2 + 100 * q[26] * (1/T - 1/298.15)
-#    omega_H_SO4  = np.float_(2.5)
-#    
-#    return b0_H_HSO4,b1_H_HSO4,C0_H_HSO4,C1_H_HSO4,alph1_H_HSO4,omega_H_HSO4, \
-#           b0_H_SO4 ,b1_H_SO4 ,C0_H_SO4 ,C1_H_SO4 ,alph1_H_SO4 ,omega_H_SO4
-#
+
+# Set up function to evaluate new fit (ie. imported coefficients)
+def CRP94new(T,q):
+    
+    # H-HSO4
+    b0_H_HSO4 = pz.coeffs.CRP94_eq24(T,q[:4])
+    b1_H_HSO4 = pz.coeffs.CRP94_eq24(T,np.array([q[4], 1.5, q[5], q[6]]))
+    C0_H_HSO4 = pz.coeffs.CRP94_eq24(T,q[ 7:11]) / 2
+    C1_H_HSO4 = pz.coeffs.CRP94_eq24(T,np.array([-0.025,
+                                                 q[23],
+                                                 q[24],
+                                                 0.0025])) / 2
+    alph1_H_HSO4 = np.float_(2)
+    omega_H_HSO4 = np.float_(2.5)
+    
+    # H-SO4
+    b0_H_SO4  = pz.coeffs.CRP94_eq24(T,q[11:15])
+    b1_H_SO4  = pz.coeffs.CRP94_eq24(T,q[15:19])
+    C0_H_SO4  = pz.coeffs.CRP94_eq24(T,q[19:23]) / (2 * np.sqrt(2))
+    C1_H_SO4  = pz.coeffs.CRP94_eq24(T,np.array([0,
+                                                 -0.176776695,
+                                                 q[25],
+                                                 0])) / (2 * np.sqrt(2))
+    alph1_H_SO4 = 2 + 100 * q[26] * (1/T - 1/298.15)
+    omega_H_SO4  = np.float_(2.5)
+    
+    return b0_H_HSO4,b1_H_HSO4,C0_H_HSO4,C1_H_HSO4,alph1_H_HSO4,omega_H_HSO4, \
+           b0_H_SO4 ,b1_H_SO4 ,C0_H_SO4 ,C1_H_SO4 ,alph1_H_SO4 ,omega_H_SO4
+
 ## Evaluate coefficients with new fit
 #b0_H_HSO4,b1_H_HSO4,C0_H_HSO4,C1_H_HSO4,alph1_H_HSO4,omega_H_HSO4, \
 #    b0_H_SO4 ,b1_H_SO4 ,C0_H_SO4 ,C1_H_SO4 ,alph1_H_SO4 ,omega_H_SO4 \
@@ -159,6 +162,70 @@ acfs2 = np.exp(pz.fitting.ln_acfs_MXY(mols,zH,zHSO4,zSO4,T,
     alph1_H_HSO4_x,-9,omega_H_HSO4_x,
     b0_H_SO4_x,b1_H_SO4_x,0,C0_H_SO4_x,C1_H_SO4_x,
     alph1_H_SO4_x,-9,omega_H_SO4_x))
+
+# Build acfs function with q input
+def qacfPM(T,q,tot,mols):
+    
+    b0_H_HSO4,b1_H_HSO4,C0_H_HSO4,C1_H_HSO4,alph1_H_HSO4,omega_H_HSO4, \
+        b0_H_SO4 ,b1_H_SO4 ,C0_H_SO4 ,C1_H_SO4 ,alph1_H_SO4 ,omega_H_SO4 \
+        = CRP94new(T,q)
+        
+    acfs = np.exp(pz.fitting.ln_acfs_MXY(mols,zH,zHSO4,zSO4,T,
+        b0_H_HSO4,b1_H_HSO4,0,C0_H_HSO4,C1_H_HSO4,
+        alph1_H_HSO4,-9,omega_H_HSO4,
+        b0_H_SO4,b1_H_SO4,0,C0_H_SO4,C1_H_SO4,
+        alph1_H_SO4,-9,omega_H_SO4))
+    
+    acfPM = ((acfs[:,0]*mols[:,0])**2 * acfs[:,2]*mols[:,2] \
+        / (4 * tot**3))**(1/3)
+    
+    return acfPM
+   
+crp94['acfPM_new'] = qacfPM(T,q,crp94.tot.values,mols)
+crp94['lnacfPM_new'] = np.log(crp94.acfPM_new)
+
+# Get Jacobian & propagate uncertainties from qmx into acfPM
+tot = crp94.tot.values
+fx_JqacfPM = jac(qacfPM, argnum=1)
+fx_JlnqacfPM = jac(lambda T,q,tot,mols:np.log(qacfPM(T,q,tot,mols)), argnum=1)
+qtest = egrad(qacfPM, argnum=1)
+JqacfPM = fx_JqacfPM(T,q,tot,mols)
+JlnqacfPM = fx_JlnqacfPM(T,q,tot,mols)
+
+crp94['acfPM_unc'] = np.diagonal(JqacfPM @ qmx @ JqacfPM.transpose())
+crp94['lnacfPM_unc'] = np.diagonal(JlnqacfPM @ qmx @ JlnqacfPM.transpose())
+
+# Monte-Carlo propagation
+Ureps = int(1e4)
+UacfPM   = np.full((np.size(T),Ureps),np.nan)
+UlnacfPM = np.full((np.size(T),Ureps),np.nan)
+
+for i in range(Ureps):
+    
+    iq = np.random.multivariate_normal(q,qmx)
+    UacfPM  [:,i] = qacfPM(T,iq,tot,mols)
+    UlnacfPM[:,i] = np.log(UacfPM[:,i])
+
+UacfPM_var   = np.var(UacfPM  , axis=1)
+UlnacfPM_var = np.var(UlnacfPM, axis=1)
+
+# Pickle results for plotting
+with open('pickles/h2so4_prop.pkl','wb') as f:
+    pickle.dump((crp94,UlnacfPM,UlnacfPM_var,UacfPM,UacfPM_var),f)
+
+## Visualise results
+#fig,ax = plt.subplots(1,1)
+#
+#crp94[crp94.temp == 273.15].plot('tot','lnacfPM_unc', ax=ax, c='b',
+#     label='273.15 K')
+#crp94[crp94.temp == 298.15].plot('tot','lnacfPM_unc', ax=ax, c='g',
+#     label='298.15 K')
+#crp94[crp94.temp == 323.15].plot('tot','lnacfPM_unc', ax=ax, c='orange',
+#     label='323.15 K')
+#
+#ax.scatter(crp94.tot,UlnacfPM_var, c='k', alpha=0.5)
+#
+#ax.grid(alpha=0.5)
 
 ## Monte-Carlo for BC uncertainty - CORRECT!
 #Ureps = int(1e3)
