@@ -26,7 +26,7 @@ cf.dh['Aosm']  = pz.coeffs.Aosm_M88
 cf.dh['AH']    = pz.coeffs.AH_MPH
 
 # Convert temperatures to 298.15 K
-fpdbase['t25']   = np.full_like(fpdbase.t,298.15, dtype='float64')
+fpdbase['t25'] = np.full_like(fpdbase.t,298.15, dtype='float64')
 
 def pd2np(series):
     return np.vstack(series.values)
@@ -45,6 +45,13 @@ def pd2np(series):
 #                                pd2np(fpdbase.t25),
 #                                cf) / 1000
 
+# Create initial electrolytes pivot table
+fpde = pd.pivot_table(fpdbase,
+                      values  = ['m'],
+                      index   = ['ele'],
+                      aggfunc = [np.min,np.max,len])
+
+# Convert measured FPD into osmotic coeff. at 298.15 K
 fpdbase['osm25'] = pz.tconv.osm2osm(pd2np(fpdbase.m),
                                     np.float_(1),#fpdbase.nC.values,
                                     np.float_(1),#fpdbase.nA.values,
@@ -72,28 +79,28 @@ fpdp = pd.pivot_table(fpdbase,
                       index   = ['ele','src'],
                       aggfunc = [np.mean,np.std,len])
 
-## Prepare for uncertainty propagation analysis [FPD]
-#DD = {var:{ele:{} for ele in fpdp.index.levels[0]} \
-#      for var in ['bs','fpd']}
-#DC = {var:{ele:{} for ele in fpdp.index.levels[0]} \
-#      for var in ['bs','fpd']}
-#D_bs_fpd = {ele:{src:np.zeros(2) for src in fpdp.loc[ele].index} \
-#            for ele in fpdp.index.levels[0]}
-#fpd_sys_std = {ele:{src:np.zeros(1) for src in fpdp.loc[ele].index} \
-#               for ele in fpdp.index.levels[0]}
-#fpdbase['dosm25_sys'] = np.full(np.size(fpdbase.t),np.nan)
+# Prepare for uncertainty propagation analysis [FPD]
+err_coeff = {var:{ele:{} for ele in fpdp.index.levels[0]} \
+      for var in ['bs','fpd']} # was DD
+err_cost  = {var:{ele:{} for ele in fpdp.index.levels[0]} \
+      for var in ['bs','fpd']} # was DC
+err_cfs_both = {ele:{src:np.zeros(2) for src in fpdp.loc[ele].index} \
+            for ele in fpdp.index.levels[0]} # was D_bs_fpd
+fpd_sys_std = {ele:{src:np.zeros(1) for src in fpdp.loc[ele].index} \
+               for ele in fpdp.index.levels[0]}
+fpdbase['dosm25_sys'] = np.nan
 
-## Run uncertainty propagation analysis [FPD]
-#for ele in fpdp.index.levels[0]:
-#
-#    print('Optimising FPD fit for ' + ele + '...')
-#
-#    bs = pweb.prop.solubility25[ele]
-#
-#    for src in fpdp.loc[ele].index:
-#
-#        SL = np.logical_and(fpdbase.ele == ele,fpdbase.src == src)
-#
+# Run uncertainty propagation analysis [FPD]
+for ele in fpdp.index.levels[0]:
+
+    print('Optimising FPD fit for ' + ele + '...')
+
+    bs = pz.prop.solubility25[ele]
+
+    for src in fpdp.loc[ele].index:
+
+        SL = np.logical_and(fpdbase.ele == ele,fpdbase.src == src)
+
 #        optemp = optimize.least_squares(
 #            lambda Dbs: fpdbase.dosm25[SL] - Dbs * \
 #                pweb.frz.fx_dosm_dbs(fpdbase.fpd[SL],
