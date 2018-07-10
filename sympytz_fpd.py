@@ -109,35 +109,38 @@ dosm25_dfpd = egrad(fpd2osm25, argnum=3)
 
 tot = pd2np(fpdbase.m)
 mw = np.float_(1)
-bs = np.full_like(tot,pz.prop.solubility25['NaCl'])
+bs = np.vstack(fpdbase.ele.map(pz.prop.solubility25).values)
 ms = tot * mw / (bs - tot)
 
-fpdbase['osm25_test'] = fpd2osm25   (bs,ms,mw,
-                                     pd2np(fpdbase.fpd),
-                                     np.float_(1),np.float_(1),
-                                     ions,
-                                     pd2np(fpdbase.t),
-                                     pd2np(fpdbase.t25),
-                                     pd2np(fpdbase.t25),
-                                     cf)
-
-fpdbase['dosm25_dbs'] = dosm25_dbs  (bs,ms,mw,
-                                     pd2np(fpdbase.fpd),
-                                     np.float_(1),np.float_(1),
-                                     ions,
-                                     pd2np(fpdbase.t),
-                                     pd2np(fpdbase.t25),
-                                     pd2np(fpdbase.t25),
-                                     cf)
-
-fpdbase['dosm25_dfpd'] = dosm25_dfpd(bs,ms,mw,
-                                     pd2np(fpdbase.fpd),
-                                     np.float_(1),np.float_(1),
-                                     ions,
-                                     pd2np(fpdbase.t),
-                                     pd2np(fpdbase.t25),
-                                     pd2np(fpdbase.t25),
-                                     cf)
+## Check propagation equation works
+#bs = np.full_like(tot,pz.prop.solubility25['NaCl'])
+#
+#fpdbase['osm25_test'] = fpd2osm25   (bs,ms,mw,
+#                                     pd2np(fpdbase.fpd),
+#                                     np.float_(1),np.float_(1),
+#                                     ions,
+#                                     pd2np(fpdbase.t),
+#                                     pd2np(fpdbase.t25),
+#                                     pd2np(fpdbase.t25),
+#                                     cf)
+#
+#fpdbase['dosm25_dbs'] = dosm25_dbs  (bs,ms,mw,
+#                                     pd2np(fpdbase.fpd),
+#                                     np.float_(1),np.float_(1),
+#                                     ions,
+#                                     pd2np(fpdbase.t),
+#                                     pd2np(fpdbase.t25),
+#                                     pd2np(fpdbase.t25),
+#                                     cf)
+#
+#fpdbase['dosm25_dfpd'] = dosm25_dfpd(bs,ms,mw,
+#                                     pd2np(fpdbase.fpd),
+#                                     np.float_(1),np.float_(1),
+#                                     ions,
+#                                     pd2np(fpdbase.t),
+#                                     pd2np(fpdbase.t25),
+#                                     pd2np(fpdbase.t25),
+#                                     cf)
 
 ## Plot components
 #from matplotlib import pyplot as plt
@@ -148,58 +151,77 @@ for ele in fpdp.index.levels[0]:
 
     print('Optimising FPD fit for ' + ele + '...')
 
-    bs = pz.prop.solubility25[ele]
-
     for src in fpdp.loc[ele].index:
 
+        print(src)
+        
         SL = np.logical_and(fpdbase.ele == ele,fpdbase.src == src)
 
-#        optemp = optimize.least_squares(
-#            lambda Dbs: fpdbase.dosm25[SL] - Dbs,0)
+        # Optimise for bs
+        optemp = optimize.least_squares(
+            lambda Dbs: fpdbase.dosm25[SL] - Dbs \
+                * dosm25_dbs (bs[SL],ms[SL],mw,
+                              pd2np(fpdbase.fpd[SL]),
+                              np.float_(1),np.float_(1),
+                              ions,
+                              pd2np(fpdbase.t[SL]),
+                              pd2np(fpdbase.t25[SL]),
+                              pd2np(fpdbase.t25[SL]),
+                              cf).ravel(),
+            0)
 
-#        optemp = optimize.least_squares(
-#            lambda Dbs: fpdbase.dosm25[SL] - Dbs * \
-#                pweb.frz.fx_dosm_dbs(fpdbase.fpd[SL],
-#                                     fpdbase.m[SL],
-#                                     fpdbase.nu[SL],
-#                                     bs), 0)
-#        err_coeff['bs'][ele][src] = optemp['x'][0]
-#        err_cost ['bs'][ele][src] = optemp['cost']
-#
-#        optemp = optimize.least_squares(
-#            lambda Dfpd: fpdbase.dosm25[SL] - Dfpd * \
-#                pweb.frz.fx_dosm_dfpd(fpdbase.fpd[SL],
-#                                      fpdbase.m[SL],
-#                                      fpdbase.nu[SL]), 0)
-#        err_coeff['fpd'][ele][src] = optemp['x'][0]
-#        err_cost ['fpd'][ele][src] = optemp['cost']
-#
-#        # Select best fit and correct using that [FPD]
-#        if (err_cost['bs'][ele][src] < err_cost['fpd'][ele][src]) \
-#          or (fpdp.loc[ele,src]['len']['m'] < 5):
-#            err_cfs_both[ele][src][0] = err_coeff['bs'][ele][src]
-#        else:
-#            err_cfs_both[ele][src][1] = err_coeff['fpd'][ele][src]
-#
-#        # Get fit residuals [FPD]
-#        fpdbase.loc[SL,'dosm25_sys'] = fpdbase.dosm25[SL] \
-#            - err_cfs_both[ele][src][0] \
-#                * pweb.frz.fx_dosm_dbs(
-#                    fpdbase.fpd[SL],
-#                    fpdbase.m[SL],
-#                    fpdbase.nu[SL],
-#                    fpdbase.ele[SL].map(pweb.prop.solubility25)) \
-#            - D_bs_fpd[ele][src][1] \
-#                * pweb.frz.fx_dosm_dfpd(
-#                    fpdbase.fpd[SL],
-#                    fpdbase.m[SL],
-#                    fpdbase.nu[SL])
-#
-#        # Get st. dev. of residuals [FPD]
-#        fpd_sys_std[ele][src] = np.std(fpdbase.dosm25_sys[SL])
+        err_coeff['bs'][ele][src] = optemp['x'][0]
+        err_cost ['bs'][ele][src] = optemp['cost']
 
-## Pickle outputs for Jupyter Notebook analysis and sign off
-#with open('pickles/simpar_fpd.pkl','wb') as f:
-#    pickle.dump((fpdbase,fpdp,D_bs_fpd,fpd_sys_std),f)
-#
-#print('FPD fit optimisation complete!')
+        # Optimise for FPD
+        optemp = optimize.least_squares(
+            lambda Dfpd: fpdbase.dosm25[SL] - Dfpd \
+                * dosm25_dfpd(bs[SL],ms[SL],mw,
+                              pd2np(fpdbase.fpd[SL]),
+                              np.float_(1),np.float_(1),
+                              ions,
+                              pd2np(fpdbase.t[SL]),
+                              pd2np(fpdbase.t25[SL]),
+                              pd2np(fpdbase.t25[SL]),
+                              cf).ravel(),
+            0)
+                
+        err_coeff['fpd'][ele][src] = optemp['x'][0]
+        err_cost ['fpd'][ele][src] = optemp['cost']
+
+        # Select best fit and correct using that [FPD]
+        if (err_cost['bs'][ele][src] < err_cost['fpd'][ele][src]) \
+          or (fpdp.loc[ele,src]['len']['m'] < 5):
+            err_cfs_both[ele][src][0] = err_coeff['bs'][ele][src]
+        else:
+            err_cfs_both[ele][src][1] = err_coeff['fpd'][ele][src]
+
+        # Get fit residuals [FPD]
+        fpdbase.loc[SL,'dosm25_sys'] = fpdbase.dosm25[SL] \
+            - err_cfs_both[ele][src][0] \
+                * dosm25_dbs (bs[SL],ms[SL],mw,
+                              pd2np(fpdbase.fpd[SL]),
+                              np.float_(1),np.float_(1),
+                              ions,
+                              pd2np(fpdbase.t[SL]),
+                              pd2np(fpdbase.t25[SL]),
+                              pd2np(fpdbase.t25[SL]),
+                              cf).ravel() \
+            - err_cfs_both[ele][src][1] \
+                * dosm25_dfpd(bs[SL],ms[SL],mw,
+                              pd2np(fpdbase.fpd[SL]),
+                              np.float_(1),np.float_(1),
+                              ions,
+                              pd2np(fpdbase.t[SL]),
+                              pd2np(fpdbase.t25[SL]),
+                              pd2np(fpdbase.t25[SL]),
+                              cf).ravel()
+
+        # Get st. dev. of residuals [FPD]
+        fpd_sys_std[ele][src] = np.std(fpdbase.dosm25_sys[SL])
+
+# Pickle outputs for Jupyter Notebook analysis and sign off
+with open('pickles/simpytz_fpd.pkl','wb') as f:
+    pickle.dump((fpdbase,fpdp,err_cfs_both,fpd_sys_std),f)
+
+print('FPD fit optimisation complete!')
