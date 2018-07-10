@@ -153,7 +153,7 @@ for ele in fpdp.index.levels[0]:
 
     for src in fpdp.loc[ele].index:
 
-        print(src)
+        print(' ... ' + src)
         
         SL = np.logical_and(fpdbase.ele == ele,fpdbase.src == src)
 
