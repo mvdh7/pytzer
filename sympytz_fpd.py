@@ -7,7 +7,8 @@ import pickle
 import pytzer as pz
 
 # Load raw datasets
-fpdbase = pz.data.fpd('E:/Dropbox/_UEA_MPH/pitzer-spritzer/python/datasets/')
+datapath = 'E:/Dropbox/_UEA_MPH/pitzer-spritzer/python/datasets/'
+fpdbase = pz.data.fpd(datapath)
 
 # Select data for analysis
 fpdbase = fpdbase[fpdbase.smooth == 0]
@@ -30,34 +31,47 @@ fpdbase['t25']   = np.full_like(fpdbase.t,298.15, dtype='float64')
 def pd2np(series):
     return np.vstack(series.values)
 
-fpdbase['Lapp'] = pz.model.Lapp(pd2np(fpdbase.m),
-                                pd2np(fpdbase.nC),
-                                pd2np(fpdbase.nA),
-                                ions,
-                                pd2np(fpdbase.t),
-                                cf)
-
-#fpdbase['osm25'] = pz.tconv.osm2osm(fpdbase.m.values,
-#                                    fpdbase.nC.values,
-#                                    fpdbase.nA.values,
-#                                    ions,
-#                                    fpdbase.t.values,
-#                                    fpdbase.t25.values,
-#                                    fpdbase.t25.values,
-#                                    cf,
-#                                    fpdbase.osm.values)
-
-
-## Calculate model osmotic coefficient at 298.15 K
-#fpdbase['osm25_calc'] = pweb.pz.osm(fpdbase.ele,fpdbase.m,fpdbase.t25)
-#fpdbase['dosm25'] = fpdbase.osm25 - fpdbase.osm25_calc
+#fpdbase['Lapp'] = pz.model.Lapp(pd2np(fpdbase.m),
+#                                np.float_(1),#pd2np(fpdbase.nC),
+#                                np.float_(1),#pd2np(fpdbase.nA),
+#                                ions,
+#                                pd2np(fpdbase.t),
+#                                cf) / 1000
 #
-## Create electrolytes/sources pivot table
-#fpdp = pd.pivot_table(fpdbase,
-#                      values  = ['m','dosm25'],
-#                      index   = ['ele','src'],
-#                      aggfunc = [np.mean,np.std,len])
-#
+#fpdbase['Lapp25'] = pz.model.Lapp(pd2np(fpdbase.m),
+#                                np.float_(1),#pd2np(fpdbase.nC),
+#                                np.float_(1),#pd2np(fpdbase.nA),
+#                                ions,
+#                                pd2np(fpdbase.t25),
+#                                cf) / 1000
+
+fpdbase['osm25'] = pz.tconv.osm2osm(pd2np(fpdbase.m),
+                                    np.float_(1),#fpdbase.nC.values,
+                                    np.float_(1),#fpdbase.nA.values,
+                                    ions,
+                                    pd2np(fpdbase.t),
+                                    pd2np(fpdbase.t25),
+                                    pd2np(fpdbase.t25),
+                                    cf,
+                                    pd2np(fpdbase.osm))
+
+# Calculate model osmotic coefficient at 298.15 K
+mols = np.vstack((fpdbase.m,fpdbase.m)).transpose()
+fpdbase['osm25_calc'] = pz.model.osm(mols,ions,pd2np(fpdbase.t25),cf)
+fpdbase['dosm25'] = fpdbase.osm25 - fpdbase.osm25_calc
+
+#from matplotlib import pyplot as plt
+#fig,ax = plt.subplots(1,1)
+#fpdbase.plot.scatter('m','dosm25', ax=ax)
+#ax.set_xlim((0,6))
+#ax.grid(alpha=0.5)
+
+# Create electrolytes/sources pivot table
+fpdp = pd.pivot_table(fpdbase,
+                      values  = ['m','dosm25'],
+                      index   = ['ele','src'],
+                      aggfunc = [np.mean,np.std,len])
+
 ## Prepare for uncertainty propagation analysis [FPD]
 #DD = {var:{ele:{} for ele in fpdp.index.levels[0]} \
 #      for var in ['bs','fpd']}
@@ -68,7 +82,7 @@ fpdbase['Lapp'] = pz.model.Lapp(pd2np(fpdbase.m),
 #fpd_sys_std = {ele:{src:np.zeros(1) for src in fpdp.loc[ele].index} \
 #               for ele in fpdp.index.levels[0]}
 #fpdbase['dosm25_sys'] = np.full(np.size(fpdbase.t),np.nan)
-#
+
 ## Run uncertainty propagation analysis [FPD]
 #for ele in fpdp.index.levels[0]:
 #
@@ -120,7 +134,7 @@ fpdbase['Lapp'] = pz.model.Lapp(pd2np(fpdbase.m),
 #
 #        # Get st. dev. of residuals [FPD]
 #        fpd_sys_std[ele][src] = np.std(fpdbase.dosm25_sys[SL])
-#
+
 ## Pickle outputs for Jupyter Notebook analysis and sign off
 #with open('pickles/simpar_fpd.pkl','wb') as f:
 #    pickle.dump((fpdbase,fpdp,D_bs_fpd,fpd_sys_std),f)

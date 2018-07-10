@@ -122,7 +122,7 @@ def fpd(datapath):
     # FPD to osmotic coefficient
     mols = np.array([(fpdbase.nC*fpdbase.m).values,
                      (fpdbase.nA*fpdbase.m).values]).transpose()
-    fpdbase['osm'] = tconv.fpd2osm(mols,fpdbase.fpd.values)
+    fpdbase['osm'] = tconv.fpd2osm(mols,np.vstack(fpdbase.fpd.values))
 
     return fpdbase
 
