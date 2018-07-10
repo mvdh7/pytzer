@@ -1,6 +1,6 @@
 from autograd import numpy as np
 from autograd import jacobian as jac
-from autograd import hessian as hess
+#from autograd import hessian as hess
 from autograd import elementwise_grad as egrad
 import pandas as pd
 import pytzer as pz
@@ -14,6 +14,8 @@ q = q[:27,1]
 # Import their covariance matrix
 qmx = np.loadtxt('datasets/allmt_stats.res', skiprows=17)
 qmx = qmx[:27,:27]
+
+qmx = qmx + 1e-7 * np.eye(*np.shape(qmx))
 
 ## Define test conditions
 #tot = np.vstack([1.6])
@@ -196,7 +198,8 @@ JlnqacfPM = fx_JlnqacfPM(T,q,tot,mols)
 # estimate Hessian... but don't know what to do with it after! See:
 # https://en.wikipedia.org/wiki/
 #     Taylor_expansions_for_the_moments_of_functions_of_random_variables
-HlnqacfPM = JlnqacfPM.transpose() @ JlnqacfPM
+#HlnqacfPM = JlnqacfPM.transpose() @ JlnqacfPM
+#Hinv = np.linalg.inv(HlnqacfPM)
 
 crp94['acfPM_unc'] = np.diagonal(JqacfPM @ qmx @ JqacfPM.transpose())
 crp94['lnacfPM_unc'] = np.diagonal(JlnqacfPM @ qmx @ JlnqacfPM.transpose())
@@ -216,7 +219,7 @@ UacfPM_var   = np.var(UacfPM  , axis=1)
 UlnacfPM_var = np.var(UlnacfPM, axis=1)
 
 ## Pickle results for plotting
-#with open('pickles/h2so4_prop.pkl','wb') as f:
+#with open('pickles/h2so4_prop_eye.pkl','wb') as f:
 #    pickle.dump((crp94,UlnacfPM,UlnacfPM_var,UacfPM,UacfPM_var),f)
 
 ## Visualise results
