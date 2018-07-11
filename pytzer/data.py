@@ -141,6 +141,7 @@ def vpl(datapath):
 
 ##### GENERIC FUNCTIONS #######################################################
     
+# Calculate some useful variables and sort database
 def prep(xxxbase):
 
     # Add extra variables
@@ -153,15 +154,48 @@ def prep(xxxbase):
 
     return xxxbase
 
+# Calculate ionic charges and stoichiometry assuming complete dissociation
 def znu(ele):
-
-    # Define dicts
-    zC = {'NaCl':+1, 'KCl':+1, 'Na2SO4':+1, 'CaCl2':+2, 'H2SO4':+1}
-    zA = {'NaCl':-1, 'KCl':-1, 'Na2SO4':-2, 'CaCl2':-1, 'H2SO4':-2}
-    nC = {'NaCl': 1, 'KCl': 1, 'Na2SO4': 2, 'CaCl2': 1, 'H2SO4': 2}
-    nA = {'NaCl': 1, 'KCl': 1, 'Na2SO4': 1, 'CaCl2': 2, 'H2SO4': 1}
-
-    # Return: nu, zC, zA, nuC, nuA
-    return ele.map(nC) + ele.map(nA), \
-           ele.map(zC), ele.map(zA), ele.map(nC), ele.map(nA)
            
+    # Define properties                   zC   zA   nC   nA
+    zC_zA_nC_nA = {'BaCl2'  : np.float_([ +2 , -1 ,  1 ,  2 ]),
+                   'CaCl2'  : np.float_([ +2 , -1 ,  1 ,  2 ]),
+                   'H2SO4'  : np.float_([ +1 , -2 ,  2 ,  1 ]),
+                   'KCl'    : np.float_([ +1 , -1 ,  1 ,  1 ]),
+                   'KOH'    : np.float_([ +1 , -1 ,  1 ,  1 ]),
+                   'MgCl2'  : np.float_([ +2 , -1 ,  1 ,  2 ]),
+                   'Na2SO4' : np.float_([ +1 , -2 ,  2 ,  1 ]),
+                   'NaCl'   : np.float_([ +1 , -1 ,  1 ,  1 ]),
+                   'ZnBr2'  : np.float_([ +2 , -1 ,  1 ,  2 ]),
+                   'ZnCl2'  : np.float_([ +2 , -1 ,  1 ,  2 ])}
+
+    # Extract properties for input ele list from dict
+    znus = np.array([zC_zA_nC_nA[ionpair] for ionpair in ele])
+    
+    # Prepare and return results
+    zC = np.vstack(znus[:,0])
+    zA = np.vstack(znus[:,1])
+    nC = np.vstack(znus[:,2])
+    nA = np.vstack(znus[:,3])
+    
+    nu = nC + nA
+    
+    return nu, zC, zA, nC, nA
+          
+# Return list of unique ions from list of electrolytes 
+def ele2ions(ele):
+    
+    # Define ions in each electrolyte
+    idict = {'BaCl2'  : np.array(['Ba', 'Cl' ]),
+             'CaCl2'  : np.array(['Ca', 'Cl' ]),
+             'H2SO4'  : np.array(['H' , 'SO4']),
+             'KCl'    : np.array(['K' , 'Cl' ]),
+             'KOH'    : np.array(['K' , 'OH' ]),
+             'MgCl2'  : np.array(['Mg', 'Cl' ]),
+             'Na2SO4' : np.array(['Na', 'SO4']),
+             'NaCl'   : np.array(['Na', 'Cl' ]),
+             'ZnBr2'  : np.array(['Zn', 'Br' ]),
+             'ZnCl2'  : np.array(['Zn', 'Cl' ])}
+
+    return np.unique(np.array([idict[ionpair] for ionpair in ele]).ravel()), \
+        idict
