@@ -10,15 +10,19 @@ def getCharges(ions):
 
     z = {}
     
-    z['Ca']   = np.float_(+2)
-    z['H' ]   = np.float_(+1)
-    z['K' ]   = np.float_(+1)
-    z['Na']   = np.float_(+1)
+    z['Ba'  ] = np.float_(+0)
+    z['Ca'  ] = np.float_(+2)
+    z['H'   ] = np.float_(+1)
+    z['K'   ] = np.float_(+1)
+    z['Mg'  ] = np.float_(+2)
+    z['Na'  ] = np.float_(+1)
+    z['Zn'  ] = np.float_(+2)
 
-    z['Cl']   = np.float_(-1)    
-    z['OH']   = np.float_(-1)
+    z['Br'  ] = np.float_(-1)
+    z['Cl'  ] = np.float_(-1)    
+    z['OH'  ] = np.float_(-1)
     z['HSO4'] = np.float_(-1)
-    z['SO4']  = np.float_(-2)
+    z['SO4' ] = np.float_(-2)
     
     return np.array([z[ion] for ion in ions])
 
