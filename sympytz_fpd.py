@@ -13,16 +13,17 @@ fpdbase = pz.data.fpd(datapath)
 
 # Select data for analysis
 fpdbase = fpdbase[fpdbase.smooth == 0]
-#fpdbase = fpdbase[xnp.logical_or.reduce((fpdbase.ele == 'NaCl',
-#                                         fpdbase.ele == 'KCl'))]#,
-##                                         fpdbase.ele == 'CaCl2'))]
-fpdbase = fpdbase[fpdbase.ele == 'NaCl']
+fpdbase = fpdbase[xnp.logical_or.reduce((fpdbase.ele == 'NaCl',
+                                         fpdbase.ele == 'KCl'))]#,
+#                                         fpdbase.ele == 'CaCl2'))]
+#fpdbase = fpdbase[fpdbase.ele == 'NaCl']
 
-ions = np.array(['Na','Cl'])
+ions = np.array(['Na','K','Cl'])
 
 # Prepare model cdict
 cf = pz.cdicts.cdict()
 cf.bC['Na-Cl'] = pz.coeffs.Na_Cl_A92ii
+cf.bC['K-Cl' ] = pz.coeffs.K_Cl_GM89
 cf.dh['Aosm']  = pz.coeffs.Aosm_M88
 cf.dh['AH']    = pz.coeffs.AH_MPH
 
@@ -32,20 +33,6 @@ fpdbase['t25'] = np.full_like(fpdbase.t,298.15, dtype='float64')
 def pd2np(series):
     return np.vstack(series.values)
 
-#fpdbase['Lapp'] = pz.model.Lapp(pd2np(fpdbase.m),
-#                                np.float_(1),#pd2np(fpdbase.nC),
-#                                np.float_(1),#pd2np(fpdbase.nA),
-#                                ions,
-#                                pd2np(fpdbase.t),
-#                                cf) / 1000
-#
-#fpdbase['Lapp25'] = pz.model.Lapp(pd2np(fpdbase.m),
-#                                np.float_(1),#pd2np(fpdbase.nC),
-#                                np.float_(1),#pd2np(fpdbase.nA),
-#                                ions,
-#                                pd2np(fpdbase.t25),
-#                                cf) / 1000
-
 # Create initial electrolytes pivot table
 fpde = pd.pivot_table(fpdbase,
                       values  = ['m'],
@@ -53,9 +40,10 @@ fpde = pd.pivot_table(fpdbase,
                       aggfunc = [np.min,np.max,len])
 
 # Convert measured FPD into osmotic coeff. at 298.15 K
+fpdbase['osm25'] = np.nan
 fpdbase['osm25'] = pz.tconv.osm2osm(pd2np(fpdbase.m),
-                                    np.float_(1),#fpdbase.nC.values,
-                                    np.float_(1),#fpdbase.nA.values,
+                                    pd2np(fpdbase.nC),
+                                    pd2np(fpdbase.nA),
                                     ions,
                                     pd2np(fpdbase.t),
                                     pd2np(fpdbase.t25),
@@ -117,7 +105,8 @@ ms = tot * mw / (bs - tot)
 #
 #fpdbase['osm25_test'] = fpd2osm25   (bs,ms,mw,
 #                                     pd2np(fpdbase.fpd),
-#                                     np.float_(1),np.float_(1),
+#                                     pd2np(fpdbase.nC),
+#                                     pd2np(fpdbase.nA),
 #                                     ions,
 #                                     pd2np(fpdbase.t),
 #                                     pd2np(fpdbase.t25),
@@ -126,7 +115,8 @@ ms = tot * mw / (bs - tot)
 #
 #fpdbase['dosm25_dbs'] = dosm25_dbs  (bs,ms,mw,
 #                                     pd2np(fpdbase.fpd),
-#                                     np.float_(1),np.float_(1),
+#                                     pd2np(fpdbase.nC),
+#                                     pd2np(fpdbase.nA),
 #                                     ions,
 #                                     pd2np(fpdbase.t),
 #                                     pd2np(fpdbase.t25),
@@ -135,7 +125,8 @@ ms = tot * mw / (bs - tot)
 #
 #fpdbase['dosm25_dfpd'] = dosm25_dfpd(bs,ms,mw,
 #                                     pd2np(fpdbase.fpd),
-#                                     np.float_(1),np.float_(1),
+#                                     pd2np(fpdbase.nC),
+#                                     pd2np(fpdbase.nA),
 #                                     ions,
 #                                     pd2np(fpdbase.t),
 #                                     pd2np(fpdbase.t25),
@@ -146,8 +137,12 @@ ms = tot * mw / (bs - tot)
 #from matplotlib import pyplot as plt
 #fig,ax = plt.subplots(1,1)
 
-# Run uncertainty propagation analysis [FPD]
-for ele in fpdp.index.levels[0]:
+#%% Run uncertainty propagation analysis [FPD]
+ionslist = [np.array(['Na','Cl']), np.array(['K','Cl'])]
+
+for E,ele in enumerate(fpdp.index.levels[0]):
+    
+    ions = ionslist[E]
 
     print('Optimising FPD fit for ' + ele + '...')
 
@@ -162,7 +157,8 @@ for ele in fpdp.index.levels[0]:
             lambda Dbs: fpdbase.dosm25[SL] - Dbs \
                 * dosm25_dbs (bs[SL],ms[SL],mw,
                               pd2np(fpdbase.fpd[SL]),
-                              np.float_(1),np.float_(1),
+                              pd2np(fpdbase.nC),
+                              pd2np(fpdbase.nA),
                               ions,
                               pd2np(fpdbase.t[SL]),
                               pd2np(fpdbase.t25[SL]),
@@ -178,7 +174,8 @@ for ele in fpdp.index.levels[0]:
             lambda Dfpd: fpdbase.dosm25[SL] - Dfpd \
                 * dosm25_dfpd(bs[SL],ms[SL],mw,
                               pd2np(fpdbase.fpd[SL]),
-                              np.float_(1),np.float_(1),
+                              pd2np(fpdbase.nC),
+                              pd2np(fpdbase.nA),
                               ions,
                               pd2np(fpdbase.t[SL]),
                               pd2np(fpdbase.t25[SL]),
@@ -201,7 +198,8 @@ for ele in fpdp.index.levels[0]:
             - err_cfs_both[ele][src][0] \
                 * dosm25_dbs (bs[SL],ms[SL],mw,
                               pd2np(fpdbase.fpd[SL]),
-                              np.float_(1),np.float_(1),
+                              pd2np(fpdbase.nC),
+                              pd2np(fpdbase.nA),
                               ions,
                               pd2np(fpdbase.t[SL]),
                               pd2np(fpdbase.t25[SL]),
@@ -210,7 +208,8 @@ for ele in fpdp.index.levels[0]:
             - err_cfs_both[ele][src][1] \
                 * dosm25_dfpd(bs[SL],ms[SL],mw,
                               pd2np(fpdbase.fpd[SL]),
-                              np.float_(1),np.float_(1),
+                              pd2np(fpdbase.nC),
+                              pd2np(fpdbase.nA),
                               ions,
                               pd2np(fpdbase.t[SL]),
                               pd2np(fpdbase.t25[SL]),
