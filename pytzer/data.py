@@ -2,7 +2,8 @@ from  autograd import numpy as np
 import pandas as pd
 from scipy import optimize
 from .constants import Mw
-from . import model, tconv
+from . import model
+from mvdh import ismember
 
 ##### DEGREE OF DISSOCIATION #################################################
 
@@ -117,14 +118,27 @@ def fpd(datapath):
 
     # Calculate freezing point temperature from FPD
     fpdbase['t'] = 273.15 - fpdbase.fpd
+    
+    # Calculate extras and sort
     fpdbase = prep(fpdbase)
 
-    # FPD to osmotic coefficient
-    mols = np.array([(fpdbase.nC*fpdbase.m).values,
-                     (fpdbase.nA*fpdbase.m).values]).transpose()
-    fpdbase['osm'] = tconv.fpd2osm(mols,np.vstack(fpdbase.fpd.values))
+    # Get mols and ions arrays for pz.model functions
+    eles = fpdbase.ele.unique()
+    ions,idict = ele2ions(eles)
+    
+    mols = np.zeros((np.shape(fpdbase)[0],len(ions)))
+    
+    for ele in eles:
+        
+        C = np.where(ions == idict[ele][0])
+        A = np.where(ions == idict[ele][1])
+        
+        EL = fpdbase.ele == ele
+        
+        mols[EL,C] = fpdbase.m[EL] * fpdbase.nC[EL]
+        mols[EL,A] = fpdbase.m[EL] * fpdbase.nA[EL]
 
-    return fpdbase
+    return fpdbase, mols, ions
 
 ##### VAPOUR PRESSURE LOWERING ################################################
 
@@ -140,7 +154,7 @@ def vpl(datapath):
     return vplbase
 
 ##### GENERIC FUNCTIONS #######################################################
-    
+
 # Calculate some useful variables and sort database
 def prep(xxxbase):
 
@@ -199,3 +213,15 @@ def ele2ions(ele):
 
     return np.unique(np.array([idict[ionpair] for ionpair in ele]).ravel()), \
         idict
+        
+def subset_ele(xxxbase,mols,ions,subset):
+    
+    R = ismember(xxxbase.ele,subset)
+    xxxbase = xxxbase[R]
+    
+    C = ismember(ions,ele2ions(subset)[0])
+    
+    mols = mols[R][:,C]
+    ions = ions[C]
+    
+    return xxxbase, mols, ions
