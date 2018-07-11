@@ -236,8 +236,8 @@ dGex_T_dT = egrad(Gex_nRT, argnum=2)
 # Apparent relative molal enthalpy (single electrolyte)
 def Lapp(tot,nC,nA,ions,T,cf):
     
-    mC = tot.ravel() * nC
-    mA = tot.ravel() * nA
+    mC = (tot * nC).ravel()
+    mA = (tot * nA).ravel()
     mols = np.vstack((mC,mA)).transpose()
     
     return -T**2 * dGex_T_dT(mols,ions,T,cf) * R / tot
