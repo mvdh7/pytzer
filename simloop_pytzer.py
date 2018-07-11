@@ -1,8 +1,8 @@
 from autograd import numpy as np
-from sys import path#, argv
-if 'E:\Dropbox\_UEA_MPH\pitzer-spritzer\python' not in path:
-    path.append('E:\\Dropbox\\_UEA_MPH\\pitzer-spritzer\\python')
-import pickle, pweb, time
+#from sys import path#, argv
+#if 'E:\Dropbox\_UEA_MPH\pitzer-spritzer\python' not in path:
+#    path.append('E:\\Dropbox\\_UEA_MPH\\pitzer-spritzer\\python')
+import pickle, time
 from multiprocessing import Pool
 import pytzer as pz
 
@@ -13,53 +13,65 @@ ele = 'NaCl'
 Ureps = 100
 
 # Get electrolyte-specific information
-Ufcs = {'NaCl' : 'b0b1C0C1',
+fcs = {'NaCl' : 'b0b1C0C1',
         'KCl'  : 'b0b1C0'  }
 
-Uaos = {'NaCl' : np.float_([-9, 2,-9,-9, 2.5]),
+aos = {'NaCl' : np.float_([-9, 2,-9,-9, 2.5]),
         'KCl'  : np.float_([-9, 2,-9,-9,-9  ])}
 
-Efc = Ufcs[ele]
-Eao = Uaos[ele]
+fc = fcs[ele]
+ao = aos[ele]
 
 # Load FPD dataset
-with open('E:\Dropbox\_UEA_MPH\pitzer-spritzer\python\pickles\simpar_fpd.pkl',
-          'rb') as f:
-    fpdbase,fpdp,D_bs_fpd,fpd_sys_std = pickle.load(f)
+with open('pickles/simpytz_fpd.pkl','rb') as f:
+    fpdbase,fpdp,err_cfs_both,fpd_sys_std = pickle.load(f)
 
 # Preprocess dataset
 L = fpdbase.ele == ele
+Eargs = [np.vstack(fpdbase.loc[L,var].values) \
+         for var in ['m', 'zC', 'zA', 'nC', 'nA', 'src', 'ele', 'fpd', 't25']]
+tot,zC,zA,nC,nA,srcs,eles,fpd,t25 = Eargs
+fpdbase = fpdbase[L]
 
-Eargs = [fpdbase.loc[L,var] for var in ['m', 'nu', 'zC', 'zA', 'nC', 'nA',
-                                        'osm25_calc', 'src', 'ele', 'fpd',
-                                        't25']]
-Em,Enu,EzC,EzA,EnC,EnA,Eosm25_calc,Esrc,Eele,Efpd,Et25 = Eargs
+# Get pytzer fitting function inputs
+mCmA = np.concatenate([tot*nC,tot*nA], axis=1)
+T = np.full_like(tot,298.15, dtype='float64')
+alph1 = ao[1]
+alph2 = ao[2]
+omega = ao[4]
 
-# Get pytzer function inputs
-EmCmA = np.tile(Em.values,(2,1)).transpose()
-zC = np.float_(+1)
-zA = np.float_(-1)
-T = np.full_like(Em,298.15, dtype='float64')
-alph1 = Eao[1]
-alph2 = Eao[2]
-omega = Eao[4]
-nC = np.float_(1)
-nA = np.float_(1)
+# Prepare model cdict
+cf = pz.cdicts.cdict()
+cf.bC['Na-Cl'] = pz.coeffs.bC_Na_Cl_A92ii
+cf.bC['K-Cl' ] = pz.coeffs.bC_K_Cl_GM89
+cf.theta['K-Na'] = pz.coeffs.theta_zero
+cf.psi['K-Na-Cl'] = pz.coeffs.psi_zero
+cf.dh['Aosm']  = pz.coeffs.Aosm_M88
+cf.dh['AH']    = pz.coeffs.AH_MPH
 
-# Define optimisation function
+#%% Define optimisation function
 def Eopt(rseed=None):
 
     # Seed random numbers
     np.random.seed(rseed)
 
     # Simulate uncertainties
-    Uosm = pweb.simpar.fpd(fpdp,Eele,Em,Efpd,Enu,Esrc,D_bs_fpd,fpd_sys_std)
+    Uosm = np.full_like(T,np.nan)
+    
+    for src in fpdp.loc[ele].index:
+        SL = srcs == src
+        
+        Uosm[SL] = pz.sim.fpd(fpdbase[SL],ele,src,cf,
+                              err_cfs_both,fpd_sys_std).ravel()
 
     b0,b1,b2,C0,C1,bCmx,mse \
-        = pz.fitting.bC(EmCmA,zC,zA,T,alph1,alph2,omega,nC,nA,Uosm,Efc,'osm')
+        = pz.fitting.bC(mCmA,zC,zA,T,alph1,alph2,omega,nC,nA,Uosm,fc,'osm')
 
     return b0,b1,b2,C0,C1
 
+b0,b1,b2,C0,C1 = Eopt()
+
+#%% Multiprocessing loop
 if __name__ == '__main__':
 
     # Set initial random seed (for reproducibility)

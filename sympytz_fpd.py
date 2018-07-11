@@ -1,11 +1,11 @@
-#%% Import libraries
+# Import libraries
 from autograd import numpy as np
-from autograd import elementwise_grad as egrad
 import pandas as pd
 from scipy import optimize
 import pickle
 import pytzer as pz
 from mvdh import ismember
+pd2vs = pz.sim.pd2vs
 
 # Load raw datasets
 datapath = 'datasets/'
@@ -28,10 +28,6 @@ cf.theta['K-Na'] = pz.coeffs.theta_zero
 cf.psi['K-Na-Cl'] = pz.coeffs.psi_zero
 cf.dh['Aosm']  = pz.coeffs.Aosm_M88
 cf.dh['AH']    = pz.coeffs.AH_MPH
-
-# Extract and vstack a pandas series
-def pd2vs(series):
-    return np.vstack(series.values)
 
 # Calculate osmotic coefficient at measurement temperature
 T   = pd2vs(fpdbase.t  )
@@ -74,7 +70,7 @@ fpdbase['dosm25'] = fpdbase.osm25_meas - fpdbase.osm25_calc
 #ax.set_xlim((0,6))
 #ax.grid(alpha=0.5)
 
-#%% Create electrolytes/sources pivot table
+# Create electrolytes/sources pivot table
 fpdp = pd.pivot_table(fpdbase,
                       values  = ['m','dosm25'],
                       index   = ['ele','src'],
@@ -90,22 +86,6 @@ err_cfs_both = {ele:{src:np.zeros(2) for src in fpdp.loc[ele].index} \
 fpd_sys_std = {ele:{src:np.zeros(1) for src in fpdp.loc[ele].index} \
                for ele in fpdp.index.levels[0]}
 fpdbase['dosm25_sys'] = np.nan
-
-# Propagate bs & fpd uncertainties
-def fpd2osm25(bs,ms,mw,fpd,nC,nA,ions,T0,T1,TR,cf):
-    
-    tot = bs * ms / (ms + mw)
-    
-    mols = np.vstack([tot.ravel() * nC,
-                      tot.ravel() * nA]).transpose()
-    
-    osmT0 = pz.tconv.fpd2osm(mols,fpd)
-    osm25 = pz.tconv.osm2osm(tot,nC,nA,ions,T0,T1,TR,cf,osmT0)
-    
-    return osm25
-
-dosm25_dbs  = egrad(fpd2osm25)
-dosm25_dfpd = egrad(fpd2osm25, argnum=3)
 
 tot = pd2vs(fpdbase.m)
 mw = np.float_(1)
@@ -130,15 +110,15 @@ for E,ele in enumerate(fpdp.index.levels[0]):
         # Optimise for bs
         optemp = optimize.least_squares(
             lambda Dbs: fpdbase.dosm25[SL] - Dbs \
-                * dosm25_dbs (bs[SL],ms[SL],mw,
-                              pd2vs(fpdbase.fpd[SL]),
-                              pd2vs(fpdbase.nC),
-                              pd2vs(fpdbase.nA),
-                              Eions,
-                              pd2vs(fpdbase.t[SL]),
-                              pd2vs(fpdbase.t25[SL]),
-                              pd2vs(fpdbase.t25[SL]),
-                              cf).ravel(),
+                * pz.sim.dosm25_dbs (bs[SL],ms[SL],mw,
+                                     pd2vs(fpdbase.fpd[SL]),
+                                     pd2vs(fpdbase.nC[SL]),
+                                     pd2vs(fpdbase.nA[SL]),
+                                     Eions,
+                                     pd2vs(fpdbase.t[SL]),
+                                     pd2vs(fpdbase.t25[SL]),
+                                     pd2vs(fpdbase.t25[SL]),
+                                     cf).ravel(),
             0)
 
         err_coeff['bs'][ele][src] = optemp['x'][0]
@@ -147,15 +127,15 @@ for E,ele in enumerate(fpdp.index.levels[0]):
         # Optimise for FPD
         optemp = optimize.least_squares(
             lambda Dfpd: fpdbase.dosm25[SL] - Dfpd \
-                * dosm25_dfpd(bs[SL],ms[SL],mw,
-                              pd2vs(fpdbase.fpd[SL]),
-                              pd2vs(fpdbase.nC),
-                              pd2vs(fpdbase.nA),
-                              Eions,
-                              pd2vs(fpdbase.t[SL]),
-                              pd2vs(fpdbase.t25[SL]),
-                              pd2vs(fpdbase.t25[SL]),
-                              cf).ravel(),
+                * pz.sim.dosm25_dfpd(bs[SL],ms[SL],mw,
+                                     pd2vs(fpdbase.fpd[SL]),
+                                     pd2vs(fpdbase.nC[SL]),
+                                     pd2vs(fpdbase.nA[SL]),
+                                     Eions,
+                                     pd2vs(fpdbase.t[SL]),
+                                     pd2vs(fpdbase.t25[SL]),
+                                     pd2vs(fpdbase.t25[SL]),
+                                     cf).ravel(),
             0)
                 
         err_coeff['fpd'][ele][src] = optemp['x'][0]
@@ -171,25 +151,25 @@ for E,ele in enumerate(fpdp.index.levels[0]):
         # Get fit residuals [FPD]
         fpdbase.loc[SL,'dosm25_sys'] = fpdbase.dosm25[SL] \
             - err_cfs_both[ele][src][0] \
-                * dosm25_dbs (bs[SL],ms[SL],mw,
-                              pd2vs(fpdbase.fpd[SL]),
-                              pd2vs(fpdbase.nC),
-                              pd2vs(fpdbase.nA),
-                              Eions,
-                              pd2vs(fpdbase.t[SL]),
-                              pd2vs(fpdbase.t25[SL]),
-                              pd2vs(fpdbase.t25[SL]),
-                              cf).ravel() \
+                * pz.sim.dosm25_dbs (bs[SL],ms[SL],mw,
+                                     pd2vs(fpdbase.fpd[SL]),
+                                     pd2vs(fpdbase.nC[SL]),
+                                     pd2vs(fpdbase.nA[SL]),
+                                     Eions,
+                                     pd2vs(fpdbase.t[SL]),
+                                     pd2vs(fpdbase.t25[SL]),
+                                     pd2vs(fpdbase.t25[SL]),
+                                     cf).ravel() \
             - err_cfs_both[ele][src][1] \
-                * dosm25_dfpd(bs[SL],ms[SL],mw,
-                              pd2vs(fpdbase.fpd[SL]),
-                              pd2vs(fpdbase.nC),
-                              pd2vs(fpdbase.nA),
-                              Eions,
-                              pd2vs(fpdbase.t[SL]),
-                              pd2vs(fpdbase.t25[SL]),
-                              pd2vs(fpdbase.t25[SL]),
-                              cf).ravel()
+                * pz.sim.dosm25_dfpd(bs[SL],ms[SL],mw,
+                                     pd2vs(fpdbase.fpd[SL]),
+                                     pd2vs(fpdbase.nC[SL]),
+                                     pd2vs(fpdbase.nA[SL]),
+                                     Eions,
+                                     pd2vs(fpdbase.t[SL]),
+                                     pd2vs(fpdbase.t25[SL]),
+                                     pd2vs(fpdbase.t25[SL]),
+                                     cf).ravel()
 
         # Get st. dev. of residuals [FPD]
         fpd_sys_std[ele][src] = np.std(fpdbase.dosm25_sys[SL])
