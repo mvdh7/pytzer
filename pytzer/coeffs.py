@@ -5,7 +5,7 @@ from .constants import Patm_bar
 ###############################################################################
 # === ZERO FUNCTIONS ==========================================================
 
-def zero_bC(T):
+def bC_zero(T):
     
     b0    = np.zeros_like(T)
     b1    = np.zeros_like(T)
@@ -19,14 +19,14 @@ def zero_bC(T):
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
-def zero_theta(T):
+def theta_zero(T):
     
     theta = np.zeros_like(T)
     valid = T > 0
     
     return theta, valid
 
-def zero_psi(T):
+def psi_zero(T):
     
     psi   = np.zeros_like(T)
     valid = T > 0
@@ -63,7 +63,7 @@ def PP87_eqNaOH(T,a):
          + a[10] / (647.-T)     \
          + a[11] * P / (647.-T)
 
-def Na_OH_PP87(T):
+def bC_Na_OH_PP87(T):
     
     b0    = PP87_eqNaOH(T,
                         np.float_([ 2.7682478e+2,
@@ -160,7 +160,7 @@ def Aosm_M88(T):
 
 # --- bC: calcium chloride ----------------------------------------------------
 
-def Ca_Cl_M88(T):
+def bC_Ca_Cl_M88(T):
     
     b0    = M88_eq13(T,
                      np.float_([-9.41895832e+1,
@@ -210,7 +210,7 @@ def Ca_Cl_M88(T):
 
 # --- bC: calcium sulfate -----------------------------------------------------
 
-def Ca_SO4_M88(T):
+def bC_Ca_SO4_M88(T):
     
     b0    = np.full_like(T,0.15, dtype='float64')
     
@@ -240,7 +240,7 @@ def Ca_SO4_M88(T):
 
 # --- bC: sodium chloride -----------------------------------------------------
 
-def Na_Cl_M88(T):
+def bC_Na_Cl_M88(T):
     
     b0    = M88_eq13(T,
                      np.float_([ 1.43783204e+1,
@@ -290,7 +290,7 @@ def Na_Cl_M88(T):
 
 # --- bC: sodium sulfate ------------------------------------------------------
 
-def Na_SO4_M88(T):
+def bC_Na_SO4_M88(T):
     
     b0    = M88_eq13(T,
                      np.float_([ 8.16920027e+1,
@@ -340,7 +340,7 @@ def Na_SO4_M88(T):
 
 # --- theta: calcium sodium ---------------------------------------------------
     
-def Ca_Na_M88(T):
+def theta_Ca_Na_M88(T):
     
     theta = np.full_like(T,0.05, dtype='float64')
     
@@ -350,7 +350,7 @@ def Ca_Na_M88(T):
 
 # --- theta: chloride sulfate -------------------------------------------------
     
-def Cl_SO4_M88(T):
+def theta_Cl_SO4_M88(T):
     
     theta = np.full_like(T,0.07, dtype='float64')
     
@@ -360,7 +360,7 @@ def Cl_SO4_M88(T):
 
 # --- psi: calcium sodium chloride --------------------------------------------
     
-def Ca_Na_Cl_M88(T):
+def psi_Ca_Na_Cl_M88(T):
     
     psi = np.full_like(T,-0.003, dtype='float64')
     
@@ -370,7 +370,7 @@ def Ca_Na_Cl_M88(T):
 
 # --- psi: calcium sodium sulfate ---------------------------------------------
     
-def Ca_Na_SO4_M88(T):
+def psi_Ca_Na_SO4_M88(T):
     
     psi = np.full_like(T,-0.012, dtype='float64')
     
@@ -380,7 +380,7 @@ def Ca_Na_SO4_M88(T):
 
 # --- psi: calcium chloride sulfate -------------------------------------------
     
-def Ca_Cl_SO4_M88(T):
+def psi_Ca_Cl_SO4_M88(T):
     
     psi = np.full_like(T,-0.018, dtype='float64')
     
@@ -390,7 +390,7 @@ def Ca_Cl_SO4_M88(T):
 
 # --- psi: sodium chloride sulfate --------------------------------------------
     
-def Na_Cl_SO4_M88(T):
+def psi_Na_Cl_SO4_M88(T):
     
     psi = np.full_like(T,-0.009, dtype='float64')
     
@@ -400,7 +400,7 @@ def Na_Cl_SO4_M88(T):
 
 # --- dissociation: water -----------------------------------------------------
     
-def Kw_M88(T):
+def dissoc_H2O_M88(T):
     
     lnKw  = M88_eq13(T,
                      np.float_([ 1.04031130e+3,
@@ -428,9 +428,9 @@ GM89_eq3 = M88_eq13
 
 # --- bC: calcium chloride ----------------------------------------------------
 
-def Ca_Cl_GM89(T):
+def bC_Ca_Cl_GM89(T):
     
-    b0,b1,b2,_,C1,alph1,alph2,omega,valid = Ca_Cl_M88(T)
+    b0,b1,b2,_,C1,alph1,alph2,omega,valid = bC_Ca_Cl_M88(T)
     
     Cphi  = GM89_eq3(T,
                      np.float_([ 1.93056024e+1,
@@ -450,7 +450,7 @@ def Ca_Cl_GM89(T):
 
 # --- bC: potassium chloride --------------------------------------------------
 
-def K_Cl_GM89(T):
+def bC_K_Cl_GM89(T):
     
     b0    = GM89_eq3(T,
                      np.float_([ 2.67375563e+1,
@@ -500,7 +500,7 @@ def K_Cl_GM89(T):
 
 # --- bC: potassium sulfate ---------------------------------------------------
 
-def K_SO4_GM89(T):
+def bC_K_SO4_GM89(T):
     
     b0    = GM89_eq3(T,
                      np.float_([ 4.07908797e+1,
@@ -542,7 +542,7 @@ def K_SO4_GM89(T):
 
 # --- theta: calcium potassium ------------------------------------------------
 
-def Ca_K_GM89(T):
+def theta_Ca_K_GM89(T):
     
     theta = np.full_like(T,0.1156, dtype='float64')
     
@@ -552,7 +552,7 @@ def Ca_K_GM89(T):
 
 # --- theta: potassium sodium -------------------------------------------------
     
-def K_Na_GM89(T):
+def theta_K_Na_GM89(T):
     
     theta = GM89_eq3(T,
                      np.float_([-5.02312111e-2,
@@ -570,7 +570,7 @@ def K_Na_GM89(T):
 
 # --- psi: calcium potassium chloride -----------------------------------------
     
-def Ca_K_Cl_GM89(T):
+def psi_Ca_K_Cl_GM89(T):
     
     psi   = GM89_eq3(T,
                      np.float_([ 4.76278977e-2,
@@ -588,7 +588,7 @@ def Ca_K_Cl_GM89(T):
 
 # --- psi: calcium potassium sulfate ------------------------------------------
 
-def Ca_K_SO4_GM89(T):
+def psi_Ca_K_SO4_GM89(T):
     
     theta = np.zeros_like(T)
     
@@ -598,7 +598,7 @@ def Ca_K_SO4_GM89(T):
 
 # --- psi: potassium sodium chloride ------------------------------------------
     
-def K_Na_Cl_GM89(T):
+def psi_K_Na_Cl_GM89(T):
     
     psi   = GM89_eq3(T,
                      np.float_([ 1.34211308e-2,
@@ -616,7 +616,7 @@ def K_Na_Cl_GM89(T):
 
 # --- psi: potassium sodium sulfate -------------------------------------------
     
-def K_Na_SO4_GM89(T):
+def psi_K_Na_SO4_GM89(T):
     
     psi   = GM89_eq3(T,
                      np.float_([ 3.48115174e-2,
@@ -634,7 +634,7 @@ def K_Na_SO4_GM89(T):
 
 # --- psi: potassium chloride sulfate -----------------------------------------
     
-def K_Cl_SO4_GM89(T):
+def psi_K_Cl_SO4_GM89(T):
     
     psi   = GM89_eq3(T,
                      np.float_([-2.12481475e-1,
@@ -688,7 +688,7 @@ def A92ii_eq36(T,p,a):
 
 # --- bC: sodium chloride -----------------------------------------------------
 
-def Na_Cl_A92ii(T):
+def bC_Na_Cl_A92ii(T):
 
     # Pressure can be varied
     p = np.float_(0.101325) # MPa
@@ -824,7 +824,7 @@ CMR93_eq31 = M88_eq13
 
 # --- bC: potassium chloride --------------------------------------------------
 
-def H_Cl_CMR93(T):
+def bC_H_Cl_CMR93(T):
     
     b0    = CMR93_eq31(T,
                        np.float_([   1.2859     ,
@@ -874,7 +874,7 @@ def H_Cl_CMR93(T):
 
 # --- theta: hydrogen potassium -----------------------------------------------
 
-def H_K_CMR93(T):
+def theta_H_K_CMR93(T):
     
     theta = np.float_(0.005) - np.float_(0.0002275) * T
     
@@ -884,7 +884,7 @@ def H_K_CMR93(T):
 
 # --- theta: hydrogen sodium --------------------------------------------------
 
-def H_Na_CMR93(T):
+def theta_H_Na_CMR93(T):
     
     theta = np.float_(0.0342) - np.float_(0.000209) * T
     
@@ -894,7 +894,7 @@ def H_Na_CMR93(T):
 
 # --- psi: hydrogen potassium chloride ----------------------------------------
 
-def H_K_Cl_CMR93(T):
+def psi_H_K_Cl_CMR93(T):
     
     psi   = np.zeros_like(T)
     
@@ -904,7 +904,7 @@ def H_K_Cl_CMR93(T):
 
 # --- psi: hydrogen sodium chloride -------------------------------------------
 
-def H_Na_Cl_CMR93(T):
+def psi_H_Na_Cl_CMR93(T):
     
     psi   = np.zeros_like(T)
     
@@ -977,7 +977,7 @@ def CRP94_eq24(T,q):
 
 # --- bC: hydrogen bisulfate --------------------------------------------------
 
-def H_HSO4_CRP94(T):
+def bC_H_HSO4_CRP94(T):
 
     # Evaluate coefficients, parameters from CRP94 Table 6
     b0 = CRP94_eq24(T,
@@ -1016,7 +1016,7 @@ def H_HSO4_CRP94(T):
 
 # --- bC: hydrogen sulfate ----------------------------------------------------
 
-def H_SO4_CRP94(T):
+def bC_H_SO4_CRP94(T):
 
     # Evaluate coefficients, parameters from CRP94 Table 6
     b0 = CRP94_eq24(T,
@@ -1055,7 +1055,7 @@ def H_SO4_CRP94(T):
 
 # --- theta: bisulfate sulfate ------------------------------------------------
     
-def HSO4_SO4_CRP94(T):
+def theta_HSO4_SO4_CRP94(T):
     
     theta = np.zeros_like(T)
     
@@ -1065,7 +1065,7 @@ def HSO4_SO4_CRP94(T):
 
 # --- psi: hydrogen bisulfate sulfate -----------------------------------------
     
-def H_HSO4_SO4_CRP94(T):
+def psi_H_HSO4_SO4_CRP94(T):
     
     psi   = np.zeros_like(T)
     
@@ -1075,7 +1075,7 @@ def H_HSO4_SO4_CRP94(T):
 
 # --- dissociation: bisulfate -------------------------------------------------
 
-def KHSO4_CRP94(T):
+def dissoc_HSO4_CRP94(T):
     
     valid = np.logical_and(T >= 273.15, T <= 328.15)
     
