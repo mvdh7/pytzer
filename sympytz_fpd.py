@@ -1,37 +1,47 @@
-# Import libraries
+#%% Import libraries
 from autograd import numpy as np
 from autograd import elementwise_grad as egrad
-import numpy as xnp
 import pandas as pd
 from scipy import optimize
 import pickle
 import pytzer as pz
+from mvdh import ismember
 
 # Load raw datasets
 datapath = 'datasets/'
-fpdbase = pz.data.fpd(datapath)
+fpdbase,mols,ions = pz.data.fpd(datapath)
 
-# Select data for analysis
-fpdbase = fpdbase[fpdbase.smooth == 0]
-fpdbase = fpdbase[xnp.logical_or.reduce((fpdbase.ele == 'NaCl',
-                                         fpdbase.ele == 'KCl'))]#,
-#                                         fpdbase.ele == 'CaCl2'))]
-#fpdbase = fpdbase[fpdbase.ele == 'NaCl']
+# Select electrolytes for analysis
+fpdbase,mols,ions = pz.data.subset_ele(fpdbase,mols,ions,
+                                       np.array(['NaCl','KCl']))
 
-ions = np.array(['Na','K','Cl'])
+# Exclude smoothed datasets
+S = fpdbase.smooth == 0
+fpdbase = fpdbase[S]
+mols    = mols   [S]
 
 # Prepare model cdict
 cf = pz.cdicts.cdict()
-cf.bC['Na-Cl'] = pz.coeffs.Na_Cl_A92ii
-cf.bC['K-Cl' ] = pz.coeffs.K_Cl_GM89
+cf.bC['Na-Cl'] = pz.coeffs.bC_Na_Cl_A92ii
+cf.bC['K-Cl' ] = pz.coeffs.bC_K_Cl_GM89
+cf.theta['K-Na'] = pz.coeffs.theta_zero
+cf.psi['K-Na-Cl'] = pz.coeffs.psi_zero
 cf.dh['Aosm']  = pz.coeffs.Aosm_M88
 cf.dh['AH']    = pz.coeffs.AH_MPH
 
+# Extract and vstack a pandas series
+def pd2vs(series):
+    return np.vstack(series.values)
+
+# Calculate osmotic coefficient at measurement temperature
+T   = pd2vs(fpdbase.t  )
+fpd = pd2vs(fpdbase.fpd)
+fpdbase['osm_meas'] = pz.tconv.fpd2osm(mols,fpd)
+fpdbase['osm_calc'] = pz.model.osm(mols,ions,T,cf)
+
 # Convert temperatures to 298.15 K
 fpdbase['t25'] = np.full_like(fpdbase.t,298.15, dtype='float64')
-
-def pd2np(series):
-    return np.vstack(series.values)
+T25 = pd2vs(fpdbase.t25)
 
 # Create initial electrolytes pivot table
 fpde = pd.pivot_table(fpdbase,
@@ -40,29 +50,31 @@ fpde = pd.pivot_table(fpdbase,
                       aggfunc = [np.min,np.max,len])
 
 # Convert measured FPD into osmotic coeff. at 298.15 K
-fpdbase['osm25'] = np.nan
-fpdbase['osm25'] = pz.tconv.osm2osm(pd2np(fpdbase.m),
-                                    pd2np(fpdbase.nC),
-                                    pd2np(fpdbase.nA),
-                                    ions,
-                                    pd2np(fpdbase.t),
-                                    pd2np(fpdbase.t25),
-                                    pd2np(fpdbase.t25),
-                                    cf,
-                                    pd2np(fpdbase.osm))
+fpdbase['osm25_meas'] = np.nan
+
+for ele in fpde.index:
+    
+    Efpdbase,_,Eions = pz.data.subset_ele(fpdbase,mols,ions,np.array([ele]))
+    EL = ismember(fpdbase.ele,np.array([ele]))
+    
+    fpdbase.loc[EL,'osm25_meas'] = pz.tconv.osm2osm(
+            pd2vs(Efpdbase.m),pd2vs(Efpdbase.nC),pd2vs(Efpdbase.nA),
+            Eions,pd2vs(Efpdbase.t),pd2vs(Efpdbase.t25),pd2vs(Efpdbase.t25),
+            cf,pd2vs(Efpdbase.osm_meas))
 
 # Calculate model osmotic coefficient at 298.15 K
-mols = np.vstack((fpdbase.m,fpdbase.m)).transpose()
-fpdbase['osm25_calc'] = pz.model.osm(mols,ions,pd2np(fpdbase.t25),cf)
-fpdbase['dosm25'] = fpdbase.osm25 - fpdbase.osm25_calc
+fpdbase['osm25_calc'] = pz.model.osm(mols,ions,T25,cf)
+fpdbase['dosm'  ] = fpdbase.osm_meas   - fpdbase.osm_calc
+fpdbase['dosm25'] = fpdbase.osm25_meas - fpdbase.osm25_calc
 
+## Quickly visualise residuals
 #from matplotlib import pyplot as plt
 #fig,ax = plt.subplots(1,1)
 #fpdbase.plot.scatter('m','dosm25', ax=ax)
 #ax.set_xlim((0,6))
 #ax.grid(alpha=0.5)
 
-# Create electrolytes/sources pivot table
+#%% Create electrolytes/sources pivot table
 fpdp = pd.pivot_table(fpdbase,
                       values  = ['m','dosm25'],
                       index   = ['ele','src'],
@@ -95,54 +107,17 @@ def fpd2osm25(bs,ms,mw,fpd,nC,nA,ions,T0,T1,TR,cf):
 dosm25_dbs  = egrad(fpd2osm25)
 dosm25_dfpd = egrad(fpd2osm25, argnum=3)
 
-tot = pd2np(fpdbase.m)
+tot = pd2vs(fpdbase.m)
 mw = np.float_(1)
 bs = np.vstack(fpdbase.ele.map(pz.prop.solubility25).values)
 ms = tot * mw / (bs - tot)
-
-## Check propagation equation works
-#bs = np.full_like(tot,pz.prop.solubility25['NaCl'])
-#
-#fpdbase['osm25_test'] = fpd2osm25   (bs,ms,mw,
-#                                     pd2np(fpdbase.fpd),
-#                                     pd2np(fpdbase.nC),
-#                                     pd2np(fpdbase.nA),
-#                                     ions,
-#                                     pd2np(fpdbase.t),
-#                                     pd2np(fpdbase.t25),
-#                                     pd2np(fpdbase.t25),
-#                                     cf)
-#
-#fpdbase['dosm25_dbs'] = dosm25_dbs  (bs,ms,mw,
-#                                     pd2np(fpdbase.fpd),
-#                                     pd2np(fpdbase.nC),
-#                                     pd2np(fpdbase.nA),
-#                                     ions,
-#                                     pd2np(fpdbase.t),
-#                                     pd2np(fpdbase.t25),
-#                                     pd2np(fpdbase.t25),
-#                                     cf)
-#
-#fpdbase['dosm25_dfpd'] = dosm25_dfpd(bs,ms,mw,
-#                                     pd2np(fpdbase.fpd),
-#                                     pd2np(fpdbase.nC),
-#                                     pd2np(fpdbase.nA),
-#                                     ions,
-#                                     pd2np(fpdbase.t),
-#                                     pd2np(fpdbase.t25),
-#                                     pd2np(fpdbase.t25),
-#                                     cf)
-
-## Plot components
-#from matplotlib import pyplot as plt
-#fig,ax = plt.subplots(1,1)
 
 #%% Run uncertainty propagation analysis [FPD]
 ionslist = [np.array(['Na','Cl']), np.array(['K','Cl'])]
 
 for E,ele in enumerate(fpdp.index.levels[0]):
     
-    ions = ionslist[E]
+    Eions = ionslist[E]
 
     print('Optimising FPD fit for ' + ele + '...')
 
@@ -156,13 +131,13 @@ for E,ele in enumerate(fpdp.index.levels[0]):
         optemp = optimize.least_squares(
             lambda Dbs: fpdbase.dosm25[SL] - Dbs \
                 * dosm25_dbs (bs[SL],ms[SL],mw,
-                              pd2np(fpdbase.fpd[SL]),
-                              pd2np(fpdbase.nC),
-                              pd2np(fpdbase.nA),
-                              ions,
-                              pd2np(fpdbase.t[SL]),
-                              pd2np(fpdbase.t25[SL]),
-                              pd2np(fpdbase.t25[SL]),
+                              pd2vs(fpdbase.fpd[SL]),
+                              pd2vs(fpdbase.nC),
+                              pd2vs(fpdbase.nA),
+                              Eions,
+                              pd2vs(fpdbase.t[SL]),
+                              pd2vs(fpdbase.t25[SL]),
+                              pd2vs(fpdbase.t25[SL]),
                               cf).ravel(),
             0)
 
@@ -173,13 +148,13 @@ for E,ele in enumerate(fpdp.index.levels[0]):
         optemp = optimize.least_squares(
             lambda Dfpd: fpdbase.dosm25[SL] - Dfpd \
                 * dosm25_dfpd(bs[SL],ms[SL],mw,
-                              pd2np(fpdbase.fpd[SL]),
-                              pd2np(fpdbase.nC),
-                              pd2np(fpdbase.nA),
-                              ions,
-                              pd2np(fpdbase.t[SL]),
-                              pd2np(fpdbase.t25[SL]),
-                              pd2np(fpdbase.t25[SL]),
+                              pd2vs(fpdbase.fpd[SL]),
+                              pd2vs(fpdbase.nC),
+                              pd2vs(fpdbase.nA),
+                              Eions,
+                              pd2vs(fpdbase.t[SL]),
+                              pd2vs(fpdbase.t25[SL]),
+                              pd2vs(fpdbase.t25[SL]),
                               cf).ravel(),
             0)
                 
@@ -197,23 +172,23 @@ for E,ele in enumerate(fpdp.index.levels[0]):
         fpdbase.loc[SL,'dosm25_sys'] = fpdbase.dosm25[SL] \
             - err_cfs_both[ele][src][0] \
                 * dosm25_dbs (bs[SL],ms[SL],mw,
-                              pd2np(fpdbase.fpd[SL]),
-                              pd2np(fpdbase.nC),
-                              pd2np(fpdbase.nA),
-                              ions,
-                              pd2np(fpdbase.t[SL]),
-                              pd2np(fpdbase.t25[SL]),
-                              pd2np(fpdbase.t25[SL]),
+                              pd2vs(fpdbase.fpd[SL]),
+                              pd2vs(fpdbase.nC),
+                              pd2vs(fpdbase.nA),
+                              Eions,
+                              pd2vs(fpdbase.t[SL]),
+                              pd2vs(fpdbase.t25[SL]),
+                              pd2vs(fpdbase.t25[SL]),
                               cf).ravel() \
             - err_cfs_both[ele][src][1] \
                 * dosm25_dfpd(bs[SL],ms[SL],mw,
-                              pd2np(fpdbase.fpd[SL]),
-                              pd2np(fpdbase.nC),
-                              pd2np(fpdbase.nA),
-                              ions,
-                              pd2np(fpdbase.t[SL]),
-                              pd2np(fpdbase.t25[SL]),
-                              pd2np(fpdbase.t25[SL]),
+                              pd2vs(fpdbase.fpd[SL]),
+                              pd2vs(fpdbase.nC),
+                              pd2vs(fpdbase.nA),
+                              Eions,
+                              pd2vs(fpdbase.t[SL]),
+                              pd2vs(fpdbase.t25[SL]),
+                              pd2vs(fpdbase.t25[SL]),
                               cf).ravel()
 
         # Get st. dev. of residuals [FPD]

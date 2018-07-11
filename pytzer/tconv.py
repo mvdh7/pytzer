@@ -44,11 +44,11 @@ def O(T0,T1):
 # wrt. molality
 dCpapp_dm = egrad(model.Cpapp)
 
-def J1(tot,nC,nA,ions,T,cf): # HO58 Ch. 8 Eq. (8-4-9)
-    return -Mw * tot**2 * dCpapp_dm(tot,nC,nA,ions,T,cf)
+def J1(tot,n1,n2,ions,T,cf): # HO58 Ch. 8 Eq. (8-4-9)
+    return -Mw * tot**2 * dCpapp_dm(tot,n1,n2,ions,T,cf)
 
-def J2(tot,nC,nA,ions,T,cf): # HO58 Ch. 8 Eq. (8-4-7)
-    return tot * dCpapp_dm(tot,nC,nA,ions,T,cf)
+def J2(tot,n1,n2,ions,T,cf): # HO58 Ch. 8 Eq. (8-4-7)
+    return tot * dCpapp_dm(tot,n1,n2,ions,T,cf)
 
 # wrt. temperature
 G1 = egrad(J1, argnum=4)
@@ -59,33 +59,33 @@ G2 = egrad(J2, argnum=4)
 # wrt. molality
 dLapp_dm = egrad(model.Lapp)
 
-def L1(tot,nC,nA,ions,T,cf): # HO58 Ch. 8 Eq. (8-4-9)
-    return -Mw * tot**2 * dLapp_dm(tot,nC,nA,ions,T,cf)
+def L1(tot,n1,n2,ions,T,cf): # HO58 Ch. 8 Eq. (8-4-9)
+    return -Mw * tot**2 * dLapp_dm(tot,n1,n2,ions,T,cf)
 
-def L2(tot,nC,nA,ions,T,cf): # HO58 Ch. 8 Eq. (8-4-7)
-    return    model.Lapp(tot,nC,nA,ions,T,cf) \
-        + tot * dLapp_dm(tot,nC,nA,ions,T,cf)
+def L2(tot,n1,n2,ions,T,cf): # HO58 Ch. 8 Eq. (8-4-7)
+    return    model.Lapp(tot,n1,n2,ions,T,cf) \
+        + tot * dLapp_dm(tot,n1,n2,ions,T,cf)
 
 # --- Execute temperature conversion ------------------------------------------
 
 # Osmotic coefficient
-def osm2osm(tot,nC,nA,ions,T0,T1,TR,cf,osm_T0):
+def osm2osm(tot,n1,n2,ions,T0,T1,TR,cf,osm_T0):
     
     tot = np.vstack(tot)
     T0  = np.vstack(T0)
     T1  = np.vstack(T1)
     TR  = np.vstack(TR)
     
-    lnAW_T0 = -osm_T0 * tot * (nC + nA) * Mw
+    lnAW_T0 = -osm_T0 * tot * (n1 + n2) * Mw
     
-    lnAW_T1 = lnAW_T0 - y(T0,T1) * L1(tot,nC,nA,ions,TR,cf) \
-                      + z(T0,T1) * J1(tot,nC,nA,ions,TR,cf) \
-                      - O(T0,T1) * G1(tot,nC,nA,ions,TR,cf)
+    lnAW_T1 = lnAW_T0 - y(T0,T1) * L1(tot,n1,n2,ions,TR,cf) \
+                      + z(T0,T1) * J1(tot,n1,n2,ions,TR,cf) \
+                      - O(T0,T1) * G1(tot,n1,n2,ions,TR,cf)
 
-    return -lnAW_T1 / (tot * (nC + nA) * Mw)
+    return -lnAW_T1 / (tot * (n1 + n2) * Mw)
     
 # Solute mean activity coefficient
-def acf2acf(tot,nC,nA,ions,T0,T1,TR,cf,acf_T0):
+def acf2acf(tot,n1,n2,ions,T0,T1,TR,cf,acf_T0):
     
     tot = np.vstack(tot)
     T0  = np.vstack(T0)
@@ -94,8 +94,9 @@ def acf2acf(tot,nC,nA,ions,T0,T1,TR,cf,acf_T0):
     
     ln_acf_T0 = np.log(acf_T0)
     
-    ln_acf_T1 = ln_acf_T0 + (- y(T0,T1) * L2(tot,nC,nA,ions,TR,cf) \
-                          + z(T0,T1) * J2(tot,nC,nA,ions,TR,cf) \
-                          - O(T0,T1) * G2(tot,nC,nA,ions,TR,cf)) / (nC + nA)
+    ln_acf_T1 = ln_acf_T0 + (- y(T0,T1) * L2(tot,n1,n2,ions,TR,cf)  \
+                             + z(T0,T1) * J2(tot,n1,n2,ions,TR,cf)  \
+                             - O(T0,T1) * G2(tot,n1,n2,ions,TR,cf)) \
+                          / (n1 + n2)
     
     return np.exp(ln_acf_T1)

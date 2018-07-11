@@ -214,6 +214,7 @@ def ele2ions(ele):
     return np.unique(np.array([idict[ionpair] for ionpair in ele]).ravel()), \
         idict
         
+# Get a subset of electrolytes from a database
 def subset_ele(xxxbase,mols,ions,subset):
     
     R = ismember(xxxbase.ele,subset)

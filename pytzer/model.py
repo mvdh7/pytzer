@@ -238,11 +238,11 @@ def aw2osm(mols,aw):
 dGex_T_dT = egrad(Gex_nRT, argnum=2)
 
 # Apparent relative molal enthalpy (single electrolyte)
-def Lapp(tot,nC,nA,ions,T,cf):
+def Lapp(tot,n1,n2,ions,T,cf):
     
-    mC = (tot * nC).ravel()
-    mA = (tot * nA).ravel()
-    mols = np.vstack((mC,mA)).transpose()
+    m1 = (tot * n1).ravel()
+    m2 = (tot * n2).ravel()
+    mols = np.vstack((m1,m2)).transpose()
     
     return -T**2 * dGex_T_dT(mols,ions,T,cf) * R / tot
 
