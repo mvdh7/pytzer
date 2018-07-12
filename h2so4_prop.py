@@ -12,7 +12,7 @@ q = np.loadtxt('datasets/allmt_coeffs.res', skiprows=9)
 q = q[:27,1]
 
 # Import their covariance matrix
-qmx = np.loadtxt('datasets/allmt_stats.res_base', skiprows=17)
+qmx = np.loadtxt('datasets/allmt_stats.res_superlong', skiprows=17)
 qmx = qmx[:27,:27]
 
 #qmx = qmx + 1e-7 * np.eye(*np.shape(qmx))
@@ -205,7 +205,7 @@ crp94['acfPM_unc'] = np.diagonal(JqacfPM @ qmx @ JqacfPM.transpose())
 crp94['lnacfPM_unc'] = np.diagonal(JlnqacfPM @ qmx @ JlnqacfPM.transpose())
 
 # Monte-Carlo propagation
-Ureps = int(1e2)
+Ureps = int(1e3)
 UacfPM   = np.full((np.size(T),Ureps),np.nan)
 UlnacfPM = np.full((np.size(T),Ureps),np.nan)
 
@@ -218,9 +218,9 @@ for i in range(Ureps):
 UacfPM_var   = np.var(UacfPM  , axis=1)
 UlnacfPM_var = np.var(UlnacfPM, axis=1)
 
-## Pickle results for plotting
-#with open('pickles/h2so4_prop_eye.pkl','wb') as f:
-#    pickle.dump((crp94,UlnacfPM,UlnacfPM_var,UacfPM,UacfPM_var),f)
+# Pickle results for plotting
+with open('pickles/h2so4_prop_eye2.pkl','wb') as f:
+    pickle.dump((crp94,UlnacfPM,UlnacfPM_var,UacfPM,UacfPM_var),f)
 
 ## Visualise results
 #fig,ax = plt.subplots(1,1)
