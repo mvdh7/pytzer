@@ -12,10 +12,10 @@ q = np.loadtxt('datasets/allmt_coeffs.res', skiprows=9)
 q = q[:27,1]
 
 # Import their covariance matrix
-qmx = np.loadtxt('datasets/allmt_stats.res', skiprows=17)
+qmx = np.loadtxt('datasets/allmt_stats.res_base', skiprows=17)
 qmx = qmx[:27,:27]
 
-qmx = qmx + 1e-7 * np.eye(*np.shape(qmx))
+#qmx = qmx + 1e-7 * np.eye(*np.shape(qmx))
 
 ## Define test conditions
 #tot = np.vstack([1.6])
@@ -149,9 +149,9 @@ crp94['acfPM_pz'] = np.cbrt((acfs[:,0]*mols[:,0])**2 * acfs[:,2]*mols[:,2] \
 
 # _x = target values following CRP94, as a sanity check
 b0_H_HSO4_x,b1_H_HSO4_x,_,C0_H_HSO4_x,C1_H_HSO4_x,alph1_H_HSO4_x,_, \
-    omega_H_HSO4_x,_ = pz.coeffs.H_HSO4_CRP94(T)
+    omega_H_HSO4_x,_ = pz.coeffs.bC_H_HSO4_CRP94(T)
 b0_H_SO4_x,b1_H_SO4_x,_,C0_H_SO4_x,C1_H_SO4_x,alph1_H_SO4_x,_, \
-    omega_H_SO4_x,_ = pz.coeffs.H_SO4_CRP94(T)
+    omega_H_SO4_x,_ = pz.coeffs.bC_H_SO4_CRP94(T)
 
 # Re-evaluate using pz.fitting functions
 Gex2 = pz.fitting.Gex_MXY(mols,zH,zHSO4,zSO4,T,
