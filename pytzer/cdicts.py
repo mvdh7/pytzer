@@ -20,12 +20,12 @@ class cdict:
         Keq = np.zeros_like(T, dtype='float64')
         
         if 'H2O' in Klist:
-            Keq = Keq + np.log(gH*mH.ravel() * gOH*mOH.ravel()) \
+            Keq = Keq + np.log(gH*mH * gOH*mOH) \
                 - np.log(self.K['H2O'](T)[0])
         
         if 'HSO4' in Klist:
-            Keq = Keq + np.log(gH*mH.ravel() * gSO4*mSO4.ravel() \
-                / (gHSO4*mHSO4.ravel())) \
+            Keq = Keq + np.log(gH*mH * gSO4*mSO4 \
+                / (gHSO4*mHSO4)) \
                 - np.log(self.K['HSO4'](T)[0])
             
         return Keq
