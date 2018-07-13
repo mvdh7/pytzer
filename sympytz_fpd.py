@@ -5,7 +5,7 @@ from scipy import optimize
 import pickle
 import pytzer as pz
 from mvdh import ismember
-pd2vs = pz.sim.pd2vs
+pd2vs = pz.misc.pd2vs
 
 # Load raw datasets
 datapath = 'datasets/'

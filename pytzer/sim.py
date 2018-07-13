@@ -19,10 +19,6 @@ def fpd2osm25(bs,ms,mw,fpd,nC,nA,ions,T0,T1,TR,cf):
 dosm25_dbs  = egrad(fpd2osm25)
 dosm25_dfpd = egrad(fpd2osm25, argnum=3)
 
-# Extract and vstack a pandas series
-def pd2vs(series):
-    return np.vstack(series.values)
-
 # Simulate new fpd dataset for one electrolyte
 def fpd(fpdbase,ele,src,cf,err_cfs_both,fpd_sys_std):
     
