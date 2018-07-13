@@ -185,6 +185,189 @@ def bC_Mg_Cl_PP87i(T):
 ###############################################################################
     
 #%%############################################################################
+# === SIMONSON ET AL 1987 =====================================================
+
+def SRRJ87_eq7(T,a):
+    
+    Tr = np.float_(298.15) 
+    return a[0]                      \
+         + a[1] * 1e-3 * (T - Tr)    \
+         + a[2] * 1e-5 * (T - Tr)**2
+
+# --- bC: potassium chloride --------------------------------------------------
+    
+def bC_K_Cl_SRRJ87(T):
+    
+    # Coefficients from SRRJ87 Table III
+    
+    b0   = SRRJ87_eq7(T,np.float_([ 0.0481,
+                                    0.592 ,
+                                   -0.562 ]))
+    
+    b1   = SRRJ87_eq7(T,np.float_([ 0.2188,
+                                    1.500 ,
+                                   -1.085 ]))
+    
+    b2 = np.zeros_like(T)
+    
+    Cphi = SRRJ87_eq7(T,np.float_([-0.790 ,
+                                   -0.639 ,
+                                    0.613 ]))
+    
+    zK    = np.float_(+1)
+    zCl   = np.float_(-1)
+    C0    = Cphi / (2 * np.sqrt(np.abs(zK*zCl)))
+    
+    C1    = np.zeros_like(T)
+    
+    alph1 = np.float_(2)
+    alph2 = -9
+    omega = -9
+    
+    valid = np.logical_and(T >= 278.15, T <= 328.15)
+    
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+# --- bC: sodium chloride -----------------------------------------------------
+    
+def bC_Na_Cl_SRRJ87(T):
+    
+    # Coefficients from SRRJ87 Table III
+    
+    b0   = SRRJ87_eq7(T,np.float_([ 0.0754,
+                                    0.792 ,
+                                   -0.935 ]))
+    
+    b1   = SRRJ87_eq7(T,np.float_([ 0.2770,
+                                    1.006 ,
+                                   -0.756 ]))
+    
+    b2 = np.zeros_like(T)
+    
+    Cphi = SRRJ87_eq7(T,np.float_([ 1.40  ,
+                                   -1.20  ,
+                                    1.15  ]))
+    
+    zNa   = np.float_(+1)
+    zCl   = np.float_(-1)
+    C0    = Cphi / (2 * np.sqrt(np.abs(zNa*zCl)))
+    
+    C1    = np.zeros_like(T)
+    
+    alph1 = np.float_(2)
+    alph2 = -9
+    omega = -9
+    
+    valid = np.logical_and(T >= 278.15, T <= 328.15)
+    
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+# --- bC: potassium borate ----------------------------------------------------
+    
+def bC_K_BOH4_SRRJ87(T):
+    
+    # Coefficients from SRRJ87 Table III
+    
+    b0   = SRRJ87_eq7(T,np.float_([  0.1469,
+                                     2.881 ,
+                                     0     ]))
+    
+    b1   = SRRJ87_eq7(T,np.float_([- 0.0989,
+                                   - 6.876 ,
+                                     0     ]))
+    
+    b2 = np.zeros_like(T)
+    
+    Cphi = SRRJ87_eq7(T,np.float_([-56.43  ,
+                                   - 9.56  ,
+                                     0     ]))
+    
+    zK    = np.float_(+1)
+    zCl   = np.float_(-1)
+    C0    = Cphi / (2 * np.sqrt(np.abs(zK*zCl)))
+    
+    C1    = np.zeros_like(T)
+    
+    alph1 = np.float_(2)
+    alph2 = -9
+    omega = -9
+    
+    valid = np.logical_and(T >= 278.15, T <= 328.15)
+    
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+# --- bC: sodium borate ----------------------------------------------------------------
+    
+def bC_Na_BOH4_SRRJ87(T):
+    
+    # Coefficients from SRRJ87 Table III
+    
+    b0   = SRRJ87_eq7(T,np.float_([- 0.0510,
+                                     5.264 ,
+                                     0     ]))
+    
+    b1   = SRRJ87_eq7(T,np.float_([  0.0961,
+                                   -10.68  ,
+                                     0     ]))
+    
+    b2 = np.zeros_like(T)
+    
+    Cphi = SRRJ87_eq7(T,np.float_([ 14.98  ,
+                                   -15.7   ,
+                                     0     ]))
+    
+    zNa   = np.float_(+1)
+    zCl   = np.float_(-1)
+    C0    = Cphi / (2 * np.sqrt(np.abs(zNa*zCl)))
+    
+    C1    = np.zeros_like(T)
+    
+    alph1 = np.float_(2)
+    alph2 = -9
+    omega = -9
+    
+    valid = np.logical_and(T >= 278.15, T <= 328.15)
+    
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+# --- theta: borate chloride --------------------------------------------------
+    
+def theta_BOH4_Cl_SRRJ87(T):
+    
+    # Coefficient from SRRJ87 Table III
+    
+    theta = np.full_like(T,-0.056, dtype='float64')
+    
+    valid = np.logical_and(T >= 278.15, T <= 328.15)
+    
+    return theta, valid
+
+# --- psi: potassium borate chloride ------------------------------------------
+    
+def psi_K_BOH4_Cl_SRRJ87(T):
+    
+    psi   = np.zeros_like(T)
+    
+    valid = np.logical_and(T >= 278.15, T <= 328.15)
+    
+    return psi, valid
+
+# --- psi: sodium borate chloride ---------------------------------------------
+    
+def psi_Na_BOH4_Cl_SRRJ87(T):
+    
+    # Coefficient from SRRJ87 Table III
+    
+    psi   = np.full_like(T,-0.019, dtype='float64')
+    
+    valid = np.logical_and(T >= 278.15, T <= 328.15)
+    
+    return psi, valid
+
+# === SIMONSON ET AL 1987 =====================================================    
+###############################################################################
+
+#%%############################################################################
 # === MOLLER 1988 =============================================================
 
 def M88_eq13(T,a):
