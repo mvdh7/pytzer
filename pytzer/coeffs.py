@@ -37,16 +37,56 @@ def psi_zero(T):
 ###############################################################################
 
 #%%############################################################################
+# === DE LIMA & PITZER 1983 ===================================================
+
+# --- bC: magnesium chloride --------------------------------------------------
+
+def bC_Mg_Cl_dLP83(T):
+    
+    # dLP83 Eq. (11)
+    
+    b0   = 5.93915e-7 * T**2 \
+         - 9.31654e-4 * T    \
+         + 0.576066
+        
+    b1   = 2.60169e-5 * T**2 \
+         - 1.09438e-2 * T    \
+         + 2.60135
+        
+    b2 = np.zeros_like(T)
+    
+    Cphi = 3.01823e-7 * T**2 \
+         - 2.89125e-4 * T    \
+         + 6.57867e-2
+    
+    zMg   = np.float_(+2)
+    zCl   = np.float_(-1)
+    C0    = Cphi / (2 * np.sqrt(np.abs(zMg*zCl)))
+    
+    C1    = np.zeros_like(T)
+    
+    alph1 = np.float_(2)
+    alph2 = -9
+    omega = -9
+    
+    valid = np.logical_and(T >= 298.15, T <= 523.15)
+    
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+# === DE LIMA & PITZER 1983 ===================================================
+###############################################################################
+    
+#%%############################################################################
 # === PALABAN & PITZER 1987 ===================================================
 
 # Note that there are two Palaban & Pitzer (1987)'s: one compiling a suite of
-#  electrolytes, and one just for NaOH.
+#  electrolytes (PP87ii), and one just for NaOH (PP87i).
 # There are also a bunch of Phutela & Pitzer papers in similar years, so will
 #  need to take care with naming conventions!
 
 # --- bC: sodium hydroxide ----------------------------------------------------
 
-def PP87_eqNaOH(T,a):
+def PP87i_eqNaOH(T,a):
     
     P = Patm_bar
     
@@ -63,51 +103,51 @@ def PP87_eqNaOH(T,a):
          + a[10] / (647.-T)     \
          + a[11] * P / (647.-T)
 
-def bC_Na_OH_PP87(T):
+def bC_Na_OH_PP87i(T):
     
-    b0    = PP87_eqNaOH(T,
-                        np.float_([ 2.7682478e+2,
-                                   -2.8131778e-3,
-                                   -7.3755443e+3,
-                                    3.7012540e-1,
-                                   -4.9359970e+1,
-                                    1.0945106e-1,
-                                    7.1788733e-6,
-                                   -4.0218506e-5,
-                                   -5.8847404e-9,
-                                    1.1931122e-1,
-                                    2.4824963e00,
-                                   -4.8217410e-3]))
+    b0    = PP87i_eqNaOH(T,
+                         np.float_([ 2.7682478e+2,
+                                    -2.8131778e-3,
+                                    -7.3755443e+3,
+                                     3.7012540e-1,
+                                    -4.9359970e+1,
+                                     1.0945106e-1,
+                                     7.1788733e-6,
+                                    -4.0218506e-5,
+                                    -5.8847404e-9,
+                                     1.1931122e-1,
+                                     2.4824963e00,
+                                    -4.8217410e-3]))
     
-    b1    = PP87_eqNaOH(T,
-                        np.float_([ 4.6286977e+2,
-                                    0           ,
-                                   -1.0294181e+4,
-                                    0           ,
-                                   -8.5960581e+1,
-                                    2.3905969e-1,
-                                    0           ,
-                                   -1.0795894e-4,
-                                    0           ,
-                                    0           ,
-                                    0           ,
-                                    0           ]))
+    b1    = PP87i_eqNaOH(T,
+                         np.float_([ 4.6286977e+2,
+                                     0           ,
+                                    -1.0294181e+4,
+                                     0           ,
+                                    -8.5960581e+1,
+                                     2.3905969e-1,
+                                     0           ,
+                                    -1.0795894e-4,
+                                     0           ,
+                                     0           ,
+                                     0           ,
+                                     0           ]))
     
     b2    = np.zeros_like(T)
     
-    Cphi  = PP87_eqNaOH(T,
-                        np.float_([-1.66868970e+01,
-                                    4.05347780e-04,
-                                    4.53649610e+02,
-                                   -5.17140170e-02,
-                                    2.96807720e000,
-                                   -6.51616670e-03,
-                                   -1.05530373e-06,
-                                    2.37657860e-06,
-                                    8.98934050e-10,
-                                   -6.89238990e-01,
-                                   -8.11562860e-02,
-                                    0             ]))
+    Cphi  = PP87i_eqNaOH(T,
+                         np.float_([-1.66868970e+01,
+                                     4.05347780e-04,
+                                     4.53649610e+02,
+                                    -5.17140170e-02,
+                                     2.96807720e000,
+                                    -6.51616670e-03,
+                                    -1.05530373e-06,
+                                     2.37657860e-06,
+                                     8.98934050e-10,
+                                    -6.89238990e-01,
+                                    -8.11562860e-02,
+                                     0             ]))
     
     zNa   = np.float_(+1)
     zOH   = np.float_(-1)
@@ -120,6 +160,24 @@ def bC_Na_OH_PP87(T):
     omega = -9
     
     valid = np.logical_and(T >= 298.15, T <= 523.15)
+    
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+# --- bC: magnesium chloride --------------------------------------------------
+
+def bC_Mg_Cl_PP87i(T):
+    
+    b0,b1,b2,_,C1,alph1,alph2,omega,_ = bC_Mg_Cl_dLP83(T)
+    
+    Cphi = 2.41831e-7 * T**2 \
+         - 2.49949e-4 * T    \
+         + 5.95320e-2
+    
+    zMg   = np.float_(+2)
+    zCl   = np.float_(-1)
+    C0    = Cphi / (2 * np.sqrt(np.abs(zMg*zCl)))
+       
+    valid = np.logical_and(T >= 298.15, T <= 473.15)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -822,7 +880,7 @@ def bC_Na_Cl_A92ii(T):
     
 CMR93_eq31 = M88_eq13
 
-# --- bC: potassium chloride --------------------------------------------------
+# --- bC: hydrogen chloride ---------------------------------------------------
 
 def bC_H_Cl_CMR93(T):
     
