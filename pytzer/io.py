@@ -12,7 +12,7 @@ def getIons(filename):
     idf = idf.fillna(0)
     
     # Get temperatures
-    T = idf.temp.values
+    T = np.vstack(idf.temp.values)
     
     # Get ionic concentrations
     idf_tots = idf[idf.keys()[idf.keys() != 'temp']]
