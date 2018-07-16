@@ -5,7 +5,7 @@ with open('README.md','r') as fh:
 
 setuptools.setup(
     name         = 'pytzer',
-    version      = '0.1.3',
+    version      = '0.1.4',
     author       = 'Matthew P. Humphreys',
     author_email = 'm.p.humphreys@cantab.net',
     description  = 'Pitzer model for chemical speciation in natural waters',
