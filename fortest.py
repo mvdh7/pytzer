@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import pytzer as pz
 pd2vs = pz.misc.pd2vs
@@ -22,22 +23,31 @@ crp94['dissoc_HSO4'] = pz.coeffs.dissoc_HSO4_CRP94(T)[0]
 
 # Format arrays for Fortran
 fT         = T.ravel()
-ftot       = crp94.tot.values
-fb0_H_HSO4 = crp94.b0_H_HSO4.values
-fb1_H_HSO4 = crp94.b1_H_HSO4.values
-fC0_H_HSO4 = crp94.C0_H_HSO4.values
-fC1_H_HSO4 = crp94.C1_H_HSO4.values
-fb0_H_SO4  = crp94.b0_H_SO4.values
-fb1_H_SO4  = crp94.b1_H_SO4.values
-fC0_H_SO4  = crp94.C0_H_SO4.values
-fC1_H_SO4  = crp94.C1_H_SO4.values
-falph1     = crp94.alph1_H_SO4.values
-fdissoc    = crp94.dissoc_HSO4.values
+ftot       = pd2vs(crp94.tot).ravel()
+fb0_H_HSO4 = pd2vs(crp94.b0_H_HSO4).ravel()
+fb1_H_HSO4 = pd2vs(crp94.b1_H_HSO4).ravel()
+fC0_H_HSO4 = pd2vs(crp94.C0_H_HSO4).ravel()
+fC1_H_HSO4 = pd2vs(crp94.C1_H_HSO4).ravel()
+fb0_H_SO4  = pd2vs(crp94.b0_H_SO4).ravel()
+fb1_H_SO4  = pd2vs(crp94.b1_H_SO4).ravel()
+fC0_H_SO4  = pd2vs(crp94.C0_H_SO4).ravel()
+fC1_H_SO4  = pd2vs(crp94.C1_H_SO4).ravel()
+falph1     = pd2vs(crp94.alph1_H_SO4).ravel()
+fdissoc    = pd2vs(crp94.dissoc_HSO4).ravel()
 
 # Solve speciation
-test = pitzh2so4(fT,ftot,fb0_H_HSO4,fb1_H_HSO4,fC0_H_HSO4,fC1_H_HSO4,
-                 fb0_H_SO4,fb1_H_SO4,fC0_H_SO4,fC1_H_SO4,falph1,fdissoc)
+mH       = np.full_like(fT,np.nan)
+mHSO4    = np.full_like(fT,np.nan)
+mSO4     = np.full_like(fT,np.nan)
+osmST    = np.full_like(fT,np.nan)
+ln_acfPM = np.full_like(fT,np.nan)
+for i in range(len(fT)):
+    mH[i],mHSO4[i],mSO4[i],osmST[i],ln_acfPM[i] \
+        = pitzh2so4(fT[i],ftot[i],
+        fb0_H_HSO4[i],fb1_H_HSO4[i],fC0_H_HSO4[i],fC1_H_HSO4[i],
+        fb0_H_SO4 [i],fb1_H_SO4 [i],fC0_H_SO4 [i],fC1_H_SO4 [i],
+        falph1[i],fdissoc[i])
 
 # Save results
-with open('fortest1.pkl','wb') as f:
-    pickle.dump((crp94,test),f)
+with open('fortest4.pkl','wb') as f:
+    pickle.dump((crp94,mH,mHSO4,mSO4,osmST,ln_acfPM),f)
