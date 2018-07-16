@@ -245,7 +245,7 @@ C
 C
 C     ------------------------------------------------
 C   ..for 234.15 < T < 373.15 K, polynomial reproduces
-C     Archer's values directly:
+C     Archers values directly:
 C     ------------------------------------------------
       X=(2.D0*T-XMAX-XMIN)/(XMAX-XMIN)
       TX(0)=1.D0
