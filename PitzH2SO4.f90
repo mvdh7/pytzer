@@ -1,7 +1,7 @@
       MODULE PitzH2SO4
 C
 C     +++++++
-      PRIVATE
+!      PRIVATE
 C     +++++++
 C     ++++++
       PUBLIC :: H2SO4
