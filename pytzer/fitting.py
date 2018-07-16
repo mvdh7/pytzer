@@ -69,7 +69,7 @@ def osm(mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega,nC=None,nA=None):
         / (R * T * (np.sum(mCmA,axis=1)))
 
 ##### THREE-COMPONENT SYSTEM ##################################################
-        
+
 # Unsymmetric mixing functions
 def xij(T,I,z0,z1):
     

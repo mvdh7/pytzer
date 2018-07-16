@@ -5,6 +5,7 @@ from autograd import elementwise_grad as egrad
 import pandas as pd
 import pytzer as pz
 #from matplotlib import pyplot as plt
+from scipy import optimize
 import pickle
 
 # Import coefficients
@@ -221,6 +222,66 @@ UlnacfPM_var = np.var(UlnacfPM, axis=1)
 ## Pickle results for plotting
 #with open('pickles/h2so4_prop_eye2.pkl','wb') as f:
 #    pickle.dump((crp94,UlnacfPM,UlnacfPM_var,UacfPM,UacfPM_var),f)
+
+# qacf function with solver
+def minifun(mH,TSO4,zM,zX,zY,T,
+            b0_MX,b1_MX,b2_MX,C0_MX,C1_MX,alph1_MX,alph2_MX,omega_MX,
+            b0_MY,b1_MY,b2_MY,C0_MY,C1_MY,alph1_MY,alph2_MY,omega_MY,
+            dissoc_MX):
+    
+    # Calculate ionic speciation
+    mH = np.vstack(mH)
+    mHSO4 = 2*TSO4 - mH
+    mSO4  = mH - TSO4
+    
+    # Create molality & ions arrays
+    mols = np.concatenate((mH,mHSO4,mSO4), axis=1)
+    
+    # Calculate activity coefficients
+    ln_acfs = pz.fitting.ln_acfs_MXY(mols,zM,zX,zY,T,
+            b0_MX,b1_MX,b2_MX,C0_MX,C1_MX,alph1_MX,alph2_MX,omega_MX,
+            b0_MY,b1_MY,b2_MY,C0_MY,C1_MY,alph1_MY,alph2_MY,omega_MY)
+    gH    = np.exp(ln_acfs[:,0])
+    gHSO4 = np.exp(ln_acfs[:,1])
+    gSO4  = np.exp(ln_acfs[:,2])
+    
+    DG = np.log(gH*mH * gSO4*mSO4 / (gHSO4*mHSO4)) \
+       - np.log(dissoc_MX)
+    
+    return DG
+
+def qacfPMs(T,q,tot):
+    
+    b0_H_HSO4,b1_H_HSO4,C0_H_HSO4,C1_H_HSO4,alph1_H_HSO4,omega_H_HSO4, \
+        b0_H_SO4,b1_H_SO4,C0_H_SO4,C1_H_SO4,alph1_H_SO4,omega_H_SO4 \
+        = CRP94new(T,q)
+        
+    
+        
+    acfs = np.exp(pz.fitting.ln_acfs_MXY(mols,zH,zHSO4,zSO4,T,
+        b0_H_HSO4,b1_H_HSO4,0,C0_H_HSO4,C1_H_HSO4,
+        alph1_H_HSO4,-9,omega_H_HSO4,
+        b0_H_SO4,b1_H_SO4,0,C0_H_SO4,C1_H_SO4,
+        alph1_H_SO4,-9,omega_H_SO4))
+    
+    acfPM = ((acfs[:,0]*mols[:,0])**2 * acfs[:,2]*mols[:,2] \
+        / (4 * tot**3))**(1/3)
+    
+    return acfPM
+
+mH = np.full_like(T,np.nan)
+for i in range(len(T)):
+    mH[i] = optimize.least_squares(lambda mH: minifun(mH,TSO4[i],
+            zH,zHSO4,zSO4,T[i],
+            b0_H_HSO4[i],b1_H_HSO4[i],b2_H_HSO4[i],C0_H_HSO4[i],C1_H_HSO4[i],
+            alph1_H_HSO4[i],-9,omega_H_HSO4[i],
+            b0_H_SO4 [i],b1_H_SO4 [i],b2_H_SO4 [i],C0_H_SO4 [i],C1_H_SO4 [i],
+            alph1_H_SO4 [i],-9,omega_H_SO4 [i],
+            dissoc_HSO4[i]).ravel(),
+                                   1.5*TSO4[i],
+                                   bounds=(TSO4[i],2*TSO4[i]),
+                                   method='trf',
+                                   xtol=1e-12)['x']
 
 ## Visualise results
 #fig,ax = plt.subplots(1,1)
