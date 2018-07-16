@@ -64,8 +64,7 @@ def minifun(mH,TSO4,zM,zX,zY,T,
             b0_MY,b1_MY,b2_MY,C0_MY,C1_MY,alph1_MY,alph2_MY,omega_MY,
             dissoc_MX):
     
-    # Calculate [H+] and ionic speciation
-#    mH = np.vstack(-np.log10(pH))
+    # Calculate ionic speciation
     mH = np.vstack(mH)
     mHSO4 = 2*TSO4 - mH
     mSO4  = mH - TSO4

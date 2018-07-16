@@ -1,11 +1,11 @@
 import numpy as np
 import pickle
 
-with open('pickles/fortest5.pkl','rb') as f:
-    crp94,mH,mHSO4,mSO4,osmST,ln_acfPM = pickle.load(f)
+with open('pickles/fortest6.pkl','rb') as f:
+    crp94,F,P = pickle.load(f)
 
-acfPM = np.exp(ln_acfPM)
-alpha = mSO4 / (mSO4 + mHSO4)
+acfPM = np.exp(F['ln_acfPM'])
+alpha = F['mSO4'] / (F['mSO4'] + F['mHSO4'])
 
 # Compare with Simon's input script
 T = crp94.temp.values
