@@ -13,13 +13,38 @@ crp94 = pd.read_excel('datasets/CRP94 Tables 8-10.xlsx')
 T = pd2vs(crp94.temp)
 
 # Get Pitzer model coefficients
-b0_MX,b1_MX,b2_MX,C0_MX,C1_MX,alph1_MX,alph2_MX,omega_MX,_ \
+crp94['b0_H_HSO4'],crp94['b1_H_HSO4'],crp94['b2_H_HSO4'],\
+    crp94['C0_H_HSO4'],crp94['C1_H_HSO4'], \
+    crp94['alph1_H_HSO4'],crp94['alph2_H_HSO4'],crp94['omega_H_HSO4'],_ \
     = pz.coeffs.bC_H_HSO4_CRP94(T)
-b0_MY,b1_MY,b2_MY,C0_MY,C1_MY,alph1_MY,alph2_MY,omega_MY,_ \
-    = pz.coeffs.bC_H_SO4_CRP94(T)
+
+crp94['b0_H_SO4' ],crp94['b1_H_SO4' ],crp94['b2_H_SO4' ],\
+    crp94['C0_H_SO4' ],crp94['C1_H_SO4' ], \
+    crp94['alph1_H_SO4' ],crp94['alph2_H_SO4' ],crp94['omega_H_SO4' ],_ \
+    = pz.coeffs.bC_H_SO4_CRP94 (T)
 
 # Get HSO4 dissociation constant
-dissoc_HSO4 = pz.coeffs.dissoc_HSO4_CRP94(T)[0]
+crp94['dissoc_HSO4'] = pz.coeffs.dissoc_HSO4_CRP94(T)[0]
+
+# Format arrays for fitting
+tot       = pd2vs(crp94.tot)
+b0_H_HSO4 = pd2vs(crp94.b0_H_HSO4)
+b1_H_HSO4 = pd2vs(crp94.b1_H_HSO4)
+b2_H_HSO4 = pd2vs(crp94.b2_H_HSO4)
+C0_H_HSO4 = pd2vs(crp94.C0_H_HSO4)
+C1_H_HSO4 = pd2vs(crp94.C1_H_HSO4)
+alph1_H_HSO4 = pd2vs(crp94.alph1_H_HSO4)
+alph2_H_HSO4 = pd2vs(crp94.alph2_H_HSO4)
+omega_H_HSO4 = pd2vs(crp94.omega_H_HSO4)
+b0_H_SO4  = pd2vs(crp94.b0_H_SO4)
+b1_H_SO4  = pd2vs(crp94.b1_H_SO4)
+b2_H_SO4  = pd2vs(crp94.b2_H_SO4)
+C0_H_SO4  = pd2vs(crp94.C0_H_SO4)
+C1_H_SO4  = pd2vs(crp94.C1_H_SO4)
+alph1_H_SO4 = pd2vs(crp94.alph1_H_SO4)
+alph2_H_SO4 = pd2vs(crp94.alph2_H_SO4)
+omega_H_SO4 = pd2vs(crp94.omega_H_SO4)
+dissoc_HSO4 = pd2vs(crp94.dissoc_HSO4)
 
 # Solve for speciation based on tabulated values
 crp94['mSO4' ] = crp94.dissoc * crp94.tot
@@ -67,14 +92,13 @@ go = time()
 mH = np.full_like(T,np.nan)
 for i in range(len(mH)):
     
-    print(i)
-    
     mH[i] = optimize.least_squares(lambda mH: minifun(mH,TSO4[i],
             zH,zHSO4,zSO4,T[i],
-            b0_MX[i],b1_MX[i],b2_MX[i],C0_MX[i],C1_MX[i],
-            alph1_MX,alph2_MX,omega_MX,
-            b0_MY[i],b1_MY[i],b2_MY[i],C0_MY[i],C1_MY[i],
-            alph1_MY[i],alph2_MY,omega_MY,dissoc_HSO4[i]).ravel(),
+            b0_H_HSO4[i],b1_H_HSO4[i],b2_H_HSO4[i],C0_H_HSO4[i],C1_H_HSO4[i],
+            alph1_H_HSO4[i],alph2_H_HSO4[i],omega_H_HSO4[i],
+            b0_H_SO4 [i],b1_H_SO4 [i],b2_H_SO4 [i],C0_H_SO4 [i],C1_H_SO4 [i],
+            alph1_H_SO4 [i],alph2_H_SO4 [i],omega_H_SO4 [i],
+            dissoc_HSO4[i]).ravel(),
                                    1.5*TSO4[i],
                                    bounds=(TSO4[i],2*TSO4[i]),
                                    method='trf',
