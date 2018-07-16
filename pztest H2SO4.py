@@ -1,129 +1,87 @@
-import autograd.numpy as np
-#from autograd import elementwise_grad as egrad
-#from scipy.misc import derivative
-#from scipy import optimize
-#from scipy.optimize import minimize
+from autograd import numpy as np
+import pandas as pd
+from scipy import optimize
 import pytzer as pz
-#from pytzer.constants import R, Mw
-#import time
+pd2vs = pz.misc.pd2vs
+from time import time
 
 # Set dict of coefficient functions
-cf = pz.cdicts.GM89
+cf = pz.cdicts.CRP94
 
-for ca in ['Ca-OH','H-Cl','H-SO4','Na-OH']:
-    cf.bC[ca]    = pz.coeffs.bC_zero
+# Import CRP94 Tables 8-10
+crp94 = pd.read_excel('datasets/CRP94 Tables 8-10.xlsx')
+T = pd2vs(crp94.temp)
 
-for ii in ['H-Na','Ca-H','Cl-OH','OH-SO4']:
-    cf.theta[ii] = pz.coeffs.theta_zero
+# Get Pitzer model coefficients
+b0_MX,b1_MX,b2_MX,C0_MX,C1_MX,alph1_MX,alph2_MX,omega_MX,_ \
+    = pz.coeffs.bC_H_HSO4_CRP94(T)
+b0_MY,b1_MY,b2_MY,C0_MY,C1_MY,alph1_MY,alph2_MY,omega_MY,_ \
+    = pz.coeffs.bC_H_SO4_CRP94(T)
 
-for iij in ['Ca-Na-OH','H-Na-Cl','H-Na-SO4','H-Na-OH','Ca-H-Cl','Ca-H-SO4',
-            'Ca-H-OH','H-Cl-SO4','Na-Cl-OH','Ca-Cl-OH','H-Cl-OH','Na-OH-SO4',
-            'Ca-OH-SO4','H-OH-SO4']:
-    cf.psi[iij]  = pz.coeffs.psi_zero
+# Get HSO4 dissociation constant
+dissoc_HSO4 = pz.coeffs.dissoc_HSO4_CRP94(T)[0]
 
-# Import test dataset
-T,tots,ions,idf = pz.io.getIons('datasets/M88 Table 4.csv')
-mols = np.copy(tots)
+# Solve for speciation based on tabulated values
+crp94['mSO4' ] = crp94.dissoc * crp94.tot
+crp94['mHSO4'] = crp94.tot - crp94.mSO4
+crp94['mH'   ] = crp94.tot + crp94.mSO4
 
-T = np.vstack(T)
+# Set charges
+zH    = np.float_(+1)
+zHSO4 = np.float_(-1)
+zSO4  = np.float_(-2)
 
-#cf = pz.cdicts.CRP94
-#    
-#T,tots,ions,idf = pz.io.getIons('CRP94 solver.csv')
-#mols = np.copy(tots)
+# Set up to solve for mH
+TSO4 = pd2vs(crp94.tot)
 
-# Calculate excess Gibbs energy and activity coeffs (no dissociation)
-Gexs = pz.model.Gex_nRT(mols,ions,T,cf)
-acfs = np.exp(pz.model.ln_acfs(mols,ions,T,cf))
-
-# Test osmotic coefficients - NaCl compares well with Archer (1992)
-# M88 Table 4 also works almost perfectly, without yet including unsymm. terms!
-osm = pz.model.osm(mols,ions,T,cf)
-aw  = pz.model.osm2aw(mols,osm)
-
-#osmST = osm * np.sum(mols,axis=1) / (3 * np.sum(mols[:,1:],axis=1))
-#
-## Differentiate fG wrt I
-#dfG_dI = egrad(pz.model.fG, argnum=1)
-#dfG = dfG_dI(np.array([298.15]),np.array([6.]),cf)
-#
-## Get mean activity coefficient (CRP94)
-#acf_mean = np.cbrt(acfs[:,0]**2 * acfs[:,2] * mols[:,0]**2 * mols[:,2] \
-#    / (4 * np.sum(mols[:,1:],axis=1)**3))
-
-## Solve for pH - M88 system
-#def minifun(pH,mols,ions,T,cf):
-#    
-#    # Calculate [H+] and [OH-]
-#    mH  = np.vstack(np.full_like(mols[:,0],-np.log10(pH)))
-#    mOH = np.copy(mH)
-#    
-#    # Add them to main arrays
-#    mols = np.concatenate((mols,mH,mOH), axis=1)
-#    ions = np.append(ions,['H','OH'])
-#    
-#    # Calculate activity coefficients
-#    ln_acfs = pz.model.ln_acfs(mols,ions,T,cf)
-#    gH  = np.exp(ln_acfs[:,4])
-#    gOH = np.exp(ln_acfs[:,5])
-#    
-#    # Set up DG equation
-#    DG = np.log(gH*mH.ravel() * gOH*mOH.ravel()) \
-#        - np.log(cf.K['H2O'](T)[0])
-#    
-#    return DG
-
-# Solve for pH - CRP94 system
-def minifun(mH,tots,ions,T,cf):
+def minifun(mH,TSO4,zM,zX,zY,T,
+            b0_MX,b1_MX,b2_MX,C0_MX,C1_MX,alph1_MX,alph2_MX,omega_MX,
+            b0_MY,b1_MY,b2_MY,C0_MY,C1_MY,alph1_MY,alph2_MY,omega_MY,
+            dissoc_MX):
     
     # Calculate [H+] and ionic speciation
 #    mH = np.vstack(-np.log10(pH))
     mH = np.vstack(mH)
-    mHSO4 = 2*tots - mH
-    mSO4  = mH - tots
+    mHSO4 = 2*TSO4 - mH
+    mSO4  = mH - TSO4
     
     # Create molality & ions arrays
     mols = np.concatenate((mH,mHSO4,mSO4), axis=1)
-    ions = np.array(['H','HSO4','SO4'])
     
     # Calculate activity coefficients
-    ln_acfs = pz.model.ln_acfs(mols,ions,T,cf)
+    ln_acfs = pz.fitting.ln_acfs_MXY(mols,zM,zX,zY,T,
+            b0_MX,b1_MX,b2_MX,C0_MX,C1_MX,alph1_MX,alph2_MX,omega_MX,
+            b0_MY,b1_MY,b2_MY,C0_MY,C1_MY,alph1_MY,alph2_MY,omega_MY)
     gH    = np.exp(ln_acfs[:,0])
     gHSO4 = np.exp(ln_acfs[:,1])
     gSO4  = np.exp(ln_acfs[:,2])
-
-    # Set up DG equation
-#    DG = np.log(gH*mH.ravel() * gSO4*mSO4.ravel() / (gHSO4*mHSO4.ravel())) \
-#        - np.log(cf.K['HSO4'](T)[0])
     
-    DG = cf.getKeq(T, mH=mH,gH=gH, mHSO4=mHSO4,gHSO4=gHSO4, 
-                   mSO4=mSO4,gSO4=gSO4)
+    DG = np.log(gH*mH * gSO4*mSO4 / (gHSO4*mHSO4)) \
+       - np.log(dissoc_MX)
     
     return DG
 
-#go = time.time()
+# Solve for mH
+go = time()
 
-#EQ = np.full_like(T,np.nan)
-#for i in range(len(EQ)):
-#    
-#    iT = np.array([T[i]])
-#    itots = np.array([tots[i,:]])
-#    
-##    EQ[i] = minimize(lambda pH:minifun(pH,itots,ions,iT,cf),1., \
-##                     method='Nelder-Mead')['x'][0]
-#    
-#    EQ[i] = optimize.least_squares(lambda mH: minifun(mH,itots,ions,iT,cf),
-#                                   1.5*itots[0],
-#                                   bounds=(itots[0],2*itots[0]),
-#                                   method='trf',
-#                                   xtol=1e-12)['x']
+mH = np.full_like(T,np.nan)
+for i in range(len(mH)):
+    
+    print(i)
+    
+    mH[i] = optimize.least_squares(lambda mH: minifun(mH,TSO4[i],
+            zH,zHSO4,zSO4,T[i],
+            b0_MX[i],b1_MX[i],b2_MX[i],C0_MX[i],C1_MX[i],
+            alph1_MX,alph2_MX,omega_MX,
+            b0_MY[i],b1_MY[i],b2_MY[i],C0_MY[i],C1_MY[i],
+            alph1_MY[i],alph2_MY,omega_MY,dissoc_HSO4[i]).ravel(),
+                                   1.5*TSO4[i],
+                                   bounds=(TSO4[i],2*TSO4[i]),
+                                   method='trf',
+                                   xtol=1e-12)['x']
 
-#print(time.time()-go)
+mSO4  = mH - TSO4
+mHSO4 = TSO4 - mSO4
+alpha = mSO4 / TSO4
 
-#EQ = np.full_like(T,np.nan)
-#for i in range(len(EQ)):
-#    
-#    iT = np.array([T[i]])
-#    imols = np.array([mols[i,:]])
-#    
-#    EQ[i] = minimize(lambda pH:minifun(pH,imols,ions,iT,cf)**2,7.)['x'][0]
+print(time()-go)
