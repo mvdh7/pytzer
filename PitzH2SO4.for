@@ -27,18 +27,24 @@ C     H-HSO4: Cphi = C * 2
 C     H-SO4 : Cphi = C * 2*SQRT(2)
 C     -----------------------------------------------------------
 C
-      REAL*8, PARAMETER :: EPS = EPSILON(1.D0) 
+C     Declare f2py intentions
+!f2py intent(in) T, mH2SO4, b0HHSO4, b1HHSO4, C0HHSO4, C1HHSO4
+!f2py intent(in) b0HSO4, b1HSO4, C0HSO4, C1HSO4, alphaHSO4, KHSO4
+!f2py intent(out) mH, mHSO4, mSO4, OSM, lnGamma
+C
+C
+      REAL*8, PARAMETER :: EPS = EPSILON(1.D0)
 C
 C
 !  -- arguments --
-      REAL*8, INTENT(IN) :: T, mH2SO4, b0HHSO4, b1HHSO4, C0HHSO4, 
+      REAL*8, INTENT(IN) :: T, mH2SO4, b0HHSO4, b1HHSO4, C0HHSO4,
      >                      C1HHSO4, b0HSO4, b1HSO4, C0HSO4, C1HSO4,
-     >                      KHSO4 
+     >                      KHSO4
       REAL*8, INTENT(OUT) ::mH, mHSO4, mSO4, OSM, lnGamma
 C
 !  -- local --
       REAL*8 :: HIGH, LOW, B(5,5,3), C(5,5)
-      REAL*8 :: THETAC(5,5) = 0.D0, THETAA(5,5) = 0.D0, 
+      REAL*8 :: THETAC(5,5) = 0.D0, THETAA(5,5) = 0.D0,
      >          PSIC(5,5,5) = 0.D0, PSIA(5,5,5) = 0.D0
 C
       SAVE THETAC, THETAA, PSIC, PSIA
@@ -78,7 +84,7 @@ C
 !     -------
       mHSO4 = 2*mH2SO4 - mH
       mSO4  = mH2SO4 - mHSO4
-C     
+C
       OSM = -AWLG/(0.0180152D0*3.D0*mH2SO4)
       dum = actH**2 * actSO4 * mH**2 * mSO4 / (4*mH2SO4**3)
       lnGamma = LOG(dum)/3.D0  ! mean act. coef.
@@ -91,9 +97,9 @@ C
 C
 C ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
-      FUNCTION ZBRENT(FC05, LOW, HIGH, TEMP, MTOT, 
+      FUNCTION ZBRENT(FC05, LOW, HIGH, TEMP, MTOT,
      >                MHG1, MPB1, EPS, CONST,
-     >                BCOEF, CCOEF, alphaHSO4, 
+     >                BCOEF, CCOEF, alphaHSO4,
      >                THETAC, THETAA, PSIC, PSIA,
      >                ACTH, ACTHSO4, ACTSO4, OSM, AWLG)
       IMPLICIT REAL*8(A-H,O-Z)
@@ -235,10 +241,10 @@ C
      > 0.164245088592D-04,-0.686031972567D-05, 0.283455806377D-05,
      >-0.115641433004D-05, 0.461489672579D-06,-0.177069754948D-06,
      > 0.612464488231D-07,-0.175689013085D-07/
-     > XMIN,XMAX/0.234150D+03,0.373150D+03/ 
+     > XMIN,XMAX/0.234150D+03,0.373150D+03/
 C
 C     ------------------------------------------------
-C   ..for 234.15 < T < 373.15 K, polynomial reproduces 
+C   ..for 234.15 < T < 373.15 K, polynomial reproduces
 C     Archer's values directly:
 C     ------------------------------------------------
       X=(2.D0*T-XMAX-XMIN)/(XMAX-XMIN)
@@ -271,11 +277,11 @@ C
      >       B(5,5,3),C(5,5),THETAC(5,5),THETAA(5,5),PSIC(5,5,5),
      >       PSIA(5,5,5)
 C
-C....................................................................     
+C....................................................................
 C
 C     equilibrium constant and APHI are calculated in ZBRENT
 C
-C.................................................................... 
+C....................................................................
 C     nb: mtot = total H2SO4 concentration
 C
       SO4T=MTOT+MPB1+MHG1
@@ -362,8 +368,8 @@ C===== activity coefficient of H+ ===================================
 C
 C//////////////////////////////////////////////////////////////////////
       CSUMCA=MH*(MHSO4*CTOT11/2.D0 + MSO4*CTOT12/CDUM)
-     >      +MH*(MHSO4*Z*2.D0*C(2,1)*EXTRA/2.D0) 
-     >      +MH*(MSO4*Z*2.D0*C(2,2)*EXTRA/CDUM) 
+     >      +MH*(MHSO4*Z*2.D0*C(2,1)*EXTRA/2.D0)
+     >      +MH*(MSO4*Z*2.D0*C(2,2)*EXTRA/CDUM)
       CSUMA=MHSO4*(2.D0*BF11 + Z*CTOT11/2.D0)
      >     +MSO4*(2.D0*BF12 + Z*CTOT12/CDUM)
 C//////////////////////////////////////////////////////////////////////
@@ -384,7 +390,7 @@ C
 C////////////////////////////////////////////////////////////////////
       ASUMCA=MH*(MHSO4*CTOT11/2.D0 + MSO4*CTOT12/CDUM)
      >      +MH*(MHSO4*Z*2.D0*C(2,1)*EXTRA/2.D0)
-     >      +MH*(MSO4*Z*2.D0*C(2,2)*EXTRA/CDUM) 
+     >      +MH*(MSO4*Z*2.D0*C(2,2)*EXTRA/CDUM)
       ASUMC=MH*(2.D0*BF11 + Z*CTOT11/2.D0)
 C////////////////////////////////////////////////////////////////////
 C
@@ -400,7 +406,7 @@ C===== activity coefficient of SO4 =================================
 C////////////////////////////////////////////////////////////////////
       ASUMCA=2.D0*MH*(MHSO4*CTOT11/2.D0 + MSO4*CTOT12/CDUM)
      >      +2.D0*MH*(MHSO4*Z*4.D0*C(2,1)*EXTRA/2.D0)
-     >      +2.D0*MH*(MSO4*Z*4.D0*C(2,2)*EXTRA/CDUM) 
+     >      +2.D0*MH*(MSO4*Z*4.D0*C(2,2)*EXTRA/CDUM)
       ASUMC=MH*(2.D0*BF12 + Z*CTOT12/CDUM)
 C////////////////////////////////////////////////////////////////////
 C
@@ -418,7 +424,7 @@ C////////////////////////////////////////////////////////////////////
        SUMCA=MH*MHSO4*(BPF11 + Z*C(1,1)/2.D0)
      >       +MH*MSO4*(BPF12 + Z*C(1,2)/CDUM)
      >      +MH*MHSO4*(Z*C(2,1)*EXPASQ/2.D0)
-     >       +MH*MSO4*(Z*C(2,2)*EXPASQ/CDUM)    
+     >       +MH*MSO4*(Z*C(2,2)*EXPASQ/CDUM)
 C///////////////////////////////////////////////////////////////////
 C
 c....  SUMCA=MH*MHSO4*(BPF11 + Z*C(1,1)/2.D0)
@@ -533,11 +539,3 @@ C
 C++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 C
       END MODULE PitzH2SO4
-     
-
-
-
-
-
-
-
