@@ -5,6 +5,7 @@ from autograd import numpy as np
 import pickle, time
 from multiprocessing import Pool
 import pytzer as pz
+pd2vs = pz.misc.pd2vs
 
 # Get electrolyte to analyse and number of repeats from user input
 #ele   =     argv[1]
@@ -50,26 +51,34 @@ cf.dh['Aosm']  = pz.coeffs.Aosm_M88
 cf.dh['AH']    = pz.coeffs.AH_MPH
 
 #%% Define optimisation function
+bs = np.vstack(fpdbase.ele.map(pz.prop.solubility25).values)
+T0 = pd2vs(fpdbase.t)
+T1 = pd2vs(fpdbase.t25)
+TR = pd2vs(fpdbase.t25)
+osm = pd2vs(fpdbase.osm25_calc)
+
 def Eopt(rseed=None):
 
     # Seed random numbers
     np.random.seed(rseed)
 
     # Simulate uncertainties
-    Uosm = np.full_like(T,np.nan)
+    Uosm = np.full_like(T0,np.nan)
     
     for src in fpdp.loc[ele].index:
         SL = srcs == src
         
-        Uosm[SL] = pz.sim.fpd(fpdbase[SL],ele,src,cf,
-                              err_cfs_both,fpd_sys_std).ravel()
+        Uosm[SL] = pz.sim.fpd(tot[SL],bs[SL],fpd[SL],nC[SL],nA[SL],
+            T0[SL],T1[SL],TR[SL],osm[SL],
+            err_cfs_both,fpd_sys_std,ele,src,cf).ravel()
 
-    b0,b1,b2,C0,C1,bCmx,mse \
-        = pz.fitting.bC(mCmA,zC,zA,T,alph1,alph2,omega,nC,nA,Uosm,fc,'osm')
+#    b0,b1,b2,C0,C1,bCmx,mse \
+#        = pz.fitting.bC(mCmA,zC,zA,T,alph1,alph2,omega,nC,nA,Uosm,fc,'osm')
 
-    return b0,b1,b2,C0,C1
+    return Uosm#b0,b1,b2,C0,C1
 
-b0,b1,b2,C0,C1 = Eopt()
+Uosm = Eopt()
+#b0,b1,b2,C0,C1 = Eopt()
 
 #%% Multiprocessing loop
 if __name__ == '__main__':
