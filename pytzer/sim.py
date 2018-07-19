@@ -3,7 +3,7 @@ from autograd import elementwise_grad as egrad
 import pandas as pd
 from . import data, tconv
     
-# Propagate bs & fpd uncertainties
+# For propagating bs & fpd uncertainties
 def fpd2osm25(bs,ms,mw,fpd,nC,nA,ions,T0,T1,TR,cf):
     
     tot = bs * ms / (ms + mw)

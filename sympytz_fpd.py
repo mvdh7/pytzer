@@ -94,10 +94,16 @@ ms = tot * mw / (bs - tot)
 
 #%% Run uncertainty propagation analysis [FPD]
 ionslist = [np.array(['Na','Cl']), np.array(['K','Cl'])]
-
+nC = np.float_([1,1])
+nA = np.float_([1,1])
+fpd_calc = np.full_like(T,np.nan)
 for E,ele in enumerate(fpdp.index.levels[0]):
     
     Eions = ionslist[E]
+    
+    # Calculate expected FPD
+    EL = fpdbase.ele == ele
+    fpd_calc[EL] = pz.tconv.tot2fpd(tot[EL],Eions,nC[E],nA[E],cf)
 
     print('Optimising FPD fit for ' + ele + '...')
 
@@ -105,7 +111,7 @@ for E,ele in enumerate(fpdp.index.levels[0]):
 
         print(' ... ' + src)
         
-        SL = np.logical_and(fpdbase.ele == ele,fpdbase.src == src)
+        SL = np.logical_and(EL,fpdbase.src == src)
 
         # Optimise for bs
         optemp = optimize.least_squares(
@@ -173,6 +179,8 @@ for E,ele in enumerate(fpdp.index.levels[0]):
 
         # Get st. dev. of residuals [FPD]
         fpd_sys_std[ele][src] = np.std(fpdbase.dosm25_sys[SL])
+
+fpdbase['fpd_calc'] = fpd_calc
 
 # Pickle outputs for Jupyter Notebook analysis and sign off
 with open('pickles/simpytz_fpd.pkl','wb') as f:

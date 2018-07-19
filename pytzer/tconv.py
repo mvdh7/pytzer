@@ -1,6 +1,7 @@
 from autograd import numpy as np
 from autograd import elementwise_grad as egrad
-from . import model
+from scipy import optimize
+from . import data, model
 from .constants import Mw, R
 
 ##### FREEZING POINT DEPRESSION ###############################################
@@ -25,6 +26,24 @@ def fpd2aw(fpd):
 # Convert freezing point depression to osmotic coefficient
 def fpd2osm(mols,fpd):
     return model.aw2osm(mols,fpd2aw(fpd))
+
+# Get expected FPD at a given molality
+def tot2fpd(tot,ions,nC,nA,cf):
+    
+    # One electrolyte at a time - nC and nA are size 1
+    
+    mols = np.concatenate((tot*nC,tot*nA), axis=1)
+    fpd = np.full_like(tot,np.nan)
+    
+    for i in range(len(tot)):
+        
+        imols = np.array([mols[i,:]])
+        
+        fpd[i] = optimize.least_squares(lambda fpd: \
+           (fpd2osm(imols,fpd) - model.osm(imols,ions,273.15-fpd,cf)).ravel(),
+                                        0.)['x'][0]
+    
+    return fpd
 
 ##### TEMPERATURE CONVERSION ##################################################
 
