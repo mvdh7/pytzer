@@ -49,7 +49,7 @@ def CRP94new(T,q):
            b0_H_SO4 ,b1_H_SO4 ,C0_H_SO4 ,C1_H_SO4 ,alph1_H_SO4 ,omega_H_SO4
 
 # Solve speciation - Fortran
-Ureps = 10
+Ureps = int(1e4) # 1e4 ~ 33s
 F = {var:np.full((np.size(T),Ureps),np.nan) \
      for var in ['mH','mHSO4','mSO4','osmST','ln_acfPM']}
 Fgo = time()
@@ -72,5 +72,5 @@ for u in range(Ureps):
 print('Runtime: ' + str(time()-Fgo))
 
 # Save results
-with open('fortest_sim.pkl','wb') as f:
+with open('pickles/fortest_sim.pkl','wb') as f:
     pickle.dump((crp94,F),f)
