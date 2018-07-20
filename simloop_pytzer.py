@@ -56,21 +56,15 @@ T0 = pd2vs(fpdbase.t)
 T1 = pd2vs(fpdbase.t25)
 TR = pd2vs(fpdbase.t25)
 osm = pd2vs(fpdbase.osm25_calc)
+ions = np.array(['Na','Cl'])
 
 def Eopt(rseed=None):
 
     # Seed random numbers
     np.random.seed(rseed)
 
-    # Simulate uncertainties
-    Uosm = np.full_like(T0,np.nan)
-    
-    for src in fpdp.loc[ele].index:
-        SL = srcs == src
-        
-        Uosm[SL] = pz.sim.fpd(tot[SL],bs[SL],fpd[SL],nC[SL],nA[SL],
-            T0[SL],T1[SL],TR[SL],osm[SL],
-            err_cfs_both,fpd_sys_std,ele,src,cf).ravel()
+    Uosm = pz.sim.fpd2(ele,tot,srcs,bs,osm,err_cfs_both,fpd_sys_std,
+                       fpd,nC,nA,ions,T0,T1,TR,cf)
 
 #    b0,b1,b2,C0,C1,bCmx,mse \
 #        = pz.fitting.bC(mCmA,zC,zA,T,alph1,alph2,omega,nC,nA,Uosm,fc,'osm')

@@ -1,7 +1,7 @@
 from autograd import numpy as np
 from autograd import elementwise_grad as egrad
 from scipy import optimize
-from . import data, model
+from . import model
 from .constants import Mw, R
 
 ##### FREEZING POINT DEPRESSION ###############################################

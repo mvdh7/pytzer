@@ -20,18 +20,25 @@ dosm25_dbs  = egrad(fpd2osm25)
 dosm25_dfpd = egrad(fpd2osm25, argnum=3)
 
 # Simulate new fpd dataset for one electrolyte
-def fpd(tot,bs,fpd,nC,nA,T0,T1,TR,osm,err_cfs_both,fpd_sys_std,ele,src,cf):
+def fpd(ele,tot,srcs,bs,osm,err_cfs_both,fpd_sys_std,
+         fpd,nC,nA,ions,T0,T1,TR,cf):
     
     mw = np.float_(1)
     ms = tot * mw / (bs - tot)
     
-    ions = data.ele2ions(pd.Series([ele]))[0]
+    dbs  = dosm25_dbs (bs,ms,mw,fpd,nC,nA,ions,T0,T1,TR,cf)
+    dfpd = dosm25_dfpd(bs,ms,mw,fpd,nC,nA,ions,T0,T1,TR,cf)
     
-    osm_fpd = osm + np.random.normal(scale=fpd_sys_std[ele][src],
-                                          size=np.shape(tot)) \
-                  + err_cfs_both[ele][src][0] \
-                  * dosm25_dbs (bs,ms,mw,fpd,nC,nA,ions,T0,T1,TR,cf) \
-                  + err_cfs_both[ele][src][1] \
-                  * dosm25_dfpd(bs,ms,mw,fpd,nC,nA,ions,T0,T1,TR,cf)
+    osm_fpd = np.full_like(tot,np.nan)
+    
+    for src in fpd_sys_std[ele].keys():
+    
+        SL = srcs == src
+        
+        osm_fpd[SL] = osm[SL] \
+                    + np.random.normal(scale=fpd_sys_std[ele][src],
+                                       size=sum(SL)) \
+                    + err_cfs_both[ele][src][0] * dbs [SL].ravel() \
+                    + err_cfs_both[ele][src][1] * dfpd[SL].ravel()
     
     return osm_fpd
