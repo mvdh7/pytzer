@@ -54,7 +54,8 @@ def acfMX(mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega,nC,nA):
 def osmfunc(ww,mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega):
     
     return ww * R * T \
-        * Gex_MX(np.array([mCmA[:,0]/ww,mCmA[:,1]/ww]).transpose(),
+        * Gex_MX(np.array([mCmA[:,0]/ww.ravel(),
+                           mCmA[:,1]/ww.ravel()]).transpose(),
                  zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega)
 
 # Osmotic coefficient derivative - single electrolyte
@@ -137,8 +138,8 @@ def bC_acfMX(mCmA,zC,zA,T,alph1,alph2,omega,nC,nA,acfMX,which_bCs):
     if which_bCs == 'b0b1C0':
         
         topt = optimize.least_squares(lambda bC: 
-            acfMX(mCmA,zC,zA,T,bC[0],bC[1],0,bC[2],0,
-                  alph1,alph2,omega,nC,nA) - acfMX,
+            (acfMX(mCmA,zC,zA,T,bC[0],bC[1],0,bC[2],0,
+                   alph1,alph2,omega,nC,nA) - acfMX).ravel(),
             np.float_([0,0,0]), jac=ojac, loss=oloss, method=omethod)
         
         b0 = topt['x'][0]
@@ -148,8 +149,8 @@ def bC_acfMX(mCmA,zC,zA,T,alph1,alph2,omega,nC,nA,acfMX,which_bCs):
     elif which_bCs == 'b0b1C0C1':
         
         topt = optimize.least_squares(lambda bC: 
-            acfMX(mCmA,zC,zA,T,bC[0],bC[1],0,bC[2],bC[3],
-                  alph1,alph2,omega,nC,nA) - acfMX,
+            (acfMX(mCmA,zC,zA,T,bC[0],bC[1],0,bC[2],bC[3],
+                   alph1,alph2,omega,nC,nA) - acfMX).ravel(),
             np.float_([0,0,0,0]), jac=ojac, loss=oloss, method=omethod)
         
         b0 = topt['x'][0]
@@ -160,8 +161,8 @@ def bC_acfMX(mCmA,zC,zA,T,alph1,alph2,omega,nC,nA,acfMX,which_bCs):
     else:
         
         topt = optimize.least_squares(lambda bC: 
-            acfMX(mCmA,zC,zA,T,bC[0],bC[1],bC[2],bC[3],bC[4],
-                  alph1,alph2,omega,nC,nA) - acfMX,
+            (acfMX(mCmA,zC,zA,T,bC[0],bC[1],bC[2],bC[3],bC[4],
+                   alph1,alph2,omega,nC,nA) - acfMX).ravel(),
             np.float_([0,0,0,0,0]), jac=ojac, loss=oloss, method=omethod)
         
         b0 = topt['x'][0]
@@ -193,8 +194,8 @@ def bC(mCmA,zC,zA,T,alph1,alph2,omega,nC,nA,mtarg,which_bCs,mtype):
     if which_bCs == 'b0b1C0':
         
         topt = optimize.least_squares(lambda bC: 
-            ofunc(mCmA,zC,zA,T,bC[0],bC[1],0,bC[2],0,
-                   alph1,alph2,omega,nC,nA) - mtarg,
+            (ofunc(mCmA,zC,zA,T,bC[0],bC[1],0,bC[2],0,
+                   alph1,alph2,omega,nC,nA) - mtarg).ravel(),
             np.float_([0,0,0]), jac=ojac, loss=oloss, method=omethod)
         
         b0 = topt['x'][0]
@@ -204,8 +205,8 @@ def bC(mCmA,zC,zA,T,alph1,alph2,omega,nC,nA,mtarg,which_bCs,mtype):
     elif which_bCs == 'b0b1C0C1':
         
         topt = optimize.least_squares(lambda bC: 
-            ofunc(mCmA,zC,zA,T,bC[0],bC[1],0,bC[2],bC[3],
-                   alph1,alph2,omega,nC,nA) - mtarg,
+            (ofunc(mCmA,zC,zA,T,bC[0],bC[1],0,bC[2],bC[3],
+                   alph1,alph2,omega,nC,nA) - mtarg).ravel(),
             np.float_([0,0,0,0]), jac=ojac, loss=oloss, method=omethod)
         
         b0 = topt['x'][0]
@@ -216,8 +217,8 @@ def bC(mCmA,zC,zA,T,alph1,alph2,omega,nC,nA,mtarg,which_bCs,mtype):
     else:
         
         topt = optimize.least_squares(lambda bC: 
-            ofunc(mCmA,zC,zA,T,bC[0],bC[1],bC[2],bC[3],bC[4],
-                   alph1,alph2,omega,nC,nA) - mtarg,
+            (ofunc(mCmA,zC,zA,T,bC[0],bC[1],bC[2],bC[3],bC[4],
+                   alph1,alph2,omega,nC,nA) - mtarg).ravel(),
             np.float_([0,0,0,0,0]), jac=ojac, loss=oloss, method=omethod)
         
         b0 = topt['x'][0]

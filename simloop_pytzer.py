@@ -2,7 +2,8 @@ from autograd import numpy as np
 #from sys import path#, argv
 #if 'E:\Dropbox\_UEA_MPH\pitzer-spritzer\python' not in path:
 #    path.append('E:\\Dropbox\\_UEA_MPH\\pitzer-spritzer\\python')
-import pickle, time
+import pickle
+from time import time
 from multiprocessing import Pool
 import pytzer as pz
 pd2vs = pz.misc.pd2vs
@@ -18,10 +19,14 @@ fcs = {'NaCl' : 'b0b1C0C1',
         'KCl'  : 'b0b1C0'  }
 
 aos = {'NaCl' : np.float_([-9, 2,-9,-9, 2.5]),
-        'KCl'  : np.float_([-9, 2,-9,-9,-9  ])}
+        'KCl' : np.float_([-9, 2,-9,-9,-9  ])}
+
+ionslist = {'NaCl' : np.array(['Na','Cl']),
+            'KCl'  : np.array(['K' ,'Cl'])}
 
 fc = fcs[ele]
 ao = aos[ele]
+ions = ionslist[ele]
 
 # Load FPD dataset
 with open('pickles/simpytz_fpd.pkl','rb') as f:
@@ -56,22 +61,23 @@ T0 = pd2vs(fpdbase.t)
 T1 = pd2vs(fpdbase.t25)
 TR = pd2vs(fpdbase.t25)
 osm = pd2vs(fpdbase.osm25_calc)
-ions = np.array(['Na','Cl'])
 
 def Eopt(rseed=None):
 
     # Seed random numbers
     np.random.seed(rseed)
 
-    Uosm = pz.sim.fpd2(ele,tot,srcs,bs,osm,err_cfs_both,fpd_sys_std,
-                       fpd,nC,nA,ions,T0,T1,TR,cf)
+    Uosm = pz.sim.fpd(ele,tot,srcs,bs,osm,err_cfs_both,fpd_sys_std,
+                      fpd,nC,nA,ions,T0,T1,TR,cf)
 
-#    b0,b1,b2,C0,C1,bCmx,mse \
-#        = pz.fitting.bC(mCmA,zC,zA,T,alph1,alph2,omega,nC,nA,Uosm,fc,'osm')
+    b0,b1,b2,C0,C1,bCmx,mse \
+        = pz.fitting.bC(mCmA,zC,zA,T,alph1,alph2,omega,nC,nA,Uosm,fc,'osm')
 
     return Uosm#b0,b1,b2,C0,C1
 
+go = time()
 Uosm = Eopt()
+print(time()-go)
 #b0,b1,b2,C0,C1 = Eopt()
 
 #%% Multiprocessing loop
