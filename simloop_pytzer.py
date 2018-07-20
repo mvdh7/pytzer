@@ -9,8 +9,10 @@ import pytzer as pz
 pd2vs = pz.misc.pd2vs
 
 # Get electrolyte to analyse and number of repeats from user input
-ele   =     argv[1]
-Ureps = int(argv[2])
+#ele   =     argv[1]
+#Ureps = int(argv[2])
+ele = 'NaCl'
+Ureps = 1
 
 # Get electrolyte-specific information
 fcs = {'NaCl' : 'b0b1C0C1',
@@ -47,7 +49,7 @@ omega = ao[4]
 # Prepare model cdict
 cf = pz.cdicts.cdict()
 cf.bC['Na-Cl'] = pz.coeffs.bC_Na_Cl_A92ii
-cf.bC['K-Cl' ] = pz.coeffs.bC_K_Cl_GM89
+cf.bC['K-Cl' ] = pz.coeffs.bC_K_Cl_A99
 cf.theta['K-Na'] = pz.coeffs.theta_zero
 cf.psi['K-Na-Cl'] = pz.coeffs.psi_zero
 cf.dh['Aosm']  = pz.coeffs.Aosm_M88
@@ -78,6 +80,9 @@ def Eopt(rseed=None):
 #print(time()-go)
 #b0,b1,b2,C0,C1 = Eopt()
 
+Uosm = pz.sim.fpd(ele,tot,srcs,bs,osm,err_cfs_both,fpd_sys_std,
+                  fpd,nC,nA,ions,T0,T1,TR,cf)
+
 #%% Multiprocessing loop
 if __name__ == '__main__':
 
@@ -96,6 +101,7 @@ if __name__ == '__main__':
 
     # Reformat pool output
     bCpool = np.array([bCpool[X] for X in range(Ureps)])
+    bCpool_mean = np.mean(bCpool,axis=0)
     bCpool_cv = np.cov(bCpool,rowvar=False)
 
     Xtend = time() # end timer - multiprocessing
@@ -106,4 +112,4 @@ if __name__ == '__main__':
 
     # Pickle results
     with open('pickles/simloop_pytzer_bC_' + ele + '.pkl','wb') as f:
-        pickle.dump((bCpool_cv,ele,Ureps),f)
+        pickle.dump((bCpool_mean,bCpool_cv,ele,Ureps),f)
