@@ -1,5 +1,5 @@
 from autograd import numpy as np
-#from sys import path#, argv
+from sys import argv#, path
 #if 'E:\Dropbox\_UEA_MPH\pitzer-spritzer\python' not in path:
 #    path.append('E:\\Dropbox\\_UEA_MPH\\pitzer-spritzer\\python')
 import pickle
@@ -9,10 +9,8 @@ import pytzer as pz
 pd2vs = pz.misc.pd2vs
 
 # Get electrolyte to analyse and number of repeats from user input
-#ele   =     argv[1]
-#Ureps = int(argv[2])
-ele = 'NaCl'
-Ureps = 100
+ele   =     argv[1]
+Ureps = int(argv[2])
 
 # Get electrolyte-specific information
 fcs = {'NaCl' : 'b0b1C0C1',
@@ -73,11 +71,11 @@ def Eopt(rseed=None):
     b0,b1,b2,C0,C1,bCmx,mse \
         = pz.fitting.bC(mCmA,zC,zA,T,alph1,alph2,omega,nC,nA,Uosm,fc,'osm')
 
-    return Uosm#b0,b1,b2,C0,C1
+    return b0,b1,b2,C0,C1
 
-go = time()
-Uosm = Eopt()
-print(time()-go)
+#go = time()
+#Uosm = Eopt()
+#print(time()-go)
 #b0,b1,b2,C0,C1 = Eopt()
 
 #%% Multiprocessing loop
@@ -89,24 +87,23 @@ if __name__ == '__main__':
     # Generate seeds for random number generator
     rseeds = np.random.randint(0,2**32,size=Ureps,dtype='int64')
 
-    Xtstart = time.time() # begin timer - multiprocessing
+    Xtstart = time() # begin timer - multiprocessing
 
     with Pool() as pool:
         bCpool = pool.map(Eopt,rseeds)
         pool.close()
         pool.join()
 
-    # Format pool output
+    # Reformat pool output
     bCpool = np.array([bCpool[X] for X in range(Ureps)])
     bCpool_cv = np.cov(bCpool,rowvar=False)
 
-    Xtend = time.time() # end timer - multiprocessing
+    Xtend = time() # end timer - multiprocessing
 
     # Calculate and print processing time
     print('multiprocessing %s: %d reps in %.2f seconds' \
         % (ele,Ureps,(Xtend - Xtstart)))
 
     # Pickle results
-    with open('E:\Dropbox\_UEA_MPH\pytzer\pickles' \
-              + '\simloop_pytzer_bC_' + ele + '.pkl','wb') as f:
+    with open('pickles/simloop_pytzer_bC_' + ele + '.pkl','wb') as f:
         pickle.dump((bCpool_cv,ele,Ureps),f)
