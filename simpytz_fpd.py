@@ -143,7 +143,7 @@ for E,ele in enumerate(fpdp.index.levels[0]):
         
         if fpderr_rdm[ele][src][0] < 0:
             fpderr_rdm[ele][src][0] = 0
-            fpderr_rdm[ele][src] = optimize.least_squares(lambda rdmerr: \
+            fpderr_rdm[ele][src][1] = optimize.least_squares(lambda rdmerr: \
                 rdmerr * fpdbase[SL].m \
                 - np.abs(fpdbase[SL].dfpd_sys), 0.)['x']
         
