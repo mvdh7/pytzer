@@ -27,21 +27,59 @@ def fpd2aw(fpd):
 def fpd2osm(mols,fpd):
     return model.aw2osm(mols,fpd2aw(fpd))
 
-# Get expected FPD at a given molality
-def tot2fpd(tot,ions,nC,nA,cf):
+# Get expected FPD at a given molality - assuming that the Pitzer model works
+#  down to the FPD...
+def tot2fpd_X(tot,ions,nC,nA,cf):
     
     # One electrolyte at a time - nC and nA are size 1
     
     mols = np.concatenate((tot*nC,tot*nA), axis=1)
     fpd = np.full_like(tot,np.nan)
     
+    iT00 = np.vstack([273.15])
+    
     for i in range(len(tot)):
         
         imols = np.array([mols[i,:]])
         
         fpd[i] = optimize.least_squares(lambda fpd: \
-           (fpd2osm(imols,fpd) - model.osm(imols,ions,273.15-fpd,cf)).ravel(),
-                                        0.)['x'][0]
+           (fpd2osm(imols,fpd) - model.osm(imols,ions,iT00-fpd,cf)).ravel(),
+                                        5., method='lm')['x'][0]
+    
+    return fpd
+
+#xmols = np.array([mols[0,:]])
+#xfpd = optimize.least_squares(lambda fpd: \
+#    (  pz.tconv.fpd2osm(xmols,fpd) \
+#     - pz.model.osm(xmols,ions,273.15-fpd,cf)).ravel(),
+#                              0.)
+
+# Get expected FPD at a given molality with T conversion
+def tot2fpd(tot,ions,nC,nA,cf):
+        
+    # One electrolyte at a time - nC and nA are size 1
+    
+    mols = np.concatenate((tot*nC,tot*nA), axis=1)
+    fpd = np.full_like(tot,np.nan)
+    T25 = np.full_like(tot,298.15, dtype='float64')
+    
+    osm25 = model.osm(mols,ions,T25,cf)
+    
+    iT25 = np.vstack([298.15])
+    iT00 = np.vstack([273.15])
+    
+    for i in range(len(tot)):
+        
+        print(i,len(tot))
+        
+        imols = np.array([mols[i,:]])
+        
+        fpd[i] = optimize.least_squares(lambda fpd: \
+           (osm2osm(tot[i],nC,nA,ions,iT00-fpd,iT25,iT25,cf,
+                    fpd2osm(imols,fpd)) - osm25[i]).ravel(),
+                                        0., method='trf')['x'][0]
+           
+        print(fpd[i])
     
     return fpd
 

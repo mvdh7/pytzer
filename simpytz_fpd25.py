@@ -93,7 +93,7 @@ bs = np.vstack(fpdbase.ele.map(pz.prop.solubility25).values)
 ms = tot * mw / (bs - tot)
 
 #%% Run uncertainty propagation analysis [FPD]
-ionslist = [np.array(['Na','Cl']), np.array(['K','Cl'])]
+ionslist = [np.array(['K','Cl']), np.array(['Na','Cl'])]
 nC = np.float_([1,1])
 nA = np.float_([1,1])
 fpd_calc = np.full_like(T,np.nan)
@@ -103,7 +103,7 @@ for E,ele in enumerate(fpdp.index.levels[0]):
     
     # Calculate expected FPD
     EL = fpdbase.ele == ele
-    fpd_calc[EL] = pz.tconv.tot2fpd(tot[EL],Eions,nC[E],nA[E],cf)
+    fpd_calc[EL] = pz.tconv.tot2fpd_X(tot[EL],Eions,nC[E],nA[E],cf)
 
     print('Optimising FPD fit for ' + ele + '...')
 

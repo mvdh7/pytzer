@@ -26,7 +26,7 @@ cf.bC['Na-Cl'] = pz.coeffs.bC_Na_Cl_A92ii
 cf.bC['K-Cl' ] = pz.coeffs.bC_K_Cl_GM89
 cf.theta['K-Na'] = pz.coeffs.theta_zero
 cf.psi['K-Na-Cl'] = pz.coeffs.psi_zero
-cf.dh['Aosm']  = pz.coeffs.Aosm_M88
+cf.dh['Aosm']  = pz.coeffs.Aosm_MPH
 cf.dh['AH']    = pz.coeffs.AH_MPH
 
 # Calculate osmotic coefficient at measurement temperature
@@ -93,7 +93,7 @@ bs = np.vstack(fpdbase.ele.map(pz.prop.solubility25).values)
 ms = tot * mw / (bs - tot)
 
 #%% Run uncertainty propagation analysis [FPD]
-ionslist = [np.array(['Na','Cl']), np.array(['K','Cl'])]
+ionslist = [np.array(['K','Cl']), np.array(['Na','Cl'])]
 nC = np.float_([1,1])
 nA = np.float_([1,1])
 fpd_calc = np.full_like(T,np.nan)
@@ -103,7 +103,7 @@ for E,ele in enumerate(fpdp.index.levels[0]):
     
     # Calculate expected FPD
     EL = fpdbase.ele == ele
-    fpd_calc[EL] = pz.tconv.tot2fpd(tot[EL],Eions,nC[E],nA[E],cf)
+    fpd_calc[EL] = pz.tconv.tot2fpd_X(tot[EL],Eions,nC[E],nA[E],cf)
 
     print('Optimising FPD fit for ' + ele + '...')
 
@@ -175,5 +175,9 @@ fpdbase['fpd_calc'] = fpd_calc
 # Pickle outputs for Jupyter Notebook analysis and sign off
 with open('pickles/simpytz_fpdT0.pkl','wb') as f:
     pickle.dump((fpdbase,fpdp,err_cfs_both,fpd_sys_std),f)
+
+osm_calc = pz.model.osm(mols,ions,273.15-fpd_calc,cf)
+osm_calc_2 = pz.tconv.fpd2osm(mols,fpd_calc)
+osmer = np.concatenate((osm_calc,osm_calc_2), axis=1)
 
 print('FPD fit optimisation complete!')
