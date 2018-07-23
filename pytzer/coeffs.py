@@ -1389,6 +1389,45 @@ def bC_K_Cl_A99(T):
 #%%############################################################################
 # === UNPUBLISHED =============================================================
 
+# --- DH lim.slope: osmotic coefficient ---------------------------------------
+    
+def Aosm_MPH(T):
+    
+    # Centre and scale temperature
+    mu_T    = np.float_(318.15   )
+    sigma_T = np.float_( 33.91165)
+    Tn = (T - mu_T) / sigma_T
+    
+    # Define polynomial coefficients
+    aosmi = np.float_( \
+          [ 0.4062019   ,
+            0.02712083  ,
+            0.003647629 ,
+            3.969679e-05,
+            5.102238e-05,
+           -7.672292e-05,
+           -5.178963e-05,
+            6.632046e-05,
+            3.698934e-06,
+           -9.619149e-06])
+
+    # Evaluate AH
+    Aosm =  aosmi[0]         \
+          + aosmi[1] * Tn    \
+          + aosmi[2] * Tn**2 \
+          + aosmi[3] * Tn**3 \
+          + aosmi[4] * Tn**4 \
+          + aosmi[5] * Tn**5 \
+          + aosmi[6] * Tn**6 \
+          + aosmi[7] * Tn**7 \
+          + aosmi[8] * Tn**8 \
+          + aosmi[9] * Tn**9
+
+    # Check temperature is in range
+    valid = np.logical_and(T >= 263.15,T <= 373.15)
+
+    return Aosm, valid
+
 # --- DH lim. slope: app. molar heat capacity @ const. P ----------------------
 
 def AC_MPH(T):
