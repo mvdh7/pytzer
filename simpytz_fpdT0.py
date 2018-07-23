@@ -2,6 +2,7 @@
 from autograd import numpy as np
 import pandas as pd
 from scipy import optimize
+from scipy.io import savemat
 import pickle
 import pytzer as pz
 from mvdh import ismember
@@ -176,8 +177,13 @@ fpdbase['fpd_calc'] = fpd_calc
 with open('pickles/simpytz_fpdT0.pkl','wb') as f:
     pickle.dump((fpdbase,fpdp,err_cfs_both,fpd_sys_std),f)
 
-osm_calc = pz.model.osm(mols,ions,273.15-fpd_calc,cf)
-osm_calc_2 = pz.tconv.fpd2osm(mols,fpd_calc)
-osmer = np.concatenate((osm_calc,osm_calc_2), axis=1)
+# Save for MATLAB figures
+fpdbase.to_csv('pickles/simpytz_fpdT0.csv')
+savemat('pickles/simpytz_fpdT0.mat',{'err_cfs_both' : err_cfs_both,
+                                     'fpd_sys_std'  : fpd_sys_std })
+
+#osm_calc = pz.model.osm(mols,ions,273.15-fpd_calc,cf)
+#osm_calc_2 = pz.tconv.fpd2osm(mols,fpd_calc)
+#osmer = np.concatenate((osm_calc,osm_calc_2), axis=1)
 
 print('FPD fit optimisation complete!')
