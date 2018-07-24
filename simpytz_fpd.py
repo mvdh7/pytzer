@@ -3,6 +3,7 @@ from autograd import numpy as np
 import pandas as pd
 from scipy import optimize
 from scipy.io import savemat
+import pickle
 import pytzer as pz
 pd2vs = pz.misc.pd2vs
 from mvdh import ismember
@@ -15,8 +16,8 @@ fpdbase,mols,ions = pz.data.fpd(datapath)
 fpdbase,mols,ions = pz.data.subset_ele(fpdbase,mols,ions,
                                        np.array(['NaCl',
                                                  'KCl',
-                                                 'CaCl2',
-                                                 'MgCl2']))
+                                                 'CaCl2']))#,
+                                                 #MgCl2']))
 
 # Exclude smoothed datasets
 S = fpdbase.smooth == 0
@@ -152,6 +153,10 @@ for E,ele in enumerate(fpdp.index.levels[0]):
             fpderr_rdm[ele][src][1] = 0
             fpderr_rdm[ele][src][0] = optimize.least_squares(lambda rdmerr: \
                 rdmerr - np.abs(fpdbase[SL].dfpd_sys), 0.)['x'][0]
+
+# Pickle outputs for simloop
+with open('pickles/simpytz_fpd.pkl','wb') as f:
+    pickle.dump((fpdbase,fpderr_rdm,fpderr_sys),f)
 
 # Save results for MATLAB figures
 fpdbase.to_csv('pickles/simpytz_fpd.csv')
