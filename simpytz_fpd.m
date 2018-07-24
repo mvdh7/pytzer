@@ -11,9 +11,9 @@ fpdsrcs.all.srcs = unique(fpdbase.src);
 % Plot raw FPD data
 
 % Choose electrolyte to plot
-eles = {'CaCl2' 'KCl' 'NaCl' 'MgCl2'};
+eles = {'CaCl2' 'KCl' 'NaCl'};
 
-for E = 1:numel(eles)
+for E = 3%1:numel(eles)
 ele = eles{E};
 
 % Define settings that depend upon electrolyte
@@ -140,11 +140,18 @@ subplot(2,2,3); hold on
 %                   'color',[fclr.(src) 0.3])
 %         end %if
         
+        % Original
         scatter(sum(fpderr_sys.(ele).(src).^2), ...
             sum(fpderr_rdm.(ele).(src).^2), ...
             mksz,fclr.(src),'filled', ...
             'marker',fmrk.(src), 'markeredgecolor',fclr.(src), ...
             'markerfacealpha',0.7, 'markeredgealpha',0.8)
+        
+%         scatter(fpderr_sys.(ele).(src)(1), ...
+%             fpderr_sys.(ele).(src)(2), ...
+%             mksz,fclr.(src),'filled', ...
+%             'marker',fmrk.(src), 'markeredgecolor',fclr.(src), ...
+%             'markerfacealpha',0.7, 'markeredgealpha',0.8)
 
     end %for S
     
@@ -217,3 +224,55 @@ print('-r300',['figures/simpytz_fpd_' ele],'-dpng')
 
 end %for E
     
+%%
+% Simulated datasets - NaCl
+load('pickles/simloop_test.mat');
+fpdtest = readtable('pickles/simloop_test.csv');
+
+tsrcs = unique(fpdtest.src);
+
+% U = 1 + U;
+% if U > 20
+%     U = 1;
+% end %if
+
+for U = 1%:20
+
+figure(3); clf; hold on
+printsetup(gcf,[12 9])
+
+% Plot data by source
+for S = 1:numel(tsrcs)
+
+    src = tsrcs{S};
+    SL = strcmp(fpdtest.src,src);
+
+%     scatter(fpdtest.m(SL),fpd_sim(SL,U)-fpdtest.fpd_calc(SL), ...
+%         mksz,fclr.(src),'filled', 'marker',fmrk.(src), ...
+%         'markeredgecolor',fclr.(src), ...
+%         'markerfacealpha',0.7, 'markeredgealpha',0.8)
+    
+    scatter(fpdtest.m(SL),fpdtest.fpd(SL)-fpdtest.fpd_calc(SL), ...
+        mksz,fclr.(src),'filled', 'marker',fmrk.(src), ...
+        'markeredgecolor',fclr.(src), ...
+        'markerfacealpha',0.7, 'markeredgealpha',0.8)
+    
+end %for S
+
+
+% Axis settings
+xlim([0 5.5])
+ylim(0.5*[-1 1])
+
+setaxes(gca,8)
+set(gca, 'box','on', 'xtick',0:1.1:5.5, 'ytick',-0.5:0.25:0.5)
+set(gca, 'yticklabel',num2str(get(gca,'ytick')','%.2f'))
+
+plot(get(gca,'xlim'),[0 0],'k')
+
+xlabel(['\itm\rm(NaCl) / mol\cdotkg^{' endash '1}'])
+ylabel('\Delta\theta / K')
+
+print('-r300',['figures/simpytz_fpd/MCsim_' num2str(0,'%02.0f')],'-dpng')
+
+end %for U
