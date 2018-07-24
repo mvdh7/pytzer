@@ -29,7 +29,7 @@ def fpd2osm(mols,fpd):
 
 # Get expected FPD at a given molality - assuming that the Pitzer model works
 #  down to the FPD...
-def tot2fpd_X(tot,ions,nC,nA,cf):
+def tot2fpd(tot,ions,nC,nA,cf):
     
     # One electrolyte at a time - nC and nA are size 1
     
@@ -55,7 +55,7 @@ def tot2fpd_X(tot,ions,nC,nA,cf):
 #                              0.)
 
 # Get expected FPD at a given molality with T conversion
-def tot2fpd(tot,ions,nC,nA,cf):
+def tot2fpd25(tot,ions,nC,nA,cf):
         
     # One electrolyte at a time - nC and nA are size 1
     
@@ -70,7 +70,8 @@ def tot2fpd(tot,ions,nC,nA,cf):
     
     for i in range(len(tot)):
         
-        print(i,len(tot))
+        if i/10. == np.round(i/10.):
+            print('Getting FPD %d of %d...' % (i+1,len(tot)))
         
         imols = np.array([mols[i,:]])
         
@@ -78,8 +79,6 @@ def tot2fpd(tot,ions,nC,nA,cf):
            (osm2osm(tot[i],nC,nA,ions,iT00-fpd,iT25,iT25,cf,
                     fpd2osm(imols,fpd)) - osm25[i]).ravel(),
                                         0., method='trf')['x'][0]
-           
-        print(fpd[i])
     
     return fpd
 

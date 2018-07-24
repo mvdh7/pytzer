@@ -37,6 +37,57 @@ def psi_zero(T):
 ###############################################################################
 
 #%%############################################################################
+# === JESS VALUES =============================================================
+    
+# --- bC: calcium chloride ----------------------------------------------------
+    
+@primitive
+def b0_Ca_Cl_JESS(T):
+    return np.full_like(T,0.319270074367523, dtype='float64') # AC 298.15 K
+def b0_Ca_Cl_JESS_vjp(ans,T):
+    return lambda g: g * np.float_(0.000203132018214092) # HA 298.15 K
+defvjp(b0_Ca_Cl_JESS,b0_Ca_Cl_JESS_vjp)
+
+@primitive
+def b1_Ca_Cl_JESS(T):
+    return np.full_like(T,1.56483352184295, dtype='float64') # AC 298.15 K
+def b1_Ca_Cl_JESS_vjp(ans,T):
+    return lambda g: g * np.float_(0.00305774295702577) # HA 298.15 K
+defvjp(b1_Ca_Cl_JESS,b1_Ca_Cl_JESS_vjp)
+
+@primitive
+def Cphi_Ca_Cl_JESS(T):
+    return np.full_like(T,-0.000792843929957598, dtype='float64') # AC 298.15 K
+def Cphi_Ca_Cl_JESS_vjp(ans,T):
+    return lambda g: g * np.float_(-0.000161954856594093) # HA 298.15 K
+defvjp(Cphi_Ca_Cl_JESS,Cphi_Ca_Cl_JESS_vjp)
+
+def bC_Ca_Cl_JESS(T):
+    
+    b0 = b0_Ca_Cl_JESS(T)
+    b1 = b1_Ca_Cl_JESS(T)
+    b2 = np.zeros_like(T)
+    
+    Cphi = Cphi_Ca_Cl_JESS(T)
+    
+    zCa   = np.float_(+2)
+    zCl   = np.float_(-1)
+    C0    = Cphi / (2 * np.sqrt(np.abs(zCa*zCl)))
+    
+    C1    = np.zeros_like(T)
+    
+    alph1 = np.float_(2)
+    alph2 = -9
+    omega = -9
+    
+    valid = np.logical_and(T >= 297.65, T <= 298.65)
+    
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+# === JESS VALUES =============================================================
+###############################################################################
+
+#%%############################################################################
 # === DE LIMA & PITZER 1983 ===================================================
 
 # --- bC: magnesium chloride --------------------------------------------------
@@ -401,40 +452,52 @@ def Aosm_M88(T):
 
 # --- bC: calcium chloride ----------------------------------------------------
 
+@primitive
+def b0_Ca_Cl_M88(T):
+    return M88_eq13(T,
+                    np.float_([-9.41895832e+1,
+                               -4.04750026e-2,
+                                2.34550368e+3,
+                                1.70912300e+1,
+                               -9.22885841e-1,
+                                1.51488122e-5,
+                               -1.39082000e00,
+                                0            ]))
+defvjp(b0_Ca_Cl_M88,b0_Ca_Cl_JESS_vjp)
+
+@primitive
+def b1_Ca_Cl_M88(T):
+    return M88_eq13(T,
+                    np.float_([ 3.47870000e00,
+                               -1.54170000e-2,
+                                0            ,
+                                0            ,
+                                0            ,
+                                3.17910000e-5,
+                                0            ,
+                                0            ]))
+defvjp(b1_Ca_Cl_M88,b1_Ca_Cl_JESS_vjp)
+
+@primitive
+def Cphi_Ca_Cl_M88(T):
+    return M88_eq13(T,
+                    np.float_([-3.03578731e+1,
+                               -1.36264728e-2,
+                                7.64582238e+2,
+                                5.50458061e00,
+                               -3.27377782e-1,
+                                5.69405869e-6,
+                               -5.36231106e-1,
+                                0            ]))
+defvjp(Cphi_Ca_Cl_M88,Cphi_Ca_Cl_JESS_vjp)
+
 def bC_Ca_Cl_M88(T):
     
-    b0    = M88_eq13(T,
-                     np.float_([-9.41895832e+1,
-                                -4.04750026e-2,
-                                 2.34550368e+3,
-                                 1.70912300e+1,
-                                -9.22885841e-1,
-                                 1.51488122e-5,
-                                -1.39082000e00,
-                                 0            ]))
-    
-    b1    = M88_eq13(T,
-                     np.float_([ 3.47870000e00,
-                                -1.54170000e-2,
-                                 0            ,
-                                 0            ,
-                                 0            ,
-                                 3.17910000e-5,
-                                 0            ,
-                                 0            ]))
-    
+    b0    = b0_Ca_Cl_M88(T) 
+    b1    = b1_Ca_Cl_M88(T)
     b2    = np.zeros_like(T)
     
-    Cphi  = M88_eq13(T,
-                     np.float_([-3.03578731e+1,
-                                -1.36264728e-2,
-                                 7.64582238e+2,
-                                 5.50458061e00,
-                                -3.27377782e-1,
-                                 5.69405869e-6,
-                                -5.36231106e-1,
-                                 0            ]))
-    
+    Cphi  = Cphi_Ca_Cl_M88(T)
     zCa   = np.float_(+2)
     zCl   = np.float_(-1)
     C0    = Cphi / (2 * np.sqrt(np.abs(zCa*zCl)))
@@ -669,19 +732,24 @@ GM89_eq3 = M88_eq13
 
 # --- bC: calcium chloride ----------------------------------------------------
 
+@primitive
+def Cphi_Ca_Cl_GM89(T):
+    return GM89_eq3(T,
+                    np.float_([ 1.93056024e+1,
+                                9.77090932e-3,
+                               -4.28383748e+2,
+                               -3.57996343e00,
+                                8.82068538e-2,
+                               -4.62270238e-6,
+                                9.91113465e00,
+                                0            ]))
+defvjp(Cphi_Ca_Cl_GM89,Cphi_Ca_Cl_JESS_vjp)
+
 def bC_Ca_Cl_GM89(T):
     
     b0,b1,b2,_,C1,alph1,alph2,omega,valid = bC_Ca_Cl_M88(T)
     
-    Cphi  = GM89_eq3(T,
-                     np.float_([ 1.93056024e+1,
-                                 9.77090932e-3,
-                                -4.28383748e+2,
-                                -3.57996343e00,
-                                 8.82068538e-2,
-                                -4.62270238e-6,
-                                 9.91113465e00,
-                                 0            ]))
+    Cphi  = Cphi_Ca_Cl_GM89(T)
     
     zCa   = np.float_(+2)
     zCl   = np.float_(-1)
@@ -1385,7 +1453,7 @@ def bC_K_Cl_A99(T):
 
 # === ARCHER 1999 =============================================================    
 ###############################################################################
-                
+
 #%%############################################################################
 # === UNPUBLISHED =============================================================
 

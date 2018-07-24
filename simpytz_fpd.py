@@ -3,10 +3,9 @@ from autograd import numpy as np
 import pandas as pd
 from scipy import optimize
 from scipy.io import savemat
-import pickle
 import pytzer as pz
-from mvdh import ismember
 pd2vs = pz.misc.pd2vs
+from mvdh import ismember
 
 # Load raw datasets
 datapath = 'datasets/'
@@ -14,7 +13,7 @@ fpdbase,mols,ions = pz.data.fpd(datapath)
 
 # Select electrolytes for analysis
 fpdbase,mols,ions = pz.data.subset_ele(fpdbase,mols,ions,
-                                       np.array(['NaCl','KCl']))
+                                       np.array(['NaCl','KCl','CaCl2']))
 
 # Exclude smoothed datasets
 S = fpdbase.smooth == 0
@@ -23,12 +22,15 @@ mols    = mols   [S]
 
 # Prepare model cdict
 cf = pz.cdicts.cdict()
+eles = fpdbase.ele
+cf.add_zeros(fpdbase.ele)
+
 cf.bC['Na-Cl'] = pz.coeffs.bC_Na_Cl_A92ii
-cf.bC['K-Cl' ] = pz.coeffs.bC_K_Cl_GM89
-cf.theta['K-Na'] = pz.coeffs.theta_zero
-cf.psi['K-Na-Cl'] = pz.coeffs.psi_zero
+cf.bC['K-Cl' ] = pz.coeffs.bC_K_Cl_A99
+cf.bC['Ca-Cl'] = pz.coeffs.bC_Ca_Cl_GM89
 cf.dh['Aosm']  = pz.coeffs.Aosm_MPH
 cf.dh['AH']    = pz.coeffs.AH_MPH
+cf.jfunc = pz.jfuncs.P75_eq47
 
 # Calculate osmotic coefficient at measurement temperature
 T   = pd2vs(fpdbase.t  )
@@ -77,41 +79,34 @@ fpdp = pd.pivot_table(fpdbase,
                       index   = ['ele','src'],
                       aggfunc = [np.mean,np.std,len])
 
-# Prepare for uncertainty propagation analysis [FPD]
-err_coeff = {var:{ele:{} for ele in fpdp.index.levels[0]} \
-      for var in ['bs','fpd']} # was DD
-err_cost  = {var:{ele:{} for ele in fpdp.index.levels[0]} \
-      for var in ['bs','fpd']} # was DC
-err_cfs_both = {ele:{src:np.zeros(2) for src in fpdp.loc[ele].index} \
-            for ele in fpdp.index.levels[0]} # was D_bs_fpd
-fpd_sys_std = {ele:{src:np.zeros(1) for src in fpdp.loc[ele].index} \
-               for ele in fpdp.index.levels[0]}
-
-tot = pd2vs(fpdbase.m)
-mw = np.float_(1)
-bs = np.vstack(fpdbase.ele.map(pz.prop.solubility25).values)
-ms = tot * mw / (bs - tot)
-
 #%% Run uncertainty propagation analysis [FPD]
-ionslist = [np.array(['K','Cl']), np.array(['Na','Cl'])]
-nC = np.float_([1,1])
-nA = np.float_([1,1])
+tot = pd2vs(fpdbase.m)
+_,_,_,nC,nA = pz.data.znu(fpdp.index.levels[0])
 fpdbase['fpd_calc'] = np.nan
 fpdbase['dfpd'    ] = np.nan
 fpdbase['dfpd_sys'] = np.nan
 fpderr_sys = {}
 fpderr_rdm = {}
+
 for E,ele in enumerate(fpdp.index.levels[0]): 
     print('Optimising FPD fit for ' + ele + '...')
     
     # Calculate expected FPD
-    Eions = ionslist[E]
+    Eions = pz.data.ele2ions(np.array([ele]))[0]
     EL = fpdbase.ele == ele
-    fpdbase.loc[EL,'fpd_calc'] = pz.tconv.tot2fpd_X(tot[EL],
-                                                    Eions,
-                                                    nC[E],
-                                                    nA[E],
-                                                    cf)
+    
+    if ele == 'CaCl2':
+        fpdbase.loc[EL,'fpd_calc'] = pz.tconv.tot2fpd25(tot[EL],
+                                                        Eions,
+                                                        nC[E],
+                                                        nA[E],
+                                                        cf)
+    else:
+        fpdbase.loc[EL,'fpd_calc'] = pz.tconv.tot2fpd(tot[EL],
+                                                      Eions,
+                                                      nC[E],
+                                                      nA[E],
+                                                      cf)
     fpdbase.loc[EL,'dfpd'] = fpdbase.fpd[EL] - fpdbase.fpd_calc[EL]
     
     # Estimate uncertainties for each source
@@ -121,6 +116,8 @@ for E,ele in enumerate(fpdp.index.levels[0]):
     for src in fpdp.loc[ele].index:
         
         SL = np.logical_and(EL,fpdbase.src == src)
+        if ele == 'CaCl2':
+            SL = np.logical_and(SL,fpdbase.m <= 1.5)
         
         # Evaluate systematic component of error
         fpderr_sys[ele][src] = optimize.least_squares(lambda syserr: \
@@ -152,37 +149,7 @@ for E,ele in enumerate(fpdp.index.levels[0]):
             fpderr_rdm[ele][src][0] = optimize.least_squares(lambda rdmerr: \
                 rdmerr - np.abs(fpdbase[SL].dfpd_sys), 0.)['x'][0]
 
-#        err_coeff['fpd'][ele][src] = optemp['x'][0]
-#        err_cost ['fpd'][ele][src] = optemp['cost']
-#
-#        # Select best fit and correct using that [FPD]
-#        if (err_cost['bs'][ele][src] < err_cost['fpd'][ele][src]) \
-#          or (fpdp.loc[ele,src]['len']['m'] < 5):
-#            err_cfs_both[ele][src][0] = err_coeff['bs'][ele][src]
-#        else:
-#            err_cfs_both[ele][src][1] = err_coeff['fpd'][ele][src]
-#
-#        # Get fit residuals [FPD]
-#        fpdbase.loc[SL,'dosmT0_sys'] = fpdbase.dosm25[SL] \
-#            - err_cfs_both[ele][src][0] \
-#                * pz.sim.dosmT0_dbs (bs[SL],ms[SL],mw,
-#                                     pd2vs(fpdbase.fpd[SL]),
-#                                     pd2vs(fpdbase.nC[SL]),
-#                                     pd2vs(fpdbase.nA[SL])).ravel() \
-#            - err_cfs_both[ele][src][1] \
-#                * pz.sim.dosmT0_dfpd(bs[SL],ms[SL],mw,
-#                                     pd2vs(fpdbase.fpd[SL]),
-#                                     pd2vs(fpdbase.nC[SL]),
-#                                     pd2vs(fpdbase.nA[SL])).ravel()
-#
-#        # Get st. dev. of residuals [FPD]
-#        fpd_sys_std[ele][src] = np.std(fpdbase.dosmT0_sys[SL])
-
-## Pickle outputs for Jupyter Notebook analysis and sign off
-#with open('pickles/simpytz_fpdT0.pkl','wb') as f:
-#    pickle.dump((fpdbase,fpdp,err_cfs_both,fpd_sys_std),f)
-
-# Save for MATLAB figures
+# Save results for MATLAB figures
 fpdbase.to_csv('pickles/simpytz_fpd.csv')
 savemat('pickles/simpytz_fpd.mat',{'fpderr_sys':fpderr_sys,
                                    'fpderr_rdm':fpderr_rdm})

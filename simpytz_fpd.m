@@ -11,21 +11,28 @@ fpdsrcs.all.srcs = unique(fpdbase.src);
 % Plot raw FPD data
 
 % Choose electrolyte to plot
-eles = {'NaCl' 'KCl'};
+eles = {'CaCl2' 'KCl' 'NaCl'};
 
 for E = 1:numel(eles)
 ele = eles{E};
 
 % Define settings that depend upon electrolyte
 switch ele
-    case 'NaCl'
-        fxl = [0 5.5];
-        fyl = 0.25*[-1 1.0000001];
-        ele2 = 'KCl';
+    case 'CaCl2'
+        fxl = [0 1.6];
+        fxt = 0:0.4:1.6;
+        fyl = 0.3*[-1 1];
+        ele2 = 'NaCl';
     case 'KCl'
         fxl = [0 3.5];
+        fxt = 0:0.5:3.5;
         fyl = 0.5*[-1 1];
         ele2 = 'NaCl';
+    case 'NaCl'
+        fxl = [0 5.5];
+        fxt = 0:1.1:5.5;
+        fyl = 0.25*[-1 1.0000001];
+        ele2 = 'KCl';
 end %switch
 
 % Define marker styles
@@ -67,12 +74,12 @@ subplot(2,2,1); hold on
     end %for S
 
     % Axis settings
-    plot(get(gca,'xlim'),[0 0],'k')
-    setaxes(gca,8)
-    set(gca, 'box','on', 'xtick',0:10, 'ytick',-1:0.1:1)
-    
     xlim(fxl)
     ylim(fyl)
+    
+    plot(get(gca,'xlim'),[0 0],'k')
+    setaxes(gca,8)
+    set(gca, 'box','on', 'xtick',fxt, 'ytick',-1:0.1:1)
     
     xlabel(['\itm\rm(' ele ') / mol\cdotkg^{-1}'])
     ylabel('\Delta(\theta) / K')
@@ -98,12 +105,12 @@ subplot(2,2,2); hold on
     legend(fpdsrcs.(ele).srcs)
     
     % Axis settings
-    nl = plot(get(gca,'xlim'),[0 0],'k'); nolegend(nl)
-    setaxes(gca,8)
-    set(gca, 'box','on', 'xtick',0:10, 'ytick',-1:0.1:1)
-    
     xlim(fxl)
     ylim(fyl)
+    
+    nl = plot(get(gca,'xlim'),[0 0],'k'); nolegend(nl)
+    setaxes(gca,8)
+    set(gca, 'box','on', 'xtick',fxt, 'ytick',-1:0.1:1)
     
     xlabel(['\itm\rm(' ele ') / mol\cdotkg^{-1}'])
     ylabel('\sigma(\theta) / K')
@@ -118,13 +125,13 @@ subplot(2,2,3); hold on
 
         src = fpdsrcs.(ele).srcs{S};
         
-        if ismember(src,fpdsrcs.(ele2).srcs)
-            plot([sum(fpderr_sys.(ele).(src).^2) ...
-                  sum(fpderr_sys.(ele2).(src).^2)], ...
-              [sum(fpderr_rdm.(ele).(src).^2) ...
-                  sum(fpderr_rdm.(ele2).(src).^2)], ...
-                  'color',[fclr.(src) 0.3])
-        end %if
+%         if ismember(src,fpdsrcs.(ele2).srcs)
+%             plot([sum(fpderr_sys.(ele).(src).^2) ...
+%                   sum(fpderr_sys.(ele2).(src).^2)], ...
+%               [sum(fpderr_rdm.(ele).(src).^2) ...
+%                   sum(fpderr_rdm.(ele2).(src).^2)], ...
+%                   'color',[fclr.(src) 0.3])
+%         end %if
         
         scatter(sum(fpderr_sys.(ele).(src).^2), ...
             sum(fpderr_rdm.(ele).(src).^2), ...
@@ -134,19 +141,19 @@ subplot(2,2,3); hold on
 
     end %for S
     
-    % Add the other electrolyte
-    for S = 1:numel(fpdsrcs.(ele2).srcs)
-
-        src = fpdsrcs.(ele2).srcs{S};
-        
-        scatter(sum(fpderr_sys.(ele2).(src).^2), ...
-            sum(fpderr_rdm.(ele2).(src).^2), ...
-            mksz,fclr.(fpdsrcs.(ele2).srcs{S}),'filled', ...
-            'marker',fmrk.(fpdsrcs.(ele2).srcs{S}), ...
-            'markeredgecolor',fclr.(fpdsrcs.(ele2).srcs{S}), ...
-            'markerfacealpha',0, 'markeredgealpha',0.8)
-
-    end %for S
+%     % Add the other electrolyte
+%     for S = 1:numel(fpdsrcs.(ele2).srcs)
+% 
+%         src = fpdsrcs.(ele2).srcs{S};
+%         
+%         scatter(sum(fpderr_sys.(ele2).(src).^2), ...
+%             sum(fpderr_rdm.(ele2).(src).^2), ...
+%             mksz,fclr.(fpdsrcs.(ele2).srcs{S}),'filled', ...
+%             'marker',fmrk.(fpdsrcs.(ele2).srcs{S}), ...
+%             'markeredgecolor',fclr.(fpdsrcs.(ele2).srcs{S}), ...
+%             'markerfacealpha',0, 'markeredgealpha',0.8)
+% 
+%     end %for S
     
     % Axis settings
     setaxes(gca,8)
@@ -184,7 +191,7 @@ subplot(2,2,4); hold on
     
     % Axis settings
     setaxes(gca,8)
-    set(gca, 'box','on', 'xtick',0:10, 'yscale','log', ...
+    set(gca, 'box','on', 'xtick',fxt, 'yscale','log', ...
         'ytick',10.^(-10:10))
     
     xlim(fxl)
