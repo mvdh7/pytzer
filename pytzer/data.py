@@ -123,12 +123,11 @@ def fpd(datapath):
     fpdbase = prep(fpdbase)
 
     # Get mols and ions arrays for pz.model functions
-    eles = fpdbase.ele.unique()
-    ions,idict = ele2ions(eles)
+    ions,_,_,idict = ele2ions(fpdbase.ele.values)
     
     mols = np.zeros((np.shape(fpdbase)[0],len(ions)))
     
-    for ele in eles:
+    for ele in fpdbase.ele.unique():
         
         C = np.where(ions == idict[ele][0])
         A = np.where(ions == idict[ele][1])
@@ -199,7 +198,7 @@ def znu(ele):
 # Return list of unique ions from list of electrolytes 
 def ele2ions(ele):
     
-    # Define ions in each electrolyte
+    # Define ions in each electrolyte given full dissociation
     idict = {'BaCl2'  : np.array(['Ba', 'Cl' ]),
              'CaCl2'  : np.array(['Ca', 'Cl' ]),
              'H2SO4'  : np.array(['H' , 'SO4']),
@@ -211,8 +210,12 @@ def ele2ions(ele):
              'ZnBr2'  : np.array(['Zn', 'Br' ]),
              'ZnCl2'  : np.array(['Zn', 'Cl' ])}
 
-    return np.unique(np.array([idict[ionpair] for ionpair in ele]).ravel()), \
-        idict
+    cats = np.unique(np.array([idict[ionpair][0] for ionpair in ele]).ravel())
+    anis = np.unique(np.array([idict[ionpair][1] for ionpair in ele]).ravel())   
+       
+    ions = np.concatenate((cats,anis))
+
+    return ions, cats, anis, idict
         
 # Get a subset of electrolytes from a database
 def subset_ele(xxxbase,mols,ions,subset):
