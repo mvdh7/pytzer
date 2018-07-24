@@ -11,7 +11,7 @@ fpdsrcs.all.srcs = unique(fpdbase.src);
 % Plot raw FPD data
 
 % Choose electrolyte to plot
-eles = {'CaCl2' 'KCl' 'NaCl'};
+eles = {'CaCl2' 'KCl' 'NaCl' 'MgCl2'};
 
 for E = 1:numel(eles)
 ele = eles{E};
@@ -25,7 +25,7 @@ switch ele
         ele2 = 'NaCl';
     case 'KCl'
         fxl = [0 3.5];
-        fxt = 0:0.5:3.5;
+        fxt = 0:0.7:3.5;
         fyl = 0.5*[-1 1];
         ele2 = 'NaCl';
     case 'NaCl'
@@ -34,6 +34,10 @@ switch ele
         fyl = 0.25*[-1 1.0000001];
         ele2 = 'KCl';
 end %switch
+
+fxl = [0 5.5];
+fxt = 0:1.1:5.5;
+fyl = 0.5*[-1 1];
 
 % Define marker styles
 mrks = repmat({'o' 'v' '^' '<' '>' 'sq' 'd' 'p' 'h'},1,3);
@@ -61,6 +65,9 @@ subplot(2,2,1); hold on
 
         src = fpdsrcs.(ele).srcs{S};
         SL = EL & strcmp(fpdbase.src,src);
+        if strcmp(ele,'CaCl2')
+            SL = SL & fpdbase.m <= 1.5;
+        end %if
 
         scatter(fpdbase.m(SL),fpdbase.dfpd(SL), ...
             mksz,fclr.(src),'filled', 'marker',fmrk.(src), ...
@@ -177,7 +184,10 @@ subplot(2,2,4); hold on
 
         src = fpdsrcs.(ele).srcs{S};
         SL = EL & strcmp(fpdbase.src,fpdsrcs.(ele).srcs{S});
-
+        if strcmp(ele,'CaCl2')
+            SL = SL & fpdbase.m <= 1.5;
+        end %if
+        
         scatter(fpdbase.m(SL),abs(fpdbase.dfpd_sys(SL)), ...
             mksz,fclr.(src),'filled', 'marker',fmrk.(src), ...
             'markeredgecolor',fclr.(src), ...

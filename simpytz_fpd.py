@@ -13,7 +13,10 @@ fpdbase,mols,ions = pz.data.fpd(datapath)
 
 # Select electrolytes for analysis
 fpdbase,mols,ions = pz.data.subset_ele(fpdbase,mols,ions,
-                                       np.array(['NaCl','KCl','CaCl2']))
+                                       np.array(['NaCl',
+                                                 'KCl',
+                                                 'CaCl2',
+                                                 'MgCl2']))
 
 # Exclude smoothed datasets
 S = fpdbase.smooth == 0
@@ -28,6 +31,7 @@ cf.add_zeros(fpdbase.ele)
 cf.bC['Na-Cl'] = pz.coeffs.bC_Na_Cl_A92ii
 cf.bC['K-Cl' ] = pz.coeffs.bC_K_Cl_A99
 cf.bC['Ca-Cl'] = pz.coeffs.bC_Ca_Cl_GM89
+cf.bC['Mg-Cl'] = pz.coeffs.bC_Mg_Cl_PP87i
 cf.dh['Aosm']  = pz.coeffs.Aosm_MPH
 cf.dh['AH']    = pz.coeffs.AH_MPH
 cf.jfunc = pz.jfuncs.P75_eq47
@@ -124,7 +128,7 @@ for E,ele in enumerate(fpdp.index.levels[0]):
             syserr[1] * fpdbase[SL].m + syserr[0] - fpdbase[SL].dfpd,
                                              [0.,0.])['x']
         
-        if sum(SL) < 5:
+        if sum(SL) < 6:
             fpderr_sys[ele][src][1] = 0
             fpderr_sys[ele][src][0] = optimize.least_squares(lambda syserr: \
                 syserr - fpdbase[SL].dfpd,0.)['x'][0]
@@ -144,7 +148,7 @@ for E,ele in enumerate(fpdp.index.levels[0]):
                 rdmerr * fpdbase[SL].m \
                 - np.abs(fpdbase[SL].dfpd_sys), 0.)['x']
         
-        if (sum(SL) < 5) or (fpderr_rdm[ele][src][1] < 0):
+        if (sum(SL) < 6) or (fpderr_rdm[ele][src][1] < 0):
             fpderr_rdm[ele][src][1] = 0
             fpderr_rdm[ele][src][0] = optimize.least_squares(lambda rdmerr: \
                 rdmerr - np.abs(fpdbase[SL].dfpd_sys), 0.)['x'][0]

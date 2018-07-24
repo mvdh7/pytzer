@@ -1,7 +1,7 @@
 %% Load Python outputs
 fpdbase = readtable('pickles/simpytz_fpd.csv');
 
-EL = strcmp(fpdbase.ele,'CaCl2');
+EL = strcmp(fpdbase.ele,'MgCl2');
 
 figure(2); clf
 
