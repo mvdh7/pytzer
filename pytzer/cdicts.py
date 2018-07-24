@@ -1,5 +1,5 @@
 import autograd.numpy as np
-from . import coeffs, jfuncs
+from . import coeffs, data, jfuncs
 
 class cdict:
     def __init__(self):
@@ -10,6 +10,7 @@ class cdict:
         self.psi   = {}
         self.K     = {}
         
+    # Get equilibrium equations
     def getKeq(self,T, mH=None, gH=None, mOH=None, gOH=None, 
                mHSO4=None, gHSO4=None, mSO4=None, gSO4=None):
         
@@ -29,6 +30,37 @@ class cdict:
                 - np.log(self.K['HSO4'](T)[0])
             
         return Keq
+    
+    # Populate with zero-functions
+    def add_zeros(self,eles):
+        
+        _,cats,anis,_ = data.ele2ions(eles)
+
+        # Populate cdict with zero functions
+        for cat in cats:
+            
+            for ani in anis:
+                self.bC[cat + '-' + ani] = coeffs.bC_zero
+                
+        for C0 in range(len(cats)):
+            for C1 in range(C0+1,len(cats)):
+                
+                self.theta[cats[C0] + '-' + cats[C1]] = coeffs.theta_zero
+                
+                for ani in anis:
+                    
+                    self.psi[cats[C0] + '-' + cats[C1] + '-' + ani] \
+                        = coeffs.psi_zero
+        
+        for A0 in range(len(anis)):
+            for A1 in range(A0+1,len(anis)):
+                
+                self.theta[anis[A0] + '-' + anis[A1]] = coeffs.theta_zero
+                
+                for cat in cats:
+                    
+                    self.psi[cat + '-' + anis[A0] + '-' + anis[A1]] \
+                        = coeffs.psi_zero
         
 
 # === MOLLER 1988 =============================================================
