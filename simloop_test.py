@@ -63,17 +63,23 @@ with open('pickles/simpytz_fpd.pkl','rb') as f:
     
 #%% Simulate new datasets
 sele = 'NaCl'
-Ureps = int(20)
-fpd_simX = np.full((np.size(tot),Ureps),np.nan)
-for U in range(Ureps):
-    fpd_simX[:,U] = pz.sim.fpd(tot,pd2vs(fpdbase.fpd_calc),srcs,sele,
-                               fpderr_rdm,fpderr_sys).ravel()
+Ureps = int(10)
 
 # Set up for fitting
 alph1 = np.float_(2.5)
 alph2 = -9
 omega = np.float_(2)
 fpd_calc = pd2vs(fpdbase.fpd_calc)
+
+# Define weights for fitting
+#weights = np.ones(np.size(T1)) # uniform
+#weights = np.sqrt(tot) # sqrt of molality
+# ... based on random errors in each dataset:
+weights = np.full_like(tot,1, dtype='float64')
+for src in np.unique(srcs):
+    SL = srcs == src
+    weights[SL] = 1 / np.sqrt(np.sum(fpderr_rdm[ele][src]**2))
+weights = weights
 
 def Eopt(rseed=None):
 
@@ -92,9 +98,10 @@ def Eopt(rseed=None):
                               273.15 - Ufpd,T1,T1,
                               cf,Uosm)
 
+    # Solve for Pitzer model coefficients
     b0,b1,_,C0,C1,_,_ \
         = pz.fitting.bC(mols,zC,zA,T1,alph1,alph2,omega,nC,nA,Uosm25,
-                        np.ones(np.size(T1)),'b0b1C0C1','osm')
+                        weights,'b0b1C0C1','osm')
 
     return Ufpd,Uosm25,b0,b1,C0,C1
 
@@ -129,7 +136,6 @@ osm25_fitted_calc = pz.model.osm(mols_fitted,ions,T1_fitted,cf)
 # Save results for MATLAB
 fpdbase.to_csv('pickles/simloop_test.csv')
 savemat('pickles/simloop_test.mat',{'fpd_sim'           : fpd_sim,
-                                    'fpd_simX'          : fpd_simX,
                                     'osm25_sim'         : osm25_sim,
                                     'tot_fitted'        : tot_fitted,
                                     'osm25_fitted'      : osm25_fitted,

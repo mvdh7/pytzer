@@ -232,7 +232,7 @@ fpdtest = readtable('pickles/simloop_test.csv');
 tsrcs = unique(fpdtest.src);
 
 U = 1 + U;
-if U > 20
+if U > 10
     U = 1;
 end %if
 
