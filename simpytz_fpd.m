@@ -220,7 +220,7 @@ subplot(2,2,4); hold on
         'units','normalized')
     
 % Save figure
-print('-r300',['figures/simpytz_fpd_' ele],'-dpng')
+% print('-r300',['figures/simpytz_fpd_' ele],'-dpng')
 
 end %for E
     
@@ -231,12 +231,12 @@ fpdtest = readtable('pickles/simloop_test.csv');
 
 tsrcs = unique(fpdtest.src);
 
-% U = 1 + U;
-% if U > 20
-%     U = 1;
-% end %if
+U = 1 + U;
+if U > 20
+    U = 1;
+end %if
 
-for U = 1%:20
+for U = U%1%:20
 
 figure(3); clf; hold on
 printsetup(gcf,[12 9])
@@ -247,32 +247,52 @@ for S = 1:numel(tsrcs)
     src = tsrcs{S};
     SL = strcmp(fpdtest.src,src);
 
+    % osm25 simulations
+    scatter(fpdtest.m(SL),osm25_sim(SL,U)-fpdtest.osm25_calc(SL), ...
+        mksz,fclr.(src),'filled', 'marker',fmrk.(src), ...
+        'markeredgecolor',fclr.(src), ...
+        'markerfacealpha',0.7, 'markeredgealpha',0.8)
+    
+%     % osm25 original dataset
+%     scatter(fpdtest.m(SL),fpdtest.osm25(SL)-fpdtest.osm25_calc(SL), ...
+%         mksz,fclr.(src),'filled', 'marker',fmrk.(src), ...
+%         'markeredgecolor',fclr.(src), ...
+%         'markerfacealpha',0.3, 'markeredgealpha',0.4)
+    
+    % osm25 simulation fits
+    plot(tot_fitted,osm25_fitted(:,U) - osm25_fitted_calc,'k');
+    
+%     % FPD simulations
 %     scatter(fpdtest.m(SL),fpd_sim(SL,U)-fpdtest.fpd_calc(SL), ...
 %         mksz,fclr.(src),'filled', 'marker',fmrk.(src), ...
 %         'markeredgecolor',fclr.(src), ...
 %         'markerfacealpha',0.7, 'markeredgealpha',0.8)
-    
-    scatter(fpdtest.m(SL),fpdtest.fpd(SL)-fpdtest.fpd_calc(SL), ...
-        mksz,fclr.(src),'filled', 'marker',fmrk.(src), ...
-        'markeredgecolor',fclr.(src), ...
-        'markerfacealpha',0.7, 'markeredgealpha',0.8)
+%     
+%     % FPD original dataset
+%     scatter(fpdtest.m(SL),fpdtest.fpd(SL)-fpdtest.fpd_calc(SL), ...
+%         mksz,fclr.(src),'filled', 'marker',fmrk.(src), ...
+%         'markeredgecolor',fclr.(src), ...
+%         'markerfacealpha',0.3, 'markeredgealpha',0.4)
     
 end %for S
 
 
 % Axis settings
 xlim([0 5.5])
-ylim(0.5*[-1 1])
+% ylim(0.5*[-1 1]) % FPD
+ylim(0.0600000001*[-1 1]) % osm25
 
 setaxes(gca,8)
-set(gca, 'box','on', 'xtick',0:1.1:5.5, 'ytick',-0.5:0.25:0.5)
+% set(gca, 'box','on', 'xtick',0:1.1:5.5, 'ytick',-0.5:0.25:0.5) % FPD
+set(gca, 'box','on', 'xtick',0:1.1:5.5, 'ytick',-0.1:0.02:0.1) % osm25
 set(gca, 'yticklabel',num2str(get(gca,'ytick')','%.2f'))
 
 plot(get(gca,'xlim'),[0 0],'k')
 
 xlabel(['\itm\rm(NaCl) / mol\cdotkg^{' endash '1}'])
-ylabel('\Delta\theta / K')
+ylabel('\Delta\theta / K') % FPD
+ylabel('\Delta\phi_{25}') % osm25
 
-print('-r300',['figures/simpytz_fpd/MCsim_' num2str(0,'%02.0f')],'-dpng')
+% print('-r300',['figures/simpytz_fpd/MCsim_' num2str(0,'%02.0f')],'-dpng')
 
 end %for U
