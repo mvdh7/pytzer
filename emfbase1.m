@@ -34,7 +34,8 @@ for T = 1:numel(temps)
 
     TL = emfbase.t == temps(T);
     
-    plot(emfbase.m(TL),emfbase.emf(TL), 'color',tclrs(T,:))
+    plot(emfbase.m(TL),emfbase.ln_acf_racf(TL), 'marker','o', ...
+        'color',tclrs(T,:), 'linewidth',1)
     
 end %for T
     
