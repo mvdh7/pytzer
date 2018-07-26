@@ -1,3 +1,8 @@
+# Run as
+# > python simloop_pytzer.py <Uele> <Ureps>
+# where <Uele>  is the electrolyte to analyse
+#       <Ureps> is the number of Monte-Carlo simulations to execute
+
 import numpy  as np
 import pandas as pd
 import pickle
@@ -36,11 +41,17 @@ cf.add_zeros(fpdbase.ele)
 cf.dh['Aosm'] = pz.coeffs.Aosm_MPH
 cf.dh['AH'  ] = pz.coeffs.AH_MPH
 cf.bC['Na-Cl'] = pz.coeffs.bC_Na_Cl_A92ii
+cf.bC['K-Cl' ] = pz.coeffs.bC_K_Cl_A99
 
 # Extract metadata from fpdbase
 tot  = pd2vs(fpdbase.m  )
 srcs = pd2vs(fpdbase.src)
 _,zC,zA,nC,nA = pz.data.znu(fpde.index)
+
+# Identify which coefficients to fit
+wbC = {'NaCl' : 'b0b1C0C1',
+       'KCl'  : 'b0b1C0'  }
+which_bCs = wbC[Uele]
 
 fpdbase['t25'] = 298.15
 T1    = pd2vs(fpdbase.t25)
@@ -106,7 +117,7 @@ def Eopt(rseed=None):
     # Solve for Pitzer model coefficients
     b0,b1,b2,C0,C1,_,_ \
         = pz.fitting.bC(mols,zC,zA,T1,alph1,alph2,omega,nC,nA,Uosm25,
-                        weights,'b0b1C0C1','osm')
+                        weights,which_bCs,'osm')
 
     return b0,b1,b2,C0,C1
 
