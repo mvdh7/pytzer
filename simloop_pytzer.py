@@ -9,6 +9,7 @@ import pickle
 import pytzer as pz
 pd2vs = pz.misc.pd2vs
 from multiprocessing import Pool
+from scipy.io        import savemat
 from sys             import argv
 from time            import time
 
@@ -158,7 +159,13 @@ if __name__ == '__main__':
     print('multiprocessing %s: %d reps in %.2f seconds' \
         % (Uele,Ureps,(Xtend - Xtstart)))
 
-    # Pickle results
-    with open('pickles/simloop_pytzer_bC_' + Uele + '_' + str(Ureps) + '.pkl',
-              'wb') as f:
+    # Pickle/save results
+    fstem = 'pickles/simloop_pytzer_bC_' + Uele + '_' + str(Ureps)
+    with open(fstem + '.pkl','wb') as f:
         pickle.dump((bC_mean,bC_cv,bCo,bCo_cv,Uele,Ureps),f)
+    savemat(fstem + '.mat', {'bC_mean' : bC_mean,
+                             'bC_cv'   : bC_cv  ,
+                             'bCo'     : bCo    ,
+                             'bCo_cv'  : bCo_cv ,
+                             'Uele'    : Uele   ,
+                             'Ureps'   : Ureps  })
