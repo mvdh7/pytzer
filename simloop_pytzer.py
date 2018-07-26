@@ -13,6 +13,8 @@ from scipy.io        import savemat
 from sys             import argv
 from time            import time
 
+argv = ['','NaCl','10']
+
 # Get input args
 Uele  =     argv[1]
 Ureps = int(argv[2])
@@ -98,10 +100,16 @@ for src in np.unique(srcs):
 weights = weights
 
 # Do the fit to the original dataset
-b0o,b1o,b2o,C0o,C1o,bCo_cv,_ \
+b0o,b1o,b2o,C0o,C1o,bCo_cv,mseo \
     = pz.fitting.bC(mols,zC,zA,T1,alph1,alph2,omega,nC,nA,pd2vs(fpdbase.osm25),
-                weights,which_bCs,'osm')
-bCo = np.vstack((b0o,b1o,b2o,C0o,C1o))
+                    weights,which_bCs,'osm')
+bCo = np.hstack((b0o,b1o,b2o,C0o,C1o))
+
+# Check understanding of MSE calculation
+mseo_dir = np.mean(((pd2vs(fpdbase.osm25) - pz.fitting.osm(mols,zC,zA,T1,
+                                            b0o,b1o,b2o,C0o,C1o,
+                                            alph1,alph2,omega)) * weights)**2)
+mse_dir  = np.mean((pd2vs(fpdbase.osm25 - fpdbase.osm25_calc) * weights)**2)
 
 # Define fitting function
 def Eopt(rseed=None):
