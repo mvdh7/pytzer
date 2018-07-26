@@ -13,33 +13,33 @@ covmx_viz(2,bCo    ,bCo_cv,varnames)
 %%
 load('pickles/simloop_res.mat')
 sqt = sqrt(tot);
-plx = tot;
+plx = sqt;
 
 figure(3); clf
 
 subplot(2,1,1); hold on
 
     plot(plx,acf,'k')
-    plot(plx,acf+sqrt(Uacf),'k--')
-    plot(plx,acf-sqrt(Uacf),'k--')
+    plot(plx,acf+sqrt(Uacf)*2,'k--')
+    plot(plx,acf-sqrt(Uacf)*2,'k--')
 
     plot(plx,acfo,'r')
-    plot(plx,acfo+sqrt(Uacfo),'r--')
-    plot(plx,acfo-sqrt(Uacfo),'r--')
+    plot(plx,acfo+sqrt(Uacfo)*2,'r--')
+    plot(plx,acfo-sqrt(Uacfo)*2,'r--')
 
     grid on
 
 subplot(2,1,2); hold on
 
     plot(plx,acf-acf,'k')
-    plot(plx,sqrt(Uacf),'k--')
-    plot(plx,sqrt(Uacf),'k--')
+    plot(plx,sqrt(Uacf)*2,'k--')
+    plot(plx,sqrt(Uacf)*2,'k--')
 
     plot(plx,acfo-acf,'r')
-    plot(plx,acfo+sqrt(Uacfo)-acf,'r--')
-    plot(plx,acfo-sqrt(Uacfo)-acf,'r--')
+    plot(plx,acfo+sqrt(Uacfo)*2-acf,'r--')
+    plot(plx,acfo-sqrt(Uacfo)*2-acf,'r--')
 
-    plot(plx,sqrt(Uacfo),'m--')
+    plot(plx,sqrt(Uacfo)*2,'m--')
     
     grid on
     
