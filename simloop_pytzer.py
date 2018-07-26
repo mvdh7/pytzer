@@ -112,7 +112,7 @@ def Eopt(rseed=None):
 
 #%% Multiprocessing loop
 if __name__ == '__main__':
-
+    
     # Set initial random seed (for reproducibility)
     np.random.seed(295)
 
@@ -142,5 +142,6 @@ if __name__ == '__main__':
         % (Uele,Ureps,(Xtend - Xtstart)))
 
     # Pickle results
-    with open('pickles/simloop_pytzer_bC_' + Uele + '.pkl','wb') as f:
+    with open('pickles/simloop_pytzer_bC_' + Uele + '_' + str(Ureps) + '.pkl',
+              'wb') as f:
         pickle.dump((bC_mean,bC_cv,Uele,Ureps),f)
