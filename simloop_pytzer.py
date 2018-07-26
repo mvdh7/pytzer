@@ -13,7 +13,7 @@ from sys             import argv
 from time            import time
 
 # Get input args
-Uele =      argv[1]
+Uele  =     argv[1]
 Ureps = int(argv[2])
 
 # Load raw datasets
@@ -96,6 +96,12 @@ for src in np.unique(srcs):
     weights[SL] = 1 / np.sqrt(np.sum(fpderr_rdm[ele][src]**2))
 weights = weights
 
+# Do the fit to the original dataset
+b0o,b1o,b2o,C0o,C1o,bCo_cv,_ \
+    = pz.fitting.bC(mols,zC,zA,T1,alph1,alph2,omega,nC,nA,pd2vs(fpdbase.osm25),
+                weights,which_bCs,'osm')
+bCo = np.vstack((b0o,b1o,b2o,C0o,C1o))
+
 # Define fitting function
 def Eopt(rseed=None):
 
@@ -155,4 +161,4 @@ if __name__ == '__main__':
     # Pickle results
     with open('pickles/simloop_pytzer_bC_' + Uele + '_' + str(Ureps) + '.pkl',
               'wb') as f:
-        pickle.dump((bC_mean,bC_cv,Uele,Ureps),f)
+        pickle.dump((bC_mean,bC_cv,bCo,bCo_cv,Uele,Ureps),f)
