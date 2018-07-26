@@ -13,7 +13,7 @@ from scipy.io        import savemat
 from sys             import argv
 from time            import time
 
-argv = ['','NaCl','10']
+#argv = ['','NaCl','10']
 
 # Get input args
 Uele  =     argv[1]
