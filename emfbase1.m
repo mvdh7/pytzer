@@ -25,6 +25,8 @@ clear fid head data ans
 % Get temperatures
 temps = unique(emfbase.t);
 
+tclrs = parula(numel(temps)+1);
+
 %% Plot
 figure(1); clf; hold on
 
@@ -32,7 +34,7 @@ for T = 1:numel(temps)
 
     TL = emfbase.t == temps(T);
     
-    plot(emfbase.m(TL),emfbase.emf(TL))
+    plot(emfbase.m(TL),emfbase.emf(TL), 'color',tclrs(T,:))
     
 end %for T
     
@@ -45,6 +47,10 @@ for T = 1:numel(temps)
     TL = emfbase.t == temps(T);
     
     plot(emfbase.m(TL),emfbase.ln_acf_racf(TL) ...
-        - emfbase.ln_acf_racf_calc(TL), 'marker','o')
+        - emfbase.ln_acf_racf_calc(TL), 'marker','o', ...
+        'color',tclrs(T,:), 'linewidth',1)
     
 end %for T
+
+xlabel('\itm\rm(NaCl) / mol\cdotkg^{-1}')
+ylabel('\Delta ln (\gamma / \gamma_{0.1})')
