@@ -152,6 +152,16 @@ def vpl(datapath):
 
     return vplbase
 
+##### ELECTROMOTIVE FORCE #####################################################
+
+def emf(datapath):
+
+    emfbase = pd.read_excel(datapath+'emf.xlsx', sheet_name='EMF data',
+                            header=0, skiprows=2, usecols=5)
+    emfbase = prep(emfbase)
+
+    return emfbase
+
 ##### GENERIC FUNCTIONS #######################################################
 
 # Calculate some useful variables and sort database
