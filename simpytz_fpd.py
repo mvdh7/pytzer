@@ -30,7 +30,7 @@ eles = fpdbase.ele
 cf.add_zeros(fpdbase.ele)
 
 cf.bC['Na-Cl'] = pz.coeffs.bC_Na_Cl_A92ii
-cf.bC['K-Cl' ] = pz.coeffs.bC_K_Cl_A99
+cf.bC['K-Cl' ] = pz.coeffs.bC_K_Cl_ZD17
 cf.bC['Ca-Cl'] = pz.coeffs.bC_Ca_Cl_GM89
 cf.bC['Mg-Cl'] = pz.coeffs.bC_Mg_Cl_PP87i
 cf.dh['Aosm']  = pz.coeffs.Aosm_MPH
@@ -153,6 +153,21 @@ for E,ele in enumerate(fpdp.index.levels[0]):
             fpderr_rdm[ele][src][1] = 0
             fpderr_rdm[ele][src][0] = optimize.least_squares(lambda rdmerr: \
                 rdmerr - np.abs(fpdbase[SL].dfpd_sys), 0.)['x'][0]
+         
+            
+            
+# Add 'all' fields for easier plotting
+for ele in fpdp.index.levels[0]:
+    Eksys = list(fpderr_sys[ele].keys())
+    fpderr_sys[ele]['all_int'] = np.array( \
+        [fpderr_sys[ele][src][0] for src in Eksys])
+    fpderr_sys[ele]['all_grad'] = np.array( \
+        [fpderr_sys[ele][src][1] for src in Eksys])
+    Ekrdm = list(fpderr_rdm[ele].keys())
+    fpderr_rdm[ele]['all_int'] = np.array( \
+        [fpderr_rdm[ele][src][0] for src in Ekrdm])
+    fpderr_rdm[ele]['all_grad'] = np.array( \
+        [fpderr_rdm[ele][src][1] for src in Ekrdm])
 
 # Pickle outputs for simloop
 with open('pickles/simpytz_fpd.pkl','wb') as f:
