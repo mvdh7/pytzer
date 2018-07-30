@@ -26,10 +26,16 @@ fpde = pd.pivot_table(fpdbase,
 
 # Prepare model cdict
 cf = pz.cdicts.cdict()
+eles = fpdbase.ele
 cf.add_zeros(fpdbase.ele)
-cf.dh['Aosm'] = pz.coeffs.Aosm_MPH
-cf.dh['AH'  ] = pz.coeffs.AH_MPH
+
 cf.bC['Na-Cl'] = pz.coeffs.bC_Na_Cl_A92ii
+cf.bC['K-Cl' ] = pz.coeffs.bC_K_Cl_ZD17
+cf.bC['Ca-Cl'] = pz.coeffs.bC_Ca_Cl_GM89
+cf.bC['Mg-Cl'] = pz.coeffs.bC_Mg_Cl_PP87i
+cf.dh['Aosm']  = pz.coeffs.Aosm_MPH
+cf.dh['AH']    = pz.coeffs.AH_MPH
+cf.jfunc = pz.jfuncs.P75_eq47
 
 # Extract metadata from fpdbase
 tot  = pd2vs(fpdbase.m  )
@@ -63,7 +69,7 @@ with open('pickles/simpytz_fpd.pkl','rb') as f:
     
 #%% Simulate new datasets
 sele = 'NaCl'
-Ureps = int(10)
+Ureps = int(20)
 
 # Set up for fitting
 alph1 = np.float_(2.5)
@@ -145,4 +151,3 @@ savemat('pickles/simloop_test.mat',{'fpd_sim'           : fpd_sim,
 #from matplotlib import pyplot as plt
 #fig,ax = plt.subplots(1,1)
 #ax.scatter(fpdbase.m,fpd_sim-fpd_calc)
-
