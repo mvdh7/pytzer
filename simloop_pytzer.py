@@ -40,7 +40,20 @@ fpde = pd.pivot_table(fpdbase,
 
 # Load outputs from simpytz_fpd.py
 with open('pickles/simpytz_fpd.pkl','rb') as f:
-    _,fpderr_rdm,fpderr_sys,cf = pickle.load(f)
+    _,fpderr_rdm,fpderr_sys = pickle.load(f)
+
+# Prepare model cdict (MUST BE CONSISTENT WITH simpytz_fpd.py)
+cf = pz.cdicts.cdict()
+eles = fpdbase.ele
+cf.add_zeros(fpdbase.ele)
+
+cf.bC['Na-Cl'] = pz.coeffs.bC_Na_Cl_A92ii
+cf.bC['K-Cl' ] = pz.coeffs.bC_K_Cl_ZD17
+cf.bC['Ca-Cl'] = pz.coeffs.bC_Ca_Cl_GM89
+cf.bC['Mg-Cl'] = pz.coeffs.bC_Mg_Cl_PP87i
+cf.dh['Aosm']  = pz.coeffs.Aosm_MPH
+cf.dh['AH']    = pz.coeffs.AH_MPH
+cf.jfunc = pz.jfuncs.P75_eq47
 
 # Extract metadata from fpdbase
 tot  = pd2vs(fpdbase.m  )

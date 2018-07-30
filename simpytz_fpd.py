@@ -154,9 +154,7 @@ for E,ele in enumerate(fpdp.index.levels[0]):
             fpderr_rdm[ele][src][0] = optimize.least_squares(lambda rdmerr: \
                 rdmerr - np.abs(fpdbase[SL].dfpd_sys), 0.)['x'][0]
          
-            
-            
-# Add 'all' fields for easier plotting
+# Add 'all' fields for easier plotting in MATLAB
 for ele in fpdp.index.levels[0]:
     Eksys = list(fpderr_sys[ele].keys())
     fpderr_sys[ele]['all_int'] = np.array( \
@@ -171,7 +169,7 @@ for ele in fpdp.index.levels[0]:
 
 # Pickle outputs for simloop
 with open('pickles/simpytz_fpd.pkl','wb') as f:
-    pickle.dump((fpdbase,fpderr_rdm,fpderr_sys,cf),f)
+    pickle.dump((fpdbase,fpderr_rdm,fpderr_sys),f)
 
 # Save results for MATLAB figures
 fpdbase.to_csv('pickles/simpytz_fpd.csv')
