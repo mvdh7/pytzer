@@ -13,7 +13,7 @@ fpdsrcs.all.srcs = unique(fpdbase.src);
 % Choose electrolyte to plot
 eles = {'CaCl2' 'KCl' 'NaCl'};
 
-for E = 3%1:numel(eles)
+for E = 1:numel(eles)
 ele = eles{E};
 
 % Define settings that depend upon electrolyte
@@ -35,9 +35,9 @@ switch ele
         ele2 = 'KCl';
 end %switch
 
-fxl = [0 5.5];
-fxt = 0:1.1:5.5;
-fyl = 0.5*[-1 1];
+% fxl = [0 5.5];
+% fxt = 0:1.1:5.5;
+% fyl = 0.5*[-1 1];
 
 % Define marker styles
 mrks = repmat({'o' 'v' '^' '<' '>' 'sq' 'd' 'p' 'h'},1,3);
@@ -220,7 +220,7 @@ subplot(2,2,4); hold on
         'units','normalized')
     
 % Save figure
-% print('-r300',['figures/simpytz_fpd_' ele],'-dpng')
+print('-r300',['figures/simpytz_fpd_' ele],'-dpng')
 
 end %for E
     
@@ -232,7 +232,7 @@ fpdtest = readtable('pickles/simloop_test.csv');
 tsrcs = unique(fpdtest.src);
 
 U = 1 + U;
-if U > 10
+if U > 20
     U = 1;
 end %if
 
@@ -253,14 +253,14 @@ for S = 1:numel(tsrcs)
         'markeredgecolor',fclr.(src), ...
         'markerfacealpha',0.7, 'markeredgealpha',0.8)
     
-%     % osm25 original dataset
-%     scatter(fpdtest.m(SL),fpdtest.osm25(SL)-fpdtest.osm25_calc(SL), ...
-%         mksz,fclr.(src),'filled', 'marker',fmrk.(src), ...
-%         'markeredgecolor',fclr.(src), ...
-%         'markerfacealpha',0.3, 'markeredgealpha',0.4)
+    % osm25 original dataset
+    scatter(fpdtest.m(SL),fpdtest.osm25(SL)-fpdtest.osm25_calc(SL), ...
+        mksz,fclr.(src),'filled', 'marker',fmrk.(src), ...
+        'markeredgecolor',fclr.(src), ...
+        'markerfacealpha',0.3, 'markeredgealpha',0.4)
     
-    % osm25 simulation fits
-    plot(tot_fitted,osm25_fitted(:,U) - osm25_fitted_calc,'k');
+%     % osm25 simulation fits
+%     plot(tot_fitted,osm25_fitted(:,U) - osm25_fitted_calc,'k');
     
 %     % FPD simulations
 %     scatter(fpdtest.m(SL),fpd_sim(SL,U)-fpdtest.fpd_calc(SL), ...
@@ -290,7 +290,7 @@ set(gca, 'yticklabel',num2str(get(gca,'ytick')','%.2f'))
 plot(get(gca,'xlim'),[0 0],'k')
 
 xlabel(['\itm\rm(NaCl) / mol\cdotkg^{' endash '1}'])
-ylabel('\Delta\theta / K') % FPD
+% ylabel('\Delta\theta / K') % FPD
 ylabel('\Delta\phi_{25}') % osm25
 
 % print('-r300',['figures/simpytz_fpd/MCsim_' num2str(0,'%02.0f')],'-dpng')
@@ -308,11 +308,17 @@ subplot(2,4,1)
                fpderr_sys.KCl.all_int ...
                fpderr_sys.CaCl2.all_int], -0.25:0.05:0.25)
 
-subplot(2,4,2)
+subplot(2,4,2); hold on
 
-    histogram([fpderr_sys.NaCl.all_grad ...
+    spdata = [fpderr_sys.NaCl.all_grad ...
                fpderr_sys.KCl.all_grad ...
-               fpderr_sys.CaCl2.all_grad], -0.25:0.05:0.25)
+               fpderr_sys.CaCl2.all_grad];
+
+    histogram(spdata, -0.25:0.05:0.25)
+           
+    fx = -0.2:0.001:0.2;
+    plot(fx,normpdf(fx,mean(spdata),std(spdata)))
+    plot(fx,normpdf(fx,0,rms(spdata)))
     
 subplot(2,4,3)
 

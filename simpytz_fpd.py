@@ -126,17 +126,18 @@ for E,ele in enumerate(fpdp.index.levels[0]):
         
         # Evaluate systematic component of error
         fpderr_sys[ele][src] = optimize.least_squares(lambda syserr: \
-            syserr[1] * fpdbase[SL].m + syserr[0] - fpdbase[SL].dfpd,
+            syserr[1] * fpdbase[SL].m + 0 * syserr[0] - fpdbase[SL].dfpd,
                                              [0.,0.])['x']
         
-        if sum(SL) < 6:
-            fpderr_sys[ele][src][1] = 0
-            fpderr_sys[ele][src][0] = optimize.least_squares(lambda syserr: \
-                syserr - fpdbase[SL].dfpd,0.)['x'][0]
+#        if sum(SL) < 6:
+#            fpderr_sys[ele][src][1] = 0
+#            fpderr_sys[ele][src][0] = optimize.least_squares(lambda syserr: \
+#                syserr - fpdbase[SL].dfpd,0.)['x'][0]
 
-        fpdbase.loc[SL,'dfpd_sys'] = fpdbase.dfpd[SL] \
-                                   - (fpdbase.m[SL] * fpderr_sys[ele][src][1] \
-                                      +               fpderr_sys[ele][src][0])
+        fpdbase.loc[SL,'dfpd_sys'] \
+            =  fpdbase.dfpd[SL] \
+            - (fpdbase.m[SL] * fpderr_sys[ele][src][1] \
+               +               fpderr_sys[ele][src][0])
                        
         # Evaluate random component of error
         fpderr_rdm[ele][src] = optimize.least_squares(lambda rdmerr: \
