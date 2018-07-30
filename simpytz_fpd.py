@@ -171,7 +171,7 @@ for ele in fpdp.index.levels[0]:
 
 # Pickle outputs for simloop
 with open('pickles/simpytz_fpd.pkl','wb') as f:
-    pickle.dump((fpdbase,fpderr_rdm,fpderr_sys),f)
+    pickle.dump((fpdbase,fpderr_rdm,fpderr_sys,cf),f)
 
 # Save results for MATLAB figures
 fpdbase.to_csv('pickles/simpytz_fpd.csv')

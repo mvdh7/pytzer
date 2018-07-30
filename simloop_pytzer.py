@@ -38,13 +38,9 @@ fpde = pd.pivot_table(fpdbase,
                       index   = ['ele'],
                       aggfunc = [np.min,np.max,len])
 
-# Prepare model cdict
-cf = pz.cdicts.cdict()
-cf.add_zeros(fpdbase.ele)
-cf.dh['Aosm'] = pz.coeffs.Aosm_MPH
-cf.dh['AH'  ] = pz.coeffs.AH_MPH
-cf.bC['Na-Cl'] = pz.coeffs.bC_Na_Cl_A92ii
-cf.bC['K-Cl' ] = pz.coeffs.bC_K_Cl_A99
+# Load outputs from simpytz_fpd.py
+with open('pickles/simpytz_fpd.pkl','rb') as f:
+    _,fpderr_rdm,fpderr_sys,cf = pickle.load(f)
 
 # Extract metadata from fpdbase
 tot  = pd2vs(fpdbase.m  )
@@ -76,10 +72,6 @@ fpdbase['osm25'] = pz.tconv.osm2osm(tot,nCvec,nAvec,ions,
                                     273.15-pd2vs(fpdbase.fpd),T1,T1,
                                     cf,pd2vs(fpdbase.osm))
 fpdbase['osm25_calc'] = pz.model.osm(mols,ions,T1,cf)
-
-# Load outputs from simpytz_fpd.py
-with open('pickles/simpytz_fpd.pkl','rb') as f:
-    _,fpderr_rdm,fpderr_sys = pickle.load(f)
     
 #%% Simulate new datasets
 
