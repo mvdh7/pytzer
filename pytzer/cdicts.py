@@ -83,6 +83,8 @@ MPH.bC['K-Cl' ] = coeffs.bC_K_Cl_ZD17
 MPH.bC['Ca-Cl'] = coeffs.bC_Ca_Cl_GM89
 MPH.bC['Mg-Cl'] = coeffs.bC_Mg_Cl_PP87i
 
+MPH.jfunc = jfuncs.P75_eq47
+
 # === MOLLER 1988 =============================================================
 M88 = cdict()
 

@@ -229,7 +229,7 @@ end %for E
 load('pickles/simloop_test.mat');
 fpdtest = readtable('pickles/simloop_test.csv');
 
-fvar = 'fpd';
+fvar = 'osm25';
 
 tsrcs = unique(fpdtest.src);
 
@@ -264,8 +264,8 @@ for S = 1:numel(tsrcs)
             'markeredgecolor',fclr.(src), ...
             'markerfacealpha',0.3, 'markeredgealpha',0.4)
     
-%         % osm25 simulation fits
-%         plot(tot_fitted,osm25_fitted(:,U) - osm25_fitted_calc,'k');
+        % osm25 simulation fits
+        plot(tot_fitted,osm25_fitted(:,U) - osm25_fitted_calc,'k');
 
         case 'fpd'
     

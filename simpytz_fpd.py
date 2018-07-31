@@ -28,17 +28,9 @@ fpdbase = fpdbase[S]
 mols    = mols   [S]
 
 # Prepare model cdict
-cf = pz.cdicts.cdict()
+cf = pz.cdicts.MPH
 eles = fpdbase.ele
 cf.add_zeros(fpdbase.ele)
-
-cf.bC['Na-Cl'] = pz.coeffs.bC_Na_Cl_A92ii
-cf.bC['K-Cl' ] = pz.coeffs.bC_K_Cl_ZD17
-cf.bC['Ca-Cl'] = pz.coeffs.bC_Ca_Cl_GM89
-cf.bC['Mg-Cl'] = pz.coeffs.bC_Mg_Cl_PP87i
-cf.dh['Aosm']  = pz.coeffs.Aosm_MPH
-cf.dh['AH']    = pz.coeffs.AH_MPH
-cf.jfunc = pz.jfuncs.P75_eq47
 
 # Calculate osmotic coefficient at measurement temperature
 T   = pd2vs(fpdbase.t  )
