@@ -1,7 +1,10 @@
 # Run as
-#>> python simloop_pytzer.py <Uele> <Ureps>
+#>> python simloop_fpd.py <Uele> <Ureps>
 # where <Uele>  is the electrolyte to analyse
 #       <Ureps> is the number of Monte-Carlo simulations to execute
+# Requires: datasets/fpd.xlsx
+#           pickles/simpar_fpd.pkl
+
 
 import numpy  as np
 import pandas as pd
