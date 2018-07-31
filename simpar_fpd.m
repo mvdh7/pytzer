@@ -1,6 +1,6 @@
 %% Load Python outputs
-load('pickles/simpytz_fpd.mat');
-fpdbase = readtable('pickles/simpytz_fpd.csv');
+load('pickles/simpar_fpd.mat');
+fpdbase = readtable('pickles/simpar_fpd.csv');
 
 % Preliminary calculations
 fpdsrcs.all.srcs = unique(fpdbase.src);
