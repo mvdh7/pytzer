@@ -22,11 +22,11 @@ Ureps = int(argv[2])
 
 # Load raw datasets
 datapath = 'datasets/'
-fpdbase,mols,ions = pz.data.fpd(datapath)
+fpdbase,mols,ions,T = pz.data.fpd(datapath)
 
 # Select electrolytes for analysis
-fpdbase,mols,ions = pz.data.subset_ele(fpdbase,mols,ions,
-                                       np.array([Uele]))
+fpdbase,mols,ions,T = pz.data.subset_ele(fpdbase,mols,ions,T,
+                                         np.array([Uele]))
 
 # Exclude smoothed datasets
 S = fpdbase.smooth == 0
@@ -65,12 +65,9 @@ nCvec = pd2vs(fpdbase.nC)
 nAvec = pd2vs(fpdbase.nA)
 
 # Prepare for simulation
-for E,ele in enumerate(fpde.index):
+Eions = pz.data.ele2ions(np.array([Uele]))[0]
 
-    EL = fpdbase.ele == ele
-    Eions = pz.data.ele2ions(np.array([ele]))[0]
-    
-    fpdbase['fpd_calc'] = pz.tconv.tot2fpd(tot[EL],Eions,nC[E],nA[E],cf)
+fpdbase['fpd_calc'] = pz.tconv.tot2fpd(tot,Eions,nC,nA,cf)
 
 # Calculate osmotic coefficient etc.
 fpdbase['osm'] = pz.tconv.fpd2osm(mols,pd2vs(fpdbase.fpd))
