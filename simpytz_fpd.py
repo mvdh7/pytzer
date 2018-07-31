@@ -8,6 +8,9 @@ import pytzer as pz
 pd2vs = pz.misc.pd2vs
 from mvdh import ismember
 
+# Set whether to allow uniform systematic offset
+USYS = np.float_(0) # 0 for no, 1 for yes
+
 # Load raw datasets
 datapath = 'datasets/'
 fpdbase,mols,ions = pz.data.fpd(datapath)
@@ -126,13 +129,14 @@ for E,ele in enumerate(fpdp.index.levels[0]):
         
         # Evaluate systematic component of error
         fpderr_sys[ele][src] = optimize.least_squares(lambda syserr: \
-            syserr[1] * fpdbase[SL].m + 0 * syserr[0] - fpdbase[SL].dfpd,
+            syserr[1] * fpdbase[SL].m + USYS * syserr[0] - fpdbase[SL].dfpd,
                                              [0.,0.])['x']
         
-#        if sum(SL) < 6:
-#            fpderr_sys[ele][src][1] = 0
-#            fpderr_sys[ele][src][0] = optimize.least_squares(lambda syserr: \
-#                syserr - fpdbase[SL].dfpd,0.)['x'][0]
+        if USYS == 1:
+            if sum(SL) < 6:
+                fpderr_sys[ele][src][1] = 0
+                fpderr_sys[ele][src][0] = optimize.least_squares(
+                    lambda syserr: syserr - fpdbase[SL].dfpd,0.)['x'][0]
 
         fpdbase.loc[SL,'dfpd_sys'] \
             =  fpdbase.dfpd[SL] \
