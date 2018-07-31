@@ -1,5 +1,5 @@
 # Run as
-# > python simloop_pytzer.py <Uele> <Ureps>
+#>> python simloop_pytzer.py <Uele> <Ureps>
 # where <Uele>  is the electrolyte to analyse
 #       <Ureps> is the number of Monte-Carlo simulations to execute
 
@@ -97,16 +97,16 @@ for src in np.unique(srcs):
 weights = weights
 
 # Do the fit to the original dataset
-b0o,b1o,b2o,C0o,C1o,bCo_cv,mseo \
+b0dir,b1dir,b2dir,C0dir,C1dir,bCdir_cv,mseo \
     = pz.fitting.bC(mols,zC,zA,T1,alph1,alph2,omega,nC,nA,pd2vs(fpdbase.osm25),
                     weights,which_bCs,'osm')
-bCo = np.hstack((b0o,b1o,b2o,C0o,C1o))
+bCdir = np.hstack((b0dir,b1dir,b2dir,C0dir,C1dir))
 
-# Check understanding of MSE calculation
-mseo_dir = np.mean(((pd2vs(fpdbase.osm25) - pz.fitting.osm(mols,zC,zA,T1,
-                                            b0o,b1o,b2o,C0o,C1o,
-                                            alph1,alph2,omega)) * weights)**2)
-mse_dir  = np.mean((pd2vs(fpdbase.osm25 - fpdbase.osm25_calc) * weights)**2)
+## Check understanding of MSE calculation
+#mseo_dir = np.mean(((pd2vs(fpdbase.osm25) - pz.fitting.osm(mols,zC,zA,T1,
+#                                            b0dir,b1dir,b2dir,C0dir,C1dir,
+#                                            alph1,alph2,omega)) * weights)**2)
+#mse_dir  = np.mean((pd2vs(fpdbase.osm25 - fpdbase.osm25_calc) * weights)**2)
 
 # Define fitting function
 def Eopt(rseed=None):
@@ -158,8 +158,8 @@ if __name__ == '__main__':
     C0 = np.float_([bCpool[X][3] for X in range(Ureps)])
     C1 = np.float_([bCpool[X][4] for X in range(Ureps)])
     bC = np.vstack((b0,b1,b2,C0,C1))
-    bC_mean = np.mean(bC, axis=1)
-    bC_cv   = np.cov(bC)
+    bCsim = np.mean(bC, axis=1)
+    bCsim_cv   = np.cov(bC)
 
     # Calculate and print processing time
     Xtend = time() # end timer - multiprocessing
@@ -169,10 +169,10 @@ if __name__ == '__main__':
     # Pickle/save results
     fstem = 'pickles/simloop_pytzer_bC_' + Uele + '_' + str(Ureps)
     with open(fstem + '.pkl','wb') as f:
-        pickle.dump((bC_mean,bC_cv,bCo,bCo_cv,Uele,Ureps),f)
-    savemat(fstem + '.mat', {'bC_mean' : bC_mean,
-                             'bC_cv'   : bC_cv  ,
-                             'bCo'     : bCo    ,
-                             'bCo_cv'  : bCo_cv ,
+        pickle.dump((bCsim,bCsim_cv,bCdir,bCdir_cv,Uele,Ureps),f)
+    savemat(fstem + '.mat', {'bCsim'   : bCsim   ,
+                             'bCsim_cv': bCsim_cv,
+                             'bCdir'   : bCdir   ,
+                             'bCdir_cv': bCdir_cv,
                              'Uele'    : Uele   ,
                              'Ureps'   : Ureps  })
