@@ -130,7 +130,7 @@ def fpd(datapath):
 def vpl(datapath):
 
     vplbase = pd.read_excel(datapath+'vpl.xlsx', sheet_name='VPL data',
-                            header=0, skiprows=2, usecols=8)
+                            header=0, skiprows=2, usecols=7)
     vplbase,mols,ions = prep(vplbase)
     T = pd2vs(vplbase.t)
 
