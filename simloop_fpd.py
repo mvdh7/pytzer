@@ -82,9 +82,9 @@ fpdbase['osm25_calc'] = pz.model.osm(mols,ions,T1,cf)
 #%% Simulate new datasets
 
 # Set up for fitting
-alph1 = np.float_(2.5)
+alph1 = np.float_(2)
 alph2 = -9
-omega = np.float_(2)
+omega = np.float_(2.5)
 fpd_calc = pd2vs(fpdbase.fpd_calc)
 
 # Define weights for fitting
