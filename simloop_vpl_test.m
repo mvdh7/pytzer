@@ -46,8 +46,8 @@ setaxes(gca,8)
 plot(get(gca,'xlim'),[0 0],'k')
 xlabel(['\itm\rm(NaCl) / mol\cdotkg^{' endash '1}'])
 
-ylim(0.0600000001*[-1 1])
-set(gca, 'box','on', 'xtick',0:1.1:5.5, 'ytick',-0.1:0.02:0.1)
+ylim(0.0300000001*[-1 1])
+set(gca, 'box','on', 'xtick',0:1.1:5.5, 'ytick',-0.1:0.01:0.1)
 ylabel('\Delta\phi_{25}')
 
 set(gca, 'yticklabel',num2str(get(gca,'ytick')','%.2f'))

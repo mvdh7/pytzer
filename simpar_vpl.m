@@ -62,6 +62,10 @@ subplot(2,2,1); hold on
         
     end %for S
     
+    Sx = linspace(0,6.1,100);
+    Sy = 0.01 ./ (2 + Sx);
+    plot(Sx,Sy,'k')
+    
     xlim(fxl)
     ylim(fyl)
     

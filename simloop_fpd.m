@@ -1,23 +1,23 @@
-fele = 'KCl';
-load(['pickles/simloop_fpd_bC_' fele '_10000.mat'])
-% load(['pickles/simloop_vpl_bC_' fele '_10.mat'])
+fele = 'NaCl';
+% load(['pickles/simloop_fpd_bC_' fele '_10000.mat'])
+load(['pickles/simloop_vpl_bC_' fele '_10000.mat'])
 
-bCsim = bCsim([1 2 4]) ;
-bCdir = bCdir([1 2 4])';
-bCsim_cv = bCsim_cv(:,[1 2 4]);
-bCsim_cv = bCsim_cv([1 2 4],:);
-bCdir_cv = bCdir_cv(:,[1 2 4]);
-bCdir_cv = bCdir_cv([1 2 4],:);
+bCsim = bCsim([1 2 4 5]) ;
+bCdir = bCdir([1 2 4 5])';
+bCsim_cv = bCsim_cv(:,[1 2 4 5]);
+bCsim_cv = bCsim_cv([1 2 4 5],:);
+bCdir_cv = bCdir_cv(:,[1 2 4 5]);
+bCdir_cv = bCdir_cv([1 2 4 5],:);
 
 varnames = {'\beta_0' '\beta_1' '\itC\rm_0'};
 
-covmx_viz(1,bCsim,bCsim_cv,varnames)
-covmx_viz(2,bCdir,bCdir_cv,varnames)
+% covmx_viz(1,bCsim,bCsim_cv,varnames)
+% covmx_viz(2,bCdir,bCdir_cv,varnames)
 
 sqt = sqrt(tot);
 plx = sqt;
 
-figure(3); clf
+figure(4); clf
 
 subplot(2,1,1); hold on
 

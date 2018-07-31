@@ -112,7 +112,7 @@ for E,ele in enumerate(vplp.index.levels[0]):
         # Evaluate systematic component of error
         vplerr_sys[ele][src] = optimize.least_squares(lambda syserr: \
             syserr[1] * vplbase[SL].m + USYS * syserr[0] - vplbase[SL].dosm25,
-                                             [0.,0.])['x']
+                                                      [0.,0.])['x']
         
         if USYS == 1:
             if (sum(SL) < 6) or (max(vplbase[SL].m) - min(vplbase[SL].m) < 2):
