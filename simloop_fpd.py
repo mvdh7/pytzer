@@ -5,7 +5,6 @@
 # Requires: datasets/fpd.xlsx
 #           pickles/simpar_fpd.pkl
 
-
 import numpy  as np
 import pandas as pd
 import pickle
@@ -58,7 +57,7 @@ _,zC,zA,nC,nA = pz.data.znu(fpde.index)
 
 # Identify which coefficients to fit
 wbC = {'NaCl' : 'b0b1C0C1',
-       'KCl'  : 'b0b1C0'  }
+       'KCl'  : 'b0b1C0C1'}
 which_bCs = wbC[Uele]
 
 fpdbase['t25'] = 298.15

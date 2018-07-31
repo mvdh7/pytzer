@@ -18,7 +18,7 @@ for S = 1:numel(vplsrcs.all.srcs)
 end %for S
 mksz = 10;
 
-for E = 1%:numel(eles)
+for E = 2%:numel(eles)
 ele = eles{E};
 
 % Define settings that depend upon electrolyte
@@ -128,11 +128,11 @@ subplot(2,2,4); hold on
     
     % Axis settings
     setaxes(gca,8)
-    set(gca, 'box','on', 'xtick',fxt, 'yscale','log', ...
-        'ytick',10.^(-10:10))
+    set(gca, 'box','on', 'xtick',fxt)%, 'yscale','log', ...
+%         'ytick',10.^(-10:10))
     
     xlim(fxl)
-    ylim([0 fyl(2)])
+    ylim([0 fyl(2)/2])
     
     xlabel(['\itm\rm(' ele ') / mol\cdotkg^{-1}'])
     ylabel('|\sigma(\psi_{25})|')

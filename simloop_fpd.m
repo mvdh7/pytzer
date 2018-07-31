@@ -1,5 +1,6 @@
 fele = 'KCl';
 load(['pickles/simloop_fpd_bC_' fele '_10000.mat'])
+% load(['pickles/simloop_vpl_bC_' fele '_10.mat'])
 
 bCsim = bCsim([1 2 4]) ;
 bCdir = bCdir([1 2 4])';
@@ -10,8 +11,8 @@ bCdir_cv = bCdir_cv([1 2 4],:);
 
 varnames = {'\beta_0' '\beta_1' '\itC\rm_0'};
 
-% covmx_viz(1,bCsim,bCsim_cv,varnames)
-% covmx_viz(2,bCdir,bCdir_cv,varnames)
+covmx_viz(1,bCsim,bCsim_cv,varnames)
+covmx_viz(2,bCdir,bCdir_cv,varnames)
 
 sqt = sqrt(tot);
 plx = sqt;

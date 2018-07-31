@@ -4,7 +4,6 @@ import pickle
 from scipy.io import savemat
 import pytzer as pz
 pd2vs = pz.misc.pd2vs
-from mvdh import ismember
 
 # Load raw datasets
 datapath = 'datasets/'
