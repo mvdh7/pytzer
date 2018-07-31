@@ -1,15 +1,15 @@
 # Import libraries
 from autograd import numpy as np
 import pandas as pd
-#from scipy import optimize
+from scipy import optimize
 from scipy.io import savemat
-#import pickle
+import pickle
 import pytzer as pz
 pd2vs = pz.misc.pd2vs
 from mvdh import ismember
 
-## Set whether to allow uniform systematic offset
-#USYS = np.float_(1) # 0 for no, 1 for yes
+# Set whether to allow uniform systematic offset
+USYS = np.float_(1) # 0 for no, 1 for yes
 
 # Load raw datasets
 datapath = 'datasets/'
@@ -85,101 +85,80 @@ vplp = pd.pivot_table(vplbase,
                       index   = ['ele','src'],
                       aggfunc = [np.mean,np.std,len])
 
-# Export vplbase to MATLAB
-vplbase.to_csv('pickles/simpar_vpl.csv')
+## Export vplbase to MATLAB
+#vplbase.to_csv('pickles/simpar_vpl.csv')
 
-##%% Run uncertainty propagation analysis [VPL]
-#tot = pd2vs(vplbase.m)
-#_,_,_,nC,nA = pz.data.znu(vplp.index.levels[0])
-#vplbase['vpl_calc'] = np.nan
-#vplbase['dvpl'    ] = np.nan
-#vplbase['dvpl_sys'] = np.nan
-#vplerr_sys = {}
-#vplerr_rdm = {}
-#
-#for E,ele in enumerate(vplp.index.levels[0]): 
-#    print('Optimising VPL fit for ' + ele + '...')
-#    
-#    # Calculate expected VPL
-#    Eions = pz.data.ele2ions(np.array([ele]))[0]
-#    EL = vplbase.ele == ele
-#    
-#    if ele == 'CaCl2':
-#        vplbase.loc[EL,'vpl_calc'] = pz.tconv.tot2vpl25(tot[EL],
-#                                                        Eions,
-#                                                        nC[E],
-#                                                        nA[E],
-#                                                        cf)
-#    else:
-#        vplbase.loc[EL,'vpl_calc'] = pz.tconv.tot2vpl(tot[EL],
-#                                                      Eions,
-#                                                      nC[E],
-#                                                      nA[E],
-#                                                      cf)
-#    vplbase.loc[EL,'dvpl'] = vplbase.vpl[EL] - vplbase.vpl_calc[EL]
-#    
-#    # Estimate uncertainties for each source
-#    vplerr_sys[ele] = {}
-#    vplerr_rdm[ele] = {}
-#    
-#    for src in vplp.loc[ele].index:
-#        
-#        SL = np.logical_and(EL,vplbase.src == src)
-#        if ele == 'CaCl2':
-#            SL = np.logical_and(SL,vplbase.m <= 1.5)
-#        
-#        # Evaluate systematic component of error
-#        vplerr_sys[ele][src] = optimize.least_squares(lambda syserr: \
-#            syserr[1] * vplbase[SL].m + USYS * syserr[0] - vplbase[SL].dvpl,
-#                                             [0.,0.])['x']
-#        
-#        if USYS == 1:
-#            if sum(SL) < 6:
-#                vplerr_sys[ele][src][1] = 0
-#                vplerr_sys[ele][src][0] = optimize.least_squares(
-#                    lambda syserr: syserr - vplbase[SL].dvpl,0.)['x'][0]
-#
-#        vplbase.loc[SL,'dvpl_sys'] \
-#            =  vplbase.dvpl[SL] \
-#            - (vplbase.m[SL] * vplerr_sys[ele][src][1] \
-#               +               vplerr_sys[ele][src][0])
-#                       
-#        # Evaluate random component of error
-#        vplerr_rdm[ele][src] = optimize.least_squares(lambda rdmerr: \
-#            rdmerr[1] * vplbase[SL].m + rdmerr[0] \
-#            - np.abs(vplbase[SL].dvpl_sys), [0,0])['x']
-#        
+#%% Run uncertainty propagation analysis [VPL]
+tot = pd2vs(vplbase.m)
+_,_,_,nC,nA = pz.data.znu(vplp.index.levels[0])
+vplbase['dosm25_sys'] = np.nan
+vplerr_sys = {}
+vplerr_rdm = {}
+
+for E,ele in enumerate(vplp.index.levels[0]): 
+    print('Optimising VPL fit for ' + ele + '...')
+    
+    # Estimate uncertainties for each source
+    vplerr_sys[ele] = {}
+    vplerr_rdm[ele] = {}
+    
+    for src in vplp.loc[ele].index:
+        
+        SL = np.logical_and(EL,vplbase.src == src)
+        SL = np.logical_and(SL,vplbase.t == 298.15)
+
+        # Evaluate systematic component of error
+        vplerr_sys[ele][src] = optimize.least_squares(lambda syserr: \
+            syserr[1] * vplbase[SL].m + USYS * syserr[0] - vplbase[SL].dosm25,
+                                             [0.,0.])['x']
+        
+        if USYS == 1:
+            if sum(SL) < 6:
+                vplerr_sys[ele][src][1] = 0
+                vplerr_sys[ele][src][0] = optimize.least_squares(
+                    lambda syserr: syserr - vplbase[SL].dosm25,0.)['x'][0]
+
+        vplbase.loc[SL,'dosm25_sys'] \
+            =  vplbase.dosm25[SL] \
+            - (vplbase.m[SL] * vplerr_sys[ele][src][1] \
+               +               vplerr_sys[ele][src][0])
+                       
+        # Evaluate random component of error
+        vplerr_rdm[ele][src] = optimize.least_squares(lambda rdmerr: \
+            rdmerr[1] * np.exp(-vplbase[SL].m) + rdmerr[0] \
+            - np.abs(vplbase[SL].dosm25_sys), [0,0])['x']
+        
 #        if vplerr_rdm[ele][src][0] < 0:
 #            vplerr_rdm[ele][src][0] = 0
 #            vplerr_rdm[ele][src][1] = optimize.least_squares(lambda rdmerr: \
 #                rdmerr * vplbase[SL].m \
-#                - np.abs(vplbase[SL].dvpl_sys), 0.)['x']
-#        
-#        if (sum(SL) < 6) or (vplerr_rdm[ele][src][1] < 0):
-#            vplerr_rdm[ele][src][1] = 0
-#            vplerr_rdm[ele][src][0] = optimize.least_squares(lambda rdmerr: \
-#                rdmerr - np.abs(vplbase[SL].dvpl_sys), 0.)['x'][0]
-#         
-## Add 'all' fields for easier plotting in MATLAB
-#for ele in vplp.index.levels[0]:
-#    Eksys = list(vplerr_sys[ele].keys())
-#    vplerr_sys[ele]['all_int'] = np.array( \
-#        [vplerr_sys[ele][src][0] for src in Eksys])
-#    vplerr_sys[ele]['all_grad'] = np.array( \
-#        [vplerr_sys[ele][src][1] for src in Eksys])
-#    Ekrdm = list(vplerr_rdm[ele].keys())
-#    vplerr_rdm[ele]['all_int'] = np.array( \
-#        [vplerr_rdm[ele][src][0] for src in Ekrdm])
-#    vplerr_rdm[ele]['all_grad'] = np.array( \
-#        [vplerr_rdm[ele][src][1] for src in Ekrdm])
-#
-## Pickle outputs for simloop
-#with open('pickles/simpytz_vpl.pkl','wb') as f:
-#    pickle.dump((vplbase,vplerr_rdm,vplerr_sys),f)
-#
-## Save results for MATLAB figures
-#vplbase.to_csv('pickles/simpar_vpl.csv')
-#savemat('pickles/simpar_vpl.mat',{'vplerr_sys':vplerr_sys,
-#                                  'vplerr_rdm':vplerr_rdm})
-#
-#print('VPL fit optimisation complete!')
+#                - np.abs(vplbase[SL].dosm25_sys), 0.)['x']
+        
+        if (sum(SL) < 6) or (vplerr_rdm[ele][src][1] < 0):
+            vplerr_rdm[ele][src][1] = 0
+            vplerr_rdm[ele][src][0] = optimize.least_squares(lambda rdmerr: \
+                rdmerr - np.abs(vplbase[SL].dosm25_sys), 0.)['x'][0]
+         
+# Add 'all' fields for easier plotting in MATLAB
+for ele in vplp.index.levels[0]:
+    Eksys = list(vplerr_sys[ele].keys())
+    vplerr_sys[ele]['all_int'] = np.array( \
+        [vplerr_sys[ele][src][0] for src in Eksys])
+    vplerr_sys[ele]['all_grad'] = np.array( \
+        [vplerr_sys[ele][src][1] for src in Eksys])
+    Ekrdm = list(vplerr_rdm[ele].keys())
+    vplerr_rdm[ele]['all_int'] = np.array( \
+        [vplerr_rdm[ele][src][0] for src in Ekrdm])
+    vplerr_rdm[ele]['all_grad'] = np.array( \
+        [vplerr_rdm[ele][src][1] for src in Ekrdm])
+
+# Pickle outputs for simloop
+with open('pickles/simpytz_vpl.pkl','wb') as f:
+    pickle.dump((vplbase,vplerr_rdm,vplerr_sys),f)
+
+# Save results for MATLAB figures
+vplbase.to_csv('pickles/simpar_vpl.csv')
+savemat('pickles/simpar_vpl.mat',{'vplerr_sys':vplerr_sys,
+                                  'vplerr_rdm':vplerr_rdm})
+
+print('VPL fit optimisation complete!')
