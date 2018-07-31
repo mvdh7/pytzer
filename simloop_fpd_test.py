@@ -7,11 +7,11 @@ pd2vs = pz.misc.pd2vs
 
 # Load raw datasets
 datapath = 'datasets/'
-fpdbase,mols,ions = pz.data.fpd(datapath)
+fpdbase,mols,ions,T = pz.data.fpd(datapath)
 
 # Select electrolytes for analysis
-fpdbase,mols,ions = pz.data.subset_ele(fpdbase,mols,ions,
-                                       np.array(['NaCl']))
+fpdbase,mols,ions,T = pz.data.subset_ele(fpdbase,mols,ions,T,
+                                         np.array(['NaCl']))
 
 # Exclude smoothed datasets
 S = fpdbase.smooth == 0
