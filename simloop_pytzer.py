@@ -8,6 +8,7 @@ import pandas as pd
 import pickle
 import pytzer as pz
 pd2vs = pz.misc.pd2vs
+from autograd        import jacobian as jac
 from multiprocessing import Pool
 from scipy.io        import savemat
 from sys             import argv
@@ -166,13 +167,54 @@ if __name__ == '__main__':
     print('multiprocessing %s: %d reps in %.1f seconds' \
         % (Uele,Ureps,(Xtend - Xtstart)))
 
-    # Pickle/save results
+    # Calculate activity coefficient and propagate error with sim. results
+    sqtot = np.vstack(np.linspace(0.001,1.81,100))
+    tot   = sqtot**2
+    mols  = np.concatenate((tot,tot),axis=1)
+    T     = np.full_like(tot,298.15)
+    
+    # Define propagation equation
+    def ppg_acfMX(mCmA,zC,zA,T,bC,alph1,alph2,omega,nC,nA):
+        
+        b0 = bC[0]
+        b1 = bC[1]
+        b2 = bC[2]
+        C0 = bC[3]
+        C1 = bC[4]
+        
+        return pz.fitting.acfMX(mCmA,zC,zA,T,b0,b1,b2,C0,C1,
+                                alph1,alph2,omega,nC,nA)
+    
+    fx_JacfMX = jac(ppg_acfMX,argnum=4)
+    
+    acfMX_sim   = np.vstack(
+            ppg_acfMX(mols,zC,zA,T,bCsim,alph1,alph2,omega,nC,nA)[0])
+    JacfMX_sim  = fx_JacfMX(mols,zC,zA,T,bCsim,
+                            alph1,alph2,omega,nC,nA).squeeze()
+    UacfMX_sim  = np.vstack(np.diag(
+            JacfMX_sim @ bCsim_cv @ JacfMX_sim.transpose()))
+    
+    acfMX_dir  = np.vstack(
+            ppg_acfMX(mols,zC,zA,T,bCdir,alph1,alph2,omega,nC,nA)[0])
+    JacfMX_dir = fx_JacfMX(mols,zC,zA,T,bCdir,
+                           alph1,alph2,omega,nC,nA).squeeze()
+    UacfMX_dir = np.vstack(np.diag(
+            JacfMX_dir @ bCdir_cv @ JacfMX_dir.transpose()))
+
+    # Pickle/save results...
     fstem = 'pickles/simloop_pytzer_bC_' + Uele + '_' + str(Ureps)
+    # ...for Python:
     with open(fstem + '.pkl','wb') as f:
         pickle.dump((bCsim,bCsim_cv,bCdir,bCdir_cv,Uele,Ureps),f)
-    savemat(fstem + '.mat', {'bCsim'   : bCsim   ,
-                             'bCsim_cv': bCsim_cv,
-                             'bCdir'   : bCdir   ,
-                             'bCdir_cv': bCdir_cv,
-                             'Uele'    : Uele   ,
-                             'Ureps'   : Ureps  })
+    # ...for MATLAB:
+    savemat(fstem + '.mat', {'bCsim'     : bCsim     ,
+                             'bCsim_cv'  : bCsim_cv  ,
+                             'bCdir'     : bCdir     ,
+                             'bCdir_cv'  : bCdir_cv  ,
+                             'Uele'      : Uele      ,
+                             'Ureps'     : Ureps     ,
+                             'tot'       : tot       ,
+                             'acfMX_sim' : acfMX_sim ,
+                             'acfMX_dir' : acfMX_dir ,
+                             'UacfMX_sim': UacfMX_sim,
+                             'UacfMX_dir': UacfMX_dir})
