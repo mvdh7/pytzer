@@ -98,6 +98,8 @@ vplerr_rdm = {}
 for E,ele in enumerate(vplp.index.levels[0]): 
     print('Optimising VPL fit for ' + ele + '...')
     
+    EL = vplbase.ele == ele
+    
     # Estimate uncertainties for each source
     vplerr_sys[ele] = {}
     vplerr_rdm[ele] = {}
@@ -113,7 +115,7 @@ for E,ele in enumerate(vplp.index.levels[0]):
                                              [0.,0.])['x']
         
         if USYS == 1:
-            if sum(SL) < 6:
+            if (sum(SL) < 6) or (max(vplbase[SL].m) - min(vplbase[SL].m) < 2):
                 vplerr_sys[ele][src][1] = 0
                 vplerr_sys[ele][src][0] = optimize.least_squares(
                     lambda syserr: syserr - vplbase[SL].dosm25,0.)['x'][0]
