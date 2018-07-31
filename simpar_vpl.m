@@ -1,8 +1,9 @@
 %% Load Python outputs
+load('pickles/simpar_vpl.mat');
 vplbase = readtable('pickles/simpar_vpl.csv');
 vplsrcs.all.srcs = unique(vplbase.src);
 
-%% Plot raw VPL data
+% Plot raw VPL data
 
 % Choose electrolyte to plot
 eles = {'KCl' 'NaCl'};
@@ -17,7 +18,7 @@ for S = 1:numel(vplsrcs.all.srcs)
 end %for S
 mksz = 10;
 
-for E = 2%:numel(eles)
+for E = 1%:numel(eles)
 ele = eles{E};
 
 % Define settings that depend upon electrolyte
@@ -55,6 +56,10 @@ subplot(2,2,1); hold on
             'markeredgecolor',fclr.(src), ...
             'markerfacealpha',0.7, 'markeredgealpha',0.8)
         
+        Sx = minmax(vplbase.m(SL)');
+        Sy = Sx * vplerr_sys.(ele).(src)(2) + vplerr_sys.(ele).(src)(1);
+        plot(Sx,Sy, 'color',[fclr.(src) 0.5])
+        
     end %for S
     
     xlim(fxl)
@@ -65,7 +70,7 @@ subplot(2,2,1); hold on
     set(gca, 'box','on', 'xtick',fxt, 'ytick',-1:0.01:1)
     
     xlabel(['\itm\rm(' ele ') / mol\cdotkg^{-1}'])
-    ylabel('\Delta(\phi_{25}) / K')
+    ylabel('\Delta(\phi_{25})')
     text(0,1.1,'(a) Measurements at 298.15 K', ...
         'fontname','arial', 'fontsize',8, 'color','k', ...
         'units','normalized')
@@ -80,7 +85,7 @@ subplot(2,2,2); hold on
         SL = EL & strcmp(vplbase.src,src);
         SL = SL & vplbase.t ~= 298.15;
 
-        scatter(vplbase.m(SL),vplbase.dosm25(SL), ...
+        scatter(vplbase.m(SL),vplbase.dosm(SL), ...
             mksz,fclr.(src),'filled', 'marker',fmrk.(src), ...
             'markeredgecolor',fclr.(src), ...
             'markerfacealpha',0.7, 'markeredgealpha',0.8)
@@ -95,9 +100,43 @@ subplot(2,2,2); hold on
     set(gca, 'box','on', 'xtick',fxt, 'ytick',-1:0.01:1)
     
     xlabel(['\itm\rm(' ele ') / mol\cdotkg^{-1}'])
-    ylabel('Converted \Delta(\phi_{25}) / K')
+    ylabel('Converted \Delta(\phi_{25})')
     text(0,1.1,'(b) Converted to 298.15 K', ...
         'fontname','arial', 'fontsize',8, 'color','k', ...
+        'units','normalized')
+    
+% (d) After systematic error correction
+subplot(2,2,4); hold on
+    
+    % Plot data by source
+    for S = 1:numel(vplsrcs.(ele).srcs)
+
+        src = vplsrcs.(ele).srcs{S};
+        SL = EL & strcmp(vplbase.src,vplsrcs.(ele).srcs{S});
+        
+        scatter(vplbase.m(SL),abs(vplbase.dosm25_sys(SL)), ...
+            mksz,fclr.(src),'filled', 'marker',fmrk.(src), ...
+            'markeredgecolor',fclr.(src), ...
+            'markerfacealpha',0.7, 'markeredgealpha',0.8)
+        
+        Sx = linspace(min(vplbase.m(SL)),max(vplbase.m(SL)),100);
+        Sy = exp(-Sx) * vplerr_rdm.(ele).(src)(2) ...
+            + vplerr_rdm.(ele).(src)(1);
+        plot(Sx,Sy, 'color',[fclr.(src) 0.5])
+        
+    end %for S
+    
+    % Axis settings
+    setaxes(gca,8)
+    set(gca, 'box','on', 'xtick',fxt, 'yscale','log', ...
+        'ytick',10.^(-10:10))
+    
+    xlim(fxl)
+    ylim([0 fyl(2)])
+    
+    xlabel(['\itm\rm(' ele ') / mol\cdotkg^{-1}'])
+    ylabel('|\sigma(\psi_{25})|')
+    text(0,1.1,'(d)', 'fontname','arial', 'fontsize',8, 'color','k', ...
         'units','normalized')
     
 end %for E
