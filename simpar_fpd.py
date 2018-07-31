@@ -169,8 +169,8 @@ with open('pickles/simpytz_fpd.pkl','wb') as f:
     pickle.dump((fpdbase,fpderr_rdm,fpderr_sys),f)
 
 # Save results for MATLAB figures
-fpdbase.to_csv('pickles/simpytz_fpd.csv')
-savemat('pickles/simpytz_fpd.mat',{'fpderr_sys':fpderr_sys,
-                                   'fpderr_rdm':fpderr_rdm})
+fpdbase.to_csv('pickles/simpar_fpd.csv')
+savemat('pickles/simpar_fpd.mat',{'fpderr_sys':fpderr_sys,
+                                  'fpderr_rdm':fpderr_rdm})
 
 print('FPD fit optimisation complete!')

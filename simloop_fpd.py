@@ -40,7 +40,7 @@ fpde = pd.pivot_table(fpdbase,
                       aggfunc = [np.min,np.max,len])
 
 # Load outputs from simpytz_fpd.py
-with open('pickles/simpytz_fpd.pkl','rb') as f:
+with open('pickles/simpar_fpd.pkl','rb') as f:
     _,fpderr_rdm,fpderr_sys = pickle.load(f)
 
 # Prepare model cdict
@@ -202,7 +202,7 @@ if __name__ == '__main__':
             JacfMX_dir @ bCdir_cv @ JacfMX_dir.transpose()))
 
     # Pickle/save results...
-    fstem = 'pickles/simloop_pytzer_bC_' + Uele + '_' + str(Ureps)
+    fstem = 'pickles/simloop_fpd_bC_' + Uele + '_' + str(Ureps)
     # ...for Python:
     with open(fstem + '.pkl','wb') as f:
         pickle.dump((bCsim,bCsim_cv,bCdir,bCdir_cv,Uele,Ureps),f)

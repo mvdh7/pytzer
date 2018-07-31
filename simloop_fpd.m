@@ -1,4 +1,5 @@
-load('pickles/simloop_pytzer_bC_KCl_8.mat')
+fele = 'KCl';
+load(['pickles/simloop_fpd_bC_' fele '_10000.mat'])
 
 bCsim = bCsim([1 2 4]) ;
 bCdir = bCdir([1 2 4])';
@@ -29,6 +30,9 @@ subplot(2,1,1); hold on
 
     grid on
 
+    xlabel(['[\itm\rm(' fele ') / mol\cdotkg^{' endash '1}]^{1/2}'])
+    ylabel('ln \gamma_\pm')
+    
 subplot(2,1,2); hold on
 
     plot(plx,acfMX_sim-acfMX_sim,'k')
@@ -42,4 +46,7 @@ subplot(2,1,2); hold on
     plot(plx,sqrt(UacfMX_dir)*2,'m--')
     
     grid on
+    
+    xlabel(['[\itm\rm(' fele ') / mol\cdotkg^{' endash '1}]^{1/2}'])
+    ylabel('\Delta ln \gamma_\pm')
     

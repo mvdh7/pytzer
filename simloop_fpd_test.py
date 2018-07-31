@@ -56,7 +56,7 @@ fpdbase['osm25'] = pz.tconv.osm2osm(tot,nCvec,nAvec,ions,
 fpdbase['osm25_calc'] = pz.model.osm(mols,ions,T1,cf)
 
 # Load outputs from simpytz_fpd.py
-with open('pickles/simpytz_fpd.pkl','rb') as f:
+with open('pickles/simpar_fpd.pkl','rb') as f:
     _,fpderr_rdm,fpderr_sys = pickle.load(f)
     
 #%% Simulate new datasets
@@ -132,12 +132,13 @@ for U in range(Ureps):
 osm25_fitted_calc = pz.model.osm(mols_fitted,ions,T1_fitted,cf)
     
 # Save results for MATLAB
-fpdbase.to_csv('pickles/simloop_test.csv')
-savemat('pickles/simloop_test.mat',{'fpd_sim'           : fpd_sim,
-                                    'osm25_sim'         : osm25_sim,
-                                    'tot_fitted'        : tot_fitted,
-                                    'osm25_fitted'      : osm25_fitted,
-                                    'osm25_fitted_calc' : osm25_fitted_calc})
+fpdbase.to_csv('pickles/simloop_fpd_test.csv')
+savemat('pickles/simloop_fpd_test.mat',
+        {'fpd_sim'           : fpd_sim,
+         'osm25_sim'         : osm25_sim,
+         'tot_fitted'        : tot_fitted,
+         'osm25_fitted'      : osm25_fitted,
+         'osm25_fitted_calc' : osm25_fitted_calc})
 
 ## Quick results viz
 #from matplotlib import pyplot as plt
