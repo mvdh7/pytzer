@@ -1,5 +1,32 @@
 from autograd import numpy as np
 
+##### VAPOUR PRESSURE LOWERING ################################################
+
+def vpl(tot,osm_calc,srcs,ele,vplerr_rdm,vplerr_sys):
+    
+    osm = osm_calc
+        
+    for S,src in enumerate(list(vplerr_rdm[ele].keys())[:-2]):
+        
+        SL = src == srcs
+        
+        osm[SL] = osm[SL] + np.random.normal(size=1,loc=0,
+                            scale=np.abs(vplerr_sys[ele][src][0]) \
+                            * np.sqrt(2/np.pi)) \
+                          + np.random.normal(size=1,loc=0,
+                            scale=np.abs(vplerr_sys[ele][src][1]) \
+                            * np.sqrt(2/np.pi)) \
+                          * tot[SL] \
+                          + np.random.normal(size=sum(SL),loc=0,
+                            scale=(vplerr_rdm[ele][src][0] \
+                                 + vplerr_rdm[ele][src][1] \
+                                 * np.exp(-tot[SL])) \
+                                 * np.sqrt(2/np.pi))
+    
+    return osm
+
+##### FREEZING POINT DEPRESSION ###############################################
+
 def fpd(tot,fpd_calc,srcs,ele,fpderr_rdm,fpderr_sys):
     
     fpd = fpd_calc
