@@ -1,12 +1,11 @@
 # Import libraries
 from autograd import numpy as np
 import pandas as pd
-from scipy import optimize
+#from scipy import optimize
 from scipy.io import savemat
-import pickle
+#import pickle
 import pytzer as pz
 pd2vs = pz.misc.pd2vs
-from pytzer.constants import Mw
 from mvdh import ismember
 
 ## Set whether to allow uniform systematic offset
@@ -27,6 +26,12 @@ vplbase,mols,ions,T = pz.data.subset_ele(vplbase,mols,ions,T,
 #S = vplbase.smooth == 0
 #vplbase = vplbase[S]
 #mols    = mols   [S]
+                                                   
+# Exclude datasets with T > 373.15 (i.e. my D-H functions are out of range)
+Tx = vplbase.t <= 373.15
+vplbase = vplbase[Tx]
+mols    = mols   [Tx]
+T       = T      [Tx]
 
 # Prepare model cdict
 cf = pz.cdicts.MPH
@@ -34,142 +39,147 @@ eles = vplbase.ele
 cf.add_zeros(vplbase.ele)
 
 ## Calculate osmotic coefficient at measurement temperature
-vplbase['osm_meas'] = -np.log(vplbase.aw) / (vplbase.nu * vplbase.m * Mw)
+#vplbase['osm_meas'] = -np.log(vplbase.aw) / (vplbase.nu * vplbase.m * Mw)
+vplbase['osm_meas'] = pz.model.aw2osm(mols,pd2vs(vplbase.aw))
 vplbase['osm_calc'] = pz.model.osm(mols,ions,T,cf)
 
-## Convert temperatures to 298.15 K
-#fpdbase['t25'] = np.full_like(fpdbase.t,298.15, dtype='float64')
-#T25 = pd2vs(fpdbase.t25)
+# Convert temperatures to 298.15 K
+vplbase['t25'] = 298.15
+T25 = pd2vs(vplbase.t25)
+
+# Create initial electrolytes pivot table
+vple = pd.pivot_table(vplbase,
+                      values  = ['m'],
+                      index   = ['ele'],
+                      aggfunc = [np.min,np.max,len])
+
+# Convert measured VPL into osmotic coeff. at 298.15 K
+vplbase['osm25_meas'] = np.nan
+
+for ele in vple.index:
+    
+    Evplbase,_,Eions,_ = pz.data.subset_ele(vplbase,mols,ions,T,
+                                            np.array([ele]))
+    EL = ismember(vplbase.ele,np.array([ele]))
+    
+    vplbase.loc[EL,'osm25_meas'] = pz.tconv.osm2osm(
+            pd2vs(Evplbase.m),pd2vs(Evplbase.nC),pd2vs(Evplbase.nA),
+            Eions,pd2vs(Evplbase.t),pd2vs(Evplbase.t25),pd2vs(Evplbase.t25),
+            cf,pd2vs(Evplbase.osm_meas))
+
+# Calculate model osmotic coefficient at 298.15 K
+vplbase['osm25_calc'] = pz.model.osm(mols,ions,T25,cf)
+vplbase['dosm'  ] = vplbase.osm_meas   - vplbase.osm_calc
+vplbase['dosm25'] = vplbase.osm25_meas - vplbase.osm25_calc
+
+## Quickly visualise residuals
+#from matplotlib import pyplot as plt
+#fig,ax = plt.subplots(1,1)
+#vplbase.plot.scatter('m','dosm25', ax=ax)
+#ax.set_xlim((0,6))
+#ax.grid(alpha=0.5)
+
+# Create electrolytes/sources pivot table
+vplp = pd.pivot_table(vplbase,
+                      values  = ['m','dosm25'],
+                      index   = ['ele','src'],
+                      aggfunc = [np.mean,np.std,len])
+
+# Export vplbase to MATLAB
+vplbase.to_csv('pickles/simpar_vpl.csv')
+
+##%% Run uncertainty propagation analysis [VPL]
+#tot = pd2vs(vplbase.m)
+#_,_,_,nC,nA = pz.data.znu(vplp.index.levels[0])
+#vplbase['vpl_calc'] = np.nan
+#vplbase['dvpl'    ] = np.nan
+#vplbase['dvpl_sys'] = np.nan
+#vplerr_sys = {}
+#vplerr_rdm = {}
 #
-## Create initial electrolytes pivot table
-#fpde = pd.pivot_table(fpdbase,
-#                      values  = ['m'],
-#                      index   = ['ele'],
-#                      aggfunc = [np.min,np.max,len])
-#
-## Convert measured FPD into osmotic coeff. at 298.15 K
-#fpdbase['osm25_meas'] = np.nan
-#
-#for ele in fpde.index:
+#for E,ele in enumerate(vplp.index.levels[0]): 
+#    print('Optimising VPL fit for ' + ele + '...')
 #    
-#    Efpdbase,_,Eions = pz.data.subset_ele(fpdbase,mols,ions,np.array([ele]))
-#    EL = ismember(fpdbase.ele,np.array([ele]))
-#    
-#    fpdbase.loc[EL,'osm25_meas'] = pz.tconv.osm2osm(
-#            pd2vs(Efpdbase.m),pd2vs(Efpdbase.nC),pd2vs(Efpdbase.nA),
-#            Eions,pd2vs(Efpdbase.t),pd2vs(Efpdbase.t25),pd2vs(Efpdbase.t25),
-#            cf,pd2vs(Efpdbase.osm_meas))
-#
-## Calculate model osmotic coefficient at 298.15 K
-#fpdbase['osm25_calc'] = pz.model.osm(mols,ions,T25,cf)
-#fpdbase['dosm'  ] = fpdbase.osm_meas   - fpdbase.osm_calc
-#fpdbase['dosm25'] = fpdbase.osm25_meas - fpdbase.osm25_calc
-#
-### Quickly visualise residuals
-##from matplotlib import pyplot as plt
-##fig,ax = plt.subplots(1,1)
-##fpdbase.plot.scatter('m','dosm25', ax=ax)
-##ax.set_xlim((0,6))
-##ax.grid(alpha=0.5)
-#
-## Create electrolytes/sources pivot table
-#fpdp = pd.pivot_table(fpdbase,
-#                      values  = ['m','dosm25'],
-#                      index   = ['ele','src'],
-#                      aggfunc = [np.mean,np.std,len])
-#
-##%% Run uncertainty propagation analysis [FPD]
-#tot = pd2vs(fpdbase.m)
-#_,_,_,nC,nA = pz.data.znu(fpdp.index.levels[0])
-#fpdbase['fpd_calc'] = np.nan
-#fpdbase['dfpd'    ] = np.nan
-#fpdbase['dfpd_sys'] = np.nan
-#fpderr_sys = {}
-#fpderr_rdm = {}
-#
-#for E,ele in enumerate(fpdp.index.levels[0]): 
-#    print('Optimising FPD fit for ' + ele + '...')
-#    
-#    # Calculate expected FPD
+#    # Calculate expected VPL
 #    Eions = pz.data.ele2ions(np.array([ele]))[0]
-#    EL = fpdbase.ele == ele
+#    EL = vplbase.ele == ele
 #    
 #    if ele == 'CaCl2':
-#        fpdbase.loc[EL,'fpd_calc'] = pz.tconv.tot2fpd25(tot[EL],
+#        vplbase.loc[EL,'vpl_calc'] = pz.tconv.tot2vpl25(tot[EL],
 #                                                        Eions,
 #                                                        nC[E],
 #                                                        nA[E],
 #                                                        cf)
 #    else:
-#        fpdbase.loc[EL,'fpd_calc'] = pz.tconv.tot2fpd(tot[EL],
+#        vplbase.loc[EL,'vpl_calc'] = pz.tconv.tot2vpl(tot[EL],
 #                                                      Eions,
 #                                                      nC[E],
 #                                                      nA[E],
 #                                                      cf)
-#    fpdbase.loc[EL,'dfpd'] = fpdbase.fpd[EL] - fpdbase.fpd_calc[EL]
+#    vplbase.loc[EL,'dvpl'] = vplbase.vpl[EL] - vplbase.vpl_calc[EL]
 #    
 #    # Estimate uncertainties for each source
-#    fpderr_sys[ele] = {}
-#    fpderr_rdm[ele] = {}
+#    vplerr_sys[ele] = {}
+#    vplerr_rdm[ele] = {}
 #    
-#    for src in fpdp.loc[ele].index:
+#    for src in vplp.loc[ele].index:
 #        
-#        SL = np.logical_and(EL,fpdbase.src == src)
+#        SL = np.logical_and(EL,vplbase.src == src)
 #        if ele == 'CaCl2':
-#            SL = np.logical_and(SL,fpdbase.m <= 1.5)
+#            SL = np.logical_and(SL,vplbase.m <= 1.5)
 #        
 #        # Evaluate systematic component of error
-#        fpderr_sys[ele][src] = optimize.least_squares(lambda syserr: \
-#            syserr[1] * fpdbase[SL].m + USYS * syserr[0] - fpdbase[SL].dfpd,
+#        vplerr_sys[ele][src] = optimize.least_squares(lambda syserr: \
+#            syserr[1] * vplbase[SL].m + USYS * syserr[0] - vplbase[SL].dvpl,
 #                                             [0.,0.])['x']
 #        
 #        if USYS == 1:
 #            if sum(SL) < 6:
-#                fpderr_sys[ele][src][1] = 0
-#                fpderr_sys[ele][src][0] = optimize.least_squares(
-#                    lambda syserr: syserr - fpdbase[SL].dfpd,0.)['x'][0]
+#                vplerr_sys[ele][src][1] = 0
+#                vplerr_sys[ele][src][0] = optimize.least_squares(
+#                    lambda syserr: syserr - vplbase[SL].dvpl,0.)['x'][0]
 #
-#        fpdbase.loc[SL,'dfpd_sys'] \
-#            =  fpdbase.dfpd[SL] \
-#            - (fpdbase.m[SL] * fpderr_sys[ele][src][1] \
-#               +               fpderr_sys[ele][src][0])
+#        vplbase.loc[SL,'dvpl_sys'] \
+#            =  vplbase.dvpl[SL] \
+#            - (vplbase.m[SL] * vplerr_sys[ele][src][1] \
+#               +               vplerr_sys[ele][src][0])
 #                       
 #        # Evaluate random component of error
-#        fpderr_rdm[ele][src] = optimize.least_squares(lambda rdmerr: \
-#            rdmerr[1] * fpdbase[SL].m + rdmerr[0] \
-#            - np.abs(fpdbase[SL].dfpd_sys), [0,0])['x']
+#        vplerr_rdm[ele][src] = optimize.least_squares(lambda rdmerr: \
+#            rdmerr[1] * vplbase[SL].m + rdmerr[0] \
+#            - np.abs(vplbase[SL].dvpl_sys), [0,0])['x']
 #        
-#        if fpderr_rdm[ele][src][0] < 0:
-#            fpderr_rdm[ele][src][0] = 0
-#            fpderr_rdm[ele][src][1] = optimize.least_squares(lambda rdmerr: \
-#                rdmerr * fpdbase[SL].m \
-#                - np.abs(fpdbase[SL].dfpd_sys), 0.)['x']
+#        if vplerr_rdm[ele][src][0] < 0:
+#            vplerr_rdm[ele][src][0] = 0
+#            vplerr_rdm[ele][src][1] = optimize.least_squares(lambda rdmerr: \
+#                rdmerr * vplbase[SL].m \
+#                - np.abs(vplbase[SL].dvpl_sys), 0.)['x']
 #        
-#        if (sum(SL) < 6) or (fpderr_rdm[ele][src][1] < 0):
-#            fpderr_rdm[ele][src][1] = 0
-#            fpderr_rdm[ele][src][0] = optimize.least_squares(lambda rdmerr: \
-#                rdmerr - np.abs(fpdbase[SL].dfpd_sys), 0.)['x'][0]
+#        if (sum(SL) < 6) or (vplerr_rdm[ele][src][1] < 0):
+#            vplerr_rdm[ele][src][1] = 0
+#            vplerr_rdm[ele][src][0] = optimize.least_squares(lambda rdmerr: \
+#                rdmerr - np.abs(vplbase[SL].dvpl_sys), 0.)['x'][0]
 #         
 ## Add 'all' fields for easier plotting in MATLAB
-#for ele in fpdp.index.levels[0]:
-#    Eksys = list(fpderr_sys[ele].keys())
-#    fpderr_sys[ele]['all_int'] = np.array( \
-#        [fpderr_sys[ele][src][0] for src in Eksys])
-#    fpderr_sys[ele]['all_grad'] = np.array( \
-#        [fpderr_sys[ele][src][1] for src in Eksys])
-#    Ekrdm = list(fpderr_rdm[ele].keys())
-#    fpderr_rdm[ele]['all_int'] = np.array( \
-#        [fpderr_rdm[ele][src][0] for src in Ekrdm])
-#    fpderr_rdm[ele]['all_grad'] = np.array( \
-#        [fpderr_rdm[ele][src][1] for src in Ekrdm])
+#for ele in vplp.index.levels[0]:
+#    Eksys = list(vplerr_sys[ele].keys())
+#    vplerr_sys[ele]['all_int'] = np.array( \
+#        [vplerr_sys[ele][src][0] for src in Eksys])
+#    vplerr_sys[ele]['all_grad'] = np.array( \
+#        [vplerr_sys[ele][src][1] for src in Eksys])
+#    Ekrdm = list(vplerr_rdm[ele].keys())
+#    vplerr_rdm[ele]['all_int'] = np.array( \
+#        [vplerr_rdm[ele][src][0] for src in Ekrdm])
+#    vplerr_rdm[ele]['all_grad'] = np.array( \
+#        [vplerr_rdm[ele][src][1] for src in Ekrdm])
 #
 ## Pickle outputs for simloop
-#with open('pickles/simpytz_fpd.pkl','wb') as f:
-#    pickle.dump((fpdbase,fpderr_rdm,fpderr_sys),f)
+#with open('pickles/simpytz_vpl.pkl','wb') as f:
+#    pickle.dump((vplbase,vplerr_rdm,vplerr_sys),f)
 #
 ## Save results for MATLAB figures
-#fpdbase.to_csv('pickles/simpar_fpd.csv')
-#savemat('pickles/simpar_fpd.mat',{'fpderr_sys':fpderr_sys,
-#                                  'fpderr_rdm':fpderr_rdm})
+#vplbase.to_csv('pickles/simpar_vpl.csv')
+#savemat('pickles/simpar_vpl.mat',{'vplerr_sys':vplerr_sys,
+#                                  'vplerr_rdm':vplerr_rdm})
 #
-#print('FPD fit optimisation complete!')
+#print('VPL fit optimisation complete!')
