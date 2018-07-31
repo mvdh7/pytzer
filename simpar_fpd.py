@@ -39,7 +39,7 @@ fpdbase['osm_meas'] = pz.tconv.fpd2osm(mols,fpd)
 fpdbase['osm_calc'] = pz.model.osm(mols,ions,T,cf)
 
 # Convert temperatures to 298.15 K
-fpdbase['t25'] = np.full_like(fpdbase.t,298.15, dtype='float64')
+fpdbase['t25'] = 298.15
 T25 = pd2vs(fpdbase.t25)
 
 # Create initial electrolytes pivot table
