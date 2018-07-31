@@ -125,7 +125,7 @@ osm25_fitted = np.full((np.size(tot_fitted),Ureps),np.nan)
 T1_fitted    = np.full_like(tot_fitted,298.15, dtype='float64')
 
 for U in range(Ureps):
-    print(U)
+    print(U+1)
     Ufpd_sim,Uosm25_sim,Ub0,Ub1,UC0,UC1 = Eopt()
     fpd_sim[:,U]   = Ufpd_sim.ravel()
     osm25_sim[:,U] = Uosm25_sim.ravel()

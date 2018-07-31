@@ -9,7 +9,7 @@ pd2vs = pz.misc.pd2vs
 from mvdh import ismember
 
 # Set whether to allow uniform systematic offset
-USYS = np.float_(0) # 0 for no, 1 for yes
+USYS = np.float_(1) # 0 for no, 1 for yes
 
 # Load raw datasets
 datapath = 'datasets/'
