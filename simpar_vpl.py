@@ -155,7 +155,7 @@ for ele in vplp.index.levels[0]:
         [vplerr_rdm[ele][src][1] for src in Ekrdm])
 
 # Pickle outputs for simloop
-with open('pickles/simpytz_vpl.pkl','wb') as f:
+with open('pickles/simpar_vpl.pkl','wb') as f:
     pickle.dump((vplbase,vplerr_rdm,vplerr_sys),f)
 
 # Save results for MATLAB figures

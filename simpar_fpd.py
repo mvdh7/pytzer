@@ -166,7 +166,7 @@ for ele in fpdp.index.levels[0]:
         [fpderr_rdm[ele][src][1] for src in Ekrdm])
 
 # Pickle outputs for simloop
-with open('pickles/simpytz_fpd.pkl','wb') as f:
+with open('pickles/simpar_fpd.pkl','wb') as f:
     pickle.dump((fpdbase,fpderr_rdm,fpderr_sys),f)
 
 # Save results for MATLAB figures
