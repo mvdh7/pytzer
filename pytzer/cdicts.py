@@ -63,6 +63,18 @@ class cdict:
                         = coeffs.psi_zero
         
 
+# === HUMPHREYS UNPUBLISHED ===================================================
+        
+MPH = cdict()
+
+MPH.dh['Aosm'] = coeffs.Aosm_MPH
+MPH.dh['AH'  ] = coeffs.AH_MPH
+
+MPH.bC['Na-Cl'] = coeffs.bC_Na_Cl_A92ii
+MPH.bC['K-Cl' ] = coeffs.bC_K_Cl_ZD17
+MPH.bC['Ca-Cl'] = coeffs.bC_Ca_Cl_GM89
+MPH.bC['Mg-Cl'] = coeffs.bC_Mg_Cl_PP87i
+
 # === MOLLER 1988 =============================================================
 M88 = cdict()
 
