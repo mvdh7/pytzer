@@ -4,16 +4,17 @@ def fpd(tot,fpd_calc,srcs,ele,fpderr_rdm,fpderr_sys):
     
     fpd = fpd_calc
     
-    # Simulate systematic errors for the datasets
-    syserr = np.random.normal(size=len(fpderr_rdm[ele].keys())-2,
-                              scale=0.041, # ADJUSTABLE!
-                              loc=0)
-    # Arrange the simulated errors in ascending order of magnitude
-    simorder = np.argsort(np.abs(syserr))
-    syserr = syserr[simorder]
-    
-    # Determine the order of magnitudes of the real systematic errors
-    sysorder = np.argsort(np.abs(fpderr_sys[ele]['all_grad']))
+#    # Preparation for Approach 2    
+#    # Simulate systematic errors for the datasets
+#    syserr = np.random.normal(size=len(fpderr_rdm[ele].keys())-2,
+#                              scale=0.041, # ADJUSTABLE!
+#                              loc=0)
+#    # Arrange the simulated errors in ascending order of magnitude
+#    simorder = np.argsort(np.abs(syserr))
+#    syserr = syserr[simorder]
+#    
+#    # Determine the order of magnitudes of the real systematic errors
+#    sysorder = np.argsort(np.abs(fpderr_sys[ele]['all_grad']))
     
     for S,src in enumerate(list(fpderr_rdm['NaCl'].keys())[:-2]):
         
