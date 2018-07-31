@@ -146,6 +146,11 @@ def bC_acfMX(mCmA,zC,zA,T,alph1,alph2,omega,nC,nA,acfMX,which_bCs):
         b1 = topt['x'][1]
         C0 = topt['x'][2]
         
+        def pad(bCmx):
+            bCmx = np.insert(bCmx,(2,3),0, axis=1)
+            bCmx = np.insert(bCmx,(2,3),0, axis=0)
+            return bCmx
+        
     elif which_bCs == 'b0b1C0C1':
         
         topt = optimize.least_squares(lambda bC: 
@@ -157,6 +162,11 @@ def bC_acfMX(mCmA,zC,zA,T,alph1,alph2,omega,nC,nA,acfMX,which_bCs):
         b1 = topt['x'][1]
         C0 = topt['x'][2]
         C1 = topt['x'][3]
+        
+        def pad(bCmx):
+            bCmx = np.insert(bCmx,2,0, axis=1)
+            bCmx = np.insert(bCmx,2,0, axis=0)
+            return bCmx
         
     else:
         
@@ -170,11 +180,16 @@ def bC_acfMX(mCmA,zC,zA,T,alph1,alph2,omega,nC,nA,acfMX,which_bCs):
         b2 = topt['x'][2]
         C0 = topt['x'][3]
         C1 = topt['x'][4]
+        
+        def pad(bCmx):
+            return bCmx
     
     # Get covariance matrix
     mse  = topt.cost * 2 / np.size(T)
     hess = topt.jac.transpose() @ topt.jac
     bCmx = np.linalg.inv(hess) * mse
+    
+    bCmx = pad(bCmx)
     
     return b0,b1,b2,C0,C1,bCmx,mse
 
@@ -202,6 +217,11 @@ def bC(mCmA,zC,zA,T,alph1,alph2,omega,nC,nA,mtarg,weights,which_bCs,mtype):
         b1 = topt['x'][1]
         C0 = topt['x'][2]
         
+        def pad(bCmx):
+            bCmx = np.insert(bCmx,(2,3),0, axis=1)
+            bCmx = np.insert(bCmx,(2,3),0, axis=0)
+            return bCmx
+        
     elif which_bCs == 'b0b1C0C1':
         
         topt = optimize.least_squares(lambda bC: 
@@ -213,6 +233,11 @@ def bC(mCmA,zC,zA,T,alph1,alph2,omega,nC,nA,mtarg,weights,which_bCs,mtype):
         b1 = topt['x'][1]
         C0 = topt['x'][2]
         C1 = topt['x'][3]
+        
+        def pad(bCmx):
+            bCmx = np.insert(bCmx,2,0, axis=1)
+            bCmx = np.insert(bCmx,2,0, axis=0)
+            return bCmx
         
     else:
         
@@ -226,11 +251,14 @@ def bC(mCmA,zC,zA,T,alph1,alph2,omega,nC,nA,mtarg,weights,which_bCs,mtype):
         b2 = topt['x'][2]
         C0 = topt['x'][3]
         C1 = topt['x'][4]
+        
+        def pad(bCmx):
+            return bCmx
     
     # Get covariance matrix
     mse  = topt.cost * 2 / np.size(T)
     hess = topt.jac.transpose() @ topt.jac
-    bCmx = np.linalg.inv(hess) * mse
+    bCmx = pad(np.linalg.inv(hess) * mse)
     
     return b0,b1,b2,C0,C1,bCmx,mse
 
