@@ -38,29 +38,37 @@ class cdict:
 
         # Populate cdict with zero functions
         for cat in cats:
-            
             for ani in anis:
-                self.bC[cat + '-' + ani] = coeffs.bC_zero
+                
+                istr = cat + '-' + ani
+                if istr not in self.bC.keys():
+                    self.bC[istr] = coeffs.bC_zero
                 
         for C0 in range(len(cats)):
             for C1 in range(C0+1,len(cats)):
                 
-                self.theta[cats[C0] + '-' + cats[C1]] = coeffs.theta_zero
+                istr = cats[C0] + '-' + cats[C1]
+                if istr not in self.theta.keys():
+                    self.theta[istr] = coeffs.theta_zero
                 
                 for ani in anis:
                     
-                    self.psi[cats[C0] + '-' + cats[C1] + '-' + ani] \
-                        = coeffs.psi_zero
+                    istr = cats[C0] + '-' + cats[C1] + '-' + ani
+                    if istr not in self.psi.keys():
+                        self.psi[istr] = coeffs.psi_zero
         
         for A0 in range(len(anis)):
             for A1 in range(A0+1,len(anis)):
                 
-                self.theta[anis[A0] + '-' + anis[A1]] = coeffs.theta_zero
+                istr = anis[A0] + '-' + anis[A1]
+                if istr not in self.theta.keys():
+                    self.theta[istr] = coeffs.theta_zero
                 
                 for cat in cats:
                     
-                    self.psi[cat + '-' + anis[A0] + '-' + anis[A1]] \
-                        = coeffs.psi_zero
+                    istr = cat + '-' + anis[A0] + '-' + anis[A1]
+                    if istr not in self.psi.keys():
+                        self.psi[istr] = coeffs.psi_zero
         
 
 # === HUMPHREYS UNPUBLISHED ===================================================
