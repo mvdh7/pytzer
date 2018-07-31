@@ -4,21 +4,46 @@ def fpd(tot,fpd_calc,srcs,ele,fpderr_rdm,fpderr_sys):
     
     fpd = fpd_calc
     
-    for src in fpderr_rdm[ele].keys():
+    # Simulate systematic errors for the datasets
+    syserr = np.random.normal(size=len(fpderr_rdm[ele].keys())-2,
+                              scale=0.041, # ADJUSTABLE!
+                              loc=0)
+    # Arrange the simulated errors in ascending order of magnitude
+    simorder = np.argsort(np.abs(syserr))
+    syserr = syserr[simorder]
+    
+    # Determine the order of magnitudes of the real systematic errors
+    sysorder = np.argsort(np.abs(fpderr_sys[ele]['all_grad']))
+    
+    for S,src in enumerate(list(fpderr_rdm['NaCl'].keys())[:-2]):
         
         SL = src == srcs
         
-        fpd[SL] = fpd[SL] + np.random.normal(size=1,loc=0,
-                            scale=np.abs(fpderr_sys[ele][src][0]) \
-                            * np.sqrt(np.pi/2)) \
-                          + np.random.normal(size=1,loc=0,
-                            scale=np.abs(fpderr_sys[ele][src][1]) \
-                            * np.sqrt(np.pi/2)) \
-                          * tot[SL] \
-                          + np.random.normal(size=sum(SL),loc=0,
-                            scale=(fpderr_rdm[ele][src][0] \
-                                 + fpderr_rdm[ele][src][1] * tot[SL]) \
-                                 * np.sqrt(np.pi/2))
+#        # Approach 1: Assume systematic offset in real dataset represents the
+#        #             mean of the half-normal distribution for that dataset.
+#        #             Probably overestimates uncertainty.
+#        fpd[SL] = fpd[SL] + np.random.normal(size=1,loc=0,
+#                            scale=np.abs(fpderr_sys[ele][src][0]) \
+#                            * np.sqrt(np.pi/2)) \
+#                          + np.random.normal(size=1,loc=0,
+#                            scale=np.abs(fpderr_sys[ele][src][1]) \
+#                            * np.sqrt(np.pi/2)) \
+#                          * tot[SL] \
+#                          + np.random.normal(size=sum(SL),loc=0,
+#                            scale=(fpderr_rdm[ele][src][0] \
+#                                 + fpderr_rdm[ele][src][1] * tot[SL]) \
+#                                 * np.sqrt(np.pi/2))
+                            
+        # Approach 2: Determine systematic offset distribution from all FPD
+        #             datasets for all electrolytes. Simulate new offsets from
+        #             that distribution. Sort the simulated offsets so that
+        #             datasets with smaller systematic offsets in reality are
+        #             simulated with smaller systematic offsets too.
+        fpd[SL] = fpd[SL] + np.random.normal(size=sum(SL),loc=0,
+                                scale=(fpderr_rdm[ele][src][0] \
+                                     + fpderr_rdm[ele][src][1] * tot[SL]) \
+                                     * np.sqrt(np.pi/2)) \
+                          + syserr[np.where(sysorder==S)] * tot[SL]
     
     return fpd
 
