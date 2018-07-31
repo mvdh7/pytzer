@@ -13,7 +13,7 @@ from scipy.io        import savemat
 from sys             import argv
 from time            import time
 
-#argv = ['','NaCl','10']
+#argv = ['','KCl','10']
 
 # Get input args
 Uele  =     argv[1]
@@ -93,7 +93,7 @@ fpd_calc = pd2vs(fpdbase.fpd_calc)
 weights = np.full_like(tot,1, dtype='float64')
 for src in np.unique(srcs):
     SL = srcs == src
-    weights[SL] = 1 / np.sqrt(np.sum(fpderr_rdm[ele][src]**2))
+    weights[SL] = 1 / np.sqrt(np.sum(fpderr_rdm[Uele][src]**2))
 weights = weights
 
 # Do the fit to the original dataset
@@ -116,7 +116,7 @@ def Eopt(rseed=None):
 
     # Simulate new FPD dataset
     Ufpd = pz.sim.fpd(tot,pd2vs(fpdbase.fpd_calc),
-                      srcs,ele,fpderr_rdm,fpderr_sys)
+                      srcs,Uele,fpderr_rdm,fpderr_sys)
     
     # Convert FPD to osmotic coefficient
     Uosm = pz.tconv.fpd2osm(mols,Ufpd)
@@ -135,6 +135,8 @@ def Eopt(rseed=None):
 
 #%% Multiprocessing loop
 if __name__ == '__main__':
+    
+    print('multiprocessing %s...' % Uele, end='\r')
     
     # Set initial random seed (for reproducibility)
     np.random.seed(295)
@@ -161,7 +163,7 @@ if __name__ == '__main__':
 
     # Calculate and print processing time
     Xtend = time() # end timer - multiprocessing
-    print('multiprocessing %s: %d reps in %.2f seconds' \
+    print('multiprocessing %s: %d reps in %.1f seconds' \
         % (Uele,Ureps,(Xtend - Xtstart)))
 
     # Pickle/save results
