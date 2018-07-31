@@ -16,7 +16,7 @@ def fpd(tot,fpd_calc,srcs,ele,fpderr_rdm,fpderr_sys):
 #    # Determine the order of magnitudes of the real systematic errors
 #    sysorder = np.argsort(np.abs(fpderr_sys[ele]['all_grad']))
     
-    for S,src in enumerate(list(fpderr_rdm['NaCl'].keys())[:-2]):
+    for S,src in enumerate(list(fpderr_rdm[ele].keys())[:-2]):
         
         SL = src == srcs
         
