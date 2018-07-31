@@ -1,9 +1,9 @@
-from  autograd import numpy as np
+from autograd import numpy as np
 import pandas as pd
 from scipy import optimize
-from .constants import Mw
-from . import model
-from mvdh import ismember
+from .misc import pd2vs
+from .     import model
+from mvdh  import ismember
 
 ##### DEGREE OF DISSOCIATION #################################################
 
@@ -118,26 +118,12 @@ def fpd(datapath):
 
     # Calculate freezing point temperature from FPD
     fpdbase['t'] = 273.15 - fpdbase.fpd
+    T = pd2vs(fpdbase.t)
     
     # Calculate extras and sort
-    fpdbase = prep(fpdbase)
+    fpdbase,mols,ions = prep(fpdbase)
 
-    # Get mols and ions arrays for pz.model functions
-    ions,_,_,idict = ele2ions(fpdbase.ele.values)
-    
-    mols = np.zeros((np.shape(fpdbase)[0],len(ions)))
-    
-    for ele in fpdbase.ele.unique():
-        
-        C = np.where(ions == idict[ele][0])
-        A = np.where(ions == idict[ele][1])
-        
-        EL = fpdbase.ele == ele
-        
-        mols[EL,C] = fpdbase.m[EL] * fpdbase.nC[EL]
-        mols[EL,A] = fpdbase.m[EL] * fpdbase.nA[EL]
-
-    return fpdbase, mols, ions
+    return fpdbase, mols, ions, T
 
 ##### VAPOUR PRESSURE LOWERING ################################################
 
@@ -145,12 +131,10 @@ def vpl(datapath):
 
     vplbase = pd.read_excel(datapath+'vpl.xlsx', sheet_name='VPL data',
                             header=0, skiprows=2, usecols=8)
-    vplbase = prep(vplbase)
+    vplbase,mols,ions = prep(vplbase)
+    T = pd2vs(vplbase.t)
 
-    # Osmotic coefficient from water activity
-    vplbase['osm'] = -np.log(vplbase.aw) / (vplbase.nu * vplbase.m * Mw)
-
-    return vplbase
+    return vplbase, mols, ions, T
 
 ##### ELECTROMOTIVE FORCE #####################################################
 
@@ -175,7 +159,22 @@ def prep(xxxbase):
     # Sort by electrolyte, then molality, then source
     xxxbase = xxxbase.sort_values(['ele', 'm', 'src'])
 
-    return xxxbase
+    # Get mols and ions arrays for pz.model functions
+    ions,_,_,idict = ele2ions(xxxbase.ele.values)
+    
+    mols = np.zeros((np.shape(xxxbase)[0],len(ions)))
+    
+    for ele in xxxbase.ele.unique():
+        
+        C = np.where(ions == idict[ele][0])
+        A = np.where(ions == idict[ele][1])
+        
+        EL = xxxbase.ele == ele
+        
+        mols[EL,C] = xxxbase.m[EL] * xxxbase.nC[EL]
+        mols[EL,A] = xxxbase.m[EL] * xxxbase.nA[EL]
+
+    return xxxbase, mols, ions
 
 # Calculate ionic charges and stoichiometry assuming complete dissociation
 def znu(ele):
@@ -228,7 +227,7 @@ def ele2ions(ele):
     return ions, cats, anis, idict
         
 # Get a subset of electrolytes from a database
-def subset_ele(xxxbase,mols,ions,subset):
+def subset_ele(xxxbase,mols,ions,T,subset):
     
     R = ismember(xxxbase.ele,subset)
     xxxbase = xxxbase[R]
@@ -237,5 +236,6 @@ def subset_ele(xxxbase,mols,ions,subset):
     
     mols = mols[R][:,C]
     ions = ions[C]
+    T    = T[R]
     
-    return xxxbase, mols, ions
+    return xxxbase, mols, ions, T

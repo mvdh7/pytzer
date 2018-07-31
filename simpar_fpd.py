@@ -13,19 +13,20 @@ USYS = np.float_(1) # 0 for no, 1 for yes
 
 # Load raw datasets
 datapath = 'datasets/'
-fpdbase,mols,ions = pz.data.fpd(datapath)
+fpdbase,mols,ions,T = pz.data.fpd(datapath)
 
 # Select electrolytes for analysis
-fpdbase,mols,ions = pz.data.subset_ele(fpdbase,mols,ions,
-                                       np.array(['NaCl',
-                                                 'KCl',
-                                                 'CaCl2']))#,
-                                                 #MgCl2']))
+fpdbase,mols,ions,T = pz.data.subset_ele(fpdbase,mols,ions,T,
+                                         np.array(['NaCl',
+                                                   'KCl',
+                                                   'CaCl2']))#,
+                                                   #MgCl2']))
 
-# Exclude smoothed datasets
+#%% Exclude smoothed datasets
 S = fpdbase.smooth == 0
 fpdbase = fpdbase[S]
 mols    = mols   [S]
+T       = T      [S]
 
 # Prepare model cdict
 cf = pz.cdicts.MPH
@@ -33,7 +34,6 @@ eles = fpdbase.ele
 cf.add_zeros(fpdbase.ele)
 
 # Calculate osmotic coefficient at measurement temperature
-T   = pd2vs(fpdbase.t  )
 fpd = pd2vs(fpdbase.fpd)
 fpdbase['osm_meas'] = pz.tconv.fpd2osm(mols,fpd)
 fpdbase['osm_calc'] = pz.model.osm(mols,ions,T,cf)
@@ -53,7 +53,8 @@ fpdbase['osm25_meas'] = np.nan
 
 for ele in fpde.index:
     
-    Efpdbase,_,Eions = pz.data.subset_ele(fpdbase,mols,ions,np.array([ele]))
+    Efpdbase,_,Eions,_ = pz.data.subset_ele(fpdbase,mols,ions,T,
+                                            np.array([ele]))
     EL = ismember(fpdbase.ele,np.array([ele]))
     
     fpdbase.loc[EL,'osm25_meas'] = pz.tconv.osm2osm(
