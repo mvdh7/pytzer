@@ -17,8 +17,20 @@ for S = 1:numel(vplsrcs.all.srcs)
 end %for S
 mksz = 10;
 
-for E = 1%:numel(eles)
+for E = 2%:numel(eles)
 ele = eles{E};
+
+% Define settings that depend upon electrolyte
+switch ele
+    case 'KCl'
+        fxl = [0 5];
+        fxt = 0:5;
+        fyl = 0.030000001*[-1 1];
+    case 'NaCl'
+        fxl = [0 6.5];
+        fxt = 0:6;
+        fyl = 0.02000000001*[-1 1.0000001];
+end %switch
 
 % Get logicals etc.
 EL = strcmp(vplbase.ele,ele);
@@ -45,13 +57,17 @@ subplot(2,2,1); hold on
         
     end %for S
     
+    xlim(fxl)
+    ylim(fyl)
+    
     plot(get(gca,'xlim'),[0 0],'k')
     setaxes(gca,8)
-    set(gca, 'box','on')
+    set(gca, 'box','on', 'xtick',fxt, 'ytick',-1:0.01:1)
     
     xlabel(['\itm\rm(' ele ') / mol\cdotkg^{-1}'])
     ylabel('\Delta(\phi_{25}) / K')
-    text(0,1.1,'(a)', 'fontname','arial', 'fontsize',8, 'color','k', ...
+    text(0,1.1,'(a) Measurements at 298.15 K', ...
+        'fontname','arial', 'fontsize',8, 'color','k', ...
         'units','normalized')
 
 % (b) Raw VPL measurements' residuals, only data at 298.15 K
@@ -71,13 +87,17 @@ subplot(2,2,2); hold on
         
     end %for S
     
+    xlim(fxl)
+    ylim(fyl)
+    
     plot(get(gca,'xlim'),[0 0],'k')
     setaxes(gca,8)
-    set(gca, 'box','on')
+    set(gca, 'box','on', 'xtick',fxt, 'ytick',-1:0.01:1)
     
     xlabel(['\itm\rm(' ele ') / mol\cdotkg^{-1}'])
     ylabel('Converted \Delta(\phi_{25}) / K')
-    text(0,1.1,'(b)', 'fontname','arial', 'fontsize',8, 'color','k', ...
+    text(0,1.1,'(b) Converted to 298.15 K', ...
+        'fontname','arial', 'fontsize',8, 'color','k', ...
         'units','normalized')
     
 end %for E
