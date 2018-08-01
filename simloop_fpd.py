@@ -167,38 +167,20 @@ if __name__ == '__main__':
         % (Uele,Ureps,(Xtend - Xtstart)))
 
     # Calculate activity coefficient and propagate error with sim. results
-    sqtot = np.vstack(np.linspace(0.001,1.81,100))
+    sqtot = np.vstack(np.linspace(0.001,np.sqrt(np.max(tot)),100))
     tot   = sqtot**2
     mols  = np.concatenate((tot,tot),axis=1)
     T     = np.full_like(tot,298.15)
     
-    # Define propagation equation
-    def ppg_acfMX(mCmA,zC,zA,T,bC,alph1,alph2,omega,nC,nA):
-        
-        b0 = bC[0]
-        b1 = bC[1]
-        b2 = bC[2]
-        C0 = bC[3]
-        C1 = bC[4]
-        
-        return pz.fitting.acfMX(mCmA,zC,zA,T,b0,b1,b2,C0,C1,
-                                alph1,alph2,omega,nC,nA)
+    # Get example propagation splines
+    acfMX_sim, UacfMX_sim = pz.fitting.ppg_acfMX(mols,zC,zA,T,bCsim,bCsim_cv,
+                                                 alph1,alph2,omega,nC,nA)
     
-    fx_JacfMX = jac(ppg_acfMX,argnum=4)
+    acfMX_dir, UacfMX_dir = pz.fitting.ppg_acfMX(mols,zC,zA,T,bCdir,bCdir_cv,
+                                                 alph1,alph2,omega,nC,nA)
     
-    acfMX_sim   = np.vstack(
-            ppg_acfMX(mols,zC,zA,T,bCsim,alph1,alph2,omega,nC,nA)[0])
-    JacfMX_sim  = fx_JacfMX(mols,zC,zA,T,bCsim,
-                            alph1,alph2,omega,nC,nA).squeeze()
-    UacfMX_sim  = np.vstack(np.diag(
-            JacfMX_sim @ bCsim_cv @ JacfMX_sim.transpose()))
-    
-    acfMX_dir  = np.vstack(
-            ppg_acfMX(mols,zC,zA,T,bCdir,alph1,alph2,omega,nC,nA)[0])
-    JacfMX_dir = fx_JacfMX(mols,zC,zA,T,bCdir,
-                           alph1,alph2,omega,nC,nA).squeeze()
-    UacfMX_dir = np.vstack(np.diag(
-            JacfMX_dir @ bCdir_cv @ JacfMX_dir.transpose()))
+    osm_sim, Uosm_sim = pz.fitting.ppg_osm(mols,zC,zA,T,bCsim,bCsim_cv,
+                                           alph1,alph2,omega)
 
     # Pickle/save results...
     fstem = 'pickles/simloop_fpd_bC_' + Uele + '_' + str(Ureps)
@@ -216,4 +198,6 @@ if __name__ == '__main__':
                              'acfMX_sim' : acfMX_sim ,
                              'acfMX_dir' : acfMX_dir ,
                              'UacfMX_sim': UacfMX_sim,
-                             'UacfMX_dir': UacfMX_dir})
+                             'UacfMX_dir': UacfMX_dir,
+                             'osm_sim'   : osm_sim   ,
+                             'Uosm_sim'  : Uosm_sim  })

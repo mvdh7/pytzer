@@ -1,8 +1,9 @@
-from autograd import numpy as np
-from autograd import elementwise_grad as egrad
-from scipy import optimize
+from autograd   import numpy            as np
+from autograd   import elementwise_grad as egrad
+from autograd   import jacobian         as jac
+from scipy      import optimize
 from .constants import b, R
-from . import coeffs, jfuncs, model
+from .          import coeffs, jfuncs, model
 
 ##### PITZER MODEL FUNCTIONS ##################################################
 
@@ -42,13 +43,32 @@ def ln_acfMX(mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega,nC,nA):
     
     ln_acfs = ln_acf(mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega)
     
-    return (nC * ln_acfs[:,0] + nA * ln_acfs[:,1]) / (nC + nA)
+    return (nC * np.vstack(ln_acfs[:,0]) + nA * np.vstack(ln_acfs[:,1])) \
+         / (nC + nA)
 
 # Mean activity coefficient - single electrolyte
 def acfMX(mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega,nC,nA):
     
     return np.exp(
         ln_acfMX(mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega,nC,nA))
+
+# Define bC propagation equation for mean activity coefficient
+def ppg_acfMX(mCmA,zC,zA,T,bC,bC_cv,alph1,alph2,omega,nC,nA):
+    
+    # Get mean mean activity coefficient
+    acfMX_sim = acfMX(mCmA,zC,zA,T,bC[0],bC[1],bC[2],bC[3],bC[4],
+                      alph1,alph2,omega,nC,nA)
+    
+    # Evaluate Jacobian
+    fx_JacfMX = jac(lambda bC: acfMX(mCmA,zC,zA,T,
+                                     bC[0],bC[1],bC[2],bC[3],bC[4],
+                                     alph1,alph2,omega,nC,nA))
+    JacfMX = fx_JacfMX(bC).squeeze()
+    
+    # Propagate var.-covar. matrix uncertainty
+    UacfMX_sim = np.vstack(np.diag(JacfMX @ bC_cv @ JacfMX.transpose()))
+    
+    return acfMX_sim, UacfMX_sim
 
 # Osmotic coefficient derivative function - single electrolyte
 def osmfunc(ww,mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega):
@@ -68,6 +88,22 @@ def osm(mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega,nC=None,nA=None):
     
     return 1 - osmD(ww,mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega) \
         / (R * T * np.vstack(np.sum(mCmA,axis=1)))
+        
+# Osmotic coefficient - bC uncertainty propagation
+def ppg_osm(mCmA,zC,zA,T,bC,bC_cv,alph1,alph2,omega):
+        
+    # Get mean osmotic coefficient
+    osm_sim = osm(mCmA,zC,zA,T,bC[0],bC[1],bC[2],bC[3],bC[4],alph1,alph2,omega)
+    
+    # Evaluate Jacobian
+    fx_Josm = jac(lambda bC: osm(mCmA,zC,zA,T,bC[0],bC[1],bC[2],bC[3],bC[4],
+                                 alph1,alph2,omega))
+    Josm = fx_Josm(bC).squeeze()
+    
+    # Propagate var.-covar. matrix uncertainty
+    Uosm_sim = np.vstack(np.diag(Josm @ bC_cv @ Josm.transpose()))
+    
+    return osm_sim, Uosm_sim
 
 ##### THREE-COMPONENT SYSTEM ##################################################
 

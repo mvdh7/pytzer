@@ -165,51 +165,15 @@ if __name__ == '__main__':
     mols  = np.concatenate((tot,tot),axis=1)
     T     = np.full_like(tot,298.15)
     
-    # Define propagation equation
-    def ppg_acfMX(mCmA,zC,zA,T,bC,alph1,alph2,omega,nC,nA):
-        
-        b0 = bC[0]
-        b1 = bC[1]
-        b2 = bC[2]
-        C0 = bC[3]
-        C1 = bC[4]
-        
-        return pz.fitting.acfMX(mCmA,zC,zA,T,b0,b1,b2,C0,C1,
-                                alph1,alph2,omega,nC,nA)
+    # Get example propagation splines
+    acfMX_sim, UacfMX_sim = pz.fitting.ppg_acfMX(mols,zC,zA,T,bCsim,bCsim_cv,
+                                                 alph1,alph2,omega,nC,nA)
     
-    fx_JacfMX = jac(ppg_acfMX,argnum=4)
+    acfMX_dir, UacfMX_dir = pz.fitting.ppg_acfMX(mols,zC,zA,T,bCdir,bCdir_cv,
+                                                 alph1,alph2,omega,nC,nA)
     
-    acfMX_sim   = np.vstack(
-            ppg_acfMX(mols,zC,zA,T,bCsim,alph1,alph2,omega,nC,nA)[0])
-    JacfMX_sim  = fx_JacfMX(mols,zC,zA,T,bCsim,
-                            alph1,alph2,omega,nC,nA).squeeze()
-    UacfMX_sim  = np.vstack(np.diag(
-            JacfMX_sim @ bCsim_cv @ JacfMX_sim.transpose()))
-    
-    acfMX_dir  = np.vstack(
-            ppg_acfMX(mols,zC,zA,T,bCdir,alph1,alph2,omega,nC,nA)[0])
-    JacfMX_dir = fx_JacfMX(mols,zC,zA,T,bCdir,
-                           alph1,alph2,omega,nC,nA).squeeze()
-    UacfMX_dir = np.vstack(np.diag(
-            JacfMX_dir @ bCdir_cv @ JacfMX_dir.transpose()))
-
-    def ppg_osm(mCmA,zC,zA,T,bC,alph1,alph2,omega):
-        
-        b0 = bC[0]
-        b1 = bC[1]
-        b2 = bC[2]
-        C0 = bC[3]
-        C1 = bC[4]
-        
-        return pz.fitting.osm(mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega)
-
-    fx_Josm = jac(ppg_osm,argnum=4)
-    
-    osm_sim = np.vstack(
-            ppg_osm(mols,zC,zA,T,bCsim,alph1,alph2,omega))
-    Josm_sim = fx_Josm(mols,zC,zA,T,bCsim,alph1,alph2,omega).squeeze()
-    Uosm_sim = np.vstack(np.diag(
-            Josm_sim @ bCsim_cv @ Josm_sim.transpose()))
+    osm_sim, Uosm_sim = pz.fitting.ppg_osm(mols,zC,zA,T,bCsim,bCsim_cv,
+                                           alph1,alph2,omega)
 
     # Pickle/save results...
     fstem = 'pickles/simloop_vpl_bC_' + Uele + '_' + str(Ureps)
