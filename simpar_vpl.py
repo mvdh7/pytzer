@@ -134,6 +134,16 @@ for E,ele in enumerate(vplp.index.levels[0]):
         vplbase.loc[SL,'dosm25_sys'] \
             = vplbase.dosm25[SL] \
             - vplerr_sys[ele][src][0] / vplbase.m[SL]
+        
+#        # Evaluate systematic component of error - approach 3
+#        vplerr_sys[ele][src] = optimize.least_squares(lambda syserr: \
+#            syserr[0] / vplbase[SL].m + syserr[1] - vplbase[SL].dosm,
+#                                                      [0,0])['x']
+#        
+#        vplbase.loc[SL,'dosm25_sys'] \
+#            = vplbase.dosm25[SL] \
+#            - (vplerr_sys[ele][src][0] / vplbase.m[SL] \
+#             + vplerr_sys[ele][src][1])
             
         # Evaluate random component of error
         vplerr_rdm[ele][src] = optimize.least_squares(lambda rdmerr: \
