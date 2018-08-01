@@ -67,8 +67,13 @@ omega = np.float_(2.5)
 weights = np.full_like(tot,1, dtype='float64')
 for src in np.unique(srcs):
     SL = srcs == src
-    weights[SL] = 1 / np.sqrt(np.sum(vplerr_rdm[sele][src]**2))
-weights = weights
+#    weights[SL] = 1 / np.sqrt(np.sum(vplerr_rdm[sele][src]**2))
+    Smax = np.max(tot[SL])
+    Smin = np.min(tot[SL])
+    weights[SL] = (vplerr_rdm[sele][src][0] * (Smax - Smin) \
+        - vplerr_rdm[sele][src][1] * (np.exp(-Smax) - np.exp(-Smin))) \
+           / (Smax - Smin)
+weights = 1 / weights
 
 def Eopt(rseed=None):
 

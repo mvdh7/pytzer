@@ -2,7 +2,7 @@
 % Simulated datasets - NaCl
 load('pickles/simloop_vpl_test.mat');
 vpltest = readtable('pickles/simloop_vpl_test.csv');
-%%
+%
 fvar = 'osm';
 
 tsrcs = unique(vpltest.src);

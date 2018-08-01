@@ -94,8 +94,13 @@ osm_calc = pd2vs(vplbase.osm_calc)
 weights = np.full_like(tot,1, dtype='float64')
 for src in np.unique(srcs):
     SL = srcs == src
-    weights[SL] = 1 / np.sqrt(np.sum(vplerr_rdm[Uele][src]**2))
-weights = weights
+#    weights[SL] = 1 / np.sqrt(np.sum(vplerr_rdm[Uele][src]**2))
+    Smax = np.max(tot[SL])
+    Smin = np.min(tot[SL])
+    weights[SL] = (vplerr_rdm[Uele][src][0] * (Smax - Smin) \
+        - vplerr_rdm[Uele][src][1] * (np.exp(-Smax) - np.exp(-Smin))) \
+           / (Smax - Smin)
+weights = 1 / weights
 
 # Do the fit to the original dataset
 b0dir,b1dir,b2dir,C0dir,C1dir,bCdir_cv,mseo \

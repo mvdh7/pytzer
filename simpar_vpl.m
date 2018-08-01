@@ -33,7 +33,7 @@ switch ele
     case 'NaCl'
         fxl = [0 6.5];
         fxt = 0:6;
-        fyl = 0.02000000001*[-1 1.0000001];
+        fyl = 0.015000000001*[-1 1.0000001];
 end %switch
 
 % Get logicals etc.
@@ -146,7 +146,7 @@ subplot(2,2,4); hold on
 %         'ytick',10.^(-10:10))
     
     xlim(fxl)
-    ylim([0 fyl(2)/2])
+    ylim([0 fyl(2)])
     
     xlabel(['\itm\rm(' ele ') / mol\cdotkg^{-1}'])
     ylabel('|\sigma(\psi_{25})|')
