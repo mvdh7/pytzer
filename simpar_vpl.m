@@ -2,6 +2,7 @@
 load('pickles/simpar_vpl.mat');
 vplbase = readtable('pickles/simpar_vpl.csv');
 vplsrcs.all.srcs = unique(vplbase.src);
+vplc = struct2table(load('pickles/vplcurve.mat'));
 
 % Plot raw VPL data
 
@@ -62,9 +63,7 @@ subplot(2,2,1); hold on
         
     end %for S
     
-    Sx = linspace(0,6.1,100);
-    Sy = 0.01 ./ (2 + Sx);
-    plot(Sx,Sy,'k')
+    plot(vplc.tot,-0.01 ./ (2 * vplc.tot .* vplc.aw),'k')
     
     xlim(fxl)
     ylim(fyl)
@@ -144,3 +143,10 @@ subplot(2,2,4); hold on
         'units','normalized')
     
 end %for E
+
+subplot(2,2,3); hold on
+
+    plot(vplc.tot,0.0002 ./ (2 * vplc.tot .* vplc.aw))
+    plot(vplc.tot,0.002 * abs(log(vplc.aw) ./ (2 * vplc.tot.^2)))
+    
+    ylim([0 0.001])
