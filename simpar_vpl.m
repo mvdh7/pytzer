@@ -22,6 +22,8 @@ mksz = 10;
 for E = 2%:numel(eles)
 ele = eles{E};
 
+load(['pickles/simloop_vpl_bC_' ele '_100.mat'])
+
 % Define settings that depend upon electrolyte
 switch ele
     case 'KCl'
@@ -59,15 +61,21 @@ subplot(2,2,1); hold on
         
 %         Sx = minmax(vplbase.m(SL)');
 %         Sy = Sx * vplerr_sys.(ele).(src)(2) + vplerr_sys.(ele).(src)(1);
-        Sx = linspace(min(vplbase.m(SL)),max(vplbase.m(SL)),100);
-        Sy = vplerr_sys.(ele).(src)(1) ./ Sx;
-        plot(Sx,Sy, 'color',[fclr.(src) 0.5])
-        
+        if any(SL)
+            Sx = linspace(min(vplbase.m(SL)),max(vplbase.m(SL)),100);
+            Sy = vplerr_sys.(ele).(src)(1) ./ Sx ...
+                + vplerr_sys.(ele).(src)(2);
+            plot(Sx,Sy, 'color',[fclr.(src) 0.5])
+        end %if
+            
     end %for S
     
 %     plot(vplc.tot,-0.01 ./ (2 * vplc.tot .* vplc.aw),'k')
 %     plot(vplc.tot,0.01388 ./ vplc.tot,'k')
     
+    plot(tot, sqrt(Uosm_sim)*2,'k:')
+    plot(tot,-sqrt(Uosm_sim)*2,'k:')
+
     xlim(fxl)
     ylim(fyl)
     

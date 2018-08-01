@@ -1,6 +1,7 @@
 fele = 'NaCl';
 % load(['pickles/simloop_fpd_bC_' fele '_10000.mat'])
-load(['pickles/simloop_vpl_bC_' fele '_10000.mat'])
+load(['pickles/simloop_vpl_bC_' fele '_100.mat'])
+vplbase = readtable('pickles/simpar_vpl.csv');
 
 bCsim = bCsim([1 2 4 5]) ;
 bCdir = bCdir([1 2 4 5])';
@@ -21,33 +22,55 @@ figure(4); clf
 
 subplot(2,1,1); hold on
 
-    plot(plx,acfMX_sim,'k')
-    plot(plx,acfMX_sim+sqrt(UacfMX_sim)*2,'k--')
-    plot(plx,acfMX_sim-sqrt(UacfMX_sim)*2,'k--')
+    plot(plx,osm_sim,'k')
+    plot(plx,osm_sim+sqrt(Uosm_sim)*2,'k--')
+    plot(plx,osm_sim-sqrt(Uosm_sim)*2,'k--')
 
-    plot(plx,acfMX_dir,'r')
-    plot(plx,acfMX_dir+sqrt(UacfMX_dir)*2,'r--')
-    plot(plx,acfMX_dir-sqrt(UacfMX_dir)*2,'r--')
-
+    SL = strcmp(vplbase.ele,'NaCl') & vplbase.t == 298.15;
+    scatter(sqrt(vplbase.m(SL)),vplbase.osm_meas(SL))
+    
     grid on
 
     xlabel(['[\itm\rm(' fele ') / mol\cdotkg^{' endash '1}]^{1/2}'])
-    ylabel('ln \gamma_\pm')
-    
+    ylabel('\phi')
+
 subplot(2,1,2); hold on
 
-    plot(plx,acfMX_sim-acfMX_sim,'k')
-    plot(plx,sqrt(UacfMX_sim)*2,'k--')
-    plot(plx,sqrt(UacfMX_sim)*2,'k--')
-
-    plot(plx,acfMX_dir-acfMX_sim,'r')
-    plot(plx,acfMX_dir+sqrt(UacfMX_dir)*2-acfMX_sim,'r--')
-    plot(plx,acfMX_dir-sqrt(UacfMX_dir)*2-acfMX_sim,'r--')
-
-    plot(plx,sqrt(UacfMX_dir)*2,'m--')
+    plot(plx, sqrt(Uosm_sim)*2,'k--')
+    plot(plx,-sqrt(Uosm_sim)*2,'k--')
     
-    grid on
+    SL = strcmp(vplbase.ele,'NaCl') & vplbase.t == 298.15;
+    scatter(sqrt(vplbase.m(SL)),vplbase.dosm(SL))
     
-    xlabel(['[\itm\rm(' fele ') / mol\cdotkg^{' endash '1}]^{1/2}'])
-    ylabel('\Delta ln \gamma_\pm')
+% subplot(2,1,1); hold on
+% 
+%     plot(plx,acfMX_sim,'k')
+%     plot(plx,acfMX_sim+sqrt(UacfMX_sim)*2,'k--')
+%     plot(plx,acfMX_sim-sqrt(UacfMX_sim)*2,'k--')
+% 
+%     plot(plx,acfMX_dir,'r')
+%     plot(plx,acfMX_dir+sqrt(UacfMX_dir)*2,'r--')
+%     plot(plx,acfMX_dir-sqrt(UacfMX_dir)*2,'r--')
+% 
+%     grid on
+% 
+%     xlabel(['[\itm\rm(' fele ') / mol\cdotkg^{' endash '1}]^{1/2}'])
+%     ylabel('ln \gamma_\pm')
+%     
+% subplot(2,1,2); hold on
+% 
+%     plot(plx,acfMX_sim-acfMX_sim,'k')
+%     plot(plx,sqrt(UacfMX_sim)*2,'k--')
+%     plot(plx,sqrt(UacfMX_sim)*2,'k--')
+% 
+%     plot(plx,acfMX_dir-acfMX_sim,'r')
+%     plot(plx,acfMX_dir+sqrt(UacfMX_dir)*2-acfMX_sim,'r--')
+%     plot(plx,acfMX_dir-sqrt(UacfMX_dir)*2-acfMX_sim,'r--')
+% 
+%     plot(plx,sqrt(UacfMX_dir)*2,'m--')
+%     
+%     grid on
+%     
+%     xlabel(['[\itm\rm(' fele ') / mol\cdotkg^{' endash '1}]^{1/2}'])
+%     ylabel('\Delta ln \gamma_\pm')
     
