@@ -109,22 +109,32 @@ for E,ele in enumerate(vplp.index.levels[0]):
         SL = np.logical_and(EL,vplbase.src == src)
         SL = np.logical_and(SL,vplbase.t == 298.15)
 
-        # Evaluate systematic component of error
-        vplerr_sys[ele][src] = optimize.least_squares(lambda syserr: \
-            syserr[1] * vplbase[SL].m + USYS * syserr[0] - vplbase[SL].dosm25,
-                                                      [0.,0.])['x']
+#        # Evaluate systematic component of error
+#        vplerr_sys[ele][src] = optimize.least_squares(lambda syserr: \
+#            syserr[1] * vplbase[SL].m + USYS * syserr[0] - vplbase[SL].dosm25,
+#                                                      [0.,0.])['x']
+#        
+#        if USYS == 1:
+#            if (sum(SL) < 6) or (max(vplbase[SL].m) - min(vplbase[SL].m) < 2):
+#                vplerr_sys[ele][src][1] = 0
+#                vplerr_sys[ele][src][0] = optimize.least_squares(
+#                    lambda syserr: syserr - vplbase[SL].dosm25,0.)['x'][0]
+#
+#        vplbase.loc[SL,'dosm25_sys'] \
+#            =  vplbase.dosm25[SL] \
+#            - (vplbase.m[SL] * vplerr_sys[ele][src][1] \
+#               +               vplerr_sys[ele][src][0])
+                    
+        # Evaluate systematic component of error - approach 2
+        vplerr_sys[ele][src] = np.array(
+                [optimize.least_squares(lambda syserr: \
+                     syserr / vplbase[SL].m - vplbase[SL].dosm,0)['x'][0],
+                 0])
         
-        if USYS == 1:
-            if (sum(SL) < 6) or (max(vplbase[SL].m) - min(vplbase[SL].m) < 2):
-                vplerr_sys[ele][src][1] = 0
-                vplerr_sys[ele][src][0] = optimize.least_squares(
-                    lambda syserr: syserr - vplbase[SL].dosm25,0.)['x'][0]
-
         vplbase.loc[SL,'dosm25_sys'] \
-            =  vplbase.dosm25[SL] \
-            - (vplbase.m[SL] * vplerr_sys[ele][src][1] \
-               +               vplerr_sys[ele][src][0])
-                       
+            = vplbase.dosm25[SL] \
+            - vplerr_sys[ele][src][0] / vplbase.m[SL]
+            
         # Evaluate random component of error
         vplerr_rdm[ele][src] = optimize.least_squares(lambda rdmerr: \
             rdmerr[1] * np.exp(-vplbase[SL].m) + rdmerr[0] \

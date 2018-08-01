@@ -10,18 +10,30 @@ def vpl(tot,osm_calc,srcs,ele,vplerr_rdm,vplerr_sys):
         
         SL = src == srcs
         
+#        # Approach 1
+#        osm[SL] = osm[SL] + np.random.normal(size=1,loc=0,
+#                            scale=np.abs(vplerr_sys[ele][src][0]) \
+#                            * np.sqrt(2/np.pi)) \
+#                          + np.random.normal(size=1,loc=0,
+#                            scale=np.abs(vplerr_sys[ele][src][1]) \
+#                            * np.sqrt(2/np.pi)) \
+#                          * tot[SL] \
+#                          + np.random.normal(size=sum(SL),loc=0,
+#                            scale=(vplerr_rdm[ele][src][0] \
+#                                 + vplerr_rdm[ele][src][1] \
+#                                 * np.exp(-tot[SL])) \
+#                                 * np.sqrt(2/np.pi))
+        
+        # Approach 2
         osm[SL] = osm[SL] + np.random.normal(size=1,loc=0,
                             scale=np.abs(vplerr_sys[ele][src][0]) \
-                            * np.sqrt(2/np.pi)) \
-                          + np.random.normal(size=1,loc=0,
-                            scale=np.abs(vplerr_sys[ele][src][1]) \
-                            * np.sqrt(2/np.pi)) \
-                          * tot[SL] \
+                            * np.sqrt(2/np.pi)) / tot[SL] \
                           + np.random.normal(size=sum(SL),loc=0,
                             scale=(vplerr_rdm[ele][src][0] \
                                  + vplerr_rdm[ele][src][1] \
                                  * np.exp(-tot[SL])) \
                                  * np.sqrt(2/np.pi))
+        
     
     return osm
 

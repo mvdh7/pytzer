@@ -57,13 +57,16 @@ subplot(2,2,1); hold on
             'markeredgecolor',fclr.(src), ...
             'markerfacealpha',0.7, 'markeredgealpha',0.8)
         
-        Sx = minmax(vplbase.m(SL)');
-        Sy = Sx * vplerr_sys.(ele).(src)(2) + vplerr_sys.(ele).(src)(1);
+%         Sx = minmax(vplbase.m(SL)');
+%         Sy = Sx * vplerr_sys.(ele).(src)(2) + vplerr_sys.(ele).(src)(1);
+        Sx = linspace(min(vplbase.m(SL)),max(vplbase.m(SL)),100);
+        Sy = vplerr_sys.(ele).(src)(1) ./ Sx;
         plot(Sx,Sy, 'color',[fclr.(src) 0.5])
         
     end %for S
     
-    plot(vplc.tot,-0.01 ./ (2 * vplc.tot .* vplc.aw),'k')
+%     plot(vplc.tot,-0.01 ./ (2 * vplc.tot .* vplc.aw),'k')
+%     plot(vplc.tot,0.01388 ./ vplc.tot,'k')
     
     xlim(fxl)
     ylim(fyl)
