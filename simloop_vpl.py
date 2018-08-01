@@ -160,7 +160,7 @@ if __name__ == '__main__':
         % (Uele,Ureps,(Xtend - Xtstart)))
 
     # Calculate activity coefficient and propagate error with sim. results
-    sqtot = np.vstack(np.linspace(0.001,1.81,100))
+    sqtot = np.vstack(np.linspace(0.001,np.sqrt(np.max(tot)),100))
     tot   = sqtot**2
     mols  = np.concatenate((tot,tot),axis=1)
     T     = np.full_like(tot,298.15)
@@ -193,6 +193,24 @@ if __name__ == '__main__':
     UacfMX_dir = np.vstack(np.diag(
             JacfMX_dir @ bCdir_cv @ JacfMX_dir.transpose()))
 
+    def ppg_osm(mCmA,zC,zA,T,bC,alph1,alph2,omega):
+        
+        b0 = bC[0]
+        b1 = bC[1]
+        b2 = bC[2]
+        C0 = bC[3]
+        C1 = bC[4]
+        
+        return pz.fitting.osm(mCmA,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega)
+
+    fx_Josm = jac(ppg_osm,argnum=4)
+    
+    osm_sim = np.vstack(
+            ppg_osm(mols,zC,zA,T,bCsim,alph1,alph2,omega))
+    Josm_sim = fx_Josm(mols,zC,zA,T,bCsim,alph1,alph2,omega).squeeze()
+    Uosm_sim = np.vstack(np.diag(
+            Josm_sim @ bCsim_cv @ Josm_sim.transpose()))
+
     # Pickle/save results...
     fstem = 'pickles/simloop_vpl_bC_' + Uele + '_' + str(Ureps)
     # ...for Python:
@@ -209,4 +227,6 @@ if __name__ == '__main__':
                              'acfMX_sim' : acfMX_sim ,
                              'acfMX_dir' : acfMX_dir ,
                              'UacfMX_sim': UacfMX_sim,
-                             'UacfMX_dir': UacfMX_dir})
+                             'UacfMX_dir': UacfMX_dir,
+                             'osm_sim'   : osm_sim   ,
+                             'Uosm_sim'  : Uosm_sim  })
