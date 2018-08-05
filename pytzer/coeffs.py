@@ -1230,8 +1230,10 @@ def psi_H_Na_Cl_CMR93(T):
 # === HOVEY, PITZER AND RARD 1993 =============================================
 
 def HPR93_eq36(T,a):
-    
-    return a[0] + a[1] * (1/T - 1/298.15) + a[2] * np.log(T/298.15)
+
+    Tref = np.float_(298.15)
+
+    return a[0] + a[1] * (1/T - 1/Tref) + a[2] * np.log(T/Tref)
 
 # --- bC: sodium sulfate ------------------------------------------------------
     
