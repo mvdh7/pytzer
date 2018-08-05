@@ -1,9 +1,8 @@
 from autograd import numpy as np
 import pandas as pd
 from scipy import optimize
-from .misc import pd2vs
+from .misc import pd2vs, ismember
 from .     import model
-from mvdh  import ismember
 
 ##### DEGREE OF DISSOCIATION #################################################
 
