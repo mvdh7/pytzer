@@ -3,7 +3,7 @@ from autograd import numpy as np
 from matplotlib import pyplot as plt
 
 cf = pz.cdicts.MIAMI
-cf.bC['Mg-SO4'] = pz.coeffs.bC_Mg_SO4_PP86ii
+cf.bC['Mg-SO4'] = pz.coeffs.bC_Mg_SO4_RM81
 
 tot  = np.vstack([0.1,1,2,3,3.6176])
 mols = np.concatenate((tot,tot),axis=1)
