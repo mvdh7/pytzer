@@ -192,7 +192,7 @@ MIAMI.bC['Sr-SO4'] = coeffs.bC_Ca_SO4_M88
 
 # Table A2
 MIAMI.bC['Mg-Cl' ] = coeffs.bC_Mg_Cl_PP87i
-#MIAMI.bC['Mg-SO4'] = coeffs.bC_Mg_SO4_PP87i
+MIAMI.bC['Mg-SO4'] = coeffs.bC_Mg_SO4_PP86ii
 
 # Table A3
 #MIAMI.bC['Na-HSO4'] = coefFs.bC_Na_HSO4_PM97

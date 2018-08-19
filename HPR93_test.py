@@ -15,6 +15,7 @@ Ts = np.float_([273.15,298.15,323.15,348.15,373.15])
 _,ax = plt.subplots(1,2, figsize=(10,4))
 
 # Figure for comparison with HPR93 Fig. 3
+# DOES NOT WORK!
 for Ti in Ts:
 
     T = np.full_like(tot,Ti)
