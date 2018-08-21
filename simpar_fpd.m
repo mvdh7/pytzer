@@ -13,7 +13,7 @@ fpdsrcs.all.srcs = unique(fpdbase.src);
 % Choose electrolyte to plot
 eles = {'CaCl2' 'KCl' 'NaCl'};
 
-for E = 1:numel(eles)
+for E = 1%:numel(eles)
 ele = eles{E};
 
 % Define settings that depend upon electrolyte
