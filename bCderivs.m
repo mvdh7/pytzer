@@ -1,5 +1,18 @@
+% Select electrolyte
+ele = 'KCl';
+
+% Set limits
+switch ele
+    case 'NaCl'
+        fxl = [0 6.25];
+        fyl = [-0.1 0.6];
+    case 'KCl'
+        fxl = [0 3.5];
+        fyl = [-0.1 0.20000001];
+end %switch
+
 % Load data
-load('pickles/bCderivs.mat');
+load(['pickles/bCderivs_' ele '.mat']);
 sqt = sqrt(tot);
 
 % Define colours
@@ -18,40 +31,47 @@ printsetup(gcf,[9 10])
 
 subplot(2,1,1); hold on
 
-    nl = plot(ftot,osm0-osm0,'k'); nolegend(nl)
-    plot(ftot,osm -osm0, 'k')
+    nl = plot(ftot,zeros(size(ftot)),'k'); nolegend(nl)
+    plot(ftot,osm - osm0, 'k')
     
-    plot(ftot,osm0 + db0 * bCs(1) - osm0, 'color',b0clr)
-    plot(ftot,osm0 + db1 * bCs(2) - osm0, 'color',b1clr)
-    plot(ftot,osm0 + dC0 * bCs(3) - osm0, 'color',C0clr)
-    plot(ftot,osm0 + dC1 * bCs(4) - osm0, 'color',C1clr)
+    plot(ftot,db0 * bCs(1), 'color',b0clr)
+    plot(ftot,db1 * bCs(2), 'color',b1clr)
+    plot(ftot,dC0 * bCs(3), 'color',C0clr)
+    plot(ftot,dC1 * bCs(4), 'color',C1clr)
+    
+%     % Check the calculation
+%     plot(ftot, ...
+%         db0 * bCs(1) + db1 * bCs(2) + dC0 * bCs(3) + dC1 * bCs(4), ...
+%         'r:')
     
     % Axis settings
     setaxes(gca,8)
-    xlim([0 6.25])
-    ylim([-0.1 0.6])
+    xlim(fxl)
+    ylim(fyl)
 
     set(gca, 'box','on', 'xtick',0:6, 'ytick',-0.1:0.1:0.6)
     set(gca, 'xticklabel',num2str(get(gca,'xtick')','%.0f'), ...
         'yticklabel',num2str(get(gca,'ytick')','%.1f'))
 
-    % xlabel(['[\itm\rm(NaCl) / mol\cdotkg^{' endash '1}]^{1/2}'])
-    xlabel(['\itm\rm(NaCl) / mol\cdotkg^{' endash '1}'])
+    % xlabel(['[\itm\rm(' ele ') / mol\cdotkg^{' endash '1}]^{1/2}'])
+    xlabel(['\itm\rm(' ele ') / mol\cdotkg^{' endash '1}'])
     ylabel('\Delta\phi')
-
+    text(0,1.08,'(a)', 'units','normalized', 'fontname','arial', ...
+        'color','k', 'fontsize',8)
+    
     % Legend
-    legend('D-H','\beta_0','\beta_1','\itC\rm_0','\itC\rm_1', ...
+    legend('All','\beta_0','\beta_1','\itC\rm_0','\itC\rm_1', ...
         'location','eastoutside')
-
+    
     % Position
-    set(gca, 'position',[0.12 0.6 0.6 0.375])
+    set(gca, 'position',[0.12 0.6 0.6 0.35])
 
 subplot(2,1,2); hold on
 
-    plot(ftot,db0 / max(db0), 'color',b0clr)
-    plot(ftot,db1 / max(db1), 'color',b1clr)
-    plot(ftot,dC0 / max(dC0), 'color',C0clr)
-    plot(ftot,dC1 / max(dC1), 'color',C1clr)
+    nl = plot(ftot,db0 / max(db0), 'color',b0clr); nolegend(nl)
+    nl = plot(ftot,db1 / max(db1), 'color',b1clr); nolegend(nl)
+    nl = plot(ftot,dC0 / max(dC0), 'color',C0clr); nolegend(nl)
+    nl = plot(ftot,dC1 / max(dC1), 'color',C1clr); nolegend(nl)
 
     plot(ftot,db1_an / max(db1_an),':' , 'color',b1clr)
     plot(ftot,db1_au / max(db1_au),'--', 'color',b1clr)
@@ -61,23 +81,25 @@ subplot(2,1,2); hold on
 
     % Axis settings
     setaxes(gca,8)
-    xlim([0 6.25])
+    xlim(fxl)
     ylim([0 1])
 
     set(gca, 'box','on', 'xtick',0:6, 'ytick',0:0.2:1)
     set(gca, 'xticklabel',num2str(get(gca,'xtick')','%.0f'), ...
         'yticklabel',num2str(get(gca,'ytick')','%.1f'))
 
-    % xlabel(['[\itm\rm(NaCl) / mol\cdotkg^{' endash '1}]^{1/2}'])
-    xlabel(['\itm\rm(NaCl) / mol\cdotkg^{' endash '1}'])
+    % xlabel(['[\itm\rm(' ele ') / mol\cdotkg^{' endash '1}]^{1/2}'])
+    xlabel(['\itm\rm(' ele ') / mol\cdotkg^{' endash '1}'])
     ylabel('d\phi/d\itX\rm / max(d\phi/d\itX\rm)')
+    text(0,1.08,'(b)', 'units','normalized', 'fontname','arial', ...
+        'color','k', 'fontsize',8)
 
     % Legend
-    legend('\beta_0','\beta_1','\itC\rm_0','\itC\rm_1', ...
+    legend('+\alpha_1',[endash '\alpha_1'],'+\omega',[endash '\omega'], ...
         'location','eastoutside')
 
     % Position
-    set(gca, 'position',[0.12 0.1 0.6 0.375])
+    set(gca, 'position',[0.12 0.1 0.6 0.35])
 
 % Print
-print('-r300','figures/bCderivs','-dpng')
+print('-r300',['figures/bCderivs_' ele],'-dpng')
