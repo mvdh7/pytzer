@@ -31,8 +31,8 @@ dC1 = dosm_dC1(mols,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega)
 # Find influence of alph1 and omega
 db1_an = dosm_db1(mols,zC,zA,T,b0,b1,b2,C0,C1,alph1 * 1.1,alph2,omega)
 db1_au = dosm_db1(mols,zC,zA,T,b0,b1,b2,C0,C1,alph1 * 0.9,alph2,omega)
-dC1_on = dosm_db1(mols,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega * 1.1)
-dC1_ou = dosm_db1(mols,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega * 0.9)
+dC1_on = dosm_dC1(mols,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega * 1.1)
+dC1_ou = dosm_dC1(mols,zC,zA,T,b0,b1,b2,C0,C1,alph1,alph2,omega * 0.9)
 
 savemat('pickles/bCderivs.mat',{'tot': tot,
                                 'osm': osm,
