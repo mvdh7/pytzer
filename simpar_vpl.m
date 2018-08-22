@@ -22,7 +22,7 @@ mksz = 10;
 for E = 2%:numel(eles)
 ele = eles{E};
 
-load(['pickles/simloop_vpl_bC_' ele '_10.mat'])
+load(['pickles/simloop_vpl_bC_' ele '_10000.mat'])
 
 % Define settings that depend upon electrolyte
 switch ele
