@@ -65,6 +65,28 @@ subplot(2,1,1); hold on
     
     % Position
     set(gca, 'position',[0.12 0.6 0.6 0.35])
+    
+    % Messing around
+%     fy = log(ftot+1)*0.1 + sqrt(ftot)*0.01;
+%     fy = (1 - exp(-ftot)) * 0.1 + sqrt(ftot)*0.05 + ftot*0.02;
+    
+    yfitt = fittype('log(m+1)*a + m^2*b + m*c + m^0.5*d + m^0.25*e', ...
+        'independent','m', 'coefficients',{'a' 'b' 'c' 'd' 'e'});
+    yopts = fitoptions(yfitt);
+    yopts.StartPoint = zeros(numel(coeffnames(yfitt)),1);
+    yfit = fit(ftot,osm-osm0,yfitt,yopts);
+    fy = feval(yfit,ftot);
+    
+    fcf = coeffvalues(yfit);
+        
+    plot(ftot,fy,'r--')
+    plot(ftot,log(ftot+1)*fcf(1),'r:')
+    plot(ftot,ftot.^2*fcf(2),'m:')
+    plot(ftot,ftot*fcf(3),'b:')
+    plot(ftot,ftot.^0.5*fcf(4),'c:')
+    plot(ftot,ftot.^0.25*fcf(5),'k:')
+    
+    disp(yfit)
 
 subplot(2,1,2); hold on
 
@@ -102,4 +124,4 @@ subplot(2,1,2); hold on
     set(gca, 'position',[0.12 0.1 0.6 0.35])
 
 % Print
-print('-r300',['figures/bCderivs_' ele],'-dpng')
+% print('-r300',['figures/bCderivs_' ele],'-dpng')
