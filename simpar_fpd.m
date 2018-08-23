@@ -13,7 +13,7 @@ fpdsrcs.all.srcs = unique(fpdbase.src);
 % Choose electrolyte to plot
 eles = {'CaCl2' 'KCl' 'NaCl'};
 
-for E = 1%:numel(eles)
+for E = 3%:numel(eles)
 ele = eles{E};
 
 % Define settings that depend upon electrolyte
@@ -220,7 +220,7 @@ subplot(2,2,4); hold on
         'units','normalized')
     
 % Save figure
-print('-r300',['figures/simpytz_fpd_' ele],'-dpng')
+% print('-r300',['figures/simpytz_fpd_' ele],'-dpng')
 
 end %for E
     
