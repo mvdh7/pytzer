@@ -1,5 +1,5 @@
 % Load fortest output
-load('pickles/fortest_CaCl2.mat')
+load('pickles/fortest_CaCl2_9.mat')
 
 % Move into table
 clear rc97

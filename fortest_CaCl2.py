@@ -6,50 +6,56 @@ from PitzCaCl2 import pitzcacl2
 import pickle
 from time import time
 from scipy.io import savemat
+from sys import argv
 #from scipy import optimize
+
+# Determine which set of coefficients to use - 9 or 10
+whichtab = argv[1]
 
 # Import RC97 Table 11
 rc97 = pd.read_excel('datasets/RC97 Table 11.xlsx')
 T   = pd2vs(rc97.temp)
 tot = pd2vs(rc97.tot)
 
-## Define Pitzer model coefficients (RC97 Table 9)
-#b0_1 = np.float_(-0.298649948)
-#b1_1 = np.float_( 2.17867147 )
-#C0_1 = np.float_( 0.022524497)
-#C1_1 = np.float_( 0.540824906)
-#b0_2 = np.float_(-1.01330402 )
-#b1_2 = np.float_( 7.27456368 )
-#C0_2 = np.float_( 0.064161134)
-#C1_2 = np.float_(-3.69567654 )
-#
-#D_MX3  = 0
-#D_MX4  = 0
-#D_MX5  = 0
-#D_NX3  = 0
-#D_NX4  = 0
-#D_NX5  = 0
-#D_MNX2 = 0
-#D_MNX3 = 0
+# Define Pitzer model coefficients (RC97 Table 9)
+if whichtab == '9':
+    b0_1 = np.float_(-0.298649948)
+    b1_1 = np.float_( 2.17867147 )
+    C0_1 = np.float_( 0.022524497)
+    C1_1 = np.float_( 0.540824906)
+    b0_2 = np.float_(-1.01330402 )
+    b1_2 = np.float_( 7.27456368 )
+    C0_2 = np.float_( 0.064161134)
+    C1_2 = np.float_(-3.69567654 )
+
+    D_MX3  = 0
+    D_MX4  = 0
+    D_MX5  = 0
+    D_NX3  = 0
+    D_NX4  = 0
+    D_NX5  = 0
+    D_MNX2 = 0
+    D_MNX3 = 0
 
 # Define Pitzer model coefficients (RC97 Table 10)
-b0_1 = np.float_(- 0.951245617)
-b1_1 = np.float_(  3.06698827 )
-C0_1 = np.float_(- 0.062276316)
-C1_1 = np.float_(  1.68840214 )
-b0_2 = np.float_(  0          )
-b1_2 = np.float_(-14.7306408  )
-C0_2 = np.float_(  0.059275582)
-C1_2 = np.float_( 21.2226853  )
+elif whichtab == '10':
+    b0_1 = np.float_(- 0.951245617)
+    b1_1 = np.float_(  3.06698827 )
+    C0_1 = np.float_(- 0.062276316)
+    C1_1 = np.float_(  1.68840214 )
+    b0_2 = np.float_(  0          )
+    b1_2 = np.float_(-14.7306408  )
+    C0_2 = np.float_(  0.059275582)
+    C1_2 = np.float_( 21.2226853  )
 
-D_MX3  = np.float_( 0.0303640612 )
-D_MX4  = np.float_(-0.0019593304 )
-D_MX5  = np.float_( 0.00004710087)
-D_NX3  = np.float_( 0            )
-D_NX4  = np.float_(-0.0001348980 )
-D_NX5  = np.float_( 0            )
-D_MNX2 = np.float_(-0.0105349140 )
-D_MNX3 = np.float_( 0            )
+    D_MX3  = np.float_( 0.0303640612 )
+    D_MX4  = np.float_(-0.0019593304 )
+    D_MX5  = np.float_( 0.00004710087)
+    D_NX3  = np.float_( 0            )
+    D_NX4  = np.float_(-0.0001348980 )
+    D_NX5  = np.float_( 0            )
+    D_MNX2 = np.float_(-0.0105349140 )
+    D_MNX3 = np.float_( 0            )
 
 # Solve speciation - Fortran
 F = {}
@@ -130,7 +136,7 @@ print('Fortran: ' + str(time()-Fgo))
 #print('Python : ' + str(time()-Fgo))
 
 # Save results
-with open('pickles/fortest_CaCl2.pkl','wb') as f:
+with open('pickles/fortest_CaCl2_' + whichtab + '.pkl','wb') as f:
     pickle.dump((rc97,F),f)
 
-savemat('pickles/fortest_CaCl2.mat',F)
+savemat('pickles/fortest_CaCl2_' + whichtab + '.mat',F)
