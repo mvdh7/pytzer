@@ -22,7 +22,7 @@ mksz = 10;
 for E = 2%:numel(eles)
 ele = eles{E};
 
-load(['pickles/simloop_vpl_bC_' ele '_10000.mat'])
+load(['pickles/simloop_vpl_bC_' ele '_10.mat'])
 
 % Define settings that depend upon electrolyte
 switch ele
@@ -47,6 +47,10 @@ printsetup(gcf,[14 10])
 % (a) Raw VPL measurements' residuals, only data at 298.15 K
 subplot(2,2,1); hold on
 
+% %%
+% figure(3); clf; hold on
+% printsetup(gcf,[18 9])
+% flegs = {};
     % Plot data by source
     for S = 1:numel(vplsrcs.(ele).srcs)
 
@@ -65,7 +69,9 @@ subplot(2,2,1); hold on
             Sx = linspace(min(vplbase.m(SL)),max(vplbase.m(SL)),100);
             Sy = vplerr_sys.(ele).(src)(1) ./ Sx ...
                 + vplerr_sys.(ele).(src)(2);
-            plot(Sx,Sy, 'color',[fclr.(src) 0.5])
+            nl = plot(Sx,Sy, 'color',[fclr.(src) 0.5], ...
+                'linewidth',1); nolegend(nl)
+%             flegs{end+1} = src;
         end %if
             
     end %for S
@@ -73,15 +79,16 @@ subplot(2,2,1); hold on
 %     plot(vplc.tot,-0.01 ./ (2 * vplc.tot .* vplc.aw),'k')
 %     plot(vplc.tot,0.01388 ./ vplc.tot,'k')
     
-    plot(tot, sqrt(Uosm_sim)*2,'k:')
-    plot(tot,-sqrt(Uosm_sim)*2,'k:')
+    plot(tot, sqrt(Uosm_sim)*2,'k:', 'linewidth',2)
+    plot(tot,-sqrt(Uosm_sim)*2,'k:', 'linewidth',2)
 
     xlim(fxl)
     ylim(fyl)
     
     plot(get(gca,'xlim'),[0 0],'k')
-    setaxes(gca,8)
-    set(gca, 'box','on', 'xtick',fxt, 'ytick',-1:0.01:1)
+    setaxes(gca,12)
+    set(gca, 'box','on', 'xtick',fxt, 'ytick',-1:0.005:1)
+    set(gca, 'yticklabel',num2str(get(gca,'ytick')','%.3f'))
     
     xlabel(['\itm\rm(' ele ') / mol\cdotkg^{-1}'])
     ylabel('\Delta(\phi_{25})')
@@ -89,6 +96,11 @@ subplot(2,2,1); hold on
         'fontname','arial', 'fontsize',8, 'color','k', ...
         'units','normalized')
 
+%     legend(flegs, 'location','eastoutside')
+%     print('-r300','figures/simpar_vpl_naclonly','-dpng')
+% 
+% %%
+    
 % (b) Raw VPL measurements' residuals, only data at 298.15 K
 subplot(2,2,2); hold on
 
