@@ -226,8 +226,8 @@ end %for E
     
 %%
 % Simulated datasets - NaCl
-load('pickles/simloop_test.mat');
-fpdtest = readtable('pickles/simloop_test.csv');
+load('pickles/simloop_fpd_test.mat');
+% fpdtest = readtable('pickles/simloop_test.csv');
 
 fvar = 'osm25';
 

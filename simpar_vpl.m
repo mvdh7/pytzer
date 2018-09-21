@@ -21,11 +21,8 @@ for S = 1:numel(vplsrcs.all.srcs)
 end %for S
 mksz = 10;
 
-
-for E = 2%:numel(eles)
+for E = 1%:numel(eles)
 ele = eles{E};
-
-load(['pickles/simloop_vpl_bC_' ele '_10.mat'])
 
 % Define settings that depend upon electrolyte
 switch ele
