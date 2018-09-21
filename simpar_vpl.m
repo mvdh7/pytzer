@@ -11,13 +11,16 @@ eles = {'KCl' 'NaCl'};
 
 % Define marker styles
 mrks = repmat({'o' 'v' '^' '<' '>' 'sq' 'd' 'p' 'h'},1,3);
+msms = repmat([ 1   1   1   1   1   1    1   3   1 ],1,3);
 clrs = repmat([228,26,28; 55,126,184; 77,175,74; 152,78,163; 255,127,0; 
     166,86,40; 247,129,191; 153,153,153] / 255,3,1);
 for S = 1:numel(vplsrcs.all.srcs)
     fmrk.(vplsrcs.all.srcs{S}) = mrks{S};
     fclr.(vplsrcs.all.srcs{S}) = clrs(S,:);
+    fmsm.(vplsrcs.all.srcs{S}) = msms(S);
 end %for S
 mksz = 10;
+
 
 for E = 2%:numel(eles)
 ele = eles{E};
@@ -42,134 +45,78 @@ vplsrcs.(ele).srcs = unique(vplbase.src(EL));
 
 % Begin figure
 figure(2); clf
-printsetup(gcf,[14 10])
+printsetup(gcf,[9 6])
+flegs = {};
 
-% (a) Raw VPL measurements' residuals, only data at 298.15 K
-subplot(2,2,1); hold on
+subplot(1,2,1); hold on
 
-% %%
-% figure(3); clf; hold on
-% printsetup(gcf,[18 9])
-% flegs = {};
     % Plot data by source
     for S = 1:numel(vplsrcs.(ele).srcs)
 
         src = vplsrcs.(ele).srcs{S};
         SL = EL & strcmp(vplbase.src,src);
         SL = SL & vplbase.t == 298.15;
-
-        scatter(vplbase.m(SL),vplbase.dosm25(SL), ...
-            mksz,fclr.(src),'filled', 'marker',fmrk.(src), ...
-            'markeredgecolor',fclr.(src), ...
-            'markerfacealpha',0.7, 'markeredgealpha',0.8)
         
-%         Sx = minmax(vplbase.m(SL)');
-%         Sy = Sx * vplerr_sys.(ele).(src)(2) + vplerr_sys.(ele).(src)(1);
+        scatter(vplbase.m(SL),vplbase.dosm25(SL), ...
+            mksz*fmsm.(src),fclr.(src),'filled', 'marker',fmrk.(src), ...
+            'markeredgecolor',fclr.(src), ...
+            'markerfacealpha',0.7, 'markeredgealpha',0)
+        
         if any(SL)
             Sx = linspace(min(vplbase.m(SL)),max(vplbase.m(SL)),100);
             Sy = vplerr_sys.(ele).(src)(1) ./ Sx ...
                 + vplerr_sys.(ele).(src)(2);
             nl = plot(Sx,Sy, 'color',[fclr.(src) 0.5], ...
-                'linewidth',1); nolegend(nl)
-%             flegs{end+1} = src;
+                'linewidth',0.5); nolegend(nl)
+            flegs{end+1} = src;
         end %if
             
     end %for S
     
-%     plot(vplc.tot,-0.01 ./ (2 * vplc.tot .* vplc.aw),'k')
-%     plot(vplc.tot,0.01388 ./ vplc.tot,'k')
-    
-    plot(tot, sqrt(Uosm_sim)*2,'k:', 'linewidth',2)
-    plot(tot,-sqrt(Uosm_sim)*2,'k:', 'linewidth',2)
-
     xlim(fxl)
     ylim(fyl)
     
     plot(get(gca,'xlim'),[0 0],'k')
-    setaxes(gca,12)
+    setaxes(gca,8)
     set(gca, 'box','on', 'xtick',fxt, 'ytick',-1:0.005:1)
-    set(gca, 'yticklabel',num2str(get(gca,'ytick')','%.3f'))
+    set(gca, 'yticklabel',num2str(get(gca,'ytick')'*1e3,'%.0f'))
     
     xlabel(['\itm\rm(' ele ') / mol\cdotkg^{-1}'])
-    ylabel('\Delta(\phi_{25})')
-    text(0,1.1,'(a) Measurements at 298.15 K', ...
-        'fontname','arial', 'fontsize',8, 'color','k', ...
-        'units','normalized')
-
-%     legend(flegs, 'location','eastoutside')
-%     print('-r300','figures/simpar_vpl_naclonly','-dpng')
-% 
-% %%
+    ylabel('\Delta\phi \times 10^{3}')
     
-% (b) Raw VPL measurements' residuals, only data at 298.15 K
-subplot(2,2,2); hold on
+    text(0,1.09,'(a)', 'units','normalized', 'fontname','arial', ...
+        'fontsize',8, 'color','k')
+    
+    spfig = gca;
 
-    % Plot data by source
-    for S = 1:numel(vplsrcs.(ele).srcs)
-
-        src = vplsrcs.(ele).srcs{S};
-        SL = EL & strcmp(vplbase.src,src);
-        SL = SL & vplbase.t ~= 298.15;
-
-        scatter(vplbase.m(SL),vplbase.dosm(SL), ...
-            mksz,fclr.(src),'filled', 'marker',fmrk.(src), ...
+subplot(1,2,2); hold on    
+    
+    setaxes(gca,8)
+    set(gca, 'xtick',[], 'ytick',[], 'box','on')
+    
+    for S = 1:numel(flegs)
+        
+        src = flegs{S};
+        
+        scatter(0.6,numel(flegs)-S, mksz*fmsm.(src)*1.5,fclr.(src), ...
+            'filled', 'marker',fmrk.(src), ...
             'markeredgecolor',fclr.(src), ...
-            'markerfacealpha',0.7, 'markeredgealpha',0.8)
+            'markerfacealpha',0.7, 'markeredgealpha',0)
+        
+        text(1.1,numel(flegs)-S,src, 'fontname','arial', 'fontsize',8, ...
+            'color','k')
         
     end %for S
     
-    xlim(fxl)
-    ylim(fyl)
+    xlim([0 5])
+    ylim([-0.75 numel(flegs)-0.25])
     
-    plot(get(gca,'xlim'),[0 0],'k')
-    setaxes(gca,8)
-    set(gca, 'box','on', 'xtick',fxt, 'ytick',-1:0.01:1)
-    
-    xlabel(['\itm\rm(' ele ') / mol\cdotkg^{-1}'])
-    ylabel('Converted \Delta(\phi_{25})')
-    text(0,1.1,'(b) Converted to 298.15 K', ...
-        'fontname','arial', 'fontsize',8, 'color','k', ...
-        'units','normalized')
-    
-% (d) After systematic error correction
-subplot(2,2,4); hold on
-    
-    % Plot data by source
-    for S = 1:numel(vplsrcs.(ele).srcs)
+    spleg = gca;
 
-        src = vplsrcs.(ele).srcs{S};
-        SL = EL & strcmp(vplbase.src,vplsrcs.(ele).srcs{S});
-        
-        scatter(vplbase.m(SL),abs(vplbase.dosm25_sys(SL)), ...
-            mksz,fclr.(src),'filled', 'marker',fmrk.(src), ...
-            'markeredgecolor',fclr.(src), ...
-            'markerfacealpha',0.7, 'markeredgealpha',0.8)
-        
-        Sx = linspace(min(vplbase.m(SL)),max(vplbase.m(SL)),100);
-        Sy = exp(-Sx) * vplerr_rdm.(ele).(src)(2) ...
-            + vplerr_rdm.(ele).(src)(1);
-        plot(Sx,Sy, 'color',[fclr.(src) 0.5])
-        
-    end %for S
-    
-    % Axis settings
-    setaxes(gca,8)
-    set(gca, 'box','on', 'xtick',fxt)%, 'yscale','log', ...
-%         'ytick',10.^(-10:10))
-    
-    xlim(fxl)
-    ylim([0 fyl(2)])
-    
-    xlabel(['\itm\rm(' ele ') / mol\cdotkg^{-1}'])
-    ylabel('|\sigma(\psi_{25})|')
-    text(0,1.1,'(d)', 'fontname','arial', 'fontsize',8, 'color','k', ...
-        'units','normalized')
-    
+% Positioning    
+spfig.Position = [0.15 0.18 0.6 0.71];
+spleg.Position = [0.8 0.31 0.18 0.45];
+
+print('-r300',['figures/simpar_vpl_' ele],'-dpng')
+
 end %for E
-
-subplot(2,2,3); hold on
-
-    plot(vplc.tot,0.0002 ./ (2 * vplc.tot .* vplc.aw))
-    plot(vplc.tot,0.002 * abs(log(vplc.aw) ./ (2 * vplc.tot.^2)))
-    
-    ylim([0 0.001])
