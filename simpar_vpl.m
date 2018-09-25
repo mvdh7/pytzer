@@ -21,7 +21,7 @@ for S = 1:numel(vplsrcs.all.srcs)
 end %for S
 mksz = 10;
 
-for E = 2%:numel(eles)
+for E = 1%:numel(eles)
 ele = eles{E};
 
 % Define settings that depend upon electrolyte
@@ -143,7 +143,6 @@ subplot(2,2,3); hold on
                 + vplerr_rdm.(ele).(src)(1);
             nl = plot(Sx,Sy, 'color',[fclr.(src) 0.5], ...
                 'linewidth',0.5); nolegend(nl)
-            flegs{end+1} = src;
         end %if
             
     end %for S
@@ -153,9 +152,7 @@ subplot(2,2,3); hold on
 % Positioning    
 spfig.Position = [0.15 0.58 0.6 0.35];
 spfg2.Position = [0.15 0.08 0.6 0.35];
-
 spleg.Position = [0.8 0.63 0.18 0.25];
-
 
 print('-r300',['figures/simpar_vpl_' ele],'-dpng')
 

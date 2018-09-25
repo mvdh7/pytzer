@@ -41,10 +41,10 @@ fpdsrcs.(ele).srcs = unique(fpdbase.src(EL));
 
 % Begin figure
 figure(2); clf
-printsetup(gcf,[9 6])
+printsetup(gcf,[9 12])
 flegs = {};
 
-subplot(1,2,1); hold on
+subplot(2,2,1); hold on
 
     % Plot data by source
     for S = 1:numel(fpdsrcs.(ele).srcs)
@@ -85,7 +85,7 @@ subplot(1,2,1); hold on
     
     spfig = gca;
 
-subplot(1,2,2); hold on
+subplot(2,2,2); hold on
     
     setaxes(gca,8)
     set(gca, 'xtick',[], 'ytick',[], 'box','on')
@@ -109,9 +109,49 @@ subplot(1,2,2); hold on
     
     spleg = gca;
 
+subplot(2,2,3); hold on
+
+    xlim(fxl)
+    ylim([0.999999999e-5 1])
+
+    setaxes(gca,8)
+    set(gca, 'box','on', 'xtick',fxt, 'ytick',10.^(-6:0))
+%     set(gca, 'yticklabel',num2str(get(gca,'ytick')','%.1f'))
+    set(gca, 'YScale','log')
+    
+    xlabel(['\itm\rm(' ele ') / mol\cdotkg^{-1}'])
+    ylabel(['|\Delta\phi ' endash ' \itm\rm \delta_{FPD}| \times 10^{3}'])
+    
+    text(0,1.09,'(b)', 'units','normalized', 'fontname','arial', ...
+        'fontsize',8, 'color','k')
+    
+    % Plot data by source
+    for S = 1:numel(fpdsrcs.(ele).srcs)
+
+        src = fpdsrcs.(ele).srcs{S};
+        SL = EL & strcmp(fpdbase.src,src);
+        
+        scatter(fpdbase.m(SL),abs(fpdbase.dfpd_sys(SL)), ...
+            mksz*fmsm.(src),fclr.(src),'filled', 'marker',fmrk.(src), ...
+            'markeredgecolor',fclr.(src), ...
+            'markerfacealpha',0.7, 'markeredgealpha',0)
+        
+        if any(SL)
+            Sx = linspace(min(fpdbase.m(SL)),max(fpdbase.m(SL)),100);
+            Sy = fpderr_rdm.(ele).(src)(2) .* Sx ...
+                + fpderr_rdm.(ele).(src)(1);
+            nl = plot(Sx,Sy, 'color',[fclr.(src) 0.5], ...
+                'linewidth',0.5); nolegend(nl)
+        end %if
+            
+    end %for S
+    
+    spfg2 = gca;
+    
 % Positioning    
-spfig.Position = [0.15 0.18 0.6 0.71];
-spleg.Position = [0.8 0.31 0.18 0.45];
+spfig.Position = [0.15 0.58 0.6 0.35];
+spfg2.Position = [0.15 0.08 0.6 0.35];
+spleg.Position = [0.8 0.63 0.18 0.25];
 
 print('-r300',['figures/simpar_fpd_' ele],'-dpng')
 
