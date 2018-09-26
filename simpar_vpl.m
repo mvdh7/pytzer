@@ -29,7 +29,7 @@ switch ele
     case 'KCl'
         fxl = [0 5];
         fxt = 0:5;
-        fyl = 0.030000001*[-1 1];
+        fyl = 0.080000001*[-1 1];
     case 'NaCl'
         fxl = [0 6.5];
         fxt = 0:6;
@@ -53,7 +53,7 @@ subplot(2,2,1); hold on
         src = vplsrcs.(ele).srcs{S};
         SL = EL & strcmp(vplbase.src,src);
         SL = SL & vplbase.t == 298.15;
-        
+               
         scatter(vplbase.m(SL),vplbase.dosm25(SL), ...
             mksz*fmsm.(src),fclr.(src),'filled', 'marker',fmrk.(src), ...
             'markeredgecolor',fclr.(src), ...
@@ -154,6 +154,6 @@ spfig.Position = [0.15 0.58 0.6 0.35];
 spfg2.Position = [0.15 0.08 0.6 0.35];
 spleg.Position = [0.8 0.63 0.18 0.25];
 
-print('-r300',['figures/simpar_vpl_' ele],'-dpng')
+% print('-r300',['figures/simpar_vpl_' ele],'-dpng')
 
 end %for E
