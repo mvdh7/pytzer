@@ -7,7 +7,7 @@ vplc = struct2table(load('pickles/vplcurve.mat'));
 % Plot raw VPL data
 
 % Choose electrolyte to plot
-eles = {'KCl' 'NaCl'};
+eles = {'KCl' 'NaCl' 'CaCl2'};
 
 % Define marker styles
 mrks = repmat({'o' 'v' '^' '<' '>' 'sq' 'd' 'p' 'h'},1,3);
@@ -21,7 +21,7 @@ for S = 1:numel(vplsrcs.all.srcs)
 end %for S
 mksz = 10;
 
-for E = 1%:numel(eles)
+for E = 3%:numel(eles)
 ele = eles{E};
 
 % Define settings that depend upon electrolyte
@@ -34,6 +34,10 @@ switch ele
         fxl = [0 6.5];
         fxt = 0:6;
         fyl = 0.015000000001*[-1 1.0000001];
+    case 'CaCl2'
+        fxl = [0 7.5];
+        fxt = 0:1.5:7.5;
+        fyl = 0.2*[-1 1];
 end %switch
 
 % Get logicals etc.
