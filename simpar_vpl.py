@@ -3,6 +3,7 @@ from autograd import numpy as np
 import pandas as pd
 from scipy import optimize
 from scipy.io import savemat
+from scipy.interpolate import pchip
 import pickle
 import pytzer as pz
 pd2vs = pz.misc.pd2vs
@@ -36,7 +37,7 @@ T       = T      [Tx]
 # Prepare model cdict
 cf = pz.cdicts.MPH
 eles = vplbase.ele
-cf.add_zeros(vplbase.ele)
+cf.add_zeros(eles)
 
 ## Calculate osmotic coefficient at measurement temperature
 #vplbase['osm_meas'] = -np.log(vplbase.aw) / (vplbase.nu * vplbase.m * Mw)
@@ -69,6 +70,16 @@ for ele in vple.index:
 
 # Calculate model osmotic coefficient at 298.15 K
 vplbase['osm25_calc'] = pz.model.osm(mols,ions,T25,cf)
+
+# Use PCHIP interpolation to get calculated osm25 for CaCl2
+with open('pickles/fortest_CaCl2_10.pkl','rb') as f:
+    rc97,F = pickle.load(f)
+pchip_CaCl2 = pchip(rc97.tot,rc97.osm)
+
+L = vplbase.ele == 'CaCl2'
+vplbase.loc[L,'osm25_calc'] = pchip_CaCl2(vplbase.m[L])
+
+# Calculate differences
 vplbase['dosm'  ] = vplbase.osm_meas   - vplbase.osm_calc
 vplbase['dosm25'] = vplbase.osm25_meas - vplbase.osm25_calc
 
