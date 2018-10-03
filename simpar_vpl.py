@@ -78,6 +78,8 @@ pchip_CaCl2 = pchip(rc97.tot,rc97.osm)
 
 L = vplbase.ele == 'CaCl2'
 vplbase.loc[L,'osm25_calc'] = pchip_CaCl2(vplbase.m[L])
+L = np.logical_and(L,vplbase.t == 298.15)
+vplbase.loc[L,'osm_calc'] = pchip_CaCl2(vplbase.m[L])
 
 # Calculate differences
 vplbase['dosm'  ] = vplbase.osm_meas   - vplbase.osm_calc
