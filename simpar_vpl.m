@@ -10,10 +10,10 @@ vplc = struct2table(load('pickles/vplcurve.mat'));
 eles = {'KCl' 'NaCl' 'CaCl2'};
 
 % Define marker styles
-mrks = repmat({'o' 'v' '^' '<' '>' 'sq' 'd' 'p' 'h'},1,3);
+mrks = repmat({'o' 'v' '^' '<' '>' 'sq' 'h' 'p' 'd'},1,3);
 msms = repmat([ 1   1   1   1   1   1    1   3   1 ],1,3);
 clrs = repmat([228,26,28; 55,126,184; 77,175,74; 152,78,163; 255,127,0; 
-    166,86,40; 247,129,191; 153,153,153] / 255,3,1);
+    166,86,40; 247,129,191; 153,153,153; 114 13 14] / 255,3,1);
 for S = 1:numel(vplsrcs.all.srcs)
     fmrk.(vplsrcs.all.srcs{S}) = mrks{S};
     fclr.(vplsrcs.all.srcs{S}) = clrs(S,:);
@@ -25,19 +25,26 @@ for E = 3%:numel(eles)
 ele = eles{E};
 
 % Define settings that depend upon electrolyte
+eletit = ele;
+fxtf = '%.1f';
 switch ele
     case 'KCl'
         fxl = [0 5];
         fxt = 0:5;
         fyl = 0.080000001*[-1 1];
+        fyti = 0.005;
     case 'NaCl'
         fxl = [0 6.5];
         fxt = 0:6;
         fyl = 0.015000000001*[-1 1.0000001];
+        fyti = 0.005;
     case 'CaCl2'
         fxl = [0 7.5];
         fxt = 0:1.5:7.5;
         fyl = 0.2*[-1 1];
+        fyti = 0.05;
+        eletit = 'CaCl_2';
+        fxtf = '%.1f';
 end %switch
 
 % Get logicals etc.
@@ -79,10 +86,11 @@ subplot(2,2,1); hold on
     
     plot(get(gca,'xlim'),[0 0],'k')
     setaxes(gca,8)
-    set(gca, 'box','on', 'xtick',fxt, 'ytick',-1:0.005:1)
+    set(gca, 'box','on', 'xtick',fxt, 'ytick',-1:fyti:1)
     set(gca, 'yticklabel',num2str(get(gca,'ytick')'*1e3,'%.0f'))
+    set(gca, 'xticklabel',num2str(get(gca,'xtick')',fxtf))
     
-    xlabel(['\itm\rm(' ele ') / mol\cdotkg^{-1}'])
+    xlabel(['\itm\rm(' eletit ') / mol\cdotkg^{-1}'])
     ylabel('\Delta\phi \times 10^{3}')
     
     text(0,1.09,'(a)', 'units','normalized', 'fontname','arial', ...
@@ -120,10 +128,11 @@ subplot(2,2,3); hold on
     ylim([0 max(fyl)])
 
     setaxes(gca,8)
-    set(gca, 'box','on', 'xtick',fxt, 'ytick',-1:0.005:1)
+    set(gca, 'box','on', 'xtick',fxt, 'ytick',-1:fyti:1)
     set(gca, 'yticklabel',num2str(get(gca,'ytick')'*1e3,'%.0f'))
+    set(gca, 'xticklabel',num2str(get(gca,'xtick')',fxtf))
     
-    xlabel(['\itm\rm(' ele ') / mol\cdotkg^{-1}'])
+    xlabel(['\itm\rm(' eletit ') / mol\cdotkg^{-1}'])
     ylabel(['|\Delta\phi ' endash ' \delta_{VPL}/\itm\rm| \times 10^{3}'])
     
     text(0,1.09,'(b)', 'units','normalized', 'fontname','arial', ...
@@ -158,6 +167,6 @@ spfig.Position = [0.15 0.58 0.6 0.35];
 spfg2.Position = [0.15 0.08 0.6 0.35];
 spleg.Position = [0.8 0.63 0.18 0.25];
 
-% print('-r300',['figures/simpar_vpl_' ele],'-dpng')
+print('-r300',['figures/simpar_vpl_' ele],'-dpng')
 
 end %for E
