@@ -3,10 +3,10 @@ load('pickles/simpar_fpd.mat');
 fpdbase = readtable('pickles/simpar_fpd.csv');
 fpdsrcs.all.srcs = unique(fpdbase.src);
 
-%% Plot raw FPD data
+% Plot raw FPD data
 
 % Choose electrolyte to plot
-eles = {'KCl' 'NaCl'};
+eles = {'KCl' 'NaCl' 'CaCl2'};
 
 % Define marker styles
 mrks = repmat({'o' 'v' '^' '<' '>' 'sq' 'd' 'p' 'h'},1,3);
@@ -20,10 +20,11 @@ for S = 1:numel(fpdsrcs.all.srcs)
 end %for S
 mksz = 10;
 
-for E = 2%:numel(eles)
+for E = 3%:numel(eles)
 ele = eles{E};
 
 % Define settings that depend upon electrolyte
+eletit = 'ele';
 switch ele
     case 'KCl'
         fxl = [0 5];
@@ -33,6 +34,11 @@ switch ele
         fxl = [0 6.5];
         fxt = 0:6;
         fyl = 0.3*[-1 1.0000001];
+    case 'CaCl2'
+        fxl = [0 7.5];
+        fxt = 0:6;
+        fyl = 6*[-1 1.0000001];
+        eletit = 'CaCl_2';
 end %switch
 
 % Get logicals etc.
@@ -77,7 +83,7 @@ subplot(2,2,1); hold on
     set(gca, 'box','on', 'xtick',fxt, 'ytick',-1:0.1:1)
     set(gca, 'yticklabel',num2str(get(gca,'ytick')','%.1f'))
     
-    xlabel(['\itm\rm(' ele ') / mol\cdotkg^{-1}'])
+    xlabel(['\itm\rm(' eletit ') / mol\cdotkg^{-1}'])
     ylabel('\Delta\itd\rm / K')
     
     text(0,1.09,'(a)', 'units','normalized', 'fontname','arial', ...
@@ -119,7 +125,7 @@ subplot(2,2,3); hold on
 %     set(gca, 'yticklabel',num2str(get(gca,'ytick')','%.1f'))
     set(gca, 'YScale','log')
     
-    xlabel(['\itm\rm(' ele ') / mol\cdotkg^{-1}'])
+    xlabel(['\itm\rm(' eletit ') / mol\cdotkg^{-1}'])
     ylabel(['|\Delta\phi ' endash ' \itm\rm \delta_{FPD}| \times 10^{3}'])
     
     text(0,1.09,'(b)', 'units','normalized', 'fontname','arial', ...
