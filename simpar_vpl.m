@@ -167,6 +167,24 @@ spfig.Position = [0.15 0.58 0.6 0.35];
 spfg2.Position = [0.15 0.08 0.6 0.35];
 spleg.Position = [0.8 0.63 0.18 0.25];
 
-print('-r300',['figures/simpar_vpl_' ele],'-dpng')
+% print('-r300',['figures/simpar_vpl_' ele],'-dpng')
 
 end %for E
+
+%% Make table
+TVPL = cell(numel(vplerr_rdm.(ele).all_int),8);
+
+TVPL(:,1) = {ele};
+TVPL(:,2) = vplsrcs.(ele).srcs;
+
+for S = 1:numel(vplsrcs.(ele).srcs)
+    src = vplsrcs.(ele).srcs{S};
+    SL = strcmp(vplbase.ele,ele) & strcmp(vplbase.src,src) ...
+        & vplbase.t == 298.15;
+    TVPL{S,3} = num2str(sum(SL));
+    TVPL{S,4} = num2str(min(vplbase.m(SL)),'%.3f');
+    TVPL{S,5} = num2str(max(vplbase.m(SL)),'%.3f');
+    TVPL{S,6} = num2str(vplerr_sys.(ele).(src)(1)*1e3,'%+.3f');
+    TVPL{S,7} = num2str(vplerr_rdm.(ele).(src)(1)*1e3,'%+.3f');
+    TVPL{S,8} = num2str(vplerr_rdm.(ele).(src)(2),'%+.3f');
+end %for S
