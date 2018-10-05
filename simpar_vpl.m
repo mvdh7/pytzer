@@ -21,7 +21,7 @@ for S = 1:numel(vplsrcs.all.srcs)
 end %for S
 mksz = 10;
 
-for E = 3%:numel(eles)
+for E = 1:numel(eles)
 ele = eles{E};
 
 % Define settings that depend upon electrolyte
@@ -172,6 +172,8 @@ spleg.Position = [0.8 0.63 0.18 0.25];
 end %for E
 
 %% Make table
+ele = 'KCl';
+
 TVPL = cell(numel(vplerr_rdm.(ele).all_int),8);
 
 TVPL(:,1) = {ele};
@@ -188,3 +190,22 @@ for S = 1:numel(vplsrcs.(ele).srcs)
     TVPL{S,7} = num2str(vplerr_rdm.(ele).(src)(1)*1e3,'%+.3f');
     TVPL{S,8} = num2str(vplerr_rdm.(ele).(src)(2),'%+.3f');
 end %for S
+
+%% Histograms
+figure(3); clf
+
+all_sys = [vplerr_sys.CaCl2.all_int ...
+           vplerr_sys.KCl.all_int ...
+           vplerr_sys.NaCl.all_int]';
+
+all_rdm_int = [vplerr_rdm.CaCl2.all_int ...
+               vplerr_rdm.KCl.all_int ...
+               vplerr_rdm.NaCl.all_int]';
+       
+all_rdm_grad = [vplerr_rdm.CaCl2.all_grad ...
+               vplerr_rdm.KCl.all_grad ...
+               vplerr_rdm.NaCl.all_grad]';
+           
+% histogram(all_rdm_grad)%,-0.048:0.012:0.048)
+
+scatter(all_rdm_int,abs(all_sys))
