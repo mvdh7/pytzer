@@ -3,10 +3,10 @@ from autograd import elementwise_grad as egrad
 import pytzer as pz
 
 # Define test conditions
-tot  = np.float_([[3]])
+tot  = np.float_([[5]])
 T    = np.float_(298.15)
 vp0  = pz.misc.vp_H2O(T)
-vpX  = vp0 * 0.9
+vpX  = vp0 * 0.5
 
 # Set up osmotic coefficient function and its derivatives
 def fx_osm(tot,T,vpX):
