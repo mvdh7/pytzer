@@ -192,7 +192,7 @@ for S = 1:numel(vplsrcs.(ele).srcs)
 end %for S
 
 %% Histograms
-figure(4); clf
+figure(4); clf; hold on
 
 all_sys = [vplerr_sys.CaCl2.all_int ...
            vplerr_sys.KCl.all_int ...
@@ -206,7 +206,14 @@ all_rdm_grad = [vplerr_rdm.CaCl2.all_grad ...
                vplerr_rdm.KCl.all_grad ...
                vplerr_rdm.NaCl.all_grad]';
            
-% histogram(all_rdm_grad)%,-0.048:0.012:0.048)
+histogram(all_sys,-0.044:0.011:0.044)
 
-scatter(all_rdm_int,abs(all_sys))
-xlim([0 0.01])
+fx = -0.05:0.0001:0.05;
+fy = normpdf(fx,0,sqrt(mean(all_sys.^2)))/numel(all_sys);
+
+plot(fx,fy)
+
+% scatter(all_rdm_int,abs(all_sys))
+% xlim([0 0.01])
+
+
