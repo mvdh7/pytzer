@@ -32,7 +32,7 @@ vplbase,mols,ions,T = pz.data.subset_ele(vplbase,mols,ions,T,
 
 # Exclude datasets with T > 373.15 (i.e. my D-H functions are out of range)
 Tx = vplbase.t <= 373.15
-# Also, take only data at 298.15 K
+# Also, take only data at 298.15 K (making previous step somewhat redundant)
 Tx = np.logical_and(Tx,vplbase.t == 298.15)
 vplbase = vplbase[Tx]
 mols    = mols   [Tx]
@@ -90,17 +90,18 @@ osm_calc = pd2vs(vplbase.osm_calc)
 # Define weights for fitting
 #weights = np.ones(np.size(T1)) # uniform
 #weights = np.sqrt(tot) # sqrt of molality
-# ... based on random errors in each dataset:
-weights = np.full_like(tot,1, dtype='float64')
-for src in np.unique(srcs):
-    SL = srcs == src
-#    weights[SL] = 1 / np.sqrt(np.sum(vplerr_rdm[Uele][src]**2))
-    Smax = np.max(tot[SL])
-    Smin = np.min(tot[SL])
-    weights[SL] = (vplerr_rdm[Uele][src][0] * (Smax - Smin) \
-        - vplerr_rdm[Uele][src][1] * (np.exp(-Smax) - np.exp(-Smin))) \
-           / (Smax - Smin)
-weights = 1 / weights
+## ... based on random errors in each dataset:
+#weights = np.full_like(tot,1, dtype='float64')
+#for src in np.unique(srcs):
+#    SL = srcs == src
+##    weights[SL] = 1 / np.sqrt(np.sum(vplerr_rdm[Uele][src]**2))
+#    Smax = np.max(tot[SL])
+#    Smin = np.min(tot[SL])
+#    weights[SL] = (vplerr_rdm[Uele][src][0] * (Smax - Smin) \
+#        - vplerr_rdm[Uele][src][1] * (np.exp(-Smax) - np.exp(-Smin))) \
+#           / (Smax - Smin)
+#weights = 1 / weights
+weights = 1 / tot
 
 # Do the fit to the original dataset
 b0dir,b1dir,b2dir,C0dir,C1dir,bCdir_cv,mseo \
