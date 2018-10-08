@@ -52,7 +52,7 @@ EL = strcmp(vplbase.ele,ele);
 vplsrcs.(ele).srcs = unique(vplbase.src(EL));
 
 % Begin figure
-figure(2); clf
+figure(E); clf
 printsetup(gcf,[9 12])
 flegs = {};
 
@@ -192,7 +192,7 @@ for S = 1:numel(vplsrcs.(ele).srcs)
 end %for S
 
 %% Histograms
-figure(3); clf
+figure(4); clf
 
 all_sys = [vplerr_sys.CaCl2.all_int ...
            vplerr_sys.KCl.all_int ...
@@ -209,3 +209,4 @@ all_rdm_grad = [vplerr_rdm.CaCl2.all_grad ...
 % histogram(all_rdm_grad)%,-0.048:0.012:0.048)
 
 scatter(all_rdm_int,abs(all_sys))
+xlim([0 0.01])
