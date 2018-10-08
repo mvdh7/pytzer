@@ -20,7 +20,7 @@ for S = 1:numel(fpdsrcs.all.srcs)
 end %for S
 mksz = 10;
 
-for E = 3%:numel(eles)
+for E = 1%:numel(eles)
 ele = eles{E};
 
 % Define settings that depend upon electrolyte
