@@ -13,7 +13,7 @@ isobase,mols0,mols1,ions0,ions1,T = pz.data.get_isopair(isobase,isopair)
 
 # Calculate reference model stuff
 cf = pz.cdicts.MPH
-cf.bC['K-Cl'] = pz.coeffs.bC_K_Cl_A99
+cf.bC['K-Cl'] = pz.coeffs.bC_K_Cl_A99 # works much better than ZD17...!
 
 isobase['osm_ref_' + isopair[0]] = pz.model.osm(mols0,ions0,T,cf)
 isobase['osm_ref_' + isopair[1]] = pz.model.osm(mols1,ions1,T,cf)
