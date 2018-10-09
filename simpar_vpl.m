@@ -21,7 +21,7 @@ for S = 1:numel(vplsrcs.all.srcs)
 end %for S
 mksz = 10;
 
-for E = 1:numel(eles)
+for E = 3%1:numel(eles)
 ele = eles{E};
 
 % Define settings that depend upon electrolyte
@@ -32,12 +32,16 @@ switch ele
         fxl = [0 5];
         fxt = 0:5;
         fyl = 0.080000001*[-1 1];
-        fyti = 0.005;
+        fyti = 0.02;
+        fyl2 = [0 0.03];
+        fyti2 = 0.01;
     case 'NaCl'
         fxl = [0 6.5];
         fxt = 0:6;
         fyl = 0.015000000001*[-1 1.0000001];
         fyti = 0.005;
+        fyl2 = [0 0.012];
+        fyti2 = 0.003;
     case 'CaCl2'
         fxl = [0 7.5];
         fxt = 0:1.5:7.5;
@@ -45,6 +49,8 @@ switch ele
         fyti = 0.05;
         eletit = 'CaCl_2';
         fxtf = '%.1f';
+        fyl2 = [0 0.2];
+        fyti2 = 0.05;
 end %switch
 
 % Get logicals etc.
@@ -125,10 +131,10 @@ subplot(2,2,2); hold on
 subplot(2,2,3); hold on
 
     xlim(fxl)
-    ylim([0 max(fyl)])
+    ylim(fyl2)
 
     setaxes(gca,8)
-    set(gca, 'box','on', 'xtick',fxt, 'ytick',-1:fyti:1)
+    set(gca, 'box','on', 'xtick',fxt, 'ytick',0:fyti2:1)
     set(gca, 'yticklabel',num2str(get(gca,'ytick')'*1e3,'%.0f'))
     set(gca, 'xticklabel',num2str(get(gca,'xtick')',fxtf))
     
@@ -167,7 +173,7 @@ spfig.Position = [0.15 0.58 0.6 0.35];
 spfg2.Position = [0.15 0.08 0.6 0.35];
 spleg.Position = [0.8 0.63 0.18 0.25];
 
-% print('-r300',['figures/simpar_vpl_' ele],'-dpng')
+print('-r300',['figures/simpar_vpl_' ele],'-dpng')
 
 end %for E
 
