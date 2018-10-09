@@ -50,7 +50,7 @@ vplbase['dosm'] = vplbase.osm_meas - vplbase.osm_calc
 # Load outputs from simpytz_vpl.py
 with open('pickles/simpar_vpl.pkl','rb') as f:
     _,vplerr_rdm,vplerr_sys = pickle.load(f)
-    
+
 #%% Simulate new datasets
 sele = 'NaCl'
 Ureps = int(20)
@@ -60,21 +60,6 @@ alph1 = np.float_(2)
 alph2 = -9
 omega = np.float_(2.5)
 
-# Define weights for fitting
-#weights = np.ones(np.size(T1)) # uniform
-#weights = np.sqrt(tot) # sqrt of molality
-# ... based on random errors in each dataset:
-weights = np.full_like(tot,1, dtype='float64')
-for src in np.unique(srcs):
-    SL = srcs == src
-#    weights[SL] = 1 / np.sqrt(np.sum(vplerr_rdm[sele][src]**2))
-    Smax = np.max(tot[SL])
-    Smin = np.min(tot[SL])
-    weights[SL] = (vplerr_rdm[sele][src][0] * (Smax - Smin) \
-        - vplerr_rdm[sele][src][1] * (np.exp(-Smax) - np.exp(-Smin))) \
-           / (Smax - Smin)
-weights = 1 / weights
-
 def Eopt(rseed=None):
 
     # Seed random numbers
@@ -82,7 +67,25 @@ def Eopt(rseed=None):
 
     # Simulate new VPL dataset
     Uosm = pz.sim.vpl(tot,pd2vs(vplbase.osm_calc),
-                        srcs,sele,vplerr_rdm,vplerr_sys)
+                      srcs,sele,vplerr_rdm,vplerr_sys)
+
+    # Define weights for fitting
+    #weights = np.ones(np.size(T1)) # uniform
+    #weights = np.sqrt(tot) # sqrt of molality
+    # ... based on random errors in each dataset:
+    weights = np.full_like(tot,1, dtype='float64')
+    for src in np.unique(srcs):
+        SL = srcs == src
+        weights[SL] = pz.misc.rms((Uosm - pd2vs(vplbase.osm_calc))[SL])
+    #    weights[SL] = 1 / np.sqrt(np.sum(vplerr_rdm[sele][src]**2))
+    #    Smax = np.max(tot[SL])
+    #    Smin = np.min(tot[SL])
+    #    weights[SL] = (vplerr_rdm[sele][src][0] * (Smax - Smin) \
+    #        - vplerr_rdm[sele][src][1] * (np.exp(-Smax) - np.exp(-Smin))) \
+    #           / (Smax - Smin)
+    weights = weights * tot
+    weights = 1 / weights
+    print(np.unique(weights))
 
     # Solve for Pitzer model coefficients
     b0,b1,_,C0,C1,_,_ \
@@ -105,7 +108,7 @@ T1_fitted    = np.full_like(tot_fitted,298.15, dtype='float64')
 
 for U in range(Ureps):
     print(U+1)
-    Uosm_sim,Ub0,Ub1,UC0,UC1 = Eopt()
+    Uosm_sim,Ub0,Ub1,UC0,UC1 = Eopt(U)
     osm_sim[:,U] = Uosm_sim.ravel()
     b0[U] = Ub0
     b1[U] = Ub1
@@ -114,9 +117,9 @@ for U in range(Ureps):
     osm_fitted[:,U] = pz.fitting.osm(mols_fitted,zC,zA,
                                      T1_fitted,b0[U],b1[U],0,C0[U],C1[U],
                                      alph1,-9,omega).ravel()
-    
+
 osm_fitted_calc = pz.model.osm(mols_fitted,ions,T1_fitted,cf)
-    
+
 # Save results for MATLAB
 vplbase.to_csv('pickles/simloop_vpl_test.csv')
 savemat('pickles/simloop_vpl_test.mat',
