@@ -207,13 +207,15 @@ all_rdm_grad = [vplerr_rdm.CaCl2.all_grad ...
                vplerr_rdm.KCl.all_grad ...
                vplerr_rdm.NaCl.all_grad]';
            
-histogram(all_sys,-0.044:0.011:0.044, 'facecolor',0.3*[1 1 1])
+L = all_sys ~= 0;           
+           
+histogram(all_sys(L),-0.044:0.011:0.044, 'facecolor',0.3*[1 1 1])
 
 xlim(0.04*[-1 1])
-ylim([0 5])
+ylim([0 4])
 
 fx = -0.044:0.0001:0.044;
-fy = normpdf(fx,0,sqrt(mean(all_sys.^2))) / numel(all_sys);
+fy = normpdf(fx,0,sqrt(mean(all_sys(L).^2))) / numel(all_sys(L));
 
 plot(fx,fy,'k', 'linewidth',1)
 
@@ -221,7 +223,7 @@ plot(fx,fy,'k', 'linewidth',1)
 % xlim([0 0.01])
 
 clc
-disp(['VPL sys RMS: ' num2str(sqrt(mean(all_sys.^2)))])
+disp(['VPL sys RMS: ' num2str(sqrt(mean(all_sys(L).^2)))])
 
 xlabel('\delta_{VPL}')
 ylabel('Number of datasets')
