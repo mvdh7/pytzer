@@ -231,5 +231,9 @@ set(gca, 'box','on', 'ytick',0:5, 'xtick',-0.04:0.01:0.044)
 
 print('-r300','figures/simpar_vpl_hist','-dpng')
 
-%%
-figure(5)
+%% random components - not really worth showing!
+figure(5); clf
+
+L = all_rdm_grad > 0 | all_rdm_int > 0;
+
+scatter(all_rdm_grad(L),all_rdm_int(L))
