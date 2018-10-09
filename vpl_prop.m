@@ -17,7 +17,7 @@ set(gca, 'box','on', 'xtick',0:6, 'ytick',-.4:.2:.4)
 set(gca, 'yticklabel',num2str(get(gca,'ytick')','%.1f'))
 
 xlabel(['\itm\rm(NaCl) / mol\cdotkg^{' endash '1}'])
-ylabel('d\phi/d\itX\rm')
+ylabel('\partial\phi/\partial\itX\rm')
 
 legend('\itT\rm','\itm\rm','\itp\rm', 'location','ne')
 
