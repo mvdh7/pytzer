@@ -135,6 +135,47 @@ def vpl(datapath):
 
     return vplbase, mols, ions, T
 
+##### ISOPIESTIC EQUILIBRIUM ##################################################
+
+def iso(datapath):
+    
+    isobase = pd.read_excel(datapath+'iso.xlsx', sheet_name='Measurements',
+                        header=0, skiprows=2, usecols=41)
+    
+    return isobase
+
+
+def get_isopair(isobase,isopair):
+    
+    C = ['t','t_unc','t_scale','reps','src','via',isopair[0],isopair[1]]
+    
+    L = np.logical_and(np.logical_not(np.isnan(isobase[isopair[0]])),
+                       np.logical_not(np.isnan(isobase[isopair[1]])))
+    
+    isobase = isobase.loc[L,C]
+    
+    T = pd2vs(isobase.t)
+    
+    # Get first electrolyte info    
+    _,_,_,nC0,nA0 = znu([isopair[0]])
+    
+    mols0 = np.concatenate((pd2vs(isobase[isopair[0]]) * nC0,
+                            pd2vs(isobase[isopair[0]]) * nA0),
+                           axis=1)
+    
+    ions0 = ele2ions([isopair[0]])[0]
+    
+    # Get second electrolyte info    
+    _,_,_,nC1,nA1 = znu([isopair[1]])
+    
+    mols1 = np.concatenate((pd2vs(isobase[isopair[1]]) * nC1,
+                            pd2vs(isobase[isopair[1]]) * nA1),
+                           axis=1)
+    
+    ions1 = ele2ions([isopair[1]])[0]
+    
+    return isobase, mols0, mols1, ions0, ions1, T
+
 ##### ELECTROMOTIVE FORCE #####################################################
 
 def emf(datapath):
