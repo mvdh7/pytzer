@@ -21,8 +21,10 @@ for S = 1:numel(vplsrcs.all.srcs)
 end %for S
 mksz = 10;
 
-for E = 3%1:numel(eles)
+for E = 1%1:numel(eles)
 ele = eles{E};
+
+load(['pickles/simloop_vpl_bC_' ele '_100.mat']);
 
 % Define settings that depend upon electrolyte
 eletit = ele;
@@ -38,7 +40,7 @@ switch ele
     case 'NaCl'
         fxl = [0 6.5];
         fxt = 0:6;
-        fyl = 0.015000000001*[-1 1.0000001];
+        fyl = 0.02000000001*[-1 1.0000001];
         fyti = 0.005;
         fyl2 = [0 0.012];
         fyti2 = 0.003;
@@ -63,6 +65,9 @@ printsetup(gcf,[9 12])
 flegs = {};
 
 subplot(2,2,1); hold on
+
+patch([tot; flipud(tot)],[sqrt(Uosm_sim); flipud(-sqrt(Uosm_sim))], ...
+    'y', 'edgecolor','none', 'facealpha',0.5)
 
     % Plot data by source
     for S = 1:numel(vplsrcs.(ele).srcs)
