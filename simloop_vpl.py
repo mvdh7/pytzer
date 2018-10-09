@@ -60,7 +60,8 @@ _,zC,zA,nC,nA = pz.data.znu(vple.index)
 
 # Identify which coefficients to fit
 wbC = {'NaCl' : 'b0b1C0C1',
-       'KCl'  : 'b0b1C0C1'}
+       'KCl'  : 'b0b1C0C1',
+       'CaCl2': 'b0b1C0C1'}
 which_bCs = wbC[Uele]
 
 vplbase['t25'] = 298.15
@@ -78,7 +79,8 @@ vplbase['osm_meas'] = pz.model.aw2osm(mols,pd2vs(vplbase.aw))
 vplbase['osm25_meas'] = pz.tconv.osm2osm(tot,nCvec,nAvec,Eions,
                                          T,T1,T1,cf,pd2vs(vplbase.osm_meas))
 vplbase['osm25_calc'] = pz.model.osm(mols,ions,T1,cf)
-    
+vplbase['dosm25'] = vplbase.osm25_meas - vplbase.osm25_calc
+
 #%% Simulate new datasets
 
 # Set up for fitting
@@ -87,26 +89,37 @@ alph2 = -9
 omega = np.float_(2.5)
 osm_calc = pd2vs(vplbase.osm_calc)
 
-# Define weights for fitting
-#weights = np.ones(np.size(T1)) # uniform
-#weights = np.sqrt(tot) # sqrt of molality
+## Define weights for fitting
+##weights = np.ones(np.size(T1)) # uniform
+##weights = np.sqrt(tot) # sqrt of molality
 ## ... based on random errors in each dataset:
 #weights = np.full_like(tot,1, dtype='float64')
 #for src in np.unique(srcs):
 #    SL = srcs == src
-##    weights[SL] = 1 / np.sqrt(np.sum(vplerr_rdm[Uele][src]**2))
-#    Smax = np.max(tot[SL])
-#    Smin = np.min(tot[SL])
-#    weights[SL] = (vplerr_rdm[Uele][src][0] * (Smax - Smin) \
-#        - vplerr_rdm[Uele][src][1] * (np.exp(-Smax) - np.exp(-Smin))) \
-#           / (Smax - Smin)
+#    weights[SL] = 1 / np.sqrt(np.mean(vplbase.dosm25**2))
+##    Smax = np.max(tot[SL])
+##    Smin = np.min(tot[SL])
+##    weights[SL] = (vplerr_rdm[Uele][src][0] * (Smax - Smin) \
+##        - vplerr_rdm[Uele][src][1] * (np.exp(-Smax) - np.exp(-Smin))) \
+##           / (Smax - Smin)
 #weights = 1 / weights
-weights = 1 / tot
+
+# Define weights for fitting
+#weights = np.ones(np.size(T1)) # uniform
+#weights = np.sqrt(tot) # sqrt of molality
+# ... based on random errors in each dataset:
+weights_dir = np.full_like(tot,1, dtype='float64')
+for src in np.unique(srcs):
+    SL = srcs == src
+    weights_dir[SL] = pz.misc.rms((pd2vs(vplbase.osm_meas) \
+                                 - pd2vs(vplbase.osm_calc))[SL])
+weights_dir = weights_dir * np.sqrt(tot)
+weights_dir = 1 / weights_dir
 
 # Do the fit to the original dataset
 b0dir,b1dir,b2dir,C0dir,C1dir,bCdir_cv,mseo \
     = pz.fitting.bC(mols,zC,zA,T1,alph1,alph2,omega,nC,nA,
-                    pd2vs(vplbase.osm_meas),weights,which_bCs,'osm')
+                    pd2vs(vplbase.osm_meas),weights_dir,which_bCs,'osm')
 bCdir = np.hstack((b0dir,b1dir,b2dir,C0dir,C1dir))
 
 ## Check understanding of MSE calculation
@@ -124,7 +137,20 @@ def Eopt(rseed=None):
     # Simulate new VPL dataset
     Uosm = pz.sim.vpl(tot,pd2vs(vplbase.osm_calc),
                       srcs,Uele,vplerr_rdm,vplerr_sys)
-    
+
+    # Define weights for fitting
+    #weights = np.ones(np.size(T1)) # uniform
+    #weights = np.sqrt(tot) # sqrt of molality
+    # ... based on random errors in each dataset:
+    weights = np.full_like(tot,1, dtype='float64')
+    for src in np.unique(srcs):
+        SL = srcs == src
+        weights[SL] = pz.misc.rms((Uosm - pd2vs(vplbase.osm_calc))[SL]) \
+                    / np.sum(SL)
+    weights = np.sqrt(tot) * weights
+    weights = np.full_like(weights,1.)#1 / weights
+    #weights = 1 / tot
+
     # Solve for Pitzer model coefficients
     b0,b1,b2,C0,C1,_,_ \
         = pz.fitting.bC(mols,zC,zA,T,alph1,alph2,omega,nC,nA,Uosm,
@@ -134,9 +160,9 @@ def Eopt(rseed=None):
 
 #%% Multiprocessing loop
 if __name__ == '__main__':
-    
+
     print('multiprocessing %s...' % Uele, end='\r')
-    
+
     # Set initial random seed (for reproducibility)
     np.random.seed(295)
 
@@ -170,15 +196,18 @@ if __name__ == '__main__':
     tot   = sqtot**2
     mols  = np.concatenate((tot,tot),axis=1)
     T     = np.full_like(tot,298.15)
-    
+
     # Get example propagation splines
     acfMX_sim, UacfMX_sim = pz.fitting.ppg_acfMX(mols,zC,zA,T,bCsim,bCsim_cv,
                                                  alph1,alph2,omega,nC,nA)
-    
+
     acfMX_dir, UacfMX_dir = pz.fitting.ppg_acfMX(mols,zC,zA,T,bCdir,bCdir_cv,
                                                  alph1,alph2,omega,nC,nA)
-    
+
     osm_sim, Uosm_sim = pz.fitting.ppg_osm(mols,zC,zA,T,bCsim,bCsim_cv,
+                                           alph1,alph2,omega)
+
+    osm_dir, Uosm_dir = pz.fitting.ppg_osm(mols,zC,zA,T,bCdir,bCdir_cv,
                                            alph1,alph2,omega)
 
     # Pickle/save results...
@@ -199,4 +228,6 @@ if __name__ == '__main__':
                              'UacfMX_sim': UacfMX_sim,
                              'UacfMX_dir': UacfMX_dir,
                              'osm_sim'   : osm_sim   ,
-                             'Uosm_sim'  : Uosm_sim  })
+                             'Uosm_sim'  : Uosm_sim  ,
+                             'osm_dir'   : osm_dir   ,
+                             'Uosm_dir'  : Uosm_dir  })
