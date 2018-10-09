@@ -193,6 +193,7 @@ end %for S
 
 %% Histograms
 figure(4); clf; hold on
+printsetup(gcf,[9 6])
 
 all_sys = [vplerr_sys.CaCl2.all_int ...
            vplerr_sys.KCl.all_int ...
@@ -206,14 +207,29 @@ all_rdm_grad = [vplerr_rdm.CaCl2.all_grad ...
                vplerr_rdm.KCl.all_grad ...
                vplerr_rdm.NaCl.all_grad]';
            
-histogram(all_sys,-0.044:0.011:0.044)
+histogram(all_sys,-0.044:0.011:0.044, 'facecolor',0.3*[1 1 1])
 
-fx = -0.05:0.0001:0.05;
-fy = normpdf(fx,0,sqrt(mean(all_sys.^2)))/numel(all_sys);
+xlim(0.04*[-1 1])
+ylim([0 5])
 
-plot(fx,fy)
+fx = -0.044:0.0001:0.044;
+fy = normpdf(fx,0,sqrt(mean(all_sys.^2))) / numel(all_sys);
+
+plot(fx,fy,'k', 'linewidth',1)
 
 % scatter(all_rdm_int,abs(all_sys))
 % xlim([0 0.01])
 
+clc
+disp(['VPL sys RMS: ' num2str(sqrt(mean(all_sys.^2)))])
 
+xlabel('\delta_{VPL}')
+ylabel('Number of datasets')
+
+setaxes(gca,8)
+set(gca, 'box','on', 'ytick',0:5, 'xtick',-0.04:0.01:0.044)
+
+print('-r300','figures/simpar_vpl_hist','-dpng')
+
+%%
+figure(5)
