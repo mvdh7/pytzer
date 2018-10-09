@@ -117,3 +117,6 @@ venv.bak/
 # Figures
 *.png
 *.gif
+
+# MATLAB
+*.m~
