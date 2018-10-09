@@ -17,3 +17,7 @@ def vp_H2O(T):
     # output VP in kPa
     return 0.61121 * np.exp((18.678 \
         - (T-273.15)/234.5) * ((T-273.15) / (257.14 + T - 273.15)))
+
+# Root-mean-square deviation
+def rms(A):
+    return np.sqrt(np.mean(np.square(A)))
