@@ -3,6 +3,7 @@ import pandas as pd
 import pickle
 from scipy.io import savemat
 import pytzer as pz
+from sys import argv
 pd2vs = pz.misc.pd2vs
 
 # Load raw datasets
@@ -10,8 +11,10 @@ datapath = 'datasets/'
 vplbase,mols,ions,T = pz.data.vpl(datapath)
 
 # Select electrolytes for analysis
+sele = argv[1]
+Ureps = int(20)
 vplbase,mols,ions,T = pz.data.subset_ele(vplbase,mols,ions,T,
-                                         np.array(['NaCl']))
+                                         np.array([sele]))
 
 ## Exclude smoothed datasets (none for VPL)
 #S = vplbase.smooth == 0
@@ -52,8 +55,6 @@ with open('pickles/simpar_vpl.pkl','rb') as f:
     _,vplerr_rdm,vplerr_sys = pickle.load(f)
 
 #%% Simulate new datasets
-sele = 'NaCl'
-Ureps = int(20)
 
 # Set up for fitting
 alph1 = np.float_(2)
@@ -77,15 +78,9 @@ def Eopt(rseed=None):
     for src in np.unique(srcs):
         SL = srcs == src
         weights[SL] = pz.misc.rms((Uosm - pd2vs(vplbase.osm_calc))[SL])
-    #    weights[SL] = 1 / np.sqrt(np.sum(vplerr_rdm[sele][src]**2))
-    #    Smax = np.max(tot[SL])
-    #    Smin = np.min(tot[SL])
-    #    weights[SL] = (vplerr_rdm[sele][src][0] * (Smax - Smin) \
-    #        - vplerr_rdm[sele][src][1] * (np.exp(-Smax) - np.exp(-Smin))) \
-    #           / (Smax - Smin)
     weights = weights * tot
-    weights = 1 / weights
-    print(np.unique(weights))
+    weights = np.full_like(weights,1.)#1 / weights
+    #weights = 1 / tot
 
     # Solve for Pitzer model coefficients
     b0,b1,_,C0,C1,_,_ \
@@ -100,7 +95,7 @@ b1 = np.full(Ureps,np.nan)
 C0 = np.full(Ureps,np.nan)
 C1 = np.full(Ureps,np.nan)
 
-sqtot_fitted = np.vstack(np.linspace(0.001,2.5,100))
+sqtot_fitted = np.vstack(np.linspace(0.001,np.sqrt(np.max(vplbase.m)),100))
 tot_fitted   = sqtot_fitted**2
 mols_fitted  = np.concatenate((tot_fitted,tot_fitted), axis=1)
 osm_fitted   = np.full((np.size(tot_fitted),Ureps),np.nan)
@@ -121,8 +116,8 @@ for U in range(Ureps):
 osm_fitted_calc = pz.model.osm(mols_fitted,ions,T1_fitted,cf)
 
 # Save results for MATLAB
-vplbase.to_csv('pickles/simloop_vpl_test.csv')
-savemat('pickles/simloop_vpl_test.mat',
+vplbase.to_csv('pickles/simloop_vpl_test_' + sele + '.csv')
+savemat('pickles/simloop_vpl_test_' + sele + '.mat',
         {'osm_sim'         : osm_sim,
          'tot_fitted'      : tot_fitted,
          'osm_fitted'      : osm_fitted,

@@ -1,7 +1,10 @@
 %%
-% Simulated datasets - NaCl
-load('pickles/simloop_vpl_test.mat');
-vpltest = readtable('pickles/simloop_vpl_test.csv');
+ele = 'KCl';
+
+% Simulated datasets
+load(['pickles/simloop_vpl_bC_' ele '_100.mat']);
+load(['pickles/simloop_vpl_test_' ele '.mat']);
+vpltest = readtable(['pickles/simloop_vpl_test_' ele '.csv']);
 %
 fvar = 'osm';
 mksz = 30;
@@ -15,7 +18,7 @@ tsrcs = unique(vpltest.src);
 
 Ufile = [];
 
-figtype = 'ani';
+figtype = 'final';
 switch figtype
     case 'ani'
         Ulist = 1:20;
@@ -48,6 +51,16 @@ end %if
 figure(3); clf; hold on
 printsetup(gcf,[10 7.5])
 set(gcf, 'color',[48 48 48]/255, 'inverthardcopy','off')
+
+if Upatch
+patch([tot; flipud(tot)],[sqrt(Uosm_sim); flipud(-sqrt(Uosm_sim))], ...
+    'y', 'edgecolor','none', 'facealpha',0.5)
+patch([tot; flipud(tot)],[sqrt(Uosm_dir); flipud(-sqrt(Uosm_dir))], ...
+    'y', 'edgecolor','none', 'facealpha',0.5)
+
+% plot(tot, sqrt(Uosm_sim)*2,'y:')
+% plot(tot,-sqrt(Uosm_sim)*2,'y:')
+end %if Upatch
 
 % Plot data by source
 for S = 1:numel(tsrcs)
@@ -87,16 +100,6 @@ for S = 1:numel(tsrcs)
         
 end %for S
 
-if Upatch
-% patch([tot; flipud(tot)],[sqrt(Uosm_sim); flipud(-sqrt(Uosm_sim))], ...
-%     'y', 'edgecolor','none', 'facealpha',0.5)
-patch([tot; flipud(tot)],2*[sqrt(Uosm_sim); flipud(-sqrt(Uosm_sim))], ...
-    'y', 'edgecolor','none', 'facealpha',0.5)
-
-% plot(tot, sqrt(Uosm_sim)*2,'y:')
-% plot(tot,-sqrt(Uosm_sim)*2,'y:')
-end %if Upatch
-
 % Axis settings
 xlim([0 6.5])
 setaxes(gca,15)
@@ -105,13 +108,14 @@ set(gca, 'color',0.5*[65 65 65]/255, 'xcolor','w', 'ycolor','w', ...
 plot(get(gca,'xlim'),[0 0],'w', 'linewidth',1)
 xlabel(['\itm\rm(NaCl) / mol\cdotkg^{' endash '1}'])
 
-ylim(0.0200000001*[-1 1])
+ylim(0.0500000001*[-1 1])
 set(gca, 'box','off', 'xtick',0:6, 'ytick',-0.1:0.01:0.1)
 ylabel('\Delta\phi')
 
 set(gca, 'yticklabel',num2str(get(gca,'ytick')','%.2f'))
 
-print('-r150',['figures/simpytz_vpl/MCsim_' ...
+print('-r150',['figures/simpytz_vpl/MCsim_KCl' ...
     num2str(Ufile,'%02.0f')],'-dpng')
+Ufile = [];
 
 end %for U
