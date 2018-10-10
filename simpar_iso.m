@@ -1,5 +1,6 @@
 % Select test and reference electrolytes
 tst = 'KCl';
+tsttit = 'KCl';
 ref = 'NaCl';
 
 % Load data from simpar_iso.py
@@ -22,43 +23,62 @@ end %for S
 mksz = 10;
 
 figure(1); clf
+printsetup(gcf,[9 12])
 
 subplot(2,1,1); hold on
 
-grid on
+    xlim([0 5])
+    ylim(0.012*[-1 1])
 
-xlim([0 5])
-ylim(0.012*[-1 1])
+    for S = 1:numel(srcs)
 
+        SL = strcmp(isobase.src,srcs{S});
 
-for S = 1:numel(srcs)
+        scatter(isobase.(tst)(SL),isobase.(['dosm_' tst])(SL), ...
+            mksz*fmsm.(srcs{S}),fclr.(srcs{S}),'filled', ...
+            'marker',fmrk.(srcs{S}))
 
-    SL = strcmp(isobase.src,srcs{S});
+        TL = tot >= min(isobase.(tst)(SL)) & tot <= max(isobase.(tst)(SL));
+        plot(tot(TL),isoerr_sys.(srcs{S}) * (1 + 1./(tot(TL) + 0.03)), ...
+            'color',fclr.(srcs{S}), 'linewidth',1)
+
+    end %for S
     
-    scatter(isobase.(tst)(SL),isobase.(['dosm_' tst])(SL), ...
-        mksz*fmsm.(srcs{S}),fclr.(srcs{S}),'filled', ...
-        'marker',fmrk.(srcs{S}))
+    plot(get(gca,'xlim'),[0 0],'k')
     
-    TL = tot >= min(isobase.(tst)(SL)) & tot <= max(isobase.(tst)(SL));
-    plot(tot(TL),isoerr_sys.(srcs{S}) * (1 + 1./(tot(TL) + 0.03)), ...
-        'color',fclr.(srcs{S}), 'linewidth',1)
+    setaxes(gca,8)
+    set(gca, 'box','on')
+    
+    xlabel(['\itm\rm(' tsttit ') / mol\cdotkg^{' endash '1}'])
 
-end %for S
-
-% %% Components
-% plot(tot,dosm_dtot *5e-3, 'linewidth',2)
-% plot(tot,dosm_dtotR*1e-2, 'linewidth',2)
-% plot(tot,(dosm_dtot + dosm_dtotR)*5e-3, 'linewidth',2)
-% plot(tot,4e-4*(1 + 1./(tot+0.03)),'k', 'linewidth',2)
+    % %% Components
+    % plot(tot,dosm_dtot *5e-3, 'linewidth',2)
+    % plot(tot,dosm_dtotR*1e-2, 'linewidth',2)
+    % plot(tot,(dosm_dtot + dosm_dtotR)*5e-3, 'linewidth',2)
+    % plot(tot,4e-4*(1 + 1./(tot+0.03)),'k', 'linewidth',2)
+    
+    spfig = gca;
 
 subplot(2,1,2); hold on
 
-for S = 1:numel(srcs)
+    for S = 1:numel(srcs)
 
-    SL = strcmp(isobase.src,srcs{S});
+        SL = strcmp(isobase.src,srcs{S});
+
+        scatter(isobase.(tst)(SL), ...
+            abs(isobase.(['dosm_' tst '_sys'])(SL)), ...
+            mksz*fmsm.(srcs{S}),fclr.(srcs{S}),'filled', ...
+            'marker',fmrk.(srcs{S}))
+
+    end %for S
+
+    setaxes(gca,8)
+    set(gca, 'box','on')
     
-    scatter(isobase.(tst)(SL),abs(isobase.(['dosm_' tst '_sys'])(SL)), ...
-        mksz*fmsm.(srcs{S}),fclr.(srcs{S}),'filled', ...
-        'marker',fmrk.(srcs{S}))
+    xlabel(['\itm\rm(' tsttit ') / mol\cdotkg^{' endash '1}'])
     
-end %for S
+    spfg2 = gca;
+
+spfig.Position = [0.15 0.58 0.6 0.35];
+spfg2.Position = [0.15 0.08 0.6 0.35];
+% spleg.Position = [0.8 0.63 0.18 0.25];
