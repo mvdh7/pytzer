@@ -1,5 +1,6 @@
 isobase = readtable('pickles/data_iso.csv');
 srcs = unique(isobase.src);
+load('pickles/data_iso.mat');
 
 figure(1); clf; hold on
 
@@ -20,3 +21,9 @@ end %for S
 
 grid on
 
+xlim([0 5])
+ylim(0.015*[-1 1])
+
+plot(tot,dosm_dtot *5e-3)
+plot(tot,dosm_dtotR*1e-2)
+plot(tot,(dosm_dtot + dosm_dtotR)*5e-3)
