@@ -30,6 +30,33 @@ isobase['osm_meas_' + isopair[0]] = isobase['osm_ref_' + isopair[1]] \
 isobase['osm_meas_' + isopair[1]] = isobase['osm_ref_' + isopair[0]] \
                                   * np.sum(mols0,axis=1) / np.sum(mols1,axis=1)
 
+# Derive expected uncertainty profiles
+
+
+# Simulation function
+def sim_iso:
+    
+    # Simulate new molality datasets (both electrolytes)
+    
+
+    # Simulate a new set of bC coeffs (reference) - provide as an input?
+
+    
+    # Calculate reference osmotic coefficient
+    
+    
+    # Calculate measured osmotic coefficient
+    
+    
+    # Fit new bC coeffs (measured)
+    
+
+    return
+
+
+
+
+
 
 # Save isobase for MATLAB plotting
 isobase.to_csv('pickles/data_iso.csv')
