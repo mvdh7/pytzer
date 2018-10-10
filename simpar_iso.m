@@ -1,7 +1,12 @@
+% Select test and reference electrolytes
+tst = 'KCl';
+ref = 'NaCl';
+
 % Load data from simpar_iso.py
-isobase = readtable('pickles/simpar_iso_isobase_tKCl_rNaCl.csv');
-load('pickles/simpar_iso_pshape_tKCl_rNaCl.mat')
-isoerr_sys = load('pickles/simpar_iso_isoerr_sys_tKCl_rNaCl.mat');
+froot = 'pickles/simpar_iso_';
+isobase = readtable([froot 'isobase_t' tst '_r' ref '.csv']);
+load([froot 'pshape_t' tst '_r' ref '.mat'])
+isoerr_sys = load([froot 'isoerr_sys_t' tst '_r' ref '.mat']);
 
 % Define marker styles
 srcs = unique(isobase.src);
@@ -30,18 +35,13 @@ for S = 1:numel(srcs)
 
     SL = strcmp(isobase.src,srcs{S});
     
-%     scatter(isobase.NaCl(SL), ...
-%         isobase.aw_ref_NaCl(SL) - isobase.aw_ref_KCl(SL))
+    scatter(isobase.(tst)(SL),isobase.(['dosm_' tst])(SL), ...
+        mksz*fmsm.(srcs{S}),fclr.(srcs{S}),'filled', ...
+        'marker',fmrk.(srcs{S}))
     
-    scatter(isobase.KCl(SL),isobase.dosm_KCl(SL),mksz*fmsm.(srcs{S}), ...
-        fclr.(srcs{S}),'filled', 'marker',fmrk.(srcs{S}))
-    
-    TL = tot >= min(isobase.KCl(SL)) & tot <= max(isobase.KCl(SL));
+    TL = tot >= min(isobase.(tst)(SL)) & tot <= max(isobase.(tst)(SL));
     plot(tot(TL),isoerr_sys.(srcs{S}) * (1 + 1./(tot(TL) + 0.03)), ...
         'color',fclr.(srcs{S}), 'linewidth',1)
-    
-%     scatter(isobase.NaCl(SL), ...
-%         isobase.osm_meas_NaCl(SL) - isobase.osm_ref_NaCl(SL))
 
 end %for S
 
@@ -57,7 +57,7 @@ for S = 1:numel(srcs)
 
     SL = strcmp(isobase.src,srcs{S});
     
-    scatter(isobase.KCl(SL),abs(isobase.dosm_KCl_sys(SL)), ...
+    scatter(isobase.(tst)(SL),abs(isobase.(['dosm_' tst '_sys'])(SL)), ...
         mksz*fmsm.(srcs{S}),fclr.(srcs{S}),'filled', ...
         'marker',fmrk.(srcs{S}))
     
