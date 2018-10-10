@@ -1,5 +1,6 @@
 from autograd import numpy as np
-from . import fitting, model
+from autograd import elementwise_grad as egrad
+from . import data, fitting, model
 
 ##### ISOPIESTIC EQUILIBRIUM ##################################################
 
@@ -16,9 +17,17 @@ def osm_cf(mols,molsR,ionsR,T,cf):
     return osm(mols,molsR,osmR)
 
 # Reference osmotic coeff calculated from input bC coeffs
-def osm_bC(mols,molsR,zCR,zAR,T,b0R,b1R,b2R,C0R,C1R,alph1R,alph2R,omegaR):
+def osm_bC(tot,totR,isopair,T,bCR):
     
-    osmR = fitting.osm(molsR,zCR,zAR,T,
-                       b0R,b1R,b2R,C0R,C1R,alph1R,alph2R,omegaR)
+    _,zC ,zA ,nC ,nA  = data.znu([isopair[0]])
+    _,zCR,zAR,nCR,nAR = data.znu([isopair[1]])
+    
+    mols  = np.concatenate((nC *tot ,nA *tot ),axis=1)
+    molsR = np.concatenate((nCR*totR,nAR*totR),axis=1)
+    
+    osmR = fitting.osm(molsR,zCR,zAR,T,*bCR)
 
     return osm(mols,molsR,osmR)
+
+# Derivatives
+dosm_dtot = egrad(osm_bC)
