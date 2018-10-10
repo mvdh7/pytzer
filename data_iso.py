@@ -2,6 +2,7 @@ from autograd import numpy as np
 import pytzer as pz
 from scipy.io import savemat
 import pandas as pd
+pd2vs = pz.misc.pd2vs
 
 # Load raw isopiestic dataset and cut to only 298.15 K data
 isobase = pz.data.iso('datasets/')
@@ -24,17 +25,29 @@ isobase['aw_ref_' + isopair[1]] = pz.model.osm2aw(mols1,pz.misc.pd2vs(
                                   isobase['osm_ref_' + isopair[1]]))
 
 # Calculate osmotic coefficients from the measurements
-isobase['osm_meas_' + isopair[0]] = isobase['osm_ref_' + isopair[1]] \
-                                  * np.sum(mols1,axis=1) / np.sum(mols0,axis=1)
+isobase['osm_meas_' + isopair[0]] = pz.experi.osm(mols0,mols1,
+                                    isobase['osm_ref_' + isopair[1]])
 
-isobase['osm_meas_' + isopair[1]] = isobase['osm_ref_' + isopair[0]] \
-                                  * np.sum(mols0,axis=1) / np.sum(mols1,axis=1)
+isobase['osm_meas_' + isopair[1]] = pz.experi.osm(mols1,mols0,
+                                    isobase['osm_ref_' + isopair[0]])
 
-# Derive expected uncertainty profiles
+# Get charges
+_,zC0,zA0,_,_ = pz.data.znu([isopair[0]])
+_,zC1,zA1,_,_ = pz.data.znu([isopair[1]])
 
+# Get reference bC coeffs at 298.15 K
+bC0 = cf.bC[ions0[0] + '-' + ions0[1]](298.15)
+bC1 = cf.bC[ions1[0] + '-' + ions1[1]](298.15)
+
+# Derive expected uncertainty profile shapes
+pshape = {'tot': np.linspace(0.001,2.5,500)**2}
+
+isobase['dosm0_dtot0'] = pz.experi.dosm_dtot(pd2vs(isobase[isopair[0]]),
+                                             pd2vs(isobase[isopair[1]]),
+                                             isopair,T,bC1)
 
 # Simulation function
-def sim_iso:
+def sim_iso():
     
     # Simulate new molality datasets (both electrolytes)
     
