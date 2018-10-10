@@ -1,9 +1,10 @@
-isobase = readtable('pickles/data_iso.csv');
-srcs = unique(isobase.src);
-load('pickles/data_iso.mat')
-isoerr_sys = load('pickles/isoerr_sys.mat');
+% Load data from simpar_iso.py
+isobase = readtable('pickles/simpar_iso_isobase_tKCl_rNaCl.csv');
+load('pickles/simpar_iso_pshape_tKCl_rNaCl.mat')
+isoerr_sys = load('pickles/simpar_iso_isoerr_sys_tKCl_rNaCl.mat');
 
 % Define marker styles
+srcs = unique(isobase.src);
 mrks = repmat({'o' 'v' '^' '<' '>' 'sq' 'h' 'p' 'd'},1,3);
 msms = repmat([ 1   1   1   1   1   1    1   3   1 ],1,3);
 clrs = repmat([228,26,28; 55,126,184; 77,175,74; 152,78,163; 255,127,0; 

@@ -109,8 +109,9 @@ def sim_iso():
     return
 
 # Save isobase for MATLAB plotting
-isobase.to_csv('pickles/data_iso.csv')
-savemat('pickles/data_iso.mat',pshape)
-savemat('pickles/isoerr_sys.mat',isoerr_sys)
+trtxt = 't' + tst + '_r' + ref    
 
-isoe.to_csv('pickles/data_isoe.csv')
+isobase.to_csv('pickles/simpar_iso_isobase_' + trtxt + '.csv')
+savemat('pickles/simpar_iso_pshape_' + trtxt + '.mat',pshape)
+savemat('pickles/simpar_iso_isoerr_sys_' + trtxt + '.mat',isoerr_sys)
+isoe.to_csv('pickles/simpar_iso_isoe_' + trtxt + '.csv')
