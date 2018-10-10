@@ -52,3 +52,7 @@ def get_osm(bC,T,molsR,osmR):
                            - osmR[M] * np.sum(molsR[M]), 1.)['x']
             
     return tot
+
+# Define function to fit isopiestic errors
+def isofit(isoerr,tot):
+    return isoerr * (1 + 1/(tot + 0.03))
