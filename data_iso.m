@@ -24,6 +24,12 @@ grid on
 xlim([0 5])
 ylim(0.015*[-1 1])
 
-plot(tot,dosm_dtot *5e-3)
-plot(tot,dosm_dtotR*1e-2)
-plot(tot,(dosm_dtot + dosm_dtotR)*5e-3)
+plot(tot,dosm_dtot *5e-3, 'linewidth',2)
+plot(tot,dosm_dtotR*1e-2, 'linewidth',2)
+plot(tot,(dosm_dtot + dosm_dtotR)*5e-3, 'linewidth',2)
+
+
+
+plot(tot,4e-4 + 4e-4./tot,'k', 'linewidth',2)
+plot(tot,5e-4 + 1e-2*exp(-tot*4),'r', 'linewidth',2)
+
