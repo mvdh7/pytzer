@@ -108,7 +108,7 @@ vplbase['dosm25_sys'] = np.nan
 vplerr_sys = {}
 vplerr_rdm = {}
 
-for E,ele in enumerate(vplp.index.levels[0]): 
+for E,ele in enumerate(vplp.index.levels[0]):
     print('Optimising VPL fit for ' + ele + '...')
     
     EL = vplbase.ele == ele
