@@ -57,6 +57,8 @@ for S = 1:numel(srcs)
 
     SL = strcmp(isobase.src,srcs{S});
     
-    scatter(isobase.KCl(SL),abs(isobase.dosm_KCl_sys(SL)))
+    scatter(isobase.KCl(SL),abs(isobase.dosm_KCl_sys(SL)), ...
+        mksz*fmsm.(srcs{S}),fclr.(srcs{S}),'filled', ...
+        'marker',fmrk.(srcs{S}))
     
 end %for S
