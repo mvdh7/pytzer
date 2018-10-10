@@ -1,6 +1,7 @@
 from autograd import numpy as np
 import pytzer as pz
 from scipy.io import savemat
+from scipy import optimize
 import pandas as pd
 pd2vs = pz.misc.pd2vs
 
@@ -40,8 +41,28 @@ bC0 = cf.bC[ions0[0] + '-' + ions0[1]](298.15)
 bC1 = cf.bC[ions1[0] + '-' + ions1[1]](298.15)
 
 # Derive expected uncertainty profile shapes
-pshape = {'tot': np.linspace(0.001,2.5,500)**2}
+pshape = {'totR': np.vstack(np.linspace(0.001,2.5,200)**2)}
+pshape['molsR'] = np.concatenate((pshape['totR'],pshape['totR']),axis=1)
+pshape['T']     = np.full_like(pshape['totR'],298.15)
+pshape['osmR']  = pz.fitting.osm(pshape['molsR'],1.,-1.,pshape['T'],*bC1)
+pshape['tot']   = np.full_like(pshape['totR'],np.nan)
 
+for M in range(len(pshape['T'])):
+    pshape['tot'][M] = optimize.least_squares(lambda tot:
+        pz.fitting.osm(np.array([[tot,tot]]), # WTF???!??!?!1
+                       1.,-1.,
+                       np.vstack(pshape['T'][M]),
+                       *bC0).ravel(),
+                                              1.)['x']
+
+#pz.fitting.osm(np.array([[tot,tot]]),1.,-1.,np.vstack(pshape['T'][M]),
+#                       *bC0).ravel() * (tot + tot) \
+#                       - pshape['osmR'][M] * np.sum(pshape['molsR'][M])
+        
+# Simulate a perfect isopiestic dataset
+#optimize.least_squares()
+
+# Get derivatives
 isobase['dosm0_dtot0'] = pz.experi.dosm_dtot(pd2vs(isobase[isopair[0]]),
                                              pd2vs(isobase[isopair[1]]),
                                              isopair,T,bC1)
