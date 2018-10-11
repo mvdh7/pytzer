@@ -9,7 +9,7 @@ pd2vs = pz.misc.pd2vs
 
 # Define test and ref electrolytes:
 tst = 'NaCl'
-ref = 'KCl'
+ref = 'CaCl2'
 
 # Load raw isopiestic dataset and cut to only 298.15 K
 isobase = pz.data.iso('datasets/')

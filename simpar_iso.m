@@ -1,6 +1,6 @@
 % Select test and reference electrolytes
 tst = 'NaCl';
-ref = 'KCl';
+ref = 'CaCl2';
 
 % Get electrolyte-specifics
 tsttit = tst;
@@ -12,6 +12,10 @@ switch tst
         fyt = -0.012:0.006:0.012;
         fyl2 = [0 0.008];
         fyt2 = 0:0.002:0.008;
+        
+        if strcmp(ref,'CaCl2')
+            fxl = [0 2.5];
+        end %if
 end %switch
 
 % Load data from simpar_iso.py
