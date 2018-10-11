@@ -53,6 +53,9 @@ def get_osm(bC,T,molsR,osmR):
             
     return tot
 
-# Define function to fit isopiestic errors
-def isofit(isoerr,tot):
+# Define functions to fit isopiestic residuals
+def isofit_sys(isoerr,tot):
     return isoerr * (1 + 1/(tot + 0.03))
+
+def isofit_rdm(isoerr,tot):
+    return isoerr[0] + isoerr[1] / (tot + 0.03)

@@ -72,6 +72,7 @@ isoe = pd.pivot_table(isobase,
 
 #%% Cycle through sources and fit residuals
 isoerr_sys = {}
+isoerr_rdm = {}
 isobase['dosm_' + tst + '_sys'] = np.nan
 
 for src in isoe.index:
@@ -81,12 +82,23 @@ for src in isoe.index:
     
     # Fit residuals
     isoerr_sys[src] = optimize.least_squares(lambda isoerr:
-        pz.experi.isofit(isoerr,isobase[tst][SL]) \
-        - isobase['dosm_' + tst][SL],4e-4)['x']
+        pz.experi.isofit_sys(isoerr,isobase[tst][SL]) \
+        - isobase['dosm_' + tst][SL],0.)['x']
         
     # Subtract systematic errors
     isobase.loc[SL,'dosm_' + tst + '_sys'] = isobase['dosm_' + tst][SL] \
-        - pz.experi.isofit(isoerr_sys[src],isobase[tst][SL])
+        - pz.experi.isofit_sys(isoerr_sys[src],isobase[tst][SL])
+        
+    # Fit random errors
+    isoerr_rdm[src] = optimize.least_squares(lambda isoerr:
+        pz.experi.isofit_rdm(isoerr,isobase[tst][SL]) \
+        - np.abs(isobase['dosm_' + tst + '_sys'][SL]),[0.,0.])['x']
+       
+    # Refit bad fits to random errors
+    if (isoerr_rdm[src][1] < 0) or not any(isobase[tst][SL] < 1):
+        isoerr_rdm[src] = np.array([ \
+                  np.mean(np.abs(isobase['dosm_' + tst + '_sys'][SL])),0])
+    
 
 #%% Simulation function
 def sim_iso():
@@ -105,6 +117,7 @@ def sim_iso():
     
     # Fit new bC coeffs (measured)
     
+    
 
     return
 
@@ -113,5 +126,7 @@ trtxt = 't' + tst + '_r' + ref
 
 isobase.to_csv('pickles/simpar_iso_isobase_' + trtxt + '.csv')
 savemat('pickles/simpar_iso_pshape_' + trtxt + '.mat',pshape)
-savemat('pickles/simpar_iso_isoerr_sys_' + trtxt + '.mat',isoerr_sys)
+savemat('pickles/simpar_iso_isoerr_' + trtxt + '.mat',
+        {'isoerr_sys': isoerr_sys,
+         'isoerr_rdm': isoerr_rdm})
 isoe.to_csv('pickles/simpar_iso_isoe_' + trtxt + '.csv')

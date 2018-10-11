@@ -7,7 +7,7 @@ ref = 'NaCl';
 froot = 'pickles/simpar_iso_';
 isobase = readtable([froot 'isobase_t' tst '_r' ref '.csv']);
 load([froot 'pshape_t' tst '_r' ref '.mat'])
-isoerr_sys = load([froot 'isoerr_sys_t' tst '_r' ref '.mat']);
+load([froot 'isoerr_t' tst '_r' ref '.mat'])
 
 % Define marker styles
 srcs = unique(isobase.src);
@@ -70,8 +70,15 @@ subplot(2,1,2); hold on
             mksz*fmsm.(srcs{S}),fclr.(srcs{S}),'filled', ...
             'marker',fmrk.(srcs{S}))
 
+        TL = tot >= min(isobase.(tst)(SL)) & tot <= max(isobase.(tst)(SL));
+        nl = plot(tot(TL),isoerr_rdm.(srcs{S})(1) ...
+            + isoerr_rdm.(srcs{S})(2) ./ (tot(TL) + 0.03), ...
+            'color',fclr.(srcs{S}), 'linewidth',1); nolegend(nl)
+        
     end %for S
 
+    legend(srcs)
+    
     setaxes(gca,8)
     set(gca, 'box','on')
     
