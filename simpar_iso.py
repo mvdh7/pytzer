@@ -8,7 +8,7 @@ pd2vs = pz.misc.pd2vs
 # Need to invest a better sense of which electrolyte is the ref throughout
 
 # Define test and ref electrolytes:
-tst = 'NaCl'
+tst = 'KCl'
 ref = 'CaCl2'
 
 # Load raw isopiestic dataset and cut to only 298.15 K
