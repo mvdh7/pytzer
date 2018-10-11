@@ -1,11 +1,11 @@
 % Select test and reference electrolytes
-tst = 'KCl';
-ref = 'NaCl';
+tst = 'NaCl';
+ref = 'KCl';
 
 % Get electrolyte-specifics
 tsttit = tst;
 switch tst
-    case 'KCl'
+    case {'KCl' 'NaCl'}
         fxl = [0 2.5];
         fxt = 0:0.5:2.5;
         fyl = 0.012 * [-1 1];
