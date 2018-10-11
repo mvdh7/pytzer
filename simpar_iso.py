@@ -117,7 +117,6 @@ def sim_iso():
     
     # Fit new bC coeffs (measured)
     
-    
 
     return
 
