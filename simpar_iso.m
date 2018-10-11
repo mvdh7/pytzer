@@ -53,7 +53,7 @@ subplot(2,2,1); hold on
         TL = tot >= min(isobase.(tst)(SL)) & tot <= max(isobase.(tst)(SL));
         plot(sqrt(tot(TL)),isoerr_sys.(srcs{S}) ...
             * (1 + 1./(tot(TL) + 0.03)), ...
-            'color',fclr.(srcs{S}), 'linewidth',1)
+            'color',fclr.(srcs{S}))
 
     end %for S
     
@@ -96,7 +96,7 @@ subplot(2,2,3); hold on
         TL = tot >= min(isobase.(tst)(SL)) & tot <= max(isobase.(tst)(SL));
         nl = plot(sqrt(tot(TL)),isoerr_rdm.(srcs{S})(1) ...
             + isoerr_rdm.(srcs{S})(2) ./ (tot(TL) + 0.03), ...
-            'color',fclr.(srcs{S}), 'linewidth',1); nolegend(nl)
+            'color',fclr.(srcs{S})); nolegend(nl)
         
     end %for S
     
