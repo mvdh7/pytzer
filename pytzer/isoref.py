@@ -1,8 +1,8 @@
-from pytzer import model
-from pytzer.coeffs import AH_MPH as AL
-from pytzer.coeffs import AC_MPH as AJ
-from pytzer.tconv import y,z,O
-from pytzer.constants import R, Mw
+from . import model
+from .coeffs import AH_MPH as AL
+from .coeffs import AC_MPH as AJ
+from .tconv import y,z,O
+from .constants import R, Mw
 from autograd import numpy as np
 from autograd import elementwise_grad as egrad
 
