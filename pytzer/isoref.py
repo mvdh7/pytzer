@@ -1,11 +1,10 @@
 from pytzer import model
 from pytzer.coeffs import AH_MPH as AL
 from pytzer.coeffs import AC_MPH as AJ
-#from pytzer.tconv import y,z,O
+from pytzer.tconv import y,z,O
 from pytzer.constants import R, Mw
 from autograd import numpy as np
 from autograd import elementwise_grad as egrad
-from scipy.io import savemat
 
 # Enthalpy - CaCl2 direct
 def Lapp_CaCl2(tot):
@@ -116,6 +115,10 @@ def J2_CaCl2(tot,T=np.float_(298.15)): # HO58 Ch. 8 Eq. (8-4-7)
     return tot * dCpapp_CaCl2_dm(tot,T)
 
 # J1 and J2 derivatives wrt. temperature
+    
+#  From visual inspection, J1 gradient wrt. temperature seems fairly linear
+#   across 298.15 to 313.15 K, but 293.15 K doesn't really fit the line.
+    
 def G1_CaCl2(tot):
     return (J1_CaCl2(tot,np.float_(303.15)) - J1_CaCl2(tot)) / 5
    
@@ -130,21 +133,25 @@ Cpapp = Cpapp_CaCl2(tot)
 J1    = J1_CaCl2   (tot)
 G1    = G1_CaCl2   (tot)
 
-## Osmotic coefficient - CaCl2 direct
-#def osm2osm25_CaCl2(tot,T0,osm_T0):
-#    
-#    tot = np.vstack(tot)
-#    T0  = np.vstack(T0)
-#    T1  = np.full_like(T0,298.15)
-#    TR  = np.full_like(T0,298.15)
-#    
-#    nC = np.float_(1)
-#    nA = np.float_(2)
-#    
-#    lnAW_T0 = -osm_T0 * tot * (nC + nA) * Mw
-#    
-#    lnAW_T1 = lnAW_T0 - y(T0,T1) * L1(tot,n1,n2,ions,TR,cf) \
-#                      + z(T0,T1) * J1(tot,n1,n2,ions,TR,cf) \
-#                      - O(T0,T1) * G1(tot,n1,n2,ions,TR,cf)
-#
-#    return -lnAW_T1 / (tot * (nC + nA) * Mw)
+# Osmotic coefficient - CaCl2 direct
+def osm2osm25_CaCl2(tot,T0,osm_T0):
+    
+    # Sanitise inputs
+    tot = np.vstack(tot)
+    T0  = np.vstack(T0)
+    T1  = np.full_like(T0,298.15)
+    
+    # CaCl2 stoichiometry
+    nC = np.float_(1)
+    nA = np.float_(2)
+    
+    # Convert to water activity
+    lnAW_T0 = -osm_T0 * tot * (nC + nA) * Mw
+    
+    # Convert temperature
+    lnAW_T1 = lnAW_T0 - y(T0,T1) * L1_CaCl2(tot) \
+                      + z(T0,T1) * J1_CaCl2(tot) \
+                      - O(T0,T1) * G1_CaCl2(tot)
+
+    # Return the osmotic coefficient
+    return -lnAW_T1 / (tot * (nC + nA) * Mw)
