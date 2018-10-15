@@ -20,7 +20,7 @@ for S = 1:numel(fpdsrcs.all.srcs)
 end %for S
 mksz = 10;
 
-for E = 1%:numel(eles)
+for E = 1:numel(eles)
 ele = eles{E};
 
 % Define settings that depend upon electrolyte
@@ -46,7 +46,7 @@ EL = strcmp(fpdbase.ele,ele);
 fpdsrcs.(ele).srcs = unique(fpdbase.src(EL));
 
 % Begin figure
-figure(2); clf
+figure(E); clf
 printsetup(gcf,[9 12])
 flegs = {};
 
