@@ -5,6 +5,14 @@ from .tconv import y,z,O
 from .constants import R, Mw
 from autograd import numpy as np
 from autograd import elementwise_grad as egrad
+from scipy.interpolate import pchip
+import pickle
+
+# Osmotic coefficient - look-up table
+# Use PCHIP interpolation to get calculated osm25 for CaCl2
+with open('pickles/fortest_CaCl2_10.pkl','rb') as f:
+    rc97 = pickle.load(f)[0]
+osm_CaCl2_PCHIP = pchip(rc97.tot,rc97.osm)
 
 # Enthalpy - CaCl2 direct
 def Lapp_CaCl2(tot):
