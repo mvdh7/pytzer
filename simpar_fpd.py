@@ -61,7 +61,7 @@ for ele in fpde.index:
                                             np.array([ele]))
     EL = ismember(fpdbase.ele,np.array([ele]))
     
-    if ele is not 'CaCl2':
+    if ele == 'CaCl2':
     
         fpdbase.loc[EL,'osm25_meas'] = pz.tconv.osm2osm(
             pd2vs(Efpdbase.m),pd2vs(Efpdbase.nC),pd2vs(Efpdbase.nA),
@@ -118,42 +118,44 @@ for E,ele in enumerate(fpdp.index.levels[0]):
 # Replicate pz.tconv.tot2fpd25 function, but using PCHIP interpolation to get
 #  CaCl2 osmotic coefficient at 298.15 K following RC97
         
-        Ctot = tot[EL]
-        CnC = nC[E]
-        CnA = nA[E]
-        Cmols = np.concatenate((Ctot*CnC,Ctot*CnA), axis=1)
-        Cfpd = np.full_like(Ctot,np.nan)
-        CT25 = np.full_like(Ctot,298.15, dtype='float64')
+        fpdbase.loc[EL,'fpd_calc'] = pz.isoref.tot2fpd25_CaCl2(tot[EL])
         
-#        Cosm25 = pz.model.osm(Cmols,Eions,CT25,cf)
-        
-        # Use PCHIP interpolation to get calculated osm25 for CaCl2
-        with open('pickles/fortest_CaCl2_10.pkl','rb') as f:
-            rc97,F = pickle.load(f)
-        pchip_CaCl2 = pchip(rc97.tot,rc97.osm)
-        
-        Cosm25 = pchip_CaCl2(Ctot)
-        
-        CiT25 = np.vstack([298.15])
-        CiT00 = np.vstack([273.15])
-        
-        for i in range(len(Ctot)):
-            
-            if i/10. == np.round(i/10.):
-                print('Getting FPD %d of %d...' % (i+1,len(Ctot)))
-            
-            imols = np.array([Cmols[i,:]])
-            
-# NOT QUITE RIGHT: pz.tconv.osm2osm still uses cf for thermal properties of
-#                  CaCl2, which are not properly constrained there...
-            
-            Cfpd[i] = optimize.least_squares(lambda fpd: \
-               (pz.tconv.osm2osm(Ctot[i],CnC,CnA,Eions,CiT00-fpd,CiT25,CiT25,
-                                 cf,
-                        pz.tconv.fpd2osm(imols,fpd)) - Cosm25[i]).ravel(),
-                                            0., method='trf')['x'][0]
-               
-        fpdbase.loc[EL,'fpd_calc'] = Cfpd
+#        Ctot = tot[EL]
+#        CnC = nC[E]
+#        CnA = nA[E]
+#        Cmols = np.concatenate((Ctot*CnC,Ctot*CnA), axis=1)
+#        Cfpd = np.full_like(Ctot,np.nan)
+#        CT25 = np.full_like(Ctot,298.15, dtype='float64')
+#        
+##        Cosm25 = pz.model.osm(Cmols,Eions,CT25,cf)
+#        
+#        # Use PCHIP interpolation to get calculated osm25 for CaCl2
+#        with open('pickles/fortest_CaCl2_10.pkl','rb') as f:
+#            rc97,F = pickle.load(f)
+#        pchip_CaCl2 = pchip(rc97.tot,rc97.osm)
+#        
+#        Cosm25 = pchip_CaCl2(Ctot)
+#        
+#        CiT25 = np.vstack([298.15])
+#        CiT00 = np.vstack([273.15])
+#        
+#        for i in range(len(Ctot)):
+#            
+#            if i/10. == np.round(i/10.):
+#                print('Getting FPD %d of %d...' % (i+1,len(Ctot)))
+#            
+#            imols = np.array([Cmols[i,:]])
+#            
+## NOT QUITE RIGHT: pz.tconv.osm2osm still uses cf for thermal properties of
+##                  CaCl2, which are not properly constrained there...
+#            
+#            Cfpd[i] = optimize.least_squares(lambda fpd: \
+#               (pz.tconv.osm2osm(Ctot[i],CnC,CnA,Eions,CiT00-fpd,CiT25,CiT25,
+#                                 cf,
+#                        pz.tconv.fpd2osm(imols,fpd)) - Cosm25[i]).ravel(),
+#                                            0., method='trf')['x'][0]
+#               
+#        fpdbase.loc[EL,'fpd_calc'] = Cfpd
         
 # =============================================================================      
         

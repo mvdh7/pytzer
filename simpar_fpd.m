@@ -37,7 +37,7 @@ switch ele
     case 'CaCl2'
         fxl = [0 7.5];
         fxt = 0:6;
-        fyl = 6*[-1 1.0000001];
+        fyl = 0.6*[-1 1.0000001];
         eletit = 'CaCl_2';
 end %switch
 
@@ -46,7 +46,7 @@ EL = strcmp(fpdbase.ele,ele);
 fpdsrcs.(ele).srcs = unique(fpdbase.src(EL));
 
 % Begin figure
-figure(E); clf
+figure(E+3); clf
 printsetup(gcf,[9 12])
 flegs = {};
 

@@ -1,4 +1,4 @@
-from . import model
+from . import model, tconv
 from .coeffs import AH_MPH as AL
 from .coeffs import AC_MPH as AJ
 from .tconv import y,z,O
@@ -6,6 +6,7 @@ from .constants import R, Mw
 from autograd import numpy as np
 from autograd import elementwise_grad as egrad
 from scipy.interpolate import pchip
+from scipy import optimize
 import pickle
 
 # Osmotic coefficient - look-up table
@@ -163,3 +164,30 @@ def osm2osm25_CaCl2(tot,T0,osm_T0):
 
     # Return the osmotic coefficient
     return -lnAW_T1 / (tot * (nC + nA) * Mw)
+
+# Get expected FPD at a given molality with T conversion - CaCl2
+def tot2fpd25_CaCl2(tot):
+            
+    # CaCl2 stoichiometry
+    nC = np.float_(1)
+    nA = np.float_(2)
+    
+    mols = np.concatenate((tot*nC,tot*nA), axis=1)
+    fpd = np.full_like(tot,np.nan)
+    
+    osm25 = osm_CaCl2_PCHIP(tot)
+    
+    iT00 = np.vstack([273.15])
+    
+    for i in range(len(tot)):
+        
+        if i/10. == np.round(i/10.):
+            print('Getting FPD %d of %d...' % (i+1,len(tot)))
+        
+        imols = np.array([mols[i,:]])
+        
+        fpd[i] = optimize.least_squares(lambda fpd: \
+           osm2osm25_CaCl2(tot[i],iT00-fpd,tconv.fpd2osm(imols,fpd) \
+                           - osm25[i]).ravel(),0., method='trf')['x'][0]
+    
+    return fpd
