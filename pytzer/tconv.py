@@ -107,8 +107,8 @@ def J2(tot,n1,n2,ions,T,cf): # HO58 Ch. 8 Eq. (8-4-7)
     return tot * dCpapp_dm(tot,n1,n2,ions,T,cf)
 
 # wrt. temperature
-G1 = egrad(J1, argnum=4)
-G2 = egrad(J2, argnum=4)
+G1 = egrad(J1,argnum=4)
+G2 = egrad(J2,argnum=4)
 
 # --- Enthalpy derivatives ----------------------------------------------------
     
