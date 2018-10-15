@@ -35,7 +35,7 @@ cf = pz.cdicts.MPH
 eles = fpdbase.ele
 cf.add_zeros(fpdbase.ele)
 cf.bC['K-Cl'] = pz.coeffs.bC_K_Cl_A99 # works much better than ZD17...!
-cf.bC['Ca-Cl'] = pz.coeffs.bC_Ca_Cl_JESS
+#cf.bC['Ca-Cl'] = pz.coeffs.bC_Ca_Cl_JESS
 
 # Calculate osmotic coefficient at measurement temperature
 fpd = pd2vs(fpdbase.fpd)
@@ -61,10 +61,17 @@ for ele in fpde.index:
                                             np.array([ele]))
     EL = ismember(fpdbase.ele,np.array([ele]))
     
-    fpdbase.loc[EL,'osm25_meas'] = pz.tconv.osm2osm(
+    if ele is not 'CaCl2':
+    
+        fpdbase.loc[EL,'osm25_meas'] = pz.tconv.osm2osm(
             pd2vs(Efpdbase.m),pd2vs(Efpdbase.nC),pd2vs(Efpdbase.nA),
             Eions,pd2vs(Efpdbase.t),pd2vs(Efpdbase.t25),pd2vs(Efpdbase.t25),
             cf,pd2vs(Efpdbase.osm_meas))
+        
+    else:
+        
+        fpdbase.loc[EL,'osm25_meas'] = pz.isoref.osm2osm25_CaCl2(
+                pd2vs(Efpdbase.m),pd2vs(Efpdbase.t),pd2vs(Efpdbase.osm_meas))
 
 # Calculate model osmotic coefficient at 298.15 K
 fpdbase['osm25_calc'] = pz.model.osm(mols,ions,T25,cf)
