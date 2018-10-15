@@ -5,15 +5,16 @@ from pytzer.coeffs import AC_MPH as AJ
 from pytzer.constants import R, Mw
 from autograd import numpy as np
 from autograd import elementwise_grad as egrad
+from scipy.io import savemat
 
 # Enthalpy - CaCl2 direct
 def Lapp_CaCl2(tot):
     
     # Coefficients from Fit_L.res from SLC
     b0L = np.float_( 0.607735e-04)
-    b1L = np.float_( 0.369990E-02)
-    C0L = np.float_(-0.434061E-04)
-    C1L = np.float_( 0.862546E-03)
+    b1L = np.float_( 0.369990e-02)
+    C0L = np.float_(-0.434061e-04)
+    C1L = np.float_( 0.862546e-03)
     
     # Set temperature (coeffs only valid at 298.15 K)
     T = np.float_(298.15)
@@ -52,23 +53,32 @@ def L1_CaCl2(tot): # HO58 Ch. 8 Eq. (8-4-9)
 def L2_CaCl2(tot): # HO58 Ch. 8 Eq. (8-4-7)
     return Lapp_CaCl2(tot) + tot * dLapp_CaCl2_dm(tot)
 
+# Define bCJ coefficients at different temperatures from SLC files
+bCJdict = {293.15: np.float_([-0.110422e-04,
+                              -0.521081e-04,
+                               0.650016e-08,
+                               0.742198e-04]),
+           298.15: np.float_([-0.113651e-04,
+                               0.883048e-05,
+                               0.148164e-06,
+                               0.479265e-04]),
+           303.15: np.float_([-0.104679e-04,
+                               0.513218e-04,
+                               0.156101e-06,
+                               0.208742e-04]),
+           313.15: np.float_([-0.971604e-05,
+                               0.860714e-04,
+                               0.199577e-06,
+                               0.130038e-04])}
+
 # Heat capacity - CaCl2 direct
-def Cpapp_CaCl2(tot,T,bCJ):
-    
-#    # Coefficients from Fit_Cp.res from SLC
-#    b0J = np.float_(-0.113651E-04)
-#    b1J = np.float_( 0.883048E-05)
-#    C0J = np.float_( 0.148164E-06)
-#    C1J = np.float_( 0.479265E-04)
-#    
-#    # Set temperature (coeffs only valid at 298.15 K)
-#    T = np.float_(298.15)
-    
+def Cpapp_CaCl2(tot,T=np.float_(298.15)):
+           
     # Unpack coefficients
-    b0J = bCJ[0]
-    b1J = bCJ[1]
-    C0J = bCJ[2]
-    C1J = bCJ[3]
+    b0J = bCJdict[T][0]
+    b1J = bCJdict[T][1]
+    C0J = bCJdict[T][2]
+    C1J = bCJdict[T][3]
     
     # Pitzer model coefficients
     b     = np.float_(1.2)
@@ -99,25 +109,26 @@ def Cpapp_CaCl2(tot,T,bCJ):
 # Derivatives wrt. molality - tested vs SLC's Calc_J1.res
 dCpapp_CaCl2_dm = egrad(Cpapp_CaCl2)
 
-def J1_CaCl2(tot,T,bCJ): # HO58 Ch. 8 Eq. (8-4-9)
-    return -Mw * tot**2 * dCpapp_CaCl2_dm(tot,T,bCJ)
+def J1_CaCl2(tot,T=np.float_(298.15)): # HO58 Ch. 8 Eq. (8-4-9)
+    return -Mw * tot**2 * dCpapp_CaCl2_dm(tot,T)
 
-def J2_CaCl2(tot,T,bCJ): # HO58 Ch. 8 Eq. (8-4-7)
-    return tot * dCpapp_CaCl2_dm(tot,T,bCJ)
+def J2_CaCl2(tot,T=np.float_(298.15)): # HO58 Ch. 8 Eq. (8-4-7)
+    return tot * dCpapp_CaCl2_dm(tot,T)
 
-bCJdict = {'25': np.float_([-0.113651E-04,
-                             0.883048E-05,
-                             0.148164E-06,
-                             0.479265E-04])}
+# J1 and J2 derivatives wrt. temperature
+def G1_CaCl2(tot):
+    return (J1_CaCl2(tot,np.float_(303.15)) - J1_CaCl2(tot)) / 5
+   
+def G2_CaCl2(tot):
+    return (J2_CaCl2(tot,np.float_(303.15)) - J2_CaCl2(tot)) / 5    
 
-bCJ = bCJdict['25']
-T = np.float_(298.15)
-
-tot   = np.float_([[6.8]])
+# Test calculations
+tot   = np.float_([[6]])
 Lapp  = Lapp_CaCl2 (tot)
 L1    = L1_CaCl2   (tot)
-Cpapp = Cpapp_CaCl2(tot,T,bCJ)
-J1    = J1_CaCl2   (tot,T,bCJ)
+Cpapp = Cpapp_CaCl2(tot)
+J1    = J1_CaCl2   (tot)
+G1    = G1_CaCl2   (tot)
 
 ## Osmotic coefficient - CaCl2 direct
 #def osm2osm25_CaCl2(tot,T0,osm_T0):
