@@ -1,5 +1,6 @@
 # Import libraries
 from autograd import numpy as np
+from autograd import elementwise_grad as egrad
 import pandas as pd
 from scipy import optimize
 from scipy.io import savemat
@@ -33,6 +34,8 @@ T       = T      [S]
 cf = pz.cdicts.MPH
 eles = fpdbase.ele
 cf.add_zeros(fpdbase.ele)
+cf.bC['K-Cl'] = pz.coeffs.bC_K_Cl_A99 # works much better than ZD17...!
+cf.bC['Ca-Cl'] = pz.coeffs.bC_Ca_Cl_JESS
 
 # Calculate osmotic coefficient at measurement temperature
 fpd = pd2vs(fpdbase.fpd)
@@ -210,6 +213,39 @@ for ele in fpdp.index.levels[0]:
     fpderr_rdm[ele]['all_grad'] = np.array( \
         [fpderr_rdm[ele][src][1] for src in Ekrdm])
 
+#%% Generate fit splines for MATLAB
+pshape_fpd = {'tot': np.vstack(np.linspace(0.001,3,100))**2}
+pshape_fpd['t25'] = np.full_like(pshape_fpd['tot'],298.15)
+
+# Define and differentiate conversion function
+def fpd2osm25(tot,n1,n2,ions,fpd,T1,TR,cf):
+    mols = np.concatenate((tot*n1,tot*n2),axis=1)
+    return pz.tconv.osm2osm(tot,n1,n2,ions,273.15-fpd,T1,TR,cf,
+                            pz.tconv.fpd2osm(mols,fpd))
+
+dosm25_dfpd = egrad(fpd2osm25,argnum=4)
+
+
+for ele in fpdp.index.levels[0]:
+    
+    Eions = pz.data.ele2ions(np.array([ele]))[0]
+    _,_,_,EnC,EnA = pz.data.znu(np.array([ele]))
+    
+    pshape_fpd['fpd_' + ele] = pz.tconv.tot2fpd(pshape_fpd['tot'],
+                                                Eions,EnC,EnA,cf)
+    
+    pshape_fpd['osm25_' + ele] = fpd2osm25(pshape_fpd['tot'],EnC,EnA,Eions,
+                                           pshape_fpd['fpd_' + ele],
+                                           pshape_fpd['t25'],
+                                           pshape_fpd['t25'],
+                                           cf)
+    
+    pshape_fpd['dosm25_' + ele] = dosm25_dfpd(pshape_fpd['tot'],EnC,EnA,Eions,
+                                              pshape_fpd['fpd_' + ele],
+                                              pshape_fpd['t25'],
+                                              pshape_fpd['t25'],
+                                              cf)
+
 # Pickle outputs for simloop
 with open('pickles/simpar_fpd.pkl','wb') as f:
     pickle.dump((fpdbase,fpderr_rdm,fpderr_sys),f)
@@ -217,6 +253,7 @@ with open('pickles/simpar_fpd.pkl','wb') as f:
 # Save results for MATLAB figures
 fpdbase.to_csv('pickles/simpar_fpd.csv')
 savemat('pickles/simpar_fpd.mat',{'fpderr_sys':fpderr_sys,
-                                  'fpderr_rdm':fpderr_rdm})
+                                  'fpderr_rdm':fpderr_rdm,
+                                  'pshape_fpd':pshape_fpd})
 
 print('FPD fit optimisation complete!')
