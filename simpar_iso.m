@@ -1,6 +1,6 @@
 % Select test and reference electrolytes
-tst = 'KCl';
-ref = 'NaCl';
+tst = 'NaCl';
+ref = 'KCl';
 
 % Get electrolyte-specifics
 tsttit = tst;
@@ -34,7 +34,7 @@ for S = 1:numel(srcs)
 end %for S
 mksz = 10;
 
-figure(1); clf
+figure(7); clf
 printsetup(gcf,[9 12])
 
 subplot(2,2,1); hold on
