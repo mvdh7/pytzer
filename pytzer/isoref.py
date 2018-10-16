@@ -160,7 +160,7 @@ def osm2osm25_CaCl2(tot,T0,osm_T0):
     # Sanitise inputs
     tot = np.vstack(tot)
     T0  = np.vstack(T0)
-    T1  = np.full_like(T0,298.15)
+    T1  = np.float_(298.15)#np.full_like(T0,298.15)
     
     # CaCl2 stoichiometry
     nC = np.float_(1)
@@ -187,7 +187,7 @@ def tot2fpd25_CaCl2(tot):
     mols = np.concatenate((tot*nC,tot*nA), axis=1)
     fpd = np.full_like(tot,np.nan)
     
-    osm25 = osm_CaCl2_PCHIP(tot)
+    osm25 = osm_CaCl2(tot)
     
     iT00 = np.vstack([273.15])
     
