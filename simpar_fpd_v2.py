@@ -80,23 +80,79 @@ fpdbase.loc[L,'osm25_calc'] = pz.isoref.osm_CaCl2_PCHIP(fpdbase.m[L])
 fpdbase['dosm'  ] = fpdbase.osm_meas   - fpdbase.osm_calc
 fpdbase['dosm25'] = fpdbase.osm25_meas - fpdbase.osm25_calc
 
-## Quickly visualise residuals
-#from matplotlib import pyplot as plt
-#fig,ax = plt.subplots(1,1)
-#fpdbase.plot.scatter('m','dosm25', ax=ax)
-#ax.set_xlim((0,6))
-#ax.grid(alpha=0.5)
-
 # Create electrolytes/sources pivot table
 fpdp = pd.pivot_table(fpdbase,
                       values  = ['m','dosm25'],
                       index   = ['ele','src'],
                       aggfunc = [np.mean,np.std,len])
 
+# Calculate expected FPD
+tot = pd2vs(fpdbase.m)
+_,_,_,nC,nA = pz.data.znu(fpdp.index.levels[0])
+fpdbase['fpd_calc'] = np.nan
+#fpdbase['dfpd'    ] = np.nan
+#fpdbase['dfpd_sys'] = np.nan
+#fpderr_sys = {}
+#fpderr_rdm = {}
+
+for E,ele in enumerate(fpdp.index.levels[0]): 
+    print('Optimising FPD fit for ' + ele + '...')
+    
+    # Calculate expected FPD
+    Eions = pz.data.ele2ions(np.array([ele]))[0]
+    EL = fpdbase.ele == ele
+    
+    if ele == 'CaCl2':
+# Replicate pz.tconv.tot2fpd25 function, but using PCHIP interpolation to get
+#  CaCl2 osmotic coefficient at 298.15 K following RC97
+        fpdbase.loc[EL,'fpd_calc'] = pz.isoref.tot2fpd25_CaCl2(tot[EL])
+        
+    else:
+        fpdbase.loc[EL,'fpd_calc'] = pz.tconv.tot2fpd(tot[EL],
+                                                      Eions,
+                                                      nC[E],
+                                                      nA[E],
+                                                      cf)
+
+fpdbase['dfpd'] = fpdbase.fpd - fpdbase.fpd_calc
+
+# Update electrolytes/sources pivot table
+fpdp = pd.pivot_table(fpdbase,
+                      values  = ['m','dfpd','dosm25'],
+                      index   = ['ele','src'],
+                      aggfunc = [np.mean,np.std,len])
+
 # Get pshapes
 pshape_fpd = {'tot': np.vstack(np.linspace(0.001,3,100))**2}
 pshape_fpd['t25'] = np.full_like(pshape_fpd['tot'],298.15)
+
+# Solve for exact FPD across molality range
 pshape_fpd['fpd_CaCl2'] = pz.isoref.tot2fpd25_CaCl2(pshape_fpd['tot'])
+
+#%% Calculate osmotic coefficient from FPD
+Cmols = np.concatenate((pshape_fpd['tot'],pshape_fpd['tot']*2),axis=1)
+pshape_fpd['osm_fpd_CaCl2'] = pz.tconv.fpd2osm(Cmols,pshape_fpd['fpd_CaCl2'])
+
+# Convert osmotic coefficient to 298.15 K
+pshape_fpd['osm25_fpd_CaCl2'] = pz.isoref.osm2osm25_CaCl2(
+        pshape_fpd['tot'],
+        273.15-pshape_fpd['fpd_CaCl2'],
+        pshape_fpd['osm_fpd_CaCl2'])
+
+# Calculate osmotic coefficient directly
+pshape_fpd['osm25_calc_CaCl2'] = pz.isoref.osm_CaCl2_PCHIP(pshape_fpd['tot'])
+
+# Calculate osmotic coefficient with small linear error in FPD temperature
+pshape_fpd['fpd_err_CaCl2'] = pshape_fpd['fpd_CaCl2']# \
+#    + 0.04 * pshape_fpd['tot']# + 0.01
+    
+# Get osmotic coefficient at 298.15 K with FPD temp error
+pshape_fpd['osm_fpd_err_CaCl2'] = pz.tconv.fpd2osm(Cmols,
+          pshape_fpd['fpd_err_CaCl2'])
+pshape_fpd['osm25_fpd_err_CaCl2'] = pz.isoref.osm2osm25_CaCl2(
+        pshape_fpd['tot']+0.1,
+        273.15-pshape_fpd['fpd_err_CaCl2'],
+        pshape_fpd['osm_fpd_err_CaCl2'])
 
 # Save results for MATLAB figures
 fpdbase.to_csv('pickles/simpar_fpd_v2.csv')
