@@ -8,19 +8,19 @@ fpdsrcs.all.srcs = unique(fpdbase.src);
 figure(4); clf
 
 subplot(2,1,1); hold on
-%     plot(pfpd.tot,pfpd.fpd_CaCl2)
     plot(pfpd.tot,pfpd.fpd_err_CaCl2-pfpd.fpd_CaCl2)
-    L = strcmp(fpdbase.ele,'CaCl2');
+    L = strcmp(fpdbase.ele,'NaCl');
     scatter(fpdbase.m(L),fpdbase.dfpd(L))
-    xlim([0 4])
+    xlim([0 6.25])
     plot(get(gca,'xlim'),[0 0],'k')
     grid on
 
 subplot(2,1,2); hold on
-    plot(pfpd.tot,pfpd.osm25_fpd_CaCl2-pfpd.osm25_calc_CaCl2)
-    plot(pfpd.tot,pfpd.osm25_fpd_err_CaCl2-pfpd.osm25_calc_CaCl2)
+    plot(pfpd.tot,pfpd.osm25_fpd_NaCl-pfpd.osm25_calc_NaCl)
+    plot(pfpd.tot,pfpd.osm_fpd_NaCl-pfpd.osm_calc_NaCl)
+%     plot(pfpd.tot,pfpd.osm25_fpd_err_CaCl2-pfpd.osm25_calc_CaCl2)
     scatter(fpdbase.m(L),fpdbase.dosm25(L))
-    xlim([0 4])
+    xlim([0 6.25])
     ylim([-1 1]*1e-2)
     grid on
 
