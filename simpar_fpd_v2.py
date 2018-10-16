@@ -1,6 +1,6 @@
 # Import libraries
 from autograd import numpy as np
-#from autograd import elementwise_grad as egrad
+from autograd import elementwise_grad as egrad
 import pandas as pd
 #from scipy import optimize
 from scipy.io import savemat
@@ -74,7 +74,7 @@ fpdbase['osm25_calc'] = pz.model.osm(mols,ions,T25,cf)
 
 # Overwrite CaCl2 reference values using PCHIP of RC97 look-up table
 L = fpdbase.ele == 'CaCl2'
-fpdbase.loc[L,'osm25_calc'] = pz.isoref.osm_CaCl2_PCHIP(fpdbase.m[L])
+fpdbase.loc[L,'osm25_calc'] = pz.isoref.osm_CaCl2(fpdbase.m[L])
 
 # Calculate osmotic coefficient residuals
 fpdbase['dosm'  ] = fpdbase.osm_meas   - fpdbase.osm_calc
@@ -141,51 +141,78 @@ pshape_fpd['osm25_fpd_CaCl2'] = pz.isoref.osm2osm25_CaCl2(
         pshape_fpd['osm_fpd_CaCl2'])
 
 # Calculate osmotic coefficient directly
-pshape_fpd['osm25_calc_CaCl2'] = pz.isoref.osm_CaCl2_PCHIP(pshape_fpd['tot'])
+pshape_fpd['osm25_calc_CaCl2'] = pz.isoref.osm_CaCl2(pshape_fpd['tot'])
 
-# Calculate osmotic coefficient with small linear error in FPD temperature
-pshape_fpd['fpd_err_CaCl2'] = pshape_fpd['fpd_CaCl2']# \
-#    + 0.04 * pshape_fpd['tot']# + 0.01
+## Calculate osmotic coefficient with small linear error in FPD temperature
+#pshape_fpd['fpd_err_CaCl2'] = pshape_fpd['fpd_CaCl2'] \
+#    + pshape_fpd['tot'] * 0
+#    
+## Get osmotic coefficient at 298.15 K with FPD temp error
+#pshape_fpd['osm_fpd_err_CaCl2'] = pz.tconv.fpd2osm(mols_CaCl2,
+#        pshape_fpd['fpd_err_CaCl2'])
+#pshape_fpd['osm25_fpd_err_CaCl2'] = pz.isoref.osm2osm25_CaCl2(
+#        pshape_fpd['tot'] * 2,
+#        273.15-pshape_fpd['fpd_err_CaCl2'],
+#        pshape_fpd['osm_fpd_err_CaCl2'])
+
+# Get uncertainty profiles for CaCl2
+def fx_pshape_err_CaCl2(dT,mT,dtot,mtot):
     
-# Get osmotic coefficient at 298.15 K with FPD temp error
-pshape_fpd['osm_fpd_err_CaCl2'] = pz.tconv.fpd2osm(mols_CaCl2,
-                                                   pshape_fpd['fpd_err_CaCl2'])
-pshape_fpd['osm25_fpd_err_CaCl2'] = pz.isoref.osm2osm25_CaCl2(
-        pshape_fpd['tot']+0.1,
-        273.15-pshape_fpd['fpd_err_CaCl2'],
-        pshape_fpd['osm_fpd_err_CaCl2'])
+    fpd_err_CaCl2 = pshape_fpd['fpd_CaCl2'] * mT + dT
+    osm_fpd_err_CaCl2 = pz.tconv.fpd2osm(mols_CaCl2 * mtot + dtot,
+            fpd_err_CaCl2)
+    osm25_fpd_err_CaCl2 = pz.isoref.osm2osm25_CaCl2(
+            pshape_fpd['tot'] * mtot + dtot,
+            273.15 - fpd_err_CaCl2,
+            osm_fpd_err_CaCl2)
+    
+    return osm25_fpd_err_CaCl2
 
-#%% Repeat for NaCl
-ions_NaCl = np.array(['Na','Cl'])
-_,_,_,nC_NaCl,nA_NaCl = pz.data.znu(['NaCl'])
-pshape_fpd['fpd_NaCl'] = pz.tconv.tot2fpd(pshape_fpd['tot'],
-                                          ions_NaCl,nC_NaCl,nA_NaCl,cf)
-# if i switch to tot2fpd25 here ^^ it makes the osm WORK at 25 but NOT at FP
-# (i.e. opposite of tot2fpd) - both are shifted UP equally in MATLAB subplot 2
+fxps_dT   = egrad(fx_pshape_err_CaCl2,argnum=0)
+fxps_mT   = egrad(fx_pshape_err_CaCl2,argnum=1)
+fxps_dtot = egrad(fx_pshape_err_CaCl2,argnum=2)
+fxps_mtot = egrad(fx_pshape_err_CaCl2,argnum=3)
 
+f0 = np.full_like(pshape_fpd['tot'],0.)
+f1 = np.full_like(pshape_fpd['tot'],1.)
 
-mols_NaCl = np.concatenate((pshape_fpd['tot'],pshape_fpd['tot']),axis=1)
-pshape_fpd['osm_fpd_NaCl'] = pz.tconv.fpd2osm(mols_NaCl,
-                                              pshape_fpd['fpd_NaCl'])
-pshape_fpd['osm25_fpd_NaCl'] = pz.tconv.osm2osm(pshape_fpd['tot'],
-                                                nC_NaCl,nA_NaCl,ions_NaCl,
-                                                273.15-pshape_fpd['fpd_NaCl'],
-                                                pshape_fpd['t25'],
-                                                pshape_fpd['t25'],
-                                                cf,pshape_fpd['osm_fpd_NaCl'])
-
-pshape_fpd['osm_calc_NaCl'] = pz.model.osm(mols_NaCl,
-                                           ions_NaCl,
-                                           273.15-pshape_fpd['fpd_NaCl'],
-                                           cf)
-pshape_fpd['osm25_calc_NaCl'] = pz.model.osm(mols_NaCl,
-                                             ions_NaCl,
-                                             pshape_fpd['t25'],
-                                             cf)
+pshape_fpd['dosm25_fpd_ddT_CaCl2']   = fxps_dT  (f0,f1,f0,f1)
+pshape_fpd['dosm25_fpd_dmT_CaCl2']   = fxps_mT  (f0,f1,f0,f1)
+pshape_fpd['dosm25_fpd_ddtot_CaCl2'] = fxps_dtot(f0,f1,f0,f1)
+pshape_fpd['dosm25_fpd_dmtot_CaCl2'] = fxps_mtot(f0,f1,f0,f1)
 
 # Save results for MATLAB figures
 fpdbase.to_csv('pickles/simpar_fpd_v2.csv')
 savemat('pickles/simpar_fpd_v2.mat',{'pshape_fpd':pshape_fpd})
+
+##%% Repeat for NaCl
+#ions_NaCl = np.array(['Na','Cl'])
+#_,_,_,nC_NaCl,nA_NaCl = pz.data.znu(['NaCl'])
+#pshape_fpd['fpd_NaCl'] = pz.tconv.tot2fpd25(pshape_fpd['tot'],
+#                                          ions_NaCl,nC_NaCl,nA_NaCl,cf)
+## if i switch to tot2fpd25 here ^^ it makes the osm WORK at 25 but NOT at FP
+## (i.e. opposite of tot2fpd) - both are shifted UP equally in MATLAB subplot 2
+## This is essentially due to the difference between Archer's model at the two
+##  different temperatures vs the theoretical temperature conversion approach
+#
+#mols_NaCl = np.concatenate((pshape_fpd['tot'],pshape_fpd['tot']),axis=1)
+#pshape_fpd['osm_fpd_NaCl'] = pz.tconv.fpd2osm(mols_NaCl,
+#                                              pshape_fpd['fpd_NaCl'])
+#pshape_fpd['osm25_fpd_NaCl'] = pz.tconv.osm2osm(pshape_fpd['tot'],
+#                                                nC_NaCl,nA_NaCl,ions_NaCl,
+#                                                273.15-pshape_fpd['fpd_NaCl'],
+#                                                pshape_fpd['t25'],
+#                                                pshape_fpd['t25'],
+#                                                cf,pshape_fpd['osm_fpd_NaCl'])
+#
+#pshape_fpd['osm_calc_NaCl'] = pz.model.osm(mols_NaCl,
+#                                           ions_NaCl,
+#                                           273.15-pshape_fpd['fpd_NaCl'],
+#                                           cf)
+#pshape_fpd['osm25_calc_NaCl'] = pz.model.osm(mols_NaCl,
+#                                             ions_NaCl,
+#                                             pshape_fpd['t25'],
+#                                             cf)
 
 #%% Run uncertainty propagation analysis [FPD]
 #tot = pd2vs(fpdbase.m)
