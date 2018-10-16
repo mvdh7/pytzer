@@ -5,6 +5,7 @@ from .tconv import y,z,O
 from .constants import R, Mw
 from autograd import numpy as np
 from autograd import elementwise_grad as egrad
+from autograd.extend import primitive, defvjp
 from scipy.interpolate import pchip
 from scipy import optimize
 import pickle
@@ -14,6 +15,17 @@ import pickle
 with open('pickles/fortest_CaCl2_10.pkl','rb') as f:
     rc97 = pickle.load(f)[0]
 osm_CaCl2_PCHIP = pchip(rc97.tot,rc97.osm)
+
+@primitive
+def osm_CaCl2(tot):
+    return osm_CaCl2_PCHIP(tot)
+
+# Set up for autograd derivatives
+def osm_CaCl2_vjp(ans,tot):    
+    return lambda g: g * osm_CaCl2_PCHIP.derivative()(tot)
+defvjp(osm_CaCl2,osm_CaCl2_vjp)
+
+dosm_dtot_CaCl2 = egrad(osm_CaCl2)
 
 # Enthalpy - CaCl2 direct
 def Lapp_CaCl2(tot):
