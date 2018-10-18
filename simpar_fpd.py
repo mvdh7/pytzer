@@ -94,31 +94,37 @@ fpdp = pd.pivot_table(fpdbase,
                       aggfunc = [np.mean,np.std,len])
 
 #%% Solve for FPD expected from model (SLOW - a couple of minutes)
-tot = pd2vs(fpdbase.m)
-_,_,_,nC,nA = pz.data.znu(fpdp.index.levels[0])
-fpdbase['fpd_calc'] = np.nan
+#tot = pd2vs(fpdbase.m)
+#_,_,_,nC,nA = pz.data.znu(fpdp.index.levels[0])
+#fpdbase['fpd_calc'] = np.nan
+#
+#for E,ele in enumerate(fpdp.index.levels[0]): 
+#    print('Solving for model FPD for ' + ele + '...')
+#
+#    Eions = pz.data.ele2ions(np.array([ele]))[0]
+#    EL = fpdbase.ele == ele
+#    
+#    if ele == 'CaCl2':
+#        
+#        fpdbase.loc[EL,'fpd_calc'] = pz.isoref.tot2fpd25_CaCl2(tot[EL])
+#        
+#    else:
+#        
+#        fpdbase.loc[EL,'fpd_calc'] = pz.tconv.tot2fpd25(tot[EL],
+#                                                        Eions,
+#                                                        nC[E],
+#                                                        nA[E],
+#                                                        cf)
+#        
+## Calculate residuals
+#fpdbase['dfpd'] = fpdbase.fpd - fpdbase.fpd_calc
+#    
+## Save fpdbase for fast loading to skip slow step above in future
+#fpdbase.to_csv('pickles/fpdbase_intermediate.csv')
 
-for E,ele in enumerate(fpdp.index.levels[0]): 
-    print('Solving for model FPD for ' + ele + '...')
+# Load intermediate saved fpdbase [latest version from 2018-10-18]
+fpdbase = pd.read_csv('pickles/fpdbase_intermediate.csv')
 
-    Eions = pz.data.ele2ions(np.array([ele]))[0]
-    EL = fpdbase.ele == ele
-    
-    if ele == 'CaCl2':
-        
-        fpdbase.loc[EL,'fpd_calc'] = pz.isoref.tot2fpd25_CaCl2(tot[EL])
-        
-    else:
-        
-        fpdbase.loc[EL,'fpd_calc'] = pz.tconv.tot2fpd25(tot[EL],
-                                                        Eions,
-                                                        nC[E],
-                                                        nA[E],
-                                                        cf)
-        
-# Calculate residuals
-fpdbase['dfpd'] = fpdbase.fpd - fpdbase.fpd_calc
-    
 #%% Run uncertainty propagation analysis [FPD]
 fpdbase['dfpd_sys'] = np.nan
 fpderr_sys = {}
