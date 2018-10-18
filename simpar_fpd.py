@@ -4,7 +4,6 @@ from autograd import elementwise_grad as egrad
 import pandas as pd
 from scipy import optimize
 from scipy.io import savemat
-from scipy.interpolate import pchip
 import pickle
 import pytzer as pz
 pd2vs = pz.misc.pd2vs
@@ -41,8 +40,10 @@ cf.bC['K-Cl'] = pz.coeffs.bC_K_Cl_A99 # works much better than ZD17...!
 fpd = pd2vs(fpdbase.fpd)
 fpdbase['osm_meas'] = pz.tconv.fpd2osm(mols,fpd)
 fpdbase['osm_calc'] = pz.model.osm(mols,ions,T,cf)
+CL = fpdbase.ele == 'CaCl2'
+fpdbase.loc[CL,'osm_calc'] = np.nan
 
-# Convert temperatures to 298.15 K
+#%% Convert temperatures to 298.15 K
 fpdbase['t25'] = 298.15
 T25 = pd2vs(fpdbase.t25)
 
@@ -52,7 +53,7 @@ fpde = pd.pivot_table(fpdbase,
                       index   = ['ele'],
                       aggfunc = [np.min,np.max,len])
 
-# Convert measured FPD into osmotic coeff. at 298.15 K
+#%% Convert measured FPD into osmotic coeff. at 298.15 K
 fpdbase['osm25_meas'] = np.nan
 
 for ele in fpde.index:
@@ -63,18 +64,19 @@ for ele in fpde.index:
     
     if ele == 'CaCl2':
     
+        fpdbase.loc[EL,'osm25_meas'] = pz.isoref.osm2osm25_CaCl2(
+                pd2vs(Efpdbase.m),pd2vs(Efpdbase.t),pd2vs(Efpdbase.osm_meas))
+        
+    else:
+        
         fpdbase.loc[EL,'osm25_meas'] = pz.tconv.osm2osm(
             pd2vs(Efpdbase.m),pd2vs(Efpdbase.nC),pd2vs(Efpdbase.nA),
             Eions,pd2vs(Efpdbase.t),pd2vs(Efpdbase.t25),pd2vs(Efpdbase.t25),
             cf,pd2vs(Efpdbase.osm_meas))
-        
-    else:
-        
-        fpdbase.loc[EL,'osm25_meas'] = pz.isoref.osm2osm25_CaCl2(
-                pd2vs(Efpdbase.m),pd2vs(Efpdbase.t),pd2vs(Efpdbase.osm_meas))
 
-# Calculate model osmotic coefficient at 298.15 K
+# Calculate model osmotic coefficient at 298.15 K and residuals
 fpdbase['osm25_calc'] = pz.model.osm(mols,ions,T25,cf)
+fpdbase.loc[CL,'osm25_calc'] = pz.isoref.osm_CaCl2(pd2vs(fpdbase.m[CL]))
 fpdbase['dosm'  ] = fpdbase.osm_meas   - fpdbase.osm_calc
 fpdbase['dosm25'] = fpdbase.osm25_meas - fpdbase.osm25_calc
 
