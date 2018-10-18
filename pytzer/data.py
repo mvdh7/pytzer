@@ -114,13 +114,13 @@ def fpd(datapath):
 
     fpdbase = pd.read_excel(datapath+'fpd.xlsx', sheet_name='FPD data',
                             header=0, skiprows=2, usecols=6)
-
-    # Calculate freezing point temperature from FPD
-    fpdbase['t'] = 273.15 - fpdbase.fpd
-    T = pd2vs(fpdbase.t)
     
     # Calculate extras and sort
     fpdbase,mols,ions = prep(fpdbase)
+    
+    # Calculate freezing point temperature from FPD
+    fpdbase['t'] = 273.15 - fpdbase.fpd
+    T = pd2vs(fpdbase.t)
 
     return fpdbase, mols, ions, T
 
