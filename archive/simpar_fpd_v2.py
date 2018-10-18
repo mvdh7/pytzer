@@ -108,7 +108,7 @@ for E,ele in enumerate(fpdp.index.levels[0]):
         fpdbase.loc[EL,'fpd_calc'] = pz.isoref.tot2fpd25_CaCl2(tot[EL])
         
     else:
-        fpdbase.loc[EL,'fpd_calc'] = pz.tconv.tot2fpd(tot[EL],
+        fpdbase.loc[EL,'fpd_calc'] = pz.tconv.tot2fpd25(tot[EL],
                                                       Eions,
                                                       nC[E],
                                                       nA[E],
@@ -143,17 +143,17 @@ pshape_fpd['osm25_fpd_CaCl2'] = pz.isoref.osm2osm25_CaCl2(
 # Calculate osmotic coefficient directly
 pshape_fpd['osm25_calc_CaCl2'] = pz.isoref.osm_CaCl2(pshape_fpd['tot'])
 
-## Calculate osmotic coefficient with small linear error in FPD temperature
-#pshape_fpd['fpd_err_CaCl2'] = pshape_fpd['fpd_CaCl2'] \
-#    + pshape_fpd['tot'] * 0
-#    
-## Get osmotic coefficient at 298.15 K with FPD temp error
-#pshape_fpd['osm_fpd_err_CaCl2'] = pz.tconv.fpd2osm(mols_CaCl2,
-#        pshape_fpd['fpd_err_CaCl2'])
-#pshape_fpd['osm25_fpd_err_CaCl2'] = pz.isoref.osm2osm25_CaCl2(
-#        pshape_fpd['tot'] * 2,
-#        273.15-pshape_fpd['fpd_err_CaCl2'],
-#        pshape_fpd['osm_fpd_err_CaCl2'])
+# Calculate osmotic coefficient with small linear error in FPD temperature
+pshape_fpd['fpd_err_CaCl2'] = pshape_fpd['fpd_CaCl2'] \
+    + pshape_fpd['tot'] * -0.03 - 0.005
+    
+# Get osmotic coefficient at 298.15 K with FPD temp error
+pshape_fpd['osm_fpd_err_CaCl2'] = pz.tconv.fpd2osm(mols_CaCl2,
+        pshape_fpd['fpd_err_CaCl2'])
+pshape_fpd['osm25_fpd_err_CaCl2'] = pz.isoref.osm2osm25_CaCl2(
+        pshape_fpd['tot'],
+        273.15-pshape_fpd['fpd_err_CaCl2'],
+        pshape_fpd['osm_fpd_err_CaCl2'])
 
 # Get uncertainty profiles for CaCl2
 def fx_pshape_err_CaCl2(dT,mT,dtot,mtot):
