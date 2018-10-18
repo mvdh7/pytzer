@@ -1,6 +1,9 @@
 %% Load Python outputs
+cd 'E:\Dropbox\_UEA_MPH\pytzer'
 load('pickles/simpar_fpd.mat');
 fpdbase = readtable('pickles/simpar_fpd.csv');
+% fpdbase = readtable('pickles/fpdbase_intermediate.csv');
+% fpdbase.dfpd_sys = NaN(height(fpdbase),1);
 fpdsrcs.all.srcs = unique(fpdbase.src);
 
 % Plot raw FPD data
@@ -24,18 +27,18 @@ for E = 1:numel(eles)
 ele = eles{E};
 
 % Define settings that depend upon electrolyte
-eletit = 'ele';
+eletit = ele;
 switch ele
     case 'KCl'
         fxl = [0 5];
         fxt = 0:5;
-        fyl = 0.35*[-1 1];
+        fyl = 0.5*[-1 1];
     case 'NaCl'
         fxl = [0 6.5];
         fxt = 0:6;
         fyl = 0.3*[-1 1.0000001];
     case 'CaCl2'
-        fxl = [0 7.5];
+        fxl = [0 4.5];
         fxt = 0:6;
         fyl = 0.6*[-1 1.0000001];
         eletit = 'CaCl_2';
@@ -46,7 +49,7 @@ EL = strcmp(fpdbase.ele,ele);
 fpdsrcs.(ele).srcs = unique(fpdbase.src(EL));
 
 % Begin figure
-figure(E+3); clf
+figure(E); clf
 printsetup(gcf,[9 12])
 flegs = {};
 
@@ -159,6 +162,109 @@ spfig.Position = [0.15 0.58 0.6 0.35];
 spfg2.Position = [0.15 0.08 0.6 0.35];
 spleg.Position = [0.8 0.63 0.18 0.25];
 
-print('-r300',['figures/simpar_fpd_' ele],'-dpng')
+% print('-r300',['figures/simpar_fpd_' ele],'-dpng')
 
 end %for E
+
+%% Histograms
+figure(4); clf
+printsetup(gcf,[12 10])
+
+% Systematic - intercept
+bw = 0.025;
+
+L = fpderr_sys.all_int ~= 0;
+fx = -0.25:0.0001:0.25;
+fy1 = normpdf(fx,0,std(fpderr_sys.all_int(L))) * sum(L) * bw; % Normal
+ld = sqrt(var(fpderr_sys.all_int(L)) / 2);
+fy = exp(-abs(fx)/ld)/(2*ld) * sum(L) * bw; % laplace
+
+subplot(2,2,1); hold on
+    
+    histogram(fpderr_sys.all_int(L),-0.25:bw:0.25, ...
+        'normalization','count', 'facecolor',0.3*[1 1 1])
+    plot(fx,fy, 'color','k', 'linestyle','--')
+    plot(fx,fy1, 'color','k')
+    
+    xlim(0.25*[-1 1])
+    ylim([0 12])
+    
+    setaxes(gca,8)
+    set(gca, 'box','on', 'xtick',-0.2:0.1:0.2, 'ytick',0:3:25)
+    
+    xlabel('')
+    ylabel('Frequency')
+    
+% Systematic - gradient
+L = fpderr_sys.all_grad ~= 0;
+
+bw = 0.01;
+
+fx = -0.1:0.0001:0.1;
+fy1 = normpdf(fx,0,std(fpderr_sys.all_grad(L))) * sum(L) * bw; % Normal
+ld = sqrt(var(fpderr_sys.all_grad(L)) / 2);
+fy = exp(-abs(fx)/ld)/(2*ld) * sum(L) * bw; % laplace
+
+subplot(2,2,2); hold on
+    L = fpderr_sys.all_grad ~= 0;
+    histogram(fpderr_sys.all_grad(L),-0.08:bw:0.08, ...
+        'normalization','count', 'facecolor',0.3*[1 1 1])
+    plot(fx,fy, 'color','k', 'linestyle','--')
+    plot(fx,fy1, 'color','k')
+    
+    xlim(0.08*[-1 1])
+    ylim([0 6])
+    
+    setaxes(gca,8)
+    set(gca, 'box','on', 'xtick',-0.08:0.04:0.08, 'ytick',0:40)
+    
+    xlabel('')
+    ylabel('Frequency')
+    
+% Random - intercept
+bw = 0.5;
+
+fx = -6:0.01:1;
+L = fpderr_rdm.all_int > 0;
+fy = normpdf(fx,mean(log10(fpderr_rdm.all_int(L))), ...
+    std(log10(fpderr_rdm.all_int(L)))) * sum(L) * bw;
+
+subplot(2,2,3); hold on
+    histogram(log10(fpderr_rdm.all_int(L)),-11:bw:1, ...
+        'normalization','count', 'facecolor',0.3*[1 1 1])
+    plot(fx,fy,'k')
+    
+    xlim([-6 1])
+    ylim([0 6])
+    
+    setaxes(gca,8)
+    set(gca, 'box','on', 'xtick',-11:1, 'ytick',0:9)
+    
+    xlabel('')
+    ylabel('Frequency')
+    
+% Random - gradient
+bw = 1/5;
+
+L = fpderr_rdm.all_grad > 0;
+fx = -4.5:0.01:-1.5;
+fy = normpdf(fx,nanmean(log10(fpderr_rdm.all_grad(L))), ...
+    nanstd(log10(fpderr_rdm.all_grad(L)))) * sum(L) * bw;
+ld = sqrt(var(log10(fpderr_rdm.all_grad(L))) / 2);
+mu = mean(log10(fpderr_rdm.all_grad(L)));
+fy1 = exp(-abs(fx-mu)/ld)/(2*ld) * sum(L) * bw; % laplace
+
+subplot(2,2,4); hold on
+    histogram(log10(fpderr_rdm.all_grad(L)),-4.5:bw:-1.5, ...
+        'normalization','count', 'facecolor',0.3*[1 1 1])
+    plot(fx,fy,'k')
+    plot(fx,fy1,'k--')
+    
+    xlim([-4.5 -1.5])
+    ylim([0 5])
+    
+    setaxes(gca,8)
+    set(gca, 'box','on', 'xtick',-11.5:1, 'ytick',0:9)
+    
+    xlabel('')
+    ylabel('Frequency')
