@@ -6,6 +6,8 @@ fpdbase = readtable('pickles/simpar_fpd.csv');
 % fpdbase.dfpd_sys = NaN(height(fpdbase),1);
 fpdsrcs.all.srcs = unique(fpdbase.src);
 
+fsim = readtable('pickles/fpdbase_sim.csv');
+
 % Plot raw FPD data
 
 % Choose electrolyte to plot
@@ -23,7 +25,7 @@ for S = 1:numel(fpdsrcs.all.srcs)
 end %for S
 mksz = 10;
 
-for E = 1:numel(eles)
+for E = 2%1:numel(eles)
 ele = eles{E};
 
 % Define settings that depend upon electrolyte
@@ -43,6 +45,10 @@ switch ele
         fyl = 0.6*[-1 1.0000001];
         eletit = 'CaCl_2';
 end %switch
+
+fpdbase = fsim;
+fpdbase.dfpd = fpdbase.fpd_sim - fpdbase.fpd_calc;
+% fpdbase.dfpd_sys = fpdbase.dfpd_sys + fpdbase.fpd - fpdbase.fpd_sim;
 
 % Get logicals etc.
 EL = strcmp(fpdbase.ele,ele);
@@ -167,6 +173,8 @@ spleg.Position = [0.8 0.63 0.18 0.25];
 end %for E
 
 %% Histograms
+load('pickles/simpar_fpd.mat');
+
 figure(4); clf
 printsetup(gcf,[12 10])
 
@@ -174,9 +182,10 @@ printsetup(gcf,[12 10])
 bw = 0.025;
 
 L = fpderr_sys.all_int ~= 0;
+F = L & fpderr_sys.all_int > -0.15;
 fx = -0.25:0.0001:0.25;
-fy1 = normpdf(fx,0,std(fpderr_sys.all_int(L))) * sum(L) * bw; % Normal
-ld = sqrt(var(fpderr_sys.all_int(L)) / 2);
+fy1 = normpdf(fx,0,sqrt(fpderr_sys.all_int_var)) * sum(L) * bw; % Normal
+ld = sqrt(fpderr_sys.all_int_var / 2);
 fy = exp(-abs(fx)/ld)/(2*ld) * sum(L) * bw; % laplace
 
 subplot(2,2,1); hold on
@@ -201,8 +210,8 @@ L = fpderr_sys.all_grad ~= 0;
 bw = 0.01;
 
 fx = -0.1:0.0001:0.1;
-fy1 = normpdf(fx,0,std(fpderr_sys.all_grad(L))) * sum(L) * bw; % Normal
-ld = sqrt(var(fpderr_sys.all_grad(L)) / 2);
+fy1 = normpdf(fx,0,sqrt(fpderr_sys.all_grad_var)) * sum(L) * bw; % Normal
+ld = sqrt(fpderr_sys.all_grad_var / 2);
 fy = exp(-abs(fx)/ld)/(2*ld) * sum(L) * bw; % laplace
 
 subplot(2,2,2); hold on
@@ -268,3 +277,12 @@ subplot(2,2,4); hold on
     
     xlabel('')
     ylabel('Frequency')
+    
+% sys covariance
+figure(5); clf; hold on
+
+L = fpderr_sys.all_grad ~= 0;
+
+scatter(fpderr_sys.all_int(L),fpderr_sys.all_grad(L))
+
+syscov = cov(fpderr_sys.all_int(L),fpderr_sys.all_grad(L));
