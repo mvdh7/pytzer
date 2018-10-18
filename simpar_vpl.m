@@ -25,6 +25,7 @@ for E = 3%1:numel(eles)
 ele = eles{E};
 
 load(['pickles/simloop_vpl_bC_' ele '_100.mat']);
+fpdfpd = load(['pickles/simloop_fpd_bC_' ele '_100.mat']);
 
 % Define settings that depend upon electrolyte
 eletit = ele;
@@ -68,6 +69,9 @@ subplot(2,2,1); hold on
 
 patch([tot; flipud(tot)],[sqrt(Uosm_sim); flipud(-sqrt(Uosm_sim))], ...
     'y', 'edgecolor','none', 'facealpha',0.5)
+patch([fpdfpd.tot; flipud(fpdfpd.tot)], ...
+    [sqrt(fpdfpd.Uosm_sim); flipud(-sqrt(fpdfpd.Uosm_sim))], ...
+    'c', 'edgecolor','none', 'facealpha',0.5)
 
     % Plot data by source
     for S = 1:numel(vplsrcs.(ele).srcs)
