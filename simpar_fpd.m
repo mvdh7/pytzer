@@ -28,6 +28,9 @@ mksz = 10;
 for E = 2%1:numel(eles)
 ele = eles{E};
 
+% % NB this is for osm25 not FPD!
+% load(['pickles/simloop_fpd_bC_' ele '_100.mat']);
+
 % Define settings that depend upon electrolyte
 eletit = ele;
 switch ele
@@ -46,8 +49,8 @@ switch ele
         eletit = 'CaCl_2';
 end %switch
 
-fpdbase = fsim;
-fpdbase.dfpd = fpdbase.fpd_sim - fpdbase.fpd_calc;
+% fpdbase = fsim;
+% fpdbase.dfpd = fpdbase.fpd_sim - fpdbase.fpd_calc;
 % fpdbase.dfpd_sys = fpdbase.dfpd_sys + fpdbase.fpd - fpdbase.fpd_sim;
 
 % Get logicals etc.
@@ -60,6 +63,9 @@ printsetup(gcf,[9 12])
 flegs = {};
 
 subplot(2,2,1); hold on
+
+patch([tot; flipud(tot)],10*[sqrt(Uosm_sim); flipud(-sqrt(Uosm_sim))], ...
+    'y', 'edgecolor','none', 'facealpha',0.5)
 
     % Plot data by source
     for S = 1:numel(fpdsrcs.(ele).srcs)
