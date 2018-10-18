@@ -11,10 +11,10 @@ import pytzer as pz
 pd2vs = pz.misc.pd2vs
 from multiprocessing import Pool
 from scipy.io        import savemat
-#from sys             import argv
+from sys             import argv
 from time            import time
 
-argv = ['','NaCl','10']
+#argv = ['','NaCl','10']
 
 # Get input args
 Uele  =     argv[1]
@@ -49,7 +49,8 @@ nA   = pd2vs(fpdbase.nA )
 
 # Identify which coefficients to fit
 wbC = {'NaCl' : 'b0b1C0C1',
-       'KCl'  : 'b0b1C0C1'}
+       'KCl'  : 'b0b1C0C1',
+       'CaCl2': 'b0b1C0C1'}
 which_bCs = wbC[Uele]
 
 T25   = pd2vs(fpdbase.t25)
@@ -152,7 +153,9 @@ if __name__ == '__main__':
         % (Uele,Ureps,(Xtend - Xtstart)))
 
     # Calculate activity coefficient and propagate error with sim. results
-    sqtot = np.vstack(np.linspace(0.001,np.sqrt(np.max(tot)),100))
+    sqtot = np.vstack(np.linspace(0.001,
+                                  np.sqrt(pz.prop.solubility25[Uele]),
+                                  100))
     tot   = sqtot**2
     mols  = np.concatenate((tot,tot),axis=1)
     T     = np.full_like(tot,298.15)
