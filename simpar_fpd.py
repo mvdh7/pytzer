@@ -93,81 +93,39 @@ fpdp = pd.pivot_table(fpdbase,
                       index   = ['ele','src'],
                       aggfunc = [np.mean,np.std,len])
 
-#%% Run uncertainty propagation analysis [FPD]
+#%% Solve for FPD expected from model (SLOW - a couple of minutes)
 tot = pd2vs(fpdbase.m)
 _,_,_,nC,nA = pz.data.znu(fpdp.index.levels[0])
 fpdbase['fpd_calc'] = np.nan
-fpdbase['dfpd'    ] = np.nan
+
+for E,ele in enumerate(fpdp.index.levels[0]): 
+    print('Solving for model FPD for ' + ele + '...')
+
+    Eions = pz.data.ele2ions(np.array([ele]))[0]
+    EL = fpdbase.ele == ele
+    
+    if ele == 'CaCl2':
+        
+        fpdbase.loc[EL,'fpd_calc'] = pz.isoref.tot2fpd25_CaCl2(tot[EL])
+        
+    else:
+        
+        fpdbase.loc[EL,'fpd_calc'] = pz.tconv.tot2fpd25(tot[EL],
+                                                        Eions,
+                                                        nC[E],
+                                                        nA[E],
+                                                        cf)
+        
+# Calculate residuals
+fpdbase['dfpd'] = fpdbase.fpd - fpdbase.fpd_calc
+    
+#%% Run uncertainty propagation analysis [FPD]
 fpdbase['dfpd_sys'] = np.nan
 fpderr_sys = {}
 fpderr_rdm = {}
 
 for E,ele in enumerate(fpdp.index.levels[0]): 
     print('Optimising FPD fit for ' + ele + '...')
-    
-    # Calculate expected FPD
-    Eions = pz.data.ele2ions(np.array([ele]))[0]
-    EL = fpdbase.ele == ele
-    
-    if ele == 'CaCl2':
-#        fpdbase.loc[EL,'fpd_calc'] = pz.tconv.tot2fpd25(tot[EL],
-#                                                        Eions,
-#                                                        nC[E],
-#                                                        nA[E],
-#                                                        cf)
-        
-# =============================================================================
-# Replicate pz.tconv.tot2fpd25 function, but using PCHIP interpolation to get
-#  CaCl2 osmotic coefficient at 298.15 K following RC97
-        
-        fpdbase.loc[EL,'fpd_calc'] = pz.isoref.tot2fpd25_CaCl2(tot[EL])
-        
-#        Ctot = tot[EL]
-#        CnC = nC[E]
-#        CnA = nA[E]
-#        Cmols = np.concatenate((Ctot*CnC,Ctot*CnA), axis=1)
-#        Cfpd = np.full_like(Ctot,np.nan)
-#        CT25 = np.full_like(Ctot,298.15, dtype='float64')
-#        
-##        Cosm25 = pz.model.osm(Cmols,Eions,CT25,cf)
-#        
-#        # Use PCHIP interpolation to get calculated osm25 for CaCl2
-#        with open('pickles/fortest_CaCl2_10.pkl','rb') as f:
-#            rc97,F = pickle.load(f)
-#        pchip_CaCl2 = pchip(rc97.tot,rc97.osm)
-#        
-#        Cosm25 = pchip_CaCl2(Ctot)
-#        
-#        CiT25 = np.vstack([298.15])
-#        CiT00 = np.vstack([273.15])
-#        
-#        for i in range(len(Ctot)):
-#            
-#            if i/10. == np.round(i/10.):
-#                print('Getting FPD %d of %d...' % (i+1,len(Ctot)))
-#            
-#            imols = np.array([Cmols[i,:]])
-#            
-## NOT QUITE RIGHT: pz.tconv.osm2osm still uses cf for thermal properties of
-##                  CaCl2, which are not properly constrained there...
-#            
-#            Cfpd[i] = optimize.least_squares(lambda fpd: \
-#               (pz.tconv.osm2osm(Ctot[i],CnC,CnA,Eions,CiT00-fpd,CiT25,CiT25,
-#                                 cf,
-#                        pz.tconv.fpd2osm(imols,fpd)) - Cosm25[i]).ravel(),
-#                                            0., method='trf')['x'][0]
-#               
-#        fpdbase.loc[EL,'fpd_calc'] = Cfpd
-        
-# =============================================================================      
-        
-    else:
-        fpdbase.loc[EL,'fpd_calc'] = pz.tconv.tot2fpd(tot[EL],
-                                                      Eions,
-                                                      nC[E],
-                                                      nA[E],
-                                                      cf)
-    fpdbase.loc[EL,'dfpd'] = fpdbase.fpd[EL] - fpdbase.fpd_calc[EL]
     
     # Estimate uncertainties for each source
     fpderr_sys[ele] = {}
