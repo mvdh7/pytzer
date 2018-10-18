@@ -6,44 +6,33 @@
 #           pickles/simpar_fpd.pkl
 
 import numpy  as np
-import pandas as pd
 import pickle
 import pytzer as pz
 pd2vs = pz.misc.pd2vs
-from autograd        import jacobian as jac
 from multiprocessing import Pool
 from scipy.io        import savemat
-from sys             import argv
+#from sys             import argv
 from time            import time
 
-#argv = ['','KCl','10']
+argv = ['','NaCl','10']
 
 # Get input args
 Uele  =     argv[1]
 Ureps = int(argv[2])
 
 # Load raw datasets
-datapath = 'datasets/'
-fpdbase,mols,ions,T = pz.data.fpd(datapath)
+with open('pickles/simpar_fpd.pkl','rb') as f:
+    fpdbase,mols,ions,T,fpderr_rdm,fpderr_sys = pickle.load(f)
 
-# Select electrolytes for analysis
+# Select electrolyte for analysis
 fpdbase,mols,ions,T = pz.data.subset_ele(fpdbase,mols,ions,T,
                                          np.array([Uele]))
 
-# Exclude smoothed datasets
-S = fpdbase.smooth == 0
-fpdbase = fpdbase[S]
-mols    = mols   [S]
-
-# Create initial electrolytes pivot table
-fpde = pd.pivot_table(fpdbase,
-                      values  = ['m'  ],
-                      index   = ['ele'],
-                      aggfunc = [np.min,np.max,len])
-
-# Load outputs from simpytz_fpd.py
-with open('pickles/simpar_fpd.pkl','rb') as f:
-    _,fpderr_rdm,fpderr_sys = pickle.load(f)
+if Uele == 'CaCl2':
+    L = fpdbase.m <= 3.5
+    fpdbase = fpdbase[L]
+    mols    = mols   [L]
+    T       = T      [L]
 
 # Prepare model cdict
 cf = pz.cdicts.MPH
@@ -53,33 +42,24 @@ cf.add_zeros(fpdbase.ele)
 # Extract metadata from fpdbase
 tot  = pd2vs(fpdbase.m  )
 srcs = pd2vs(fpdbase.src)
-_,zC,zA,nC,nA = pz.data.znu(fpde.index)
+zC   = pd2vs(fpdbase.zC )
+zA   = pd2vs(fpdbase.zA )
+nC   = pd2vs(fpdbase.nC )
+nA   = pd2vs(fpdbase.nA )
 
 # Identify which coefficients to fit
 wbC = {'NaCl' : 'b0b1C0C1',
        'KCl'  : 'b0b1C0C1'}
 which_bCs = wbC[Uele]
 
-fpdbase['t25'] = 298.15
-T1    = pd2vs(fpdbase.t25)
+T25   = pd2vs(fpdbase.t25)
 
 nCvec = pd2vs(fpdbase.nC)
 nAvec = pd2vs(fpdbase.nA)
 
 # Prepare for simulation
 Eions = pz.data.ele2ions(np.array([Uele]))[0]
-
-fpdbase['fpd_calc'] = pz.tconv.tot2fpd(tot,Eions,nC,nA,cf)
-
-# Calculate osmotic coefficient etc.
-fpdbase['osm'] = pz.tconv.fpd2osm(mols,pd2vs(fpdbase.fpd))
-fpdbase['osm25'] = pz.tconv.osm2osm(tot,nCvec,nAvec,ions,
-                                    273.15-pd2vs(fpdbase.fpd),T1,T1,
-                                    cf,pd2vs(fpdbase.osm))
-fpdbase['osm25_calc'] = pz.model.osm(mols,ions,T1,cf)
     
-#%% Simulate new datasets
-
 # Set up for fitting
 alph1 = np.float_(2)
 alph2 = -9
@@ -87,19 +67,19 @@ omega = np.float_(2.5)
 fpd_calc = pd2vs(fpdbase.fpd_calc)
 
 # Define weights for fitting
-#weights = np.ones(np.size(T1)) # uniform
+weights = np.ones(np.size(T25)) # uniform
 #weights = np.sqrt(tot) # sqrt of molality
 # ... based on random errors in each dataset:
-weights = np.full_like(tot,1, dtype='float64')
-for src in np.unique(srcs):
-    SL = srcs == src
-    weights[SL] = 1 / np.sqrt(np.sum(fpderr_rdm[Uele][src]**2))
-weights = weights
+#weights = np.full_like(tot,1, dtype='float64')
+#for src in np.unique(srcs):
+#    SL = srcs == src
+#    weights[SL] = 1 / np.sqrt(np.sum(fpderr_rdm[Uele][src]**2))
+#weights = weights
 
 # Do the fit to the original dataset
 b0dir,b1dir,b2dir,C0dir,C1dir,bCdir_cv,mseo \
-    = pz.fitting.bC(mols,zC,zA,T1,alph1,alph2,omega,nC,nA,pd2vs(fpdbase.osm25),
-                    weights,which_bCs,'osm')
+    = pz.fitting.bC(mols,zC,zA,T25,alph1,alph2,omega,nC,nA,
+                    pd2vs(fpdbase.osm25_meas),weights,which_bCs,'osm')
 bCdir = np.hstack((b0dir,b1dir,b2dir,C0dir,C1dir))
 
 ## Check understanding of MSE calculation
@@ -108,30 +88,35 @@ bCdir = np.hstack((b0dir,b1dir,b2dir,C0dir,C1dir))
 #                                            alph1,alph2,omega)) * weights)**2)
 #mse_dir  = np.mean((pd2vs(fpdbase.osm25 - fpdbase.osm25_calc) * weights)**2)
 
-# Define fitting function
+##%% Test simulation function
+#fpdbase['fpd_sim'] = pz.sim.fpd(tot,fpd_calc,srcs,Uele,fpderr_rdm,fpderr_sys)
+#fpdbase.to_csv('pickles/fpdbase_sim.csv')
+
+#%% Define fitting function
 def Eopt(rseed=None):
 
     # Seed random numbers
     np.random.seed(rseed)
 
     # Simulate new FPD dataset
-    Ufpd = pz.sim.fpd(tot,pd2vs(fpdbase.fpd_calc),
-                      srcs,Uele,fpderr_rdm,fpderr_sys)
+    Ufpd = pz.sim.fpd(tot,fpd_calc,srcs,Uele,fpderr_rdm,fpderr_sys)
     
     # Convert FPD to osmotic coefficient
     Uosm = pz.tconv.fpd2osm(mols,Ufpd)
     
     # Convert osmotic coefficient to 298.15 K
     Uosm25 = pz.tconv.osm2osm(tot,nCvec,nAvec,ions,
-                              273.15 - Ufpd,T1,T1,
+                              273.15 - Ufpd,T25,T25,
                               cf,Uosm)
 
     # Solve for Pitzer model coefficients
     b0,b1,b2,C0,C1,_,_ \
-        = pz.fitting.bC(mols,zC,zA,T1,alph1,alph2,omega,nC,nA,Uosm25,
+        = pz.fitting.bC(mols,zC,zA,T25,alph1,alph2,omega,nC,nA,Uosm25,
                         weights,which_bCs,'osm')
 
     return b0,b1,b2,C0,C1
+
+b0,b1,b2,C0,C1 = Eopt()
 
 #%% Multiprocessing loop
 if __name__ == '__main__':
@@ -171,6 +156,7 @@ if __name__ == '__main__':
     tot   = sqtot**2
     mols  = np.concatenate((tot,tot),axis=1)
     T     = np.full_like(tot,298.15)
+    _,zC,zA,nC,nA = pz.data.znu([Uele])
     
     # Get example propagation splines
     acfMX_sim, UacfMX_sim = pz.fitting.ppg_acfMX(mols,zC,zA,T,bCsim,bCsim_cv,
@@ -180,6 +166,9 @@ if __name__ == '__main__':
                                                  alph1,alph2,omega,nC,nA)
     
     osm_sim, Uosm_sim = pz.fitting.ppg_osm(mols,zC,zA,T,bCsim,bCsim_cv,
+                                           alph1,alph2,omega)
+    
+    osm_dir, Uosm_dir = pz.fitting.ppg_osm(mols,zC,zA,T,bCdir,bCdir_cv,
                                            alph1,alph2,omega)
 
     # Pickle/save results...
@@ -200,4 +189,6 @@ if __name__ == '__main__':
                              'UacfMX_sim': UacfMX_sim,
                              'UacfMX_dir': UacfMX_dir,
                              'osm_sim'   : osm_sim   ,
-                             'Uosm_sim'  : Uosm_sim  })
+                             'Uosm_sim'  : Uosm_sim  ,
+                             'osm_dir'   : osm_dir   ,
+                             'Uosm_dir'  : Uosm_dir  })
