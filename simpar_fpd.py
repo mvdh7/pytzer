@@ -195,10 +195,25 @@ for stype in ['all_int','all_grad']:
                                         for ele in fpde.index])
     fpderr_rdm[stype] = np.concatenate([fpderr_rdm[ele][stype] \
                                         for ele in fpde.index])
+    
+fpderr_sys['all_int_var'] = np.var(fpderr_sys['all_int'] \
+          [fpderr_sys['all_int'] > -0.15])
 
+fpderr_sys['all_grad_var'] = np.var(fpderr_sys['all_grad'] \
+          [np.logical_and(fpderr_sys['all_grad'] != 0,
+                          fpderr_sys['all_grad'] > -0.05)])
+
+L = np.logical_and(fpderr_sys['all_grad'] != 0,
+                   fpderr_sys['all_grad'] > -0.05)
+L = np.logical_and(fpderr_sys['all_int' ] > -0.15,L)
+#L = fpderr_sys['all_grad'] != 0
+fpderr_sys['all_cov'] = np.cov(np.concatenate(([fpderr_sys['all_int' ][L]],
+                                               [fpderr_sys['all_grad'][L]]),
+                                              axis=0))
+    
 # Pickle outputs for simloop
 with open('pickles/simpar_fpd.pkl','wb') as f:
-    pickle.dump((fpdbase,fpderr_rdm,fpderr_sys),f)
+    pickle.dump((fpdbase,mols,ions,T,fpderr_rdm,fpderr_sys),f)
 
 # Save results for MATLAB figures
 fpdbase.to_csv('pickles/simpar_fpd.csv')
