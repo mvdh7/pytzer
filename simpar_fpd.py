@@ -133,6 +133,8 @@ fpderr_rdm = {}
 for E,ele in enumerate(fpdp.index.levels[0]): 
     print('Optimising FPD fit for ' + ele + '...')
     
+    EL = fpdbase.ele == ele
+    
     # Estimate uncertainties for each source
     fpderr_sys[ele] = {}
     fpderr_rdm[ele] = {}
@@ -140,8 +142,8 @@ for E,ele in enumerate(fpdp.index.levels[0]):
     for src in fpdp.loc[ele].index:
         
         SL = np.logical_and(EL,fpdbase.src == src)
-#        if ele == 'CaCl2':
-#            SL = np.logical_and(SL,fpdbase.m <= 1.5)
+        if ele == 'CaCl2':
+            SL = np.logical_and(SL,fpdbase.m <= 3.5)
         
         # Evaluate systematic component of error
         fpderr_sys[ele][src] = optimize.least_squares(lambda syserr: \
@@ -175,7 +177,7 @@ for E,ele in enumerate(fpdp.index.levels[0]):
             fpderr_rdm[ele][src][0] = optimize.least_squares(lambda rdmerr: \
                 rdmerr - np.abs(fpdbase[SL].dfpd_sys), 0.)['x'][0]
          
-# Add 'all' fields for easier plotting in MATLAB
+#%% Add 'all' fields for easier plotting in MATLAB
 for ele in fpdp.index.levels[0]:
     Eksys = list(fpderr_sys[ele].keys())
     fpderr_sys[ele]['all_int'] = np.array( \
@@ -188,38 +190,11 @@ for ele in fpdp.index.levels[0]:
     fpderr_rdm[ele]['all_grad'] = np.array( \
         [fpderr_rdm[ele][src][1] for src in Ekrdm])
 
-#%% Generate fit splines for MATLAB
-pshape_fpd = {'tot': np.vstack(np.linspace(0.001,3,100))**2}
-pshape_fpd['t25'] = np.full_like(pshape_fpd['tot'],298.15)
-
-# Define and differentiate conversion function
-def fpd2osm25(tot,n1,n2,ions,fpd,T1,TR,cf):
-    mols = np.concatenate((tot*n1,tot*n2),axis=1)
-    return pz.tconv.osm2osm(tot,n1,n2,ions,273.15-fpd,T1,TR,cf,
-                            pz.tconv.fpd2osm(mols,fpd))
-
-dosm25_dfpd = egrad(fpd2osm25,argnum=4)
-
-
-for ele in fpdp.index.levels[0]:
-    
-    Eions = pz.data.ele2ions(np.array([ele]))[0]
-    _,_,_,EnC,EnA = pz.data.znu(np.array([ele]))
-    
-    pshape_fpd['fpd_' + ele] = pz.tconv.tot2fpd(pshape_fpd['tot'],
-                                                Eions,EnC,EnA,cf)
-    
-    pshape_fpd['osm25_' + ele] = fpd2osm25(pshape_fpd['tot'],EnC,EnA,Eions,
-                                           pshape_fpd['fpd_' + ele],
-                                           pshape_fpd['t25'],
-                                           pshape_fpd['t25'],
-                                           cf)
-    
-    pshape_fpd['dosm25_' + ele] = dosm25_dfpd(pshape_fpd['tot'],EnC,EnA,Eions,
-                                              pshape_fpd['fpd_' + ele],
-                                              pshape_fpd['t25'],
-                                              pshape_fpd['t25'],
-                                              cf)
+for stype in ['all_int','all_grad']:
+    fpderr_sys[stype] = np.concatenate([fpderr_sys[ele][stype] \
+                                        for ele in fpde.index])
+    fpderr_rdm[stype] = np.concatenate([fpderr_rdm[ele][stype] \
+                                        for ele in fpde.index])
 
 # Pickle outputs for simloop
 with open('pickles/simpar_fpd.pkl','wb') as f:
@@ -228,7 +203,6 @@ with open('pickles/simpar_fpd.pkl','wb') as f:
 # Save results for MATLAB figures
 fpdbase.to_csv('pickles/simpar_fpd.csv')
 savemat('pickles/simpar_fpd.mat',{'fpderr_sys':fpderr_sys,
-                                  'fpderr_rdm':fpderr_rdm,
-                                  'pshape_fpd':pshape_fpd})
+                                  'fpderr_rdm':fpderr_rdm})
 
 print('FPD fit optimisation complete!')
