@@ -10,7 +10,7 @@ import pandas as pd
 import pickle
 import pytzer as pz
 pd2vs = pz.misc.pd2vs
-from autograd        import jacobian as jac
+#from autograd        import jacobian as jac
 from multiprocessing import Pool
 from scipy.io        import savemat
 from sys             import argv
@@ -192,7 +192,9 @@ if __name__ == '__main__':
         % (Uele,Ureps,(Xtend - Xtstart)))
 
     # Calculate activity coefficient and propagate error with sim. results
-    sqtot = np.vstack(np.linspace(0.001,np.sqrt(np.max(tot)),100))
+    sqtot = np.vstack(np.linspace(0.001,
+                                  np.sqrt(pz.prop.solubility25[Uele]),
+                                  100))
     tot   = sqtot**2
     mols  = np.concatenate((tot,tot),axis=1)
     T     = np.full_like(tot,298.15)
