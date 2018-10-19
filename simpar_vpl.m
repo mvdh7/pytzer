@@ -21,11 +21,11 @@ for S = 1:numel(vplsrcs.all.srcs)
 end %for S
 mksz = 10;
 
-for E = 3%1:numel(eles)
+for E = 1:numel(eles)
 ele = eles{E};
 
-load(['pickles/simloop_vpl_bC_' ele '_100.mat']);
-fpdfpd = load(['pickles/simloop_fpd_bC_' ele '_100.mat']);
+load(['pickles/simloop_vpl_bC_' ele '_1000.mat']);
+% fpdfpd = load(['pickles/simloop_fpd_bC_' ele '_1000.mat']);
 
 % Define settings that depend upon electrolyte
 eletit = ele;
@@ -69,9 +69,22 @@ subplot(2,2,1); hold on
 
 patch([tot; flipud(tot)],[sqrt(Uosm_sim); flipud(-sqrt(Uosm_sim))], ...
     'y', 'edgecolor','none', 'facealpha',0.5)
-patch([fpdfpd.tot; flipud(fpdfpd.tot)], ...
-    [sqrt(fpdfpd.Uosm_sim); flipud(-sqrt(fpdfpd.Uosm_sim))], ...
-    'c', 'edgecolor','none', 'facealpha',0.5)
+% patch([fpdfpd.tot; flipud(fpdfpd.tot)], ...
+%     [sqrt(fpdfpd.Uosm_sim); flipud(-sqrt(fpdfpd.Uosm_sim))], ...
+%     'c', 'edgecolor','none', 'facealpha',0.5)
+% 
+% TVPL = tot;
+% UVPL = Uosm_sim;
+% 
+% TFPD = fpdfpd.tot;
+% UFPD = fpdfpd.Uosm_sim;
+% 
+% UFINAL = (1./UFPD + 1./UVPL).*(UFPD .* UVPL ./ (UFPD + UVPL)).^2;
+% 
+% plot(TFPD,sqrt(UFPD),'b')
+% plot(TVPL,sqrt(UVPL),'r')
+% 
+% plot(TVPL,sqrt(UFINAL),'k')
 
     % Plot data by source
     for S = 1:numel(vplsrcs.(ele).srcs)
