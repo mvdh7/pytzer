@@ -1,45 +1,13 @@
 %% Load Python outputs
 cd 'E:\Dropbox\_UEA_MPH\pytzer'
-pfpd = load('pickles/simpar_fpd_v2.mat');
-pfpd = struct2table(pfpd.pshape_fpd);
-fpdbase = readtable('pickles/simpar_fpd_v2.csv');
+load('pickles/simpar_fpd_osm25.mat');
+% pfpd = struct2table(pfpd.pshape_fpd);
+fpdbase = readtable('pickles/simpar_fpd_osm25.csv');
 fpdsrcs.all.srcs = unique(fpdbase.src);
 
-% figure(5); clf; hold on
-% plot(pfpd.tot,pfpd.dosm25_fpd_ddT_CaCl2,'r')
-% % nl = plot(pfpd.tot,pfpd.dosm25_fpd_ddT_CaCl2.*pfpd.tot,'r--'); nolegend(nl)
-% plot(pfpd.tot,pfpd.dosm25_fpd_dmT_CaCl2,'m')
-% plot(pfpd.tot,pfpd.dosm25_fpd_ddtot_CaCl2,'b')
-% plot(pfpd.tot,pfpd.dosm25_fpd_dmtot_CaCl2,'k')
-% plot(pfpd.tot,pfpd.osm25_fpd_err_CaCl2 - pfpd.osm25_calc_CaCl2)
-% grid on
-% 
-% ylim([-1 1]*3)
-% 
-% legend('dT','mT','dtot','mtot')
+% fsim = readtable('pickles/fpdbase_sim_osm25.csv');
 
-% Plot raw FPD data
-figure(4); clf
-
-subplot(2,1,1); hold on
-    L = strcmp(fpdbase.ele,'KCl');
-    scatter(fpdbase.m(L),fpdbase.dfpd(L))
-    plot(pfpd.tot,pfpd.fpd_err_CaCl2-pfpd.fpd_CaCl2,'r')
-    xlim([0 6.25])
-    plot(get(gca,'xlim'),[0 0],'k')
-    grid on
-
-subplot(2,1,2); hold on
-    plot(pfpd.tot,pfpd.osm25_fpd_CaCl2-pfpd.osm25_calc_CaCl2,'k')
-    scatter(fpdbase.m(L),fpdbase.dosm25(L))
-    plot(pfpd.tot,pfpd.osm25_fpd_err_CaCl2-pfpd.osm25_calc_CaCl2,'r')
-    xlim([0 6.25])
-    ylim([-1 1]*1e-2)
-    grid on
-
-
-
-%% Choose electrolyte to plot
+% %% Choose electrolyte to plot
 eles = {'KCl' 'NaCl' 'CaCl2'};
 
 % Define marker styles
@@ -54,7 +22,7 @@ for S = 1:numel(fpdsrcs.all.srcs)
 end %for S
 mksz = 10;
 
-for E = 1:numel(eles)
+for E = 1%:numel(eles)
 ele = eles{E};
 
 % Define settings that depend upon electrolyte
@@ -75,6 +43,10 @@ switch ele
         eletit = 'CaCl_2';
 end %switch
 
+% fpdbase = fsim;
+% fpdbase.dosm25 = fpdbase.osm25_sim - fpdbase.osm25_calc;
+% fpdbase.dfpd_sys = fpdbase.dfpd_sys + fpdbase.fpd - fpdbase.fpd_sim;
+
 % Get logicals etc.
 EL = strcmp(fpdbase.ele,ele);
 fpdsrcs.(ele).srcs = unique(fpdbase.src(EL));
@@ -93,7 +65,7 @@ subplot(2,2,1); hold on
         SL = EL & strcmp(fpdbase.src,src);
 %         SL = SL & fpdbase.t == 298.15;
         
-        scatter(fpdbase.m(SL),fpdbase.dosm25(SL), ...
+        scatter(sqrt(fpdbase.m(SL)),fpdbase.dosm25(SL), ...
             mksz*fmsm.(src),fclr.(src),'filled', 'marker',fmrk.(src), ...
             'markeredgecolor',fclr.(src), ...
             'markerfacealpha',0.7, 'markeredgealpha',0)
@@ -112,8 +84,10 @@ subplot(2,2,1); hold on
             
     end %for S
     
-    xlim(fxl)
+    xlim(sqrt(fxl))
     ylim(fyl)
+    
+    plot(sqrt(0.1)*[1 1],fyl,'k')
     
     plot(get(gca,'xlim'),[0 0],'k')
     setaxes(gca,8)
@@ -154,13 +128,13 @@ subplot(2,2,2); hold on
 
 subplot(2,2,3); hold on
 
-    xlim(fxl)
-    ylim([0.999999999e-5 1])
+    xlim(sqrt(fxl))
+%     ylim([0.999999999e-5 1])
 
     setaxes(gca,8)
-    set(gca, 'box','on', 'xtick',fxt, 'ytick',10.^(-6:0))
+    set(gca, 'box','on', 'xtick',fxt)%, 'ytick',10.^(-6:0))
 %     set(gca, 'yticklabel',num2str(get(gca,'ytick')','%.1f'))
-    set(gca, 'YScale','log')
+%     set(gca, 'YScale','log')
     
     xlabel(['\itm\rm(' eletit ') / mol\cdotkg^{-1}'])
     ylabel(['|\Delta\phi ' endash ' \itm\rm \delta_{FPD}| \times 10^{3}'])
@@ -168,26 +142,32 @@ subplot(2,2,3); hold on
     text(0,1.09,'(b)', 'units','normalized', 'fontname','arial', ...
         'fontsize',8, 'color','k')
     
-%     % Plot data by source
-%     for S = 1:numel(fpdsrcs.(ele).srcs)
-% 
-%         src = fpdsrcs.(ele).srcs{S};
-%         SL = EL & strcmp(fpdbase.src,src);
-%         
-%         scatter(fpdbase.m(SL),abs(fpdbase.dfpd_sys(SL)), ...
-%             mksz*fmsm.(src),fclr.(src),'filled', 'marker',fmrk.(src), ...
-%             'markeredgecolor',fclr.(src), ...
-%             'markerfacealpha',0.7, 'markeredgealpha',0)
-%         
-%         if any(SL)
-%             Sx = linspace(min(fpdbase.m(SL)),max(fpdbase.m(SL)),100);
-%             Sy = fpderr_rdm.(ele).(src)(2) .* Sx ...
-%                 + fpderr_rdm.(ele).(src)(1);
-%             nl = plot(Sx,Sy, 'color',[fclr.(src) 0.5], ...
-%                 'linewidth',0.5); nolegend(nl)
-%         end %if
-%             
-%     end %for S
+    % Plot data by source
+    for S = 1:numel(fpdsrcs.(ele).srcs)
+
+        src = fpdsrcs.(ele).srcs{S};
+        SL = EL & strcmp(fpdbase.src,src);
+        
+        scatter(sqrt(fpdbase.m(SL)),abs(fpdbase.dosm25_sys(SL)), ...
+            mksz*fmsm.(src),fclr.(src),'filled', 'marker',fmrk.(src), ...
+            'markeredgecolor',fclr.(src), ...
+            'markerfacealpha',0.7, 'markeredgealpha',0)
+        
+        if any(SL)% && fpderr_rdm.(ele).(src)(2) ~= 0
+            Sx = linspace(min(fpdbase.m(SL)),max(fpdbase.m(SL)),1000);
+            Sy = fpderr_rdm.(ele).(src)(1) ...
+                + fpderr_rdm.(ele).(src)(2) ...
+                * exp(-Sx*fpderr_rdm.(ele).(src)(3));
+%             Sy = fpderr_rdm.(ele).(src)(1) ...
+%                 + fpderr_rdm.(ele).(src)(1) ./ Sx;
+            nl = plot(sqrt(Sx),Sy, 'color',[fclr.(src) 0.5], ...
+                'linewidth',0.5); nolegend(nl)
+        end %if
+            
+    end %for S
+    
+%     fx = 0:0.01:6;
+%     plot(fx,0.025*exp(-fx*3)+0.002,'k')
     
     spfg2 = gca;
     
@@ -199,3 +179,22 @@ spleg.Position = [0.8 0.63 0.18 0.25];
 % print('-r300',['figures/simpar_fpd_osm_' ele],'-dpng')
 
 end %for E
+
+%% histogram
+figure(4); clf; hold on
+printsetup(gcf,[9 6])
+
+bw = 0.01;
+
+histogram(fpderr_sys.all,-0.03:bw:0.03, 'normalization','count')
+
+fx = -0.035:0.0001:0.035;
+fy = normpdf(fx,0,fpderr_sys.all_rmse) * numel(fpderr_sys.all) * bw;
+
+plot(fx,fy)
+
+xlim(0.035*[-1 1])
+ylim([0 9])
+
+setaxes(gca,8)
+set(gca, 'box','on')
