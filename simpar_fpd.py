@@ -1,6 +1,6 @@
 # Import libraries
 from autograd import numpy as np
-from autograd import elementwise_grad as egrad
+#from autograd import elementwise_grad as egrad
 import pandas as pd
 from scipy import optimize
 from scipy.io import savemat
