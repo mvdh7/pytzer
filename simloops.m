@@ -1,5 +1,5 @@
 vplbase = readtable('pickles/simpar_vpl.csv');
-fpdbase = readtable('pickles/simpar_fpd.csv');
+fpdbase = readtable('pickles/simpar_fpd_osm25.csv');
 
 %%
 eles = {'NaCl' 'KCl' 'CaCl2'};
@@ -34,7 +34,7 @@ VL = strcmp(vplbase.ele,ele);
 FL = strcmp(fpdbase.ele,ele);
 
 vplu = load(['pickles/simloop_vpl_bC_' ele '_1000.mat']);
-fpdu = load(['pickles/simloop_fpd_bC_' ele '_1000.mat']);
+fpdu = load(['pickles/simloop_fpd_osm25_bC_' ele '_100.mat']);
 
 varf = (1./fpdu.Uosm_sim + 1./vplu.Uosm_sim) ...
     .* (fpdu.Uosm_sim .* vplu.Uosm_sim ...
