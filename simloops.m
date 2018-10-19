@@ -4,7 +4,7 @@ fpdbase = readtable('pickles/simpar_fpd_osm25.csv');
 %%
 eles = {'NaCl' 'KCl' 'CaCl2'};
 
-errtype = 'dir'; % sim or dir
+errtype = 'sim'; % sim or dir
 
 for E = 1:numel(eles)
 ele = eles{E};
