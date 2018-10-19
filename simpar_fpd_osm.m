@@ -34,15 +34,20 @@ switch ele
         fxl = [0 5];
         fxt = 0:0.5:5;
         fyl = 0.05000000001*[-1 1];
+        fyt = -0.12:0.01:0.12;
     case 'NaCl'
         fxl = [0 6.5];
         fxt = 0:0.5:6;
         fyl = 0.05000000001*[-1 1];
+        fyt = -0.12:0.01:0.12;
     case 'CaCl2'
         fxl = [0 7.5];
         fxt = 0:0.5:6;
-        fyl = 0.05000000001*[-1 1];
+        fyl = 0.1200000001*[-1 1];
+        fyt = -0.12:0.03:0.12;
         eletit = 'CaCl_2';
+%         fpdbase = fpdbase(fpdbase.m < 3.5 ...
+%             | ~strcmp(fpdbase.src,'OBS90'),:);
 end %switch
 
 % fpdbase = fsim;
@@ -95,7 +100,7 @@ patch([tot; flipud(tot)],[sqrt(Uosm_sim); flipud(-sqrt(Uosm_sim))], ...
     
     plot(get(gca,'xlim'),[0 0],'k')
     setaxes(gca,8)
-    set(gca, 'box','on', 'xtick',fxt, 'ytick',-1:0.01:1)
+    set(gca, 'box','on', 'xtick',fxt, 'ytick',fyt)
     set(gca, 'xticklabel',num2str(get(gca,'xtick')','%.1f'))
     set(gca, 'yticklabel',num2str(get(gca,'ytick')','%.2f'))
     
@@ -181,7 +186,7 @@ subplot(2,2,3); hold on
     
 % Positioning    
 spfig.Position = [0.15 0.58 0.6 0.35];
-spfg2.Position = [0.15 0.08 0.6 0.35];
+spfg2.Position = [0.15 0.1 0.6 0.35];
 spleg.Position = [0.8 0.63 0.18 0.25];
 
 print('-r300',['figures/simpar_fpd_osm25_' ele],'-dpng')
@@ -208,7 +213,7 @@ ylim([0 9])
 setaxes(gca,8)
 set(gca, 'box','on')
 
-xlabel('\delta_{FPD} / K')
+xlabel('\delta_{FPD}')
 ylabel('Number of datasets')
 
 print('-r300','figures/simpar_fpd_osm25_hist','-dpng')
