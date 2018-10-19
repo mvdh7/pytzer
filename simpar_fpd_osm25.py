@@ -127,6 +127,7 @@ for E,ele in enumerate(fpdp.index.levels[0]):
     for src in fpdp.loc[ele].index:
         
         SL = np.logical_and(EL,fpdbase.src == src)
+        SLx = np.copy(SL)
         if ele == 'CaCl2' and src == 'OBS90':
             SL = np.logical_and(SL,fpdbase.m <= 3.5)
         
@@ -134,8 +135,8 @@ for E,ele in enumerate(fpdp.index.levels[0]):
         sysL = np.logical_and(SL,fpdbase.m >= 0.1)
         fpderr_sys[ele][src] = np.mean(fpdbase.dosm25[sysL])
 
-        fpdbase.loc[SL,'dosm25_sys'] \
-            =  fpdbase.dosm25[SL] - fpderr_sys[ele][src]
+        fpdbase.loc[SLx,'dosm25_sys'] \
+            =  fpdbase.dosm25[SLx] - fpderr_sys[ele][src]
                        
         # Evaluate random component of error
         fpderr_rdm[ele][src] = optimize.least_squares(lambda rdmerr: \
