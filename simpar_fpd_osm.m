@@ -22,23 +22,25 @@ for S = 1:numel(fpdsrcs.all.srcs)
 end %for S
 mksz = 10;
 
-for E = 1%:numel(eles)
+for E = 1:numel(eles)
 ele = eles{E};
+
+load(['pickles/simloop_fpd_osm25_bC_' ele '_100.mat'])
 
 % Define settings that depend upon electrolyte
 eletit = ele;
 switch ele
     case 'KCl'
         fxl = [0 5];
-        fxt = 0:5;
+        fxt = 0:0.5:5;
         fyl = 0.05000000001*[-1 1];
     case 'NaCl'
         fxl = [0 6.5];
-        fxt = 0:6;
+        fxt = 0:0.5:6;
         fyl = 0.05000000001*[-1 1];
     case 'CaCl2'
         fxl = [0 7.5];
-        fxt = 0:6;
+        fxt = 0:0.5:6;
         fyl = 0.05000000001*[-1 1];
         eletit = 'CaCl_2';
 end %switch
@@ -58,6 +60,9 @@ flegs = {};
 
 subplot(2,2,1); hold on
 
+patch([tot; flipud(tot)],[sqrt(Uosm_sim); flipud(-sqrt(Uosm_sim))], ...
+    'y', 'edgecolor','none', 'facealpha',0.5)
+
     % Plot data by source
     for S = 1:numel(fpdsrcs.(ele).srcs)
 
@@ -71,14 +76,13 @@ subplot(2,2,1); hold on
             'markerfacealpha',0.7, 'markeredgealpha',0)
         
         if any(SL)
-%             SPL = pshape_fpd.tot >= min(fpdbase.m(SL)) ...
-%                 & pshape_fpd.tot <= max(fpdbase.m(SL));
-%             Sx = pshape_fpd.tot(SPL);
+            Sx = [min(fpdbase.m(SL)) max(fpdbase.m(SL))];
+            Sy = ones(size(Sx)) * fpderr_sys.(ele).(src);
 %             Sy = (fpderr_sys.(ele).(src)(2) .* Sx ...
 %                 + fpderr_sys.(ele).(src)(1)) ...
 %                 .* pshape_fpd.(['dosm25_' ele])(SPL);
-% %             nl = plot(Sx,Sy, 'color',[fclr.(src) 0.5], ...
-% %                 'linewidth',0.5); nolegend(nl)
+            nl = plot(sqrt(Sx),Sy, 'color',[fclr.(src) 0.5], ...
+                'linewidth',0.5); nolegend(nl)
             flegs{end+1} = src;
         end %if
             
@@ -87,14 +91,15 @@ subplot(2,2,1); hold on
     xlim(sqrt(fxl))
     ylim(fyl)
     
-    plot(sqrt(0.1)*[1 1],fyl,'k')
+%     plot(sqrt(0.1)*[1 1],fyl,'k')
     
     plot(get(gca,'xlim'),[0 0],'k')
     setaxes(gca,8)
     set(gca, 'box','on', 'xtick',fxt, 'ytick',-1:0.01:1)
+    set(gca, 'xticklabel',num2str(get(gca,'xtick')','%.1f'))
     set(gca, 'yticklabel',num2str(get(gca,'ytick')','%.2f'))
     
-    xlabel(['\itm\rm(' eletit ') / mol\cdotkg^{-1}'])
+    xlabel(['[\itm\rm(' eletit ') / mol\cdotkg^{-1}]^{1/2}'])
     ylabel('\Delta\phi_{25}')
     
     text(0,1.09,'(a)', 'units','normalized', 'fontname','arial', ...
@@ -136,7 +141,7 @@ subplot(2,2,3); hold on
 %     set(gca, 'yticklabel',num2str(get(gca,'ytick')','%.1f'))
 %     set(gca, 'YScale','log')
     
-    xlabel(['\itm\rm(' eletit ') / mol\cdotkg^{-1}'])
+    xlabel(['[\itm\rm(' eletit ') / mol\cdotkg^{-1}]^{1/2}'])
     ylabel(['|\Delta\phi ' endash ' \itm\rm \delta_{FPD}| \times 10^{3}'])
     
     text(0,1.09,'(b)', 'units','normalized', 'fontname','arial', ...
@@ -169,6 +174,9 @@ subplot(2,2,3); hold on
 %     fx = 0:0.01:6;
 %     plot(fx,0.025*exp(-fx*3)+0.002,'k')
     
+    set(gca, 'xticklabel',num2str(get(gca,'xtick')','%.1f'))
+    set(gca, 'yticklabel',num2str(get(gca,'ytick')'*1e3))
+    
     spfg2 = gca;
     
 % Positioning    
@@ -176,7 +184,7 @@ spfig.Position = [0.15 0.58 0.6 0.35];
 spfg2.Position = [0.15 0.08 0.6 0.35];
 spleg.Position = [0.8 0.63 0.18 0.25];
 
-% print('-r300',['figures/simpar_fpd_osm_' ele],'-dpng')
+print('-r300',['figures/simpar_fpd_osm25_' ele],'-dpng')
 
 end %for E
 
@@ -186,15 +194,21 @@ printsetup(gcf,[9 6])
 
 bw = 0.01;
 
-histogram(fpderr_sys.all,-0.03:bw:0.03, 'normalization','count')
+histogram(fpderr_sys.all,-0.03:bw:0.03, 'normalization','count', ...
+    'facecolor',0.3*[1 1 1])
 
 fx = -0.035:0.0001:0.035;
 fy = normpdf(fx,0,fpderr_sys.all_rmse) * numel(fpderr_sys.all) * bw;
 
-plot(fx,fy)
+plot(fx,fy,'k', 'linewidth',1)
 
 xlim(0.035*[-1 1])
 ylim([0 9])
 
 setaxes(gca,8)
 set(gca, 'box','on')
+
+xlabel('\delta_{FPD} / K')
+ylabel('Number of datasets')
+
+print('-r300','figures/simpar_fpd_osm25_hist','-dpng')
