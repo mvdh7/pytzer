@@ -27,11 +27,11 @@ with open('pickles/simpar_fpd_osm25.pkl','rb') as f:
 fpdbase,mols,ions,T = pz.data.subset_ele(fpdbase,mols,ions,T,
                                          np.array([Uele]))
 
-if Uele == 'CaCl2':
-    L = fpdbase.m <= 3.5
-    fpdbase = fpdbase[L]
-    mols    = mols   [L]
-    T       = T      [L]
+#if Uele == 'CaCl2':
+#    L = np.logical_or(fpdbase.m <= 3.5,fpdbase.src != 'OBS90')
+#    fpdbase = fpdbase[L]
+#    mols    = mols   [L]
+#    T       = T      [L]
 
 # Prepare model cdict
 cf = pz.cdicts.MPH
