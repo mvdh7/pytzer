@@ -50,6 +50,25 @@ def vpl(tot,osm_calc,srcs,ele,vplerr_rdm,vplerr_sys):
 
 ##### FREEZING POINT DEPRESSION ###############################################
 
+def fpd_osm25(tot,osm25_calc,srcs,ele,fpderr_rdm,fpderr_sys):
+    
+    osm25 = np.copy(osm25_calc)
+    
+    for S,src in enumerate(np.unique(srcs)):
+
+        SL = src == srcs
+        
+        osm25[SL] = osm25[SL] + np.random.normal(loc=0,
+            scale=fpderr_sys['all_rmse']) \
+                + np.random.normal(size=sum(SL),loc=0,
+                    scale=(fpderr_rdm[ele][src][0] \
+                        + fpderr_rdm[ele][src][1] \
+                        * np.exp(-tot[SL] * fpderr_rdm[ele][src][2])) \
+                        * np.sqrt(2/np.pi))   
+
+    return osm25
+
+
 def fpd(tot,fpd_calc,srcs,ele,fpderr_rdm,fpderr_sys):
 
     fpd = np.copy(fpd_calc)
