@@ -1,6 +1,6 @@
 % Select test and reference electrolytes
-tst = 'NaCl';
-ref = 'KCl';
+tst = 'KCl';
+ref = 'CaCl2';
 
 % Get electrolyte-specifics
 tsttit = tst;
@@ -12,7 +12,14 @@ switch tst
         fyt = -0.012:0.006:0.012;
         fyl2 = [0 0.008];
         fyt2 = 0:0.002:0.008;
-
+    case 'CaCl2'
+        tsttit = 'CaCl_2';
+        fxl = [0 2];
+        fxt = 0:0.5:2.5;
+        fyl = 0.012 * [-1 1];
+        fyt = -0.012:0.006:0.012;
+        fyl2 = [0 0.008];
+        fyt2 = 0:0.002:0.008;
 end %switch
 
 % Load data from simpar_iso.py
@@ -23,15 +30,7 @@ load([froot 'isoerr_t' tst '_r' ref '.mat'])
 
 % Define marker styles
 srcs = unique(isobase.src);
-mrks = repmat({'o' 'v' '^' '<' '>' 'sq' 'h' 'p' 'd'},1,3);
-msms = repmat([ 1   1   1   1   1   1    1   3   1 ],1,3);
-clrs = repmat([228,26,28; 55,126,184; 77,175,74; 152,78,163; 255,127,0; 
-    166,86,40; 247,129,191; 153,153,153; 114 13 14] / 255,3,1);
-for S = 1:numel(srcs)
-    fmrk.(srcs{S}) = mrks{S};
-    fclr.(srcs{S}) = clrs(S,:);
-    fmsm.(srcs{S}) = msms(S);
-end %for S
+[fmrk,fclr,fmsm] = simpar_markers(srcs);
 mksz = 10;
 
 figure(7); clf

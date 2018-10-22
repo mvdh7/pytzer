@@ -3,11 +3,12 @@ import pytzer as pz
 from scipy.io import savemat
 from scipy import optimize
 import pandas as pd
+import pickle
 pd2vs = pz.misc.pd2vs
 
 # Define test and ref electrolytes:
-tst = 'NaCl'
-ref = 'KCl'
+tst = 'CaCl2'
+ref = 'NaCl'
 
 # Load raw isopiestic dataset and cut to only 298.15 K
 isobase = pz.data.iso('datasets/')
@@ -123,7 +124,7 @@ def sim_iso():
     return
 
 # Save isobase for MATLAB plotting
-trtxt = 't' + tst + '_r' + ref    
+trtxt = 't' + tst + '_r' + ref
 
 isobase.to_csv('pickles/simpar_iso_isobase_' + trtxt + '.csv')
 savemat('pickles/simpar_iso_pshape_' + trtxt + '.mat',pshape)
@@ -131,3 +132,6 @@ savemat('pickles/simpar_iso_isoerr_' + trtxt + '.mat',
         {'isoerr_sys': isoerr_sys,
          'isoerr_rdm': isoerr_rdm})
 isoe.to_csv('pickles/simpar_iso_isoe_' + trtxt + '.csv')
+
+with open('pickles/simpar_iso_isoerr_' + trtxt + '.pkl','wb') as f:
+    pickle.dump((isoerr_sys,isoerr_rdm),f)
