@@ -5,8 +5,6 @@ from scipy import optimize
 import pandas as pd
 pd2vs = pz.misc.pd2vs
 
-# Need to invest a better sense of which electrolyte is the ref throughout
-
 # Define test and ref electrolytes:
 tst = 'NaCl'
 ref = 'KCl'
@@ -21,10 +19,14 @@ isobase,molsT,molsR,ionsT,ionsR,T = pz.data.get_isopair(isobase,isopair)
 
 # Calculate reference model stuff
 cf = pz.cdicts.MPH
-cf.bC['K-Cl'] = pz.coeffs.bC_K_Cl_A99 # works much better than ZD17...!
 
 isobase['osm_calc_' + tst] = pz.model.osm(molsT,ionsT,T,cf)
 isobase['osm_calc_' + ref] = pz.model.osm(molsR,ionsR,T,cf)
+
+if tst == 'CaCl2':
+    isobase['osm_calc_' + tst] = pz.isoref.osm_CaCl2(pd2vs(isobase.CaCl2))
+if ref == 'CaCl2':
+    isobase['osm_calc_' + ref] = pz.isoref.osm_CaCl2(pd2vs(isobase.CaCl2))
 
 isobase['aw_calc_' + tst] = pz.model.osm2aw(molsT,pz.misc.pd2vs(
                                             isobase['osm_calc_' + tst]))
