@@ -113,6 +113,7 @@ venv.bak/
 *.docx
 *.tmp
 *.asv
+*.pptx
 
 # Figures
 *.png
