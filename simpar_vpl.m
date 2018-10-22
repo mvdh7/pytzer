@@ -10,15 +10,7 @@ vplc = struct2table(load('pickles/vplcurve.mat'));
 eles = {'KCl' 'NaCl' 'CaCl2'};
 
 % Define marker styles
-mrks = repmat({'o' 'v' '^' '<' '>' 'sq' 'h' 'p' 'd'},1,3);
-msms = repmat([ 1   1   1   1   1   1    1   3   1 ],1,3);
-clrs = repmat([228,26,28; 55,126,184; 77,175,74; 152,78,163; 255,127,0; 
-    166,86,40; 247,129,191; 153,153,153; 114 13 14] / 255,3,1);
-for S = 1:numel(vplsrcs.all.srcs)
-    fmrk.(vplsrcs.all.srcs{S}) = mrks{S};
-    fclr.(vplsrcs.all.srcs{S}) = clrs(S,:);
-    fmsm.(vplsrcs.all.srcs{S}) = msms(S);
-end %for S
+[fmrk,fclr,fmsm] = simpar_markers(vplsrcs.all.srcs);
 mksz = 10;
 
 for E = 1:numel(eles)
