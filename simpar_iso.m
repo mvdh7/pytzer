@@ -1,6 +1,8 @@
+cd 'E:\Dropbox\_UEA_MPH\pytzer'
+
 % Select test and reference electrolytes
-tst = 'KCl';
-ref = 'CaCl2';
+tst = 'NaCl';
+ref = 'KCl';
 
 % Get electrolyte-specifics
 tsttit = tst;
@@ -41,6 +43,8 @@ subplot(2,2,1); hold on
     xlim(fxl)
     ylim(fyl)
 
+% isobase = readtable('pickles/isobase_test.csv');
+    
     for S = 1:numel(srcs)
 
         SL = strcmp(isobase.src,srcs{S});
@@ -49,6 +53,11 @@ subplot(2,2,1); hold on
             mksz*fmsm.(srcs{S}),fclr.(srcs{S}),'filled', ...
             'marker',fmrk.(srcs{S}), ...
             'markerfacealpha',0.7, 'markeredgealpha',0)
+
+%         scatter(sqrt(isobase.(tst)(SL)),isobase.dosm25_sim(SL), ...
+%             mksz*fmsm.(srcs{S}),fclr.(srcs{S}),'filled', ...
+%             'marker',fmrk.(srcs{S}), ...
+%             'markerfacealpha',0.7, 'markeredgealpha',0)
 
         TL = tot >= min(isobase.(tst)(SL)) & tot <= max(isobase.(tst)(SL));
         plot(sqrt(tot(TL)),isoerr_sys.(srcs{S}) ...
