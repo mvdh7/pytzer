@@ -1,8 +1,8 @@
 cd 'E:\Dropbox\_UEA_MPH\pytzer'
 
 % Select test and reference electrolytes
-tst = 'NaCl';
-ref = 'KCl';
+tst = 'KCl';
+ref = 'NaCl';
 
 % Get electrolyte-specifics
 tsttit = tst;
@@ -30,6 +30,9 @@ isobase = readtable([froot 'isobase_t' tst '_r' ref '.csv']);
 load([froot 'pshape_t' tst '_r' ref '.mat'])
 load([froot 'isoerr_t' tst '_r' ref '.mat'])
 
+% Load data from simloop_iso.py
+load(['pickles/simloop_iso_bC_t' tst '_r' ref '_10.mat'])
+
 % Define marker styles
 srcs = unique(isobase.src);
 [fmrk,fclr,fmsm] = simpar_markers(srcs);
@@ -40,9 +43,12 @@ printsetup(gcf,[9 12])
 
 subplot(2,2,1); hold on
 
-    xlim(fxl)
-    ylim(fyl)
+xlim(fxl)
+ylim(fyl)
 
+patch([tot; flipud(tot)],[sqrt(Uosm_sim); flipud(-sqrt(Uosm_sim))], ...
+    'y', 'edgecolor','none', 'facealpha',0.5)    
+    
 % isobase = readtable('pickles/isobase_test.csv');
     
     for S = 1:numel(srcs)
@@ -151,4 +157,4 @@ spfig.Position = [0.15 0.58 0.6 0.35];
 spfg2.Position = [0.15 0.08 0.6 0.35];
 spleg.Position = [0.8 0.63 0.18 0.25];
 
-print('-r300',['figures/simpar_iso_t' tst '_r' ref],'-dpng')
+% print('-r300',['figures/simpar_iso_t' tst '_r' ref],'-dpng')
