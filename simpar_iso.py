@@ -7,7 +7,7 @@ import pickle
 pd2vs = pz.misc.pd2vs
 
 # Define test and ref electrolytes:
-tst = 'CaCl2'
+tst = 'KCl'
 ref = 'NaCl'
 
 # Load raw isopiestic dataset and cut to only 298.15 K
@@ -44,28 +44,28 @@ isobase['dosm_' + tst] = isobase['osm_meas_' + tst] \
 #                                    isobase['osm_calc_' + tst])
 
 # Get charges
-_,zCT,zAT,_,_ = pz.data.znu([tst])
-_,zCR,zAR,_,_ = pz.data.znu([ref])
+nuT,zCT,zAT,nCT,nAT = pz.data.znu([tst])
+_  ,zCR,zAR,_  ,_   = pz.data.znu([ref])
 
 # Get reference bC coeffs at 298.15 K
-bCT = cf.bC[ionsT[0] + '-' + ionsT[1]](298.15)
-bCR = cf.bC[ionsR[0] + '-' + ionsR[1]](298.15)
+bCT = cf.bC[ionsT[0] + '-' + ionsT[1]](np.vstack([298.15]))
+bCR = cf.bC[ionsR[0] + '-' + ionsR[1]](np.vstack([298.15]))
 
-# Derive expected uncertainty profile shapes
-pshape = {'totR': np.vstack(np.linspace(0.001,2.5,100)**2)}
-pshape['molsR'] = np.concatenate((pshape['totR'],pshape['totR']),axis=1)
-pshape['T']     = np.full_like(pshape['totR'],298.15)
-pshape['osmR']  = pz.fitting.osm(pshape['molsR'],zCR,zAR,pshape['T'],*bCR)
-pshape['tot']   = pz.experi.get_osm(bCT,
-                                    pshape['T'],
-                                    pshape['molsR'],
-                                    pshape['osmR'])
-pshape['mols']  = np.concatenate((pshape['tot'],pshape['tot']),axis=1)
-
-# Get derivatives
-osmargs = [pshape['tot'],pshape['totR'],isopair,pshape['T'],bCR]
-pshape['dosm_dtot']  = pz.experi.dosm_dtot (*osmargs)
-pshape['dosm_dtotR'] = pz.experi.dosm_dtotR(*osmargs)
+## Derive expected uncertainty profile shapes
+#pshape = {'totR': np.vstack(np.linspace(0.001,2.5,100)**2)}
+#pshape['molsR'] = np.concatenate((pshape['totR'],pshape['totR']),axis=1)
+#pshape['T']     = np.full_like(pshape['totR'],298.15)
+#pshape['osmR']  = pz.fitting.osm(pshape['molsR'],zCR,zAR,pshape['T'],*bCR)
+#pshape['tot']   = pz.experi.get_isotot(bCT,nuT,zCT,zAT,nCT,nAT,
+#                                       pshape['T'],
+#                                       pshape['molsR'],
+#                                       pshape['osmR'])[0]
+#pshape['mols']  = np.concatenate((pshape['tot'],pshape['tot']),axis=1)
+#
+## Get derivatives
+#osmargs = [pshape['tot'],pshape['totR'],isopair,pshape['T'],bCR]
+#pshape['dosm_dtot']  = pz.experi.dosm_dtot (*osmargs)
+#pshape['dosm_dtotR'] = pz.experi.dosm_dtotR(*osmargs)
 
 # Create sources pivot table
 isoe = pd.pivot_table(isobase,
@@ -127,7 +127,7 @@ def sim_iso():
 trtxt = 't' + tst + '_r' + ref
 
 isobase.to_csv('pickles/simpar_iso_isobase_' + trtxt + '.csv')
-savemat('pickles/simpar_iso_pshape_' + trtxt + '.mat',pshape)
+#savemat('pickles/simpar_iso_pshape_' + trtxt + '.mat',pshape)
 savemat('pickles/simpar_iso_isoerr_' + trtxt + '.mat',
         {'isoerr_sys': isoerr_sys,
          'isoerr_rdm': isoerr_rdm})
