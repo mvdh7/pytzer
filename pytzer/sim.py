@@ -1,4 +1,24 @@
 from autograd import numpy as np
+from . import experi
+
+##### ISOPIESTIC EQUILIBRIUM ##################################################
+
+def iso(rtot,tosm25_calc,srcs,tst,ref,isoerr_sys,isoerr_rdm):
+    
+    tosm25 = np.copy(tosm25_calc)
+    trtxt = 't' + tst + '_r' + ref
+    
+    for S,src in enumerate(np.unique(srcs)):
+
+        SL = src == srcs
+        
+        tosm25[SL] = tosm25[SL] + experi.isofit_sys(np.random.normal(loc=0,
+            scale=isoerr_sys['all_qsd']),rtot[SL]) \
+                + np.random.normal(size=sum(SL),loc=0,
+                    scale=experi.isofit_rdm(isoerr_rdm[trtxt][src],rtot[SL]) \
+                    * np.sqrt(np.pi/2))
+
+    return tosm25
 
 ##### VAPOUR PRESSURE LOWERING ################################################
 
