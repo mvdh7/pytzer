@@ -10,6 +10,11 @@ def osm(mols,molsR,osmR):
     
     return np.vstack(np.sum(molsR,axis=1) * osmR.ravel() / np.sum(mols,axis=1))
 
+# Get test molality from simulated osmotic coefficients
+def osm2tot(osm,nu,molsR,osmR):
+    
+    return np.vstack(np.sum(molsR,axis=1) * osmR.ravel() / (osm * nu))
+
 # Reference osmotic coeff calculated from pz.model
 def osm_cf(mols,molsR,ionsR,T,cf):
     
