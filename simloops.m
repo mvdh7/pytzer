@@ -1,4 +1,5 @@
 %% Load databases
+cd 'E:\Dropbox\_UEA_MPH\pytzer'
 vplbase = readtable('pickles/simpar_vpl.csv');
 fpdbase = readtable('pickles/simpar_fpd_osm25.csv');
 isobase = readtable('pickles/simpar_iso_isobase_tKCl_rNaCl.csv');
@@ -8,7 +9,7 @@ eles = {'NaCl' 'KCl' 'CaCl2'};
 
 errtype = 'sim'; % sim or dir
 
-for E = 2%1:numel(eles)
+for E = 1%1:numel(eles)
 ele = eles{E};
 
 % ----- ELECTROLYTE SPECIFICS ---------------------------------------------
@@ -43,9 +44,15 @@ vplu = load(['pickles/simloop_vpl_bC_' ele '_1000.mat']);
 fpdu = load(['pickles/simloop_fpd_osm25_bC_' ele '_100.mat']);
 isou = load('pickles/simloop_iso_bC_tKCl_rNaCl_10.mat');
 
-varf = (1./fpdu.(['Uosm_' errtype]) + 1./vplu.(['Uosm_' errtype])) ...
-    .* (fpdu.(['Uosm_' errtype]) .* vplu.(['Uosm_' errtype]) ...
-    ./ (fpdu.(['Uosm_' errtype]) + vplu.(['Uosm_' errtype]))).^2;
+UV = vplu.(['Uosm_' errtype]);
+UF = fpdu.(['Uosm_' errtype]);
+UI = isou.(['Uosm_' errtype]);
+
+% VM = 3.3;
+% FM = 8.5;
+% varf = (UV*VM^2 + UF*FM^2) / (VM + FM)^2;
+varf = UV .* UF ./ (UV + UF);
+% varf = UV .* UF .* UI ./ (UF.*UI + UV.*UI + UF.*UV);
 
 % ===== BEGIN FIGURE ======================================================
 figure(8); clf; hold on
@@ -60,10 +67,12 @@ patch([fpdu.tot; flipud(fpdu.tot)], ...
     [sqrt(fpdu.(['Uosm_' errtype])); 
     flipud(-sqrt(fpdu.(['Uosm_' errtype])))], ...
     clrfpd, 'edgecolor','none', 'facealpha',0.2)
+if strcmp(ele,'KCl')
 patch([isou.tot; flipud(isou.tot)], ...
     [sqrt(isou.(['Uosm_' errtype])); 
     flipud(-sqrt(isou.(['Uosm_' errtype])))], ...
     clriso, 'edgecolor','none', 'facealpha',0.3)
+end %if
 
 % ----- PATCH OUTLINES ----------------------------------------------------
 x = plot(vplu.tot, sqrt(vplu.(['Uosm_' errtype])), 'color',clrvpl);
@@ -76,31 +85,37 @@ x.Color = [x.Color 0.6];
 x = plot(fpdu.tot,-sqrt(fpdu.(['Uosm_' errtype])), 'color',clrfpd);
 x.Color = [x.Color 0.6];
 
+if strcmp(ele,'KCl')
 x = plot(isou.tot, sqrt(isou.(['Uosm_' errtype])), 'color',clriso);
 x.Color = [x.Color 0.6];
 x = plot(isou.tot,-sqrt(isou.(['Uosm_' errtype])), 'color',clriso);
 x.Color = [x.Color 0.6];
-
-plot(vplu.tot, sqrt(varf),'k:')
-plot(vplu.tot,-sqrt(varf),'k:')
+end %if
 
 % ----- SCATTER DATA ------------------------------------------------------
 mksz = 5;
-mkfa = 0.7;
-scatter(vplbase.m(VL),vplbase.dosm25(VL),mksz*0.8,clrvpl,'filled', ...
+mkfa = 0.6;
+scatter(vplbase.m(VL),vplbase.dosm25(VL),mksz*0.6,clrvpl,'filled', ...
     'markerfacealpha',mkfa, 'marker','o')
-scatter(fpdbase.m(FL),fpdbase.dosm25(FL),mksz,clrfpd,'filled', ...
+scatter(fpdbase.m(FL),fpdbase.dosm25(FL),mksz*0.7,clrfpd,'filled', ...
     'markerfacealpha',mkfa, 'marker','v')
 if strcmp(ele,'KCl')
 scatter(isobase.(ele),isobase.(['dosm_' ele]),mksz,clriso,'filled', ...
     'markerfacealpha',mkfa, 'marker','sq')
 end %if
 
+% ----- COMBINED UNCERTAINTY ----------------------------------------------
+load('pickles/combicov_NaCl.mat')
+plot(vplu.tot,sqrt(Uosm_best),'r')
+
+plot(vplu.tot, sqrt(varf),'k:')
+plot(vplu.tot,-sqrt(varf),'k:')
+
 % ----- AXIS SETTINGS -----------------------------------------------------
 xlim([0 fxl])
 ylim(fyl*[-1 1])
 
-% plot(get(gca,'xlim'),[0 0],'k')
+plot(get(gca,'xlim'),[0 0],'k')
 
 setaxes(gca,8)
 set(gca, 'box','on', 'xtick',fxt, 'ytick',fyt)
