@@ -82,7 +82,7 @@ bCdir = np.hstack((b0dir,b1dir,b2dir,C0dir,C1dir))
 rb0,rb1,rb2,rC0,rC1,ralph1,ralph2,romega,_ \
     = cf.bC['-'.join(rions)](np.float_(298.15))
 
-with open('pickles/simloop_fpd_bC_' + ref + '_100.pkl','rb') as f:
+with open('pickles/simloop_fpd_osm25_bC_' + ref + '_100.pkl','rb') as f:
     _,rbCsim_cv,_,_,_,_ = pickle.load(f)
 
 #%% Define fitting function
