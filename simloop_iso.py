@@ -33,9 +33,11 @@ srcs        = pd2vs(isobase.src)
 T           = pd2vs(isobase.t)
 
 # Get electrolyte info
-_,tzC,tzA,tnC,tnA = pz.data.znu([tst])
-_,_  ,_  ,rnC,rnA = pz.data.znu([tst])
+tnu,tzC,tzA,tnC,tnA = pz.data.znu([tst])
+_  ,rzC,rzA,rnC,rnA = pz.data.znu([tst])
+
 tions = pz.data.ele2ions([tst])[0]
+rions = pz.data.ele2ions([ref])[0]
 
 # Solve for expected test molality & osmotic coefficient
 def tot2osm(tot,nC,nA,ions,T,cf):
@@ -76,6 +78,13 @@ b0dir,b1dir,b2dir,C0dir,C1dir,bCdir_cv,mseo \
                     tosm25_exp,weights,which_bCs,'osm')
 bCdir = np.hstack((b0dir,b1dir,b2dir,C0dir,C1dir))
 
+#%% Get reference model uncertainty matrix
+rb0,rb1,rb2,rC0,rC1,ralph1,ralph2,romega,_ \
+    = cf.bC['-'.join(rions)](np.float_(298.15))
+
+with open('pickles/simloop_fpd_bC_' + ref + '_100.pkl','rb') as f:
+    _,rbCsim_cv,_,_,_,_ = pickle.load(f)
+
 #%% Define fitting function
 def Eopt(rseed=None):
 
@@ -85,12 +94,30 @@ def Eopt(rseed=None):
     # Simulate new isopiestic equilibrium dataset
     Uosm = pz.sim.iso(ttot_calc,tosm25_calc,srcs,tst,ref,isoerr_sys,isoerr_rdm)
 
+    # Calculate corresponding tot & mols
+    Utot = pz.experi.osm2tot(Uosm,tnu,rmols_exp,rosm25_calc)
+    Umols = np.concatenate((Utot*tnC,Utot*tnA),axis=1)
+    
+    # Re-evaluate the reference osmotic coefficient
+    Urb0,Urb1,Urb2,UrC0,UrC1 \
+        = np.random.multivariate_normal(np.array([rb0,rb1,rb2,rC0,rC1]),
+                                        rbCsim_cv)
+    Urb2 = 0
+    
+    Urosm25 = pz.fitting.osm(rmols_exp,rzC,rzA,T,Urb0,Urb1,Urb2,UrC0,UrC1,
+                             ralph1,ralph2,romega)
+    
+    # Calculate the osmotic coefficient again
+    Uosm = pz.experi.osm(Umols,rmols_exp,Urosm25)
+
     # Solve for Pitzer model coefficients
     b0,b1,b2,C0,C1,_,_ \
-        = pz.fitting.bC(tmols_calc,tzC,tzA,T,talph1,talph2,tomega,tnC,tnA,Uosm,
+        = pz.fitting.bC(Umols,tzC,tzA,T,talph1,talph2,tomega,tnC,tnA,Uosm,
                         weights,which_bCs,'osm')
 
     return b0,b1,b2,C0,C1
+
+b0,b1,b2,C0,C1 = Eopt()
 
 #%% Multiprocessing loop
 if __name__ == '__main__':
