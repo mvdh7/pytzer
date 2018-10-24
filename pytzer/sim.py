@@ -13,7 +13,7 @@ def iso(ttot,tosm25_calc,srcs,tst,ref,isoerr_sys,isoerr_rdm):
         SL = src == srcs
         
         tosm25[SL] = tosm25[SL] + experi.isofit_sys(np.random.normal(loc=0,
-            scale=isoerr_sys['all_qsd']),ttot[SL]) \
+            scale=isoerr_sys['all_Sn']),ttot[SL]) \
                 + np.random.normal(size=sum(SL),loc=0,
                     scale=experi.isofit_rdm(isoerr_rdm[trtxt][src],ttot[SL]) \
                     * np.sqrt(np.pi/2))
