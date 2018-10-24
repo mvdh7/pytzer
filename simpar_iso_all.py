@@ -2,6 +2,7 @@ from autograd import numpy as np
 from scipy.io import savemat
 from scipy.stats import norm
 import pickle
+from pytzer.misc import Sn
 
 # Define electrolytes to test
 eles = ['NaCl','KCl','CaCl2']
@@ -41,6 +42,8 @@ isoerr_sys['qsd'] = np.float_(0.85)
 isoerr_sys['all_qsd'] = np.diff(np.quantile(isoerr_sys['all'],
     [1-isoerr_sys['qsd'],isoerr_sys['qsd']])) \
     / (2 * norm.ppf(isoerr_sys['qsd']))
+    
+isoerr_sys['all_Sn'] = Sn(isoerr_sys['all'])
     
 # Save for plotting and simloop
 savemat('pickles/simpar_iso_all.mat',{'isoerr_sys':isoerr_sys,
