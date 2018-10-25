@@ -91,16 +91,16 @@ def Eopt(rseed=None):
 
     return b0,b1,b2,C0,C1
 
-# Test dataset simulation
-Ureps_sim = 20
-Uosm_sim = np.full((np.size(T),Ureps_sim),np.nan)
-
-for U in range(Ureps_sim):
-    Uosm_sim[:,U] = pz.sim.vpl(tot,pd2vs(vplbase.osm_calc),
-                               srcs,Uele,vplerr_sys,vplerr_rdm).ravel()
-
-savemat('pickles/Uosm_sim_vpl_' + Uele + '.mat',{'Uosm_sim' : Uosm_sim})
-vplbase.to_csv('pickles/Uosm_sim_vpl_' + Uele + '.csv')
+## Test dataset simulation
+#Ureps_sim = 20
+#Uosm_sim = np.full((np.size(T),Ureps_sim),np.nan)
+#
+#for U in range(Ureps_sim):
+#    Uosm_sim[:,U] = pz.sim.vpl(tot,pd2vs(vplbase.osm_calc),
+#                               srcs,Uele,vplerr_sys,vplerr_rdm).ravel()
+#
+#savemat('pickles/Uosm_sim_vpl_' + Uele + '.mat',{'Uosm_sim' : Uosm_sim})
+#vplbase.to_csv('pickles/Uosm_sim_vpl_' + Uele + '.csv')
 
 #%% Multiprocessing loop
 if __name__ == '__main__':
