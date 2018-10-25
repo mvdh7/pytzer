@@ -22,49 +22,19 @@ def iso(ttot,tosm25_calc,srcs,tst,ref,isoerr_sys,isoerr_rdm):
 
 ##### VAPOUR PRESSURE LOWERING ################################################
 
-def vpl(tot,osm_calc,srcs,ele,vplerr_rdm,vplerr_sys):
+def vpl(tot,osm_calc,srcs,ele,vplerr_sys,vplerr_rdm):
 
     osm = np.copy(osm_calc)
 
-    for S,src in enumerate(list(vplerr_rdm[ele].keys())[:-2]):
+    for S,src in enumerate(list(vplerr_sys[ele].keys())[:-1]):
 
         SL = src == srcs
 
-#        # Approach 1
-#        osm[SL] = osm[SL] + np.random.normal(size=1,loc=0,
-#                            scale=np.abs(vplerr_sys[ele][src][0]) \
-#                            * np.sqrt(2/np.pi)) \
-#                          + np.random.normal(size=1,loc=0,
-#                            scale=np.abs(vplerr_sys[ele][src][1]) \
-#                            * np.sqrt(2/np.pi)) \
-#                          * tot[SL] \
-#                          + np.random.normal(size=sum(SL),loc=0,
-#                            scale=(vplerr_rdm[ele][src][0] \
-#                                 + vplerr_rdm[ele][src][1] \
-#                                 * np.exp(-tot[SL])) \
-#                                 * np.sqrt(2/np.pi))
-
-#        # Approach 2
-#        osm[SL] = osm[SL] + np.random.normal(size=1,loc=0,
-#                            scale=np.abs(vplerr_sys[ele][src][0]) \
-#                            * np.sqrt(2/np.pi)) / tot[SL] \
-#                          + np.random.normal(size=sum(SL),loc=0,
-#                            scale=(vplerr_rdm[ele][src][0] \
-#                                 + vplerr_rdm[ele][src][1] \
-#                                 * np.exp(-tot[SL])) \
-#                                 * np.sqrt(2/np.pi))
-
-        # Approach 3
-        all_sys = np.concatenate([vplerr_sys[ele]['all_int'] \
-                                  for ele in ('NaCl','KCl','CaCl2')])
-        RL = all_sys != 0
-        rmsd = np.sqrt(np.mean(all_sys[RL]**2))
-        osm[SL] = osm[SL] + np.random.normal(size=1,loc=0,scale=rmsd) / tot[SL] \
-                          + np.random.normal(size=sum(SL),loc=0,
-                                             scale=(vplerr_rdm[ele][src][0] \
-                                                  + vplerr_rdm[ele][src][1] \
-                                                  * np.exp(-tot[SL])) \
-                                                  * np.sqrt(np.pi/2))
+        osm[SL] = osm[SL] + experi.vplfit_sys(np.random.normal(loc=0,
+            scale=vplerr_sys['sd_Sn']),tot[SL]) \
+                + np.random.normal(size=sum(SL),loc=0,
+                    scale=experi.vplfit_rdm(vplerr_rdm[ele][src],tot[SL]) \
+                    * np.sqrt(np.pi/2))
 
     return osm
 
