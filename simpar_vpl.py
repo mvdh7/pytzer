@@ -149,7 +149,7 @@ vplerr_sys['sd_Sn'] = pz.misc.Sn(vplerr_sys['all'])
     
 #%% Pickle outputs for simloop
 with open('pickles/simpar_vpl.pkl','wb') as f:
-    pickle.dump((vplbase,vplerr_rdm,vplerr_sys),f)
+    pickle.dump((vplbase,mols,ions,T,vplerr_sys,vplerr_rdm),f)
 
 # Save results for MATLAB figures
 vplbase.to_csv('pickles/simpar_vpl.csv')
