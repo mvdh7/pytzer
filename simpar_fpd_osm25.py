@@ -159,11 +159,12 @@ for ele in fpde.index:
 fpderr_sys['all'] = np.concatenate([fpderr_sys[ele]['all'] \
                                     for ele in fpde.index])
     
-fpderr_sys['all_rmse'] = pz.misc.rms(fpderr_sys['all'])
+fpderr_sys['all_rms'] = pz.misc.rms(fpderr_sys['all'])
+fpderr_sys['sd_Sn'] = pz.misc.Sn(fpderr_sys['all'])
     
 # Pickle outputs for simloop
 with open('pickles/simpar_fpd_osm25.pkl','wb') as f:
-    pickle.dump((fpdbase,mols,ions,T,fpderr_rdm,fpderr_sys),f)
+    pickle.dump((fpdbase,mols,ions,T,fpderr_sys,fpderr_rdm),f)
 
 # Save results for MATLAB figures
 fpdbase.to_csv('pickles/simpar_fpd_osm25.csv')
