@@ -6,12 +6,20 @@ vplc = struct2table(load('pickles/vplcurve.mat'));
 
 % Plot raw VPL data
 
+% Use common y-axes?
+COMMON_Y = 0;
+
 % Choose electrolyte to plot
-eles = {'KCl' 'NaCl' 'CaCl2'};
+eles = {'NaCl' 'KCl' 'CaCl2'};
 
 % Define marker styles
 [fmrk,fclr,fmsm] = simpar_markers(vplsrcs.all.srcs);
 mksz = 10;
+
+% Begin figure
+figure(E); clf
+printsetup(gcf,[18 12])
+flegs = {};
 
 for E = 1:numel(eles)
 ele = eles{E};
@@ -22,10 +30,12 @@ load(['pickles/simloop_vpl_bC_' ele '_1000.mat']);
 % Define settings that depend upon electrolyte
 eletit = ele;
 fxtf = '%.1f';
+
 switch ele
     case 'KCl'
         fxl = [0 5];
         fxt = 0:5;
+        fxtf = '%.0f';
         fyl = 0.080000001*[-1 1];
         fyti = 0.02;
         fyl2 = [0 0.03];
@@ -33,6 +43,7 @@ switch ele
     case 'NaCl'
         fxl = [0 6.5];
         fxt = 0:6;
+        fxtf = '%.0f';
         fyl = 0.02000000001*[-1 1.0000001];
         fyti = 0.005;
         fyl2 = [0 0.012];
@@ -48,35 +59,29 @@ switch ele
         fyti2 = 0.05;
 end %switch
 
+% Override above y-axis settings if requested
+if COMMON_Y
+    fyl = 0.2*[-1 1];
+    fyti = 0.05;
+    fyl2 = [0 0.2];
+    fyti2 = 0.05;
+end %if COMMON_Y
+
 % Get logicals etc.
 EL = strcmp(vplbase.ele,ele);
 vplsrcs.(ele).srcs = unique(vplbase.src(EL));
 
-% Begin figure
-figure(E); clf
-printsetup(gcf,[9 12])
-flegs = {};
-
-subplot(2,2,1); hold on
+subplot(2,4,E); hold on
 
 patch([tot; flipud(tot)],[sqrt(Uosm_sim); flipud(-sqrt(Uosm_sim))], ...
-    'y', 'edgecolor','none', 'facealpha',0.5)
-% patch([fpdfpd.tot; flipud(fpdfpd.tot)], ...
-%     [sqrt(fpdfpd.Uosm_sim); flipud(-sqrt(fpdfpd.Uosm_sim))], ...
-%     'c', 'edgecolor','none', 'facealpha',0.5)
-% 
-% TVPL = tot;
-% UVPL = Uosm_sim;
-% 
-% TFPD = fpdfpd.tot;
-% UFPD = fpdfpd.Uosm_sim;
-% 
-% UFINAL = (1./UFPD + 1./UVPL).*(UFPD .* UVPL ./ (UFPD + UVPL)).^2;
-% 
-% plot(TFPD,sqrt(UFPD),'b')
-% plot(TVPL,sqrt(UVPL),'r')
-% 
-% plot(TVPL,sqrt(UFINAL),'k')
+    [1 1 0], 'edgecolor','none', 'facealpha',0.5)
+plot(tot, sqrt(Uosm_sim),'y')
+plot(tot,-sqrt(Uosm_sim),'y')
+
+    xlim(fxl)
+    ylim(fyl)
+    
+    plot(get(gca,'xlim'),[0 0],'k')
 
     % Plot data by source
     for S = 1:numel(vplsrcs.(ele).srcs)
@@ -96,15 +101,13 @@ patch([tot; flipud(tot)],[sqrt(Uosm_sim); flipud(-sqrt(Uosm_sim))], ...
                 + vplerr_sys.(ele).(src)(2);
             nl = plot(Sx,Sy, 'color',[fclr.(src) 0.5], ...
                 'linewidth',0.5); nolegend(nl)
-            flegs{end+1} = src;
+            if ~ismember(src,flegs)
+                flegs{end+1} = src;
+            end %if
         end %if
             
     end %for S
     
-    xlim(fxl)
-    ylim(fyl)
-    
-    plot(get(gca,'xlim'),[0 0],'k')
     setaxes(gca,8)
     set(gca, 'box','on', 'xtick',fxt, 'ytick',-1:fyti:1)
     set(gca, 'yticklabel',num2str(get(gca,'ytick')'*1e3,'%.0f'))
@@ -113,36 +116,13 @@ patch([tot; flipud(tot)],[sqrt(Uosm_sim); flipud(-sqrt(Uosm_sim))], ...
     xlabel(['\itm\rm(' eletit ') / mol\cdotkg^{-1}'])
     ylabel('\Delta\phi \times 10^{3}')
     
-    text(0,1.09,'(a)', 'units','normalized', 'fontname','arial', ...
-        'fontsize',8, 'color','k')
+    text(0,1.09,['(' lcletter(E*2-1) ')'], 'units','normalized', ...
+        'fontname','arial', 'fontsize',8, 'color','k')
     
-    spfig = gca;
+    plotbox(gca)
+    spfig.(['e' num2str(E)]) = gca;
 
-subplot(2,2,2); hold on    
-    
-    setaxes(gca,8)
-    set(gca, 'xtick',[], 'ytick',[], 'box','on')
-    
-    for S = 1:numel(flegs)
-        
-        src = flegs{S};
-        
-        scatter(0.6,numel(flegs)-S, mksz*fmsm.(src)*1.5,fclr.(src), ...
-            'filled', 'marker',fmrk.(src), ...
-            'markeredgecolor',fclr.(src), ...
-            'markerfacealpha',0.7, 'markeredgealpha',0)
-        
-        text(1.1,numel(flegs)-S,src, 'fontname','arial', 'fontsize',8, ...
-            'color','k')
-        
-    end %for S
-    
-    xlim([0 5])
-    ylim([-0.75 numel(flegs)-0.25])
-    
-    spleg = gca;
-
-subplot(2,2,3); hold on
+subplot(2,4,E+4); hold on
 
     xlim(fxl)
     ylim(fyl2)
@@ -153,10 +133,11 @@ subplot(2,2,3); hold on
     set(gca, 'xticklabel',num2str(get(gca,'xtick')',fxtf))
     
     xlabel(['\itm\rm(' eletit ') / mol\cdotkg^{-1}'])
-    ylabel(['|\Delta\phi ' endash ' \delta_{VPL}/\itm\rm| \times 10^{3}'])
+    ylabel(['|\itR_v\rm ' endash ...
+        ' \it\Delta_{v}\rm(\itm\rm,\it\delta_v\rm)| \times 10^{3}'])
     
-    text(0,1.09,'(b)', 'units','normalized', 'fontname','arial', ...
-        'fontsize',8, 'color','k')
+    text(0,1.09,['(' lcletter(E*2) ')'], 'units','normalized', ...
+        'fontname','arial', 'fontsize',8, 'color','k')
     
     % Plot data by source
     for S = 1:numel(vplsrcs.(ele).srcs)
@@ -180,17 +161,45 @@ subplot(2,2,3); hold on
             
     end %for S
     
-    spfg2 = gca;
+    plotbox(gca)
     
-% Positioning    
-spfig.Position = [0.15 0.58 0.6 0.35];
-spfg2.Position = [0.15 0.08 0.6 0.35];
-spleg.Position = [0.8 0.63 0.18 0.25];
-
-print('-r300',['figures/simpar_vpl_' ele],'-dpng')
-
+    spfg2.(['e' num2str(E)]) = gca;
+    
 end %for E
 
+subplot(1,4,4); hold on    
+    
+    setaxes(gca,8)
+    set(gca, 'xtick',[], 'ytick',[], 'box','on')
+    
+    for S = 1:numel(flegs)
+        
+        src = flegs{S};
+        
+        scatter(0.6,numel(flegs)-S, mksz*fmsm.(src)*1.5,fclr.(src), ...
+            'filled', 'marker',fmrk.(src), ...
+            'markeredgecolor',fclr.(src), ...
+            'markerfacealpha',0.7, 'markeredgealpha',0)
+        
+        text(1.1,numel(flegs)-S,src, 'fontname','arial', 'fontsize',8, ...
+            'color','k')
+        
+    end %for S
+    
+    xlim([0 5])
+    ylim([-0.75 numel(flegs)-0.25])
+    
+    spleg = gca;
+    
+% Positioning
+for E = 1:numel(eles)
+    spfig.(['e' num2str(E)]).Position = [0.08+(E-1)*0.28 0.6 0.19 0.34];
+    spfg2.(['e' num2str(E)]).Position = [0.08+(E-1)*0.28 0.1 0.19 0.34];
+end %for E
+spleg.Position = [0.88 0.3 0.1 0.4];
+
+print('-r300',['figures/simpar_vpl_' num2str(COMMON_Y)],'-dpng')
+    
 %% Make table
 ele = 'KCl';
 
