@@ -193,22 +193,52 @@ print('-r300',['figures/simpar_fpd_osm25_' ele],'-dpng')
 
 end %for E
 
+%% Make table
+ele = 'CaCl2';
+
+TFPD = cell(numel(fpderr_sys.(ele).all),8);
+
+TFPD(:,1) = {ele};
+TFPD(:,2) = fpdsrcs.(ele).srcs;
+
+for S = 1:numel(fpdsrcs.(ele).srcs)
+    src = fpdsrcs.(ele).srcs{S};
+    SL = strcmp(fpdbase.ele,ele) & strcmp(fpdbase.src,src);
+    TFPD{S,3} = num2str(sum(SL));
+    TFPD{S,4} = num2str(min(fpdbase.m(SL)),'%.3f');
+    TFPD{S,5} = num2str(max(fpdbase.m(SL)),'%.3f');
+    TFPD{S,6} = num2str(fpderr_sys.(ele).(src)(1)*1e3,'%+.3f');
+    TFPD{S,7} = num2str(fpderr_rdm.(ele).(src)(1)*1e3,'%+.3f');
+    TFPD{S,8} = num2str(fpderr_rdm.(ele).(src)(2),'%+.3f');
+end %for S
+
 %% histogram
 figure(4); clf; hold on
 printsetup(gcf,[9 6])
 
-bw = 0.01;
+bw = 0.005;
 
 histogram(fpderr_sys.all,-0.03:bw:0.03, 'normalization','count', ...
     'facecolor',0.3*[1 1 1])
 
+all_sysL = fpderr_sys.all;
+
+Sn0 = NaN(numel(all_sysL));
+Sn1 = NaN(numel(all_sysL),1);
+for C = 1:numel(all_sysL)
+    Sn0(:,C) = abs(all_sysL(C) - all_sysL);
+    Sn1(C) = median(Sn0(Sn0(:,C) ~= 0,C));
+end %for C
+sd_Sn = 1.1926 * median(Sn1);
+
 fx = -0.035:0.0001:0.035;
-fy = normpdf(fx,0,fpderr_sys.all_rmse) * numel(fpderr_sys.all) * bw;
+% fy = normpdf(fx,0,fpderr_sys.all_rmse) * numel(fpderr_sys.all) * bw;
+fy = normpdf(fx,0,sd_Sn) * numel(fpderr_sys.all) * bw;
 
 plot(fx,fy,'k', 'linewidth',1)
 
 xlim(0.035*[-1 1])
-ylim([0 9])
+ylim([0 15])
 
 setaxes(gca,8)
 set(gca, 'box','on')
