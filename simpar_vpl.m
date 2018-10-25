@@ -2,7 +2,6 @@
 load('pickles/simpar_vpl.mat');
 vplbase = readtable('pickles/simpar_vpl.csv');
 vplsrcs.all.srcs = unique(vplbase.src);
-vplc = struct2table(load('pickles/vplcurve.mat'));
 
 % Plot raw VPL data
 
@@ -28,7 +27,7 @@ mksz = 10;
 for SIM = SS
 
 % Begin figure
-figure(E); clf
+figure(1); clf
 printsetup(gcf,[18 12])
 flegs = {};
 
@@ -134,9 +133,9 @@ plot(tot,-sqrt(Uosm_sim),'y')
     set(gca, 'xticklabel',num2str(get(gca,'xtick')',fxtf))
     
     xlabel(['\itm\rm(' eletit ') / mol\cdotkg^{-1}'])
-    ylabel('\Delta\phi \times 10^{3}')
+    ylabel('\itR_v\rm \times 10^{3}')
     
-    text(0,1.09,['(' lcletter(E*2-1) ')'], 'units','normalized', ...
+    text(0,1.09,['(' lcletter(E) ')'], 'units','normalized', ...
         'fontname','arial', 'fontsize',8, 'color','k')
     
     plotbox(gca)
@@ -156,7 +155,7 @@ subplot(2,4,E+4); hold on
     ylabel(['|\itR_v\rm ' endash ...
         ' \it\Delta_{v}\rm(\itm\rm,\it\delta_v\rm)| \times 10^{3}'])
     
-    text(0,1.09,['(' lcletter(E*2) ')'], 'units','normalized', ...
+    text(0,1.09,['(' lcletter(E+3) ')'], 'units','normalized', ...
         'fontname','arial', 'fontsize',8, 'color','k')
     
     % Plot data by source
