@@ -9,12 +9,23 @@ vplc = struct2table(load('pickles/vplcurve.mat'));
 % Use common y-axes?
 COMMON_Y = 0;
 
+% Do simulations?
+DO_SIMS = 0;
+
+if DO_SIMS
+    SS = 1:20;
+else %if ~DO_SIMS
+    SS = 0;
+end %if DO_SIMS
+
 % Choose electrolyte to plot
 eles = {'NaCl' 'KCl' 'CaCl2'};
 
 % Define marker styles
 [fmrk,fclr,fmsm] = simpar_markers(vplsrcs.all.srcs);
 mksz = 10;
+
+for SIM = SS
 
 % Begin figure
 figure(E); clf
@@ -24,7 +35,7 @@ flegs = {};
 for E = 1:numel(eles)
 ele = eles{E};
 
-load(['pickles/simloop_vpl_bC_' ele '_1000.mat']);
+load(['pickles/simloop_vpl_bC_' ele '_100.mat']);
 % fpdfpd = load(['pickles/simloop_fpd_bC_' ele '_1000.mat']);
 
 % Define settings that depend upon electrolyte
@@ -67,6 +78,16 @@ if COMMON_Y
     fyti2 = 0.05;
 end %if COMMON_Y
 
+if DO_SIMS
+    
+    vplbase = readtable(['pickles/Uosm_sim_vpl_' ele '.csv']);
+    Uosm_sim_vpl = load(['pickles/Uosm_sim_vpl_' ele '.mat']);
+    Uosm_sim_vpl = Uosm_sim_vpl.Uosm_sim;
+    
+    vplbase.dosm25 = Uosm_sim_vpl(:,SIM) - vplbase.osm25_calc;
+    
+end %if
+
 % Get logicals etc.
 EL = strcmp(vplbase.ele,ele);
 vplsrcs.(ele).srcs = unique(vplbase.src(EL));
@@ -97,8 +118,7 @@ plot(tot,-sqrt(Uosm_sim),'y')
         
         if any(SL)
             Sx = linspace(min(vplbase.m(SL)),max(vplbase.m(SL)),100);
-            Sy = vplerr_sys.(ele).(src)(1) ./ Sx ...
-                + vplerr_sys.(ele).(src)(2);
+            Sy = vplerr_sys.(ele).(src) ./ Sx;
             nl = plot(Sx,Sy, 'color',[fclr.(src) 0.5], ...
                 'linewidth',0.5); nolegend(nl)
             if ~ismember(src,flegs)
@@ -198,7 +218,13 @@ for E = 1:numel(eles)
 end %for E
 spleg.Position = [0.88 0.3 0.1 0.4];
 
-print('-r300',['figures/simpar_vpl_' num2str(COMMON_Y)],'-dpng')
+if ~DO_SIMS
+    print('-r300',['figures/simpar_vpl_' num2str(COMMON_Y)],'-dpng')
+else
+    print('-r300',['figures/simpar_vpl/sim_' num2str(SIM)],'-dpng')
+end %if
+
+end %for SIM
     
 %% Make table
 ele = 'KCl';
