@@ -10,7 +10,7 @@ vplc = struct2table(load('pickles/vplcurve.mat'));
 COMMON_Y = 0;
 
 % Do simulations?
-DO_SIMS = 0;
+DO_SIMS = 1;
 
 if DO_SIMS
     SS = 1:20;
@@ -35,7 +35,7 @@ flegs = {};
 for E = 1:numel(eles)
 ele = eles{E};
 
-load(['pickles/simloop_vpl_bC_' ele '_100.mat']);
+load(['pickles/simloop_vpl_bC_' ele '_1000.mat']);
 % fpdfpd = load(['pickles/simloop_fpd_bC_' ele '_1000.mat']);
 
 % Define settings that depend upon electrolyte
@@ -55,7 +55,7 @@ switch ele
         fxl = [0 6.5];
         fxt = 0:6;
         fxtf = '%.0f';
-        fyl = 0.02000000001*[-1 1.0000001];
+        fyl = 0.02500000001*[-1 1.0000001];
         fyti = 0.005;
         fyl2 = [0 0.012];
         fyti2 = 0.003;
