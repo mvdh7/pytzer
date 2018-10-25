@@ -229,13 +229,24 @@ all_rdm_grad = [vplerr_rdm.CaCl2.all_grad ...
            
 L = all_sys ~= 0;           
            
-histogram(all_sys(L),-0.044:0.011:0.044, 'facecolor',0.3*[1 1 1])
+all_sysL = all_sys(L);
 
-xlim(0.04*[-1 1])
+Sn0 = NaN(numel(all_sysL));
+Sn1 = NaN(numel(all_sysL),1);
+for C = 1:numel(all_sysL)
+    Sn0(:,C) = abs(all_sysL(C) - all_sysL);
+    Sn1(C) = median(Sn0(Sn0(:,C) ~= 0,C));
+end %for C
+sd_Sn = 1.1926 * median(Sn1);
+
+histogram(all_sys(L),-0.055:0.011:0.05, 'facecolor',0.3*[1 1 1])
+
+xlim(0.05*[-1 1])
 ylim([0 4])
 
-fx = -0.044:0.0001:0.044;
-fy = normpdf(fx,0,sqrt(mean(all_sys(L).^2))) / numel(all_sys(L));
+fx = -0.05:0.0001:0.05;
+% fy = normpdf(fx,0,sqrt(mean(all_sys(L).^2))) / numel(all_sys(L));
+fy = normpdf(fx,0,sd_Sn) / numel(all_sys(L));
 
 plot(fx,fy,'k', 'linewidth',1)
 
@@ -244,6 +255,7 @@ plot(fx,fy,'k', 'linewidth',1)
 
 clc
 disp(['VPL sys RMS: ' num2str(sqrt(mean(all_sys(L).^2)))])
+disp(['VPL sys Sn : ' num2str(sd_Sn)])
 
 xlabel('\delta_{VPL}')
 ylabel('Number of datasets')
