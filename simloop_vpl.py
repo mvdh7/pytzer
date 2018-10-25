@@ -2,51 +2,30 @@
 #>> python simloop_vpl.py <Uele> <Ureps>
 # where <Uele>  is the electrolyte to analyse
 #       <Ureps> is the number of Monte-Carlo simulations to execute
-# Requires: datasets/vpl.xlsx
-#           pickles/simpar_vpl.pkl
+# Requires: pickles/simpar_vpl.pkl
 
 import numpy  as np
-import pandas as pd
 import pickle
 import pytzer as pz
 pd2vs = pz.misc.pd2vs
-#from autograd        import jacobian as jac
 from multiprocessing import Pool
 from scipy.io        import savemat
 from sys             import argv
 from time            import time
 
-#argv = ['','NaCl','10']
+#argv = ['','CaCl2','10']
 
 # Get input args
 Uele  =     argv[1]
 Ureps = int(argv[2])
 
 # Load raw datasets
-datapath = 'datasets/'
-vplbase,mols,ions,T = pz.data.vpl(datapath)
-
-# Select electrolytes for analysis
-vplbase,mols,ions,T = pz.data.subset_ele(vplbase,mols,ions,T,
-                                         np.array([Uele]))
-
-# Exclude datasets with T > 373.15 (i.e. my D-H functions are out of range)
-Tx = vplbase.t <= 373.15
-# Also, take only data at 298.15 K (making previous step somewhat redundant)
-Tx = np.logical_and(Tx,vplbase.t == 298.15)
-vplbase = vplbase[Tx]
-mols    = mols   [Tx]
-T       = T      [Tx]
-
-# Create initial electrolytes pivot table
-vple = pd.pivot_table(vplbase,
-                      values  = ['m'  ],
-                      index   = ['ele'],
-                      aggfunc = [np.min,np.max,len])
-
-# Load outputs from simpytz_vpl.py
 with open('pickles/simpar_vpl.pkl','rb') as f:
-    _,vplerr_rdm,vplerr_sys = pickle.load(f)
+    vplbase,mols,ions,T,vplerr_sys,vplerr_rdm = pickle.load(f)
+
+# Select electrolyte for analysis
+vplbase,mols,Eions,T = pz.data.subset_ele(vplbase,mols,ions,T,
+                                         np.array([Uele]))
 
 # Prepare model cdict
 cf = pz.cdicts.MPH
@@ -56,7 +35,7 @@ cf.add_zeros(vplbase.ele)
 # Extract metadata from vplbase
 tot  = pd2vs(vplbase.m  )
 srcs = pd2vs(vplbase.src)
-_,zC,zA,nC,nA = pz.data.znu(vple.index)
+_,zC,zA,nC,nA = pz.data.znu([Uele])
 
 # Identify which coefficients to fit
 wbC = {'NaCl' : 'b0b1C0C1',
@@ -64,61 +43,28 @@ wbC = {'NaCl' : 'b0b1C0C1',
        'CaCl2': 'b0b1C0C1'}
 which_bCs = wbC[Uele]
 
-vplbase['t25'] = 298.15
-T1    = pd2vs(vplbase.t25)
-
-nCvec = pd2vs(vplbase.nC)
-nAvec = pd2vs(vplbase.nA)
-
-# Prepare for simulation
-Eions = pz.data.ele2ions(np.array([Uele]))[0]
-
-# Calculate osmotic coefficient etc.
-vplbase['osm_calc'] = pz.model.osm(mols,ions,T,cf)
-vplbase['osm_meas'] = pz.model.aw2osm(mols,pd2vs(vplbase.aw))
-vplbase['osm25_meas'] = pz.tconv.osm2osm(tot,nCvec,nAvec,Eions,
-                                         T,T1,T1,cf,pd2vs(vplbase.osm_meas))
-vplbase['osm25_calc'] = pz.model.osm(mols,ions,T1,cf)
-vplbase['dosm25'] = vplbase.osm25_meas - vplbase.osm25_calc
-
-#%% Simulate new datasets
-
 # Set up for fitting
 alph1 = np.float_(2)
 alph2 = -9
 omega = np.float_(2.5)
 osm_calc = pd2vs(vplbase.osm_calc)
 
-## Define weights for fitting
-##weights = np.ones(np.size(T1)) # uniform
-##weights = np.sqrt(tot) # sqrt of molality
-## ... based on random errors in each dataset:
-#weights = np.full_like(tot,1, dtype='float64')
-#for src in np.unique(srcs):
-#    SL = srcs == src
-#    weights[SL] = 1 / np.sqrt(np.mean(vplbase.dosm25**2))
-##    Smax = np.max(tot[SL])
-##    Smin = np.min(tot[SL])
-##    weights[SL] = (vplerr_rdm[Uele][src][0] * (Smax - Smin) \
-##        - vplerr_rdm[Uele][src][1] * (np.exp(-Smax) - np.exp(-Smin))) \
-##           / (Smax - Smin)
-#weights = 1 / weights
-
 # Define weights for fitting
-#weights = np.ones(np.size(T1)) # uniform
+weights = np.ones(np.size(T)) # uniform
 #weights = np.sqrt(tot) # sqrt of molality
 # ... based on random errors in each dataset:
-weights_dir = np.full_like(tot,1, dtype='float64')
-for src in np.unique(srcs):
-    SL = srcs == src
-    weights_dir[SL] = pz.misc.rms((pd2vs(vplbase.osm_meas) \
-                                 - pd2vs(vplbase.osm_calc))[SL])
-weights_dir = weights_dir * np.sqrt(tot)
-weights_dir = 1 / weights_dir
+#weights_dir = np.full_like(tot,1, dtype='float64')
+#for src in np.unique(srcs):
+#    SL = srcs == src
+#    weights_dir[SL] = pz.misc.rms((pd2vs(vplbase.osm_meas) \
+#                                 - pd2vs(vplbase.osm_calc))[SL])
+#weights_dir = weights_dir * np.sqrt(tot)
+#weights_dir = 1 / weights_dir
+weights_dir = weights
 
 # Do the fit to the original dataset
 b0dir,b1dir,b2dir,C0dir,C1dir,bCdir_cv,mseo \
-    = pz.fitting.bC(mols,zC,zA,T1,alph1,alph2,omega,nC,nA,
+    = pz.fitting.bC(mols,zC,zA,T,alph1,alph2,omega,nC,nA,
                     pd2vs(vplbase.osm_meas),weights_dir,which_bCs,'osm')
 bCdir = np.hstack((b0dir,b1dir,b2dir,C0dir,C1dir))
 
@@ -128,7 +74,7 @@ bCdir = np.hstack((b0dir,b1dir,b2dir,C0dir,C1dir))
 #                                            alph1,alph2,omega)) * weights)**2)
 #mse_dir  = np.mean((pd2vs(vplbase.osm25 - vplbase.osm25_calc) * weights)**2)
 
-#%% Define fitting function
+# Define fitting function
 def Eopt(rseed=None):
 
     # Seed random numbers
@@ -136,20 +82,7 @@ def Eopt(rseed=None):
 
     # Simulate new VPL dataset
     Uosm = pz.sim.vpl(tot,pd2vs(vplbase.osm_calc),
-                      srcs,Uele,vplerr_rdm,vplerr_sys)
-
-    # Define weights for fitting
-    #weights = np.ones(np.size(T1)) # uniform
-    #weights = np.sqrt(tot) # sqrt of molality
-    # ... based on random errors in each dataset:
-    weights = np.full_like(tot,1, dtype='float64')
-    for src in np.unique(srcs):
-        SL = srcs == src
-        weights[SL] = pz.misc.rms((Uosm - pd2vs(vplbase.osm_calc))[SL]) \
-                    / np.sum(SL)
-    weights = np.sqrt(tot) * weights
-    weights = np.full_like(weights,1.)#1 / weights
-    #weights = 1 / tot
+                      srcs,Uele,vplerr_sys,vplerr_rdm)
 
     # Solve for Pitzer model coefficients
     b0,b1,b2,C0,C1,_,_ \
@@ -157,6 +90,17 @@ def Eopt(rseed=None):
                         weights,which_bCs,'osm')
 
     return b0,b1,b2,C0,C1
+
+# Test dataset simulation
+Ureps_sim = 20
+Uosm_sim = np.full((np.size(T),Ureps_sim),np.nan)
+
+for U in range(Ureps_sim):
+    Uosm_sim[:,U] = pz.sim.vpl(tot,pd2vs(vplbase.osm_calc),
+                               srcs,Uele,vplerr_sys,vplerr_rdm).ravel()
+
+savemat('pickles/Uosm_sim_vpl_' + Uele + '.mat',{'Uosm_sim' : Uosm_sim})
+vplbase.to_csv('pickles/Uosm_sim_vpl_' + Uele + '.csv')
 
 #%% Multiprocessing loop
 if __name__ == '__main__':
