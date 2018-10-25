@@ -21,7 +21,7 @@ Ureps = int(argv[2])
 
 # Load raw datasets
 with open('pickles/simpar_fpd_osm25.pkl','rb') as f:
-    fpdbase,mols,ions,T,fpderr_rdm,fpderr_sys = pickle.load(f)
+    fpdbase,mols,ions,T,fpderr_sys,fpderr_rdm = pickle.load(f)
 
 # Select electrolyte for analysis
 fpdbase,mols,ions,T = pz.data.subset_ele(fpdbase,mols,ions,T,
@@ -88,11 +88,16 @@ bCdir = np.hstack((b0dir,b1dir,b2dir,C0dir,C1dir))
 #                                            alph1,alph2,omega)) * weights)**2)
 #mse_dir  = np.mean((pd2vs(fpdbase.osm25 - fpdbase.osm25_calc) * weights)**2)
 
-##%% Test simulation function
-#fpdbase['osm25_sim'] = pz.sim.fpd_osm25(tot,osm25_calc,srcs,Uele,
-#                                        fpderr_rdm,fpderr_sys)
-#fpdbase['dosm25'] = fpdbase.osm25_sim - fpdbase.osm25_calc
-#fpdbase.to_csv('pickles/fpdbase_sim_osm25.csv')
+## Test dataset simulation
+#Ureps_sim = 20
+#Uosm_sim = np.full((np.size(T),Ureps_sim),np.nan)
+#
+#for U in range(Ureps_sim):
+#    Uosm_sim[:,U] = pz.sim.fpd_osm25(tot,pd2vs(fpdbase.osm_calc),
+#                                     srcs,Uele,fpderr_sys,fpderr_rdm).ravel()
+#
+#savemat('pickles/Uosm_sim_fpd_osm25_' + Uele + '.mat',{'Uosm_sim' : Uosm_sim})
+#fpdbase.to_csv('pickles/Uosm_sim_fpd_osm25_' + Uele + '.csv')
 
 #%% Define fitting function
 def Eopt(rseed=None):
@@ -101,7 +106,7 @@ def Eopt(rseed=None):
     np.random.seed(rseed)
 
     # Simulate new osm25 dataset
-    Uosm25 = pz.sim.fpd_osm25(tot,osm25_calc,srcs,Uele,fpderr_rdm,fpderr_sys)
+    Uosm25 = pz.sim.fpd_osm25(tot,osm25_calc,srcs,Uele,fpderr_sys,fpderr_rdm)
 
     # Solve for Pitzer model coefficients
     b0,b1,b2,C0,C1,_,_ \
