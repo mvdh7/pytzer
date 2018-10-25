@@ -3,14 +3,9 @@ from autograd import numpy as np
 import pandas as pd
 from scipy import optimize
 from scipy.io import savemat
-from scipy.interpolate import pchip
 import pickle
 import pytzer as pz
-pd2vs = pz.misc.pd2vs
-from mvdh import ismember
-
-# Set whether to allow uniform systematic offset
-USYS = np.float_(1) # 0 for no, 1 for yes
+from pytzer.misc import ismember, pd2vs
 
 # Load raw datasets
 datapath = 'datasets/'
@@ -20,16 +15,16 @@ vplbase,mols,ions,T = pz.data.vpl(datapath)
 vplbase,mols,ions,T = pz.data.subset_ele(vplbase,mols,ions,T,
                                          np.array(['NaCl',
                                                    'KCl',
-                                                   'CaCl2']))#,
-                                                   #MgCl2']))
-
-## Exclude smoothed datasets (none for VPL)
-#S = vplbase.smooth == 0
-#vplbase = vplbase[S]
-#mols    = mols   [S]
+                                                   'CaCl2']))
                                                    
-# Exclude datasets with T > 373.15 (i.e. my D-H functions are out of range)
-Tx = vplbase.t <= 373.15
+## Exclude datasets with T > 373.15 (i.e. my D-H functions are out of range)
+#Tx = vplbase.t <= 373.15
+#vplbase = vplbase[Tx]
+#mols    = mols   [Tx]
+#T       = T      [Tx]
+
+# Select only datasets at T = 298.15
+Tx = vplbase.t == 298.15
 vplbase = vplbase[Tx]
 mols    = mols   [Tx]
 T       = T      [Tx]
@@ -40,7 +35,6 @@ eles = vplbase.ele
 cf.add_zeros(eles)
 
 ## Calculate osmotic coefficient at measurement temperature
-#vplbase['osm_meas'] = -np.log(vplbase.aw) / (vplbase.nu * vplbase.m * Mw)
 vplbase['osm_meas'] = pz.model.aw2osm(mols,pd2vs(vplbase.aw))
 vplbase['osm_calc'] = pz.model.osm(mols,ions,T,cf)
 
@@ -72,14 +66,14 @@ for ele in vple.index:
 vplbase['osm25_calc'] = pz.model.osm(mols,ions,T25,cf)
 
 # Use PCHIP interpolation to get calculated osm25 for CaCl2
-with open('pickles/fortest_CaCl2_10.pkl','rb') as f:
-    rc97,F = pickle.load(f)
-pchip_CaCl2 = pchip(rc97.tot,rc97.osm)
-
 L = vplbase.ele == 'CaCl2'
-vplbase.loc[L,'osm25_calc'] = pchip_CaCl2(vplbase.m[L])
-L = np.logical_and(L,vplbase.t == 298.15)
-vplbase.loc[L,'osm_calc'] = pchip_CaCl2(vplbase.m[L])
+vplbase.loc[L,'osm25_calc'] = pz.isoref.osm_CaCl2(vplbase.m[L])
+
+L1 = np.logical_and(L,vplbase.t == 298.15)
+vplbase.loc[L1,'osm_calc'] = pz.isoref.osm_CaCl2(vplbase.m[L1])
+
+L2 = np.logical_and(L,vplbase.t != 298.15)
+vplbase.loc[L2,'osm_calc'] = np.nan
 
 # Calculate differences
 vplbase['dosm'  ] = vplbase.osm_meas   - vplbase.osm_calc
@@ -121,73 +115,39 @@ for E,ele in enumerate(vplp.index.levels[0]):
         
         SL = np.logical_and(EL,vplbase.src == src)
         SL = np.logical_and(SL,vplbase.t == 298.15)
-
-#        # Evaluate systematic component of error
-#        vplerr_sys[ele][src] = optimize.least_squares(lambda syserr: \
-#            syserr[1] * vplbase[SL].m + USYS * syserr[0] - vplbase[SL].dosm25,
-#                                                      [0.,0.])['x']
-#        
-#        if USYS == 1:
-#            if (sum(SL) < 6) or (max(vplbase[SL].m) - min(vplbase[SL].m) < 2):
-#                vplerr_sys[ele][src][1] = 0
-#                vplerr_sys[ele][src][0] = optimize.least_squares(
-#                    lambda syserr: syserr - vplbase[SL].dosm25,0.)['x'][0]
-#
-#        vplbase.loc[SL,'dosm25_sys'] \
-#            =  vplbase.dosm25[SL] \
-#            - (vplbase.m[SL] * vplerr_sys[ele][src][1] \
-#               +               vplerr_sys[ele][src][0])
                     
-        # Evaluate systematic component of error - approach 2
-        vplerr_sys[ele][src] = np.array(
-                [optimize.least_squares(lambda syserr: \
-                     syserr / vplbase[SL].m - vplbase[SL].dosm,0)['x'][0],
-                 0])
+        # Evaluate systematic component of error
+        vplerr_sys[ele][src] = optimize.least_squares(lambda syserr: \
+            pz.experi.vplfit_sys(syserr,vplbase.m[SL]) \
+            - vplbase.dosm[SL],0)['x']
         
-        vplbase.loc[SL,'dosm25_sys'] \
-            = vplbase.dosm25[SL] \
-            - vplerr_sys[ele][src][0] / vplbase.m[SL]
+        # Normalise residuals
+        vplbase.loc[SL,'dosm25_sys'] = vplbase.dosm25[SL] \
+            - pz.experi.vplfit_sys(vplerr_sys[ele][src],vplbase.m[SL])
         
-#        # Evaluate systematic component of error - approach 3
-#        vplerr_sys[ele][src] = optimize.least_squares(lambda syserr: \
-#            syserr[0] / vplbase[SL].m + syserr[1] - vplbase[SL].dosm,
-#                                                      [0,0])['x']
-#        
-#        vplbase.loc[SL,'dosm25_sys'] \
-#            = vplbase.dosm25[SL] \
-#            - (vplerr_sys[ele][src][0] / vplbase.m[SL] \
-#             + vplerr_sys[ele][src][1])
-            
         # Evaluate random component of error
         vplerr_rdm[ele][src] = optimize.least_squares(lambda rdmerr: \
-            rdmerr[1] * np.exp(-vplbase[SL].m) + rdmerr[0] \
-            - np.abs(vplbase[SL].dosm25_sys), [0,0])['x']
+            pz.experi.vplfit_rdm(rdmerr,vplbase.m[SL]) \
+            - np.abs(vplbase.dosm25_sys[SL]), [0,0])['x']
         
-#        if vplerr_rdm[ele][src][0] < 0:
-#            vplerr_rdm[ele][src][0] = 0
-#            vplerr_rdm[ele][src][1] = optimize.least_squares(lambda rdmerr: \
-#                rdmerr * vplbase[SL].m \
-#                - np.abs(vplbase[SL].dosm25_sys), 0.)['x']
-        
+        # Correct poor fits
         if (sum(SL) < 6) or (vplerr_rdm[ele][src][1] < 0):
+            vplerr_rdm[ele][src][0] = np.mean(np.abs(vplbase[SL].dosm25_sys))
             vplerr_rdm[ele][src][1] = 0
-            vplerr_rdm[ele][src][0] = optimize.least_squares(lambda rdmerr: \
-                rdmerr - np.abs(vplbase[SL].dosm25_sys), 0.)['x'][0]
          
-# Add 'all' fields for easier plotting in MATLAB
+# Add 'all' fields
 for ele in vplp.index.levels[0]:
     Eksys = list(vplerr_sys[ele].keys())
-    vplerr_sys[ele]['all_int'] = np.array( \
-        [vplerr_sys[ele][src][0] for src in Eksys])
-    vplerr_sys[ele]['all_grad'] = np.array( \
-        [vplerr_sys[ele][src][1] for src in Eksys])
-    Ekrdm = list(vplerr_rdm[ele].keys())
-    vplerr_rdm[ele]['all_int'] = np.array( \
-        [vplerr_rdm[ele][src][0] for src in Ekrdm])
-    vplerr_rdm[ele]['all_grad'] = np.array( \
-        [vplerr_rdm[ele][src][1] for src in Ekrdm])
+    vplerr_sys[ele]['all'] = np.array( \
+        [vplerr_sys[ele][src] for src in Eksys]).ravel()
 
-# Pickle outputs for simloop
+vplerr_sys['all'] = np.concatenate([vplerr_sys[ele]['all'] \
+                                    for ele in vplp.index.levels[0]])
+
+# Calculate systematic simulation coefficient
+vplerr_sys['sd_Sn'] = pz.misc.Sn(vplerr_sys['all'])
+    
+#%% Pickle outputs for simloop
 with open('pickles/simpar_vpl.pkl','wb') as f:
     pickle.dump((vplbase,vplerr_rdm,vplerr_sys),f)
 
