@@ -63,9 +63,16 @@ def get_isotot(bCT,nuT,zCT,zAT,nCT,nAT,T,molsR,osmR):
             
     return totT, osmT
 
-# Define functions to fit isopiestic residuals
+# Define functions to fit isopiestic equilibrium residuals
 def isofit_sys(isoerr,tot):
     return isoerr * (1 + 1/(tot + 0.03))
 
 def isofit_rdm(isoerr,tot):
     return isoerr[0] + isoerr[1] / (tot + 0.03)
+
+# Define functions to fit vapour pressure lowering residuals
+def vplfit_sys(vplerr,tot):
+    return vplerr / tot
+
+def vplfit_rdm(vplerr,tot):
+    return vplerr[0] + vplerr[1] * np.exp(-tot)
