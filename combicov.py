@@ -3,15 +3,127 @@ from autograd import numpy as np
 import pickle
 import pytzer as pz
 from scipy.io import savemat
+from scipy import optimize
 
 ele = 'NaCl'
+ions = pz.data.ele2ions([ele])[0]
 
-with open('pickles/simloop_fpd_osm25_bC_' + ele + '_100.pkl','rb') as f:
+with open('pickles/simloop_fpd_osm25_bC_' + ele + '_1000.pkl','rb') as f:
     bCfpd,bCfpd_cv,_,_,_,_ = pickle.load(f)
     
 with open('pickles/simloop_vpl_bC_' + ele + '_1000.pkl','rb') as f:
     bCvpl,bCvpl_cv,_,_,_,_ = pickle.load(f)
     
+# ===== Fit the matrix ========================================================
+
+# Evaluate combined uncertainty
+sqtot = np.vstack(np.linspace(0.001,
+                              np.sqrt(pz.prop.solubility25[ele]),
+                              100))
+tot   = sqtot**2
+
+_,zC,zA,nC,nA = pz.data.znu([ele])
+mols  = np.concatenate((tot*nC,tot*nA),axis=1)
+T     = np.full_like(tot,298.15)
+
+alph1 = np.float_(2)
+alph2 = -9
+omega = np.float_(2.5)
+
+# Get reference model coefficients
+cf = pz.cdicts.MPH
+b0,b1,b2,C0,C1,_,_,_,_ = cf.bC['-'.join(ions)](T[0])
+bC = np.concatenate((b0,b1,b2,C0,C1))
+
+# Get propagation splines
+Ufpd = pz.fitting.ppg_osm(mols,zC,zA,T,bC,bCfpd_cv,
+                          alph1,alph2,omega)[1]
+
+Uvpl = pz.fitting.ppg_osm(mols,zC,zA,T,bC,bCvpl_cv,
+                          alph1,alph2,omega)[1]
+
+Ucombi = Uvpl * Ufpd / (Uvpl + Ufpd)
+
+#%% Construct matrix propagation function for optimisation
+
+# Convert between vector and matrix format for VCM
+def vec2mx(vec):
+    mx = np.full((5,5),np.nan)
+    for i in range(5):
+        for j in range(i,5):
+            vj = int(j + 4.5*i - 0.5*i**2)
+            mx[i,j] = vec[vj]
+            mx[j,i] = vec[vj]
+    return mx
+
+def mx2vec(mx):
+    vec = np.full(15,np.nan)
+    for i in range(5):
+        for j in range(i,5):
+            vj = int(j + 4.5*i - 0.5*i**2)
+            vec[vj] = mx[i,j]
+    return vec
+
+# Convert between 4- and 5-coefficient vector
+def v42v5(v4):
+    return np.insert(v4,(2,5,7,7,7),0)
+
+def v52v4(v5):
+    return v5[[0,1,3,4,5,7,8,12,13,14]]
+
+def v4cv2v5(v4cv,vdiag):
+    return v42v5(np.insert(v4cv,(0,3,5,6),vdiag))
+
+# Define propagation functions for fitting
+def ppg_mx(mols,zC,zA,T,bC,bC_cv_vec,alph1,alph2,omega):
+    # fit all vars and covars
+    bC_cv = vec2mx(bC_cv_vec)
+    return pz.fitting.ppg_osm(mols,zC,zA,T,bC,bC_cv,alph1,alph2,omega)[1]
+
+def ppg_mx_bC4(mols,zC,zA,T,bC,bC_cv_vec,alph1,alph2,omega):
+    # fit all vars and covars except b2, which is set to zero
+    bC_cv = vec2mx(v42v5(bC_cv_vec))
+    return pz.fitting.ppg_osm(mols,zC,zA,T,bC,bC_cv,alph1,alph2,omega)[1]
+
+def ppg_mx_bC4_diag(mols,zC,zA,T,bC,bC_cv_vec,vdiag,alph1,alph2,omega):
+    # fit covars only, except b2, which is set to zero
+    bC_cv = vec2mx(v4cv2v5(bC_cv_vec,vdiag))
+    return pz.fitting.ppg_osm(mols,zC,zA,T,bC,bC_cv,alph1,alph2,omega)[1]
+
+# Calculate values for VCM diagonal
+vdiag = (np.diag(bCvpl_cv) + np.diag(bCfpd_cv))[[0,1,3,4]]
+
+#test = optimize.least_squares(lambda bC_cv_vec: \
+#    (ppg_mx_bC4_diag(mols,zC,zA,T,bC,bC_cv_vec,vdiag,alph1,alph2,omega) \
+#     - Ucombi).ravel(), np.zeros(6), method='lm')
+
+test = optimize.least_squares(lambda bC_cv_vec: \
+    (ppg_mx_bC4(mols,zC,zA,T,bC,bC_cv_vec,alph1,alph2,omega) \
+     - Ucombi).ravel(), np.zeros(10), method='trf')#, 
+#     bounds=([0,-np.inf,-np.inf,-np.inf,0,-np.inf,-np.inf,0,-np.inf,0],
+#             [np.inf,np.inf,np.inf,np.inf,np.inf,
+#              np.inf,np.inf,np.inf,np.inf,np.inf]))
+
+#%% Save for plotting
+#testmx = vec2mx(v4cv2v5(test['x'],vdiag))
+testmx = vec2mx(v42v5(test['x']))
+
+#testmx = np.identity(5) * vdiag
+
+Utest = pz.fitting.ppg_osm(mols,zC,zA,T,bC,testmx,
+                           alph1,alph2,omega)[1]
+
+UtestACF = pz.fitting.ppg_acfMX(mols,zC,zA,T,bC,testmx,
+                                alph1,alph2,omega,nC,nA)[1]
+
+savemat('pickles/combicov2_' + ele + '.mat',{'tot'   : tot ,
+                                             'Ufpd'  : Ufpd,
+                                             'Uvpl'  : Uvpl,
+                                             'Ucombi': Ucombi,
+                                             'Utest' : Utest ,
+                                             'UtestACF':UtestACF})
+
+#%% === Original approach =====================================================
 def bCbest(bCs,bCvrs):
 #    return (bCs[0:5]*bCvrs[5:10] + bCs[5:10]*bCvrs[0:5]) \
 #        / (bCvrs[0:5] + bCvrs[5:10])
