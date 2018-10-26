@@ -1,8 +1,9 @@
 # Run as
-#>> python simloop_vpl.py <Uele> <Ureps>
+#>> python simloop_vpl_fpd.py <Uele> <Ureps>
 # where <Uele>  is the electrolyte to analyse
 #       <Ureps> is the number of Monte-Carlo simulations to execute
-# Requires: pickles/simpar_vpl.pkl
+# Requires: pickles/simpar_vpl.pkl       from simpar_vpl.py
+#           pickles/simpar_fpd_osm25.pkl from simpar_fpd_osm25.py
 
 import numpy  as np
 import pickle
@@ -10,10 +11,10 @@ import pytzer as pz
 pd2vs = pz.misc.pd2vs
 from multiprocessing import Pool
 from scipy.io        import savemat
-#from sys             import argv
+from sys             import argv
 from time            import time
 
-argv = ['','CaCl2','10']
+#argv = ['','CaCl2','10']
 
 # Get input args
 Uele  =     argv[1]
@@ -160,7 +161,9 @@ if __name__ == '__main__':
                                   np.sqrt(pz.prop.solubility25[Uele]),
                                   100))
     tot   = sqtot**2
-    mols  = np.concatenate((tot,tot),axis=1)
+    
+    _,zC,zA,nC,nA = pz.data.znu([Uele])
+    mols  = np.concatenate((tot*nC,tot*nA),axis=1)
     T     = np.full_like(tot,298.15)
 
     # Get example propagation splines
