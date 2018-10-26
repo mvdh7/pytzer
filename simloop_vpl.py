@@ -140,7 +140,9 @@ if __name__ == '__main__':
                                   np.sqrt(pz.prop.solubility25[Uele]),
                                   100))
     tot   = sqtot**2
-    mols  = np.concatenate((tot,tot),axis=1)
+    
+    _,zC,zA,nC,nA = pz.data.znu([Uele])
+    mols  = np.concatenate((tot*nC,tot*nA),axis=1)
     T     = np.full_like(tot,298.15)
 
     # Get example propagation splines
