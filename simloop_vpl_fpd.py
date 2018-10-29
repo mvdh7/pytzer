@@ -14,11 +14,25 @@ from scipy.io        import savemat
 from sys             import argv
 from time            import time
 
-#argv = ['','CaCl2','10']
+#argv = ['','NaCl','10']
 
 # Get input args
 Uele  =     argv[1]
 Ureps = int(argv[2])
+
+# Get ions
+Eions = pz.data.ele2ions(np.array([Uele]))[0]
+
+# Identify which coefficients to fit
+wbC = {'NaCl' : 'b0b1C0C1',
+       'KCl'  : 'b0b1C0'  ,
+       'CaCl2': 'b0b1C0C1'}
+which_bCs = wbC[Uele]
+
+# Set alphas and omega
+alph1 = np.float_(2)
+alph2 = -9
+omega = np.float_(2.5)
 
 # ===== VAPOUR PRESSURE LOWERING ==============================================
 
@@ -38,10 +52,17 @@ vplzA   = pd2vs(vplbase.zA )
 vplnC   = pd2vs(vplbase.nC )
 vplnA   = pd2vs(vplbase.nA )
 
+vplmols = np.concatenate((vpltot*vplnC,vpltot*vplnA),axis=1)
+
 # Set up for fitting
 vplosm_calc = pd2vs(vplbase.osm_calc)
 vplosm_meas = pd2vs(vplbase.osm_meas)
-vplweights  = np.ones(np.size(vplT))
+#vplweights  = np.ones(np.size(vplT))
+
+with open('pickles/simloop_vpl_bC_' + Uele + '_1000.pkl','rb') as f:
+    bCvpl,bCvpl_cv,_,_,_,_ = pickle.load(f)
+vplweights  = 1 / pz.fitting.ppg_osm(vplmols,vplzC,vplzA,vplT,bCvpl,bCvpl_cv,
+                                     alph1,alph2,omega)[1]
 
 # ===== FREEZING POINT DEPRESSION =============================================
 
@@ -62,10 +83,17 @@ fpdnC   = pd2vs(fpdbase.nC )
 fpdnA   = pd2vs(fpdbase.nA )
 fpdT25  = pd2vs(fpdbase.t25)
 
+fpdmols = np.concatenate((fpdtot*fpdnC,fpdtot*fpdnA),axis=1)
+
 # Set up for fitting
 fpdosm25_calc = pd2vs(fpdbase.osm25_calc)
 fpdosm25_meas = pd2vs(fpdbase.osm25_meas)
-fpdweights    = np.ones(np.size(vplT))
+#fpdweights    = np.ones(np.shape(fpdtot))
+
+with open('pickles/simloop_fpd_osm25_bC_' + Uele + '_1000.pkl','rb') as f:
+    bCfpd,bCfpd_cv,_,_,_,_ = pickle.load(f)
+fpdweights  = 1 / pz.fitting.ppg_osm(fpdmols,fpdzC,fpdzA,fpdT25,bCfpd,bCfpd_cv,
+                                     alph1,alph2,omega)[1]
 
 # ===== BOTH TOGETHER =========================================================
 
@@ -77,26 +105,13 @@ T        = np.concatenate((vplT       ,fpdT25       ))
 nC       = np.concatenate((vplnC      ,fpdnC        ))
 nA       = np.concatenate((vplnA      ,fpdnA        ))
 osm_meas = np.concatenate((vplosm_meas,fpdosm25_meas))
-weights  = np.concatenate((vplweights ,fpdweights   ))
-
-# Get ions
-Eions = pz.data.ele2ions(np.array([Uele]))[0]
-
-# Identify which coefficients to fit
-wbC = {'NaCl' : 'b0b1C0C1',
-       'KCl'  : 'b0b1C0'  ,
-       'CaCl2': 'b0b1C0C1'}
-which_bCs = wbC[Uele]
+weights  = np.concatenate((vplweights ,fpdweights   )) * 1e-6
+#weights[weights > 1] = 1
 
 # Prepare model cdict
 cf = pz.cdicts.MPH
 eles = vplbase.ele
 cf.add_zeros(vplbase.ele)
-
-# Set alphas and omega
-alph1 = np.float_(2)
-alph2 = -9
-omega = np.float_(2.5)
 
 # Do the fit to the original datasets
 b0dir,b1dir,b2dir,C0dir,C1dir,bCdir_cv,mseo \
