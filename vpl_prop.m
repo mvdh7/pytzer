@@ -1,4 +1,5 @@
 load('pickles/vpl_prop.mat')
+load('pickles/simpar_vpl.mat')
 
 figure(1); clf; hold on
 printsetup(gcf,[9 6])
@@ -23,4 +24,9 @@ legend('\itT\rm','\itm\rm','\itp\rm', 'location','ne')
 
 set(gca, 'position',[0.15 0.2 0.75 0.7])
 
-print('-r300','figures/vpl_prop','-dpng')
+plot(tot,vplerr_sys.sd_Sn./tot,'k')
+% plot(tot,dosm_dT * 0.1, 'r--') % best = 0.1 K
+% plot(tot,dosm_dtot * -0.01, 'r--') % best = 0.01 to 0.1 mol/kg
+plot(tot,dosm_dvpX * -1,'r--') % best = 1 
+
+% print('-r300','figures/vpl_prop','-dpng')
