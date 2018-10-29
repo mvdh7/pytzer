@@ -8,9 +8,9 @@ isobase = readtable('pickles/simpar_iso_isobase_tKCl_rNaCl.csv');
 eles = {'NaCl' 'KCl' 'CaCl2'};
 
 errtype = 'sim'; % sim or dir
-SHOW_COMBI = 0;
+SHOW_COMBI = 1;
 
-for E = 1%1:numel(eles)
+for E = 2%:numel(eles)
 ele = eles{E};
 
 % ----- ELECTROLYTE SPECIFICS ---------------------------------------------
@@ -46,7 +46,7 @@ vplu = load(['pickles/simloop_vpl_bC_' ele '_1000.mat']);
 fpdu = load(['pickles/simloop_fpd_osm25_bC_' ele '_1000.mat']);
 isou = load('pickles/simloop_iso_bC_tKCl_rNaCl_10.mat');
 
-vpl_fpd = load(['pickles/simloop_vpl_fpd_bC_' ele '_1000.mat']);
+vpl_fpd = load(['pickles/simloop_vpl_fpd_bC_' ele '_100.mat']);
 
 UV = vplu.(['Uosm_' errtype]);
 UF = fpdu.(['Uosm_' errtype]);
@@ -124,8 +124,8 @@ scatter(isobase.(ele),isobase.(['dosm_' ele]),mksz,clriso,'filled', ...
 end %if
 
 % ----- COMBINED UNCERTAINTY ----------------------------------------------
-load('pickles/combicov2_NaCl.mat')
-plot(tot,sqrt(Utest),'r')
+% load('pickles/combicov2_NaCl.mat')
+% plot(tot,sqrt(Utest),'r')
 
 plot(vplu.tot, sqrt(varf),'k:')
 plot(vplu.tot,-sqrt(varf),'k:')
