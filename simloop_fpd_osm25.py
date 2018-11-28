@@ -10,10 +10,10 @@ import pytzer as pz
 pd2vs = pz.misc.pd2vs
 from multiprocessing import Pool
 from scipy.io        import savemat
-from sys             import argv
+#from sys             import argv
 from time            import time
 
-#argv = ['','KCl','10']
+argv = ['','KCl','10']
 
 # Get input args
 Uele  =     argv[1]
@@ -88,16 +88,16 @@ bCdir = np.hstack((b0dir,b1dir,b2dir,C0dir,C1dir))
 #                                            alph1,alph2,omega)) * weights)**2)
 #mse_dir  = np.mean((pd2vs(fpdbase.osm25 - fpdbase.osm25_calc) * weights)**2)
 
-## Test dataset simulation
-#Ureps_sim = 20
-#Uosm_sim = np.full((np.size(T),Ureps_sim),np.nan)
-#
-#for U in range(Ureps_sim):
-#    Uosm_sim[:,U] = pz.sim.fpd_osm25(tot,pd2vs(fpdbase.osm_calc),
-#                                     srcs,Uele,fpderr_sys,fpderr_rdm).ravel()
-#
-#savemat('pickles/Uosm_sim_fpd_osm25_' + Uele + '.mat',{'Uosm_sim' : Uosm_sim})
-#fpdbase.to_csv('pickles/Uosm_sim_fpd_osm25_' + Uele + '.csv')
+# Test dataset simulation
+Ureps_sim = 20
+Uosm_sim = np.full((np.size(T),Ureps_sim),np.nan)
+
+for U in range(Ureps_sim):
+    Uosm_sim[:,U] = pz.sim.fpd_osm25(tot,pd2vs(fpdbase.osm25_calc),
+                                     srcs,Uele,fpderr_sys,fpderr_rdm).ravel()
+
+savemat('pickles/Uosm_sim_fpd_osm25_' + Uele + '.mat',{'Uosm_sim' : Uosm_sim})
+fpdbase.to_csv('pickles/Uosm_sim_fpd_osm25_' + Uele + '.csv')
 
 #%% Define fitting function
 def Eopt(rseed=None):
