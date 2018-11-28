@@ -8,7 +8,7 @@ isobase = readtable('pickles/simpar_iso_isobase_tKCl_rNaCl.csv');
 eles = {'NaCl' 'KCl' 'CaCl2'};
 
 errtype = 'sim'; % sim or dir
-SHOW_COMBI = 1;
+SHOW_COMBI = 0;
 
 for E = 2%:numel(eles)
 ele = eles{E};
@@ -55,8 +55,8 @@ UI = isou.(['Uosm_' errtype]);
 % VM = 3.3;
 % FM = 8.5;
 % varf = (UV*VM^2 + UF*FM^2) / (VM + FM)^2;
-varf = UV .* UF ./ (UV + UF);
-% varf = UV .* UF .* UI ./ (UF.*UI + UV.*UI + UF.*UV);
+% varf = UV .* UF ./ (UV + UF);
+varf = UV .* UF .* UI ./ (UF.*UI + UV.*UI + UF.*UV);
 
 % ===== BEGIN FIGURE ======================================================
 figure(8); clf; hold on
