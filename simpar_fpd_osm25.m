@@ -34,7 +34,7 @@ flegs = {};
 for E = 1:numel(eles)
 ele = eles{E};
 
-load(['pickles/simloop_fpd_osm25_bC_' ele '_100.mat']);
+load(['pickles/simloop_fpd_osm25_bC_' ele '_1000.mat']);
 
 % Define settings that depend upon electrolyte
 eletit = ele;
@@ -80,7 +80,7 @@ if DO_SIMS
     Uosm_sim_fpd = load(['pickles/Uosm_sim_fpd_osm25_' ele '.mat']);
     Uosm_sim_fpd = Uosm_sim_fpd.Uosm_sim;
     
-    fpdbase.dosm25 = Uosm_sim_fpd(:,SIM) - fpdbase.osm_calc;
+    fpdbase.dosm25 = Uosm_sim_fpd(:,SIM) - fpdbase.osm25_calc;
     
 end %if
 
@@ -225,9 +225,9 @@ end %if
 end %for SIM
 
 %% Make table
-ele = 'CaCl2';
+ele = 'KCl';
 
-TFPD = cell(numel(fpderr_sys.(ele).all),8);
+TFPD = cell(numel(fpderr_sys.(ele).all),9);
 
 TFPD(:,1) = {ele};
 TFPD(:,2) = fpdsrcs.(ele).srcs;
@@ -241,6 +241,7 @@ for S = 1:numel(fpdsrcs.(ele).srcs)
     TFPD{S,6} = num2str(fpderr_sys.(ele).(src)(1)*1e3,'%+.3f');
     TFPD{S,7} = num2str(fpderr_rdm.(ele).(src)(1)*1e3,'%+.3f');
     TFPD{S,8} = num2str(fpderr_rdm.(ele).(src)(2),'%+.3f');
+    TFPD{S,9} = num2str(fpderr_rdm.(ele).(src)(3),'%+.3f');
 end %for S
 
 %% histogram
