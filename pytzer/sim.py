@@ -54,7 +54,7 @@ def fpd_osm25(tot,osm25_calc,srcs,ele,fpderr_sys,fpderr_rdm):
                     scale=(fpderr_rdm[ele][src][0] \
                         + fpderr_rdm[ele][src][1] \
                         * np.exp(-tot[SL] * fpderr_rdm[ele][src][2])) \
-                        * np.sqrt(np.pi/2))   
+                        * np.sqrt(np.pi/2))
 
     return osm25
 
