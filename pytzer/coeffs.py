@@ -1420,6 +1420,8 @@ def Aosm_CRP94(T): # CRP94 Appendix II
     for C in range(2,np.size(a_Aosm)):
         Tmx[:,C] = 2 * X * Tmx[:,C-1] - Tmx[:,C-2]
 
+    print(Tmx)
+
     # Solve for Aosm (CRP94 E.AII1)
     Aosm = np.matmul(Tmx,a_Aosm)
 
