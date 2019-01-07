@@ -19,8 +19,8 @@ vpl_src = np.vstack([srcs[ki] for ki in vplbase.src])
 
 vpl_type = np.full_like(vpl_tot,1)
 
-# Write to file
-f = open('pickles/fp_dataprep_vpl_v2.dat','w')
+# Write to file - one per sample
+f = open('pickles/fp_dataprep_vpl_samples.dat','w')
 
 f.write('%i\n' % np.size(vpl_tot))
 
@@ -29,3 +29,18 @@ for i in range(np.size(vpl_tot)):
     f.write('%i %i %.8f %.2f\n' % (vpl_src[i],vpl_type[i],vpl_tot[i],vpl_T[i]))
 
 f.close()
+
+# Write to file - one per dataset
+f = open('pickles/fp_dataprep_vpl_datasets.dat','w')
+
+f.write('%i\n' % len(srcs))
+
+for src in srcs.keys():
+    
+    f.write('%i %i %.8f %.8f %.8f %.8f\n' % (srcs[src],1,vplerr_sys[ele][src],
+                                             vplerr_rdm[ele][src][0],
+                                             vplerr_rdm[ele][src][1],
+                                             0))
+
+f.close()
+
