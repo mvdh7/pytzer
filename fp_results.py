@@ -5,10 +5,11 @@ from scipy.io import savemat
 cf = pz.cdicts.MPH
 
 ele = 'NaCl'
+method = 'fpd'
 
-sqtot = np.vstack(np.linspace(0.001,
-                                  np.sqrt(pz.prop.solubility25[ele]),
-                                  100))
+fstem = ele + '_' + method
+
+sqtot = np.vstack(np.linspace(0.001,np.sqrt(pz.prop.solubility25[ele]),100))
 tot   = sqtot**2
 
 _,zC,zA,nC,nA = pz.data.znu([ele])
@@ -22,14 +23,14 @@ alph1 = np.float_(2)
 alph2 = -9
 omega = np.float_(2.5)
 
-bC_cv = np.genfromtxt('E:/Dropbox/_UEA_MPH/fort-pitzer/fp_summary.res',
-                      skip_header=18)
+bC_cv = np.genfromtxt('E:/Dropbox/_UEA_MPH/fort-pitzer/results/' \
+                      + fstem + '_summary.res', skip_header=18, max_rows=4)
 
 bC_cv = np.insert(bC_cv,2,0, axis=0)
 bC_cv = np.insert(bC_cv,2,0, axis=1)
 
 osm_sim, Uosm_sim = pz.fitting.ppg_osm(mols,zC,zA,T,bC,bC_cv,alph1,alph2,omega)
 
-savemat('splines/fp_vpl_NaCl.mat',{'tot'     : tot     ,
-                                   'osm_sim' : osm_sim ,
-                                   'Uosm_sim': Uosm_sim})
+savemat('splines/fp_' + fstem + '.mat',{'tot'     : tot     ,
+                                        'osm_sim' : osm_sim ,
+                                        'Uosm_sim': Uosm_sim})

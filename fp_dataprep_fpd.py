@@ -19,8 +19,8 @@ srcs = {ki:i+1 for i,ki in enumerate(fpderr_rdm[ele].keys())}
 fpd_src = np.vstack([srcs[ki] for ki in fpdbase.src])
 
 # Write to file - one per sample
-f = open('E:/Dropbox/_UEA_MPH/fort-pitzer/fp_dataprep_fpd_samples_' \
-         + ele + '.dat','w')
+f = open('E:/Dropbox/_UEA_MPH/fort-pitzer/datasets/' + ele \
+         + '_fpd_samples.dat','w')
 
 f.write('%i\n' % np.size(fpd_tot))
 
@@ -31,8 +31,8 @@ for i in range(np.size(fpd_tot)):
 f.close()
 
 # Write to file - one per dataset
-f = open('E:/Dropbox/_UEA_MPH/fort-pitzer/fp_dataprep_fpd_datasets_' \
-         + ele + '.dat','w')
+f = open('E:/Dropbox/_UEA_MPH/fort-pitzer/datasets/' + ele \
+         + '_fpd_datasets.dat','w')
 
 f.write('%i\n' % len(srcs))
 

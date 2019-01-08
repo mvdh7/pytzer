@@ -18,8 +18,8 @@ srcs = {ki:i+1 for i,ki in enumerate(vplerr_rdm[ele].keys())}
 vpl_src = np.vstack([srcs[ki] for ki in vplbase.src])
 
 # Write to file - one per sample
-f = open('E:/Dropbox/_UEA_MPH/fort-pitzer/fp_dataprep_vpl_samples_' \
-         + ele + '.dat','w')
+f = open('E:/Dropbox/_UEA_MPH/fort-pitzer/datasets/' + ele \
+         + '_vpl_samples.dat','w')
 
 f.write('%i\n' % np.size(vpl_tot))
 
@@ -30,8 +30,8 @@ for i in range(np.size(vpl_tot)):
 f.close()
 
 # Write to file - one per dataset
-f = open('E:/Dropbox/_UEA_MPH/fort-pitzer/fp_dataprep_vpl_datasets_' \
-         + ele + '.dat','w')
+f = open('E:/Dropbox/_UEA_MPH/fort-pitzer/datasets/' + ele \
+         + '_vpl_datasets.dat','w')
 
 f.write('%i\n' % len(srcs))
 

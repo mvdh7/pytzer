@@ -1,4 +1,4 @@
-load('splines/fp_vpl_NaCl.mat')
+load('splines/fp_NaCl_fpd.mat')
 
 ftot = sqrt(tot);
 
