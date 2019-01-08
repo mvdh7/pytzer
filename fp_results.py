@@ -5,7 +5,7 @@ from scipy.io import savemat
 cf = pz.cdicts.MPH
 
 ele = 'NaCl'
-method = 'fpd'
+method = 'vpl'
 
 fstem = ele + '_' + method
 
