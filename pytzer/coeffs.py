@@ -443,9 +443,9 @@ def bC_Na_SO4_HM86(T):
 ###############################################################################
     
 #%%############################################################################
-# === PALABAN & PITZER 1987 ===================================================
+# === PABALAN & PITZER 1987 ===================================================
 
-# Note that there are two Palaban & Pitzer (1987)'s: one compiling a suite of
+# Note that there are two Pabalan & Pitzer (1987)'s: one compiling a suite of
 #  electrolytes (PP87ii), and one just for NaOH (PP87i).
 # There are also a bunch of Phutela & Pitzer papers in similar years, so will
 #  need to take care with naming conventions!
