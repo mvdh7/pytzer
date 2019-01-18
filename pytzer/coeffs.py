@@ -3456,7 +3456,7 @@ def psi_Na_CO3_HSO4_HMW84(T):
 
 def psi_K_CO3_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,nan, dtype='float64')
+    psi = np.full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
