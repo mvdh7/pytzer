@@ -250,3 +250,19 @@ MIAMI.bC['K-I'    ] = coeffs.bC_K_I_MP98
 #MIAMI.bC['NH4-Cl' ] = coeffs.bC_NH4_Cl_MP98
 #MIAMI.bC['NH4-Br' ] = coeffs.bC_NH4_Br_MP98
 #MIAMI.bC['NH4-F'  ] = coeffs.bC_NH4_F_MP98
+
+# === WATERS & MILLERO 2013 ===================================================
+WM13 = cdict()
+
+WM13.dh['Aosm'] = coeffs.Aosm_M88
+
+# Table A1
+WM13.bC['Na-Cl' ] = coeffs.bC_Na_Cl_M88
+#WM13.bC['Na-SO4'] = coeffs.bC_Na_SO4_HM86
+
+#WM13.bC['K-Cl'  ] = coeffs.bC_K_Cl_GM89
+#WM13.bC['K-SO4' ] = coeffs.bC_K_SO4_GM89
+#WM13.bC['Ca-Cl' ] = coeffs.bC_Ca_Cl_GM89
+#WM13.bC['Ca-SO4'] = coeffs.bC_Ca_SO4_M88
+#WM13.bC['Ca-SO3'] = coeffs.bC_Ca_SO4_M88
+#WM13.bC['Sr-SO4'] = coeffs.bC_Ca_SO4_M88
