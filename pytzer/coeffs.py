@@ -233,6 +233,146 @@ def bC_Mg_Cl_dLP83(T):
 
 # === DE LIMA & PITZER 1983 ===================================================
 ###############################################################################
+
+#%%############################################################################
+# === HOLMES & MESMER 1983 ====================================================
+
+def HM83_eq25(T,a):
+    
+    TR = np.float_(298.15)
+    
+    return a[0]                  \
+         + a[1] * (1/T - 1/TR)   \
+         + a[2] * np.log(T/TR)   \
+         + a[3] * (T - TR)       \
+         + a[4] * (T**2 - TR**2) \
+         + a[5] * np.log(T - 260)
+
+# --- bC: caesium chloride ----------------------------------------------------
+         
+def bC_Cs_Cl_HM83(T):
+    
+    b0    = HM83_eq25(T,np.float_([    0.03352  ,
+                                   -1290.0      ,
+                                   -   8.4279   ,
+                                       0.018502 ,
+                                   -   6.7942e-6,
+                                       0        ]))
+    
+    b1    = HM83_eq25(T,np.float_([    0.0429   ,
+                                   -  38.0      ,
+                                       0        ,
+                                       0.001306 ,
+                                       0        ,
+                                       0        ]))
+    
+    b2    = np.zeros_like(T)
+    
+    Cphi  = HM83_eq25(T,np.float_([-   2.62e-4  ,
+                                     157.13     ,
+                                       1.0860   ,
+                                   -   0.0025242,
+                                       9.840e-7 ,
+                                       0        ]))
+        
+    zCs   = np.float_(+1)
+    zCl   = np.float_(-1)
+    C0    = Cphi / (2 * np.sqrt(np.abs(zCs*zCl)))
+    
+    C1    = np.zeros_like(T)
+    
+    alph1 = np.float_(2)
+    alph2 = -9
+    omega = -9
+    
+    valid = np.logical_and(T >= 273.15, T <= 523.15)
+    
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+# --- bC: potassium chloride --------------------------------------------------
+         
+def bC_K_Cl_HM83(T):
+    
+    b0    = HM83_eq25(T,np.float_([   0.04808  ,
+                                   -758.48     ,
+                                   -  4.7062   ,
+                                      0.010072 ,
+                                   -  3.7599e-6,
+                                      0        ]))
+    
+    b1    = HM83_eq25(T,np.float_([   0.0476   ,
+                                    303.09     ,
+                                      1.066    ,
+                                      0        ,
+                                      0        ,
+                                      0.0470   ]))
+    
+    b2    = np.zeros_like(T)
+    
+    Cphi  = HM83_eq25(T,np.float_([-  7.88e-4  ,
+                                     91.270    ,
+                                      0.58643  ,
+                                   -  0.0012980,
+                                      4.9567e-7,
+                                      0        ]))
+        
+    zK    = np.float_(+1)
+    zCl   = np.float_(-1)
+    C0    = Cphi / (2 * np.sqrt(np.abs(zK*zCl)))
+    
+    C1    = np.zeros_like(T)
+    
+    alph1 = np.float_(2)
+    alph2 = -9
+    omega = -9
+    
+    valid = np.logical_and(T >= 273.15, T <= 523.15)
+    
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+# --- bC: lithium chloride ----------------------------------------------------
+         
+def bC_Li_Cl_HM83(T):
+    
+    b0    = HM83_eq25(T,np.float_([ 0.14847 ,
+                                    0       ,
+                                    0       ,
+                                   -1.546e-4,
+                                    0       ,
+                                    0       ]))
+    
+    b1    = HM83_eq25(T,np.float_([ 0.307   ,
+                                    0       ,
+                                    0       ,
+                                    6.36e-4 ,
+                                    0       ,
+                                    0       ]))
+    
+    b2    = np.zeros_like(T)
+    
+    Cphi  = HM83_eq25(T,np.float_([ 0.003710,
+                                    4.115   ,
+                                    0       ,
+                                    0       ,
+                                   -3.71e-9 ,
+                                    0       ]))
+        
+    zLi   = np.float_(+1)
+    zCl   = np.float_(-1)
+    C0    = Cphi / (2 * np.sqrt(np.abs(zLi*zCl)))
+    
+    C1    = np.zeros_like(T)
+    
+    alph1 = np.float_(2)
+    alph2 = -9
+    omega = -9
+    
+    valid = np.logical_and(T >= 273.15, T <= 523.15)
+    
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+# === HOLMES & MESMER 1983 ====================================================
+###############################################################################
     
 #%%############################################################################
 # === PALABAN & PITZER 1987 ===================================================
