@@ -258,7 +258,7 @@ WM13.dh['Aosm'] = coeffs.Aosm_M88
 
 # Table A1
 WM13.bC['Na-Cl' ] = coeffs.bC_Na_Cl_M88
-#WM13.bC['Na-SO4'] = coeffs.bC_Na_SO4_HM86
+WM13.bC['Na-SO4'] = coeffs.bC_Na_SO4_HM86
 
 #WM13.bC['K-Cl'  ] = coeffs.bC_K_Cl_GM89
 #WM13.bC['K-SO4' ] = coeffs.bC_K_SO4_GM89
