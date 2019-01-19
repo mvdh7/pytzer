@@ -393,6 +393,48 @@ def HM86_eq8(T,a):
 
 # --- bC: potassium sulfate ---------------------------------------------------
          
+def bC_K_SO4_HM86(T):
+    
+    b0    = HM86_eq8(T,np.float_([ 0         ,
+                                   7.476e-4  ,
+                                   0         ,
+                                   4.265e-3  ,
+                                  -3.088     ,
+                                   0         ,
+                                   0         ]))
+    
+    b1    = HM86_eq8(T,np.float_([ 0.6179    ,
+                                   6.85e-3   ,
+                                   5.576e-5  ,
+                                  -5.841e-2  ,
+                                   0         ,
+                                  -0.90      ,
+                                   0         ]))
+    
+    b2    = np.zeros_like(T)
+    
+    Cphi  = HM86_eq8(T,np.float_([ 9.15467e-3,
+                                   0         ,
+                                   0         ,
+                                  -1.81e-4   ,
+                                   0         ,
+                                   0         ,
+                                   0         ]))
+    
+    zK    = np.float_(+1)
+    zSO4  = np.float_(-2)
+    C0    = Cphi / (2 * np.sqrt(np.abs(zK*zSO4)))
+    
+    C1    = np.zeros_like(T)
+    
+    alph1 = np.float_(2)
+    alph2 = -9
+    omega = -9
+    
+    valid = np.logical_and(T >= 298.15, T <= 523.15)
+    
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+         
 # --- bC: lithium sulfate -----------------------------------------------------
 
 # --- bC: sodium sulfate ------------------------------------------------------

@@ -275,7 +275,7 @@ WM13.bC['Ca-Cl'  ] = coeffs.bC_Ca_Cl_GM89
 
 # Table A4: K salts
 WM13.bC['K-Cl'  ] = coeffs.bC_K_Cl_GM89
-#WM13.bC['K-SO4' ] = coeffs.bC_K_SO4_HM86
+WM13.bC['K-SO4' ] = coeffs.bC_K_SO4_HM86
 #WM13.bC['K-HSO4'] = coeffs.bC_K_HSO4_Pitzer91
 #WM13.bC['K-OH'  ] = coeffs.bC_K_OH_HMW84
 
