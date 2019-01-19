@@ -2100,14 +2100,11 @@ def bC_K_Cl_A99(T):
 
 def bC_Mg_HSO4_RC99(T):
 
+    # RC99 Table 6, left column
     b0 = np.full_like(T,0.40692)
-
     b1 = np.full_like(T,1.6466)
-
     b2 = np.zeros_like(T)
-
     C0 = np.full_like(T,0.024293)
-
     C1 = np.full_like(T,-0.127194)
 
     # Alpha and omega values
@@ -2119,6 +2116,26 @@ def bC_Mg_HSO4_RC99(T):
     valid = T == 298.15
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+# --- psi: hydrogen magnesium bisulfate ---------------------------------------
+    
+def psi_H_Mg_HSO4_RC99(T):
+    
+    # RC99 Table 6, left column
+    psi = np.full_like(T,-0.027079)   
+    valid = T == 298.15
+    
+    return psi, valid
+
+# --- psi: hydrogen magnesium sulfate -----------------------------------------
+    
+def psi_H_Mg_SO4_RC99(T):
+    
+    # RC99 Table 6, left column
+    psi = np.full_like(T,-0.047368)  
+    valid = T == 298.15
+    
+    return psi, valid
 
 # === RARD & CLEGG 1999 =======================================================
 ###############################################################################

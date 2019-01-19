@@ -265,7 +265,7 @@ WM13.bC['Na-OH'  ] = coeffs.bC_Na_OH_PP87i
 # Table A2: Mg salts
 WM13.bC['Mg-Cl'  ] = coeffs.bC_Mg_Cl_dLP83
 WM13.bC['Mg-SO4' ] = coeffs.bC_Mg_SO4_PP86ii
-WM13.bC['Mg-HSO4'] = coeffs.bC_Mg_HSO4_RCl99
+WM13.bC['Mg-HSO4'] = coeffs.bC_Mg_HSO4_RC99
 
 # Table A3: Ca salts
 WM13.bC['Ca-Cl'  ] = coeffs.bC_Ca_Cl_GM89
@@ -343,8 +343,8 @@ WM13.psi['H-Na-SO4' ] = coeffs.psi_zero
 WM13.psi['H-Na-HSO4'] = coeffs.psi_H_Na_Cl_HMW84
 
 WM13.psi['H-Mg-Cl'] = coeffs.psi_H_Mg_Cl_HMW84
-#WM13.psi['H-Mg-SO4'] = coeffs.psi_H_Mg_SO4_RC99
-#WM13.psi['H-Mg-HSO4'] = coeffs.psi_H_Mg_HSO4_RC99
+WM13.psi['H-Mg-SO4'] = coeffs.psi_H_Mg_SO4_RC99
+WM13.psi['H-Mg-HSO4'] = coeffs.psi_H_Mg_HSO4_RC99
 
 WM13.psi['Ca-H-Cl'  ] = coeffs.psi_Ca_H_Cl_HMW84
 WM13.psi['Ca-H-SO4' ] = coeffs.psi_zero
