@@ -327,7 +327,7 @@ WM13.psi['K-Cl-OH' ] = coeffs.psi_K_Cl_OH_HMW84
 
 WM13.psi['H-HSO4-SO4' ] = coeffs.psi_zero
 WM13.psi['Na-HSO4-SO4'] = coeffs.psi_Na_HSO4_SO4_HMW84
-WM13.psi['Mg-HSO4-SO4'] = coeffs.psi_Mg_HSO4_SO4_HMW84
+WM13.psi['Mg-HSO4-SO4'] = coeffs.psi_Mg_HSO4_SO4_RC99
 WM13.psi['Ca-HSO4-SO4'] = coeffs.psi_zero
 WM13.psi['K-HSO4-SO4' ] = coeffs.psi_K_HSO4_SO4_HMW84
 

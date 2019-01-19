@@ -2137,6 +2137,16 @@ def psi_H_Mg_SO4_RC99(T):
     
     return psi, valid
 
+# --- psi: magnesium bisulfate sulfate ----------------------------------------
+    
+def psi_Mg_HSO4_SO4_RC99(T):
+    
+    # RC99 Table 6, left column
+    psi = np.full_like(T,-0.078418)  
+    valid = T == 298.15
+    
+    return psi, valid
+
 # === RARD & CLEGG 1999 =======================================================
 ###############################################################################
 
