@@ -265,7 +265,7 @@ WM13.bC['Na-OH'  ] = coeffs.bC_Na_OH_PP87i
 # Table A2: Mg salts
 WM13.bC['Mg-Cl'  ] = coeffs.bC_Mg_Cl_dLP83
 WM13.bC['Mg-SO4' ] = coeffs.bC_Mg_SO4_PP86ii
-#WM13.bC['Mg-HSO4'] = coeffs.bC_Mg_HSO4_RardClegg99
+WM13.bC['Mg-HSO4'] = coeffs.bC_Mg_HSO4_RCl99
 
 # Table A3: Ca salts
 WM13.bC['Ca-Cl'  ] = coeffs.bC_Ca_Cl_GM89
