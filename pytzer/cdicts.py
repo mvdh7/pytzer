@@ -271,13 +271,13 @@ WM13.bC['Mg-HSO4'] = coeffs.bC_Mg_HSO4_RC99
 WM13.bC['Ca-Cl'  ] = coeffs.bC_Ca_Cl_GM89
 #WM13.bC['Ca-SO4' ] = coeffs.bC_Ca_SO4_Pitzer91
 #WM13.bC['Ca-HSO4'] = coeffs.bC_Ca_HSO4_Pitzer91
-#WM13.bC['Ca-OH'  ] = coeffs.bC_Ca_OH_HMW84
+WM13.bC['Ca-OH'  ] = coeffs.bC_Ca_OH_HMW84
 
 # Table A4: K salts
 WM13.bC['K-Cl'  ] = coeffs.bC_K_Cl_GM89
 WM13.bC['K-SO4' ] = coeffs.bC_K_SO4_HM86
 #WM13.bC['K-HSO4'] = coeffs.bC_K_HSO4_Pitzer91
-#WM13.bC['K-OH'  ] = coeffs.bC_K_OH_HMW84
+WM13.bC['K-OH'  ] = coeffs.bC_K_OH_HMW84
 
 # Table A5: H+ interactions
 WM13.bC['H-Cl'  ] = coeffs.bC_H_Cl_CMR93
@@ -285,7 +285,7 @@ WM13.bC['H-SO4' ] = coeffs.bC_H_SO4_CRP94
 WM13.bC['H-HSO4'] = coeffs.bC_H_HSO4_CRP94
 
 # Table A6: MgOH+ interactions
-#WM13.bC['MgOH-Cl'] = coeffs.bC_MgOH_Cl_HMW84
+WM13.bC['MgOH-Cl'] = coeffs.bC_MgOH_Cl_HMW84
 
 # Table A7: cation-cation interactions
 WM13.theta['H-Na' ] = coeffs.theta_H_Na_CMR93
