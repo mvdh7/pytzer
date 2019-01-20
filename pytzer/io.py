@@ -1,27 +1,23 @@
-from autograd.numpy import array, concatenate, unique, vstack
-import pandas as pd
+from autograd.numpy import array, concatenate, genfromtxt, nan_to_num, \
+                           shape, unique, vstack
 
 ##### FILE I/O ################################################################
 
-def getIons(filename):
+def getmols(filename, delimiter=','):
 
-    # Import input conditions from .csv
-    idf = pd.read_csv(filename, float_precision='round_trip')
-
-    # Replace missing values with zero
-    idf = idf.fillna(0)
-
-    # Get temperatures
-    T = vstack(idf.temp.values)
-
-    # Get ionic concentrations
-    idf_tots = idf[idf.keys()[idf.keys() != 'temp']]
-    tots = idf_tots.values
-
-    # Get list of ions
-    ions = array(idf_tots.keys())
-
-    return T, tots, ions, idf
+    data = genfromtxt(filename, delimiter=delimiter, skip_header=1)
+    head = genfromtxt(filename, delimiter=delimiter, dtype='U', 
+                      skip_footer=shape(data)[0])
+    
+    nan_to_num(data, copy=False)
+    
+    TL = head == 'temp'
+    
+    mols = data[:,~TL]
+    ions = head[~TL]
+    T = data[:,TL]
+    
+    return mols, ions, T
 
 # Return list of unique ions from list of electrolytes
 def ele2ions(ele):
