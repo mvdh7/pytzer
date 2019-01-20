@@ -1,5 +1,5 @@
-import autograd.numpy as np
-from . import coeffs, data, jfuncs
+from autograd.numpy import log, zeros_like
+from . import coeffs, io, jfuncs
 
 class cdict:
     def __init__(self):
@@ -18,23 +18,23 @@ class cdict:
         Klist = self.K.keys()
         
         # Initialise Keq equation
-        Keq = np.zeros_like(T, dtype='float64')
+        Keq = zeros_like(T, dtype='float64')
         
         if 'H2O' in Klist:
-            Keq = Keq + np.log(gH*mH * gOH*mOH) \
-                - np.log(self.K['H2O'](T)[0])
+            Keq = Keq + log(gH*mH * gOH*mOH) \
+                      - log(self.K['H2O'](T)[0])
         
         if 'HSO4' in Klist:
-            Keq = Keq + np.log(gH*mH * gSO4*mSO4 \
+            Keq = Keq + log(gH*mH * gSO4*mSO4 \
                 / (gHSO4*mHSO4)) \
-                - np.log(self.K['HSO4'](T)[0])
+                - log(self.K['HSO4'](T)[0])
             
         return Keq
     
     # Populate with zero-functions
     def add_zeros(self,eles):
         
-        _,cats,anis,_ = data.ele2ions(eles)
+        _,cats,anis,_ = io.ele2ions(eles)
 
         # Populate cdict with zero functions
         for cat in cats:

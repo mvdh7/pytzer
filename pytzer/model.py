@@ -1,4 +1,7 @@
-import autograd.numpy as np
+from autograd.numpy import array, exp, float_, full_like, log, shape, sqrt, \
+                           vstack
+from autograd.numpy import abs as np_abs
+from autograd.numpy import sum as np_sum
 from autograd import elementwise_grad as egrad
 from autograd.extend import primitive, defvjp
 #from scipy.misc import derivative
@@ -10,21 +13,21 @@ def getCharges(ions):
 
     z = {}
     
-    z['Ba'  ] = np.float_(+0)
-    z['Ca'  ] = np.float_(+2)
-    z['H'   ] = np.float_(+1)
-    z['K'   ] = np.float_(+1)
-    z['Mg'  ] = np.float_(+2)
-    z['Na'  ] = np.float_(+1)
-    z['Zn'  ] = np.float_(+2)
+    z['Ba'  ] = float_(+0)
+    z['Ca'  ] = float_(+2)
+    z['H'   ] = float_(+1)
+    z['K'   ] = float_(+1)
+    z['Mg'  ] = float_(+2)
+    z['Na'  ] = float_(+1)
+    z['Zn'  ] = float_(+2)
 
-    z['Br'  ] = np.float_(-1)
-    z['Cl'  ] = np.float_(-1)    
-    z['OH'  ] = np.float_(-1)
-    z['HSO4'] = np.float_(-1)
-    z['SO4' ] = np.float_(-2)
+    z['Br'  ] = float_(-1)
+    z['Cl'  ] = float_(-1)    
+    z['OH'  ] = float_(-1)
+    z['HSO4'] = float_(-1)
+    z['SO4' ] = float_(-2)
     
-    return np.array([z[ion] for ion in ions])
+    return array([z[ion] for ion in ions])
 
 
 ##### DEBYE-HUECKEL SLOPES ####################################################
@@ -47,43 +50,43 @@ def fG(T,I,cf): # from CRP94 Eq. (AI1)
     else:
         Aosm = lambda T: cf.dh['Aosm'](T)[0]
     
-    return -4 * np.vstack(Aosm(T)) * I * np.log(1 + b*np.sqrt(I)) / b
+    return -4 * vstack(Aosm(T)) * I * log(1 + b*sqrt(I)) / b
 
 ###
 dfG_T_dT = egrad(lambda T,I,cf: fG(T,I,cf) * R) # for testing purposes only
 
 def fL(T,I,cf,nu): # for testing purposes only
 
-    return nu * cf.dh['AH'](T) * np.log(1 + b*np.sqrt(I)) / (2*b)
+    return nu * cf.dh['AH'](T) * log(1 + b*sqrt(I)) / (2*b)
 
 
 ##### PITZER MODEL SUBFUNCTIONS ###############################################
 
 def g(x): # CRP94 Eq. (AI13)
-    return 2 * (1 - (1 + x) * np.exp(-x)) / x**2
+    return 2 * (1 - (1 + x) * exp(-x)) / x**2
 
 def h(x):  # CRP94 Eq. (AI15)
-    return (6 - (6 + x*(6 + 3*x + x**2)) * np.exp(-x)) / x**4
+    return (6 - (6 + x*(6 + 3*x + x**2)) * exp(-x)) / x**4
 
 
 def B(T,I,cf,iset): # CRP94 Eq. (AI7)
     
     b0,b1,b2,_,_,a1,a2,_,_ = cf.bC[iset](T)
 
-    return b0 + b1 * g(a1*np.sqrt(I)) + b2 * g(a2*np.sqrt(I))
+    return b0 + b1 * g(a1*sqrt(I)) + b2 * g(a2*sqrt(I))
 
 def CT(T,I,cf,iset): # CRP94 Eq. (AI10)
     
     _,_,_,C0,C1,_,_,o,_ = cf.bC[iset](T)
     
-    return C0 + 4 * C1 * h(o*np.sqrt(I))
+    return C0 + 4 * C1 * h(o*sqrt(I))
 
 
 ##### UNSYMMETRIC MIXING ######################################################
     
 def xij(T,I,z0,z1,cf):
     
-    return 6 * z0*z1 * np.vstack(cf.dh['Aosm'](T)[0]) * np.sqrt(I)
+    return 6 * z0*z1 * vstack(cf.dh['Aosm'](T)[0]) * sqrt(I)
 
 def etheta(T,I,z0,z1,cf):
     
@@ -103,8 +106,8 @@ def Gex_nRT(mols,ions,T,cf):
     
     # Ionic strength etc.
     zs = getCharges(ions)
-    I = np.vstack(0.5 * (np.sum(mols * zs**2, 1)))
-    Z = np.vstack(np.sum(mols * np.abs(zs), 1))
+    I = vstack(0.5 * (np_sum(mols * zs**2, 1)))
+    Z = vstack(np_sum(mols * np_abs(zs), 1))
     
     # Separate cations and anions
     CL = zs > 0
@@ -125,7 +128,7 @@ def Gex_nRT(mols,ions,T,cf):
 
             iset= '-'.join([cation,anion])
 
-            Gex_nRT = Gex_nRT + np.vstack(cats[:,C] * anis[:,A]) \
+            Gex_nRT = Gex_nRT + vstack(cats[:,C] * anis[:,A]) \
                 * (2*B(T,I,cf,iset) + Z*CT(T,I,cf,iset))
                 
     # Add c-c' interactions
@@ -136,12 +139,12 @@ def Gex_nRT(mols,ions,T,cf):
             iset.sort()
             iset= '-'.join(iset)
             
-            Gex_nRT = Gex_nRT + np.vstack(cats[:,C0] * cats[:,C1]) \
+            Gex_nRT = Gex_nRT + vstack(cats[:,C0] * cats[:,C1]) \
                 * 2 * cf.theta[iset](T)[0]
                 
             if zCs[C0] != zCs[C1]:
                 
-                Gex_nRT = Gex_nRT + np.vstack(cats[:,C0] * cats[:,C1]) \
+                Gex_nRT = Gex_nRT + vstack(cats[:,C0] * cats[:,C1]) \
                     * 2 * etheta(T,I,zCs[C0],zCs[C1],cf)
                 
     # Add c-c'-a interactions
@@ -149,7 +152,7 @@ def Gex_nRT(mols,ions,T,cf):
                 
                 itri = '-'.join([iset,anions[A]])
                                 
-                Gex_nRT = Gex_nRT + np.vstack(cats[:,C0] * cats[:,C1] \
+                Gex_nRT = Gex_nRT + vstack(cats[:,C0] * cats[:,C1] \
                     * anis[:,A]) * cf.psi[itri](T)[0]
 
     # Add a-a' interactions
@@ -160,12 +163,12 @@ def Gex_nRT(mols,ions,T,cf):
             iset.sort()
             iset= '-'.join(iset)
             
-            Gex_nRT = Gex_nRT + np.vstack(anis[:,A0] * anis[:,A1]) \
+            Gex_nRT = Gex_nRT + vstack(anis[:,A0] * anis[:,A1]) \
                 * 2 * cf.theta[iset](T)[0]
                 
             if zAs[A0] != zAs[A1]:
                 
-                Gex_nRT = Gex_nRT + np.vstack(anis[:,A0] * anis[:,A1]) \
+                Gex_nRT = Gex_nRT + vstack(anis[:,A0] * anis[:,A1]) \
                     * 2 * etheta(T,I,zAs[A0],zAs[A1],cf)
 
     # Add c-a-a' interactions
@@ -173,7 +176,7 @@ def Gex_nRT(mols,ions,T,cf):
                 
                 itri = '-'.join([cations[C],iset])
                                 
-                Gex_nRT = Gex_nRT + np.vstack(anis[:,A0] * anis[:,A1] \
+                Gex_nRT = Gex_nRT + vstack(anis[:,A0] * anis[:,A1] \
                     * cats[:,C]) * cf.psi[itri](T)[0]
 
     return Gex_nRT
@@ -185,7 +188,7 @@ ln_acfs = egrad(Gex_nRT)
 
 def acfs(mols,ions,T,cf):
     
-    return np.exp(ln_acfs(mols,ions,T,cf))
+    return exp(ln_acfs(mols,ions,T,cf))
 
 # Get mean activity coefficient for an M_(nM)X_(nX) electrolyte
 def ln_acf2ln_acf_MX(ln_acfM,ln_acfX,nM,nX):
@@ -197,8 +200,8 @@ def ln_acf2ln_acf_MX(ln_acfM,ln_acfX,nM,nX):
 # Osmotic coefficient derivative function - single electrolyte
 def osmfunc(ww,mols,ions,T,cf):
     
-    mols_ww = np.array([mols[:,E]/ww.ravel() \
-                        for E in range(np.shape(mols)[1])]).transpose()
+    mols_ww = array([mols[:,E]/ww.ravel() \
+                        for E in range(shape(mols)[1])]).transpose()
     
     return ww * R * T * Gex_nRT(mols_ww,ions,T,cf)
 
@@ -208,29 +211,29 @@ osmD = egrad(osmfunc)
 # Osmotic coefficient - single electrolyte
 def osm(mols,ions,T,cf):
     
-    ww = np.full_like(T,1, dtype='float64')
+    ww = full_like(T,1, dtype='float64')
     
     return 1 - osmD(ww,mols,ions,T,cf) \
-        / (R * T * np.vstack(np.sum(mols,axis=1)))
+        / (R * T * vstack(np_sum(mols,axis=1)))
 
 ## Osmotic coefficient function - scipy derivative version
 #def osm(mols,ions,T,cf):
-#    osmD = np.full_like(T,np.nan)
+#    osmD = full_like(T,np.nan)
 #    for i in range(len(T)):
 #        osmD[i] = derivative(lambda ww: 
-#            ww * R*T[i] * Gex_nRT(np.array([mols[i,:]/ww]),ions,T[i],cf),
-#            np.array([1.]), dx=1e-8)[0]
-#    osm = 1 - osmD / (R * T * (np.sum(mols,axis=1)))
+#            ww * R*T[i] * Gex_nRT(array([mols[i,:]/ww]),ions,T[i],cf),
+#            array([1.]), dx=1e-8)[0]
+#    osm = 1 - osmD / (R * T * (np_sum(mols,axis=1)))
 #    
 #    return osm
 
 # Convert osmotic coefficient to water activity
 def osm2aw(mols,osm):
-    return np.exp(-osm * Mw * np.vstack(np.sum(mols,axis=1)))
+    return exp(-osm * Mw * vstack(np_sum(mols,axis=1)))
 
 # Convert water activity to osmotic coefficient
 def aw2osm(mols,aw):
-    return -np.log(aw) / (Mw * np.vstack(np.sum(mols,axis=1)))
+    return -log(aw) / (Mw * vstack(np_sum(mols,axis=1)))
 
 ##### ENTHALPY and HEAT CAPACITY ##############################################
     
@@ -242,7 +245,7 @@ def Lapp(tot,n1,n2,ions,T,cf):
     
     m1 = (tot * n1).ravel()
     m2 = (tot * n2).ravel()
-    mols = np.vstack((m1,m2)).transpose()
+    mols = vstack((m1,m2)).transpose()
     
     return -T**2 * dGex_T_dT(mols,ions,T,cf) * R / tot
 
