@@ -708,7 +708,7 @@ def bC_K_BOH4_SRRJ87(T):
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
-# --- bC: sodium borate ----------------------------------------------------------------
+# --- bC: sodium borate -------------------------------------------------------
     
 def bC_Na_BOH4_SRRJ87(T):
     
