@@ -1,6 +1,5 @@
 # pytzer
 
-Pitzer model for chemical speciation in natural waters
+Pitzer model for chemical speciation.
 
-Written by Matthew P. Humphreys
-University of East Anglia, Norwich, UK
+Implemented by Matthew P. Humphreys, University of East Anglia, Norwich, UK
