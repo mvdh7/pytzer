@@ -1,5 +1,5 @@
 from autograd.numpy import array, concatenate, genfromtxt, nan_to_num, \
-                           shape, unique, vstack
+                           shape, unique
 
 ##### FILE I/O ################################################################
 
