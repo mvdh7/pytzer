@@ -1,4 +1,5 @@
 import autograd.numpy as np
+from autograd.numpy import full_like, logical_and, zeros_like
 from autograd.extend import primitive, defvjp
 from .constants import Patm_bar
 
@@ -9,28 +10,28 @@ COEFFS_PRESSURE = np.float_(0.101325) # MPa
 
 def bC_zero(T):
     
-    b0    = np.zeros_like(T)
-    b1    = np.zeros_like(T)
-    b2    = np.zeros_like(T)
-    C0    = np.zeros_like(T)
-    C1    = np.zeros_like(T)
-    alph1 = np.full_like(T,-9)
-    alph2 = np.full_like(T,-9)
-    omega = np.full_like(T,-9)
+    b0    = zeros_like(T)
+    b1    = zeros_like(T)
+    b2    = zeros_like(T)
+    C0    = zeros_like(T)
+    C1    = zeros_like(T)
+    alph1 = full_like(T,-9)
+    alph2 = full_like(T,-9)
+    omega = full_like(T,-9)
     valid = T > 0
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 def theta_zero(T):
     
-    theta = np.zeros_like(T)
+    theta = zeros_like(T)
     valid = T > 0
     
     return theta, valid
 
 def psi_zero(T):
     
-    psi   = np.zeros_like(T)
+    psi   = zeros_like(T)
     valid = T > 0
     
     return psi, valid
@@ -45,21 +46,21 @@ def psi_zero(T):
     
 @primitive
 def b0_Ca_Cl_JESS(T):
-    return np.full_like(T,0.319270074367523, dtype='float64') # AC 298.15 K
+    return full_like(T,0.319270074367523, dtype='float64') # AC 298.15 K
 def b0_Ca_Cl_JESS_vjp(ans,T):
     return lambda g: g * np.float_(0.000203132018214092) # HA 298.15 K
 defvjp(b0_Ca_Cl_JESS,b0_Ca_Cl_JESS_vjp)
 
 @primitive
 def b1_Ca_Cl_JESS(T):
-    return np.full_like(T,1.56483352184295, dtype='float64') # AC 298.15 K
+    return full_like(T,1.56483352184295, dtype='float64') # AC 298.15 K
 def b1_Ca_Cl_JESS_vjp(ans,T):
     return lambda g: g * np.float_(0.00305774295702577) # HA 298.15 K
 defvjp(b1_Ca_Cl_JESS,b1_Ca_Cl_JESS_vjp)
 
 @primitive
 def Cphi_Ca_Cl_JESS(T):
-    return np.full_like(T,-0.000792843929957598, dtype='float64') # AC 298.15 K
+    return full_like(T,-0.000792843929957598, dtype='float64') # AC 298.15 K
 def Cphi_Ca_Cl_JESS_vjp(ans,T):
     return lambda g: g * np.float_(-0.000161954856594093) # HA 298.15 K
 defvjp(Cphi_Ca_Cl_JESS,Cphi_Ca_Cl_JESS_vjp)
@@ -68,7 +69,7 @@ def bC_Ca_Cl_JESS(T):
     
     b0 = b0_Ca_Cl_JESS(T)
     b1 = b1_Ca_Cl_JESS(T)
-    b2 = np.zeros_like(T)
+    b2 = zeros_like(T)
     
     Cphi = Cphi_Ca_Cl_JESS(T)
     
@@ -76,13 +77,13 @@ def bC_Ca_Cl_JESS(T):
     zCl   = np.float_(-1)
     C0    = Cphi / (2 * np.sqrt(np.abs(zCa*zCl)))
     
-    C1    = np.zeros_like(T)
+    C1    = zeros_like(T)
     
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
     
-    valid = np.logical_and(T >= 297.65, T <= 298.65)
+    valid = logical_and(T >= 297.65, T <= 298.65)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -211,7 +212,7 @@ def bC_Mg_Cl_dLP83(T):
          - 1.09438e-2 * T    \
          + 2.60135
         
-    b2 = np.zeros_like(T)
+    b2 = zeros_like(T)
     
     Cphi = 3.01823e-7 * T**2 \
          - 2.89125e-4 * T    \
@@ -221,13 +222,13 @@ def bC_Mg_Cl_dLP83(T):
     zCl   = np.float_(-1)
     C0    = Cphi / (2 * np.sqrt(np.abs(zMg*zCl)))
     
-    C1    = np.zeros_like(T)
+    C1    = zeros_like(T)
     
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
     
-    valid = np.logical_and(T >= 298.15, T <= 523.15)
+    valid = logical_and(T >= 298.15, T <= 523.15)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -266,7 +267,7 @@ def bC_Cs_Cl_HM83(T):
                                        0        ,
                                        0        ]))
     
-    b2    = np.zeros_like(T)
+    b2    = zeros_like(T)
     
     Cphi  = HM83_eq25(T,np.float_([-   2.62e-4  ,
                                      157.13     ,
@@ -279,13 +280,13 @@ def bC_Cs_Cl_HM83(T):
     zCl   = np.float_(-1)
     C0    = Cphi / (2 * np.sqrt(np.abs(zCs*zCl)))
     
-    C1    = np.zeros_like(T)
+    C1    = zeros_like(T)
     
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
     
-    valid = np.logical_and(T >= 273.15, T <= 523.15)
+    valid = logical_and(T >= 273.15, T <= 523.15)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -307,7 +308,7 @@ def bC_K_Cl_HM83(T):
                                       0        ,
                                       0.0470   ]))
     
-    b2    = np.zeros_like(T)
+    b2    = zeros_like(T)
     
     Cphi  = HM83_eq25(T,np.float_([-  7.88e-4  ,
                                      91.270    ,
@@ -320,13 +321,13 @@ def bC_K_Cl_HM83(T):
     zCl   = np.float_(-1)
     C0    = Cphi / (2 * np.sqrt(np.abs(zK*zCl)))
     
-    C1    = np.zeros_like(T)
+    C1    = zeros_like(T)
     
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
     
-    valid = np.logical_and(T >= 273.15, T <= 523.15)
+    valid = logical_and(T >= 273.15, T <= 523.15)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -348,7 +349,7 @@ def bC_Li_Cl_HM83(T):
                                     0       ,
                                     0       ]))
     
-    b2    = np.zeros_like(T)
+    b2    = zeros_like(T)
     
     Cphi  = HM83_eq25(T,np.float_([ 0.003710,
                                     4.115   ,
@@ -361,13 +362,13 @@ def bC_Li_Cl_HM83(T):
     zCl   = np.float_(-1)
     C0    = Cphi / (2 * np.sqrt(np.abs(zLi*zCl)))
     
-    C1    = np.zeros_like(T)
+    C1    = zeros_like(T)
     
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
     
-    valid = np.logical_and(T >= 273.15, T <= 523.15)
+    valid = logical_and(T >= 273.15, T <= 523.15)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -415,7 +416,7 @@ def bC_K_SO4_HM86(T):
                                   -0.90      ,
                                    0         ]))
     
-    b2    = np.zeros_like(T)
+    b2    = zeros_like(T)
     
     Cphi  = HM86_eq8(T,np.float_([ 9.15467e-3,
                                    0         ,
@@ -429,13 +430,13 @@ def bC_K_SO4_HM86(T):
     zSO4  = np.float_(-2)
     C0    = Cphi / (2 * np.sqrt(np.abs(zK*zSO4)))
     
-    C1    = np.zeros_like(T)
+    C1    = zeros_like(T)
     
     alph1 = np.float_(1.4)
     alph2 = -9
     omega = -9
     
-    valid = np.logical_and(T >= 298.15, T <= 523.15)
+    valid = logical_and(T >= 298.15, T <= 523.15)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
          
@@ -461,7 +462,7 @@ def bC_Na_SO4_HM86(T):
                                       0         ,
                                    1861.3       ]))
     
-    b2    = np.zeros_like(T)
+    b2    = zeros_like(T)
     
     Cphi  = HM86_eq8(T,np.float_([    1.1745e-2 ,
                                   -   3.3038e-4 ,
@@ -475,13 +476,13 @@ def bC_Na_SO4_HM86(T):
     zSO4  = np.float_(-2)
     C0    = Cphi / (2 * np.sqrt(np.abs(zNa*zSO4)))
     
-    C1    = np.zeros_like(T)
+    C1    = zeros_like(T)
     
     alph1 = np.float_(1.4)
     alph2 = -9
     omega = -9
     
-    valid = np.logical_and(T >= 298.15, T <= 523.15)
+    valid = logical_and(T >= 298.15, T <= 523.15)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -545,7 +546,7 @@ def bC_Na_OH_PP87i(T):
                                      0           ,
                                      0           ]))
     
-    b2    = np.zeros_like(T)
+    b2    = zeros_like(T)
     
     Cphi  = PP87i_eqNaOH(T,
                          np.float_([-1.66868970e+01,
@@ -565,13 +566,13 @@ def bC_Na_OH_PP87i(T):
     zOH   = np.float_(-1)
     C0    = Cphi / (2 * np.sqrt(np.abs(zNa*zOH)))
     
-    C1    = np.zeros_like(T)
+    C1    = zeros_like(T)
     
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
     
-    valid = np.logical_and(T >= 298.15, T <= 523.15)
+    valid = logical_and(T >= 298.15, T <= 523.15)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -589,7 +590,7 @@ def bC_Mg_Cl_PP87i(T):
     zCl   = np.float_(-1)
     C0    = Cphi / (2 * np.sqrt(np.abs(zMg*zCl)))
        
-    valid = np.logical_and(T >= 298.15, T <= 473.15)
+    valid = logical_and(T >= 298.15, T <= 473.15)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -620,7 +621,7 @@ def bC_K_Cl_SRRJ87(T):
                                     1.500 ,
                                    -1.085 ]))
     
-    b2 = np.zeros_like(T)
+    b2 = zeros_like(T)
     
     Cphi = SRRJ87_eq7(T,np.float_([-0.790 ,
                                    -0.639 ,
@@ -630,13 +631,13 @@ def bC_K_Cl_SRRJ87(T):
     zCl   = np.float_(-1)
     C0    = Cphi / (2 * np.sqrt(np.abs(zK*zCl)))
     
-    C1    = np.zeros_like(T)
+    C1    = zeros_like(T)
     
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
     
-    valid = np.logical_and(T >= 278.15, T <= 328.15)
+    valid = logical_and(T >= 278.15, T <= 328.15)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -654,7 +655,7 @@ def bC_Na_Cl_SRRJ87(T):
                                     1.006 ,
                                    -0.756 ]))
     
-    b2 = np.zeros_like(T)
+    b2 = zeros_like(T)
     
     Cphi = SRRJ87_eq7(T,np.float_([ 1.40  ,
                                    -1.20  ,
@@ -664,13 +665,13 @@ def bC_Na_Cl_SRRJ87(T):
     zCl   = np.float_(-1)
     C0    = Cphi / (2 * np.sqrt(np.abs(zNa*zCl)))
     
-    C1    = np.zeros_like(T)
+    C1    = zeros_like(T)
     
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
     
-    valid = np.logical_and(T >= 278.15, T <= 328.15)
+    valid = logical_and(T >= 278.15, T <= 328.15)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -688,7 +689,7 @@ def bC_K_BOH4_SRRJ87(T):
                                    - 6.876 ,
                                      0     ]))
     
-    b2 = np.zeros_like(T)
+    b2 = zeros_like(T)
     
     Cphi = SRRJ87_eq7(T,np.float_([-56.43  ,
                                    - 9.56  ,
@@ -698,13 +699,13 @@ def bC_K_BOH4_SRRJ87(T):
     zCl   = np.float_(-1)
     C0    = Cphi / (2 * np.sqrt(np.abs(zK*zCl)))
     
-    C1    = np.zeros_like(T)
+    C1    = zeros_like(T)
     
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
     
-    valid = np.logical_and(T >= 278.15, T <= 328.15)
+    valid = logical_and(T >= 278.15, T <= 328.15)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -722,7 +723,7 @@ def bC_Na_BOH4_SRRJ87(T):
                                    -10.68  ,
                                      0     ]))
     
-    b2 = np.zeros_like(T)
+    b2 = zeros_like(T)
     
     Cphi = SRRJ87_eq7(T,np.float_([ 14.98  ,
                                    -15.7   ,
@@ -732,13 +733,13 @@ def bC_Na_BOH4_SRRJ87(T):
     zCl   = np.float_(-1)
     C0    = Cphi / (2 * np.sqrt(np.abs(zNa*zCl)))
     
-    C1    = np.zeros_like(T)
+    C1    = zeros_like(T)
     
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
     
-    valid = np.logical_and(T >= 278.15, T <= 328.15)
+    valid = logical_and(T >= 278.15, T <= 328.15)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -748,9 +749,9 @@ def theta_BOH4_Cl_SRRJ87(T):
     
     # Coefficient from SRRJ87 Table III
     
-    theta = np.full_like(T,-0.056, dtype='float64')
+    theta = full_like(T,-0.056, dtype='float64')
     
-    valid = np.logical_and(T >= 278.15, T <= 328.15)
+    valid = logical_and(T >= 278.15, T <= 328.15)
     
     return theta, valid
 
@@ -758,9 +759,9 @@ def theta_BOH4_Cl_SRRJ87(T):
     
 def psi_K_BOH4_Cl_SRRJ87(T):
     
-    psi   = np.zeros_like(T)
+    psi   = zeros_like(T)
     
-    valid = np.logical_and(T >= 278.15, T <= 328.15)
+    valid = logical_and(T >= 278.15, T <= 328.15)
     
     return psi, valid
 
@@ -770,9 +771,9 @@ def psi_Na_BOH4_Cl_SRRJ87(T):
     
     # Coefficient from SRRJ87 Table III
     
-    psi   = np.full_like(T,-0.019, dtype='float64')
+    psi   = full_like(T,-0.019, dtype='float64')
     
-    valid = np.logical_and(T >= 278.15, T <= 328.15)
+    valid = logical_and(T >= 278.15, T <= 328.15)
     
     return psi, valid
 
@@ -807,7 +808,7 @@ def Aosm_M88(T):
                                  4.52586464e+1,
                                  0            ]))
     
-    valid = np.logical_and(T >= 273.15, T <= 573.15)
+    valid = logical_and(T >= 273.15, T <= 573.15)
     
     return Aosm, valid
 
@@ -856,20 +857,20 @@ def bC_Ca_Cl_M88(T):
     
     b0    = b0_Ca_Cl_M88(T) 
     b1    = b1_Ca_Cl_M88(T)
-    b2    = np.zeros_like(T)
+    b2    = zeros_like(T)
     
     Cphi  = Cphi_Ca_Cl_M88(T)
     zCa   = np.float_(+2)
     zCl   = np.float_(-1)
     C0    = Cphi / (2 * np.sqrt(np.abs(zCa*zCl)))
     
-    C1    = np.zeros_like(T)
+    C1    = zeros_like(T)
     
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
     
-    valid = np.logical_and(T >= 298.15, T <= 523.15)
+    valid = logical_and(T >= 298.15, T <= 523.15)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -877,9 +878,9 @@ def bC_Ca_Cl_M88(T):
 
 def bC_Ca_SO4_M88(T):
     
-    b0    = np.full_like(T,0.15, dtype='float64')
+    b0    = full_like(T,0.15, dtype='float64')
     
-    b1    = np.full_like(T,3.00, dtype='float64')
+    b1    = full_like(T,3.00, dtype='float64')
     
     b2    = M88_eq13(T,
                      np.float_([-1.29399287e+2,
@@ -891,15 +892,15 @@ def bC_Ca_SO4_M88(T):
                                  0            ,
                                  0            ]))
     
-    C0    = np.zeros_like(T)
+    C0    = zeros_like(T)
     
-    C1    = np.zeros_like(T)
+    C1    = zeros_like(T)
     
     alph1 = np.float_(1.4)
     alph2 = np.float_(12)
     omega = -9
     
-    valid = np.logical_and(T >= 298.15, T <= 523.15)
+    valid = logical_and(T >= 298.15, T <= 523.15)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -927,7 +928,7 @@ def bC_Na_Cl_M88(T):
                                  0            ,
                                 -4.23433299e00]))
     
-    b2    = np.zeros_like(T)
+    b2    = zeros_like(T)
     
     Cphi  = M88_eq13(T,
                      np.float_([-1.00588714e-1,
@@ -943,13 +944,13 @@ def bC_Na_Cl_M88(T):
     zCl   = np.float_(-1)
     C0    = Cphi / (2 * np.sqrt(np.abs(zNa*zCl)))
     
-    C1    = np.zeros_like(T)
+    C1    = zeros_like(T)
     
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
     
-    valid = np.logical_and(T >= 273.15, T <= 573.15)
+    valid = logical_and(T >= 273.15, T <= 573.15)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -977,7 +978,7 @@ def bC_Na_SO4_M88(T):
                                  1.46772243e+3,
                                  0            ]))
     
-    b2    = np.zeros_like(T)
+    b2    = zeros_like(T)
     
     Cphi  = M88_eq13(T,
                      np.float_([-8.07816886e+1,
@@ -993,13 +994,13 @@ def bC_Na_SO4_M88(T):
     zSO4  = np.float_(-2)
     C0    = Cphi / (2 * np.sqrt(np.abs(zNa*zSO4)))
     
-    C1    = np.zeros_like(T)
+    C1    = zeros_like(T)
     
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
     
-    valid = np.logical_and(T >= 273.15, T <= 573.15)
+    valid = logical_and(T >= 273.15, T <= 573.15)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -1007,9 +1008,9 @@ def bC_Na_SO4_M88(T):
     
 def theta_Ca_Na_M88(T):
     
-    theta = np.full_like(T,0.05, dtype='float64')
+    theta = full_like(T,0.05, dtype='float64')
     
-    valid = np.logical_and(T >= 298.15, T <= 523.15)
+    valid = logical_and(T >= 298.15, T <= 523.15)
     
     return theta, valid
 
@@ -1017,9 +1018,9 @@ def theta_Ca_Na_M88(T):
     
 def theta_Cl_SO4_M88(T):
     
-    theta = np.full_like(T,0.07, dtype='float64')
+    theta = full_like(T,0.07, dtype='float64')
     
-    valid = np.logical_and(T >= 298.15, T <= 423.15)
+    valid = logical_and(T >= 298.15, T <= 423.15)
     
     return theta, valid
 
@@ -1027,9 +1028,9 @@ def theta_Cl_SO4_M88(T):
     
 def psi_Ca_Na_Cl_M88(T):
     
-    psi = np.full_like(T,-0.003, dtype='float64')
+    psi = full_like(T,-0.003, dtype='float64')
     
-    valid = np.logical_and(T >= 298.15, T <= 523.15)
+    valid = logical_and(T >= 298.15, T <= 523.15)
     
     return psi, valid
 
@@ -1037,9 +1038,9 @@ def psi_Ca_Na_Cl_M88(T):
     
 def psi_Ca_Na_SO4_M88(T):
     
-    psi = np.full_like(T,-0.012, dtype='float64')
+    psi = full_like(T,-0.012, dtype='float64')
     
-    valid = np.logical_and(T >= 298.15, T <= 523.15)
+    valid = logical_and(T >= 298.15, T <= 523.15)
     
     return psi, valid
 
@@ -1047,9 +1048,9 @@ def psi_Ca_Na_SO4_M88(T):
     
 def psi_Ca_Cl_SO4_M88(T):
     
-    psi = np.full_like(T,-0.018, dtype='float64')
+    psi = full_like(T,-0.018, dtype='float64')
     
-    valid = np.logical_and(T >= 298.15, T <= 523.15)
+    valid = logical_and(T >= 298.15, T <= 523.15)
     
     return psi, valid
 
@@ -1057,9 +1058,9 @@ def psi_Ca_Cl_SO4_M88(T):
     
 def psi_Na_Cl_SO4_M88(T):
     
-    psi = np.full_like(T,-0.009, dtype='float64')
+    psi = full_like(T,-0.009, dtype='float64')
     
-    valid = np.logical_and(T >= 298.15, T <= 423.15)
+    valid = logical_and(T >= 298.15, T <= 423.15)
     
     return psi, valid
 
@@ -1077,7 +1078,7 @@ def dissoc_H2O_M88(T):
                                  5.20549183e+1,
                                  0            ]))
     
-    valid = np.logical_and(T >= 298.15, T <= 523.15)
+    valid = logical_and(T >= 298.15, T <= 523.15)
     
     return np.exp(lnKw), valid
 
@@ -1142,7 +1143,7 @@ def bC_K_Cl_GM89(T):
                                  0            ,
                                 -5.94578140e00]))
     
-    b2    = np.zeros_like(T)
+    b2    = zeros_like(T)
     
     Cphi  = GM89_eq3(T,
                      np.float_([-3.30531334e00,
@@ -1158,13 +1159,13 @@ def bC_K_Cl_GM89(T):
     zCl   = np.float_(-1)
     C0    = Cphi / (2 * np.sqrt(np.abs(zK*zCl)))
     
-    C1    = np.zeros_like(T)
+    C1    = zeros_like(T)
     
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
     
-    valid = np.logical_and(T >= 273.15, T <= 523.15)
+    valid = logical_and(T >= 273.15, T <= 523.15)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -1192,21 +1193,21 @@ def bC_K_SO4_GM89(T):
                                  0            ,
                                  0            ]))
     
-    b2    = np.zeros_like(T)
+    b2    = zeros_like(T)
     
-    Cphi  = np.full_like(T,-0.0188, dtype='float64')
+    Cphi  = full_like(T,-0.0188, dtype='float64')
     
     zK    = np.float_(+1)
     zSO4  = np.float_(-2)
     C0    = Cphi / (2 * np.sqrt(np.abs(zK*zSO4)))
     
-    C1    = np.zeros_like(T)
+    C1    = zeros_like(T)
     
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
     
-    valid = np.logical_and(T >= 273.15, T <= 523.15)
+    valid = logical_and(T >= 273.15, T <= 523.15)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -1214,9 +1215,9 @@ def bC_K_SO4_GM89(T):
 
 def theta_Ca_K_GM89(T):
     
-    theta = np.full_like(T,0.1156, dtype='float64')
+    theta = full_like(T,0.1156, dtype='float64')
     
-    valid = np.logical_and(T >= 273.15, T <= 523.15)
+    valid = logical_and(T >= 273.15, T <= 523.15)
     
     return theta, valid
 
@@ -1234,7 +1235,7 @@ def theta_K_Na_GM89(T):
                                  0            ,
                                  0            ]))
     
-    valid = np.logical_and(T >= 273.15, T <= 523.15)
+    valid = logical_and(T >= 273.15, T <= 523.15)
     
     return theta, valid
 
@@ -1252,7 +1253,7 @@ def psi_Ca_K_Cl_GM89(T):
                                  0            ,
                                  0            ]))
     
-    valid = np.logical_and(T >= 273.15, T <= 523.15)
+    valid = logical_and(T >= 273.15, T <= 523.15)
     
     return psi, valid
 
@@ -1260,9 +1261,9 @@ def psi_Ca_K_Cl_GM89(T):
 
 def psi_Ca_K_SO4_GM89(T):
     
-    theta = np.zeros_like(T)
+    theta = zeros_like(T)
     
-    valid = np.logical_and(T >= 273.15, T <= 523.15)
+    valid = logical_and(T >= 273.15, T <= 523.15)
     
     return theta, valid
 
@@ -1280,7 +1281,7 @@ def psi_K_Na_Cl_GM89(T):
                                  0            ,
                                  0            ]))
     
-    valid = np.logical_and(T >= 273.15, T <= 523.15)
+    valid = logical_and(T >= 273.15, T <= 523.15)
     
     return psi, valid
 
@@ -1298,7 +1299,7 @@ def psi_K_Na_SO4_GM89(T):
                                  0            ,
                                  0            ]))
     
-    valid = np.logical_and(T >= 273.15, T <= 423.15)
+    valid = logical_and(T >= 273.15, T <= 423.15)
     
     return psi, valid
 
@@ -1316,7 +1317,7 @@ def psi_K_Cl_SO4_GM89(T):
                                  0            ,
                                  0            ]))
     
-    valid = np.logical_and(T >= 273.15, T <= 523.15)
+    valid = logical_and(T >= 273.15, T <= 523.15)
     
     return psi, valid
 
@@ -1417,7 +1418,7 @@ def bC_Na_Cl_A92ii(T):
               0,
               0                  ]))
 
-    b2 = np.zeros_like(T)
+    b2 = zeros_like(T)
 
     C0 = A92ii_eq36(T,p,np.float_([ \
               0,
@@ -1477,8 +1478,8 @@ def bC_Na_Cl_A92ii(T):
     omega = np.float_(2.5)
 
     # Validity range
-    valid = np.logical_and(T >= 250, T <= 600)
-    valid = np.logical_and(valid, p <= 100)
+    valid = logical_and(T >= 250, T <= 600)
+    valid = logical_and(valid, p <= 100)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -1516,7 +1517,7 @@ def bC_H_Cl_CMR93(T):
                                      0          ,
                                      0          ]))
     
-    b2    = np.zeros_like(T)
+    b2    = zeros_like(T)
     
     Cphi  = CMR93_eq31(T,
                        np.float_([-  0.305156   ,
@@ -1532,13 +1533,13 @@ def bC_H_Cl_CMR93(T):
     zCl   = np.float_(-1)
     C0    = Cphi / (2 * np.sqrt(np.abs(zH*zCl)))
     
-    C1    = np.zeros_like(T)
+    C1    = zeros_like(T)
     
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
     
-    valid = np.logical_and(T >= 273.15, T <= 328.15)
+    valid = logical_and(T >= 273.15, T <= 328.15)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -1548,7 +1549,7 @@ def theta_H_K_CMR93(T):
     
     theta = np.float_(0.005) - np.float_(0.0002275) * T
     
-    valid = np.logical_and(T >= 273.15, T <= 328.15)
+    valid = logical_and(T >= 273.15, T <= 328.15)
     
     return theta, valid
 
@@ -1558,7 +1559,7 @@ def theta_H_Na_CMR93(T):
     
     theta = np.float_(0.0342) - np.float_(0.000209) * T
     
-    valid = np.logical_and(T >= 273.15, T <= 328.15)
+    valid = logical_and(T >= 273.15, T <= 328.15)
     
     return theta, valid
 
@@ -1566,9 +1567,9 @@ def theta_H_Na_CMR93(T):
 
 def psi_H_K_Cl_CMR93(T):
     
-    psi   = np.zeros_like(T)
+    psi   = zeros_like(T)
     
-    valid = np.logical_and(T >= 273.15, T <= 523.15)
+    valid = logical_and(T >= 273.15, T <= 523.15)
     
     return psi, valid
 
@@ -1576,9 +1577,9 @@ def psi_H_K_Cl_CMR93(T):
 
 def psi_H_Na_Cl_CMR93(T):
     
-    psi   = np.zeros_like(T)
+    psi   = zeros_like(T)
     
-    valid = np.logical_and(T >= 273.15, T <= 523.15)
+    valid = logical_and(T >= 273.15, T <= 523.15)
     
     return psi, valid
 
@@ -1608,7 +1609,7 @@ def bC_Na_SO4_HPR93(T):
                                   -70.014123   ,
                                     0.2962095  ]))
     
-    b2    = np.zeros_like(T)
+    b2    = zeros_like(T)
     
     Cphi  = HPR93_eq36(T,
                        np.float_([  0.007693706,
@@ -1619,13 +1620,13 @@ def bC_Na_SO4_HPR93(T):
     zSO4  = np.float_(-2)
     C0    = Cphi / (2 * np.sqrt(np.abs(zNa*zSO4)))
     
-    C1    = np.zeros_like(T)
+    C1    = zeros_like(T)
     
     alph1 = np.float_(1.7)
     alph2 = -9
     omega = -9
     
-    valid = np.logical_and(T >= 273., T <= 373.)
+    valid = logical_and(T >= 273., T <= 373.)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -1680,7 +1681,7 @@ def Aosm_CRP94(T): # CRP94 Appendix II
     Aosm = np.matmul(Tmx,a_Aosm)
 
     # Validity range
-    valid = np.logical_and(T >= 234.15, T <= 373.15)
+    valid = logical_and(T >= 234.15, T <= 373.15)
 
     return Aosm, valid
 
@@ -1711,7 +1712,7 @@ def bC_H_HSO4_CRP94(T):
                                  0.207494846   ,
                                  0.00448526492 ]))  
     
-    b2    = np.zeros_like(T)
+    b2    = zeros_like(T)
     
     C0 = CRP94_eq24(T,
                     np.float_([- 0.00280032520 ,
@@ -1729,7 +1730,7 @@ def bC_H_HSO4_CRP94(T):
     alph2 = -9
     omega = np.float_(2.5)
 
-    valid = np.logical_and(T >= 273.15, T <= 328.15)
+    valid = logical_and(T >= 273.15, T <= 328.15)
 
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -1750,7 +1751,7 @@ def bC_H_SO4_CRP94(T):
                                - 2.26268944    ,
                                - 0.0352968547  ]))
     
-    b2    = np.zeros_like(T)
+    b2    = zeros_like(T)
     
     C0 = CRP94_eq24(T,
                     np.float_([  0.00764778951 ,
@@ -1768,7 +1769,7 @@ def bC_H_SO4_CRP94(T):
     alph2 = -9
     omega = np.float_(2.5)
 
-    valid = np.logical_and(T >= 273.15, T <= 328.15)
+    valid = logical_and(T >= 273.15, T <= 328.15)
 
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -1776,9 +1777,9 @@ def bC_H_SO4_CRP94(T):
     
 def theta_HSO4_SO4_CRP94(T):
     
-    theta = np.zeros_like(T)
+    theta = zeros_like(T)
     
-    valid = np.logical_and(T >= 273.15, T <= 328.15)
+    valid = logical_and(T >= 273.15, T <= 328.15)
     
     return theta, valid
 
@@ -1786,9 +1787,9 @@ def theta_HSO4_SO4_CRP94(T):
     
 def psi_H_HSO4_SO4_CRP94(T):
     
-    psi   = np.zeros_like(T)
+    psi   = zeros_like(T)
     
-    valid = np.logical_and(T >= 273.15, T <= 328.15)
+    valid = logical_and(T >= 273.15, T <= 328.15)
     
     return psi, valid
 
@@ -1796,7 +1797,7 @@ def psi_H_HSO4_SO4_CRP94(T):
 
 def dissoc_HSO4_CRP94(T):
     
-    valid = np.logical_and(T >= 273.15, T <= 328.15)
+    valid = logical_and(T >= 273.15, T <= 328.15)
     
     return 10**(562.69486 - 102.5154 * np.log(T) \
         - 1.117033e-4 * T**2 + 0.2477538*T - 13273.75/T), valid
@@ -1846,7 +1847,7 @@ def bC_Na_I_MP98(T):
     alph2 = -9
     omega = -9
     
-    valid = np.logical_and(T >= 273.15, T <= 323.15)
+    valid = logical_and(T >= 273.15, T <= 323.15)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
     
@@ -1878,7 +1879,7 @@ def bC_Na_Br_MP98(T):
     alph2 = -9
     omega = -9
     
-    valid = np.logical_and(T >= 273.15, T <= 323.15)
+    valid = logical_and(T >= 273.15, T <= 323.15)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -1902,7 +1903,7 @@ def bC_Na_F_MP98(T):
     alph2 = -9
     omega = -9
     
-    valid = np.logical_and(T >= 273.15, T <= 323.15)
+    valid = logical_and(T >= 273.15, T <= 323.15)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -1934,7 +1935,7 @@ def bC_K_Br_MP98(T):
     alph2 = -9
     omega = -9
     
-    valid = np.logical_and(T >= 273.15, T <= 323.15)
+    valid = logical_and(T >= 273.15, T <= 323.15)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -1966,7 +1967,7 @@ def bC_K_F_MP98(T):
     alph2 = -9
     omega = -9
     
-    valid = np.logical_and(T >= 273.15, T <= 323.15)
+    valid = logical_and(T >= 273.15, T <= 323.15)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -1998,7 +1999,7 @@ def bC_K_OH_MP98(T):
     alph2 = -9
     omega = -9
     
-    valid = np.logical_and(T >= 273.15, T <= 323.15)
+    valid = logical_and(T >= 273.15, T <= 323.15)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -2030,7 +2031,7 @@ def bC_K_I_MP98(T):
     alph2 = -9
     omega = -9
     
-    valid = np.logical_and(T >= 273.15, T <= 323.15)
+    valid = logical_and(T >= 273.15, T <= 323.15)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -2072,7 +2073,7 @@ def bC_K_Cl_A99(T):
              0,
             -0.00188349608000903]))
 
-    b2 = np.zeros_like(T)
+    b2 = zeros_like(T)
 
     C0 = A99_eq22(T,np.float_( \
            [-0.00133515934994478,
@@ -2082,7 +2083,7 @@ def bC_K_Cl_A99(T):
             -0.00075896583546707,
              0                  ]))
 
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
 
     # Alpha and omega values
     alph1 = np.float_(2)
@@ -2090,7 +2091,7 @@ def bC_K_Cl_A99(T):
     omega = -9
 
     # Validity range
-    valid = np.logical_and(T >= 260, T <= 420)
+    valid = logical_and(T >= 260, T <= 420)
     
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -2105,11 +2106,11 @@ def bC_K_Cl_A99(T):
 def bC_Mg_HSO4_RC99(T):
 
     # RC99 Table 6, left column
-    b0 = np.full_like(T,0.40692)
-    b1 = np.full_like(T,1.6466)
-    b2 = np.zeros_like(T)
-    C0 = np.full_like(T,0.024293)
-    C1 = np.full_like(T,-0.127194)
+    b0 = full_like(T,0.40692)
+    b1 = full_like(T,1.6466)
+    b2 = zeros_like(T)
+    C0 = full_like(T,0.024293)
+    C1 = full_like(T,-0.127194)
 
     # Alpha and omega values
     alph1 = np.float_(2)
@@ -2126,7 +2127,7 @@ def bC_Mg_HSO4_RC99(T):
 def psi_H_Mg_HSO4_RC99(T):
     
     # RC99 Table 6, left column
-    psi = np.full_like(T,-0.027079)   
+    psi = full_like(T,-0.027079)   
     valid = T == 298.15
     
     return psi, valid
@@ -2136,7 +2137,7 @@ def psi_H_Mg_HSO4_RC99(T):
 def psi_H_Mg_SO4_RC99(T):
     
     # RC99 Table 6, left column
-    psi = np.full_like(T,-0.047368)  
+    psi = full_like(T,-0.047368)  
     valid = T == 298.15
     
     return psi, valid
@@ -2146,7 +2147,7 @@ def psi_H_Mg_SO4_RC99(T):
 def psi_Mg_HSO4_SO4_RC99(T):
     
     # RC99 Table 6, left column
-    psi = np.full_like(T,-0.078418)  
+    psi = full_like(T,-0.078418)  
     valid = T == 298.15
     
     return psi, valid
@@ -2247,7 +2248,7 @@ def bC_K_Cl_ZD17(T):
             -  0.7343191,
               46.340392 ]))
 
-    b2 = np.zeros_like(T)
+    b2 = zeros_like(T)
 
     C0 = ZD17_eq8(T,p,np.float_( \
            [-  0.0005981,
@@ -2352,7 +2353,7 @@ def Aosm_MPH(T):
           + aosmi[9] * Tn**9
 
     # Check temperature is in range
-    valid = np.logical_and(T >= 263.15,T <= 373.15)
+    valid = logical_and(T >= 263.15,T <= 373.15)
 
     return Aosm, valid
 
@@ -2391,7 +2392,7 @@ def AC_MPH(T):
         + aCi[9] * Tn**9
 
     # Check temperature is in range
-    valid = np.logical_and(T >= 263.15,T <= 373.15)
+    valid = logical_and(T >= 263.15,T <= 373.15)
 
     return AC, valid
 
@@ -2434,7 +2435,7 @@ def AH_MPH(T):
 # Needed to remove valid output to get primitive grad to work
 
 #    # Check temperature is in range
-#    valid = np.logical_and(T >= 263.15,T <= 373.15)
+#    valid = logical_and(T >= 263.15,T <= 373.15)
 
     return AH#, valid
 
@@ -2453,14 +2454,14 @@ defvjp(AH_MPH,AH_vjp)
 
 def bC_Na_Cl_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.0765, dtype='float64')
-    b1   = np.full_like(T,0.2644, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.00127, dtype='float64')
+    b0   = full_like(T,0.0765, dtype='float64')
+    b1   = full_like(T,0.2644, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.00127, dtype='float64')
     zNa = np.float_(1)
     zCl = np.float_(-1)
     C0 = Cphi / (2 * np.sqrt(np.abs(zNa*zCl)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2469,14 +2470,14 @@ def bC_Na_Cl_HMW84(T):
 
 def bC_Na_SO4_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.01958, dtype='float64')
-    b1   = np.full_like(T,1.113, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.00497, dtype='float64')
+    b0   = full_like(T,0.01958, dtype='float64')
+    b1   = full_like(T,1.113, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.00497, dtype='float64')
     zNa = np.float_(1)
     zSO4 = np.float_(-2)
     C0 = Cphi / (2 * np.sqrt(np.abs(zNa*zSO4)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2485,14 +2486,14 @@ def bC_Na_SO4_HMW84(T):
 
 def bC_Na_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.0454, dtype='float64')
-    b1   = np.full_like(T,0.398, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.0, dtype='float64')
+    b0   = full_like(T,0.0454, dtype='float64')
+    b1   = full_like(T,0.398, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
     zNa = np.float_(1)
     zHSO4 = np.float_(-1)
     C0 = Cphi / (2 * np.sqrt(np.abs(zNa*zHSO4)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2501,14 +2502,14 @@ def bC_Na_HSO4_HMW84(T):
 
 def bC_Na_OH_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.0864, dtype='float64')
-    b1   = np.full_like(T,0.253, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.0044, dtype='float64')
+    b0   = full_like(T,0.0864, dtype='float64')
+    b1   = full_like(T,0.253, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0044, dtype='float64')
     zNa = np.float_(1)
     zOH = np.float_(-1)
     C0 = Cphi / (2 * np.sqrt(np.abs(zNa*zOH)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2517,14 +2518,14 @@ def bC_Na_OH_HMW84(T):
 
 def bC_Na_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.0277, dtype='float64')
-    b1   = np.full_like(T,0.0411, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.0, dtype='float64')
+    b0   = full_like(T,0.0277, dtype='float64')
+    b1   = full_like(T,0.0411, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
     zNa = np.float_(1)
     zHCO3 = np.float_(-1)
     C0 = Cphi / (2 * np.sqrt(np.abs(zNa*zHCO3)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2533,14 +2534,14 @@ def bC_Na_HCO3_HMW84(T):
 
 def bC_Na_CO3_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.0399, dtype='float64')
-    b1   = np.full_like(T,1.389, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.0044, dtype='float64')
+    b0   = full_like(T,0.0399, dtype='float64')
+    b1   = full_like(T,1.389, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0044, dtype='float64')
     zNa = np.float_(1)
     zCO3 = np.float_(-2)
     C0 = Cphi / (2 * np.sqrt(np.abs(zNa*zCO3)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2549,14 +2550,14 @@ def bC_Na_CO3_HMW84(T):
 
 def bC_K_Cl_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.04835, dtype='float64')
-    b1   = np.full_like(T,0.2122, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,-0.00084, dtype='float64')
+    b0   = full_like(T,0.04835, dtype='float64')
+    b1   = full_like(T,0.2122, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,-0.00084, dtype='float64')
     zK = np.float_(1)
     zCl = np.float_(-1)
     C0 = Cphi / (2 * np.sqrt(np.abs(zK*zCl)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2565,14 +2566,14 @@ def bC_K_Cl_HMW84(T):
 
 def bC_K_SO4_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.04995, dtype='float64')
-    b1   = np.full_like(T,0.7793, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.0, dtype='float64')
+    b0   = full_like(T,0.04995, dtype='float64')
+    b1   = full_like(T,0.7793, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
     zK = np.float_(1)
     zSO4 = np.float_(-2)
     C0 = Cphi / (2 * np.sqrt(np.abs(zK*zSO4)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2581,14 +2582,14 @@ def bC_K_SO4_HMW84(T):
 
 def bC_K_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,-0.0003, dtype='float64')
-    b1   = np.full_like(T,0.1735, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.0, dtype='float64')
+    b0   = full_like(T,-0.0003, dtype='float64')
+    b1   = full_like(T,0.1735, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
     zK = np.float_(1)
     zHSO4 = np.float_(-1)
     C0 = Cphi / (2 * np.sqrt(np.abs(zK*zHSO4)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2597,14 +2598,14 @@ def bC_K_HSO4_HMW84(T):
 
 def bC_K_OH_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.1298, dtype='float64')
-    b1   = np.full_like(T,0.32, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.0041, dtype='float64')
+    b0   = full_like(T,0.1298, dtype='float64')
+    b1   = full_like(T,0.32, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0041, dtype='float64')
     zK = np.float_(1)
     zOH = np.float_(-1)
     C0 = Cphi / (2 * np.sqrt(np.abs(zK*zOH)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2613,14 +2614,14 @@ def bC_K_OH_HMW84(T):
 
 def bC_K_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.0296, dtype='float64')
-    b1   = np.full_like(T,-0.013, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,-0.008, dtype='float64')
+    b0   = full_like(T,0.0296, dtype='float64')
+    b1   = full_like(T,-0.013, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,-0.008, dtype='float64')
     zK = np.float_(1)
     zHCO3 = np.float_(-1)
     C0 = Cphi / (2 * np.sqrt(np.abs(zK*zHCO3)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2629,14 +2630,14 @@ def bC_K_HCO3_HMW84(T):
 
 def bC_K_CO3_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.1488, dtype='float64')
-    b1   = np.full_like(T,1.43, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,-0.0015, dtype='float64')
+    b0   = full_like(T,0.1488, dtype='float64')
+    b1   = full_like(T,1.43, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,-0.0015, dtype='float64')
     zK = np.float_(1)
     zCO3 = np.float_(-2)
     C0 = Cphi / (2 * np.sqrt(np.abs(zK*zCO3)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2645,14 +2646,14 @@ def bC_K_CO3_HMW84(T):
 
 def bC_Ca_Cl_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.3159, dtype='float64')
-    b1   = np.full_like(T,1.614, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,-0.00034, dtype='float64')
+    b0   = full_like(T,0.3159, dtype='float64')
+    b1   = full_like(T,1.614, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,-0.00034, dtype='float64')
     zCa = np.float_(2)
     zCl = np.float_(-1)
     C0 = Cphi / (2 * np.sqrt(np.abs(zCa*zCl)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2661,14 +2662,14 @@ def bC_Ca_Cl_HMW84(T):
 
 def bC_Ca_SO4_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.2, dtype='float64')
-    b1   = np.full_like(T,3.1973, dtype='float64')
-    b2   = np.full_like(T,-54.24, dtype='float64')
-    Cphi = np.full_like(T,0.0, dtype='float64')
+    b0   = full_like(T,0.2, dtype='float64')
+    b1   = full_like(T,3.1973, dtype='float64')
+    b2   = full_like(T,-54.24, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
     zCa = np.float_(2)
     zSO4 = np.float_(-2)
     C0 = Cphi / (2 * np.sqrt(np.abs(zCa*zSO4)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(1.4)
     alph2 = np.float_(12)
     omega = -9
@@ -2677,14 +2678,14 @@ def bC_Ca_SO4_HMW84(T):
 
 def bC_Ca_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.2145, dtype='float64')
-    b1   = np.full_like(T,2.53, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.0, dtype='float64')
+    b0   = full_like(T,0.2145, dtype='float64')
+    b1   = full_like(T,2.53, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
     zCa = np.float_(2)
     zHSO4 = np.float_(-1)
     C0 = Cphi / (2 * np.sqrt(np.abs(zCa*zHSO4)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2693,14 +2694,14 @@ def bC_Ca_HSO4_HMW84(T):
 
 def bC_Ca_OH_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,-0.1747, dtype='float64')
-    b1   = np.full_like(T,-0.2303, dtype='float64')
-    b2   = np.full_like(T,-5.72, dtype='float64')
-    Cphi = np.full_like(T,0.0, dtype='float64')
+    b0   = full_like(T,-0.1747, dtype='float64')
+    b1   = full_like(T,-0.2303, dtype='float64')
+    b2   = full_like(T,-5.72, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
     zCa = np.float_(2)
     zOH = np.float_(-1)
     C0 = Cphi / (2 * np.sqrt(np.abs(zCa*zOH)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(1.4)
     alph2 = np.float_(12)
     omega = -9
@@ -2709,14 +2710,14 @@ def bC_Ca_OH_HMW84(T):
 
 def bC_Ca_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.4, dtype='float64')
-    b1   = np.full_like(T,2.977, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.0, dtype='float64')
+    b0   = full_like(T,0.4, dtype='float64')
+    b1   = full_like(T,2.977, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
     zCa = np.float_(2)
     zHCO3 = np.float_(-1)
     C0 = Cphi / (2 * np.sqrt(np.abs(zCa*zHCO3)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2725,14 +2726,14 @@ def bC_Ca_HCO3_HMW84(T):
 
 def bC_Ca_CO3_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.0, dtype='float64')
-    b1   = np.full_like(T,0.0, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.0, dtype='float64')
+    b0   = full_like(T,0.0, dtype='float64')
+    b1   = full_like(T,0.0, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
     zCa = np.float_(2)
     zCO3 = np.float_(-2)
     C0 = Cphi / (2 * np.sqrt(np.abs(zCa*zCO3)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2741,14 +2742,14 @@ def bC_Ca_CO3_HMW84(T):
 
 def bC_Mg_Cl_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.35235, dtype='float64')
-    b1   = np.full_like(T,1.6815, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.00519, dtype='float64')
+    b0   = full_like(T,0.35235, dtype='float64')
+    b1   = full_like(T,1.6815, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.00519, dtype='float64')
     zMg = np.float_(2)
     zCl = np.float_(-1)
     C0 = Cphi / (2 * np.sqrt(np.abs(zMg*zCl)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2757,14 +2758,14 @@ def bC_Mg_Cl_HMW84(T):
 
 def bC_Mg_SO4_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.221, dtype='float64')
-    b1   = np.full_like(T,3.343, dtype='float64')
-    b2   = np.full_like(T,-37.23, dtype='float64')
-    Cphi = np.full_like(T,0.025, dtype='float64')
+    b0   = full_like(T,0.221, dtype='float64')
+    b1   = full_like(T,3.343, dtype='float64')
+    b2   = full_like(T,-37.23, dtype='float64')
+    Cphi = full_like(T,0.025, dtype='float64')
     zMg = np.float_(2)
     zSO4 = np.float_(-2)
     C0 = Cphi / (2 * np.sqrt(np.abs(zMg*zSO4)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(1.4)
     alph2 = np.float_(12)
     omega = -9
@@ -2773,14 +2774,14 @@ def bC_Mg_SO4_HMW84(T):
 
 def bC_Mg_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.4746, dtype='float64')
-    b1   = np.full_like(T,1.729, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.0, dtype='float64')
+    b0   = full_like(T,0.4746, dtype='float64')
+    b1   = full_like(T,1.729, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
     zMg = np.float_(2)
     zHSO4 = np.float_(-1)
     C0 = Cphi / (2 * np.sqrt(np.abs(zMg*zHSO4)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2789,14 +2790,14 @@ def bC_Mg_HSO4_HMW84(T):
 
 def bC_Mg_OH_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.0, dtype='float64')
-    b1   = np.full_like(T,0.0, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.0, dtype='float64')
+    b0   = full_like(T,0.0, dtype='float64')
+    b1   = full_like(T,0.0, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
     zMg = np.float_(2)
     zOH = np.float_(-1)
     C0 = Cphi / (2 * np.sqrt(np.abs(zMg*zOH)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2805,14 +2806,14 @@ def bC_Mg_OH_HMW84(T):
 
 def bC_Mg_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.329, dtype='float64')
-    b1   = np.full_like(T,0.6072, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.0, dtype='float64')
+    b0   = full_like(T,0.329, dtype='float64')
+    b1   = full_like(T,0.6072, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
     zMg = np.float_(2)
     zHCO3 = np.float_(-1)
     C0 = Cphi / (2 * np.sqrt(np.abs(zMg*zHCO3)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2821,14 +2822,14 @@ def bC_Mg_HCO3_HMW84(T):
 
 def bC_Mg_CO3_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.0, dtype='float64')
-    b1   = np.full_like(T,0.0, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.0, dtype='float64')
+    b0   = full_like(T,0.0, dtype='float64')
+    b1   = full_like(T,0.0, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
     zMg = np.float_(2)
     zCO3 = np.float_(-2)
     C0 = Cphi / (2 * np.sqrt(np.abs(zMg*zCO3)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2837,14 +2838,14 @@ def bC_Mg_CO3_HMW84(T):
 
 def bC_MgOH_Cl_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,-0.1, dtype='float64')
-    b1   = np.full_like(T,1.658, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.0, dtype='float64')
+    b0   = full_like(T,-0.1, dtype='float64')
+    b1   = full_like(T,1.658, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
     zMgOH = np.float_(1)
     zCl = np.float_(-1)
     C0 = Cphi / (2 * np.sqrt(np.abs(zMgOH*zCl)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2853,14 +2854,14 @@ def bC_MgOH_Cl_HMW84(T):
 
 def bC_MgOH_SO4_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.0, dtype='float64')
-    b1   = np.full_like(T,0.0, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.0, dtype='float64')
+    b0   = full_like(T,0.0, dtype='float64')
+    b1   = full_like(T,0.0, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
     zMgOH = np.float_(1)
     zSO4 = np.float_(-2)
     C0 = Cphi / (2 * np.sqrt(np.abs(zMgOH*zSO4)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2869,14 +2870,14 @@ def bC_MgOH_SO4_HMW84(T):
 
 def bC_MgOH_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.0, dtype='float64')
-    b1   = np.full_like(T,0.0, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.0, dtype='float64')
+    b0   = full_like(T,0.0, dtype='float64')
+    b1   = full_like(T,0.0, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
     zMgOH = np.float_(1)
     zHSO4 = np.float_(-1)
     C0 = Cphi / (2 * np.sqrt(np.abs(zMgOH*zHSO4)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2885,14 +2886,14 @@ def bC_MgOH_HSO4_HMW84(T):
 
 def bC_MgOH_OH_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.0, dtype='float64')
-    b1   = np.full_like(T,0.0, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.0, dtype='float64')
+    b0   = full_like(T,0.0, dtype='float64')
+    b1   = full_like(T,0.0, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
     zMgOH = np.float_(1)
     zOH = np.float_(-1)
     C0 = Cphi / (2 * np.sqrt(np.abs(zMgOH*zOH)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2901,14 +2902,14 @@ def bC_MgOH_OH_HMW84(T):
 
 def bC_MgOH_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.0, dtype='float64')
-    b1   = np.full_like(T,0.0, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.0, dtype='float64')
+    b0   = full_like(T,0.0, dtype='float64')
+    b1   = full_like(T,0.0, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
     zMgOH = np.float_(1)
     zHCO3 = np.float_(-1)
     C0 = Cphi / (2 * np.sqrt(np.abs(zMgOH*zHCO3)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2917,14 +2918,14 @@ def bC_MgOH_HCO3_HMW84(T):
 
 def bC_MgOH_CO3_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.0, dtype='float64')
-    b1   = np.full_like(T,0.0, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.0, dtype='float64')
+    b0   = full_like(T,0.0, dtype='float64')
+    b1   = full_like(T,0.0, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
     zMgOH = np.float_(1)
     zCO3 = np.float_(-2)
     C0 = Cphi / (2 * np.sqrt(np.abs(zMgOH*zCO3)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2933,14 +2934,14 @@ def bC_MgOH_CO3_HMW84(T):
 
 def bC_H_Cl_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.1775, dtype='float64')
-    b1   = np.full_like(T,0.2945, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.0008, dtype='float64')
+    b0   = full_like(T,0.1775, dtype='float64')
+    b1   = full_like(T,0.2945, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0008, dtype='float64')
     zH = np.float_(1)
     zCl = np.float_(-1)
     C0 = Cphi / (2 * np.sqrt(np.abs(zH*zCl)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2949,14 +2950,14 @@ def bC_H_Cl_HMW84(T):
 
 def bC_H_SO4_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.0298, dtype='float64')
-    b1   = np.full_like(T,0.0, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.0438, dtype='float64')
+    b0   = full_like(T,0.0298, dtype='float64')
+    b1   = full_like(T,0.0, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0438, dtype='float64')
     zH = np.float_(1)
     zSO4 = np.float_(-2)
     C0 = Cphi / (2 * np.sqrt(np.abs(zH*zSO4)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2965,14 +2966,14 @@ def bC_H_SO4_HMW84(T):
 
 def bC_H_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.2065, dtype='float64')
-    b1   = np.full_like(T,0.5556, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.0, dtype='float64')
+    b0   = full_like(T,0.2065, dtype='float64')
+    b1   = full_like(T,0.5556, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
     zH = np.float_(1)
     zHSO4 = np.float_(-1)
     C0 = Cphi / (2 * np.sqrt(np.abs(zH*zHSO4)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2981,14 +2982,14 @@ def bC_H_HSO4_HMW84(T):
 
 def bC_H_OH_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.0, dtype='float64')
-    b1   = np.full_like(T,0.0, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.0, dtype='float64')
+    b0   = full_like(T,0.0, dtype='float64')
+    b1   = full_like(T,0.0, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
     zH = np.float_(1)
     zOH = np.float_(-1)
     C0 = Cphi / (2 * np.sqrt(np.abs(zH*zOH)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -2997,14 +2998,14 @@ def bC_H_OH_HMW84(T):
 
 def bC_H_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.0, dtype='float64')
-    b1   = np.full_like(T,0.0, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.0, dtype='float64')
+    b0   = full_like(T,0.0, dtype='float64')
+    b1   = full_like(T,0.0, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
     zH = np.float_(1)
     zHCO3 = np.float_(-1)
     C0 = Cphi / (2 * np.sqrt(np.abs(zH*zHCO3)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -3013,14 +3014,14 @@ def bC_H_HCO3_HMW84(T):
 
 def bC_H_CO3_HMW84(T):
 # Coefficients from HMW84 Table 1
-    b0   = np.full_like(T,0.0, dtype='float64')
-    b1   = np.full_like(T,0.0, dtype='float64')
-    b2   = np.full_like(T,0.0, dtype='float64')
-    Cphi = np.full_like(T,0.0, dtype='float64')
+    b0   = full_like(T,0.0, dtype='float64')
+    b1   = full_like(T,0.0, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
     zH = np.float_(1)
     zCO3 = np.float_(-2)
     C0 = Cphi / (2 * np.sqrt(np.abs(zH*zCO3)))
-    C1 = np.zeros_like(T)
+    C1 = zeros_like(T)
     alph1 = np.float_(2)
     alph2 = -9
     omega = -9
@@ -3031,631 +3032,631 @@ def bC_H_CO3_HMW84(T):
 
 def theta_K_Na_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,-0.012, dtype='float64')
+    theta = full_like(T,-0.012, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_K_Na_Cl_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.0018, dtype='float64')
+    psi = full_like(T,-0.0018, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_Na_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.01, dtype='float64')
+    psi = full_like(T,-0.01, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_Na_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_Na_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_Na_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.003, dtype='float64')
+    psi = full_like(T,-0.003, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_Na_CO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.003, dtype='float64')
+    psi = full_like(T,0.003, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def theta_Ca_Na_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,0.07, dtype='float64')
+    theta = full_like(T,0.07, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_Ca_Na_Cl_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.007, dtype='float64')
+    psi = full_like(T,-0.007, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_Na_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.055, dtype='float64')
+    psi = full_like(T,-0.055, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_Na_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_Na_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_Na_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_Na_CO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def theta_Mg_Na_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,0.07, dtype='float64')
+    theta = full_like(T,0.07, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_Mg_Na_Cl_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.012, dtype='float64')
+    psi = full_like(T,-0.012, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Mg_Na_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.015, dtype='float64')
+    psi = full_like(T,-0.015, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Mg_Na_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Mg_Na_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Mg_Na_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Mg_Na_CO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def theta_MgOH_Na_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,0.0, dtype='float64')
+    theta = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_MgOH_Na_Cl_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_MgOH_Na_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_MgOH_Na_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_MgOH_Na_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_MgOH_Na_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_MgOH_Na_CO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def theta_H_Na_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,0.036, dtype='float64')
+    theta = full_like(T,0.036, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_H_Na_Cl_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.004, dtype='float64')
+    psi = full_like(T,-0.004, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_Na_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_Na_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.0129, dtype='float64')
+    psi = full_like(T,-0.0129, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_Na_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_Na_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_Na_CO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def theta_Ca_K_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,0.032, dtype='float64')
+    theta = full_like(T,0.032, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_Ca_K_Cl_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.025, dtype='float64')
+    psi = full_like(T,-0.025, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_K_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_K_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_K_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_K_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_K_CO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def theta_K_Mg_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,0.0, dtype='float64')
+    theta = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_K_Mg_Cl_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.022, dtype='float64')
+    psi = full_like(T,-0.022, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_Mg_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.048, dtype='float64')
+    psi = full_like(T,-0.048, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_Mg_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_Mg_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_Mg_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_Mg_CO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def theta_K_MgOH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,0.0, dtype='float64')
+    theta = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_K_MgOH_Cl_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_MgOH_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_MgOH_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_MgOH_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_MgOH_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_MgOH_CO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def theta_H_K_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,0.005, dtype='float64')
+    theta = full_like(T,0.005, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_H_K_Cl_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.011, dtype='float64')
+    psi = full_like(T,-0.011, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_K_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.197, dtype='float64')
+    psi = full_like(T,0.197, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_K_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.0265, dtype='float64')
+    psi = full_like(T,-0.0265, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_K_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_K_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_K_CO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def theta_Ca_Mg_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,0.007, dtype='float64')
+    theta = full_like(T,0.007, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_Ca_Mg_Cl_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.012, dtype='float64')
+    psi = full_like(T,-0.012, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_Mg_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.024, dtype='float64')
+    psi = full_like(T,0.024, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_Mg_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_Mg_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_Mg_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_Mg_CO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def theta_Ca_MgOH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,0.0, dtype='float64')
+    theta = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_Ca_MgOH_Cl_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_MgOH_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_MgOH_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_MgOH_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_MgOH_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_MgOH_CO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def theta_Ca_H_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,0.092, dtype='float64')
+    theta = full_like(T,0.092, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_Ca_H_Cl_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.015, dtype='float64')
+    psi = full_like(T,-0.015, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_H_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_H_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_H_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_H_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_H_CO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def theta_Mg_MgOH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,0.0, dtype='float64')
+    theta = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_Mg_MgOH_Cl_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.028, dtype='float64')
+    psi = full_like(T,0.028, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Mg_MgOH_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Mg_MgOH_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Mg_MgOH_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Mg_MgOH_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Mg_MgOH_CO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def theta_H_Mg_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,0.1, dtype='float64')
+    theta = full_like(T,0.1, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_H_Mg_Cl_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.011, dtype='float64')
+    psi = full_like(T,-0.011, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_Mg_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_Mg_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.0178, dtype='float64')
+    psi = full_like(T,-0.0178, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_Mg_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_Mg_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_Mg_CO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def theta_H_MgOH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,0.0, dtype='float64')
+    theta = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_H_MgOH_Cl_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_MgOH_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_MgOH_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_MgOH_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_MgOH_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_MgOH_CO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
@@ -3663,631 +3664,631 @@ def psi_H_MgOH_CO3_HMW84(T):
 
 def theta_Cl_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,0.02, dtype='float64')
+    theta = full_like(T,0.02, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_Na_Cl_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0014, dtype='float64')
+    psi = full_like(T,0.0014, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_Cl_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_Cl_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.018, dtype='float64')
+    psi = full_like(T,-0.018, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Mg_Cl_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.004, dtype='float64')
+    psi = full_like(T,-0.004, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_MgOH_Cl_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_Cl_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def theta_Cl_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,-0.006, dtype='float64')
+    theta = full_like(T,-0.006, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_Na_Cl_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.006, dtype='float64')
+    psi = full_like(T,-0.006, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_Cl_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_Cl_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Mg_Cl_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_MgOH_Cl_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_Cl_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.013, dtype='float64')
+    psi = full_like(T,0.013, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def theta_Cl_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,-0.05, dtype='float64')
+    theta = full_like(T,-0.05, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_Na_Cl_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.006, dtype='float64')
+    psi = full_like(T,-0.006, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_Cl_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.006, dtype='float64')
+    psi = full_like(T,-0.006, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_Cl_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.025, dtype='float64')
+    psi = full_like(T,-0.025, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Mg_Cl_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_MgOH_Cl_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_Cl_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def theta_Cl_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,0.03, dtype='float64')
+    theta = full_like(T,0.03, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_Na_Cl_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.15, dtype='float64')
+    psi = full_like(T,-0.15, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_Cl_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_Cl_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Mg_Cl_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.096, dtype='float64')
+    psi = full_like(T,-0.096, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_MgOH_Cl_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_Cl_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def theta_CO3_Cl_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,-0.02, dtype='float64')
+    theta = full_like(T,-0.02, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_Na_CO3_Cl_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0085, dtype='float64')
+    psi = full_like(T,0.0085, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_CO3_Cl_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.004, dtype='float64')
+    psi = full_like(T,0.004, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_CO3_Cl_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Mg_CO3_Cl_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_MgOH_CO3_Cl_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_CO3_Cl_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def theta_HSO4_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,0.0, dtype='float64')
+    theta = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_Na_HSO4_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.0094, dtype='float64')
+    psi = full_like(T,-0.0094, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_HSO4_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.0677, dtype='float64')
+    psi = full_like(T,-0.0677, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_HSO4_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Mg_HSO4_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.0425, dtype='float64')
+    psi = full_like(T,-0.0425, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_MgOH_HSO4_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_HSO4_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def theta_OH_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,-0.013, dtype='float64')
+    theta = full_like(T,-0.013, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_Na_OH_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.009, dtype='float64')
+    psi = full_like(T,-0.009, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_OH_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.05, dtype='float64')
+    psi = full_like(T,-0.05, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_OH_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Mg_OH_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_MgOH_OH_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_OH_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def theta_HCO3_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,0.01, dtype='float64')
+    theta = full_like(T,0.01, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_Na_HCO3_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.005, dtype='float64')
+    psi = full_like(T,-0.005, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_HCO3_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_HCO3_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Mg_HCO3_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.161, dtype='float64')
+    psi = full_like(T,-0.161, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_MgOH_HCO3_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_HCO3_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def theta_CO3_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,0.02, dtype='float64')
+    theta = full_like(T,0.02, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_Na_CO3_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.005, dtype='float64')
+    psi = full_like(T,-0.005, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_CO3_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.009, dtype='float64')
+    psi = full_like(T,-0.009, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_CO3_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Mg_CO3_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_MgOH_CO3_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_CO3_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def theta_HSO4_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,0.0, dtype='float64')
+    theta = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_Na_HSO4_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_HSO4_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_HSO4_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Mg_HSO4_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_MgOH_HSO4_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_HSO4_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def theta_HCO3_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,0.0, dtype='float64')
+    theta = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_Na_HCO3_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_HCO3_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_HCO3_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Mg_HCO3_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_MgOH_HCO3_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_HCO3_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def theta_CO3_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,0.0, dtype='float64')
+    theta = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_Na_CO3_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_CO3_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_CO3_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Mg_CO3_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_MgOH_CO3_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_CO3_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def theta_HCO3_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,0.0, dtype='float64')
+    theta = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_Na_HCO3_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_HCO3_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_HCO3_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Mg_HCO3_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_MgOH_HCO3_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_HCO3_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def theta_CO3_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,0.1, dtype='float64')
+    theta = full_like(T,0.1, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_Na_CO3_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.017, dtype='float64')
+    psi = full_like(T,-0.017, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_CO3_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,-0.01, dtype='float64')
+    psi = full_like(T,-0.01, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_CO3_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Mg_CO3_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_MgOH_CO3_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_CO3_OH_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def theta_CO3_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    theta = np.full_like(T,-0.04, dtype='float64')
+    theta = full_like(T,-0.04, dtype='float64')
     valid = T == 298.15
     return theta, valid
 
 def psi_Na_CO3_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.002, dtype='float64')
+    psi = full_like(T,0.002, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_K_CO3_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.012, dtype='float64')
+    psi = full_like(T,0.012, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Ca_CO3_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_Mg_CO3_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_MgOH_CO3_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0, dtype='float64')
+    psi = full_like(T,0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
 def psi_H_CO3_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 2
-    psi = np.full_like(T,0.0, dtype='float64')
+    psi = full_like(T,0.0, dtype='float64')
     valid = T == 298.15
     return psi, valid
 
