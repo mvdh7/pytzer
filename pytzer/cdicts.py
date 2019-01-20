@@ -1,35 +1,14 @@
-from autograd.numpy import log, zeros_like
 from . import coeffs, io, jfuncs
+
 
 class cdict:
     def __init__(self):
         self.dh    = {}
-        self.bC    = {'H-OH': coeffs.bC_zero}
+        self.bC    = {}
         self.theta = {}
         self.jfunc = []
         self.psi   = {}
-        self.K     = {}
         
-    # Get equilibrium equations
-    def getKeq(self,T, mH=None, gH=None, mOH=None, gOH=None, 
-               mHSO4=None, gHSO4=None, mSO4=None, gSO4=None):
-        
-        # Find which equilibria are stored in dict
-        Klist = self.K.keys()
-        
-        # Initialise Keq equation
-        Keq = zeros_like(T, dtype='float64')
-        
-        if 'H2O' in Klist:
-            Keq = Keq + log(gH*mH * gOH*mOH) \
-                      - log(self.K['H2O'](T)[0])
-        
-        if 'HSO4' in Klist:
-            Keq = Keq + log(gH*mH * gSO4*mSO4 \
-                / (gHSO4*mHSO4)) \
-                - log(self.K['HSO4'](T)[0])
-            
-        return Keq
     
     # Populate with zero-functions
     def add_zeros(self,eles):
@@ -70,22 +49,9 @@ class cdict:
                     if istr not in self.psi.keys():
                         self.psi[istr] = coeffs.psi_zero
         
-
-# === HUMPHREYS UNPUBLISHED ===================================================
         
-MPH = cdict()
-
-MPH.dh['Aosm'] = coeffs.Aosm_MPH
-MPH.dh['AH'  ] = coeffs.AH_MPH
-
-MPH.bC['Na-Cl'] = coeffs.bC_Na_Cl_A92ii
-MPH.bC['K-Cl' ] = coeffs.bC_K_Cl_A99
-MPH.bC['Ca-Cl'] = coeffs.bC_Ca_Cl_GM89
-MPH.bC['Mg-Cl'] = coeffs.bC_Mg_Cl_PP87i
-
-MPH.jfunc = jfuncs.P75_eq47
-
 # === MOLLER 1988 =============================================================
+
 M88 = cdict()
 
 # Debye-Hueckel slope as cf.dh['Aosm']
@@ -115,10 +81,9 @@ M88.psi['Ca-Na-SO4'] = coeffs.psi_Ca_Na_SO4_M88
 M88.psi['Ca-Cl-SO4'] = coeffs.psi_Ca_Cl_SO4_M88
 M88.psi['Na-Cl-SO4'] = coeffs.psi_Na_Cl_SO4_M88
 
-# Dissociation constants as cf.K['acid']
-M88.K['H2O'] = coeffs.dissoc_H2O_M88
 
 # === GREENBERG & MOLLER 1989 =================================================
+
 GM89 = cdict()
 
 # Debye-Hueckel slope
@@ -157,10 +122,9 @@ GM89.psi['Ca-Cl-SO4'] = coeffs.psi_Ca_Cl_SO4_M88
 GM89.psi['K-Cl-SO4' ] = coeffs.psi_K_Cl_SO4_GM89
 GM89.psi['Na-Cl-SO4'] = coeffs.psi_Na_Cl_SO4_M88
 
-# Dissociation constants as cf.K['acid']
-GM89.K['H2O'] = coeffs.dissoc_H2O_M88
 
 # === CLEGG ET AL 1994=========================================================
+
 CRP94 = cdict()
 
 CRP94.dh['Aosm'] = coeffs.Aosm_CRP94
@@ -174,206 +138,3 @@ CRP94.jfunc = jfuncs.P75_eq47
 
 CRP94.psi['H-HSO4-SO4'] = coeffs.psi_H_HSO4_SO4_CRP94
 
-CRP94.K['HSO4'] = coeffs.dissoc_HSO4_CRP94
-
-# === MIAMI - MILLERO & PIERROT 1998 ==========================================
-MIAMI = cdict()
-
-MIAMI.dh['Aosm'] = coeffs.Aosm_M88
-
-# Table A1
-MIAMI.bC['Na-Cl' ] = coeffs.bC_Na_Cl_M88
-MIAMI.bC['K-Cl'  ] = coeffs.bC_K_Cl_GM89
-MIAMI.bC['K-SO4' ] = coeffs.bC_K_SO4_GM89
-MIAMI.bC['Ca-Cl' ] = coeffs.bC_Ca_Cl_GM89
-MIAMI.bC['Ca-SO4'] = coeffs.bC_Ca_SO4_M88
-MIAMI.bC['Ca-SO3'] = coeffs.bC_Ca_SO4_M88
-MIAMI.bC['Sr-SO4'] = coeffs.bC_Ca_SO4_M88
-
-# Table A2
-MIAMI.bC['Mg-Cl' ] = coeffs.bC_Mg_Cl_PP87i
-MIAMI.bC['Mg-SO4'] = coeffs.bC_Mg_SO4_PP86ii
-
-# Table A3
-#MIAMI.bC['Na-HSO4'] = coefFs.bC_Na_HSO4_PM97
-#MIAMI.bC['Na-HCO3'] = coeffs.bC_Na_HCO3_PP82
-MIAMI.bC['Na-SO4' ] = coeffs.bC_Na_SO4_HPR93
-#MIAMI.bC['Na-CO3' ] = coeffs.bC_Na_CO3_PP82
-MIAMI.bC['Na-BOH4'] = coeffs.bC_Na_BOH4_SRRJ87
-#MIAMI.bC['Na-HS'  ] = coeffs.bC_Na_HS_H88
-#MIAMI.bC['Na-CNS' ] = coeffs.bC_Na_CNS_SP78
-#MIAMI.bC['Na-SO3' ] = coeffs.bC_Na_SO3_M89
-#MIAMI.bC['Na-HSO3'] = coeffs.bC_Na_HSO3_M89
-
-# Table A4
-#MIAMI.bC['K-HCO3 '] = coeffs.bC_K_HCO3_R83
-#MIAMI.bC['K-CO3'  ] = coeffs.bC_K_CO3_S87a
-MIAMI.bC['K-BOH4' ] = coeffs.bC_K_BOH4_SRRJ87
-#MIAMI.bC['K-HS'   ] = coeffs.bC_K_HS_M95
-#MIAMI.bC['K-H2PO4'] = coeffs.bC_K_H2PO4_SP78
-#MIAMI.bC['K-CNS'  ] = coeffs.bC_K_CNS_SP78
-
-# Table A5
-#MIAMI.bC['Mg-Br'  ] = coeffs.bC_Mg_Br_SP78
-#MIAMI.bC['Mg-BOH4'] = coeffs.bC_Mg_BOH4_S87b
-#MIAMI.bC['Mg-ClO4'] = coeffs.bC_Mg_ClO4_SP78
-#MIAMI.bC['Ca-Br'  ] = coeffs.bC_Ca_Br_SP78
-#MIAMI.bC['Ca-BOH4'] = coeffs.bC_Ca_BOH4_S87b
-#MIAMI.bC['Ca-ClO4'] = coeffs.bC_Ca_ClO4_SP78
-
-# Table A6
-#MIAMI.bC['Sr-Br'  ] = coeffs.bC_Sr_Br_SP78
-#MIAMI.bC['Sr-NO3' ] = coeffs.bC_Sr_NO3_SP78
-#MIAMI.bC['Sr-ClO4'] = coeffs.bC_Sr_ClO4_SP78
-#MIAMI.bC['Sr-HSO3'] = coeffs.bC_Sr_HSO3_SP78
-#MIAMI.bC['Sr-BOH4'] = coeffs.bC_Ca_BOH4_S87b
-
-# Table A7
-MIAMI.bC['Na-I'   ] = coeffs.bC_Na_I_MP98
-MIAMI.bC['Na-Br'  ] = coeffs.bC_Na_Br_MP98
-MIAMI.bC['Na-F'   ] = coeffs.bC_Na_F_MP98
-MIAMI.bC['K-Br'   ] = coeffs.bC_K_Br_MP98
-MIAMI.bC['K-F'    ] = coeffs.bC_K_F_MP98
-MIAMI.bC['K-OH'   ] = coeffs.bC_K_OH_MP98
-MIAMI.bC['K-I'    ] = coeffs.bC_K_I_MP98
-#MIAMI.bC['Na-ClO3'] = coeffs.bC_Na_ClO3_MP98
-#MIAMI.bC['K-ClO3' ] = coeffs.bC_K_ClO3_MP98
-#MIAMI.bC['Na-ClO4'] = coeffs.bC_Na_ClO4_MP98
-#MIAMI.bC['Na-BrO3'] = coeffs.bC_Na_BrO3_MP98
-#MIAMI.bC['K-BrO3' ] = coeffs.bC_K_BrO3_MP98
-#MIAMI.bC['Na-NO3' ] = coeffs.bC_Na_NO3_MP98
-#MIAMI.bC['K-NO3'  ] = coeffs.bC_K_NO3_MP98
-#MIAMI.bC['Mg-NO3' ] = coeffs.bC_Mg_NO3_MP98
-#MIAMI.bC['Ca-NO3' ] = coeffs.bC_Ca_NO3_MP98
-#MIAMI.bC['H-Br'   ] = coeffs.bC_H_Br_MP98
-#MIAMI.bC['Sr-Cl'  ] = coeffs.bC_Sr_Cl_MP98
-#MIAMI.bC['NH4-Cl' ] = coeffs.bC_NH4_Cl_MP98
-#MIAMI.bC['NH4-Br' ] = coeffs.bC_NH4_Br_MP98
-#MIAMI.bC['NH4-F'  ] = coeffs.bC_NH4_F_MP98
-
-# === WATERS & MILLERO 2013 ===================================================
-WM13 = cdict()
-
-WM13.dh['Aosm'] = coeffs.Aosm_M88
-
-# Table A1: Na salts
-WM13.bC['Na-Cl'  ] = coeffs.bC_Na_Cl_M88
-WM13.bC['Na-SO4' ] = coeffs.bC_Na_SO4_HM86
-#WM13.bC['Na-HSO4'] = coeffs.bC_Na_HSO4_Hovey93
-WM13.bC['Na-OH'  ] = coeffs.bC_Na_OH_PP87i
-
-# Table A2: Mg salts
-WM13.bC['Mg-Cl'  ] = coeffs.bC_Mg_Cl_dLP83
-WM13.bC['Mg-SO4' ] = coeffs.bC_Mg_SO4_PP86ii
-WM13.bC['Mg-HSO4'] = coeffs.bC_Mg_HSO4_RC99
-
-# Table A3: Ca salts
-WM13.bC['Ca-Cl'  ] = coeffs.bC_Ca_Cl_GM89
-#WM13.bC['Ca-SO4' ] = coeffs.bC_Ca_SO4_Pitzer91
-#WM13.bC['Ca-HSO4'] = coeffs.bC_Ca_HSO4_Pitzer91
-WM13.bC['Ca-OH'  ] = coeffs.bC_Ca_OH_HMW84
-
-# Table A4: K salts
-WM13.bC['K-Cl'  ] = coeffs.bC_K_Cl_GM89
-WM13.bC['K-SO4' ] = coeffs.bC_K_SO4_HM86
-#WM13.bC['K-HSO4'] = coeffs.bC_K_HSO4_Pitzer91
-WM13.bC['K-OH'  ] = coeffs.bC_K_OH_HMW84
-
-# Table A5: H+ interactions
-WM13.bC['H-Cl'  ] = coeffs.bC_H_Cl_CMR93
-WM13.bC['H-SO4' ] = coeffs.bC_H_SO4_CRP94
-WM13.bC['H-HSO4'] = coeffs.bC_H_HSO4_CRP94
-
-# Table A6: MgOH+ interactions
-WM13.bC['MgOH-Cl'] = coeffs.bC_MgOH_Cl_HMW84
-
-# Table A7: cation-cation interactions
-WM13.theta['H-Na' ] = coeffs.theta_H_Na_CMR93
-#WM13.theta['H-Mg' ] = coeffs.theta_H_Mg_Roy80
-#WM13.theta['Ca-H' ] = coeffs.theta_Ca_H_Roy80
-WM13.theta['H-K'  ] = coeffs.theta_H_K_CMR93
-WM13.theta['Mg-Na'] = coeffs.theta_Mg_Na_HMW84
-WM13.theta['Ca-Na'] = coeffs.theta_Ca_Na_HMW84
-WM13.theta['K-Na' ] = coeffs.theta_K_Na_HMW84
-WM13.theta['Ca-Mg'] = coeffs.theta_Ca_Mg_HMW84
-WM13.theta['K-Mg' ] = coeffs.theta_K_Mg_HMW84
-WM13.theta['Ca-K' ] = coeffs.theta_Ca_K_HMW84
-
-# Table A7: anion-anion interactions
-WM13.theta['Cl-SO4'  ] = coeffs.theta_Cl_SO4_HMW84
-WM13.theta['Cl-HSO4' ] = coeffs.theta_Cl_HSO4_HMW84
-WM13.theta['Cl-OH'   ] = coeffs.theta_Cl_OH_HMW84
-WM13.theta['HSO4-SO4'] = coeffs.theta_zero
-WM13.theta['OH-SO4'  ] = coeffs.theta_OH_SO4_HMW84
-
-# Table A8: c-a-a' triplets
-WM13.psi['H-Cl-SO4' ] = coeffs.psi_zero
-WM13.psi['Na-Cl-SO4'] = coeffs.psi_Na_Cl_SO4_HMW84
-WM13.psi['Mg-Cl-SO4'] = coeffs.psi_Mg_Cl_SO4_HMW84
-WM13.psi['Ca-Cl-SO4'] = coeffs.psi_Ca_Cl_SO4_HMW84
-WM13.psi['K-Cl-SO4' ] = coeffs.psi_K_Cl_SO4_HMW84
-
-WM13.psi['H-Cl-HSO4' ] = coeffs.psi_H_Cl_HSO4_HMW84
-WM13.psi['Na-Cl-HSO4'] = coeffs.psi_Na_Cl_HSO4_HMW84
-WM13.psi['Mg-Cl-HSO4'] = coeffs.psi_Mg_Cl_HSO4_HMW84
-WM13.psi['Ca-Cl-HSO4'] = coeffs.psi_Ca_Cl_HSO4_HMW84
-WM13.psi['K-Cl-HSO4' ] = coeffs.psi_K_Cl_HSO4_HMW84
-
-WM13.psi['H-Cl-OH' ] = coeffs.psi_zero
-WM13.psi['Na-Cl-OH'] = coeffs.psi_Na_Cl_OH_HMW84
-WM13.psi['Mg-Cl-OH'] = coeffs.psi_zero
-WM13.psi['Ca-Cl-OH'] = coeffs.psi_Ca_Cl_OH_HMW84
-WM13.psi['K-Cl-OH' ] = coeffs.psi_K_Cl_OH_HMW84
-
-WM13.psi['H-HSO4-SO4' ] = coeffs.psi_zero
-WM13.psi['Na-HSO4-SO4'] = coeffs.psi_Na_HSO4_SO4_HMW84
-WM13.psi['Mg-HSO4-SO4'] = coeffs.psi_Mg_HSO4_SO4_RC99
-WM13.psi['Ca-HSO4-SO4'] = coeffs.psi_zero
-WM13.psi['K-HSO4-SO4' ] = coeffs.psi_K_HSO4_SO4_HMW84
-
-WM13.psi['H-OH-SO4' ] = coeffs.psi_zero
-WM13.psi['Na-OH-SO4'] = coeffs.psi_Na_OH_SO4_HMW84
-WM13.psi['Mg-OH-SO4'] = coeffs.psi_zero
-WM13.psi['Ca-OH-SO4'] = coeffs.psi_zero
-WM13.psi['K-OH-SO4' ] = coeffs.psi_K_OH_SO4_HMW84
-
-# Table A9: c-c'-a triplets
-WM13.psi['H-Na-Cl'  ] = coeffs.psi_H_Na_Cl_HMW84
-WM13.psi['H-Na-SO4' ] = coeffs.psi_zero
-WM13.psi['H-Na-HSO4'] = coeffs.psi_H_Na_Cl_HMW84
-
-WM13.psi['H-Mg-Cl'] = coeffs.psi_H_Mg_Cl_HMW84
-WM13.psi['H-Mg-SO4'] = coeffs.psi_H_Mg_SO4_RC99
-WM13.psi['H-Mg-HSO4'] = coeffs.psi_H_Mg_HSO4_RC99
-
-WM13.psi['Ca-H-Cl'  ] = coeffs.psi_Ca_H_Cl_HMW84
-WM13.psi['Ca-H-SO4' ] = coeffs.psi_zero
-WM13.psi['Ca-H-HSO4'] = coeffs.psi_zero
-
-WM13.psi['H-K-Cl'  ] = coeffs.psi_H_K_Cl_HMW84
-WM13.psi['H-K-SO4' ] = coeffs.psi_H_K_SO4_HMW84
-WM13.psi['H-K-HSO4'] = coeffs.psi_H_K_HSO4_HMW84
-
-WM13.psi['Mg-Na-Cl'  ] = coeffs.psi_Mg_Na_Cl_HMW84
-WM13.psi['Mg-Na-SO4' ] = coeffs.psi_Mg_Na_SO4_HMW84
-WM13.psi['Mg-Na-HSO4'] = coeffs.psi_zero
-
-WM13.psi['Ca-Na-Cl'  ] = coeffs.psi_Ca_Na_Cl_HMW84
-WM13.psi['Ca-Na-SO4' ] = coeffs.psi_Ca_Na_SO4_HMW84
-WM13.psi['Ca-Na-HSO4'] = coeffs.psi_zero
-
-WM13.psi['K-Na-Cl'  ] = coeffs.psi_K_Na_Cl_HMW84
-WM13.psi['K-Na-SO4' ] = coeffs.psi_K_Na_SO4_HMW84
-WM13.psi['K-Na-HSO4'] = coeffs.psi_zero
-
-WM13.psi['Ca-Mg-Cl'  ] = coeffs.psi_Ca_Mg_Cl_HMW84
-WM13.psi['Ca-Mg-SO4' ] = coeffs.psi_Ca_Mg_SO4_HMW84
-WM13.psi['Ca-Mg-HSO4'] = coeffs.psi_zero
-
-WM13.psi['K-Mg-Cl'  ] = coeffs.psi_K_Mg_Cl_HMW84
-WM13.psi['K-Mg-SO4' ] = coeffs.psi_K_Mg_SO4_HMW84
-WM13.psi['K-Mg-HSO4'] = coeffs.psi_zero
-
-WM13.psi['Ca-K-Cl'  ] = coeffs.psi_Ca_K_Cl_HMW84
-WM13.psi['Ca-K-SO4' ] = coeffs.psi_zero
-WM13.psi['Ca-K-HSO4'] = coeffs.psi_zero
