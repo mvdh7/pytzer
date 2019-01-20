@@ -377,16 +377,20 @@ def bC_Li_Cl_HM83(T):
 #%%############################################################################
 # === HOLMES & MESMER 1986 ====================================================
 
+# Note that HM86 use alph1 of 1.4 even where there is no beta2 term (p. 502)
+
 def HM86_eq8(T,a):
     
     TR = np.float_(298.15)
+    
+    # Typo in a[5] term in HM86 has been corrected here
     
     return a[0]                                                         \
          + a[1] * (TR - TR**2/T)                                        \
          + a[2] * (T**2 + 2*TR**3/T - 3*TR**2)                          \
          + a[3] * (T + TR**2/T - 2*TR)                                  \
          + a[4] * (np.log(T/TR) + TR/T - 1)                             \
-         + a[5] * (1/(T - 263) + (263*T - TR)**2 / (T * (TR - 263)**2)) \
+         + a[5] * (1/(T - 263) + (263*T - TR**2) / (T * (TR - 263)**2)) \
          + a[6] * (1/(680 - T) + (TR**2 - 680*T) / (T * (680 - TR)**2))
 
 # --- bC: caesium sulfate -----------------------------------------------------
@@ -427,7 +431,7 @@ def bC_K_SO4_HM86(T):
     
     C1    = np.zeros_like(T)
     
-    alph1 = np.float_(2)
+    alph1 = np.float_(1.4)
     alph2 = -9
     omega = -9
     
@@ -473,7 +477,7 @@ def bC_Na_SO4_HM86(T):
     
     C1    = np.zeros_like(T)
     
-    alph1 = np.float_(2)
+    alph1 = np.float_(1.4)
     alph2 = -9
     omega = -9
     
