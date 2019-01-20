@@ -102,25 +102,3 @@ venv.bak/
 
 # mypy
 .mypy_cache/
-
-# I/O files
-*.xlsx
-*.mat
-*.pkl
-*.csv
-*.dat
-
-# Miscellaneous
-*.docx
-*.tmp
-*.asv
-*.pptx
-*.zip
-*.pdf
-
-# Figures
-*.png
-*.gif
-
-# MATLAB
-*.m~
