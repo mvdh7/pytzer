@@ -163,36 +163,31 @@ def ln_acf2ln_acf_MX(ln_acfM,ln_acfX,nM,nX):
 
 #---------------------------------------------------- Osmotic coefficient -----
 
-
 # Osmotic coefficient derivative function - single electrolyte
-def osmfunc(ww,mols,ions,T,cfdict):
+def _osmfunc(ww,mols,ions,T,cfdict):
     
     mols_ww = array([mols[:,E]/ww.ravel() \
                         for E in range(shape(mols)[1])]).transpose()
     
     return ww * R * T * Gex_nRT(mols_ww,ions,T,cfdict)
 
-
 # Osmotic coefficient derivative - single electrolyte
-osmD = egrad(osmfunc)
-
+_osmD = egrad(_osmfunc)
 
 # Osmotic coefficient - single electrolyte
 def osm(mols,ions,T,cfdict):
     
     ww = full_like(T,1, dtype='float64')
     
-    return 1 - osmD(ww,mols,ions,T,cfdict) \
+    return 1 - _osmD(ww,mols,ions,T,cfdict) \
         / (R * T * vstack(np_sum(mols,axis=1)))
 
 
 #------------------------------------------------------- Solvent activity -----
 
-
 # Convert osmotic coefficient to water activity
 def osm2aw(mols,osm):
     return exp(-osm * Mw * vstack(np_sum(mols,axis=1)))
-
 
 # Convert water activity to osmotic coefficient
 def aw2osm(mols,aw):
