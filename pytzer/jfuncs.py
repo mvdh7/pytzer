@@ -3,6 +3,7 @@ from autograd import elementwise_grad as egrad
 from autograd.extend import primitive, defvjp
 from scipy.misc import derivative
 
+
 # === Pitzer (1975) Eq. (46) ==================================================
 
 def P75_eq46(x):
@@ -54,6 +55,7 @@ def _Harvie_raw(x):
     
         if x[s] < 1.:
         
+            # Values from Table B-1, middle column (akI)
             ak = float_([ 1.925154014814667,
                          -0.060076477753119,
                          -0.029779077456514,
@@ -76,18 +78,19 @@ def _Harvie_raw(x):
                          -0.000000000002563,
                          -0.000000000010991])
         
-            z = 4 * x[s]**0.2 - 2
-            dz_dx = 4 * x[s]**-0.8 / 5
+            z = 4 * x[s]**(1/5) - 2      # Eq. (B-21)
+            dz_dx = 4 * x[s]**-(4/5) / 5 # Eq. (B-22)
         
             bk = zeros(size(ak)+2, dtype='float64')
             dk = zeros(size(ak)+2, dtype='float64')
             
             for i in reversed(range(21)):
-                bk[i] = z*bk[i+1] - bk[i+2] + ak[i]
-                dk[i] = bk[i+1] + z*dk[i+1] - dk[i+2]
+                bk[i] = z*bk[i+1] - bk[i+2] + ak[i]   # Eq. (B-23)
+                dk[i] = bk[i+1] + z*dk[i+1] - dk[i+2] # Eq. (B-24)
             
         else:
             
+            # Values from Table B-1, final column (akII)
             ak = float_([ 0.628023320520852,
                           0.462762985338493,
                           0.150044637187895,
@@ -110,18 +113,18 @@ def _Harvie_raw(x):
                          -0.000000002849257,
                           0.000000000237816])
         
-            z = float_(40/9) * x[s]**-0.1 - float_(22/9)
-            dz_dx = -4 * x[s]**-1.1 / 9
+            z = 40/9 * x[s]**-0.1 - 22/9 # Eq. (B-25)
+            dz_dx = -4 * x[s]**-1.1 / 9  # Eq. (B-26)
         
             bk = zeros(size(ak)+2, dtype='float64')
             dk = zeros(size(ak)+2, dtype='float64')
             
             for i in reversed(range(21)):
-                bk[i] = z*bk[i+1] - bk[i+2] + ak[i]
-                dk[i] = bk[i+1] + z*dk[i+1] - dk[i+2]
+                bk[i] = z*bk[i+1] - bk[i+2] + ak[i]   # Eq. (B-27)
+                dk[i] = bk[i+1] + z*dk[i+1] - dk[i+2] # Eq. (B-28)
         
-        J [s] = 0.25 * x[s] - 1 + 0.5 * (bk[0] - bk[2])
-        Jp[s] = 0.25 + 0.5 * dz_dx * (dk[0] - dk[2])
+        J [s] = 0.25 * x[s] - 1 + 0.5 * (bk[0] - bk[2]) # Eq. (B-29)
+        Jp[s] = 0.25 + 0.5 * dz_dx * (dk[0] - dk[2])    # Eq. (B-30)
         
     return J, Jp
 
