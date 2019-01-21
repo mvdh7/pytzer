@@ -45,7 +45,7 @@ def P75_eq47(x):
 
 # Define the raw function - doesn't work in pytzer (not autograd-able)
 # Use Harvie() instead (code comes afterwards)
-def Harvie_raw(x):
+def _Harvie_raw(x):
     
     J  = full_like(x,nan, dtype='float64')
     Jp = full_like(x,nan, dtype='float64')
@@ -127,26 +127,26 @@ def Harvie_raw(x):
 
 # Perform code gymnastics so that autograd can differentiate Harvie_raw
 @primitive
-def Harvie_J(x):
-    return Harvie_raw(x)[0]
+def _Harvie_J(x):
+    return _Harvie_raw(x)[0]
 @primitive
-def Harvie_Jp(x):
-    return Harvie_raw(x)[1]
+def _Harvie_Jp(x):
+    return _Harvie_raw(x)[1]
 
-Harvie_dx = 1e-9
-def Harvie_J_drv(x):
-    return derivative(Harvie_J,x,  dx=Harvie_dx) * Harvie_dx
-def Harvie_Jp_drv(x):
-    return derivative(Harvie_Jp,x, dx=Harvie_dx) * Harvie_dx
+_Harvie_dx = 1e-9
+def _Harvie_J_drv(x):
+    return derivative(_Harvie_J,x,  dx=_Harvie_dx) * _Harvie_dx
+def _Harvie_Jp_drv(x):
+    return derivative(_Harvie_Jp,x, dx=_Harvie_dx) * _Harvie_dx
 
-def Harvie_J_vjp(ans,x):
-    return lambda g: g * Harvie_J_drv(x)
-def Harvie_Jp_vjp(ans,x):
-    return lambda g: g * Harvie_Jp_drv(x)
+def _Harvie_J_vjp(ans,x):
+    return lambda g: g * _Harvie_J_drv(x)
+def _Harvie_Jp_vjp(ans,x):
+    return lambda g: g * _Harvie_Jp_drv(x)
 
-defvjp(Harvie_J ,Harvie_J_vjp )
-defvjp(Harvie_Jp,Harvie_Jp_vjp)
+defvjp(_Harvie_J ,_Harvie_J_vjp )
+defvjp(_Harvie_Jp,_Harvie_Jp_vjp)
 
 # This is the final function to use in pytzer:
 def Harvie(x):
-    return Harvie_J(x), Harvie_Jp(x)
+    return _Harvie_J(x), _Harvie_Jp(x)
