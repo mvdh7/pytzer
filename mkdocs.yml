@@ -1,3 +1,7 @@
 site_name: pytzer
 site_author: Matthew P. Humphreys
 theme: readthedocs
+nav:
+- Introduction: index.md
+- pytzer.cfdicts: cfdicts.md
+- pytzer.io: io.md
