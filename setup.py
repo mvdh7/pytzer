@@ -14,6 +14,10 @@ setuptools.setup(
     long_description = long_description,
     long_description_content_type = 'text/markdown',
     classifiers = (
+        'Development Status :: 3 - Alpha',
         'Programming Language :: Python :: 3',
         'License :: OSI Approved :: MIT License',
-        'Operating System :: OS Independent',),)
+        'Operating System :: OS Independent',
+        'Natural Language :: English',
+        'Intended Audience :: Science/Research',
+        'Topic :: Scientific/Engineering :: Chemistry'),)
