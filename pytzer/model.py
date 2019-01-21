@@ -58,7 +58,7 @@ def etheta(T,I,z0,z1,cf):
 def Gex_nRT(mols,ions,T,cf):
     
     # Ionic strength etc.
-    zs = props.charges(ions)
+    zs = props.charges(ions)[0]
     I = vstack(0.5 * (np_sum(mols * zs**2, 1)))
     Z = vstack(np_sum(mols * np_abs(zs), 1))
     

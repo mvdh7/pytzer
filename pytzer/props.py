@@ -1,6 +1,6 @@
 from autograd.numpy import array, float_
 
-##### IONIC CHARGES ###########################################################
+# Get charges for input ions
 
 def charges(ions):
 
@@ -18,4 +18,9 @@ def charges(ions):
          'HSO4': float_(-1),
          'SO4' : float_(-2)}
     
-    return array([z[ion] for ion in ions])
+    zs = array([z[ion] for ion in ions])
+    
+    cations = ions[zs > 0]
+    anions  = ions[zs < 0]
+    
+    return zs, cations, anions
