@@ -1,63 +1,16 @@
-from autograd.numpy import array, exp, float_, full_like, log, shape, sqrt, \
-                           vstack
+from autograd.numpy import array, exp, full_like, log, shape, sqrt, vstack
 from autograd.numpy import abs as np_abs
 from autograd.numpy import sum as np_sum
 from autograd import elementwise_grad as egrad
-from autograd.extend import primitive, defvjp
-#from scipy.misc import derivative
 from .constants import b, Mw, R
-
-##### IONIC CHARGES ###########################################################
-
-def getCharges(ions):
-
-    z = {}
-    
-    z['Ba'  ] = float_(+0)
-    z['Ca'  ] = float_(+2)
-    z['H'   ] = float_(+1)
-    z['K'   ] = float_(+1)
-    z['Mg'  ] = float_(+2)
-    z['Na'  ] = float_(+1)
-    z['Zn'  ] = float_(+2)
-
-    z['Br'  ] = float_(-1)
-    z['Cl'  ] = float_(-1)    
-    z['OH'  ] = float_(-1)
-    z['HSO4'] = float_(-1)
-    z['SO4' ] = float_(-2)
-    
-    return array([z[ion] for ion in ions])
+from . import props
 
 
 ##### DEBYE-HUECKEL SLOPES ####################################################
 
 def fG(T,I,cf): # from CRP94 Eq. (AI1)
-    
-    # T and I inputs must have the same shape for correct broadcasting
-    
-    # Override autograd differentiation of Aosm wrt. T by using AH, if AH is
-    #  present in cf.dh
-    if 'AH' in cf.dh.keys():
-        @primitive
-        def Aosm(T):
-            return cf.dh['Aosm'](T)[0]
-        def Aosm_vjp(ans,T): # P91 Ch. 3 Eq. (84)
-            return lambda g: g * cf.dh['AH'](T) / (4 * R * T**2)   
-        defvjp(Aosm,Aosm_vjp)
-    
-    # Just use autograd if AH is not provided
-    else:
-        Aosm = lambda T: cf.dh['Aosm'](T)[0]
-    
-    return -4 * vstack(Aosm(T)) * I * log(1 + b*sqrt(I)) / b
-
-###
-dfG_T_dT = egrad(lambda T,I,cf: fG(T,I,cf) * R) # for testing purposes only
-
-def fL(T,I,cf,nu): # for testing purposes only
-
-    return nu * cf.dh['AH'](T) * log(1 + b*sqrt(I)) / (2*b)
+        
+    return -4 * vstack(cf.dh['Aosm'](T)[0]) * I * log(1 + b*sqrt(I)) / b
 
 
 ##### PITZER MODEL SUBFUNCTIONS ###############################################
@@ -105,7 +58,7 @@ def etheta(T,I,z0,z1,cf):
 def Gex_nRT(mols,ions,T,cf):
     
     # Ionic strength etc.
-    zs = getCharges(ions)
+    zs = props.charges(ions)
     I = vstack(0.5 * (np_sum(mols * zs**2, 1)))
     Z = vstack(np_sum(mols * np_abs(zs), 1))
     
@@ -181,7 +134,10 @@ def Gex_nRT(mols,ions,T,cf):
 
     return Gex_nRT
 
+
+
 ##### SOLUTE ACTIVITY COEFFICIENT #############################################
+
 
 # Determine activity coefficient function
 ln_acfs = egrad(Gex_nRT)
@@ -190,12 +146,16 @@ def acfs(mols,ions,T,cf):
     
     return exp(ln_acfs(mols,ions,T,cf))
 
+
 # Get mean activity coefficient for an M_(nM)X_(nX) electrolyte
 def ln_acf2ln_acf_MX(ln_acfM,ln_acfX,nM,nX):
     
     return (nM * ln_acfM + nX * ln_acfX) / (nM + nX)
 
+
+
 ##### OSMOTIC COEFFICIENT and SOLVENT ACTIVITY ################################
+
 
 # Osmotic coefficient derivative function - single electrolyte
 def osmfunc(ww,mols,ions,T,cf):
@@ -205,8 +165,10 @@ def osmfunc(ww,mols,ions,T,cf):
     
     return ww * R * T * Gex_nRT(mols_ww,ions,T,cf)
 
+
 # Osmotic coefficient derivative - single electrolyte
 osmD = egrad(osmfunc)
+
 
 # Osmotic coefficient - single electrolyte
 def osm(mols,ions,T,cf):
@@ -216,38 +178,12 @@ def osm(mols,ions,T,cf):
     return 1 - osmD(ww,mols,ions,T,cf) \
         / (R * T * vstack(np_sum(mols,axis=1)))
 
-## Osmotic coefficient function - scipy derivative version
-#def osm(mols,ions,T,cf):
-#    osmD = full_like(T,np.nan)
-#    for i in range(len(T)):
-#        osmD[i] = derivative(lambda ww: 
-#            ww * R*T[i] * Gex_nRT(array([mols[i,:]/ww]),ions,T[i],cf),
-#            array([1.]), dx=1e-8)[0]
-#    osm = 1 - osmD / (R * T * (np_sum(mols,axis=1)))
-#    
-#    return osm
 
 # Convert osmotic coefficient to water activity
 def osm2aw(mols,osm):
     return exp(-osm * Mw * vstack(np_sum(mols,axis=1)))
 
+
 # Convert water activity to osmotic coefficient
 def aw2osm(mols,aw):
     return -log(aw) / (Mw * vstack(np_sum(mols,axis=1)))
-
-##### ENTHALPY and HEAT CAPACITY ##############################################
-    
-# Gex/T differential wrt. T
-dGex_T_dT = egrad(Gex_nRT, argnum=2)
-
-# Apparent relative molal enthalpy (single electrolyte)
-def Lapp(tot,n1,n2,ions,T,cf):
-    
-    m1 = (tot * n1).ravel()
-    m2 = (tot * n2).ravel()
-    mols = vstack((m1,m2)).transpose()
-    
-    return -T**2 * dGex_T_dT(mols,ions,T,cf) * R / tot
-
-# Apparent relative molal heat capacity (i.e. dL/dT; does not include Cp0 term)
-Cpapp = egrad(Lapp, argnum=4)
