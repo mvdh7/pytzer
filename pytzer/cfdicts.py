@@ -1,9 +1,9 @@
 from . import coeffs, jfuncs, props
 
 #==============================================================================
-#===================================================== Define cdict class =====
+#==================================================== Define cfdict class =====
 
-class cdict:
+class cfdict:
     
     # Initialise
     def __init__(self):
@@ -19,7 +19,7 @@ class cdict:
         # Get lists of cations and anions
         _,cats,anis = props.charges(ions)
 
-        # Populate cdict with zero functions where no function exists
+        # Populate cfdict with zero functions where no function exists
         for cat in cats:
             for ani in anis:
                 
@@ -55,7 +55,7 @@ class cdict:
       
         
 #==============================================================================
-#================================================= Define specific cdicts =====
+#================================================= Define specific cfdicts =====
         
 #------------------------------------------------------------ Møller 1988 -----
 
@@ -64,7 +64,7 @@ class cdict:
 #
 # System: Na-Ca-Cl-SO4
 
-M88 = cdict()
+M88 = cfdict()
 
 # Debye-Hueckel limiting slope
 M88.dh['Aosm'] = coeffs.Aosm_M88
@@ -82,7 +82,7 @@ M88.theta['Ca-Na' ] = coeffs.theta_Ca_Na_M88
 M88.theta['Cl-SO4'] = coeffs.theta_Cl_SO4_M88
 
 # Unsymmetrical mixing functions
-M88.jfunc = jfuncs.P75_eq47
+M88.jfunc = jfuncs.Harvie
 
 # Triplet interactions (psi)
 # c-c'-a
@@ -100,7 +100,7 @@ M88.psi['Na-Cl-SO4'] = coeffs.psi_Na_Cl_SO4_M88
 #
 # System: Na-K-Ca-Cl-SO4
 
-GM89 = cdict()
+GM89 = cfdict()
 
 # Debye-Hueckel limiting slope
 GM89.dh['Aosm'] = coeffs.Aosm_M88
@@ -122,7 +122,7 @@ GM89.theta['K-Na'  ] = coeffs.theta_K_Na_GM89
 GM89.theta['Cl-SO4'] = coeffs.theta_Cl_SO4_M88
 
 # Unsymmetrical mixing terms
-GM89.jfunc = jfuncs.P75_eq47
+GM89.jfunc = jfuncs.Harvie
 
 # Triplet interactions (psi)
 # c-c'-a
@@ -145,7 +145,7 @@ GM89.psi['Na-Cl-SO4'] = coeffs.psi_Na_Cl_SO4_M88
 #
 # System: H-HSO4-SO4
 
-CRP94 = cdict()
+CRP94 = cfdict()
 
 # Debye-Hueckel limiting slope
 CRP94.dh['Aosm'] = coeffs.Aosm_CRP94
