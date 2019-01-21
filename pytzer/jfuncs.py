@@ -11,11 +11,11 @@ def P75_eq46(x):
     
         # P75 Table III
         C = float_([ 4.118 ,
-                      7.247 ,
-                     -4.408 ,
-                      1.837 ,
-                     -0.251 ,
-                      0.0164])
+                     7.247 ,
+                    -4.408 ,
+                     1.837 ,
+                    -0.251 ,
+                     0.0164])
     
         Jsum = x * 0
         
@@ -125,7 +125,7 @@ def _Harvie_raw(x):
         
     return J, Jp
 
-# Perform code gymnastics so that autograd can differentiate Harvie_raw
+# Perform code gymnastics so that autograd can differentiate _Harvie_raw
 @primitive
 def _Harvie_J(x):
     return _Harvie_raw(x)[0]
@@ -147,6 +147,6 @@ def _Harvie_Jp_vjp(ans,x):
 defvjp(_Harvie_J ,_Harvie_J_vjp )
 defvjp(_Harvie_Jp,_Harvie_Jp_vjp)
 
-# This is the final function to use in pytzer:
+# This is the final function to call in pytzer:
 def Harvie(x):
     return _Harvie_J(x), _Harvie_Jp(x)

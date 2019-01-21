@@ -1549,9 +1549,6 @@ def bC_Na_SO4_HPR93(T):
 
 # --- Debye-Hueckel slope -----------------------------------------------------
 
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# NOT AUTOGRAD-ABLE due to updating Tmx
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 def Aosm_CRP94(T): # CRP94 Appendix II
 
     # Transform temperature
