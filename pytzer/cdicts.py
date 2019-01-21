@@ -1,6 +1,6 @@
-from . import coeffs, io, jfuncs
+from . import coeffs, jfuncs, props
 
-
+# Define cdict class
 class cdict:
     def __init__(self):
         self.dh    = {}
@@ -11,9 +11,9 @@ class cdict:
         
     
     # Populate with zero-functions
-    def add_zeros(self,eles):
+    def add_zeros(self,ions):
         
-        _,cats,anis,_ = io.ele2ions(eles)
+        _,cats,anis = props.charges(ions)
 
         # Populate cdict with zero functions
         for cat in cats:
