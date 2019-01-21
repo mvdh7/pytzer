@@ -5,15 +5,16 @@ from autograd import elementwise_grad as egrad
 from .constants import b, Mw, R
 from . import props
 
-
-##### DEBYE-HUECKEL SLOPES ####################################################
+#==============================================================================
+#=================================================== Debye-Hueckel slopes =====
 
 def fG(T,I,cf): # from CRP94 Eq. (AI1)
-        
+
     return -4 * vstack(cf.dh['Aosm'](T)[0]) * I * log(1 + b*sqrt(I)) / b
 
 
-##### PITZER MODEL SUBFUNCTIONS ###############################################
+#==============================================================================
+#============================================== Pitzer model subfunctions =====
 
 def g(x): # CRP94 Eq. (AI13)
     return 2 * (1 - (1 + x) * exp(-x)) / x**2
@@ -23,38 +24,41 @@ def h(x):  # CRP94 Eq. (AI15)
 
 
 def B(T,I,cf,iset): # CRP94 Eq. (AI7)
-    
+
     b0,b1,b2,_,_,a1,a2,_,_ = cf.bC[iset](T)
 
     return b0 + b1 * g(a1*sqrt(I)) + b2 * g(a2*sqrt(I))
 
 def CT(T,I,cf,iset): # CRP94 Eq. (AI10)
-    
+
     _,_,_,C0,C1,_,_,o,_ = cf.bC[iset](T)
-    
+
     return C0 + 4 * C1 * h(o*sqrt(I))
 
 
-##### UNSYMMETRIC MIXING ######################################################
-    
+#==============================================================================
+#============================================= Unsymmetrical mixing terms =====
+
 def xij(T,I,z0,z1,cf):
-    
+
     return 6 * z0*z1 * vstack(cf.dh['Aosm'](T)[0]) * sqrt(I)
 
 def etheta(T,I,z0,z1,cf):
-    
+
     x00 = xij(T,I,z0,z0,cf)
     x01 = xij(T,I,z0,z1,cf)
     x11 = xij(T,I,z1,z1,cf)
     
     etheta = z0*z1 * (cf.jfunc(x01)[0] \
                       - 0.5 * (cf.jfunc(x00)[0] + cf.jfunc(x11)[0])) / (4 * I)
-    
+
     return etheta
 
 
-##### EXCESS GIBBS ENERGY #####################################################
-    
+#==============================================================================
+#==================================================== Excess Gibbs energy =====
+
+
 def Gex_nRT(mols,ions,T,cf):
     
     # Ionic strength etc.
@@ -135,8 +139,8 @@ def Gex_nRT(mols,ions,T,cf):
     return Gex_nRT
 
 
-
-##### SOLUTE ACTIVITY COEFFICIENT #############################################
+#==============================================================================
+#=========================================== Solute activity coefficients =====
 
 
 # Determine activity coefficient function
@@ -153,8 +157,11 @@ def ln_acf2ln_acf_MX(ln_acfM,ln_acfX,nM,nX):
     return (nM * ln_acfM + nX * ln_acfX) / (nM + nX)
 
 
+#==============================================================================
+#=============================== Osmotic coefficient and solvent activity =====
 
-##### OSMOTIC COEFFICIENT and SOLVENT ACTIVITY ################################
+
+#---------------------------------------------------- Osmotic coefficient -----
 
 
 # Osmotic coefficient derivative function - single electrolyte
@@ -179,6 +186,9 @@ def osm(mols,ions,T,cf):
         / (R * T * vstack(np_sum(mols,axis=1)))
 
 
+#------------------------------------------------------- Solvent activity -----
+
+
 # Convert osmotic coefficient to water activity
 def osm2aw(mols,osm):
     return exp(-osm * Mw * vstack(np_sum(mols,axis=1)))
@@ -187,3 +197,6 @@ def osm2aw(mols,osm):
 # Convert water activity to osmotic coefficient
 def aw2osm(mols,aw):
     return -log(aw) / (Mw * vstack(np_sum(mols,axis=1)))
+
+
+#==============================================================================
