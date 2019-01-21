@@ -1,9 +1,9 @@
 from . import coeffs, jfuncs, props
 
 #==============================================================================
-#==================================================== Define cfdict class =====
+#==================================================== Define CfDict class =====
 
-class cfdict:
+class CfDict:
     
     # Initialise
     def __init__(self):
@@ -64,7 +64,7 @@ class cfdict:
 #
 # System: Na-Ca-Cl-SO4
 
-M88 = cfdict()
+M88 = CfDict()
 
 # Debye-Hueckel limiting slope
 M88.dh['Aosm'] = coeffs.Aosm_M88
@@ -100,7 +100,7 @@ M88.psi['Na-Cl-SO4'] = coeffs.psi_Na_Cl_SO4_M88
 #
 # System: Na-K-Ca-Cl-SO4
 
-GM89 = cfdict()
+GM89 = CfDict()
 
 # Debye-Hueckel limiting slope
 GM89.dh['Aosm'] = coeffs.Aosm_M88
@@ -145,7 +145,7 @@ GM89.psi['Na-Cl-SO4'] = coeffs.psi_Na_Cl_SO4_M88
 #
 # System: H-HSO4-SO4
 
-CRP94 = cfdict()
+CRP94 = CfDict()
 
 # Debye-Hueckel limiting slope
 CRP94.dh['Aosm'] = coeffs.Aosm_CRP94
