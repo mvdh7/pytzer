@@ -6,10 +6,11 @@ repo_url: https://github.com/mvdh7/pytzer
 theme: readthedocs
 nav:
 - Overview: index.md
-- Import and export: io.md
-- Coefficient dictionaries: cfdicts.md
-- The Pitzer model: model.md
-- Interaction coefficients: coeffs.md
-- Unsymmetrical mixing: jfuncs.md
-- Universal ionic properties: props.md
-- Physical constants: constants.md
+- PYTZER MODULES:
+  - Import and export: io.md
+  - Coefficient dictionaries: cfdicts.md
+  - The Pitzer model: model.md
+  - Interaction coefficients: coeffs.md
+  - Unsymmetrical mixing: jfuncs.md
+  - Universal ionic properties: props.md
+  - Physical constants: constants.md
