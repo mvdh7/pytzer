@@ -3,7 +3,7 @@ site_author: Matthew P. Humphreys
 site_description: Pitzer model for chemical speciation
 copyright: Copyright © 2019 Matthew Paul Humphreys under the GNU GPLv3.
 repo_url: https://github.com/mvdh7/pytzer
-theme: readthedocs
+theme: mkdocs
 nav:
 - Overview: index.md
 - PYTZER MODULES:
