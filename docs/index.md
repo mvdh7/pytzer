@@ -14,46 +14,45 @@ title: Overview
 </tr><tr>
 
 <td><code>pytzer.io</code></td>
-<td><a href="modules/import-and-export">Import and export data</a></td>
+<td><a href="modules/io">Import and export data</a></td>
 
 </tr><tr>
 
 <td><code>pytzer.cfdicts</code></td>
-<td><a href="modules/coefficient-dictionaries">Define combinations of model coefficients to use</a></td>
+<td><a href="modules/cfdicts">Define combinations of model coefficients to use</a></td>
 
 </tr><tr>
 
 <td><code>pytzer.model</code></td>
-<td><a href="modules/pitzer-model-implementation">Implement the Pitzer model</a></td>
+<td><a href="modules/model">Implement the Pitzer model</a></td>
 
 </tr><tr>
 
 <td><code>pytzer.coeffs</code></td>
-<td><a href="modules/interaction-coefficients">Define functions to evaluate model coefficients</a></td>
+<td><a href="modules/coeffs">Define functions to evaluate model coefficients</a></td>
 
 </tr><tr>
 
 <td><code>pytzer.jfuncs</code></td>
-<td><a href="modules/unsymmetrical-mixing">Define unsymmetrical mixing functions</a></td>
+<td><a href="modules/jfuncs">Define unsymmetrical mixing functions</a></td>
 
 </tr><tr>
 
 <td><code>pytzer.props</code></td>
-<td><a href="modules/universal-ionic-properties">Define universal ionic properties</a></td>
+<td><a href="modules/props">Define universal ionic properties</a></td>
 
 </tr><tr>
 
 <td><code>pytzer.constants</code></td>
-<td><a href="modules/physical-constants">Define physical constants</a></td>
+<td><a href="modules/constants">Define physical constants</a></td>
 
 </tr></table>
 
 # Acknowledgements
 
-**pytzer** is maintained by Dr Matthew P. Humphreys at the Centre for Ocean and Atmospheric Sciences, School of Environmental Sciences, University of East Anglia, Norwich, UK.
+**pytzer** is maintained by [Dr Matthew P. Humphreys](https://mvdh.xyz) at the Centre for Ocean and Atmospheric Sciences, School of Environmental Sciences, University of East Anglia, Norwich, UK.
 
-Its development is funded by the Natural Environment Research Council (NERC, UK) through
-*NSFGEO-NERC: A Thermodynamic Chemical Speciation Model for the Oceans, Seas, and Estuaries* ([NE/P012361/1](http://gotw.nerc.ac.uk/list_full.asp?pcode=NE%2FP012361%2F1)).
+Its ongoing development is funded by the [Natural Environment Research Council](https://nerc.ukri.org/) (NERC, UK) through *NSFGEO-NERC: A Thermodynamic Chemical Speciation Model for the Oceans, Seas, and Estuaries* (PI Prof Simon Clegg, [NE/P012361/1](http://gotw.nerc.ac.uk/list_full.asp?pcode=NE%2FP012361%2F1)).
 
 # License
 
