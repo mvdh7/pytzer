@@ -1,5 +1,5 @@
 # pytzer: the Pitzer model for chemical speciation
-# Copyright (C) 2019  Matthew Paul Humphreys  under GNU GPLv3
+# Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 
 from autograd.numpy import array, exp, full_like, log, shape, sqrt, vstack
 from autograd.numpy import abs as np_abs
@@ -51,7 +51,7 @@ def etheta(T,I,z0,z1,cfdict):
     x00 = xij(T,I,z0,z0,cfdict)
     x01 = xij(T,I,z0,z1,cfdict)
     x11 = xij(T,I,z1,z1,cfdict)
-    
+
     etheta = z0*z1 * (cfdict.jfunc(x01)[0] \
              - 0.5 * (cfdict.jfunc(x00)[0] + cfdict.jfunc(x11)[0])) / (4 * I)
 
@@ -63,12 +63,12 @@ def etheta(T,I,z0,z1,cfdict):
 
 
 def Gex_nRT(mols,ions,T,cfdict):
-    
+
     # Ionic strength etc.
     zs = props.charges(ions)[0]
     I = vstack(0.5 * (np_sum(mols * zs**2, 1)))
     Z = vstack(np_sum(mols * np_abs(zs), 1))
-    
+
     # Separate cations and anions
     CL = zs > 0
     cats    = mols[:,CL]
@@ -78,10 +78,10 @@ def Gex_nRT(mols,ions,T,cfdict):
     anis    = mols[:,AL]
     anions  = ions[  AL]
     zAs     = zs  [  AL]
-    
+
     # Begin with Debye-Hueckel component
     Gex_nRT = fG(T,I,cfdict)
-    
+
     # Add c-a interactions
     for C, cation in enumerate(cations):
         for A, anion in enumerate(anions):
@@ -90,54 +90,54 @@ def Gex_nRT(mols,ions,T,cfdict):
 
             Gex_nRT = Gex_nRT + vstack(cats[:,C] * anis[:,A]) \
                 * (2*B(T,I,cfdict,iset) + Z*CT(T,I,cfdict,iset))
-                
+
     # Add c-c' interactions
     for C0, cation0 in enumerate(cations):
         for C1, cation1 in enumerate(cations[C0+1:]):
-            
+
             iset = [cation0,cation1]
             iset.sort()
             iset= '-'.join(iset)
-            
+
             Gex_nRT = Gex_nRT + vstack(cats[:,C0] * cats[:,C1]) \
                 * 2 * cfdict.theta[iset](T)[0]
-                
+
             # Unsymmetrical mixing terms
             if zCs[C0] != zCs[C1]:
-                
+
                 Gex_nRT = Gex_nRT + vstack(cats[:,C0] * cats[:,C1]) \
                     * 2 * etheta(T,I,zCs[C0],zCs[C1],cfdict)
-                
+
     # Add c-c'-a interactions
             for A, anion in enumerate(anions):
-                
+
                 itri = '-'.join((iset,anion))
-                                
+
                 Gex_nRT = Gex_nRT + vstack(cats[:,C0] * cats[:,C1] \
                     * anis[:,A]) * cfdict.psi[itri](T)[0]
 
     # Add a-a' interactions
     for A0, anion0 in enumerate(anions):
         for A1, anion1 in enumerate(anions[A0+1:]):
-            
+
             iset = [anion0,anion1]
             iset.sort()
             iset= '-'.join(iset)
-            
+
             Gex_nRT = Gex_nRT + vstack(anis[:,A0] * anis[:,A1]) \
                 * 2 * cfdict.theta[iset](T)[0]
-                
+
             # Unsymmetrical mixing terms
             if zAs[A0] != zAs[A1]:
-                
+
                 Gex_nRT = Gex_nRT + vstack(anis[:,A0] * anis[:,A1]) \
                     * 2 * etheta(T,I,zAs[A0],zAs[A1],cfdict)
 
     # Add c-a-a' interactions
             for C, cation in enumerate(cations):
-                
+
                 itri = '-'.join((cation,iset))
-                                
+
                 Gex_nRT = Gex_nRT + vstack(anis[:,A0] * anis[:,A1] \
                     * cats[:,C]) * cfdict.psi[itri](T)[0]
 
@@ -152,13 +152,13 @@ def Gex_nRT(mols,ions,T,cfdict):
 ln_acfs = egrad(Gex_nRT)
 
 def acfs(mols,ions,T,cfdict):
-    
+
     return exp(ln_acfs(mols,ions,T,cfdict))
 
 
 # Get mean activity coefficient for an M_(nM)X_(nX) electrolyte
 def ln_acf2ln_acf_MX(ln_acfM,ln_acfX,nM,nX):
-    
+
     return (nM * ln_acfM + nX * ln_acfX) / (nM + nX)
 
 
@@ -170,10 +170,10 @@ def ln_acf2ln_acf_MX(ln_acfM,ln_acfX,nM,nX):
 
 # Osmotic coefficient derivative function - single electrolyte
 def _osmfunc(ww,mols,ions,T,cfdict):
-    
+
     mols_ww = array([mols[:,E]/ww.ravel() \
                         for E in range(shape(mols)[1])]).transpose()
-    
+
     return ww * R * T * Gex_nRT(mols_ww,ions,T,cfdict)
 
 # Osmotic coefficient derivative - single electrolyte
@@ -181,7 +181,7 @@ _osmD = egrad(_osmfunc)
 
 # Osmotic coefficient - single electrolyte
 def osm(mols,ions,T,cfdict):
-    
+
     ww = full_like(T,1, dtype='float64')
 
     return 1 - _osmD(ww,mols,ions,T,cfdict) \

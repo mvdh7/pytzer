@@ -1,5 +1,5 @@
 # pytzer: the Pitzer model for chemical speciation
-# Copyright (C) 2019  Matthew Paul Humphreys  under GNU GPLv3
+# Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 
 from autograd.numpy import float_
 

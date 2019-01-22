@@ -1,5 +1,5 @@
 # pytzer: the Pitzer model for chemical speciation
-# Copyright (C) 2019  Matthew Paul Humphreys  under GNU GPLv3
+# Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 
 from autograd.numpy import array, float_
 
@@ -14,7 +14,7 @@ def charges(ions):
          'Mg'  : float_(+2),
          'Na'  : float_(+1),
          'Zn'  : float_(+2),
-         
+
          'Br'  : float_(-1),
          'Cl'  : float_(-1),
          'OH'  : float_(-1),

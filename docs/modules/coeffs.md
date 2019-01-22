@@ -1,3 +1,3 @@
 # Introduction
 
-**pytzer.coeffs** module contains functions for ionic interaction coefficients.
+**pytzer.coeffs** contains functions for ionic interaction coefficients.

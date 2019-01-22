@@ -1,5 +1,5 @@
 # pytzer: the Pitzer model for chemical speciation
-# Copyright (C) 2019  Matthew Paul Humphreys
+# Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
