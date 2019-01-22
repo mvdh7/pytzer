@@ -10,7 +10,7 @@ theme:
 nav:
     - Overview: index.md
     - Modules:
-        - Import and export: modules/import-and-export.md
+        - Import and export: modules/io.md
         - Coefficient dictionaries: modules/coefficient-dictionaries.md
         - Pitzer model implementation: modules/pitzer-model-implementation.md
         - Interaction coefficients: modules/interaction-coefficients.md
