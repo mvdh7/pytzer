@@ -1,10 +1,13 @@
-# pytzer.io
+title: Import and export
 
-Importing and exporting data.
+# Introduction
+
+The `pytzer.io` module provides a function to import user data ready for use with `pytzer`.
+
 
 ## pytzer.io.getmols
 
-Import table of temperature and molality values, and format them ready for `pz.model` functions.
+Imports a table of temperature and molality values, and format them ready for `pz.model` functions.
 
 ### Syntax
 

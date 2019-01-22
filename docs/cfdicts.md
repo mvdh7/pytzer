@@ -1,6 +1,10 @@
-# pz.cfdicts
+title: Coefficient dictionaries
 
-To use a Pitzer model we need to define a set of coefficients that quantify the interactions between different combinations of ions. In pytzer, we do this by creating a `cfdict`, which contains functions that evaluate the coefficients for every possible interaction. The functions themselves are defined in the separate module `pytzer.coeffs`.
+# Introduction
+
+The `pytzer.cfdict` module provides specific combinations of coefficients that have been used in published Pitzer models.
+
+To use a Pitzer model we need to define a set of coefficients that quantify the interactions between different combinations of ions. We do this by creating a `cfdict` (short for **coefficient dictionary**), which contains functions that evaluate the coefficients for every possible interaction. The functions themselves are defined in the separate module `pytzer.coeffs`.
 
 # Pre-defined cfdicts
 
@@ -32,6 +36,9 @@ Ca - Na - Cl - SO<sub>4</sub> - H<sub>2</sub>O
   * **Temperature:** 25 °C to 250 °C
 
   * **Ionic strength:** 0 to ~18 mol·kg<sup>−1</sup>
+
+
+# Modify an existing cfdict
 
 
 # Create your own

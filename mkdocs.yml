@@ -2,6 +2,11 @@ site_name: pytzer
 site_author: Matthew P. Humphreys
 theme: readthedocs
 nav:
-- Introduction: index.md
-- pytzer.cfdicts: cfdicts.md
-- pytzer.io: io.md
+- Overview: index.md
+- Import and export: io.md
+- Coefficient dictionaries: cfdicts.md
+- Interaction coefficients: coeffs.md
+- Unsymmetrical mixing: jfuncs.md
+- The Pitzer model: model.md
+- Universal ionic properties: props.md
+- Physical constants: constants.md
