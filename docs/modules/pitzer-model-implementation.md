@@ -1,4 +1,4 @@
-title: The Pitzer model
+title: Pitzer model implementation
 
 # Introduction
 
