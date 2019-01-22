@@ -80,8 +80,8 @@ def Gex_nRT(mols,ions,T,cfdict):
     Gex_nRT = fG(T,I,cfdict)
     
     # Add c-a interactions
-    for C,cation in enumerate(cations):
-        for A,anion in enumerate(anions):
+    for C, cation in enumerate(cations):
+        for A, anion in enumerate(anions):
 
             iset= '-'.join([cation,anion])
 

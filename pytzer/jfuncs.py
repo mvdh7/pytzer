@@ -51,9 +51,9 @@ def _Harvie_raw(x):
     J  = full_like(x,nan, dtype='float64')
     Jp = full_like(x,nan, dtype='float64')
     
-    for s in range(len(x)):
+    for s, xs in enumerate(x):
     
-        if x[s] < 1.:
+        if xs < 1.:
         
             # Values from Table B-1, middle column (akI)
             ak = float_([ 1.925154014814667,
@@ -78,8 +78,8 @@ def _Harvie_raw(x):
                          -0.000000000002563,
                          -0.000000000010991])
         
-            z = 4 * x[s]**(1/5) - 2      # Eq. (B-21)
-            dz_dx = 4 * x[s]**-(4/5) / 5 # Eq. (B-22)
+            z = 4 * xs**(1/5) - 2      # Eq. (B-21)
+            dz_dx = 4 * xs**-(4/5) / 5 # Eq. (B-22)
         
             bk = zeros(size(ak)+2, dtype='float64')
             dk = zeros(size(ak)+2, dtype='float64')
@@ -113,8 +113,8 @@ def _Harvie_raw(x):
                          -0.000000002849257,
                           0.000000000237816])
         
-            z = 40/9 * x[s]**-0.1 - 22/9 # Eq. (B-25)
-            dz_dx = -4 * x[s]**-1.1 / 9  # Eq. (B-26)
+            z = 40/9 * xs**-0.1 - 22/9 # Eq. (B-25)
+            dz_dx = -4 * xs**-1.1 / 9  # Eq. (B-26)
         
             bk = zeros(size(ak)+2, dtype='float64')
             dk = zeros(size(ak)+2, dtype='float64')
@@ -123,8 +123,8 @@ def _Harvie_raw(x):
                 bk[i] = z*bk[i+1] - bk[i+2] + ak[i]   # Eq. (B-27)
                 dk[i] = bk[i+1] + z*dk[i+1] - dk[i+2] # Eq. (B-28)
         
-        J [s] = 0.25 * x[s] - 1 + 0.5 * (bk[0] - bk[2]) # Eq. (B-29)
-        Jp[s] = 0.25 + 0.5 * dz_dx * (dk[0] - dk[2])    # Eq. (B-30)
+        J [s] = 0.25 * xs - 1 + 0.5 * (bk[0] - bk[2]) # Eq. (B-29)
+        Jp[s] = 0.25 + 0.5 * dz_dx * (dk[0] - dk[2])  # Eq. (B-30)
 
     return J, Jp
 

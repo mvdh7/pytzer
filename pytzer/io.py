@@ -16,5 +16,5 @@ def getmols(filename, delimiter=','):
     mols = data[:,~TL]
     ions = head[~TL]
     T = data[:,TL]
-    
+
     return mols, ions, T
