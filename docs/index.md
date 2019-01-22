@@ -14,37 +14,37 @@ title: Overview
 </tr><tr>
 
 <td><code>pytzer.io</code></td>
-<td>Import and export data</td>
+<td><a href="io">Import and export data</a></td>
 
 </tr><tr>
 
 <td><code>pytzer.cfdicts</code></td>
-<td>Define combinations of model coefficients to use</td>
-
-</tr><tr>
-
-<td><code>pytzer.coeffs</code></td>
-<td>Define functions to evaluate model coefficients</td>
-
-</tr><tr>
-
-<td><code>pytzer.jfuncs</code></td>
-<td>Define unsymmetrical mixing functions</td>
+<td><a href="cfdicts">Define combinations of model coefficients to use</a></td>
 
 </tr><tr>
 
 <td><code>pytzer.model</code></td>
-<td>Implement the Pitzer model</td>
+<td><a href="model">Implement the Pitzer model</a></td>
+
+</tr><tr>
+
+<td><code>pytzer.coeffs</code></td>
+<td><a href="coeffs">Define functions to evaluate model coefficients</a></td>
+
+</tr><tr>
+
+<td><code>pytzer.jfuncs</code></td>
+<td><a href="jfuncs">Define unsymmetrical mixing functions</a></td>
 
 </tr><tr>
 
 <td><code>pytzer.props</code></td>
-<td>Define universal ionic properties</td>
+<td><a href="props">Define universal ionic properties</a></td>
 
 </tr><tr>
 
 <td><code>pytzer.constants</code></td>
-<td>Define physical constants</td>
+<td><a href="constants">Define physical constants</a></td>
 
 </tr></table>
 

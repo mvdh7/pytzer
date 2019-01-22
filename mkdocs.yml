@@ -5,8 +5,8 @@ nav:
 - Overview: index.md
 - Import and export: io.md
 - Coefficient dictionaries: cfdicts.md
+- The Pitzer model: model.md
 - Interaction coefficients: coeffs.md
 - Unsymmetrical mixing: jfuncs.md
-- The Pitzer model: model.md
 - Universal ionic properties: props.md
 - Physical constants: constants.md

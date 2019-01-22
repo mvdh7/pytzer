@@ -2,7 +2,7 @@ title: Coefficient dictionaries
 
 # Introduction
 
-The `pytzer.cfdict` module provides specific combinations of coefficients that have been used in published Pitzer models.
+The `pytzer.cfdicts` module provides specific combinations of coefficients that have been used in published Pitzer models.
 
 To use a Pitzer model we need to define a set of coefficients that quantify the interactions between different combinations of ions. We do this by creating a `cfdict` (short for **coefficient dictionary**), which contains functions that evaluate the coefficients for every possible interaction. The functions themselves are defined in the separate module `pytzer.coeffs`.
 
