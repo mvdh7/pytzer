@@ -40,9 +40,9 @@ Several ready-to-use **cfdicts** are available in this module.
 
 <hr />
 
-# Modify an existing cfdict
+# How cfdicts work
 
-To modify an existing **cfdict** it is necessary to understand how they are used within **pytzer**, as follows. A basic understanding of the workings of the Pitzer model is assumed.
+To modify an existing **cfdict**, or create a new one, it is first necessary to understand how they are used within **pytzer**, as follows. A basic understanding of the workings of the Pitzer model is assumed.
 
 A **cfdict** is an object of the class `CfDict` as defined within **pytzer.cfdicts**. From the initalisation function we can see that it contains the following fields:
 
@@ -58,40 +58,78 @@ class CfDict:
         self.psi   = {}
 ```
 
-Each field is then filled with functions from **pytzer.coeffs** that define the Pitzer model interaction coefficients, as follows.
+Each field is then filled with functions from **pytzer.coeffs** that define the Pitzer model interaction coefficients, as follows. (Descriptions of the required contents of the functions themselves are in the separate <a href="../coeffs"><strong>pytzer.coeffs</strong> documentation</a>.)
+
 
 ### Debye-Hückel limiting slope
 
-The function for the Debye-Hückel limiting slope (i.e. <i>A<sub>ϕ</sub></i>) is located in `CfDict.dh['Aosm']`. For example:
+The function for the Debye-Hückel limiting slope (i.e. <i>A<sub>ϕ</sub></i>) is stored as `CfDict.dh['Aosm']`.
+
+### Cation-anion interactions
+
+Functions to evaluate the *β* and *C* coefficients for interactions between cations and anions are contained within the `cfdict.bC` dict. The function for each specific interaction gets its own field within the dict. The fields are named as `<cation>-<anion>`, with the ionic names matching those described [for an input file](../io/#pytzeriogetmols). Some examples:
+
+```python
+cfdict.bC['Na-Cl'] = <Na-Cl interaction coefficients function>
+cfdict.bC['Mg-Cl'] = <Mg-Cl interaction coefficients function>
+cfdict.bC['K-SO4'] = <K-SO4 interaction coefficients function>
+```
+
+### Cation-cation and anion-anion interactions
+
+Functions that evaluate the *θ* coefficients for interactions between ion pairs with a common charge sign are contained within the `cfdict.theta` dict. The function for each specific interaction gets its own field within the dict. The fields are named as `<cation0>-<cation1>`, with the cations in alphabetical order, and with the ionic names matching those described [for an input file](../io/#pytzeriogetmols). Some examples:
+
+```python
+cfdict.theta['Ca-Mg']  = <Ca-Mg interaction coefficients function>
+cfdict.theta['Mg-Na']  = <Mg-Na interaction coefficients function>
+cfdict.theta['Cl-SO4'] = <Cl-SO4 interaction coefficients function>
+```
+
+### Triplet interactions
+
+Functions that evaluate the *ψ* coefficients for interactions between ion pairs with a common charge sign and a third ion of opposite sign are contained within the `cfdict.psi` dict. The function for each specific triplet interaction gets its own field within the dict. The fields are named as `<ion0>-<ion1>-<ion2>`, with the order of the ions obeying the following rules, given here in order of precedence:
+
+  1. Cations before anions;
+
+  1. In alphabetical order.
+
+The ionic names should match those described [for an input file](../io/#pytzeriogetmols).
+
+Some examples:
+
+```python
+cfdict.psi['Ca-Mg-Cl']  = <Ca-Mg-Cl interaction coefficients function>
+cfdict.psi['Mg-Na-SO4'] = <Mg-Na-SO4 interaction coefficients function>
+cfdict.psi['Na-Cl-SO4'] = <Na-Cl-SO4 interaction coefficients function>
+```
+
+### Unsymmetrical mixing terms
+
+A function to evaluate the J and J' equations are contained in `cfdict.jfunc`. Unlike the other fields within the **cfdict**, only one function is provided, so this field directly contains the relevant function, rather than storing it in a dict.
+
+<hr />
+
+# Modify an existing cfdict
+
+The functions within an existing cfdict can easily be switched by reassignment. For example, if you wanted to use the Møller (1988) model, but replace only the Na-Cl interaction equations with the model of Archer (1992), you could write:
 
 ```python
 import pytzer as pz
 
+# Get Møller (1988) cfdict
+cfdict = pz.cfdicts.M88
 
+# Update Na-Cl interaction function to Archer (1992)
+cfdict.bC['Na-Cl'] = pz.coeffs.bC_Na_Cl_A92ii
 ```
 
-### Cation-anion interactions
-
-`CfDict.bC` contains functions to evaluate the beta and C coefficients for interactions between cations and anions.
-
-
-### Cation-cation and anion-anion interactions
-
-`CfDict.theta`
-
-### Triplet interactions
-
-
-
-### Unsymmetrical mixing terms
-
-
+Note that the statement to get the **cfdict** (`cfdict = pz.cfdicts.M88`) only references, not copies, from **pytzer.cfdicts**.
 
 <hr />
 
 # Build your own
 
-You can also construct your own as follows. A `cfdict` is initialised using the `pytzer.cfdicts.CfDict` class. Functions from `pytzer.coeffs` are then added. For example, to generate a `cfdict` for the system Na-Ca-Cl using functions from Møller (1988), we would write:
+You can also construct your own **cfdict** from scratch. In the example below, we initialise a `cfdict` using the `pytzer.cfdicts.CfDict` class. We add functions from `pytzer.coeffs` for the system Na-Ca-Cl using functions from Møller (1988). Finally, we use the method `add_zeros` to fill out any interactions that we have neglected to provide functions for with zeros.
 
 ```python
 import pytzer as pz
@@ -122,10 +160,10 @@ myCfdict.psi['Ca-Na-Cl' ] = coeffs.psi_Ca_Na_Cl_M88
 myCfdict.add_zeros(np.array(['Na','Ca','Cl']))
 ```
 
-Any missing functions can be filled in with zeros using `CfDict.add_zeros()` at the end.
+To explicitly assign zeros to any interaction (i.e. the interaction is ignored by the model), you can use the appropriate zero-functions from **pytzer.coeffs**:
 
-Two conventions must be followed for the strings that define which ions are involved in each interaction. In order of precedence they are:
-
-  1. Cations before anions;
-
-  1. Alphabetical order.
+```python
+myCfdict.bC['Ba-SO4']   = coeffs.bC_zero    # ignore Ba-SO4 interactions
+myCfdict.bC['H-Na']     = coeffs.theta_zero # ignore H-Na interactions
+myCfdict.psi['H-Mg-OH'] = coeffs.psi_zero   # ignore H-Mg-OH interactions
+```
