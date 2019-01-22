@@ -1,10 +1,8 @@
-title: Universal ionic properties
-
 # Introduction
 
 *The casual user has no need to explicitly call this module.*
 
-The `pytzer.props` module contains functions that retrieve the universal properties of ions and electrolytes. By *universal*, we mean that these do not change depending on the exact model set-up, unlike the Pitzer model coefficients.
+**pytzer.props** module contains functions that retrieve the universal properties of ions and electrolytes. By *universal*, we mean that these do not change depending on the exact model set-up, unlike the Pitzer model coefficients.
 
 
 ## pytzer.props.charges

@@ -1,8 +1,6 @@
-title: Import and export
-
 # Introduction
 
-The `pytzer.io` module provides a function to import user data ready for use with `pytzer`.
+**pytzer.io** provides a function to import user data ready for use with **pytzer**.
 
 
 ## pytzer.io.getmols

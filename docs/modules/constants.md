@@ -1,10 +1,8 @@
-title: Physical constants
-
 # Introduction
 
 *The casual user has no need to explicitly call this module.*
 
-The `pytzer.constants` module contains physical constants required by the Pitzer model.
+**pytzer.constants** contains physical constants required by **pytzer**.
 
 ## Universal constants
 
