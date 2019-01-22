@@ -1,3 +1,6 @@
+# pytzer: the Pitzer model for chemical speciation
+# Copyright (C) 2019  Matthew Paul Humphreys  under GNU GPLv3
+
 from autograd.numpy import array, exp, full_like, log, shape, sqrt, vstack
 from autograd.numpy import abs as np_abs
 from autograd.numpy import sum as np_sum

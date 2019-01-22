@@ -1,3 +1,6 @@
+# pytzer: the Pitzer model for chemical speciation
+# Copyright (C) 2019  Matthew Paul Humphreys  under GNU GPLv3
+
 from autograd.numpy import exp, float_, full_like, log, nan, size, zeros
 from autograd import elementwise_grad as egrad
 from autograd.extend import primitive, defvjp
