@@ -72,11 +72,12 @@ import pytzer as pz
 
 ### Cation-anion interactions
 
+`CfDict.bC` contains functions to evaluate the beta and C coefficients for interactions between cations and anions.
 
 
 ### Cation-cation and anion-anion interactions
 
-
+`CfDict.theta`
 
 ### Triplet interactions
 
