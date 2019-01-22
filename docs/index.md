@@ -48,11 +48,18 @@ title: Overview
 
 </tr></table>
 
+# Acknowledgements
+
+**pytzer** is maintained by Dr Matthew P. Humphreys at the Centre for Ocean and Atmospheric Sciences, School of Environmental Sciences, University of East Anglia, Norwich, UK.
+
+Its development is funded by the Natural Environment Research Council (NERC, UK) through
+*NSFGEO-NERC: A Thermodynamic Chemical Speciation Model for the Oceans, Seas, and Estuaries* ([NE/P012361/1](http://gotw.nerc.ac.uk/list_full.asp?pcode=NE%2FP012361%2F1)).
+
 # License
 
 <img src="img/1920px-GPLv3_Logo.svg.png" width="25%" />
 
-The entirety of **pytzer** is licensed under GNU General Public License version 3 (GPLv3).
+The entirety of **pytzer** is licensed under the [GNU General Public License version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.en.html).
 
 # References
 
