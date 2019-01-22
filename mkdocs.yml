@@ -12,7 +12,7 @@ nav:
     - Modules:
         - Import and export: modules/import-and-export.md
         - Coefficient dictionaries: modules/coefficient-dictionaries.md
-        - The Pitzer model: modules/pitzer-model-implementation.md
+        - Pitzer model implementation: modules/pitzer-model-implementation.md
         - Interaction coefficients: modules/interaction-coefficients.md
         - Unsymmetrical mixing: modules/unsymmetrical-mixing.md
         - Universal ionic properties: modules/universal-ionic-properties.md
