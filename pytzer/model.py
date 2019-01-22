@@ -89,49 +89,51 @@ def Gex_nRT(mols,ions,T,cfdict):
                 * (2*B(T,I,cfdict,iset) + Z*CT(T,I,cfdict,iset))
                 
     # Add c-c' interactions
-    for C0 in range(len(cations)):
-        for C1 in range(C0+1,len(cations)):
+    for C0, cation0 in enumerate(cations):
+        for C1, cation1 in enumerate(cations[C0+1:]):
             
-            iset = [cations[C0],cations[C1]]
+            iset = [cation0,cation1]
             iset.sort()
             iset= '-'.join(iset)
             
             Gex_nRT = Gex_nRT + vstack(cats[:,C0] * cats[:,C1]) \
                 * 2 * cfdict.theta[iset](T)[0]
                 
+            # Unsymmetrical mixing terms
             if zCs[C0] != zCs[C1]:
                 
                 Gex_nRT = Gex_nRT + vstack(cats[:,C0] * cats[:,C1]) \
                     * 2 * etheta(T,I,zCs[C0],zCs[C1],cfdict)
                 
     # Add c-c'-a interactions
-            for A in range(len(anions)):
+            for A, anion in enumerate(anions):
                 
-                itri = '-'.join([iset,anions[A]])
+                itri = '-'.join((iset,anion))
                                 
                 Gex_nRT = Gex_nRT + vstack(cats[:,C0] * cats[:,C1] \
                     * anis[:,A]) * cfdict.psi[itri](T)[0]
 
     # Add a-a' interactions
-    for A0 in range(len(anions)):
-        for A1 in range(A0+1,len(anions)):
+    for A0, anion0 in enumerate(anions):
+        for A1, anion1 in enumerate(anions[A0+1:]):
             
-            iset = [anions[A0],anions[A1]]
+            iset = [anion0,anion1]
             iset.sort()
             iset= '-'.join(iset)
             
             Gex_nRT = Gex_nRT + vstack(anis[:,A0] * anis[:,A1]) \
                 * 2 * cfdict.theta[iset](T)[0]
                 
+            # Unsymmetrical mixing terms
             if zAs[A0] != zAs[A1]:
                 
                 Gex_nRT = Gex_nRT + vstack(anis[:,A0] * anis[:,A1]) \
                     * 2 * etheta(T,I,zAs[A0],zAs[A1],cfdict)
 
     # Add c-a-a' interactions
-            for C in range(len(cations)):
+            for C, cation in enumerate(cations):
                 
-                itri = '-'.join([cations[C],iset])
+                itri = '-'.join((cation,iset))
                                 
                 Gex_nRT = Gex_nRT + vstack(anis[:,A0] * anis[:,A1] \
                     * cats[:,C]) * cfdict.psi[itri](T)[0]
@@ -178,7 +180,7 @@ _osmD = egrad(_osmfunc)
 def osm(mols,ions,T,cfdict):
     
     ww = full_like(T,1, dtype='float64')
-    
+
     return 1 - _osmD(ww,mols,ions,T,cfdict) \
         / (R * T * vstack(np_sum(mols,axis=1)))
 

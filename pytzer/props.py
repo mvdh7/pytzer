@@ -17,12 +17,12 @@ def charges(ions):
          'OH'  : float_(-1),
          'HSO4': float_(-1),
          'SO4' : float_(-2)}
-    
+
     # Extract charges from dict
     zs = array([z[ion] for ion in ions])
-    
+
     # Get lists of cation and anion names
     cations = ions[zs > 0]
     anions  = ions[zs < 0]
-    
+
     return zs, cations, anions

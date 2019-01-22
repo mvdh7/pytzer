@@ -6,7 +6,7 @@ from autograd.numpy import genfromtxt, nan_to_num, shape
 def getmols(filename, delimiter=','):
 
     data = genfromtxt(filename, delimiter=delimiter, skip_header=1)
-    head = genfromtxt(filename, delimiter=delimiter, dtype='U', 
+    head = genfromtxt(filename, delimiter=delimiter, dtype='U',
                       skip_footer=shape(data)[0])
     
     nan_to_num(data, copy=False)

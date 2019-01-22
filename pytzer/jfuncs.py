@@ -125,7 +125,7 @@ def _Harvie_raw(x):
         
         J [s] = 0.25 * x[s] - 1 + 0.5 * (bk[0] - bk[2]) # Eq. (B-29)
         Jp[s] = 0.25 + 0.5 * dz_dx * (dk[0] - dk[2])    # Eq. (B-30)
-        
+
     return J, Jp
 
 # Perform code gymnastics so that autograd can differentiate _Harvie_raw

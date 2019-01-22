@@ -18,45 +18,49 @@ class CfDict:
         
         # Get lists of cations and anions
         _,cats,anis = props.charges(ions)
+        
+        # Sort lists into alphabetical order
+        cats.sort()
+        anis.sort()
 
         # Populate cfdict with zero functions where no function exists
         for cat in cats:
             for ani in anis:
                 
-                istr = cat + '-' + ani
+                istr = '-'.join((cat,ani))
                 if istr not in self.bC.keys():
                     self.bC[istr] = coeffs.bC_zero
                 
-        for C0 in range(len(cats)):
-            for C1 in range(C0+1,len(cats)):
+        for C0, cat0 in enumerate(cats):
+            for cat1 in cats[C0+1:]:
                 
-                istr = cats[C0] + '-' + cats[C1]
+                istr = '-'.join((cat0,cat1))
                 if istr not in self.theta.keys():
                     self.theta[istr] = coeffs.theta_zero
                 
                 for ani in anis:
                     
-                    istr = cats[C0] + '-' + cats[C1] + '-' + ani
+                    istr = '-'.join((cat0,cat1,ani))
                     if istr not in self.psi.keys():
                         self.psi[istr] = coeffs.psi_zero
         
-        for A0 in range(len(anis)):
-            for A1 in range(A0+1,len(anis)):
+        for A0, ani0 in enumerate(anis):
+            for ani1 in anis[A0+1:]:
                 
-                istr = anis[A0] + '-' + anis[A1]
+                istr = '-'.join((ani0,ani1))
                 if istr not in self.theta.keys():
                     self.theta[istr] = coeffs.theta_zero
                 
                 for cat in cats:
                     
-                    istr = cat + '-' + anis[A0] + '-' + anis[A1]
+                    istr = '-'.join((cat,ani0,ani1))
                     if istr not in self.psi.keys():
                         self.psi[istr] = coeffs.psi_zero
       
         
 #==============================================================================
 #================================================= Define specific cfdicts =====
-        
+
 #------------------------------------------------------------ Møller 1988 -----
 
 # Møller (1988). Geochim. Cosmochim. Acta 52, 821-837,
