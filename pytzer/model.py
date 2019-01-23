@@ -80,7 +80,6 @@ def Gex_nRT(mols,ions,T,cfdict):
     anis = mols[:,AL]
     
     # Charges
-    zNs = zs[CL]
     zCs = zs[CL]
     zAs = zs[AL]
 
@@ -88,6 +87,8 @@ def Gex_nRT(mols,ions,T,cfdict):
     Gex_nRT = fG(T,I,cfdict)
 
     # Loop through cations
+#    with errstate(divide='ignore', invalid='ignore'):
+        
     for C0, cation0 in enumerate(cations):
         
         # Add c-a interactions
@@ -160,7 +161,7 @@ def Gex_nRT(mols,ions,T,cfdict):
 
                 Gex_nRT = Gex_nRT + vstack(anis[:,A0] * anis[:,A1] \
                     * cats[:,C]) * cfdict.psi[itri](T)[0]
-                
+
         # Add n-a interactions
         for N, neutral in enumerate(neutrals):
             
