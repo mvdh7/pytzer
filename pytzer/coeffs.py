@@ -26,25 +26,29 @@ def bC_zero(T):
     return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def theta_zero(T):
-
     theta = zeros_like(T)
     valid = T > 0
-
     return theta, valid
 
 def psi_zero(T):
-
     psi   = zeros_like(T)
     valid = T > 0
-
     return psi, valid
 
 def lambd_zero(T):
-    
     lambd = zeros_like(T)
     valid = T > 0
-    
     return lambd, valid
+
+def eta_zero(T):
+    eta   = zeros_like(T)
+    valid = T > 0
+    return eta, valid
+
+def mu_zero(T):
+    mu    = zeros_like(T)
+    valid = T > 0
+    return mu, valid
 
 # === ZERO FUNCTIONS ==========================================================
 ###############################################################################

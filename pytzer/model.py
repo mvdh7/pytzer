@@ -94,10 +94,19 @@ def Gex_nRT(mols,ions,T,cfdict):
         # Add c-a interactions
         for A, anion in enumerate(anions):
             
-            iset = '-'.join([cation0,anion])
+            iset = '-'.join((cation0,anion))
 
             Gex_nRT = Gex_nRT + vstack(cats[:,C0] * anis[:,A]) \
                 * (2*B(T,I,cfdict,iset) + Z*CT(T,I,cfdict,iset))
+                
+            # Add n-c-a interactions
+            for N, neutral in enumerate(neutrals):
+                
+                inca = '-'.join((neutral,iset))
+                
+                Gex_nRT = Gex_nRT \
+                        + vstack(neus[:,N] * cats[:,C0] * anis[:,A]) \
+                        * cfdict.eta[inca](T)[0]
 
         # Add c-c' interactions
         for xC1, cation1 in enumerate(cations[C0+1:]):
@@ -169,7 +178,14 @@ def Gex_nRT(mols,ions,T,cfdict):
             
             Gex_nRT = Gex_nRT + 2 * vstack(neus[:,N] * anis[:,A0]) \
                                   * cfdict.lambd[ina](T)[0]
-                                  
+
+    # Add n-n-n interactions
+    for N, neutral in enumerate(neutrals):
+        
+        innn = '-'.join((neutral,neutral,neutral))
+        
+        Gex_nRT = Gex_nRT + vstack(neus[:,N]**3) * cfdict.mu[innn](T)[0]
+
 
     return Gex_nRT
 

@@ -12,12 +12,14 @@ class CoefficientDictionary:
 
     # Initialise
     def __init__(self):
-        self.dh    = {}
-        self.bC    = {}
-        self.theta = {}
-        self.jfunc = []
-        self.psi   = {}
-        self.lambd = {}
+        self.dh    = {} # Aosm
+        self.bC    = {} # c-a
+        self.theta = {} # c-c' and a-a'
+        self.jfunc = [] # unsymmetrical mixing
+        self.psi   = {} # c-c'-a and c-a-a'
+        self.lambd = {} # n-c and n-a
+        self.eta   = {} # n-c-a
+        self.mu    = {} # n-n-n
         self.ions  = array([],'U')
 
     # Populate with zero-functions
@@ -68,19 +70,32 @@ class CoefficientDictionary:
                     if istr not in self.psi.keys():
                         self.psi[istr] = coeffs.psi_zero
                         
-        # n-x lambdas
-        for N, neutral in enumerate(neutrals):
+        # Neutral interactions
+        for neutral in neutrals:
             
+            # n-c lambdas
             for cation in cations:
                 inc = '-'.join((neutral,cation))
                 if inc not in self.lambd.keys():
                     self.lambd[inc] = coeffs.lambd_zero
                     
+                # n-c-a etas    
+                for anion in anions:
+                    inca = '-'.join((neutral,cation,anion))
+                    if inca not in self.eta.keys():
+                        self.eta[inca] = coeffs.eta_zero
+                    
+            # n-a lambdas
             for anion in anions:
                 ina = '-'.join((neutral,anion))
                 if ina not in self.lambd.keys():
                     self.lambd[ina] = coeffs.lambd_zero
-
+                    
+            # n-n-n mus
+            innn = '-'.join((neutral,neutral,neutral))
+            if innn not in self.mu.keys():
+                self.mu[innn] = coeffs.mu_zero
+            
 
 #==============================================================================
 #=============================== Define specific coefficient dictionaries =====
