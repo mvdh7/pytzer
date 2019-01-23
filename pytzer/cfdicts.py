@@ -2,6 +2,7 @@
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 
 from . import coeffs, jfuncs, props
+from .meta import version
 from numpy import array
 from copy import deepcopy
 
@@ -12,6 +13,7 @@ class CoefficientDictionary:
 
     # Initialise
     def __init__(self):
+        self.name  = ''
         self.dh    = {} # Aosm
         self.bC    = {} # c-a
         self.theta = {} # c-c' and a-a'
@@ -100,6 +102,9 @@ class CoefficientDictionary:
     def print_coeffs(self,T,filename):
         
         f = open(filename,'w')
+        
+        f.write('Coefficient dictionary: {} [pytzer-v{}]\n\n'.format( \
+                self.name,version))
         
         f.write('Aosm\n')
         f.write('====\n')
@@ -195,6 +200,7 @@ class CoefficientDictionary:
 # System: Na-Ca-Cl-SO4
 
 M88 = CoefficientDictionary()
+M88.name = 'M88'
 
 # Debye-Hueckel limiting slope
 M88.dh['Aosm'] = coeffs.Aosm_M88
@@ -231,6 +237,7 @@ M88.psi['Na-Cl-SO4'] = coeffs.psi_Na_Cl_SO4_M88
 # System: Na-K-Ca-Cl-SO4
 
 GM89 = CoefficientDictionary()
+GM89.name = 'GM89'
 
 # Debye-Hueckel limiting slope
 GM89.dh['Aosm'] = coeffs.Aosm_M88
@@ -276,6 +283,7 @@ GM89.psi['Na-Cl-SO4'] = coeffs.psi_Na_Cl_SO4_M88
 # System: H-HSO4-SO4
 
 CRP94 = CoefficientDictionary()
+CRP94.name = 'CRP94'
 
 # Debye-Hueckel limiting slope
 CRP94.dh['Aosm'] = coeffs.Aosm_CRP94
@@ -302,6 +310,7 @@ CRP94.psi['H-HSO4-SO4'] = coeffs.psi_H_HSO4_SO4_CRP94
 #  doi:10.1016/j.marchem.2012.11.003
 
 WM13 = CoefficientDictionary()
+WM13.name = 'WM13'
 
 # Debye-Hueckel limiting slope and unsymmetrical mixing
 WM13.dh['Aosm'] = coeffs.Aosm_M88
@@ -434,6 +443,7 @@ WM13.psi['Ca-K-HSO4'] = coeffs.psi_zero
 
 # Begin with WM13
 MarChemSpec = deepcopy(WM13)
+MarChemSpec.name = 'MarChemSpec'
 
 # Add coefficients from GT17 Supp. Info. Table S6 (simultaneous optimisation)
 MarChemSpec.bC['Na-Cl'    ] = coeffs.bC_Na_Cl_GT17_simopt

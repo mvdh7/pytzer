@@ -1,5 +1,5 @@
 import pytzer as pz
-#import numpy as np
+#import numpy as np 
 
 filename = 'testfiles/GenerateConcs.csv'
 
@@ -7,9 +7,11 @@ mols,ions,T = pz.io.getmols(filename)
 
 cf = pz.cfdicts.MarChemSpec
 
+# Print out coefficient values to file
+
 cf.print_coeffs(298.15,'print_coeffs/pytzer_MarChemSpec_25.txt')
 
-## Cut out zero ionic strengths
+## Cut out zero ionic strengths and do calculations
 #
 #zs = pz.props.charges(ions)[0]
 #I = np.vstack(0.5 * (np.sum(mols * zs**2, 1)))

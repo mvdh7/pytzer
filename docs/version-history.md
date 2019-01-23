@@ -7,9 +7,10 @@
   * Fixed fatal indexing error in **model.Gex_nRT**
   * Added **cfdict** for the Waters and Millero (2013) model
   * Added **cfdict** for MarChemSpec project testing
-  * Added some coefficient functions from Gallego-Urrea and Turner (2017)
+  * Added *some* coefficient values from Gallego-Urrea and Turner (2017)
   * Added equations for neutral solute interactions to **model.Gex_nRT** and supporting functions in **cfdicts**
   * Added **CoefficientDictionary** method **print_coeffs** to evaluate all model coefficients at a given temperature
+  * Added **meta** module as single-source-of-truth for package version
 
 ## 0.2.0
 

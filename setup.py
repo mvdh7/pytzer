@@ -1,11 +1,12 @@
 import setuptools
+from pytzer import __version__
 
 with open('README.md','r') as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name         = 'pytzer',
-    version      = '0.2.0',
+    version      = __version__,
     author       = 'Matthew P. Humphreys',
     author_email = 'm.p.humphreys@cantab.net',
     description  = 'Pitzer model for chemical speciation',
