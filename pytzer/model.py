@@ -91,15 +91,17 @@ def Gex_nRT(mols,ions,T,cfdict):
 
     # Add c-c' interactions
     for C0, cation0 in enumerate(cations):
-        for C1, cation1 in enumerate(cations[C0+1:]):
-
+        for xC1, cation1 in enumerate(cations[C0+1:]):
+            
+            C1 = xC1 + C0 + 1
+            
             iset = [cation0,cation1]
             iset.sort()
             iset= '-'.join(iset)
 
             Gex_nRT = Gex_nRT + vstack(cats[:,C0] * cats[:,C1]) \
                 * 2 * cfdict.theta[iset](T)[0]
-
+            
             # Unsymmetrical mixing terms
             if zCs[C0] != zCs[C1]:
 
@@ -116,7 +118,9 @@ def Gex_nRT(mols,ions,T,cfdict):
 
     # Add a-a' interactions
     for A0, anion0 in enumerate(anions):
-        for A1, anion1 in enumerate(anions[A0+1:]):
+        for xA1, anion1 in enumerate(anions[A0+1:]):
+            
+            A1 = xA1 + A0 + 1
 
             iset = [anion0,anion1]
             iset.sort()
