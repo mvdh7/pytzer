@@ -10,9 +10,11 @@ There are three different types of coefficient functions, each representing a di
 
   1. `psi_` functions
 
+We do not provide a full list of the functions currently at this point (but would like to in the future). There are a number of functions in **pytzer.coeffs** that are not used by any of the ready-made **cfdicts**.
+
 ## Syntax
 
-The functions use the following formats. Within the function titles, **cation**, **anion** and **source** should be replaced with appropriate values. The input `T` is a numpy vstack of temperature values (in K), for example as produced by **pytzer.io.getmols**.
+The functions use the following formats. Within the function titles, **cation**, **anion** and **source** should be replaced with appropriate values, as described on the page about [naming conventions](../../name-conventions). The input `T` is a numpy vstack of temperature values (in K), for example as produced by **pytzer.io.getmols**.
 
 ### `bC_` function syntax
 

@@ -40,7 +40,7 @@ The input file `filename` should be formatted as follows:
 
 The header of the column containing the temperatures (in K) must be `temp`.
 
-The other columns should be headed with the chemical symbol for the ion, excluding the charge, and without any brackets. Only *internal* stoichiometry should be included: SO<sub>4</sub><sup>2−</sup> becomes `SO4`; Na<sup>+</sup> becomes `Na`, and would *not* be `Na2` even if a solution of Na<sub>2</sub>SO<sub>4</sub> was under investigation.
+The other columns should be headed with the chemical symbol for the ion, excluding the charge, and without any brackets. Only *internal* stoichiometry should be included: SO<sub>4</sub><sup>2−</sup> becomes `SO4`; Na<sup>+</sup> becomes `Na`, and would *not* be `Na2` even if a solution of Na<sub>2</sub>SO<sub>4</sub> was under investigation. For a more detailed explanation, see the [section on naming conventions](../../name-conventions).
 
 The order of the columns does not matter.
 

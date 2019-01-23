@@ -7,7 +7,7 @@
 
 ## pytzer.props.charges
 
-For an input array of ion names, returns the charge on each ion, and separate lists of cations and anions.
+For an input array of ion names - following the **pytzer** [naming conventions](../../name-conventions) - returns the charge on each ion, and separate lists of cations and anions.
 
 ### Syntax
 

@@ -1,7 +1,7 @@
 site_name: pytzer
 site_author: Matthew P. Humphreys
 site_description: Pitzer model for chemical speciation
-copyright: Copyright &copy; 2019 Matthew Paul Humphreys (GNU GPLv3).
+copyright: Copyright &copy; 2019 Matthew P. Humphreys (GNU GPLv3).
 repo_url: https://github.com/mvdh7/pytzer
 
 theme:
@@ -9,11 +9,12 @@ theme:
 
 nav:
     - Overview: index.md
+    - Conventions: name-conventions.md
     - pytzer modules:
-        - .io – import and export:          modules/io.md
-        - .cfdicts – coefficient dictionaries:   modules/cfdicts.md
+        - .io – import and export:             modules/io.md
+        - .cfdicts – coefficient dictionaries: modules/cfdicts.md
         - .model – the Pitzer model:           modules/model.md
-        - .coeffs – interaction coefficients:   modules/coeffs.md
-        - .jfuncs – unsymmetrical mixing:       modules/jfuncs.md
+        - .coeffs – interaction coefficients:  modules/coeffs.md
+        - .jfuncs – unsymmetrical mixing:      modules/jfuncs.md
         - .props – universal ionic properties: modules/props.md
-        - .constants – physical constants:         modules/constants.md
+        - .constants – physical constants:     modules/constants.md

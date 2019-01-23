@@ -67,7 +67,7 @@ The function for the Debye-Hückel limiting slope (i.e. <i>A<sub>ϕ</sub></i>) i
 
 ### Cation-anion interactions
 
-Functions to evaluate the *β* and *C* coefficients for interactions between cations and anions are contained within the `cfdict.bC` dict. The function for each specific interaction gets its own field within the dict. The fields are named as `<cation>-<anion>`, with the ionic names matching those described [for an input file](../io/#pytzeriogetmols). Some examples:
+Functions to evaluate the *β* and *C* coefficients for interactions between cations and anions are contained within the `cfdict.bC` dict. The function for each specific interaction gets its own field within the dict. The fields are named as `<cation>-<anion>`, with the ionic names matching those described [for an input file](../io/#pytzeriogetmols) - see the page on [naming conventions](../../name-conventions) for a full description. Some examples:
 
 ```python
 cfdict.bC['Na-Cl'] = <Na-Cl interaction coefficients function>
