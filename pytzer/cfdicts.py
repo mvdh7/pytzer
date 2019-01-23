@@ -24,13 +24,15 @@ class CoefficientDictionary:
     def add_zeros(self,ions):
 
         # Get lists of cations and anions
-        _,cations,anions,_ = props.charges(ions)
+        _,cations,anions,neutrals = props.charges(ions)
 
         # Sort lists into alphabetical order
         cations.sort()
         anions.sort()
 
         # Populate cfdict with zero functions where no function exists
+        
+        # betas and Cs
         for cation in cations:
             for anion in anions:
 
@@ -38,6 +40,7 @@ class CoefficientDictionary:
                 if istr not in self.bC.keys():
                     self.bC[istr] = coeffs.bC_zero
 
+        # c-c'-a thetas and psis
         for C0, cation0 in enumerate(cations):
             for cation1 in cations[C0+1:]:
 
@@ -51,6 +54,7 @@ class CoefficientDictionary:
                     if istr not in self.psi.keys():
                         self.psi[istr] = coeffs.psi_zero
 
+        # c-a-a' thetas and psis
         for A0, anion0 in enumerate(anions):
             for anion1 in anions[A0+1:]:
 
@@ -63,6 +67,19 @@ class CoefficientDictionary:
                     istr = '-'.join((cation,anion0,anion1))
                     if istr not in self.psi.keys():
                         self.psi[istr] = coeffs.psi_zero
+                        
+        # n-x lambdas
+        for N, neutral in enumerate(neutrals):
+            
+            for cation in cations:
+                inc = '-'.join((neutral,cation))
+                if inc not in self.lambd.keys():
+                    self.lambd[inc] = coeffs.lambd_zero
+                    
+            for anion in anions:
+                ina = '-'.join((neutral,anion))
+                if ina not in self.lambd.keys():
+                    self.lambd[ina] = coeffs.lambd_zero
 
 
 #==============================================================================

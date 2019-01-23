@@ -23,7 +23,7 @@ def bC_zero(T):
     omega = full_like(T,-9)
     valid = T > 0
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def theta_zero(T):
 
@@ -38,6 +38,13 @@ def psi_zero(T):
     valid = T > 0
 
     return psi, valid
+
+def lambd_zero(T):
+    
+    lambd = zeros_like(T)
+    valid = T > 0
+    
+    return lambd, valid
 
 # === ZERO FUNCTIONS ==========================================================
 ###############################################################################
@@ -86,7 +93,7 @@ def bC_Mg_SO4_RM81i(T):
 
     valid = T == 298.15
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # === RARD & MILLER 1981i =====================================================
 ###############################################################################
@@ -176,7 +183,7 @@ def bC_Mg_SO4_PP86ii(T):
 
     valid = T <= 473.
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # === PHUTELA & PITZER 1986 ===================================================
 ###############################################################################
@@ -216,7 +223,7 @@ def bC_Mg_Cl_dLP83(T):
 
     valid = logical_and(T >= 298.15, T <= 523.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # === DE LIMA & PITZER 1983 ===================================================
 ###############################################################################
@@ -274,7 +281,7 @@ def bC_Cs_Cl_HM83(T):
 
     valid = logical_and(T >= 273.15, T <= 523.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: potassium chloride --------------------------------------------------
 
@@ -315,7 +322,7 @@ def bC_K_Cl_HM83(T):
 
     valid = logical_and(T >= 273.15, T <= 523.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: lithium chloride ----------------------------------------------------
 
@@ -356,7 +363,7 @@ def bC_Li_Cl_HM83(T):
 
     valid = logical_and(T >= 273.15, T <= 523.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # === HOLMES & MESMER 1983 ====================================================
 ###############################################################################
@@ -424,7 +431,7 @@ def bC_K_SO4_HM86(T):
 
     valid = logical_and(T >= 298.15, T <= 523.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: lithium sulfate -----------------------------------------------------
 
@@ -470,7 +477,7 @@ def bC_Na_SO4_HM86(T):
 
     valid = logical_and(T >= 298.15, T <= 523.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # === HOLMES & MESMER 1986 ====================================================
 ###############################################################################
@@ -557,7 +564,7 @@ def bC_Na_OH_PP87i(T):
 
     valid = logical_and(T >= 298.15, T <= 523.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: magnesium chloride --------------------------------------------------
 
@@ -575,7 +582,7 @@ def bC_Mg_Cl_PP87i(T):
 
     valid = logical_and(T >= 298.15, T <= 473.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # === PALABAN & PITZER 1987 ===================================================
 ###############################################################################
@@ -622,7 +629,7 @@ def bC_K_Cl_SRRJ87(T):
 
     valid = logical_and(T >= 278.15, T <= 328.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: sodium chloride -----------------------------------------------------
 
@@ -656,7 +663,7 @@ def bC_Na_Cl_SRRJ87(T):
 
     valid = logical_and(T >= 278.15, T <= 328.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: potassium borate ----------------------------------------------------
 
@@ -690,7 +697,7 @@ def bC_K_BOH4_SRRJ87(T):
 
     valid = logical_and(T >= 278.15, T <= 328.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: sodium borate -------------------------------------------------------
 
@@ -724,7 +731,7 @@ def bC_Na_BOH4_SRRJ87(T):
 
     valid = logical_and(T >= 278.15, T <= 328.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- theta: borate chloride --------------------------------------------------
 
@@ -845,7 +852,7 @@ def bC_Ca_Cl_M88(T):
 
     valid = logical_and(T >= 298.15, T <= 523.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: calcium sulfate -----------------------------------------------------
 
@@ -874,7 +881,7 @@ def bC_Ca_SO4_M88(T):
 
     valid = logical_and(T >= 298.15, T <= 523.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: sodium chloride -----------------------------------------------------
 
@@ -921,7 +928,7 @@ def bC_Na_Cl_M88(T):
 
     valid = logical_and(T >= 273.15, T <= 573.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: sodium sulfate ------------------------------------------------------
 
@@ -968,7 +975,7 @@ def bC_Na_SO4_M88(T):
 
     valid = logical_and(T >= 273.15, T <= 573.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- theta: calcium sodium ---------------------------------------------------
 
@@ -1079,7 +1086,7 @@ def bC_Ca_Cl_GM89(T):
     zCl   = float_(-1)
     C0    = Cphi / (2 * sqrt(np_abs(zCa*zCl)))
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: potassium chloride --------------------------------------------------
 
@@ -1126,7 +1133,7 @@ def bC_K_Cl_GM89(T):
 
     valid = logical_and(T >= 273.15, T <= 523.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: potassium sulfate ---------------------------------------------------
 
@@ -1166,7 +1173,7 @@ def bC_K_SO4_GM89(T):
 
     valid = logical_and(T >= 273.15, T <= 523.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- theta: calcium potassium ------------------------------------------------
 
@@ -1433,7 +1440,7 @@ def bC_Na_Cl_A92ii(T):
     valid = logical_and(T >= 250, T <= 600)
     valid = logical_and(valid, p <= 100)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # === ARCHER 1992 =============================================================
 ###############################################################################
@@ -1558,7 +1565,7 @@ def bC_H_Cl_CMR93(T):
 
     valid = logical_and(T >= 273.15, T <= 328.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- theta: hydrogen potassium -----------------------------------------------
 
@@ -1642,7 +1649,7 @@ def bC_Na_SO4_HPR93(T):
 
     valid = logical_and(T >= 273., T <= 373.)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # === HOVEY, PITZER AND RARD 1993 =============================================
 ###############################################################################
@@ -1739,7 +1746,7 @@ def bC_H_HSO4_CRP94(T):
 
     valid = logical_and(T >= 273.15, T <= 328.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: hydrogen sulfate ----------------------------------------------------
 
@@ -1774,7 +1781,7 @@ def bC_H_SO4_CRP94(T):
 
     valid = logical_and(T >= 273.15, T <= 328.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- theta: bisulfate sulfate ------------------------------------------------
 
@@ -1852,7 +1859,7 @@ def bC_Na_I_MP98(T):
 
     valid = logical_and(T >= 273.15, T <= 323.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: sodium bromide ------------------------------------------------------
 
@@ -1884,7 +1891,7 @@ def bC_Na_Br_MP98(T):
 
     valid = logical_and(T >= 273.15, T <= 323.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: sodium fluoride -----------------------------------------------------
 
@@ -1908,7 +1915,7 @@ def bC_Na_F_MP98(T):
 
     valid = logical_and(T >= 273.15, T <= 323.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: potassium bromide ---------------------------------------------------
 
@@ -1940,7 +1947,7 @@ def bC_K_Br_MP98(T):
 
     valid = logical_and(T >= 273.15, T <= 323.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: potassium fluoride --------------------------------------------------
 
@@ -1972,7 +1979,7 @@ def bC_K_F_MP98(T):
 
     valid = logical_and(T >= 273.15, T <= 323.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: potassium hydroxide -------------------------------------------------
 
@@ -2004,7 +2011,7 @@ def bC_K_OH_MP98(T):
 
     valid = logical_and(T >= 273.15, T <= 323.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: potassium iodide ----------------------------------------------------
 
@@ -2036,7 +2043,7 @@ def bC_K_I_MP98(T):
 
     valid = logical_and(T >= 273.15, T <= 323.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # === MILLERO & PIERROT 1998 ==================================================
 ###############################################################################
@@ -2096,7 +2103,7 @@ def bC_K_Cl_A99(T):
     # Validity range
     valid = logical_and(T >= 260, T <= 420)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # === ARCHER 1999 =============================================================
 ###############################################################################
@@ -2123,7 +2130,7 @@ def bC_Mg_HSO4_RC99(T):
     # Validity range
     valid = T == 298.15
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- psi: hydrogen magnesium bisulfate ---------------------------------------
 
@@ -2461,7 +2468,7 @@ def bC_K_Cl_ZD17(T):
     # Validity range
     valid = T <= 600
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # === ZEZIN & DRIESNER 2017 ===================================================
 ###############################################################################
@@ -2485,7 +2492,7 @@ def bC_Na_Cl_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_Na_SO4_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2501,7 +2508,7 @@ def bC_Na_SO4_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_Na_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2517,7 +2524,7 @@ def bC_Na_HSO4_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_Na_OH_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2533,7 +2540,7 @@ def bC_Na_OH_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_Na_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2549,7 +2556,7 @@ def bC_Na_HCO3_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_Na_CO3_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2565,7 +2572,7 @@ def bC_Na_CO3_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_K_Cl_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2581,7 +2588,7 @@ def bC_K_Cl_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_K_SO4_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2597,7 +2604,7 @@ def bC_K_SO4_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_K_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2613,7 +2620,7 @@ def bC_K_HSO4_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_K_OH_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2629,7 +2636,7 @@ def bC_K_OH_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_K_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2645,7 +2652,7 @@ def bC_K_HCO3_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_K_CO3_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2661,7 +2668,7 @@ def bC_K_CO3_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_Ca_Cl_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2677,7 +2684,7 @@ def bC_Ca_Cl_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_Ca_SO4_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2693,7 +2700,7 @@ def bC_Ca_SO4_HMW84(T):
     alph2 = float_(12)
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_Ca_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2709,7 +2716,7 @@ def bC_Ca_HSO4_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_Ca_OH_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2725,7 +2732,7 @@ def bC_Ca_OH_HMW84(T):
     alph2 = float_(12)
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_Ca_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2741,7 +2748,7 @@ def bC_Ca_HCO3_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_Ca_CO3_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2757,7 +2764,7 @@ def bC_Ca_CO3_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_Mg_Cl_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2773,7 +2780,7 @@ def bC_Mg_Cl_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_Mg_SO4_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2789,7 +2796,7 @@ def bC_Mg_SO4_HMW84(T):
     alph2 = float_(12)
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_Mg_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2805,7 +2812,7 @@ def bC_Mg_HSO4_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_Mg_OH_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2821,7 +2828,7 @@ def bC_Mg_OH_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_Mg_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2837,7 +2844,7 @@ def bC_Mg_HCO3_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_Mg_CO3_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2853,7 +2860,7 @@ def bC_Mg_CO3_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_MgOH_Cl_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2869,7 +2876,7 @@ def bC_MgOH_Cl_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_MgOH_SO4_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2885,7 +2892,7 @@ def bC_MgOH_SO4_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_MgOH_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2901,7 +2908,7 @@ def bC_MgOH_HSO4_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_MgOH_OH_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2917,7 +2924,7 @@ def bC_MgOH_OH_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_MgOH_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2933,7 +2940,7 @@ def bC_MgOH_HCO3_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_MgOH_CO3_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2949,7 +2956,7 @@ def bC_MgOH_CO3_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_H_Cl_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2965,7 +2972,7 @@ def bC_H_Cl_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_H_SO4_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2981,7 +2988,7 @@ def bC_H_SO4_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_H_HSO4_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -2997,7 +3004,7 @@ def bC_H_HSO4_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_H_OH_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -3013,7 +3020,7 @@ def bC_H_OH_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_H_HCO3_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -3029,7 +3036,7 @@ def bC_H_HCO3_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 def bC_H_CO3_HMW84(T):
 # Coefficients from HMW84 Table 1
@@ -3045,7 +3052,7 @@ def bC_H_CO3_HMW84(T):
     alph2 = -9
     omega = -9
     valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- Auto-generated by HMW84_funcgen_cca.py ----------------------------------
 
