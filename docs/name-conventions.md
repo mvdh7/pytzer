@@ -98,6 +98,9 @@ References from the peer-reviewed literature (or 'sources') are written as the i
 <td><code>GM89</code></td>
 <td>Greenberg, J. P., and Møller, N. (1989). The prediction of mineral solubilities in natural waters: A chemical equilibrium model for the Na-K-Ca-Cl-SO<sub>4</sub>-H<sub>2</sub>O system to high concentration from 0 to 250°C. <i>Geochim. Cosmochim. Acta</i> 53, 2503–2518. <a href="https://doi.org/10.1016/0016-7037(89)90124-5">doi:10.1016/0016-7037(89)90124-5</a>.</td></tr><tr>
 
+<td><code>GT17</code></td>
+<td>Gallego-Urrea, J. A., and Turner, D. R. (2017). Determination of pH in estuarine and brackish waters: Pitzer parameters for Tris buffers and dissociation constants for <i>m</i>-cresol purple at 298.15K. <i>Mar. Chem.</i> 195, 84–89. <a href="https://doi.org/10.1016/j.marchem.2017.07.004">doi:10.1016/j.marchem.2017.07.004</a>.</td></tr><tr>
+
 <td><code>HM83</code></td>
 <td>Holmes, H. F., and Mesmer, R. E. (1983). Thermodynamic properties of aqueous solutions of the alkali metal chlorides to 250 °C. <i>J. Phys. Chem.</i> 87, 1242–1255. <a href="https://doi.org/10.1021/j100230a030">doi:10.1021/j100230a030</a>.</td></tr><tr>
 

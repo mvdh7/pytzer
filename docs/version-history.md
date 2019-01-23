@@ -2,10 +2,11 @@
 
 ## 0.2.1
 
-**Release date:** 2019-01-23
+**Release date:** forthcoming
 
-  * Fixed indexing error in **model.Gex_nRT**
-  * Added **cfdict** for Waters and Millero (2013) model
+  * Fixed fatal indexing error in **model.Gex_nRT**
+  * Added **cfdict** for the Waters and Millero (2013) model
+  * Added some coefficient functions from Gallego-Urrea and Turner (2017)
 
 ## 0.2.0
 

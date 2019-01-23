@@ -2159,6 +2159,154 @@ def psi_Mg_HSO4_SO4_RC99(T):
 ###############################################################################
 
 #%%############################################################################
+# === GALLEGO-URREA & TURNER 2017 =============================================
+
+# --- bC: sodium chloride -----------------------------------------------------
+
+def bC_Na_Cl_GT17_simopt(T):
+    
+    # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
+    b0    = full_like(T,0.07722)
+    b1    = full_like(T,0.26768)
+    b2    = zeros_like(T)
+    Cphi  = full_like(T,0.001628)
+    
+    zNa   = float_(+1)
+    zCl   = float_(-1)
+    C0    = Cphi / (2 * sqrt(np_abs(zNa*zCl)))
+    
+    C1    = zeros_like(T)
+    
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    
+    valid = T == 298.15
+    
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# --- bC: trisH+ chloride -----------------------------------------------------
+
+def bC_trisH_Cl_GT17_simopt(T):
+    
+    # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
+    b0     = full_like(T,0.04181)
+    b1     = full_like(T,0.16024)
+    b2     = zeros_like(T)
+    Cphi   = full_like(T,-0.00132)
+    
+    ztrisH = float_(+1)
+    zCl    = float_(-1)
+    C0     = Cphi / (2 * sqrt(np_abs(ztrisH*zCl)))
+    
+    C1     = zeros_like(T)
+    
+    alph1  = float_(2)
+    alph2  = -9
+    omega  = -9
+    
+    valid  = T == 298.15
+    
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# --- bC: trisH+ sulfate ------------------------------------------------------
+
+def bC_trisH_SO4_GT17_simopt(T):
+    
+    # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
+    b0     = full_like(T,0.09746)
+    b1     = full_like(T,0.52936)
+    b2     = zeros_like(T)
+    Cphi   = full_like(T,-0.004957)
+    
+    ztrisH = float_(+1)
+    zSO4   = float_(-2)
+    C0     = Cphi / (2 * sqrt(np_abs(ztrisH*zSO4)))
+    
+    C1     = zeros_like(T)
+    
+    alph1  = float_(2)
+    alph2  = -9
+    omega  = -9
+    
+    valid  = T == 298.15
+    
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# --- theta: hydrogen trisH ---------------------------------------------------
+    
+def theta_H_trisH_GT17_simopt(T):
+    
+    # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
+    theta = full_like(T,-0.00575)
+    valid = T == 298.15
+    
+    return theta, valid
+
+# --- psi: hydrogen trisH chloride --------------------------------------------
+    
+def psi_H_trisH_Cl_GT17_simopt(T):
+    
+    # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
+    psi   = full_like(T,-0.00700)
+    valid = T == 298.15
+    
+    return psi, valid
+
+# --- lambd: tris trisH -------------------------------------------------------
+    
+def lambd_tris_trisH_GT17_simopt(T):
+    
+    # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
+    lambd = full_like(T,0.06306)
+    valid = T == 298.15
+    
+    return lambd, valid
+
+# --- lambd: tris sodium ------------------------------------------------------
+    
+def lambd_tris_Na_GT17_simopt(T):
+    
+    # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
+    lambd = full_like(T,0.01580)
+    valid = T == 298.15
+    
+    return lambd, valid
+
+# --- lambd: tris potassium ---------------------------------------------------
+    
+def lambd_tris_K_GT17_simopt(T):
+    
+    # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
+    lambd = full_like(T,0.02895)
+    valid = T == 298.15
+    
+    return lambd, valid
+
+# --- lambd: tris magnesium ---------------------------------------------------
+    
+def lambd_tris_Mg_GT17_simopt(T):
+    
+    # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
+    lambd = full_like(T,-0.14505)
+    valid = T == 298.15
+    
+    return lambd, valid
+
+# --- lambd: tris calcium -----------------------------------------------------
+    
+def lambd_tris_Ca_GT17_simopt(T):
+    
+    # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
+    lambd = full_like(T,-0.31081)
+    valid = T == 298.15
+    
+    return lambd, valid
+
+# === GALLEGO-URREA & TURNER 2017 =============================================
+###############################################################################
+
+#%%############################################################################
 # === ZEZIN & DRIESNER 2017 ===================================================
 
 def ZD17_eq8(T,p,b):
