@@ -8,6 +8,8 @@
   * Added **cfdict** for the Waters and Millero (2013) model
   * Added **cfdict** for MarChemSpec project testing
   * Added some coefficient functions from Gallego-Urrea and Turner (2017)
+  * Added equations for neutral solute interactions to **model.Gex_nRT** and supporting functions in **cfdicts**
+  * Added **CoefficientDictionary** method **print_coeffs** to evaluate all model coefficients at a given temperature
 
 ## 0.2.0
 

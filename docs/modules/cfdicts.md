@@ -63,7 +63,7 @@ Each field is then filled with functions from **pytzer.coeffs** that define the 
 
 ### Debye-Hückel limiting slope
 
-The function for the Debye-Hückel limiting slope (i.e. <i>A<sub>ϕ</sub></i>) is stored as `CfDict.dh['Aosm']`.
+The function for the Debye-Hückel limiting slope (i.e. <i>A<sub>ϕ</sub></i>) is stored as `CoefficientDictionary.dh['Aosm']`.
 
 ### Cation-anion interactions
 
@@ -129,14 +129,14 @@ Note that the statement to get the **cfdict** (`cfdict = pz.cfdicts.M88`) only r
 
 # Build your own
 
-You can also construct your own **cfdict** from scratch. In the example below, we initialise a `cfdict` using the `pytzer.cfdicts.CfDict` class. We add functions from `pytzer.coeffs` for the system Na-Ca-Cl using functions from Møller (1988). Finally, we use the method `add_zeros` to fill out any interactions that we have neglected to provide functions for with zeros.
+You can also construct your own **cfdict** from scratch. In the example below, we initialise a `cfdict` using the `pytzer.cfdicts.CoefficientDictionary` class. We add functions from `pytzer.coeffs` for the system Na-Ca-Cl using functions from Møller (1988). Finally, we use the method `add_zeros` to fill out any interactions that we have neglected to provide functions for with zeros.
 
 ```python
 import pytzer as pz
 import numpy as np
 
 # Initialise
-myCfdict = pz.cfdicts.CfDict()
+myCfdict = pz.cfdicts.CoefficientDictionary()
 
 # Debye-Hueckel limiting slope
 myCfdict.dh['Aosm'] = coeffs.Aosm_M88
@@ -167,3 +167,13 @@ myCfdict.bC['Ba-SO4']   = coeffs.bC_zero    # ignore Ba-SO4 interactions
 myCfdict.bC['H-Na']     = coeffs.theta_zero # ignore H-Na interactions
 myCfdict.psi['H-Mg-OH'] = coeffs.psi_zero   # ignore H-Mg-OH interactions
 ```
+
+## Print out coefficients
+
+You can use the method **print_coeffs** on a **cfdict** to create a file containing every coefficient, evaluated at a single input temperature of your choice. For example:
+
+```python
+myCfdict.print_coeffs(298.15,'myCoeffs.txt')
+```
+
+would evaluate every coefficient at 298.15 K and print the results to the file **myCoeffs.txt**.
