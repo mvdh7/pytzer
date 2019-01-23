@@ -6,6 +6,7 @@
 
   * Fixed fatal indexing error in **model.Gex_nRT**
   * Added **cfdict** for the Waters and Millero (2013) model
+  * Added **cfdict** for MarChemSpec project testing
   * Added some coefficient functions from Gallego-Urrea and Turner (2017)
 
 ## 0.2.0

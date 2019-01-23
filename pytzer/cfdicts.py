@@ -3,6 +3,7 @@
 
 from . import coeffs, jfuncs, props
 from numpy import array
+from copy import deepcopy
 
 #==============================================================================
 #===================================== Define CoefficientDictionary class =====
@@ -16,6 +17,7 @@ class CoefficientDictionary:
         self.theta = {}
         self.jfunc = []
         self.psi   = {}
+        self.lambd = {}
         self.ions  = array([],'U')
 
     # Populate with zero-functions
@@ -308,5 +310,28 @@ WM13.psi['Ca-K-Cl'  ] = coeffs.psi_Ca_K_Cl_HMW84
 WM13.psi['Ca-K-SO4' ] = coeffs.psi_zero
 WM13.psi['Ca-K-HSO4'] = coeffs.psi_zero
 
+
+#------------------------------------------------------------ MarChemSpec -----
+
+# Begin with WM13
+MarChemSpec = deepcopy(WM13)
+
+# Add coefficients from GT17 Supp. Info. Table S6 (simultaneous optimisation)
+MarChemSpec.bC['Na-Cl'    ] = coeffs.bC_Na_Cl_GT17_simopt
+MarChemSpec.bC['trisH-SO4'] = coeffs.bC_trisH_SO4_GT17_simopt
+MarChemSpec.bC['trisH-Cl' ] = coeffs.bC_trisH_Cl_GT17_simopt
+
+MarChemSpec.theta['H-trisH'] = coeffs.theta_H_trisH_GT17_simopt
+
+MarChemSpec.psi['H-trisH-Cl'] = coeffs.psi_H_trisH_Cl_GT17_simopt
+
+MarChemSpec.lambd['tris-trisH'] = coeffs.lambd_tris_trisH_GT17_simopt
+MarChemSpec.lambd['tris-Na'   ] = coeffs.lambd_tris_Na_GT17_simopt
+MarChemSpec.lambd['tris-K'    ] = coeffs.lambd_tris_K_GT17_simopt
+MarChemSpec.lambd['tris-Mg'   ] = coeffs.lambd_tris_Mg_GT17_simopt
+MarChemSpec.lambd['tris-Ca'   ] = coeffs.lambd_tris_Ca_GT17_simopt
+
+MarChemSpec.add_zeros(array(['H','Na','Mg','Ca','K','MgOH','trisH','Cl','SO4',
+                             'HSO4','OH','tris']))
 
 #==============================================================================
