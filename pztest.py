@@ -1,28 +1,25 @@
 import pytzer as pz
 import numpy as np
-from autograd import elementwise_grad as egrad
 
-filename = 'testfiles/M88 Table 4.csv'
-#delim = ','
+filename = 'testfiles/GenerateConcs.csv'
 
 mols,ions,T = pz.io.getmols(filename)
 
-cf = pz.cfdicts.M88
+cf = pz.cfdicts.MarChemSpec
 
-cf.add_zeros(np.array(['Na','Ca','Ba','Cl','SO4']))
+# Cut out zero ionic strengths
 
-osm = pz.model.osm(mols,ions,T,cf)
+zs = pz.props.charges(ions)[0]
+I = np.vstack(0.5 * (np.sum(mols * zs**2, 1)))
 
-aw = pz.model.osm2aw(mols,osm)
+Gex_nRT = np.full_like(T   , np.nan)
+osm     = np.full_like(T   , np.nan)
+acfs    = np.full_like(mols, np.nan)
 
-acfs = pz.model.acfs(mols,ions,T,cf)
+L = (I > 0).ravel()
 
-tx = np.array([1])
+nargs = (mols[L,:], ions, T[L], cf)
 
-tJ = pz.jfuncs._Harvie_J(tx)
-
-tJscipy = pz.jfuncs._Harvie_J_drv(tx)
-
-fJegrad = egrad(pz.jfuncs._Harvie_J)
-
-tJegrad = fJegrad(tx)
+Gex_nRT[L  ] = pz.model.Gex_nRT(*nargs)
+osm    [L  ] = pz.model.osm    (*nargs)
+acfs   [L,:] = pz.model.acfs   (*nargs)
