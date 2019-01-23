@@ -44,10 +44,10 @@ Several ready-to-use **cfdicts** are available in this module.
 
 To modify an existing **cfdict**, or create a new one, it is first necessary to understand how they are used within **pytzer**, as follows. A basic understanding of the workings of the Pitzer model is assumed.
 
-A **cfdict** is an object of the class `CfDict` as defined within **pytzer.cfdicts**. From the initalisation function we can see that it contains the following fields:
+A **cfdict** is an object of the class `CoefficientDictionary` as defined within **pytzer.cfdicts**. From the initalisation function we can see that it contains the following fields:
 
 ```python
-class CfDict:
+class CoefficientDictionary:
 
     # Initialise
     def __init__(self):

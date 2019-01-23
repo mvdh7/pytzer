@@ -4,9 +4,9 @@
 from . import coeffs, jfuncs, props
 
 #==============================================================================
-#==================================================== Define CfDict class =====
+#===================================== Define CoefficientDictionary class =====
 
-class CfDict:
+class CoefficientDictionary:
 
     # Initialise
     def __init__(self):
@@ -62,7 +62,7 @@ class CfDict:
 
 
 #==============================================================================
-#================================================ Define specific cfdicts =====
+#=============================== Define specific coefficient dictionaries =====
 
 #------------------------------------------------------------ Møller 1988 -----
 
@@ -71,7 +71,7 @@ class CfDict:
 #
 # System: Na-Ca-Cl-SO4
 
-M88 = CfDict()
+M88 = CoefficientDictionary()
 
 # Debye-Hueckel limiting slope
 M88.dh['Aosm'] = coeffs.Aosm_M88
@@ -107,7 +107,7 @@ M88.psi['Na-Cl-SO4'] = coeffs.psi_Na_Cl_SO4_M88
 #
 # System: Na-K-Ca-Cl-SO4
 
-GM89 = CfDict()
+GM89 = CoefficientDictionary()
 
 # Debye-Hueckel limiting slope
 GM89.dh['Aosm'] = coeffs.Aosm_M88
@@ -152,7 +152,7 @@ GM89.psi['Na-Cl-SO4'] = coeffs.psi_Na_Cl_SO4_M88
 #
 # System: H-HSO4-SO4
 
-CRP94 = CfDict()
+CRP94 = CoefficientDictionary()
 
 # Debye-Hueckel limiting slope
 CRP94.dh['Aosm'] = coeffs.Aosm_CRP94
