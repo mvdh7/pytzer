@@ -5,6 +5,15 @@
 
 Pitzer model for chemical speciation, under ongoing testing and development.
 
-Documentation available: [pytzer.rtfd.io](https://pytzer.readthedocs.io/en/latest/)
+Installation with conda/pip:
+
+```
+conda create -n pytzer python=3.6 numpy=1.15
+[source] activate pytzer
+pip install autograd
+pip install pytzer
+```
+
+Further documentation available: [pytzer.rtfd.io](https://pytzer.readthedocs.io/en/latest/)
 
 Implemented by Matthew P. Humphreys, University of East Anglia, Norwich, UK.
