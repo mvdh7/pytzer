@@ -14,6 +14,7 @@ def charges(ions):
          'K'    : float_(+1),
          'Li'   : float_(+1),
          'Mg'   : float_(+2),
+         'MgOH' : float_(+1),
          'Na'   : float_(+1),
          'trisH': float_(+1),
          'Zn'   : float_(+2),
