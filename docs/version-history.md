@@ -11,6 +11,7 @@
   * Added equations for neutral solute interactions to **model.Gex_nRT** and supporting functions in **cfdicts**
   * Added **CoefficientDictionary** method **print_coeffs** to evaluate all model coefficients at a given temperature
   * Added **meta** module as single-source-of-truth for package version
+  * Updated documentation with basic information on neutral solutes
 
 ## 0.2.0
 

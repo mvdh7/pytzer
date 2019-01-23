@@ -51,11 +51,15 @@ class CoefficientDictionary:
 
     # Initialise
     def __init__(self):
-        self.dh    = {}
-        self.bC    = {}
-        self.theta = {}
-        self.jfunc = []
-        self.psi   = {}
+        self.name  = ''
+        self.dh    = {} # Aosm
+        self.bC    = {} # c-a
+        self.theta = {} # c-c' and a-a'
+        self.jfunc = [] # unsymmetrical mixing
+        self.psi   = {} # c-c'-a and c-a-a'
+        self.lambd = {} # n-c and n-a
+        self.eta   = {} # n-c-a
+        self.mu    = {} # n-n-n
 ```
 
 Each field is then filled with functions from **pytzer.coeffs** that define the Pitzer model interaction coefficients, as follows. (Descriptions of the required contents of the functions themselves are in the separate <a href="../coeffs"><strong>pytzer.coeffs</strong> documentation</a>.)
@@ -103,6 +107,19 @@ cfdict.psi['Mg-Na-SO4'] = <Mg-Na-SO4 interaction coefficients function>
 cfdict.psi['Na-Cl-SO4'] = <Na-Cl-SO4 interaction coefficients function>
 ```
 
+
+### Neutral interactions
+
+Functions that evaluate the *λ*, *η* and *μ* coefficients for the interactions between a neutral solute and an ion (*λ*), the three-way between a neutral, cation and anion (*η*) and the three-way between three neutrals of the same kind (*μ*) are contained within `cfdict.lambd`, `cfdict.eta` and `cfdict.mu` respectively.
+
+The field names obey the rules, in order of precedence:
+
+  2. Neutrals first, then cations, then anions;
+
+  2. In alphabetical order.
+
+Assigning functions is exactly the same as described for the other interaction types.
+
 ### Unsymmetrical mixing terms
 
 A function to evaluate the J and J' equations are contained in `cfdict.jfunc`. Unlike the other fields within the **cfdict**, only one function is provided, so this field directly contains the relevant function, rather than storing it in a dict.
@@ -123,7 +140,19 @@ cfdict = pz.cfdicts.M88
 cfdict.bC['Na-Cl'] = pz.coeffs.bC_Na_Cl_A92ii
 ```
 
-Note that the statement to get the **cfdict** (`cfdict = pz.cfdicts.M88`) only references, not copies, from **pytzer.cfdicts**.
+Note that the statement to get the **cfdict** (`cfdict = pz.cfdicts.M88`) only references, not copies, from **pytzer.cfdicts**. To copy, and make changes without modifying the original, use:
+
+```python
+import pytzer as pz
+from copy import deepcopy
+
+# Get Møller (1988) cfdict
+cfdict = deepcopy(pz.cfdicts.M88)
+cfdict.name = 'M88-modified' # so we know it's been changed
+
+# Update Na-Cl interaction function to Archer (1992)
+cfdict.bC['Na-Cl'] = pz.coeffs.bC_Na_Cl_A92ii
+```
 
 <hr />
 

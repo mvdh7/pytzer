@@ -22,7 +22,6 @@ class CoefficientDictionary:
         self.lambd = {} # n-c and n-a
         self.eta   = {} # n-c-a
         self.mu    = {} # n-n-n
-        self.ions  = array([],'U')
 
     # Populate with zero-functions
     def add_zeros(self,ions):
@@ -35,7 +34,7 @@ class CoefficientDictionary:
         anions.sort()
 
         # Populate cfdict with zero functions where no function exists
-        
+
         # betas and Cs
         for cation in cations:
             for anion in anions:
@@ -71,123 +70,123 @@ class CoefficientDictionary:
                     istr = '-'.join((cation,anion0,anion1))
                     if istr not in self.psi.keys():
                         self.psi[istr] = coeffs.psi_zero
-                        
+
         # Neutral interactions
         for neutral in neutrals:
-            
+
             # n-c lambdas
             for cation in cations:
                 inc = '-'.join((neutral,cation))
                 if inc not in self.lambd.keys():
                     self.lambd[inc] = coeffs.lambd_zero
-                    
-                # n-c-a etas    
+
+                # n-c-a etas
                 for anion in anions:
                     inca = '-'.join((neutral,cation,anion))
                     if inca not in self.eta.keys():
                         self.eta[inca] = coeffs.eta_zero
-                    
+
             # n-a lambdas
             for anion in anions:
                 ina = '-'.join((neutral,anion))
                 if ina not in self.lambd.keys():
                     self.lambd[ina] = coeffs.lambd_zero
-                    
+
             # n-n-n mus
             innn = '-'.join((neutral,neutral,neutral))
             if innn not in self.mu.keys():
                 self.mu[innn] = coeffs.mu_zero
-                
+
     # Print all coefficient values at a given temperature
     def print_coeffs(self,T,filename):
-        
+
         f = open(filename,'w')
-        
+
         f.write('Coefficient dictionary: {} [pytzer-v{}]\n\n'.format( \
                 self.name,version))
-        
+
         f.write('Aosm\n')
         f.write('====\n')
-        
+
         eval_Aosm = self.dh['Aosm'](T)[0]
-        
+
         f.write('{:11.9f}\n'.format(eval_Aosm))
-        
+
         f.write('\n')
         f.write('c-a: b0, b1, b2, C0, C1, alph1, alph2, omega\n')
         f.write('============================================\n')
-        
+
         for bC in self.bC.keys():
-            
+
             cation,anion = bC.split('-')
             b0,b1,b2,C0,C1, alph1,alph2,omega, _ = self.bC[bC](T)
-            
+
             f.write(''.join(('{:6s} {:6s} {:>12.5e} {:>12.5e} {:>12.5e} ',
                              '{:>12.5e} {:>12.5e} {:>4.1f} {:>4.1f} ', \
                              '{:>4.1f}\n')).format(cation,anion,b0,b1,b2,C0,C1,
                                                    alph1,alph2,omega))
-    
+
         f.write('\n')
         f.write('i-i\': theta\n')
         f.write('===========\n')
-    
+
         for theta in self.theta.keys():
-            
+
             ion0,ion1 = theta.split('-')
             eval_theta = self.theta[theta](T)[0]
-            
+
             f.write('{:6s} {:6s} {:>12.5e}\n'.format(ion0,ion1,eval_theta))
-            
+
         f.write('\n')
         f.write('i-i\'-j: psi\n')
         f.write('===========\n')
-            
+
         for psi in self.psi.keys():
-            
+
             ion0,ion1,ion2 = psi.split('-')
             eval_psi = self.psi[psi](T)[0]
-            
+
             f.write('{:6s} {:6s} {:6s} {:>12.5e}\n'.format(ion0,ion1,ion2,
                                                            eval_psi))
 
         f.write('\n')
         f.write('n-i: lambd\n')
         f.write('==========\n')
-            
+
         for lambd in self.lambd.keys():
-            
+
             neutral0,neutral1 = lambd.split('-')
             eval_lambd = self.lambd[lambd](T)[0]
-            
+
             f.write('{:6s} {:6s} {:>12.5e}\n'.format(neutral0,neutral1,
                                                      eval_lambd))
-            
+
         f.write('\n')
         f.write('n-c-a: eta\n')
         f.write('==========\n')
-            
+
         for eta in self.eta.keys():
-            
+
             neutral,cation,anion = eta.split('-')
             eval_eta = self.eta[eta](T)[0]
-            
+
             f.write('{:6s} {:6s} {:6s} {:>12.5e}\n'.format(neutral,cation,
                                                            anion,eval_eta))
-            
+
         f.write('\n')
         f.write('n-n-n: mu\n')
         f.write('=========\n')
-            
+
         for mu in self.mu.keys():
-            
+
             neutral = mu.split('-')[0]
             eval_mu = self.mu[mu](T)[0]
-            
+
             f.write('{:6s} {:6s} {:6s} {:>12.5e}\n'.format(neutral,neutral,
                                                            neutral,eval_mu))
-            
+
         f.close()
-            
+
 
 #==============================================================================
 #=============================== Define specific coefficient dictionaries =====
