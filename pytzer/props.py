@@ -9,8 +9,10 @@ def charges(ions):
     # Define dict of charges
     z = {'Ba'  : float_(+2),
          'Ca'  : float_(+2),
+         'Cs'  : float_(+1),
          'H'   : float_(+1),
          'K'   : float_(+1),
+         'Li'  : float_(+1),
          'Mg'  : float_(+2),
          'Na'  : float_(+1),
          'Zn'  : float_(+2),
