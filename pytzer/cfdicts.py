@@ -188,7 +188,7 @@ WM13.dh['Aosm'] = coeffs.Aosm_M88
 # Table A1: Na salts
 WM13.bC['Na-Cl'  ] = coeffs.bC_Na_Cl_M88
 WM13.bC['Na-SO4' ] = coeffs.bC_Na_SO4_HM86
-#WM13.bC['Na-HSO4'] = coeffs.bC_Na_HSO4_Hovey93
+WM13.bC['Na-HSO4'] = coeffs.bC_zero
 WM13.bC['Na-OH'  ] = coeffs.bC_Na_OH_PP87i
 
 # Table A2: Mg salts

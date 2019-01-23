@@ -45,11 +45,14 @@ The other ions are listed approximately in order of the atomic number of their m
 <td><strong>Formula</strong></td>
 <td><strong>Name in pytzer</strong></td>
 
-</tr><tr><td>Hydroxide</td> <td>OH<sup>−</sup></td> <td><code>OH</code></td>
 </tr><tr><td>Borate</td> <td>B(OH)<sub>4</sub><sup>−</sup></td> <td><code>BOH4</code></td>
+</tr><tr><td>Bicarbonate</td> <td>HCO<sub>3</sub><sup>−</sup></td> <td><code>HCO3</code></td>
+</tr><tr><td>Carbonate</td> <td>CO<sub>3</sub><sup>2−</sup></td> <td><code>CO3</code></td>
+</tr><tr><td>TrisH<sup>+</sup></td> <td>(HOCH<sub>2</sub>)<sub>3</sub>CNH<sub>3</sub><sup>+</sup></td> <td><code>trisH</code></td>
+</tr><tr><td>Hydroxide</td> <td>OH<sup>−</sup></td> <td><code>OH</code></td>
 </tr><tr><td>Bisulfate</td> <td>HSO<sub>4</sub><sup>−</sup></td> <td><code>HSO4</code></td>
 </tr><tr><td>Sulfate</td> <td>SO<sub>4</sub><sup>2−</sup></td> <td><code>SO4</code></td>
-</tr><tr><td>trisH<sup>+</sup></td> <td>(HOCH<sub>2</sub>)<sub>3</sub>CNH<sub>3</sub><sup>+</sup></td> <td><code>trisH</code></td>
+</tr><tr><td>Magnesium hydroxide</td> <td>MgOH<sup>+</sup></td> <td><code>MgOH</code></td>
 
 </tr></table>
 
@@ -63,7 +66,7 @@ Neutral species are referred to as `ions` throughout **pytzer**, for simplicity'
 <td><strong>Formula</strong></td>
 <td><strong>Name in pytzer</strong></td>
 
-</tr><tr><td>tris</td> <td>(HOCH<sub>2</sub>)<sub>3</sub>CNH<sub>2</sub></td> <td><code>tris</code></td>
+</tr><tr><td>Tris</td> <td>(HOCH<sub>2</sub>)<sub>3</sub>CNH<sub>2</sub></td> <td><code>tris</code></td>
 
 </tr></table>
 
@@ -98,8 +101,14 @@ References from the peer-reviewed literature (or 'sources') are written as the i
 <td><code>HM83</code></td>
 <td>Holmes, H. F., and Mesmer, R. E. (1983). Thermodynamic properties of aqueous solutions of the alkali metal chlorides to 250 °C. <i>J. Phys. Chem.</i> 87, 1242–1255. <a href="https://doi.org/10.1021/j100230a030">doi:10.1021/j100230a030</a>.</td></tr><tr>
 
+<td><code>HMW84</code></td>
+<td>Harvie, C. E., Møller, N., and Weare, J. H. (1984). The prediction of mineral solubilities in natural waters: The Na-K-Mg-Ca-H-Cl-SO<sub>4</sub>-OH-HCO<sub>3</sub>-CO<sub>3</sub>-CO<sub>2</sub>-H<sub>2</sub>O system to high ionic strengths at 25°C. <i>Geochim. Cosmochim. Acta</i> 48, 723–751. <a href="https://doi.org/10.1016/0016-7037(84)90098-X">doi:10.1016/0016-7037(84)90098-X</a>.</td></tr><tr>
+
 <td><code>HM86</code></td>
 <td>Holmes, H. F., and Mesmer, R. E. (1986). Thermodynamics of aqueous solutions of the alkali metal sulfates. <i>J. Solution Chem.</i> 15, 495–517. <a href="https://doi.org/10.1007/BF00644892">doi:10.1007/BF00644892</a>.</td></tr><tr>
+
+<td><code>HPR93</code></td>
+<td>Hovey, J. K., Pitzer, K. S., and Rard, J. A. (1993). Thermodynamics of Na<sub>2</sub>SO<sub>4</sub>(aq) at temperatures <i>T</i> from 273 K to 373 K and of {(1-<i>y</i>)H<sub>2</sub>SO<sub>4</sub>+<i>y</i>Na<sub>2</sub>SO<sub>4</sub>}(aq) at <i>T</i> = 298.15 K.  <a href="https://doi.org/10.1006/jcht.1993.1016">doi:10.1006/jcht.1993.1016</a>.</td></tr><tr>
 
 <td><code>M88</code></td>
 <td>Møller, N. (1988). The prediction of mineral solubilities in natural waters: A chemical equilibrium model for the Na-Ca-Cl-SO<sub>4</sub>-H<sub>2</sub>O system, to high temperature and concentration. <i>Geochim. Cosmochim. Acta</i> 52, 821–837. <a href="https://doi.org/10.1016/0016-7037(88)90354-7">doi:10.1016/0016-7037(88)90354-7</a>.</td></tr><tr>
@@ -121,6 +130,9 @@ References from the peer-reviewed literature (or 'sources') are written as the i
 
 <td><code>SRRJ87</code></td>
 <td>Simonson, J. M., Roy, R. N., Roy, L. N., and Johnson, D. A. (1987). The thermodynamics of aqueous borate solutions I. Mixtures of boric acid with sodium or potassium borate and chloride. <i>J. Solution Chem.</i> 16, 791–803. <a href="https://doi.org/10.1007/BF00650749">doi:10.1007/BF00650749</a>.</td></tr><tr>
+
+<td><code>WM13</code></td>
+<td>Waters, J. F., and Millero, F. J. (2013). The free proton concentration scale for seawater pH. <i>Mar. Chem.</i> 149, 8–22. <a href="https://doi.org/10.1016/j.marchem.2012.11.003">doi:10.1016/j.marchem.2012.11.003</a>.</td></tr><tr>
 
 <td><code>ZD17</code></td>
 <td>Zezin, D., and Driesner, T. (2017). Thermodynamic properties of aqueous KCl solution at temperatures to 600 K, pressures to 150 MPa, and concentrations to saturation. <i>Fluid Phase Equilib.</i> 453, 24–39. <a href="https://doi.org/10.1016/j.fluid.2017.09.001">doi:10.1016/j.fluid.2017.09.001</a>.</td>
