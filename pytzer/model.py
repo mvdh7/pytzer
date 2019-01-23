@@ -65,18 +65,16 @@ def etheta(T,I,z0,z1,cfdict):
 def Gex_nRT(mols,ions,T,cfdict):
 
     # Ionic strength etc.
-    zs = props.charges(ions)[0]
+    zs,cations,anions,_ = props.charges(ions)
     I = vstack(0.5 * (np_sum(mols * zs**2, 1)))
     Z = vstack(np_sum(mols * np_abs(zs), 1))
 
     # Separate cations and anions
     CL = zs > 0
     cats    = mols[:,CL]
-    cations = ions[  CL]
     zCs     = zs  [  CL]
     AL = zs < 0
     anis    = mols[:,AL]
-    anions  = ions[  AL]
     zAs     = zs  [  AL]
 
     # Begin with Debye-Hueckel component

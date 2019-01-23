@@ -20,43 +20,43 @@ class CoefficientDictionary:
     def add_zeros(self,ions):
 
         # Get lists of cations and anions
-        _,cats,anis = props.charges(ions)
+        _,cations,anions,_ = props.charges(ions)
 
         # Sort lists into alphabetical order
-        cats.sort()
-        anis.sort()
+        cations.sort()
+        anions.sort()
 
         # Populate cfdict with zero functions where no function exists
-        for cat in cats:
-            for ani in anis:
+        for cation in cations:
+            for anion in anions:
 
-                istr = '-'.join((cat,ani))
+                istr = '-'.join((cation,anion))
                 if istr not in self.bC.keys():
                     self.bC[istr] = coeffs.bC_zero
 
-        for C0, cat0 in enumerate(cats):
-            for cat1 in cats[C0+1:]:
+        for C0, cation0 in enumerate(cations):
+            for cation1 in cations[C0+1:]:
 
-                istr = '-'.join((cat0,cat1))
+                istr = '-'.join((cation0,cation1))
                 if istr not in self.theta.keys():
                     self.theta[istr] = coeffs.theta_zero
 
-                for ani in anis:
+                for anion in anions:
 
-                    istr = '-'.join((cat0,cat1,ani))
+                    istr = '-'.join((cation0,cation1,anion))
                     if istr not in self.psi.keys():
                         self.psi[istr] = coeffs.psi_zero
 
-        for A0, ani0 in enumerate(anis):
-            for ani1 in anis[A0+1:]:
+        for A0, anion0 in enumerate(anions):
+            for anion1 in anions[A0+1:]:
 
-                istr = '-'.join((ani0,ani1))
+                istr = '-'.join((anion0,anion1))
                 if istr not in self.theta.keys():
                     self.theta[istr] = coeffs.theta_zero
 
-                for cat in cats:
+                for cation in cations:
 
-                    istr = '-'.join((cat,ani0,ani1))
+                    istr = '-'.join((cation,anion0,anion1))
                     if istr not in self.psi.keys():
                         self.psi[istr] = coeffs.psi_zero
 
