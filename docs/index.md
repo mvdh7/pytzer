@@ -4,6 +4,17 @@ title: Overview
 
 **pytzer** is a Python 3.6+ implementation of the Pitzer model for chemical speciation (Pitzer, 1991).
 
+# Installation
+
+With conda/pip:
+
+```
+conda create -n pytzer python=3.6 numpy=1.15
+[source] activate pytzer
+pip install autograd
+pip install pytzer
+```
+
 # Modules
 
 <table><tr>
