@@ -7,7 +7,7 @@ mols,ions,T = pz.io.getmols(filename)
 
 cf = pz.cfdicts.MarChemSpec
 
-cf.print_coeffs(298.15,'print_coeffs/MarChemSpec25.txt')
+cf.print_coeffs(298.15,'print_coeffs/pytzer_MarChemSpec_25.txt')
 
 ## Cut out zero ionic strengths
 #

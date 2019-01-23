@@ -101,6 +101,14 @@ class CoefficientDictionary:
         
         f = open(filename,'w')
         
+        f.write('Aosm\n')
+        f.write('====\n')
+        
+        eval_Aosm = self.dh['Aosm'](T)[0]
+        
+        f.write('{:11.9f}\n'.format(eval_Aosm))
+        
+        f.write('\n')
         f.write('c-a: b0, b1, b2, C0, C1, alph1, alph2, omega\n')
         f.write('============================================\n')
         
@@ -110,9 +118,9 @@ class CoefficientDictionary:
             b0,b1,b2,C0,C1, alph1,alph2,omega, _ = self.bC[bC](T)
             
             f.write(''.join(('{:6s} {:6s} {:>12.5e} {:>12.5e} {:>12.5e} ',
-                             '{:>12.5e} {:>12.5e} {:>5.2f} {:>5.2f} {:>5.2f}\n' \
-                             )).format(cation,anion,b0,b1,b2,C0,C1,
-                                       alph1,alph2,omega))
+                             '{:>12.5e} {:>12.5e} {:>4.1f} {:>4.1f} ', \
+                             '{:>4.1f}\n')).format(cation,anion,b0,b1,b2,C0,C1,
+                                                   alph1,alph2,omega))
     
         f.write('\n')
         f.write('i-i\': theta\n')
