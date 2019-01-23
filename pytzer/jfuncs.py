@@ -1,7 +1,8 @@
 # pytzer: the Pitzer model for chemical speciation
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 
-from autograd.numpy import exp, float_, full_like, log, nan, size, zeros
+from autograd.numpy import exp, float_, full_like, log, nan, size, zeros, \
+                           zeros_like
 from autograd import elementwise_grad as egrad
 from autograd.extend import primitive, defvjp
 from scipy.misc import derivative
@@ -21,7 +22,7 @@ def P75_eq46(x):
                     -0.251 ,
                      0.0164])
 
-        Jsum = x * 0
+        Jsum = zeros_like(x)
 
         for k in range(6):
             Jsum = Jsum + C[k] * x**-(k+1)
