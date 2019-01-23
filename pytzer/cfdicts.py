@@ -219,8 +219,8 @@ WM13.bC['MgOH-Cl'] = coeffs.bC_MgOH_Cl_HMW84
 
 # Table A7: cation-cation interactions
 WM13.theta['H-Na' ] = coeffs.theta_H_Na_CMR93
-#WM13.theta['H-Mg' ] = coeffs.theta_H_Mg_Roy80
-#WM13.theta['Ca-H' ] = coeffs.theta_Ca_H_Roy80
+WM13.theta['H-Mg' ] = coeffs.theta_H_Mg_RGB80
+WM13.theta['Ca-H' ] = coeffs.theta_Ca_H_RGO82 # WM13 citation error
 WM13.theta['H-K'  ] = coeffs.theta_H_K_CMR93
 WM13.theta['Mg-Na'] = coeffs.theta_Mg_Na_HMW84
 WM13.theta['Ca-Na'] = coeffs.theta_Ca_Na_HMW84

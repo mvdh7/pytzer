@@ -116,6 +116,9 @@ References from the peer-reviewed literature (or 'sources') are written as the i
 <td><code>MP98</code></td>
 <td>Millero, F. J., and Pierrot, D. (1998). A Chemical Equilibrium Model for Natural Waters. <i>Aquat. Geochem.</i> 4, 153–199. <a href="https://doi.org/10.1023/A:1009656023546">doi:10.1023/A:1009656023546</a>.</td></tr><tr>
 
+<td><code>P91</code></td>
+<td>Pitzer, K. S. (1991). “Ion Interaction Approach: Theory and Data Correlation,” in *Activity Coefficients in Electrolyte Solutions, 2nd Edition*, ed. K. S. Pitzer (CRC Press, Florida, USA), 75–153.</td></tr><tr>
+
 <td><code>PP87i</code></td>
 <td>Pabalan, R. T., and Pitzer, K. S. (1987). Thermodynamics of NaOH(aq) in hydrothermal solutions. <i>Geochim. Cosmochim. Acta</i> 51, 829–837. <a href="https://doi.org/10.1016/0016-7037(87)90096-2">doi:10.1016/0016-7037(87)90096-2</a>.</td></tr><tr>
 
@@ -124,6 +127,12 @@ References from the peer-reviewed literature (or 'sources') are written as the i
 
 <td><code>RC99</code></td>
 <td>Rard, J. A., and Clegg, S. L. (1999). Isopiestic determination of the osmotic and activity coefficients of {<i>z</i>H<sub>2</sub>SO<sub>4</sub>+ (1−<i>z</i>)MgSO<sub>4</sub>}(aq) at <i>T</i> = 298.15 K. II. Results for <i>z</i> = (0.43040, 0.28758, and 0.14399) and analysis with Pitzer's model. <i>J. Chem. Thermodyn.</i> 31, 399–429. <a href="https://doi.org/10.1006/jcht.1998.0461">doi:10.1006/jcht.1998.0461</a>.</td></tr><tr>
+
+<td><code>RGB80</code></td>
+<td>Roy, R. N., Gibbons, J. J., Bliss, D. P., Casebolt, R. G., and Baker, B. K. (1980). Activity coefficients for ternary systems: VI. The system HCl + MgCl<sub>2</sub> + H<sub>2</sub>O at different temperatures; application of Pitzer's equations. <i>J. Solution Chem.</i> 9, 911–930. <a href="https://doi.org/10.1039/F19827801405">doi:10.1039/F19827801405</a>.</td></tr><tr>
+
+<td><code>RGO82</code></td>
+<td>Roy, R. N., Gibbons, J. J., Ovens, L. K., Bliss, G. A., and Hartley, J. J. (1982). Activity coefficients for the system HCl + CaCl<sub>2</sub> + H<sub>2</sub>O at various temperatures. Applications of Pitzer's equations. <i>J. Chem. Soc., Faraday Trans. 1</i> 78, 1405–1422. <a href="https://doi.org/10.1039/F19827801405">doi:10.1039/F19827801405</a>.</td></tr><tr>
 
 <td><code>RM81i</code></td>
 <td>Rard, J. A., and Miller, D. G. (1981). Isopiestic Determination of the Osmotic Coefficients of Aqueous Na<sub>2</sub>SO<sub>4</sub>, MgSO<sub>4</sub>, and Na<sub>2</sub>SO<sub>4</sub>-MgSO<sub>4</sub> at 25 °C. <i>J. Chem. Eng. Data</i> 26, 33–38. <a href="https://doi.org/10.1021/je00023a013">doi:10.1021/je00023a013</a>.</td></tr><tr>
