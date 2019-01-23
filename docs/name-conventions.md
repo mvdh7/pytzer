@@ -49,6 +49,21 @@ The other ions are listed approximately in order of the atomic number of their m
 </tr><tr><td>Borate</td> <td>B(OH)<sub>4</sub><sup>−</sup></td> <td><code>BOH4</code></td>
 </tr><tr><td>Bisulfate</td> <td>HSO<sub>4</sub><sup>−</sup></td> <td><code>HSO4</code></td>
 </tr><tr><td>Sulfate</td> <td>SO<sub>4</sub><sup>2−</sup></td> <td><code>SO4</code></td>
+</tr><tr><td>trisH<sup>+</sup></td> <td>(HOCH<sub>2</sub>)<sub>3</sub>CNH<sub>3</sub><sup>+</sup></td> <td><code>trisH</code></td>
+
+</tr></table>
+
+## Neutral species
+
+Neutral species are referred to as `ions` throughout **pytzer**, for simplicity's sake.
+
+<table><tr>
+
+<td><strong>Solute name</strong></td>
+<td><strong>Formula</strong></td>
+<td><strong>Name in pytzer</strong></td>
+
+</tr><tr><td>tris</td> <td>(HOCH<sub>2</sub>)<sub>3</sub>CNH<sub>2</sub></td> <td><code>tris</code></td>
 
 </tr></table>
 
