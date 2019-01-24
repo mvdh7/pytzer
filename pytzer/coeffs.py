@@ -11,7 +11,7 @@ COEFFS_PRESSURE = float_(0.101325) # MPa
 #%%############################################################################
 # === ZERO FUNCTIONS ==========================================================
 
-def bC_zero(T):
+def bC_none(T):
 
     b0    = zeros_like(T)
     b1    = zeros_like(T)
@@ -25,27 +25,27 @@ def bC_zero(T):
 
     return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
-def theta_zero(T):
+def theta_none(T):
     theta = zeros_like(T)
     valid = T > 0
     return theta, valid
 
-def psi_zero(T):
+def psi_none(T):
     psi   = zeros_like(T)
     valid = T > 0
     return psi, valid
 
-def lambd_zero(T):
+def lambd_none(T):
     lambd = zeros_like(T)
     valid = T > 0
     return lambd, valid
 
-def eta_zero(T):
+def eta_none(T):
     eta   = zeros_like(T)
     valid = T > 0
     return eta, valid
 
-def mu_zero(T):
+def mu_none(T):
     mu    = zeros_like(T)
     valid = T > 0
     return mu, valid
@@ -2170,11 +2170,137 @@ def psi_Mg_HSO4_SO4_RC99(T):
 ###############################################################################
 
 #%%############################################################################
+# === WATERS & MILLERO 2013 ===================================================
+
+# Some are functions that WM13 declared came from another source, but I 
+#  couldn't find them there, so copied directly from WM13 instead.
+#
+# Others were just declared by WM13 as zero. These all seem to agree with
+#  HMW84; it's unclear why HMW84 wasn't cited by WM13 for these.
+    
+# --- bC: sodium sulfate ------------------------------------------------------
+
+def bC_Na_HSO4_HPR93viaWM13(T):
+    # WM13 Table A1 - can't find where HPR93 state this
+    return bC_none(T)
+
+# --- theta: bisulfate sulfate ------------------------------------------------
+    
+def theta_HSO4_SO4_WM13(T):
+    # WM13 Table A7
+    return theta_none(T)
+
+# --- psi: hydrogen chloride sulfate ------------------------------------------
+    
+def psi_H_Cl_SO4_WM13(T):
+    # WM13 Table A8
+    return psi_none(T)
+
+# --- psi: hydrogen chloride hydroxide ----------------------------------------
+    
+def psi_H_Cl_OH_WM13(T):
+    # WM13 Table A8
+    return psi_none(T)
+
+# --- psi: magnesium chloride hydroxide ---------------------------------------
+    
+def psi_Mg_Cl_OH_WM13(T):
+    # WM13 Table A8
+    return psi_none(T)
+
+# --- psi: calcium bisulfate sulfate ------------------------------------------
+    
+def psi_Ca_HSO4_SO4_WM13(T):
+    # WM13 Table A8
+    return psi_none(T)
+
+# --- psi: hydrogen hydroxide sulfate ------------------------------------------
+    
+def psi_H_OH_SO4_WM13(T):
+    # WM13 Table A8
+    return psi_none(T)
+
+# --- psi: magnesium hydroxide sulfate ----------------------------------------
+    
+def psi_Mg_OH_SO4_WM13(T):
+    # WM13 Table A8
+    return psi_none(T)
+
+# --- psi: calcium hydroxide sulfate ------------------------------------------
+    
+def psi_Ca_OH_SO4_WM13(T):
+    # WM13 Table A8
+    return psi_none(T)
+
+# --- psi: hydrogen sodium sulfate --------------------------------------------
+    
+def psi_H_Na_SO4_WM13(T):
+    # WM13 Table A9
+    return psi_none(T)
+
+# --- psi: calcium hydrogen sulfate -------------------------------------------
+    
+def psi_Ca_H_SO4_WM13(T):
+    # WM13 Table A9
+    return psi_none(T)
+
+# --- psi: calcium hydrogen bisulfate -----------------------------------------
+    
+def psi_Ca_H_HSO4_WM13(T):
+    # WM13 Table A9
+    return psi_none(T)
+
+# --- psi: magnesium sodium bisulfate -----------------------------------------
+    
+def psi_Mg_Na_HSO4_WM13(T):
+    # WM13 Table A9
+    return psi_none(T)
+
+# --- psi: calcium sodium bisulfate -------------------------------------------
+    
+def psi_Ca_Na_HSO4_WM13(T):
+    # WM13 Table A9
+    return psi_none(T)
+
+# --- psi: potassium sodium bisulfate -----------------------------------------
+    
+def psi_K_Na_HSO4_WM13(T):
+    # WM13 Table A9
+    return psi_none(T)
+
+# --- psi: calcium magnesium bisulfate ----------------------------------------
+    
+def psi_Ca_Mg_HSO4_WM13(T):
+    # WM13 Table A9
+    return psi_none(T)
+
+# --- psi: potassium magnesium bisulfate --------------------------------------
+    
+def psi_K_Mg_HSO4_WM13(T):
+    # WM13 Table A9
+    return psi_none(T)
+
+# --- psi: calcium potassium sulfate ------------------------------------------
+    
+def psi_Ca_K_SO4_WM13(T):
+    # WM13 Table A9
+    return psi_none(T)
+
+# --- psi: calcium potassium bisulfate ----------------------------------------
+    
+def psi_Ca_K_HSO4_WM13(T):
+    # WM13 Table A9
+    return psi_none(T)
+
+# === WATERS & MILLERO 2013 ===================================================
+###############################################################################
+
+#%%############################################################################
 # === GALLEGO-URREA & TURNER 2017 =============================================
 
 # --- bC: sodium chloride -----------------------------------------------------
 
-def bC_Na_Cl_GT17_simopt(T):
+def bC_Na_Cl_GT17simopt(T):
     
     # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
     b0    = full_like(T,0.07722)
@@ -2198,7 +2324,7 @@ def bC_Na_Cl_GT17_simopt(T):
 
 # --- bC: trisH+ chloride -----------------------------------------------------
 
-def bC_trisH_Cl_GT17_simopt(T):
+def bC_trisH_Cl_GT17simopt(T):
     
     # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
     b0     = full_like(T,0.04181)
@@ -2222,7 +2348,7 @@ def bC_trisH_Cl_GT17_simopt(T):
 
 # --- bC: trisH+ sulfate ------------------------------------------------------
 
-def bC_trisH_SO4_GT17_simopt(T):
+def bC_trisH_SO4_GT17simopt(T):
     
     # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
     b0     = full_like(T,0.09746)
@@ -2246,7 +2372,7 @@ def bC_trisH_SO4_GT17_simopt(T):
 
 # --- theta: hydrogen trisH ---------------------------------------------------
     
-def theta_H_trisH_GT17_simopt(T):
+def theta_H_trisH_GT17simopt(T):
     
     # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
     theta = full_like(T,-0.00575)
@@ -2256,7 +2382,7 @@ def theta_H_trisH_GT17_simopt(T):
 
 # --- psi: hydrogen trisH chloride --------------------------------------------
     
-def psi_H_trisH_Cl_GT17_simopt(T):
+def psi_H_trisH_Cl_GT17simopt(T):
     
     # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
     psi   = full_like(T,-0.00700)
@@ -2266,7 +2392,7 @@ def psi_H_trisH_Cl_GT17_simopt(T):
 
 # --- lambd: tris trisH -------------------------------------------------------
     
-def lambd_tris_trisH_GT17_simopt(T):
+def lambd_tris_trisH_GT17simopt(T):
     
     # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
     lambd = full_like(T,0.06306)
@@ -2276,7 +2402,7 @@ def lambd_tris_trisH_GT17_simopt(T):
 
 # --- lambd: tris sodium ------------------------------------------------------
     
-def lambd_tris_Na_GT17_simopt(T):
+def lambd_tris_Na_GT17simopt(T):
     
     # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
     lambd = full_like(T,0.01580)
@@ -2286,7 +2412,7 @@ def lambd_tris_Na_GT17_simopt(T):
 
 # --- lambd: tris potassium ---------------------------------------------------
     
-def lambd_tris_K_GT17_simopt(T):
+def lambd_tris_K_GT17simopt(T):
     
     # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
     lambd = full_like(T,0.02895)
@@ -2296,7 +2422,7 @@ def lambd_tris_K_GT17_simopt(T):
 
 # --- lambd: tris magnesium ---------------------------------------------------
     
-def lambd_tris_Mg_GT17_simopt(T):
+def lambd_tris_Mg_GT17simopt(T):
     
     # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
     lambd = full_like(T,-0.14505)
@@ -2306,7 +2432,7 @@ def lambd_tris_Mg_GT17_simopt(T):
 
 # --- lambd: tris calcium -----------------------------------------------------
     
-def lambd_tris_Ca_GT17_simopt(T):
+def lambd_tris_Ca_GT17simopt(T):
     
     # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
     lambd = full_like(T,-0.31081)
