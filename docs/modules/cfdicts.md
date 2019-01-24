@@ -21,22 +21,83 @@ This `cfdict` can then be passed into all of the **pytzer.model** functions.
 
 Several ready-to-use **cfdicts** are available in this module.
 
-## GM89: Greenberg and Møller (1989)
+To decode the sources, see the [literature references table](../../name-conventions/#literature-references).
 
- **Source:** Greenberg, J. P., and Møller, N. (1989). The prediction of mineral solubilities in natural waters: A chemical equilibrium model for the Na-K-Ca-Cl-SO<sub>4</sub>-H<sub>2</sub>O system to high concentration from 0 to 250°C. *Geochim. Cosmochim. Acta* 53, 2503–2518. <a href="https://doi.org/10.1016/0016-7037(89)90124-5">doi:10.1016/0016-7037(89)90124-5</a>.
+<table><tr>
 
-**System:** Ca - K - Na - Cl - SO<sub>4</sub>
+<td><strong>cfdict name</strong></td>
+<td><strong>System</strong></td>
+<td><strong>Source</strong></td>
 
-**Validity:** *temperature* from 0 °C to 250 °C
+</tr><tr>
+<td>CRP94</td>
+<td>H<sup>+</sup> :: HSO<sub>4</sub><sup>−</sup> :: SO<sub>4</sub><sup>2−</sup></td>
+<td>Clegg et al. (1994)</td>
+
+</tr><tr>
+<td>GM89</td>
+<td>Ca<sup>2+</sup> :: Cl<sup>−</sup> :: K<sup>+</sup> :: Na<sup>+</sup> :: SO<sub>4</sub><sup>2−</sup></td>
+<td>Greenberg and Møller (1989)</td>
+
+</tr><tr>
+<td>M88</td>
+<td>Ca<sup>2+</sup> :: Cl<sup>−</sup> :: Na<sup>+</sup> :: SO<sub>4</sub><sup>2−</sup></td>
+<td>Møller (1988)</td>
+
+</tr><tr>
+<td>WM13</td>
+<td>Ca<sup>2+</sup> :: Cl<sup>−</sup> :: H<sup>+</sup> :: HSO<sub>4</sub><sup>−</sup> :: K<sup>+</sup> :: Mg<sup>2+</sup> :: MgOH<sup>+</sup> :: Na<sup>+</sup> :: OH<sup>−</sup> :: SO<sub>4</sub><sup>2−</sup></td>
+<td>Waters and Millero (2013)</td>
+
+</tr></table>
+
+<hr />
+
+# cfdict methods
+
+A few handy methods are provided as part of the **CoefficientDictionary** class. Brief summaries are provided below, and here is a usage example of all of them together:
 
 
-## M88: Møller (1988)
+```python
+import pytzer as pz
+import numpy as np
+from copy import deepcopy
 
-**Source:** Møller, N. (1988). The prediction of mineral solubilities in natural waters: A chemical equilibrium model for the Na-Ca-Cl-SO<sub>4</sub>-H<sub>2</sub>O system, to high temperature and concentration. *Geochim. Cosmochim. Acta* 52, 821–837. <a href="https://doi.org/10.1016/0016-7037(88)90354-7">doi:10.1016/0016-7037(88)90354-7</a>.
+# Copy a pre-defined cfdict
+cfdict = deepcopy(pz.cfdicts.M88)
 
-**System:** Ca - Na - Cl - SO<sub>4</sub>
+# Get ions within it
+cfdict.get_contents()
 
-**Validity:** *temperature* from 25 °C to 250 °C; *ionic strength* from 0 to ~18 mol·kg<sup>−1</sup>
+# Add a new ion into the mix
+cfdict.ions = np.append(cfdict.ions,'K')
+
+# Add zero-functions for all interactions with the new ion
+cfdict.add_zeros(cfdict.ions)
+
+# Update cfdict name to show we've changed it
+cfdict.name = 'M88-modified'
+
+# Print out the coefficients evaluated at 298.15 K
+cfdict.print_coeffs(298.15,'coeff_file.txt')
+```
+
+The methods are as follows:
+
+## cfdict.add_zeros
+
+Adds zero-functions for all missing interactions, given a list of ions.
+
+## cfdict.get_contents
+
+Scans through all functions within the **cfdict** and puts a list of all ions and all sources in the relevant fields of the **cfdict** itself (i.e. **cfdict.ions** and **cfdict.srcs**).
+
+Ions and sources are determined from the function names themselves.
+
+## cfdict.print_coeffs
+
+Evaluates all coefficients in a **cfdict** at a single input temperature, and prints the results to a text file.
+
 
 <hr />
 
@@ -120,11 +181,16 @@ The field names obey the rules, in order of precedence:
 
 Assigning functions is exactly the same as described for the other interaction types.
 
+
 ### Unsymmetrical mixing terms
 
 A function to evaluate the J and J' equations are contained in `cfdict.jfunc`. Unlike the other fields within the **cfdict**, only one function is provided, so this field directly contains the relevant function, rather than storing it in a dict.
 
+Different options for the functions needed here can be found in **pytzer.jfuncs**.
+
+
 <hr />
+
 
 # Modify an existing cfdict
 

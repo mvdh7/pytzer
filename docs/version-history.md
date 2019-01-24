@@ -2,16 +2,19 @@
 
 ## 0.2.1
 
-**Release date:** forthcoming
+**Release date:** 2019-01-24
 
-  * Fixed fatal indexing error in **model.Gex_nRT**
-  * Added **cfdict** for the Waters and Millero (2013) model
-  * Added **cfdict** for MarChemSpec project testing
-  * Added *some* coefficient values from Gallego-Urrea and Turner (2017)
-  * Added equations for neutral solute interactions to **model.Gex_nRT** and supporting functions in **cfdicts**
-  * Added **CoefficientDictionary** method **print_coeffs** to evaluate all model coefficients at a given temperature
-  * Added **meta** module as single-source-of-truth for package version
-  * Updated documentation with basic information on neutral solutes
+  * Fixed fatal indexing error in **model.Gex_nRT**;
+  * Added **cfdict** for the Waters and Millero (2013) model;
+  * Added **cfdict** for MarChemSpec project testing;
+  * Added *some* coefficient values from Gallego-Urrea and Turner (2017);
+  * Added equations for neutral solute interactions to **model.Gex_nRT**, along with supporting functions in **cfdicts**;
+  * Added **CoefficientDictionary** methods:
+    * **print_coeffs** to evaluate all model coefficients at a given temperature, and print them to file;
+    * **get_contents** to generate lists of all ions and all references within the dictionary;
+  * Updated documentation on coefficient dictionaries to reflect these changes;
+  * Added **meta** module as single-source-of-truth for package version;
+  * Updated documentation with basic information on neutral solutes.
 
 ## 0.2.0
 
