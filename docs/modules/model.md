@@ -6,7 +6,7 @@
 
 Many of these functions have a common set of inputs: `mols`, `ions`, `T` and `cfdict`.
 
-The first three of these inputs can be generated from an input file by **pytzer.io.getmols** and their formats are described in [the relevant documentation](../io/#pytzeriogetmols).
+The first three of these inputs can be generated from an input file by **pytzer.io.getmols** and their formats are described in [the relevant documentation](../io/#pytzeriogetmols). Throughout **pytzer**, when we refer to a variable called `ions` we are including any neutral species in the solution.
 
 The final input is a **cfdict** (coefficient dictionary), which defines the set of interaction coefficients to use in the model, as described on [the relevant page](../cfdicts).
 

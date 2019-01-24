@@ -14,8 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-name = 'pytzer'
+__name__ = 'pytzer'
 
-__all__ = ['cfdicts', 'coeffs', 'constants', 'io', 'jfuncs', 'model', 'props']
+__all__ = ['cfdicts', 'coeffs', 'constants', 'io', 'jfuncs', 'model', 'props',
+           'meta']
 
-from . import cfdicts, coeffs, constants, io, jfuncs, model, props
+from . import cfdicts, coeffs, constants, io, jfuncs, model, props, meta
+
+__version__ = meta.version

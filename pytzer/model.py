@@ -65,64 +65,94 @@ def etheta(T,I,z0,z1,cfdict):
 def Gex_nRT(mols,ions,T,cfdict):
 
     # Ionic strength etc.
-    zs = props.charges(ions)[0]
+    zs,cations,anions,neutrals = props.charges(ions)
     I = vstack(0.5 * (np_sum(mols * zs**2, 1)))
     Z = vstack(np_sum(mols * np_abs(zs), 1))
 
-    # Separate cations and anions
-    CL = zs > 0
-    cats    = mols[:,CL]
-    cations = ions[  CL]
-    zCs     = zs  [  CL]
-    AL = zs < 0
-    anis    = mols[:,AL]
-    anions  = ions[  AL]
-    zAs     = zs  [  AL]
+    # Separate out cations, anions and neutrals
+    NL = zs == 0
+    CL = zs >  0
+    AL = zs <  0
+    
+    # Concentrations
+    neus = mols[:,NL]
+    cats = mols[:,CL]
+    anis = mols[:,AL]
+    
+    # Charges
+    zCs = zs[CL]
+    zAs = zs[AL]
 
     # Begin with Debye-Hueckel component
     Gex_nRT = fG(T,I,cfdict)
 
-    # Add c-a interactions
-    for C, cation in enumerate(cations):
-        for A, anion in enumerate(anions):
-
-            iset= '-'.join([cation,anion])
-
-            Gex_nRT = Gex_nRT + vstack(cats[:,C] * anis[:,A]) \
-                * (2*B(T,I,cfdict,iset) + Z*CT(T,I,cfdict,iset))
-
-    # Add c-c' interactions
+    # Loop through cations
+#    with errstate(divide='ignore', invalid='ignore'):
+        
     for C0, cation0 in enumerate(cations):
-        for C1, cation1 in enumerate(cations[C0+1:]):
+        
+        # Add c-a interactions
+        for A, anion in enumerate(anions):
+            
+            iset = '-'.join((cation0,anion))
 
+            Gex_nRT = Gex_nRT + vstack(cats[:,C0] * anis[:,A]) \
+                * (2*B(T,I,cfdict,iset) + Z*CT(T,I,cfdict,iset))
+                
+            # Add n-c-a interactions
+            for N, neutral in enumerate(neutrals):
+                
+                inca = '-'.join((neutral,iset))
+                
+                Gex_nRT = Gex_nRT \
+                        + vstack(neus[:,N] * cats[:,C0] * anis[:,A]) \
+                        * cfdict.eta[inca](T)[0]
+
+        # Add c-c' interactions
+        for xC1, cation1 in enumerate(cations[C0+1:]):
+            
+            C1 = xC1 + C0 + 1
+            
             iset = [cation0,cation1]
             iset.sort()
             iset= '-'.join(iset)
 
             Gex_nRT = Gex_nRT + vstack(cats[:,C0] * cats[:,C1]) \
                 * 2 * cfdict.theta[iset](T)[0]
-
+            
             # Unsymmetrical mixing terms
             if zCs[C0] != zCs[C1]:
 
                 Gex_nRT = Gex_nRT + vstack(cats[:,C0] * cats[:,C1]) \
                     * 2 * etheta(T,I,zCs[C0],zCs[C1],cfdict)
 
-    # Add c-c'-a interactions
+            # Add c-c'-a interactions
             for A, anion in enumerate(anions):
 
                 itri = '-'.join((iset,anion))
 
                 Gex_nRT = Gex_nRT + vstack(cats[:,C0] * cats[:,C1] \
                     * anis[:,A]) * cfdict.psi[itri](T)[0]
+                
+        # Add n-c interactions
+        for N, neutral in enumerate(neutrals):
+            
+            inc = '-'.join((neutral,cation0))
+            
+            Gex_nRT = Gex_nRT + 2 * vstack(neus[:,N] * cats[:,C0]) \
+                                  * cfdict.lambd[inc](T)[0]
 
-    # Add a-a' interactions
+    # Loop through anions
     for A0, anion0 in enumerate(anions):
-        for A1, anion1 in enumerate(anions[A0+1:]):
+        
+        # Add a-a' interactions
+        for xA1, anion1 in enumerate(anions[A0+1:]):
+            
+            A1 = xA1 + A0 + 1
 
             iset = [anion0,anion1]
             iset.sort()
-            iset= '-'.join(iset)
+            iset = '-'.join(iset)
 
             Gex_nRT = Gex_nRT + vstack(anis[:,A0] * anis[:,A1]) \
                 * 2 * cfdict.theta[iset](T)[0]
@@ -133,13 +163,29 @@ def Gex_nRT(mols,ions,T,cfdict):
                 Gex_nRT = Gex_nRT + vstack(anis[:,A0] * anis[:,A1]) \
                     * 2 * etheta(T,I,zAs[A0],zAs[A1],cfdict)
 
-    # Add c-a-a' interactions
+            # Add c-a-a' interactions
             for C, cation in enumerate(cations):
 
                 itri = '-'.join((cation,iset))
 
                 Gex_nRT = Gex_nRT + vstack(anis[:,A0] * anis[:,A1] \
                     * cats[:,C]) * cfdict.psi[itri](T)[0]
+
+        # Add n-a interactions
+        for N, neutral in enumerate(neutrals):
+            
+            ina = '-'.join((neutral,anion0))
+            
+            Gex_nRT = Gex_nRT + 2 * vstack(neus[:,N] * anis[:,A0]) \
+                                  * cfdict.lambd[ina](T)[0]
+
+    # Add n-n-n interactions
+    for N, neutral in enumerate(neutrals):
+        
+        innn = '-'.join((neutral,neutral,neutral))
+        
+        Gex_nRT = Gex_nRT + vstack(neus[:,N]**3) * cfdict.mu[innn](T)[0]
+
 
     return Gex_nRT
 

@@ -45,10 +45,28 @@ The other ions are listed approximately in order of the atomic number of their m
 <td><strong>Formula</strong></td>
 <td><strong>Name in pytzer</strong></td>
 
-</tr><tr><td>Hydroxide</td> <td>OH<sup>−</sup></td> <td><code>OH</code></td>
 </tr><tr><td>Borate</td> <td>B(OH)<sub>4</sub><sup>−</sup></td> <td><code>BOH4</code></td>
+</tr><tr><td>Bicarbonate</td> <td>HCO<sub>3</sub><sup>−</sup></td> <td><code>HCO3</code></td>
+</tr><tr><td>Carbonate</td> <td>CO<sub>3</sub><sup>2−</sup></td> <td><code>CO3</code></td>
+</tr><tr><td>TrisH<sup>+</sup></td> <td>(HOCH<sub>2</sub>)<sub>3</sub>CNH<sub>3</sub><sup>+</sup></td> <td><code>trisH</code></td>
+</tr><tr><td>Hydroxide</td> <td>OH<sup>−</sup></td> <td><code>OH</code></td>
 </tr><tr><td>Bisulfate</td> <td>HSO<sub>4</sub><sup>−</sup></td> <td><code>HSO4</code></td>
 </tr><tr><td>Sulfate</td> <td>SO<sub>4</sub><sup>2−</sup></td> <td><code>SO4</code></td>
+</tr><tr><td>Magnesium hydroxide</td> <td>MgOH<sup>+</sup></td> <td><code>MgOH</code></td>
+
+</tr></table>
+
+## Neutral species
+
+Neutral species are referred to as `ions` throughout **pytzer**, for simplicity's sake.
+
+<table><tr>
+
+<td><strong>Solute name</strong></td>
+<td><strong>Formula</strong></td>
+<td><strong>Name in pytzer</strong></td>
+
+</tr><tr><td>Tris</td> <td>(HOCH<sub>2</sub>)<sub>3</sub>CNH<sub>2</sub></td> <td><code>tris</code></td>
 
 </tr></table>
 
@@ -80,17 +98,29 @@ References from the peer-reviewed literature (or 'sources') are written as the i
 <td><code>GM89</code></td>
 <td>Greenberg, J. P., and Møller, N. (1989). The prediction of mineral solubilities in natural waters: A chemical equilibrium model for the Na-K-Ca-Cl-SO<sub>4</sub>-H<sub>2</sub>O system to high concentration from 0 to 250°C. <i>Geochim. Cosmochim. Acta</i> 53, 2503–2518. <a href="https://doi.org/10.1016/0016-7037(89)90124-5">doi:10.1016/0016-7037(89)90124-5</a>.</td></tr><tr>
 
+<td><code>GT17</code></td>
+<td>Gallego-Urrea, J. A., and Turner, D. R. (2017). Determination of pH in estuarine and brackish waters: Pitzer parameters for Tris buffers and dissociation constants for <i>m</i>-cresol purple at 298.15K. <i>Mar. Chem.</i> 195, 84–89. <a href="https://doi.org/10.1016/j.marchem.2017.07.004">doi:10.1016/j.marchem.2017.07.004</a>.</td></tr><tr>
+
 <td><code>HM83</code></td>
 <td>Holmes, H. F., and Mesmer, R. E. (1983). Thermodynamic properties of aqueous solutions of the alkali metal chlorides to 250 °C. <i>J. Phys. Chem.</i> 87, 1242–1255. <a href="https://doi.org/10.1021/j100230a030">doi:10.1021/j100230a030</a>.</td></tr><tr>
 
+<td><code>HMW84</code></td>
+<td>Harvie, C. E., Møller, N., and Weare, J. H. (1984). The prediction of mineral solubilities in natural waters: The Na-K-Mg-Ca-H-Cl-SO<sub>4</sub>-OH-HCO<sub>3</sub>-CO<sub>3</sub>-CO<sub>2</sub>-H<sub>2</sub>O system to high ionic strengths at 25°C. <i>Geochim. Cosmochim. Acta</i> 48, 723–751. <a href="https://doi.org/10.1016/0016-7037(84)90098-X">doi:10.1016/0016-7037(84)90098-X</a>.</td></tr><tr>
+
 <td><code>HM86</code></td>
 <td>Holmes, H. F., and Mesmer, R. E. (1986). Thermodynamics of aqueous solutions of the alkali metal sulfates. <i>J. Solution Chem.</i> 15, 495–517. <a href="https://doi.org/10.1007/BF00644892">doi:10.1007/BF00644892</a>.</td></tr><tr>
+
+<td><code>HPR93</code></td>
+<td>Hovey, J. K., Pitzer, K. S., and Rard, J. A. (1993). Thermodynamics of Na<sub>2</sub>SO<sub>4</sub>(aq) at temperatures <i>T</i> from 273 K to 373 K and of {(1-<i>y</i>)H<sub>2</sub>SO<sub>4</sub>+<i>y</i>Na<sub>2</sub>SO<sub>4</sub>}(aq) at <i>T</i> = 298.15 K.  <a href="https://doi.org/10.1006/jcht.1993.1016">doi:10.1006/jcht.1993.1016</a>.</td></tr><tr>
 
 <td><code>M88</code></td>
 <td>Møller, N. (1988). The prediction of mineral solubilities in natural waters: A chemical equilibrium model for the Na-Ca-Cl-SO<sub>4</sub>-H<sub>2</sub>O system, to high temperature and concentration. <i>Geochim. Cosmochim. Acta</i> 52, 821–837. <a href="https://doi.org/10.1016/0016-7037(88)90354-7">doi:10.1016/0016-7037(88)90354-7</a>.</td></tr><tr>
 
 <td><code>MP98</code></td>
 <td>Millero, F. J., and Pierrot, D. (1998). A Chemical Equilibrium Model for Natural Waters. <i>Aquat. Geochem.</i> 4, 153–199. <a href="https://doi.org/10.1023/A:1009656023546">doi:10.1023/A:1009656023546</a>.</td></tr><tr>
+
+<td><code>P91</code></td>
+<td>Pitzer, K. S. (1991). “Ion Interaction Approach: Theory and Data Correlation,” in *Activity Coefficients in Electrolyte Solutions, 2nd Edition*, ed. K. S. Pitzer (CRC Press, Florida, USA), 75–153.</td></tr><tr>
 
 <td><code>PP87i</code></td>
 <td>Pabalan, R. T., and Pitzer, K. S. (1987). Thermodynamics of NaOH(aq) in hydrothermal solutions. <i>Geochim. Cosmochim. Acta</i> 51, 829–837. <a href="https://doi.org/10.1016/0016-7037(87)90096-2">doi:10.1016/0016-7037(87)90096-2</a>.</td></tr><tr>
@@ -101,11 +131,20 @@ References from the peer-reviewed literature (or 'sources') are written as the i
 <td><code>RC99</code></td>
 <td>Rard, J. A., and Clegg, S. L. (1999). Isopiestic determination of the osmotic and activity coefficients of {<i>z</i>H<sub>2</sub>SO<sub>4</sub>+ (1−<i>z</i>)MgSO<sub>4</sub>}(aq) at <i>T</i> = 298.15 K. II. Results for <i>z</i> = (0.43040, 0.28758, and 0.14399) and analysis with Pitzer's model. <i>J. Chem. Thermodyn.</i> 31, 399–429. <a href="https://doi.org/10.1006/jcht.1998.0461">doi:10.1006/jcht.1998.0461</a>.</td></tr><tr>
 
+<td><code>RGB80</code></td>
+<td>Roy, R. N., Gibbons, J. J., Bliss, D. P., Casebolt, R. G., and Baker, B. K. (1980). Activity coefficients for ternary systems: VI. The system HCl + MgCl<sub>2</sub> + H<sub>2</sub>O at different temperatures; application of Pitzer's equations. <i>J. Solution Chem.</i> 9, 911–930. <a href="https://doi.org/10.1039/F19827801405">doi:10.1039/F19827801405</a>.</td></tr><tr>
+
+<td><code>RGO82</code></td>
+<td>Roy, R. N., Gibbons, J. J., Ovens, L. K., Bliss, G. A., and Hartley, J. J. (1982). Activity coefficients for the system HCl + CaCl<sub>2</sub> + H<sub>2</sub>O at various temperatures. Applications of Pitzer's equations. <i>J. Chem. Soc., Faraday Trans. 1</i> 78, 1405–1422. <a href="https://doi.org/10.1039/F19827801405">doi:10.1039/F19827801405</a>.</td></tr><tr>
+
 <td><code>RM81i</code></td>
 <td>Rard, J. A., and Miller, D. G. (1981). Isopiestic Determination of the Osmotic Coefficients of Aqueous Na<sub>2</sub>SO<sub>4</sub>, MgSO<sub>4</sub>, and Na<sub>2</sub>SO<sub>4</sub>-MgSO<sub>4</sub> at 25 °C. <i>J. Chem. Eng. Data</i> 26, 33–38. <a href="https://doi.org/10.1021/je00023a013">doi:10.1021/je00023a013</a>.</td></tr><tr>
 
 <td><code>SRRJ87</code></td>
 <td>Simonson, J. M., Roy, R. N., Roy, L. N., and Johnson, D. A. (1987). The thermodynamics of aqueous borate solutions I. Mixtures of boric acid with sodium or potassium borate and chloride. <i>J. Solution Chem.</i> 16, 791–803. <a href="https://doi.org/10.1007/BF00650749">doi:10.1007/BF00650749</a>.</td></tr><tr>
+
+<td><code>WM13</code></td>
+<td>Waters, J. F., and Millero, F. J. (2013). The free proton concentration scale for seawater pH. <i>Mar. Chem.</i> 149, 8–22. <a href="https://doi.org/10.1016/j.marchem.2012.11.003">doi:10.1016/j.marchem.2012.11.003</a>.</td></tr><tr>
 
 <td><code>ZD17</code></td>
 <td>Zezin, D., and Driesner, T. (2017). Thermodynamic properties of aqueous KCl solution at temperatures to 600 K, pressures to 150 MPa, and concentrations to saturation. <i>Fluid Phase Equilib.</i> 453, 24–39. <a href="https://doi.org/10.1016/j.fluid.2017.09.001">doi:10.1016/j.fluid.2017.09.001</a>.</td>

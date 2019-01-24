@@ -18,3 +18,4 @@ nav:
         - .jfuncs – unsymmetrical mixing:      modules/jfuncs.md
         - .props – universal ionic properties: modules/props.md
         - .constants – physical constants:     modules/constants.md
+    - Version history: version-history.md

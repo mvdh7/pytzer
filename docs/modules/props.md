@@ -7,12 +7,12 @@
 
 ## pytzer.props.charges
 
-For an input array of ion names - following the **pytzer** [naming conventions](../../name-conventions) - returns the charge on each ion, and separate lists of cations and anions.
+For an input array of "ion" names - following the **pytzer** [naming conventions](../../name-conventions) - returns the charge on each ion, and separate lists of cations, anions, and neutral species.
 
 ### Syntax
 
 ```python
-zs, cations, anions = pytzer.props.charges(ions)
+zs, cations, anions, neutrals = pytzer.props.charges(ions)
 ```
 
 ### Input
@@ -25,7 +25,7 @@ zs, cations, anions = pytzer.props.charges(ions)
 </tr><tr>
 
 <td><code>ions</code></td>
-<td>numpy array of ion names</td>
+<td>numpy array of ion (and neutral species) names</td>
 
 </tr></table>
 
@@ -39,7 +39,7 @@ zs, cations, anions = pytzer.props.charges(ions)
 </tr><tr>
 
 <td><code>zs</code></td>
-<td>Charge on each ion, in the same order as input <code>ions</code></td>
+<td>Charge on each ion (or zero for neutrals), in the same order as input <code>ions</code></td>
 
 </tr><tr>
 
@@ -50,5 +50,10 @@ zs, cations, anions = pytzer.props.charges(ions)
 
 <td><code>anions</code></td>
 <td>numpy array of anion names</td>
+
+</tr><td>
+
+<td><code>neutrals</code></td>
+<td>numpy array of neutral species names</td>
 
 </tr></table>

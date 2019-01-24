@@ -21,22 +21,83 @@ This `cfdict` can then be passed into all of the **pytzer.model** functions.
 
 Several ready-to-use **cfdicts** are available in this module.
 
-## GM89: Greenberg and Møller (1989)
+To decode the sources, see the [literature references table](../../name-conventions/#literature-references).
 
- **Source:** Greenberg, J. P., and Møller, N. (1989). The prediction of mineral solubilities in natural waters: A chemical equilibrium model for the Na-K-Ca-Cl-SO<sub>4</sub>-H<sub>2</sub>O system to high concentration from 0 to 250°C. *Geochim. Cosmochim. Acta* 53, 2503–2518. <a href="https://doi.org/10.1016/0016-7037(89)90124-5">doi:10.1016/0016-7037(89)90124-5</a>.
+<table><tr>
 
-**System:** Ca - K - Na - Cl - SO<sub>4</sub>
+<td><strong>cfdict name</strong></td>
+<td><strong>System</strong></td>
+<td><strong>Source</strong></td>
 
-**Validity:** *temperature* from 0 °C to 250 °C
+</tr><tr>
+<td>CRP94</td>
+<td>H<sup>+</sup> :: HSO<sub>4</sub><sup>−</sup> :: SO<sub>4</sub><sup>2−</sup></td>
+<td>Clegg et al. (1994)</td>
+
+</tr><tr>
+<td>GM89</td>
+<td>Ca<sup>2+</sup> :: Cl<sup>−</sup> :: K<sup>+</sup> :: Na<sup>+</sup> :: SO<sub>4</sub><sup>2−</sup></td>
+<td>Greenberg and Møller (1989)</td>
+
+</tr><tr>
+<td>M88</td>
+<td>Ca<sup>2+</sup> :: Cl<sup>−</sup> :: Na<sup>+</sup> :: SO<sub>4</sub><sup>2−</sup></td>
+<td>Møller (1988)</td>
+
+</tr><tr>
+<td>WM13</td>
+<td>Ca<sup>2+</sup> :: Cl<sup>−</sup> :: H<sup>+</sup> :: HSO<sub>4</sub><sup>−</sup> :: K<sup>+</sup> :: Mg<sup>2+</sup> :: MgOH<sup>+</sup> :: Na<sup>+</sup> :: OH<sup>−</sup> :: SO<sub>4</sub><sup>2−</sup></td>
+<td>Waters and Millero (2013)</td>
+
+</tr></table>
+
+<hr />
+
+# cfdict methods
+
+A few handy methods are provided as part of the **CoefficientDictionary** class. Brief summaries are provided below, and here is a usage example of all of them together:
 
 
-## M88: Møller (1988)
+```python
+import pytzer as pz
+import numpy as np
+from copy import deepcopy
 
-**Source:** Møller, N. (1988). The prediction of mineral solubilities in natural waters: A chemical equilibrium model for the Na-Ca-Cl-SO<sub>4</sub>-H<sub>2</sub>O system, to high temperature and concentration. *Geochim. Cosmochim. Acta* 52, 821–837. <a href="https://doi.org/10.1016/0016-7037(88)90354-7">doi:10.1016/0016-7037(88)90354-7</a>.
+# Copy a pre-defined cfdict
+cfdict = deepcopy(pz.cfdicts.M88)
 
-**System:** Ca - Na - Cl - SO<sub>4</sub>
+# Get ions within it
+cfdict.get_contents()
 
-**Validity:** *temperature* from 25 °C to 250 °C; *ionic strength* from 0 to ~18 mol·kg<sup>−1</sup>
+# Add a new ion into the mix
+cfdict.ions = np.append(cfdict.ions,'K')
+
+# Add zero-functions for all interactions with the new ion
+cfdict.add_zeros(cfdict.ions)
+
+# Update cfdict name to show we've changed it
+cfdict.name = 'M88-modified'
+
+# Print out the coefficients evaluated at 298.15 K
+cfdict.print_coeffs(298.15,'coeff_file.txt')
+```
+
+The methods are as follows:
+
+## cfdict.add_zeros
+
+Adds zero-functions for all missing interactions, given a list of ions.
+
+## cfdict.get_contents
+
+Scans through all functions within the **cfdict** and puts a list of all ions and all sources in the relevant fields of the **cfdict** itself (i.e. **cfdict.ions** and **cfdict.srcs**).
+
+Ions and sources are determined from the function names themselves.
+
+## cfdict.print_coeffs
+
+Evaluates all coefficients in a **cfdict** at a single input temperature, and prints the results to a text file.
+
 
 <hr />
 
@@ -44,18 +105,22 @@ Several ready-to-use **cfdicts** are available in this module.
 
 To modify an existing **cfdict**, or create a new one, it is first necessary to understand how they are used within **pytzer**, as follows. A basic understanding of the workings of the Pitzer model is assumed.
 
-A **cfdict** is an object of the class `CfDict` as defined within **pytzer.cfdicts**. From the initalisation function we can see that it contains the following fields:
+A **cfdict** is an object of the class `CoefficientDictionary` as defined within **pytzer.cfdicts**. From the initalisation function we can see that it contains the following fields:
 
 ```python
-class CfDict:
+class CoefficientDictionary:
 
     # Initialise
     def __init__(self):
-        self.dh    = {}
-        self.bC    = {}
-        self.theta = {}
-        self.jfunc = []
-        self.psi   = {}
+        self.name  = ''
+        self.dh    = {} # Aosm
+        self.bC    = {} # c-a
+        self.theta = {} # c-c' and a-a'
+        self.jfunc = [] # unsymmetrical mixing
+        self.psi   = {} # c-c'-a and c-a-a'
+        self.lambd = {} # n-c and n-a
+        self.eta   = {} # n-c-a
+        self.mu    = {} # n-n-n
 ```
 
 Each field is then filled with functions from **pytzer.coeffs** that define the Pitzer model interaction coefficients, as follows. (Descriptions of the required contents of the functions themselves are in the separate <a href="../coeffs"><strong>pytzer.coeffs</strong> documentation</a>.)
@@ -63,7 +128,7 @@ Each field is then filled with functions from **pytzer.coeffs** that define the 
 
 ### Debye-Hückel limiting slope
 
-The function for the Debye-Hückel limiting slope (i.e. <i>A<sub>ϕ</sub></i>) is stored as `CfDict.dh['Aosm']`.
+The function for the Debye-Hückel limiting slope (i.e. <i>A<sub>ϕ</sub></i>) is stored as `CoefficientDictionary.dh['Aosm']`.
 
 ### Cation-anion interactions
 
@@ -103,11 +168,29 @@ cfdict.psi['Mg-Na-SO4'] = <Mg-Na-SO4 interaction coefficients function>
 cfdict.psi['Na-Cl-SO4'] = <Na-Cl-SO4 interaction coefficients function>
 ```
 
+
+### Neutral interactions
+
+Functions that evaluate the *λ*, *η* and *μ* coefficients for the interactions between a neutral solute and an ion (*λ*), the three-way between a neutral, cation and anion (*η*) and the three-way between three neutrals of the same kind (*μ*) are contained within `cfdict.lambd`, `cfdict.eta` and `cfdict.mu` respectively.
+
+The field names obey the rules, in order of precedence:
+
+  2. Neutrals first, then cations, then anions;
+
+  2. In alphabetical order.
+
+Assigning functions is exactly the same as described for the other interaction types.
+
+
 ### Unsymmetrical mixing terms
 
 A function to evaluate the J and J' equations are contained in `cfdict.jfunc`. Unlike the other fields within the **cfdict**, only one function is provided, so this field directly contains the relevant function, rather than storing it in a dict.
 
+Different options for the functions needed here can be found in **pytzer.jfuncs**.
+
+
 <hr />
+
 
 # Modify an existing cfdict
 
@@ -123,20 +206,32 @@ cfdict = pz.cfdicts.M88
 cfdict.bC['Na-Cl'] = pz.coeffs.bC_Na_Cl_A92ii
 ```
 
-Note that the statement to get the **cfdict** (`cfdict = pz.cfdicts.M88`) only references, not copies, from **pytzer.cfdicts**.
+Note that the statement to get the **cfdict** (`cfdict = pz.cfdicts.M88`) only references, not copies, from **pytzer.cfdicts**. To copy, and make changes without modifying the original, use:
+
+```python
+import pytzer as pz
+from copy import deepcopy
+
+# Get Møller (1988) cfdict
+cfdict = deepcopy(pz.cfdicts.M88)
+cfdict.name = 'M88-modified' # so we know it's been changed
+
+# Update Na-Cl interaction function to Archer (1992)
+cfdict.bC['Na-Cl'] = pz.coeffs.bC_Na_Cl_A92ii
+```
 
 <hr />
 
 # Build your own
 
-You can also construct your own **cfdict** from scratch. In the example below, we initialise a `cfdict` using the `pytzer.cfdicts.CfDict` class. We add functions from `pytzer.coeffs` for the system Na-Ca-Cl using functions from Møller (1988). Finally, we use the method `add_zeros` to fill out any interactions that we have neglected to provide functions for with zeros.
+You can also construct your own **cfdict** from scratch. In the example below, we initialise a `cfdict` using the `pytzer.cfdicts.CoefficientDictionary` class. We add functions from `pytzer.coeffs` for the system Na-Ca-Cl using functions from Møller (1988). Finally, we use the method `add_zeros` to fill out any interactions that we have neglected to provide functions for with zeros.
 
 ```python
 import pytzer as pz
 import numpy as np
 
 # Initialise
-myCfdict = pz.cfdicts.CfDict()
+myCfdict = pz.cfdicts.CoefficientDictionary()
 
 # Debye-Hueckel limiting slope
 myCfdict.dh['Aosm'] = coeffs.Aosm_M88
@@ -167,3 +262,13 @@ myCfdict.bC['Ba-SO4']   = coeffs.bC_zero    # ignore Ba-SO4 interactions
 myCfdict.bC['H-Na']     = coeffs.theta_zero # ignore H-Na interactions
 myCfdict.psi['H-Mg-OH'] = coeffs.psi_zero   # ignore H-Mg-OH interactions
 ```
+
+## Print out coefficients
+
+You can use the method **print_coeffs** on a **cfdict** to create a file containing every coefficient, evaluated at a single input temperature of your choice. For example:
+
+```python
+myCfdict.print_coeffs(298.15,'myCoeffs.txt')
+```
+
+would evaluate every coefficient at 298.15 K and print the results to the file **myCoeffs.txt**.

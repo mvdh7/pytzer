@@ -11,7 +11,7 @@ COEFFS_PRESSURE = float_(0.101325) # MPa
 #%%############################################################################
 # === ZERO FUNCTIONS ==========================================================
 
-def bC_zero(T):
+def bC_none(T):
 
     b0    = zeros_like(T)
     b1    = zeros_like(T)
@@ -23,25 +23,54 @@ def bC_zero(T):
     omega = full_like(T,-9)
     valid = T > 0
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
-def theta_zero(T):
-
+def theta_none(T):
     theta = zeros_like(T)
     valid = T > 0
-
     return theta, valid
 
-def psi_zero(T):
-
+def psi_none(T):
     psi   = zeros_like(T)
     valid = T > 0
-
     return psi, valid
+
+def lambd_none(T):
+    lambd = zeros_like(T)
+    valid = T > 0
+    return lambd, valid
+
+def eta_none(T):
+    eta   = zeros_like(T)
+    valid = T > 0
+    return eta, valid
+
+def mu_none(T):
+    mu    = zeros_like(T)
+    valid = T > 0
+    return mu, valid
 
 # === ZERO FUNCTIONS ==========================================================
 ###############################################################################
 
+#%%############################################################################
+# === ROY ET AL. 1980 =========================================================
+
+# --- theta: hydrogen magnesium -----------------------------------------------
+
+def theta_H_Mg_RGB80(T):
+    
+    # RGB80 do provide theta values at 5, 15, 25, 35 and 45 degC, but no 
+    #  equation to interpolate between them.
+    # This function just returns the 25 degC value.
+    
+    theta = full_like(T,0.0620)
+    valid = T == 298.15
+    
+    return theta, valid
+
+# === ROY ET AL. 1980 =========================================================
+###############################################################################
 
 #%%############################################################################
 # === RARD & MILLER 1981i =====================================================
@@ -68,9 +97,24 @@ def bC_Mg_SO4_RM81i(T):
 
     valid = T == 298.15
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # === RARD & MILLER 1981i =====================================================
+###############################################################################
+
+#%%############################################################################
+# === ROY ET AL. 1982 =========================================================
+
+# --- theta: calcium hydrogen -------------------------------------------------
+
+def theta_Ca_H_RGO82(T):
+    
+    theta = full_like(T,0.0612)
+    valid = T == 298.15
+    
+    return theta, valid
+
+# === ROY ET AL. 1982 =========================================================
 ###############################################################################
 
 #%%############################################################################
@@ -111,7 +155,7 @@ def PP86ii_eq29(T,q):
 
 def bC_Mg_SO4_PP86ii(T):
 
-    b0r,b1r,b2r,C0r,C1,alph1,alph2,omega,_ = bC_Mg_SO4_RM81(T)
+    b0r,b1r,b2r,C0r,C1,alph1,alph2,omega,_ = bC_Mg_SO4_RM81i(T)
 
     b0 = PP86ii_eq29(T,float_([-1.0282   ,
                                 8.4790e-3,
@@ -143,7 +187,7 @@ def bC_Mg_SO4_PP86ii(T):
 
     valid = T <= 473.
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # === PHUTELA & PITZER 1986 ===================================================
 ###############################################################################
@@ -183,7 +227,7 @@ def bC_Mg_Cl_dLP83(T):
 
     valid = logical_and(T >= 298.15, T <= 523.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # === DE LIMA & PITZER 1983 ===================================================
 ###############################################################################
@@ -241,7 +285,7 @@ def bC_Cs_Cl_HM83(T):
 
     valid = logical_and(T >= 273.15, T <= 523.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: potassium chloride --------------------------------------------------
 
@@ -282,7 +326,7 @@ def bC_K_Cl_HM83(T):
 
     valid = logical_and(T >= 273.15, T <= 523.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: lithium chloride ----------------------------------------------------
 
@@ -323,7 +367,7 @@ def bC_Li_Cl_HM83(T):
 
     valid = logical_and(T >= 273.15, T <= 523.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # === HOLMES & MESMER 1983 ====================================================
 ###############################################################################
@@ -391,7 +435,7 @@ def bC_K_SO4_HM86(T):
 
     valid = logical_and(T >= 298.15, T <= 523.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: lithium sulfate -----------------------------------------------------
 
@@ -437,7 +481,7 @@ def bC_Na_SO4_HM86(T):
 
     valid = logical_and(T >= 298.15, T <= 523.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # === HOLMES & MESMER 1986 ====================================================
 ###############################################################################
@@ -524,7 +568,7 @@ def bC_Na_OH_PP87i(T):
 
     valid = logical_and(T >= 298.15, T <= 523.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: magnesium chloride --------------------------------------------------
 
@@ -542,7 +586,7 @@ def bC_Mg_Cl_PP87i(T):
 
     valid = logical_and(T >= 298.15, T <= 473.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # === PALABAN & PITZER 1987 ===================================================
 ###############################################################################
@@ -589,7 +633,7 @@ def bC_K_Cl_SRRJ87(T):
 
     valid = logical_and(T >= 278.15, T <= 328.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: sodium chloride -----------------------------------------------------
 
@@ -623,7 +667,7 @@ def bC_Na_Cl_SRRJ87(T):
 
     valid = logical_and(T >= 278.15, T <= 328.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: potassium borate ----------------------------------------------------
 
@@ -657,7 +701,7 @@ def bC_K_BOH4_SRRJ87(T):
 
     valid = logical_and(T >= 278.15, T <= 328.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: sodium borate -------------------------------------------------------
 
@@ -691,7 +735,7 @@ def bC_Na_BOH4_SRRJ87(T):
 
     valid = logical_and(T >= 278.15, T <= 328.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- theta: borate chloride --------------------------------------------------
 
@@ -812,7 +856,7 @@ def bC_Ca_Cl_M88(T):
 
     valid = logical_and(T >= 298.15, T <= 523.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: calcium sulfate -----------------------------------------------------
 
@@ -841,7 +885,7 @@ def bC_Ca_SO4_M88(T):
 
     valid = logical_and(T >= 298.15, T <= 523.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: sodium chloride -----------------------------------------------------
 
@@ -888,7 +932,7 @@ def bC_Na_Cl_M88(T):
 
     valid = logical_and(T >= 273.15, T <= 573.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: sodium sulfate ------------------------------------------------------
 
@@ -935,7 +979,7 @@ def bC_Na_SO4_M88(T):
 
     valid = logical_and(T >= 273.15, T <= 573.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- theta: calcium sodium ---------------------------------------------------
 
@@ -1046,7 +1090,7 @@ def bC_Ca_Cl_GM89(T):
     zCl   = float_(-1)
     C0    = Cphi / (2 * sqrt(np_abs(zCa*zCl)))
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: potassium chloride --------------------------------------------------
 
@@ -1093,7 +1137,7 @@ def bC_K_Cl_GM89(T):
 
     valid = logical_and(T >= 273.15, T <= 523.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: potassium sulfate ---------------------------------------------------
 
@@ -1133,7 +1177,7 @@ def bC_K_SO4_GM89(T):
 
     valid = logical_and(T >= 273.15, T <= 523.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- theta: calcium potassium ------------------------------------------------
 
@@ -1400,9 +1444,76 @@ def bC_Na_Cl_A92ii(T):
     valid = logical_and(T >= 250, T <= 600)
     valid = logical_and(valid, p <= 100)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # === ARCHER 1992 =============================================================
+###############################################################################
+
+#%%############################################################################
+# === PITZER 1991 =============================================================
+
+# Mostly just adding a temperature derivative from Pitzer's book chapter to a
+#  constant coefficient value at 298.15 K
+    
+# --- bC: calcium sulfate -----------------------------------------------------
+
+def bC_Ca_SO4_P91(T):
+    
+    # Define reference temperature
+    TR = float_(298.15)
+    
+    # Inherit from HMW84
+    b0,b1,b2,C0,C1, alph1,alph2,omega, valid = bC_Ca_SO4_HMW84(T)
+    
+    # Temperature derivatives from P91/Chapter3/Table13 on page 111.
+    b1 = b1 + 5.46e-2 * (T - TR)
+    b2 = b2 - 5.16e-1 * (T - TR)
+    
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# --- bC: calcium bisulfate ---------------------------------------------------
+
+def bC_Ca_HSO4_P91(T):
+    
+    # Define reference temperature
+    TR = float_(298.15)
+    
+    # Inherit from HMW84
+    b0,b1,b2,C0,C1, alph1,alph2,omega, valid = bC_Ca_HSO4_HMW84(T)
+    
+    # Convert C0 back to Cphi
+    zCa   = float_(+2)
+    zHSO4 = float_(-1)
+    Cphi  = C0 * (2 * sqrt(np_abs(zCa*zHSO4)))
+    
+    # Temperature derivatives should be in P91/Chapter 3, according to WM13,
+    #  but I can't find them there.
+    # Values here are therefore directly from WM13/TableA3.
+    b0   = b0   + 8.3e-4  * (T - TR)
+    b1   = b1   + 5.8e-3  * (T - TR)
+    Cphi = Cphi - 1.09e-4 * (T - TR)
+    
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# --- bC: potassium bisulfate -------------------------------------------------
+
+def bC_K_HSO4_P91(T):
+    
+    # Define reference temperature
+    TR = float_(298.15)
+    
+    # Inherit from HMW84
+    b0,b1,b2,C0,C1, alph1,alph2,omega, valid = bC_K_HSO4_HMW84(T)
+    
+    # Temperature derivatives should be in P91/Chapter 3, according to WM13,
+    #  but I can't find them there.
+    # Values here are therefore directly from WM13/TableA3.
+    b0 = b0 + 6e5      * (T - TR)
+    b1 = b1 + 1.007e-2 * (T - TR)
+    
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# === PITZER 1991 =============================================================
 ###############################################################################
 
 #%%############################################################################
@@ -1458,7 +1569,7 @@ def bC_H_Cl_CMR93(T):
 
     valid = logical_and(T >= 273.15, T <= 328.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- theta: hydrogen potassium -----------------------------------------------
 
@@ -1542,7 +1653,7 @@ def bC_Na_SO4_HPR93(T):
 
     valid = logical_and(T >= 273., T <= 373.)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # === HOVEY, PITZER AND RARD 1993 =============================================
 ###############################################################################
@@ -1639,7 +1750,7 @@ def bC_H_HSO4_CRP94(T):
 
     valid = logical_and(T >= 273.15, T <= 328.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: hydrogen sulfate ----------------------------------------------------
 
@@ -1674,7 +1785,7 @@ def bC_H_SO4_CRP94(T):
 
     valid = logical_and(T >= 273.15, T <= 328.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- theta: bisulfate sulfate ------------------------------------------------
 
@@ -1752,7 +1863,7 @@ def bC_Na_I_MP98(T):
 
     valid = logical_and(T >= 273.15, T <= 323.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: sodium bromide ------------------------------------------------------
 
@@ -1784,7 +1895,7 @@ def bC_Na_Br_MP98(T):
 
     valid = logical_and(T >= 273.15, T <= 323.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: sodium fluoride -----------------------------------------------------
 
@@ -1808,7 +1919,7 @@ def bC_Na_F_MP98(T):
 
     valid = logical_and(T >= 273.15, T <= 323.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: potassium bromide ---------------------------------------------------
 
@@ -1840,7 +1951,7 @@ def bC_K_Br_MP98(T):
 
     valid = logical_and(T >= 273.15, T <= 323.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: potassium fluoride --------------------------------------------------
 
@@ -1872,7 +1983,7 @@ def bC_K_F_MP98(T):
 
     valid = logical_and(T >= 273.15, T <= 323.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: potassium hydroxide -------------------------------------------------
 
@@ -1904,7 +2015,7 @@ def bC_K_OH_MP98(T):
 
     valid = logical_and(T >= 273.15, T <= 323.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: potassium iodide ----------------------------------------------------
 
@@ -1936,7 +2047,7 @@ def bC_K_I_MP98(T):
 
     valid = logical_and(T >= 273.15, T <= 323.15)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # === MILLERO & PIERROT 1998 ==================================================
 ###############################################################################
@@ -1996,7 +2107,7 @@ def bC_K_Cl_A99(T):
     # Validity range
     valid = logical_and(T >= 260, T <= 420)
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # === ARCHER 1999 =============================================================
 ###############################################################################
@@ -2023,7 +2134,7 @@ def bC_Mg_HSO4_RC99(T):
     # Validity range
     valid = T == 298.15
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- psi: hydrogen magnesium bisulfate ---------------------------------------
 
@@ -2056,6 +2167,280 @@ def psi_Mg_HSO4_SO4_RC99(T):
     return psi, valid
 
 # === RARD & CLEGG 1999 =======================================================
+###############################################################################
+
+#%%############################################################################
+# === WATERS & MILLERO 2013 ===================================================
+
+# Some are functions that WM13 declared came from another source, but I 
+#  couldn't find them there, so copied directly from WM13 instead.
+#
+# Others were just declared by WM13 as zero. These all seem to agree with
+#  HMW84; it's unclear why HMW84 wasn't cited by WM13 for these.
+    
+# --- bC: sodium sulfate ------------------------------------------------------
+
+def bC_Na_HSO4_HPR93viaWM13(T):
+    # WM13 Table A1 - can't find where HPR93 state this
+    return bC_none(T)
+
+# --- theta: bisulfate sulfate ------------------------------------------------
+    
+def theta_HSO4_SO4_WM13(T):
+    # WM13 Table A7
+    return theta_none(T)
+
+# --- psi: hydrogen chloride sulfate ------------------------------------------
+    
+def psi_H_Cl_SO4_WM13(T):
+    # WM13 Table A8
+    return psi_none(T)
+
+# --- psi: hydrogen chloride hydroxide ----------------------------------------
+    
+def psi_H_Cl_OH_WM13(T):
+    # WM13 Table A8
+    return psi_none(T)
+
+# --- psi: magnesium chloride hydroxide ---------------------------------------
+    
+def psi_Mg_Cl_OH_WM13(T):
+    # WM13 Table A8
+    return psi_none(T)
+
+# --- psi: calcium bisulfate sulfate ------------------------------------------
+    
+def psi_Ca_HSO4_SO4_WM13(T):
+    # WM13 Table A8
+    return psi_none(T)
+
+# --- psi: hydrogen hydroxide sulfate ------------------------------------------
+    
+def psi_H_OH_SO4_WM13(T):
+    # WM13 Table A8
+    return psi_none(T)
+
+# --- psi: magnesium hydroxide sulfate ----------------------------------------
+    
+def psi_Mg_OH_SO4_WM13(T):
+    # WM13 Table A8
+    return psi_none(T)
+
+# --- psi: calcium hydroxide sulfate ------------------------------------------
+    
+def psi_Ca_OH_SO4_WM13(T):
+    # WM13 Table A8
+    return psi_none(T)
+
+# --- psi: hydrogen sodium sulfate --------------------------------------------
+    
+def psi_H_Na_SO4_WM13(T):
+    # WM13 Table A9
+    return psi_none(T)
+
+# --- psi: calcium hydrogen sulfate -------------------------------------------
+    
+def psi_Ca_H_SO4_WM13(T):
+    # WM13 Table A9
+    return psi_none(T)
+
+# --- psi: calcium hydrogen bisulfate -----------------------------------------
+    
+def psi_Ca_H_HSO4_WM13(T):
+    # WM13 Table A9
+    return psi_none(T)
+
+# --- psi: magnesium sodium bisulfate -----------------------------------------
+    
+def psi_Mg_Na_HSO4_WM13(T):
+    # WM13 Table A9
+    return psi_none(T)
+
+# --- psi: calcium sodium bisulfate -------------------------------------------
+    
+def psi_Ca_Na_HSO4_WM13(T):
+    # WM13 Table A9
+    return psi_none(T)
+
+# --- psi: potassium sodium bisulfate -----------------------------------------
+    
+def psi_K_Na_HSO4_WM13(T):
+    # WM13 Table A9
+    return psi_none(T)
+
+# --- psi: calcium magnesium bisulfate ----------------------------------------
+    
+def psi_Ca_Mg_HSO4_WM13(T):
+    # WM13 Table A9
+    return psi_none(T)
+
+# --- psi: potassium magnesium bisulfate --------------------------------------
+    
+def psi_K_Mg_HSO4_WM13(T):
+    # WM13 Table A9
+    return psi_none(T)
+
+# --- psi: calcium potassium sulfate ------------------------------------------
+    
+def psi_Ca_K_SO4_WM13(T):
+    # WM13 Table A9
+    return psi_none(T)
+
+# --- psi: calcium potassium bisulfate ----------------------------------------
+    
+def psi_Ca_K_HSO4_WM13(T):
+    # WM13 Table A9
+    return psi_none(T)
+
+# === WATERS & MILLERO 2013 ===================================================
+###############################################################################
+
+#%%############################################################################
+# === GALLEGO-URREA & TURNER 2017 =============================================
+
+# --- bC: sodium chloride -----------------------------------------------------
+
+def bC_Na_Cl_GT17simopt(T):
+    
+    # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
+    b0    = full_like(T,0.07722)
+    b1    = full_like(T,0.26768)
+    b2    = zeros_like(T)
+    Cphi  = full_like(T,0.001628)
+    
+    zNa   = float_(+1)
+    zCl   = float_(-1)
+    C0    = Cphi / (2 * sqrt(np_abs(zNa*zCl)))
+    
+    C1    = zeros_like(T)
+    
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    
+    valid = T == 298.15
+    
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# --- bC: trisH+ chloride -----------------------------------------------------
+
+def bC_trisH_Cl_GT17simopt(T):
+    
+    # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
+    b0     = full_like(T,0.04181)
+    b1     = full_like(T,0.16024)
+    b2     = zeros_like(T)
+    Cphi   = full_like(T,-0.00132)
+    
+    ztrisH = float_(+1)
+    zCl    = float_(-1)
+    C0     = Cphi / (2 * sqrt(np_abs(ztrisH*zCl)))
+    
+    C1     = zeros_like(T)
+    
+    alph1  = float_(2)
+    alph2  = -9
+    omega  = -9
+    
+    valid  = T == 298.15
+    
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# --- bC: trisH+ sulfate ------------------------------------------------------
+
+def bC_trisH_SO4_GT17simopt(T):
+    
+    # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
+    b0     = full_like(T,0.09746)
+    b1     = full_like(T,0.52936)
+    b2     = zeros_like(T)
+    Cphi   = full_like(T,-0.004957)
+    
+    ztrisH = float_(+1)
+    zSO4   = float_(-2)
+    C0     = Cphi / (2 * sqrt(np_abs(ztrisH*zSO4)))
+    
+    C1     = zeros_like(T)
+    
+    alph1  = float_(2)
+    alph2  = -9
+    omega  = -9
+    
+    valid  = T == 298.15
+    
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# --- theta: hydrogen trisH ---------------------------------------------------
+    
+def theta_H_trisH_GT17simopt(T):
+    
+    # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
+    theta = full_like(T,-0.00575)
+    valid = T == 298.15
+    
+    return theta, valid
+
+# --- psi: hydrogen trisH chloride --------------------------------------------
+    
+def psi_H_trisH_Cl_GT17simopt(T):
+    
+    # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
+    psi   = full_like(T,-0.00700)
+    valid = T == 298.15
+    
+    return psi, valid
+
+# --- lambd: tris trisH -------------------------------------------------------
+    
+def lambd_tris_trisH_GT17simopt(T):
+    
+    # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
+    lambd = full_like(T,0.06306)
+    valid = T == 298.15
+    
+    return lambd, valid
+
+# --- lambd: tris sodium ------------------------------------------------------
+    
+def lambd_tris_Na_GT17simopt(T):
+    
+    # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
+    lambd = full_like(T,0.01580)
+    valid = T == 298.15
+    
+    return lambd, valid
+
+# --- lambd: tris potassium ---------------------------------------------------
+    
+def lambd_tris_K_GT17simopt(T):
+    
+    # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
+    lambd = full_like(T,0.02895)
+    valid = T == 298.15
+    
+    return lambd, valid
+
+# --- lambd: tris magnesium ---------------------------------------------------
+    
+def lambd_tris_Mg_GT17simopt(T):
+    
+    # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
+    lambd = full_like(T,-0.14505)
+    valid = T == 298.15
+    
+    return lambd, valid
+
+# --- lambd: tris calcium -----------------------------------------------------
+    
+def lambd_tris_Ca_GT17simopt(T):
+    
+    # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
+    lambd = full_like(T,-0.31081)
+    valid = T == 298.15
+    
+    return lambd, valid
+
+# === GALLEGO-URREA & TURNER 2017 =============================================
 ###############################################################################
 
 #%%############################################################################
@@ -2213,7 +2598,1855 @@ def bC_K_Cl_ZD17(T):
     # Validity range
     valid = T <= 600
 
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # === ZEZIN & DRIESNER 2017 ===================================================
+###############################################################################
+
+#%%############################################################################            
+# === HARVIE, MOLLER AND WEARE 1984 ===========================================
+
+# --- Auto-generated by HMW84_funcgen_bC.py -----------------------------------
+
+def bC_Na_Cl_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.0765, dtype='float64')
+    b1   = full_like(T,0.2644, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.00127, dtype='float64')
+    zNa = float_(1)
+    zCl = float_(-1)
+    C0 = Cphi / (2 * sqrt(np_abs(zNa*zCl)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_Na_SO4_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.01958, dtype='float64')
+    b1   = full_like(T,1.113, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.00497, dtype='float64')
+    zNa = float_(1)
+    zSO4 = float_(-2)
+    C0 = Cphi / (2 * sqrt(np_abs(zNa*zSO4)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_Na_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.0454, dtype='float64')
+    b1   = full_like(T,0.398, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
+    zNa = float_(1)
+    zHSO4 = float_(-1)
+    C0 = Cphi / (2 * sqrt(np_abs(zNa*zHSO4)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_Na_OH_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.0864, dtype='float64')
+    b1   = full_like(T,0.253, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0044, dtype='float64')
+    zNa = float_(1)
+    zOH = float_(-1)
+    C0 = Cphi / (2 * sqrt(np_abs(zNa*zOH)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_Na_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.0277, dtype='float64')
+    b1   = full_like(T,0.0411, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
+    zNa = float_(1)
+    zHCO3 = float_(-1)
+    C0 = Cphi / (2 * sqrt(np_abs(zNa*zHCO3)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_Na_CO3_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.0399, dtype='float64')
+    b1   = full_like(T,1.389, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0044, dtype='float64')
+    zNa = float_(1)
+    zCO3 = float_(-2)
+    C0 = Cphi / (2 * sqrt(np_abs(zNa*zCO3)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_K_Cl_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.04835, dtype='float64')
+    b1   = full_like(T,0.2122, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,-0.00084, dtype='float64')
+    zK = float_(1)
+    zCl = float_(-1)
+    C0 = Cphi / (2 * sqrt(np_abs(zK*zCl)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_K_SO4_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.04995, dtype='float64')
+    b1   = full_like(T,0.7793, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
+    zK = float_(1)
+    zSO4 = float_(-2)
+    C0 = Cphi / (2 * sqrt(np_abs(zK*zSO4)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_K_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,-0.0003, dtype='float64')
+    b1   = full_like(T,0.1735, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
+    zK = float_(1)
+    zHSO4 = float_(-1)
+    C0 = Cphi / (2 * sqrt(np_abs(zK*zHSO4)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_K_OH_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.1298, dtype='float64')
+    b1   = full_like(T,0.32, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0041, dtype='float64')
+    zK = float_(1)
+    zOH = float_(-1)
+    C0 = Cphi / (2 * sqrt(np_abs(zK*zOH)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_K_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.0296, dtype='float64')
+    b1   = full_like(T,-0.013, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,-0.008, dtype='float64')
+    zK = float_(1)
+    zHCO3 = float_(-1)
+    C0 = Cphi / (2 * sqrt(np_abs(zK*zHCO3)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_K_CO3_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.1488, dtype='float64')
+    b1   = full_like(T,1.43, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,-0.0015, dtype='float64')
+    zK = float_(1)
+    zCO3 = float_(-2)
+    C0 = Cphi / (2 * sqrt(np_abs(zK*zCO3)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_Ca_Cl_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.3159, dtype='float64')
+    b1   = full_like(T,1.614, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,-0.00034, dtype='float64')
+    zCa = float_(2)
+    zCl = float_(-1)
+    C0 = Cphi / (2 * sqrt(np_abs(zCa*zCl)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_Ca_SO4_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.2, dtype='float64')
+    b1   = full_like(T,3.1973, dtype='float64')
+    b2   = full_like(T,-54.24, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
+    zCa = float_(2)
+    zSO4 = float_(-2)
+    C0 = Cphi / (2 * sqrt(np_abs(zCa*zSO4)))
+    C1 = zeros_like(T)
+    alph1 = float_(1.4)
+    alph2 = float_(12)
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_Ca_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.2145, dtype='float64')
+    b1   = full_like(T,2.53, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
+    zCa = float_(2)
+    zHSO4 = float_(-1)
+    C0 = Cphi / (2 * sqrt(np_abs(zCa*zHSO4)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_Ca_OH_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,-0.1747, dtype='float64')
+    b1   = full_like(T,-0.2303, dtype='float64')
+    b2   = full_like(T,-5.72, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
+    zCa = float_(2)
+    zOH = float_(-1)
+    C0 = Cphi / (2 * sqrt(np_abs(zCa*zOH)))
+    C1 = zeros_like(T)
+    alph1 = float_(1.4)
+    alph2 = float_(12)
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_Ca_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.4, dtype='float64')
+    b1   = full_like(T,2.977, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
+    zCa = float_(2)
+    zHCO3 = float_(-1)
+    C0 = Cphi / (2 * sqrt(np_abs(zCa*zHCO3)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_Ca_CO3_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.0, dtype='float64')
+    b1   = full_like(T,0.0, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
+    zCa = float_(2)
+    zCO3 = float_(-2)
+    C0 = Cphi / (2 * sqrt(np_abs(zCa*zCO3)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_Mg_Cl_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.35235, dtype='float64')
+    b1   = full_like(T,1.6815, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.00519, dtype='float64')
+    zMg = float_(2)
+    zCl = float_(-1)
+    C0 = Cphi / (2 * sqrt(np_abs(zMg*zCl)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_Mg_SO4_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.221, dtype='float64')
+    b1   = full_like(T,3.343, dtype='float64')
+    b2   = full_like(T,-37.23, dtype='float64')
+    Cphi = full_like(T,0.025, dtype='float64')
+    zMg = float_(2)
+    zSO4 = float_(-2)
+    C0 = Cphi / (2 * sqrt(np_abs(zMg*zSO4)))
+    C1 = zeros_like(T)
+    alph1 = float_(1.4)
+    alph2 = float_(12)
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_Mg_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.4746, dtype='float64')
+    b1   = full_like(T,1.729, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
+    zMg = float_(2)
+    zHSO4 = float_(-1)
+    C0 = Cphi / (2 * sqrt(np_abs(zMg*zHSO4)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_Mg_OH_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.0, dtype='float64')
+    b1   = full_like(T,0.0, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
+    zMg = float_(2)
+    zOH = float_(-1)
+    C0 = Cphi / (2 * sqrt(np_abs(zMg*zOH)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_Mg_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.329, dtype='float64')
+    b1   = full_like(T,0.6072, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
+    zMg = float_(2)
+    zHCO3 = float_(-1)
+    C0 = Cphi / (2 * sqrt(np_abs(zMg*zHCO3)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_Mg_CO3_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.0, dtype='float64')
+    b1   = full_like(T,0.0, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
+    zMg = float_(2)
+    zCO3 = float_(-2)
+    C0 = Cphi / (2 * sqrt(np_abs(zMg*zCO3)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_MgOH_Cl_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,-0.1, dtype='float64')
+    b1   = full_like(T,1.658, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
+    zMgOH = float_(1)
+    zCl = float_(-1)
+    C0 = Cphi / (2 * sqrt(np_abs(zMgOH*zCl)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_MgOH_SO4_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.0, dtype='float64')
+    b1   = full_like(T,0.0, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
+    zMgOH = float_(1)
+    zSO4 = float_(-2)
+    C0 = Cphi / (2 * sqrt(np_abs(zMgOH*zSO4)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_MgOH_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.0, dtype='float64')
+    b1   = full_like(T,0.0, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
+    zMgOH = float_(1)
+    zHSO4 = float_(-1)
+    C0 = Cphi / (2 * sqrt(np_abs(zMgOH*zHSO4)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_MgOH_OH_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.0, dtype='float64')
+    b1   = full_like(T,0.0, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
+    zMgOH = float_(1)
+    zOH = float_(-1)
+    C0 = Cphi / (2 * sqrt(np_abs(zMgOH*zOH)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_MgOH_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.0, dtype='float64')
+    b1   = full_like(T,0.0, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
+    zMgOH = float_(1)
+    zHCO3 = float_(-1)
+    C0 = Cphi / (2 * sqrt(np_abs(zMgOH*zHCO3)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_MgOH_CO3_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.0, dtype='float64')
+    b1   = full_like(T,0.0, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
+    zMgOH = float_(1)
+    zCO3 = float_(-2)
+    C0 = Cphi / (2 * sqrt(np_abs(zMgOH*zCO3)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_H_Cl_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.1775, dtype='float64')
+    b1   = full_like(T,0.2945, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0008, dtype='float64')
+    zH = float_(1)
+    zCl = float_(-1)
+    C0 = Cphi / (2 * sqrt(np_abs(zH*zCl)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_H_SO4_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.0298, dtype='float64')
+    b1   = full_like(T,0.0, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0438, dtype='float64')
+    zH = float_(1)
+    zSO4 = float_(-2)
+    C0 = Cphi / (2 * sqrt(np_abs(zH*zSO4)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_H_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.2065, dtype='float64')
+    b1   = full_like(T,0.5556, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
+    zH = float_(1)
+    zHSO4 = float_(-1)
+    C0 = Cphi / (2 * sqrt(np_abs(zH*zHSO4)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_H_OH_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.0, dtype='float64')
+    b1   = full_like(T,0.0, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
+    zH = float_(1)
+    zOH = float_(-1)
+    C0 = Cphi / (2 * sqrt(np_abs(zH*zOH)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_H_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.0, dtype='float64')
+    b1   = full_like(T,0.0, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
+    zH = float_(1)
+    zHCO3 = float_(-1)
+    C0 = Cphi / (2 * sqrt(np_abs(zH*zHCO3)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+def bC_H_CO3_HMW84(T):
+# Coefficients from HMW84 Table 1
+    b0   = full_like(T,0.0, dtype='float64')
+    b1   = full_like(T,0.0, dtype='float64')
+    b2   = full_like(T,0.0, dtype='float64')
+    Cphi = full_like(T,0.0, dtype='float64')
+    zH = float_(1)
+    zCO3 = float_(-2)
+    C0 = Cphi / (2 * sqrt(np_abs(zH*zCO3)))
+    C1 = zeros_like(T)
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# --- Auto-generated by HMW84_funcgen_cca.py ----------------------------------
+
+def theta_K_Na_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,-0.012, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_K_Na_Cl_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.0018, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_Na_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.01, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_Na_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_Na_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_Na_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.003, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_Na_CO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.003, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def theta_Ca_Na_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,0.07, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Ca_Na_Cl_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.007, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_Na_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.055, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_Na_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_Na_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_Na_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_Na_CO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def theta_Mg_Na_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,0.07, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Mg_Na_Cl_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.012, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mg_Na_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.015, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mg_Na_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mg_Na_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mg_Na_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mg_Na_CO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def theta_MgOH_Na_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_MgOH_Na_Cl_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_MgOH_Na_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_MgOH_Na_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_MgOH_Na_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_MgOH_Na_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_MgOH_Na_CO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def theta_H_Na_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,0.036, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_H_Na_Cl_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.004, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_Na_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_Na_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.0129, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_Na_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_Na_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_Na_CO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def theta_Ca_K_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,0.032, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Ca_K_Cl_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.025, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_K_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_K_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_K_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_K_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_K_CO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def theta_K_Mg_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_K_Mg_Cl_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.022, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_Mg_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.048, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_Mg_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_Mg_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_Mg_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_Mg_CO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def theta_K_MgOH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_K_MgOH_Cl_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_MgOH_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_MgOH_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_MgOH_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_MgOH_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_MgOH_CO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def theta_H_K_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,0.005, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_H_K_Cl_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.011, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_K_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.197, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_K_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.0265, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_K_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_K_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_K_CO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def theta_Ca_Mg_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,0.007, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Ca_Mg_Cl_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.012, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_Mg_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.024, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_Mg_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_Mg_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_Mg_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_Mg_CO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def theta_Ca_MgOH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Ca_MgOH_Cl_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_MgOH_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_MgOH_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_MgOH_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_MgOH_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_MgOH_CO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def theta_Ca_H_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,0.092, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Ca_H_Cl_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.015, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_H_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_H_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_H_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_H_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_H_CO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def theta_Mg_MgOH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Mg_MgOH_Cl_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.028, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mg_MgOH_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mg_MgOH_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mg_MgOH_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mg_MgOH_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mg_MgOH_CO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def theta_H_Mg_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,0.1, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_H_Mg_Cl_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.011, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_Mg_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_Mg_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.0178, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_Mg_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_Mg_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_Mg_CO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def theta_H_MgOH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_H_MgOH_Cl_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_MgOH_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_MgOH_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_MgOH_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_MgOH_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_MgOH_CO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+# --- Auto-generated by HMW84_funcgen_caa.py ---------------------------------- 
+
+def theta_Cl_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,0.02, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Na_Cl_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0014, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_Cl_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_Cl_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.018, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mg_Cl_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.004, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_MgOH_Cl_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_Cl_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def theta_Cl_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,-0.006, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Na_Cl_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.006, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_Cl_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_Cl_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mg_Cl_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_MgOH_Cl_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_Cl_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.013, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def theta_Cl_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,-0.05, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Na_Cl_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.006, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_Cl_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.006, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_Cl_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.025, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mg_Cl_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_MgOH_Cl_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_Cl_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def theta_Cl_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,0.03, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Na_Cl_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.15, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_Cl_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_Cl_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mg_Cl_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.096, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_MgOH_Cl_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_Cl_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def theta_CO3_Cl_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,-0.02, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Na_CO3_Cl_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0085, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_CO3_Cl_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.004, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_CO3_Cl_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mg_CO3_Cl_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_MgOH_CO3_Cl_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_CO3_Cl_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def theta_HSO4_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Na_HSO4_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.0094, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_HSO4_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.0677, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_HSO4_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mg_HSO4_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.0425, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_MgOH_HSO4_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_HSO4_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def theta_OH_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,-0.013, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Na_OH_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.009, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_OH_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.05, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_OH_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mg_OH_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_MgOH_OH_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_OH_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def theta_HCO3_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,0.01, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Na_HCO3_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.005, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_HCO3_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_HCO3_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mg_HCO3_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.161, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_MgOH_HCO3_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_HCO3_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def theta_CO3_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,0.02, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Na_CO3_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.005, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_CO3_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.009, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_CO3_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mg_CO3_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_MgOH_CO3_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_CO3_SO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def theta_HSO4_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Na_HSO4_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_HSO4_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_HSO4_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mg_HSO4_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_MgOH_HSO4_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_HSO4_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def theta_HCO3_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Na_HCO3_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_HCO3_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_HCO3_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mg_HCO3_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_MgOH_HCO3_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_HCO3_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def theta_CO3_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Na_CO3_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_CO3_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_CO3_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mg_CO3_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_MgOH_CO3_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_CO3_HSO4_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def theta_HCO3_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Na_HCO3_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_HCO3_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_HCO3_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mg_HCO3_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_MgOH_HCO3_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_HCO3_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def theta_CO3_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,0.1, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Na_CO3_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.017, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_CO3_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,-0.01, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_CO3_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mg_CO3_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_MgOH_CO3_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_CO3_OH_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def theta_CO3_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    theta = full_like(T,-0.04, dtype='float64')
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Na_CO3_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.002, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_CO3_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.012, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_CO3_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mg_CO3_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_MgOH_CO3_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_CO3_HCO3_HMW84(T):
+# Coefficients from HMW84 Table 2
+    psi = full_like(T,0.0, dtype='float64')
+    valid = T == 298.15
+    return psi, valid
+
+# === HARVIE, MOLLER AND WEARE 1984 ===========================================
 ###############################################################################
