@@ -1,4 +1,4 @@
-# Introduction
+# pytzer.coeffs
 
 **pytzer.coeffs** contains functions for ionic interaction coefficients.
 
@@ -16,9 +16,8 @@ There are six different types of coefficient functions, each representing a diff
 
   1. `mu_`, for interactions between three neutral solutes of the same type (*μ*).
 
-We do not provide a full list of the functions currently at this point (but would like to in the future).
+There is not yet a full list of all the functions available. A number of them are not used by any ready-made **CoefficientDictionary**.
 
-A number of the functions in **pytzer.coeffs** are not used by any of the ready-made **cfdicts**.
 
 ## Philosophy
 
@@ -26,9 +25,12 @@ The main principle followed when constructing these functions is to maintain a *
 
 Coefficient functions are only created for studies that report something new. If a new study reports coefficient equations or values but is simply copying them exactly from an older study, the newer study does not get a new function. Rather, when constructing a **CoefficientDictionary** to represent the newer study, the older study's function should be selected.
 
-If a new study takes an older study's coefficients and modifies them in some way, this will be represented in the code: the function for the new study will call the older study's function to get the original values, and then modify them, rather than re-declaring the original values itself. See for example...
+If a new study takes an older study's coefficients and modifies them in some way, this will be represented in the code: the function for the new study will call the older study's function to get the original values, and then modify them, rather than re-declaring the original values itself.
 
-Where an equation is provided to evaluate coefficients, rather than a single value, this equation will be written out in its own function... See for example...
+Where an equation is provided to evaluate coefficients, rather than a single value, this equation will be written out once only, in its own function. All of the coefficient functions that use this equation will then simply pass the relevant coefficients into that function.
+
+**pytzer** takes these steps because the literature is littered with typos. Papers that compile coefficients from multiple sources into a complex model are particularly problematic. Our approach should minimise the opportunity for these errors to occur, and better still, once an error is detected, it will only ever need to be fixed in one place. When we *do* identify a specific typo in a study, this will be noted in comments within the coefficient's function, and adjust the function to use the correct value, if it can be found. We keep a separate summary of all of these corrections, which will be published for reference in due course.
+
 
 ## Syntax
 
@@ -40,7 +42,8 @@ Some of these functions are defined as a function of pressure as well as tempera
 
 The outputs are the coefficient(s') value(s), and a logical array (`valid`) indicating whether the input temperature(s) fell within the function's validity range. *The logical array is not currently used.*
 
-Output formats...
+The output variables each have the same shape as the temperature input, with the exception of `alph1`, `alph2` and `omega` in the `bC_` functions, which are almost always single values.
+
 
 ### `bC_` functions
 
@@ -66,6 +69,9 @@ def bC_cation_anion_source(T):
     return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 ```
 
+If any of the main five coefficients (i.e. `b0` to `C1`) is not used for any electrolyte, it will be set to an array of zeros of the same shape as input `T`. Unused `alph1`, `alph2` or `omega` coefficents are set to **−9** - if a value of zero was used, it would cause problems going through **pytzer.model**, even though the problematic result is then multiplied by zero.
+
+
 ### Other functions
 
 All the other coefficients do not have auxiliary parameters and consequently have much simpler functions:
@@ -78,3 +84,5 @@ def coefficient_ion1_ion2[_ion3]_source(T):
 
     return coeff, valid
 ```
+
+Again, if the coefficient is explicitly defined as unused by the source, then the output `coeff` will be an array of zeros, the same shape as input `T`.

@@ -1,33 +1,39 @@
 # 0.2 (beta)
 
+
 ## 0.2.2
 
 **Release date:** forthcoming
 
   * Added temperature to the file produced by **print_coeffs**;
-  * Added neutrals, and made other general improvements, to **pytzer.coeffs** documentation.
+  * Improved documentation:
+    * Added neutrals, and made other updates, for **pytzer.coeffs**;
+    * Updated for **pytzer.cfdicts**.
+
 
 ## 0.2.1
 
 **Release date:** 2019-01-24
 
   * Fixed fatal indexing error in **model.Gex_nRT**;
-  * Added **cfdict** for the Waters and Millero (2013) model;
-  * Added **cfdict** for MarChemSpec project testing;
+  * Added **CoefficientDictionary** `WM13` for the Waters and Millero (2013) model;
+  * Added **CoefficientDictionary** `MarChemSpec` for MarChemSpec project testing;
   * Added *some* coefficient values from Gallego-Urrea and Turner (2017);
-  * Added equations for neutral solute interactions to **model.Gex_nRT**, along with supporting functions in **cfdicts**;
+  * Added equations for neutral solute interactions to **model.Gex_nRT**, along with supporting functions in **pytzer.cfdicts**;
   * Added **CoefficientDictionary** methods:
-    * **print_coeffs** to evaluate all model coefficients at a given temperature, and print them to file;
-    * **get_contents** to generate lists of all ions and all references within the dictionary;
+    * **print_coeffs**, to evaluate all model coefficients at a given temperature, and print them to file;
+    * **get_contents**, to generate lists of all ions and all references within the dictionary;
   * Updated documentation on coefficient dictionaries to reflect these changes;
   * Added **meta** module as single-source-of-truth for package version;
   * Updated documentation with basic information on neutral solutes.
+
 
 ## 0.2.0
 
 **Release date:** 2019-01-23
 
 The first beta release, including full documentation on [pytzer.readthedocs.io](https://pytzer.readthedocs.io).
+
 
 # 0.1 (alpha)
 
