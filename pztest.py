@@ -9,9 +9,7 @@ cf = pz.cfdicts.MarChemSpec
 
 # Print out coefficient values to file
 
-cf.print_coeffs(298.15,'print_coeffs/pytzer_MarChemSpec_25.txt')
-
-print(cf.ions)
+cf.print_coeffs(298.15,'print_coeffs/pytzer021_MarChemSpec_25.txt')
 
 #cf.add_zeros(np.array(['Ba','Ca']))
 
