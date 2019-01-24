@@ -1,5 +1,11 @@
 # 0.2 (beta)
 
+## 0.2.2
+
+**Release date:** forthcoming
+
+  * Added temperature to file produced by **print_coeffs**.
+
 ## 0.2.1
 
 **Release date:** 2019-01-24

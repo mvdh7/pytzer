@@ -119,6 +119,8 @@ class CoefficientDictionary:
 
 #        srcslist = 'Sources: ' + (len(self.srcs)-1)*'{}, ' + '{}\n\n'
 #        f.write(srcslist.format(*self.srcs))
+        
+        f.write('Temperature: {} K\n\n'.format(T))
 
         # Debye-Hueckel slope
         f.write('Debye-Hueckel limiting slope\n')
