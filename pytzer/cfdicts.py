@@ -3,7 +3,7 @@
 
 from . import coeffs, jfuncs, props
 from .meta import version
-from numpy import array
+from autograd.numpy import array, concatenate, unique
 from copy import deepcopy
 
 #==============================================================================
@@ -11,9 +11,12 @@ from copy import deepcopy
 
 class CoefficientDictionary:
 
-    # Initialise
+    
+# ------------------------------------------------------------ Initialise -----
+    
     def __init__(self):
         self.name  = ''
+        
         self.dh    = {} # Aosm
         self.bC    = {} # c-a
         self.theta = {} # c-c' and a-a'
@@ -22,9 +25,13 @@ class CoefficientDictionary:
         self.lambd = {} # n-c and n-a
         self.eta   = {} # n-c-a
         self.mu    = {} # n-n-n
+        
+        self.ions  = array([])
+        self.srcs  = array([])
 
-    # Populate with zero-functions
-    def add_nones(self,ions):
+# ------------------------------------------ Populate with zero-functions -----
+        
+    def add_zeros(self,ions):
 
         # Get lists of cations and anions
         _,cations,anions,neutrals = props.charges(ions)
@@ -97,13 +104,21 @@ class CoefficientDictionary:
             if innn not in self.mu.keys():
                 self.mu[innn] = coeffs.mu_none
 
-    # Print all coefficient values at a given temperature
+
+# ------------------- Print all coefficient values at a given temperature -----
+                
     def print_coeffs(self,T,filename):
 
         f = open(filename,'w')
 
         f.write('Coefficient dictionary: {} [pytzer-v{}]\n\n'.format( \
                 self.name,version))
+        
+        ionslist = 'Ions: ' + (len(self.ions)-1)*'{}, ' + '{}\n\n'
+        f.write(ionslist.format(*self.ions))
+
+#        srcslist = 'Sources: ' + (len(self.srcs)-1)*'{}, ' + '{}\n\n'
+#        f.write(srcslist.format(*self.srcs))
 
         # Debye-Hueckel slope
         f.write('Debye-Hueckel limiting slope\n')
@@ -232,6 +247,24 @@ class CoefficientDictionary:
             f.write(muVals.format(neut1,neut2,neut3,eval_mu,src))
 
 
+# -------------------------------- Get all ions and sources in the cfdict -----
+
+    def get_contents(self):
+
+        ctypes = [self.bC, self.theta, self.psi, self.lambd, self.eta, self.mu]
+        
+        all_funcs = [[ctype[key].__name__.split('_')[1:] \
+                      for key in ctype.keys()] for ctype in ctypes]
+        
+        self.ions = unique(concatenate([[func[:-1] for func in ftype]
+                                        for ftype in all_funcs][0]))
+        
+        self.srcs = unique(concatenate([[func[-1] for func in ftype] \
+                                       for ftype in all_funcs]))
+
+        self.ions.sort()
+        self.srcs.sort()
+
 
 #==============================================================================
 #=============================== Define specific coefficient dictionaries =====
@@ -272,6 +305,7 @@ M88.psi['Ca-Na-SO4'] = coeffs.psi_Ca_Na_SO4_M88
 M88.psi['Ca-Cl-SO4'] = coeffs.psi_Ca_Cl_SO4_M88
 M88.psi['Na-Cl-SO4'] = coeffs.psi_Na_Cl_SO4_M88
 
+M88.get_contents()
 
 #------------------------------------------------ Greenberg & Møller 1989 -----
 
@@ -318,6 +352,7 @@ GM89.psi['Ca-Cl-SO4'] = coeffs.psi_Ca_Cl_SO4_M88
 GM89.psi['K-Cl-SO4' ] = coeffs.psi_K_Cl_SO4_GM89
 GM89.psi['Na-Cl-SO4'] = coeffs.psi_Na_Cl_SO4_M88
 
+GM89.get_contents()
 
 #------------------------------------------------------ Clegg et al. 1994 -----
 
@@ -347,6 +382,7 @@ CRP94.jfunc = jfuncs.P75_eq47
 # c-a-a'
 CRP94.psi['H-HSO4-SO4'] = coeffs.psi_H_HSO4_SO4_CRP94
 
+CRP94.get_contents()
 
 #-------------------------------------------------- Waters & Millero 2013 -----
 
@@ -482,6 +518,7 @@ WM13.psi['Ca-K-Cl'  ] = coeffs.psi_Ca_K_Cl_HMW84
 WM13.psi['Ca-K-SO4' ] = coeffs.psi_Ca_K_SO4_WM13 # agrees with HMW84
 WM13.psi['Ca-K-HSO4'] = coeffs.psi_Ca_K_HSO4_WM13 # agrees with HMW84
 
+WM13.get_contents()
 
 #------------------------------------------------------------ MarChemSpec -----
 
@@ -504,7 +541,8 @@ MarChemSpec.lambd['tris-K'    ] = coeffs.lambd_tris_K_GT17simopt
 MarChemSpec.lambd['tris-Mg'   ] = coeffs.lambd_tris_Mg_GT17simopt
 MarChemSpec.lambd['tris-Ca'   ] = coeffs.lambd_tris_Ca_GT17simopt
 
-MarChemSpec.add_nones(array(['H','Na','Mg','Ca','K','MgOH','trisH','Cl','SO4',
+MarChemSpec.add_zeros(array(['H','Na','Mg','Ca','K','MgOH','trisH','Cl','SO4',
                              'HSO4','OH','tris']))
+MarChemSpec.get_contents()
 
 #==============================================================================

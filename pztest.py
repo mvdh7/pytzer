@@ -11,6 +11,8 @@ cf = pz.cfdicts.MarChemSpec
 
 cf.print_coeffs(298.15,'print_coeffs/pytzer_MarChemSpec_25.txt')
 
+print(cf.ions)
+
 ## Cut out zero ionic strengths and do calculations
 #
 #zs = pz.props.charges(ions)[0]
