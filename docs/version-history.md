@@ -4,7 +4,8 @@
 
 **Release date:** forthcoming
 
-  * Added temperature to file produced by **print_coeffs**.
+  * Added temperature to the file produced by **print_coeffs**;
+  * Added neutrals, and made other general improvements, to **pytzer.coeffs** documentation.
 
 ## 0.2.1
 
