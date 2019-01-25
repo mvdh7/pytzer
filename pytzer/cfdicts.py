@@ -401,7 +401,7 @@ WM13.jfunc = jfuncs.P75_eq47
 # Table A1: Na salts
 WM13.bC['Na-Cl'  ] = coeffs.bC_Na_Cl_M88
 WM13.bC['Na-SO4' ] = coeffs.bC_Na_SO4_HM86
-WM13.bC['Na-HSO4'] = coeffs.bC_Na_HSO4_HPR93viaWM13
+WM13.bC['Na-HSO4'] = coeffs.bC_Na_HSO4_HPR93
 WM13.bC['Na-OH'  ] = coeffs.bC_Na_OH_PP87i
 
 # Table A2: Mg salts

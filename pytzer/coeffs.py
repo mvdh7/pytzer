@@ -1655,6 +1655,33 @@ def bC_Na_SO4_HPR93(T):
 
     return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
+# --- bC: sodium bisulfate ----------------------------------------------------
+    
+# Coefficients from HPR93 Table 3 for low ionic strengths
+    
+def bC_Na_HSO4_HPR93(T):
+    
+    b0 = full_like(T,0.0670967)
+    b1 = full_like(T,0.3826401)
+    b2 = zeros_like(T)
+    
+    Cphi = full_like(T,-0.0039056)
+    
+    zNa   = float_(+1)
+    zHSO4 = float_(-2)
+    C0    = Cphi / (2 * sqrt(np_abs(zNa*zHSO4)))
+    
+    C1 = zeros_like(T)
+    
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    
+    valid = T == 298.15
+    
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+    
+
 # === HOVEY, PITZER AND RARD 1993 =============================================
 ###############################################################################
 
