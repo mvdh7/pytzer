@@ -6,11 +6,11 @@ filename = 'testfiles/GenerateConcs.csv'
 
 mols,ions,T = pz.io.getmols(filename)
 
-cf = pz.cfdicts.MarChemSpec
+cf = pz.cfdicts.WM13
 
 # Print out coefficient values to file
 
-#cf.print_coeffs(298.15,'print_coeffs/pytzer021_MarChemSpec_25.txt')
+cf.print_coeffs(298.15,'print_coeffs/pytzer-v0-2-1-1_WM13_25.txt')
 
 #cf.add_zeros(np.array(['Ba','Ca']))
 
@@ -31,16 +31,16 @@ cf = pz.cfdicts.MarChemSpec
 #osm    [L  ] = pz.model.osm    (*nargs)
 #acfs   [L,:] = pz.model.acfs   (*nargs)
 
-I = np.zeros((1,1))
-T = np.full((1,1),298.15)
-
-#fG = pz.model.fG(T,I,cf)
+#I = np.zeros((1,1))
+#T = np.full((1,1),298.15)
 #
-#B = pz.model.B(T,I,cf,'Na-Cl')
-g = pz.model.g(I)
-#gp = pz.model.g_vjp(I)
-
-gp = egrad(pz.model.g)(I)
+##fG = pz.model.fG(T,I,cf)
+##
+##B = pz.model.B(T,I,cf,'Na-Cl')
+#g = pz.model.g(I)
+##gp = pz.model.g_vjp(I)
+#
+#gp = egrad(pz.model.g)(I)
 
 #
 #CT = pz.model.CT(T,I,cf,'Na-Cl')
