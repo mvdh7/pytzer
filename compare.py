@@ -47,7 +47,7 @@ for cnum in range(5):
         cdiff = test[0][cnum] - WM13_bC[ix][cnum]
         
         note = ' '
-        if np.abs(cdiff) > np.abs(1e-3 * WM13_bC[ix][cnum]):
+        if np.abs(cdiff) > np.abs(1e-6 * WM13_bC[ix][cnum]):
             note = '*'
         
         print(strfmt.format(ions[0],WM13_bC[ix][cnum],test[0][cnum],cdiff,note))
