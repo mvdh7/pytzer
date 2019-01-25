@@ -10,7 +10,8 @@
     * Added neutrals, and made other updates, for **pytzer.coeffs**;
     * Updated for **pytzer.cfdicts**;
   * Fixed zero ionic strength error for **model.Gex_nRT**;
-  * Removed `Jp` outputs from all **jfuncs**.
+  * Removed `Jp` outputs from all **jfuncs**;
+  * Corrected functions contributing **CoefficientDictionary** `WM13` following intercomparison with Prof S.L. Clegg.
 
 
 ## 0.2.1
