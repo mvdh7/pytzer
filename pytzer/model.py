@@ -1,10 +1,12 @@
 # pytzer: the Pitzer model for chemical speciation
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 
-from autograd.numpy import array, exp, full_like, log, shape, sqrt, vstack
+from autograd.numpy import array, exp, full_like, log, \
+                           shape, sqrt, vstack, nan_to_num, errstate
 from autograd.numpy import abs as np_abs
 from autograd.numpy import sum as np_sum
 from autograd import elementwise_grad as egrad
+from autograd.extend import primitive, defvjp
 from .constants import b, Mw, R
 from . import props
 
@@ -19,24 +21,39 @@ def fG(T,I,cfdict): # from CRP94 Eq. (AI1)
 #==============================================================================
 #============================================== Pitzer model subfunctions =====
 
+#@primitive
 def g(x): # CRP94 Eq. (AI13)
-    return 2 * (1 - (1 + x) * exp(-x)) / x**2
+    with errstate(invalid='ignore'):
+        g = nan_to_num(2 * (1 - (1 + x) * exp(-x)) / x**2)
+    return g
+
+#def gp(x):
+#    return egrad(g)(x)
+
+#def g_vjp(ans,x):
+#    with errstate(invalid='ignore'):
+#    gp = egrad(g)
+#    return lambda G: G * egrad(g)(x)
+#defvjp(g,g_vjp)
+
 
 def h(x):  # CRP94 Eq. (AI15)
-    return (6 - (6 + x*(6 + 3*x + x**2)) * exp(-x)) / x**4
+    with errstate(invalid='ignore'):
+        h = nan_to_num((6 - (6 + x*(6 + 3*x + x**2)) * exp(-x)) / x**4)
+    return h
 
 
 def B(T,I,cfdict,iset): # CRP94 Eq. (AI7)
 
-    b0,b1,b2,_,_,a1,a2,_,_ = cfdict.bC[iset](T)
+    b0,b1,b2,_,_,alph1,alph2,_,_ = cfdict.bC[iset](T)
 
-    return b0 + b1 * g(a1*sqrt(I)) + b2 * g(a2*sqrt(I))
+    return b0 + b1 * g(alph1*sqrt(I)) + b2 * g(alph2*sqrt(I))
 
 def CT(T,I,cfdict,iset): # CRP94 Eq. (AI10)
 
-    _,_,_,C0,C1,_,_,o,_ = cfdict.bC[iset](T)
+    _,_,_,C0,C1,_,_,omega,_ = cfdict.bC[iset](T)
 
-    return C0 + 4 * C1 * h(o*sqrt(I))
+    return C0 + 4 * C1 * h(omega*sqrt(I))
 
 
 #==============================================================================
@@ -52,8 +69,8 @@ def etheta(T,I,z0,z1,cfdict):
     x01 = xij(T,I,z0,z1,cfdict)
     x11 = xij(T,I,z1,z1,cfdict)
 
-    etheta = z0*z1 * (cfdict.jfunc(x01)[0] \
-             - 0.5 * (cfdict.jfunc(x00)[0] + cfdict.jfunc(x11)[0])) / (4 * I)
+    etheta = nan_to_num(z0*z1 * (cfdict.jfunc(x01) \
+             - 0.5 * (cfdict.jfunc(x00) + cfdict.jfunc(x11))) / (4 * I))
 
     return etheta
 
@@ -179,6 +196,9 @@ def Gex_nRT(mols,ions,T,cfdict):
             Gex_nRT = Gex_nRT + 2 * vstack(neus[:,N] * anis[:,A0]) \
                                   * cfdict.lambd[ina](T)[0]
 
+    
+    Gex_nRT = nan_to_num(Gex_nRT)
+    
     # Add n-n-n interactions
     for N, neutral in enumerate(neutrals):
         

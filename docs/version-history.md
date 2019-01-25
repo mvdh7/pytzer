@@ -8,7 +8,9 @@
   * Added temperature to the file produced by **print_coeffs**;
   * Improved documentation:
     * Added neutrals, and made other updates, for **pytzer.coeffs**;
-    * Updated for **pytzer.cfdicts**.
+    * Updated for **pytzer.cfdicts**;
+  * Fixed zero ionic strength error for **model.Gex_nRT**;
+  * Removed `Jp` outputs from all **jfuncs**.
 
 
 ## 0.2.1
