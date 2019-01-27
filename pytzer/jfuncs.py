@@ -3,9 +3,7 @@
 
 from autograd.numpy import exp, float_, full_like, log, nan, size, zeros, \
                            zeros_like, errstate
-from autograd import elementwise_grad as egrad
 from autograd.extend import primitive, defvjp
-from scipy.misc import derivative
 
 
 # === Pitzer (1975) Eq. (46) ==================================================
@@ -143,30 +141,12 @@ def _Harvie_raw(x):
         J [s] = 0.25 * xs - 1 + 0.5 * (bk[0] - bk[2]) # Eq. (B-29)
         Jp[s] = 0.25 + 0.5 * dz_dx * (dk[0] - dk[2])  # Eq. (B-30)
 
-    return J#, Jp
+    return J, Jp
 
-# Perform code gymnastics so that autograd can differentiate _Harvie_raw
 @primitive
-def _Harvie_J(x):
-    return _Harvie_raw(x)#[0]
-#@primitive
-#def _Harvie_Jp(x):
-#    return _Harvie_raw(x)[1]
-
-_Harvie_dx = 1e-9
-def _Harvie_J_drv(x):
-    return derivative(_Harvie_J,x,  dx=_Harvie_dx) * _Harvie_dx
-#def _Harvie_Jp_drv(x):
-#    return derivative(_Harvie_Jp,x, dx=_Harvie_dx) * _Harvie_dx
-
-def _Harvie_J_vjp(ans,x):
-    return lambda g: g * _Harvie_J_drv(x)
-#def _Harvie_Jp_vjp(ans,x):
-#    return lambda g: g * _Harvie_Jp_drv(x)
-
-defvjp(_Harvie_J ,_Harvie_J_vjp )
-#defvjp(_Harvie_Jp,_Harvie_Jp_vjp)
-
-# This is the final function to call in pytzer:
 def Harvie(x):
-    return _Harvie_J(x)#, _Harvie_Jp(x)
+    return _Harvie_raw(x)[0]
+
+def _Harvie_vjp(ans,x):
+    return lambda g: g * _Harvie_raw(x)[1]
+defvjp(Harvie,_Harvie_vjp)

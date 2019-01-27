@@ -8,9 +8,19 @@ mols,ions,T = pz.io.getmols(filename)
 
 cf = pz.cfdicts.WM13
 
+# Test jfunc differentiation Harvie
+
+x = np.array([1.5])
+
+J, Jp = pz.jfuncs._Harvie_raw(x)
+
+Jg = egrad(lambda x: pz.jfuncs.Harvie(x)[0])(x)
+
+print(Jp,Jg)
+
 # Print out coefficient values to file
 
-cf.print_coeffs(298.15,'print_coeffs/pytzer-v0-2-1-1_WM13_25.txt')
+#cf.print_coeffs(298.15,'print_coeffs/pytzer-v0-2-1-1_WM13_25.txt')
 
 #cf.add_zeros(np.array(['Ba','Ca']))
 
