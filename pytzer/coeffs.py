@@ -59,14 +59,14 @@ def mu_none(T):
 # --- theta: hydrogen magnesium -----------------------------------------------
 
 def theta_H_Mg_RGB80(T):
-    
-    # RGB80 do provide theta values at 5, 15, 25, 35 and 45 degC, but no 
+
+    # RGB80 do provide theta values at 5, 15, 25, 35 and 45 degC, but no
     #  equation to interpolate between them.
     # This function just returns the 25 degC value.
-    
+
     theta = full_like(T,0.0620)
     valid = T == 298.15
-    
+
     return theta, valid
 
 # === ROY ET AL. 1980 =========================================================
@@ -108,10 +108,10 @@ def bC_Mg_SO4_RM81i(T):
 # --- theta: calcium hydrogen -------------------------------------------------
 
 def theta_Ca_H_RGO82(T):
-    
+
     theta = full_like(T,0.0612)
     valid = T == 298.15
-    
+
     return theta, valid
 
 # === ROY ET AL. 1982 =========================================================
@@ -209,7 +209,7 @@ def bC_Mg_Cl_dLP83(T):
          - 1.09438e-2 * T    \
          + 2.60135
 
-    b2 = zeros_like(T)
+    b2   = zeros_like(T)
 
     Cphi = 3.01823e-7 * T**2 \
          - 2.89125e-4 * T    \
@@ -1454,63 +1454,63 @@ def bC_Na_Cl_A92ii(T):
 
 # Mostly just adding a temperature derivative from Pitzer's book chapter to a
 #  constant coefficient value at 298.15 K
-    
+
 # --- bC: calcium sulfate -----------------------------------------------------
 
 def bC_Ca_SO4_P91(T):
-    
+
     # Define reference temperature
     TR = float_(298.15)
-    
+
     # Inherit from HMW84
     b0,b1,b2,C0,C1, alph1,alph2,omega, valid = bC_Ca_SO4_HMW84(T)
-    
+
     # Temperature derivatives from P91/Chapter3/Table13 on page 111.
     b1 = b1 + 5.46e-2 * (T - TR)
     b2 = b2 - 5.16e-1 * (T - TR)
-    
+
     return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: calcium bisulfate ---------------------------------------------------
 
 def bC_Ca_HSO4_P91(T):
-    
+
     # Define reference temperature
     TR = float_(298.15)
-    
+
     # Inherit from HMW84
     b0,b1,b2,C0,C1, alph1,alph2,omega, valid = bC_Ca_HSO4_HMW84(T)
-    
+
     # Convert C0 back to Cphi
     zCa   = float_(+2)
     zHSO4 = float_(-1)
     Cphi  = C0 * (2 * sqrt(np_abs(zCa*zHSO4)))
-    
+
     # Temperature derivatives should be in P91/Chapter 3, according to WM13,
     #  but I can't find them there.
     # Values here are therefore directly from WM13/TableA3.
     b0   = b0   + 8.3e-4  * (T - TR)
     b1   = b1   + 5.8e-3  * (T - TR)
     Cphi = Cphi - 1.09e-4 * (T - TR)
-    
+
     return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: potassium bisulfate -------------------------------------------------
 
 def bC_K_HSO4_P91(T):
-    
+
     # Define reference temperature
     TR = float_(298.15)
-    
+
     # Inherit from HMW84
     b0,b1,b2,C0,C1, alph1,alph2,omega, valid = bC_K_HSO4_HMW84(T)
-    
+
     # Temperature derivatives should be in P91/Chapter 3, according to WM13,
     #  but I can't find them there.
     # Values here are therefore directly from WM13/TableA3.
     b0 = b0 + 6e5      * (T - TR)
     b1 = b1 + 1.007e-2 * (T - TR)
-    
+
     return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # === PITZER 1991 =============================================================
@@ -1656,31 +1656,31 @@ def bC_Na_SO4_HPR93(T):
     return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: sodium bisulfate ----------------------------------------------------
-    
+
 # Coefficients from HPR93 Table 3 for low ionic strengths
-    
+
 def bC_Na_HSO4_HPR93(T):
-    
+
     b0 = full_like(T,0.0670967)
     b1 = full_like(T,0.3826401)
     b2 = zeros_like(T)
-    
+
     Cphi = full_like(T,-0.0039056)
-    
+
     zNa   = float_(+1)
     zHSO4 = float_(-2)
     C0    = Cphi / (2 * sqrt(np_abs(zNa*zHSO4)))
-    
+
     C1 = zeros_like(T)
-    
+
     alph1 = float_(2)
     alph2 = -9
     omega = -9
-    
+
     valid = T == 298.15
-    
+
     return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
-    
+
 
 # === HOVEY, PITZER AND RARD 1993 =============================================
 ###############################################################################
@@ -2199,12 +2199,12 @@ def psi_Mg_HSO4_SO4_RC99(T):
 #%%############################################################################
 # === WATERS & MILLERO 2013 ===================================================
 
-# Some are functions that WM13 declared came from another source, but I 
+# Some are functions that WM13 declared came from another source, but I
 #  couldn't find them there, so copied directly from WM13 instead.
 #
 # Others were just declared by WM13 as zero. These all seem to agree with
 #  HMW84; it's unclear why HMW84 wasn't cited by WM13 for these.
-    
+
 # --- bC: sodium sulfate ------------------------------------------------------
 
 def bC_Na_HSO4_HPR93viaWM13(T):
@@ -2212,109 +2212,109 @@ def bC_Na_HSO4_HPR93viaWM13(T):
     return bC_none(T)
 
 # --- theta: bisulfate sulfate ------------------------------------------------
-    
+
 def theta_HSO4_SO4_WM13(T):
     # WM13 Table A7
     return theta_none(T)
 
 # --- psi: hydrogen chloride sulfate ------------------------------------------
-    
+
 def psi_H_Cl_SO4_WM13(T):
     # WM13 Table A8
     return psi_none(T)
 
 # --- psi: hydrogen chloride hydroxide ----------------------------------------
-    
+
 def psi_H_Cl_OH_WM13(T):
     # WM13 Table A8
     return psi_none(T)
 
 # --- psi: magnesium chloride hydroxide ---------------------------------------
-    
+
 def psi_Mg_Cl_OH_WM13(T):
     # WM13 Table A8
     return psi_none(T)
 
 # --- psi: calcium bisulfate sulfate ------------------------------------------
-    
+
 def psi_Ca_HSO4_SO4_WM13(T):
     # WM13 Table A8
     return psi_none(T)
 
 # --- psi: hydrogen hydroxide sulfate ------------------------------------------
-    
+
 def psi_H_OH_SO4_WM13(T):
     # WM13 Table A8
     return psi_none(T)
 
 # --- psi: magnesium hydroxide sulfate ----------------------------------------
-    
+
 def psi_Mg_OH_SO4_WM13(T):
     # WM13 Table A8
     return psi_none(T)
 
 # --- psi: calcium hydroxide sulfate ------------------------------------------
-    
+
 def psi_Ca_OH_SO4_WM13(T):
     # WM13 Table A8
     return psi_none(T)
 
 # --- psi: hydrogen sodium sulfate --------------------------------------------
-    
+
 def psi_H_Na_SO4_WM13(T):
     # WM13 Table A9
     return psi_none(T)
 
 # --- psi: calcium hydrogen sulfate -------------------------------------------
-    
+
 def psi_Ca_H_SO4_WM13(T):
     # WM13 Table A9
     return psi_none(T)
 
 # --- psi: calcium hydrogen bisulfate -----------------------------------------
-    
+
 def psi_Ca_H_HSO4_WM13(T):
     # WM13 Table A9
     return psi_none(T)
 
 # --- psi: magnesium sodium bisulfate -----------------------------------------
-    
+
 def psi_Mg_Na_HSO4_WM13(T):
     # WM13 Table A9
     return psi_none(T)
 
 # --- psi: calcium sodium bisulfate -------------------------------------------
-    
+
 def psi_Ca_Na_HSO4_WM13(T):
     # WM13 Table A9
     return psi_none(T)
 
 # --- psi: potassium sodium bisulfate -----------------------------------------
-    
+
 def psi_K_Na_HSO4_WM13(T):
     # WM13 Table A9
     return psi_none(T)
 
 # --- psi: calcium magnesium bisulfate ----------------------------------------
-    
+
 def psi_Ca_Mg_HSO4_WM13(T):
     # WM13 Table A9
     return psi_none(T)
 
 # --- psi: potassium magnesium bisulfate --------------------------------------
-    
+
 def psi_K_Mg_HSO4_WM13(T):
     # WM13 Table A9
     return psi_none(T)
 
 # --- psi: calcium potassium sulfate ------------------------------------------
-    
+
 def psi_Ca_K_SO4_WM13(T):
     # WM13 Table A9
     return psi_none(T)
 
 # --- psi: calcium potassium bisulfate ----------------------------------------
-    
+
 def psi_Ca_K_HSO4_WM13(T):
     # WM13 Table A9
     return psi_none(T)
@@ -2328,143 +2328,143 @@ def psi_Ca_K_HSO4_WM13(T):
 # --- bC: sodium chloride -----------------------------------------------------
 
 def bC_Na_Cl_GT17simopt(T):
-    
+
     # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
     b0    = full_like(T,0.07722)
     b1    = full_like(T,0.26768)
     b2    = zeros_like(T)
     Cphi  = full_like(T,0.001628)
-    
+
     zNa   = float_(+1)
     zCl   = float_(-1)
     C0    = Cphi / (2 * sqrt(np_abs(zNa*zCl)))
-    
+
     C1    = zeros_like(T)
-    
+
     alph1 = float_(2)
     alph2 = -9
     omega = -9
-    
+
     valid = T == 298.15
-    
+
     return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: trisH+ chloride -----------------------------------------------------
 
 def bC_trisH_Cl_GT17simopt(T):
-    
+
     # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
     b0     = full_like(T,0.04181)
     b1     = full_like(T,0.16024)
     b2     = zeros_like(T)
     Cphi   = full_like(T,-0.00132)
-    
+
     ztrisH = float_(+1)
     zCl    = float_(-1)
     C0     = Cphi / (2 * sqrt(np_abs(ztrisH*zCl)))
-    
+
     C1     = zeros_like(T)
-    
+
     alph1  = float_(2)
     alph2  = -9
     omega  = -9
-    
+
     valid  = T == 298.15
-    
+
     return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: trisH+ sulfate ------------------------------------------------------
 
 def bC_trisH_SO4_GT17simopt(T):
-    
+
     # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
     b0     = full_like(T,0.09746)
     b1     = full_like(T,0.52936)
     b2     = zeros_like(T)
     Cphi   = full_like(T,-0.004957)
-    
+
     ztrisH = float_(+1)
     zSO4   = float_(-2)
     C0     = Cphi / (2 * sqrt(np_abs(ztrisH*zSO4)))
-    
+
     C1     = zeros_like(T)
-    
+
     alph1  = float_(2)
     alph2  = -9
     omega  = -9
-    
+
     valid  = T == 298.15
-    
+
     return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- theta: hydrogen trisH ---------------------------------------------------
-    
+
 def theta_H_trisH_GT17simopt(T):
-    
+
     # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
     theta = full_like(T,-0.00575)
     valid = T == 298.15
-    
+
     return theta, valid
 
 # --- psi: hydrogen trisH chloride --------------------------------------------
-    
+
 def psi_H_trisH_Cl_GT17simopt(T):
-    
+
     # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
     psi   = full_like(T,-0.00700)
     valid = T == 298.15
-    
+
     return psi, valid
 
 # --- lambd: tris trisH -------------------------------------------------------
-    
+
 def lambd_tris_trisH_GT17simopt(T):
-    
+
     # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
     lambd = full_like(T,0.06306)
     valid = T == 298.15
-    
+
     return lambd, valid
 
 # --- lambd: tris sodium ------------------------------------------------------
-    
+
 def lambd_tris_Na_GT17simopt(T):
-    
+
     # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
     lambd = full_like(T,0.01580)
     valid = T == 298.15
-    
+
     return lambd, valid
 
 # --- lambd: tris potassium ---------------------------------------------------
-    
+
 def lambd_tris_K_GT17simopt(T):
-    
+
     # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
     lambd = full_like(T,0.02895)
     valid = T == 298.15
-    
+
     return lambd, valid
 
 # --- lambd: tris magnesium ---------------------------------------------------
-    
+
 def lambd_tris_Mg_GT17simopt(T):
-    
+
     # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
     lambd = full_like(T,-0.14505)
     valid = T == 298.15
-    
+
     return lambd, valid
 
 # --- lambd: tris calcium -----------------------------------------------------
-    
+
 def lambd_tris_Ca_GT17simopt(T):
-    
+
     # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
     lambd = full_like(T,-0.31081)
     valid = T == 298.15
-    
+
     return lambd, valid
 
 # === GALLEGO-URREA & TURNER 2017 =============================================
@@ -2630,7 +2630,7 @@ def bC_K_Cl_ZD17(T):
 # === ZEZIN & DRIESNER 2017 ===================================================
 ###############################################################################
 
-#%%############################################################################            
+#%%############################################################################
 # === HARVIE, MOLLER AND WEARE 1984 ===========================================
 
 # --- Auto-generated by HMW84_funcgen_bC.py -----------------------------------
@@ -3843,7 +3843,7 @@ def psi_H_MgOH_CO3_HMW84(T):
     valid = T == 298.15
     return psi, valid
 
-# --- Auto-generated by HMW84_funcgen_caa.py ---------------------------------- 
+# --- Auto-generated by HMW84_funcgen_caa.py ----------------------------------
 
 def theta_Cl_SO4_HMW84(T):
 # Coefficients from HMW84 Table 2
