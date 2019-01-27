@@ -11,7 +11,8 @@
     * Updated for **pytzer.cfdicts**;
   * Fixed zero ionic strength error for **model.Gex_nRT**;
   * Removed `Jp` outputs from all **jfuncs**;
-  * Corrected functions contributing **CoefficientDictionary** `WM13` following intercomparison with Prof S.L. Clegg.
+  * Corrected functions in **CoefficientDictionary** `WM13` following intercomparison with Prof S.L. Clegg;
+  * Added other package requirements (i.e. **numpy** and **autograd**) to the **setup.py**.
 
 
 ## 0.2.1
