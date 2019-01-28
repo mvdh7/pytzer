@@ -399,7 +399,7 @@ WM13.name = 'WM13'
 
 # Debye-Hueckel limiting slope and unsymmetrical mixing
 WM13.dh['Aosm'] = coeffs.Aosm_M88
-WM13.jfunc = jfuncs.P75_eq47
+WM13.jfunc = jfuncs.Harvie
 
 # Table A1: Na salts
 WM13.bC['Na-Cl'  ] = coeffs.bC_Na_Cl_M88

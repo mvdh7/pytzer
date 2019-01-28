@@ -4,11 +4,13 @@
 
 ## Function inputs
 
-Many of these functions have a common set of inputs: `mols`, `ions`, `T` and `cfdict`.
+Many of these functions have a common set of inputs: `mols`, `ions`, `T`, `cfdict` and `Izero`.
 
 The first three of these inputs can be generated from an input file by **pytzer.io.getmols** and their formats are described in [the relevant documentation](../io/#pytzeriogetmols). Throughout **pytzer**, when we refer to a variable called `ions` we are including any neutral species in the solution.
 
-The final input is a **cfdict** (coefficient dictionary), which defines the set of interaction coefficients to use in the model, as described on [the relevant page](../cfdicts).
+The final compulsory input is a **cfdict** (coefficient dictionary), which defines the set of interaction coefficients to use in the model, as described on [the relevant page](../cfdicts).
+
+`Izero` is an optional input with a default value of `False`. In this case, a full Pitzer model is executed. If `Izero` is instead changed to `True`, then only neutral-only interactions are evaluated: this is the setting to use for solutions with zero ionic strength. If you try to pass a zero-ionic-strength solution through the full model, a `nan` is returned along with lots of divide-by-zero warnings. You must split up your own input data and run the function twice, if you have both types of solution.
 
 All of the usage examples below assume that you have first imported **pytzer** as `pz`:
 
@@ -27,7 +29,7 @@ In **pytzer**, the excess Gibbs energy is the only physicochemical equation that
 ## pytzer.model.Gex_nRT
 
 ```python
-Gex_nRT = pz.model.Gex_nRT(mols,ions,T,cfdict)
+Gex_nRT = pz.model.Gex_nRT(mols,ions,T,cfdict, Izero=False)
 ```
 
 Evaluates the excess Gibbs energy of the solution (per mol and divided by *RT*).
@@ -39,8 +41,8 @@ Evaluates the excess Gibbs energy of the solution (per mol and divided by *RT*).
 ## pytzer.model.acfs / pytzer.model.ln_acfs
 
 ```python
-ln_acfs = pz.model.ln_acfs(mols,ions,T,cfdict)
-acfs    = pz.model.acfs   (mols,ions,T,cfdict)
+ln_acfs = pz.model.ln_acfs(mols,ions,T,cfdict, Izero=False)
+acfs    = pz.model.acfs   (mols,ions,T,cfdict, Izero=False)
 ```
 
 Returns a matrix of activity coefficients (`.acfs`) or their natural logarithm (`.ln_acfs`) of the same size and shape as input `mols`. Each activity coefficient is for the same ion and solution composition as the corresponding input molality.
@@ -56,7 +58,7 @@ Combines the natural logarithms of the activity coefficients of a cation (`ln_ac
 ## pytzer.model.osm
 
 ```python
-osm = pz.model.osm(mols,ions,T,cfdict)
+osm = pz.model.osm(mols,ions,T,cfdict, Izero=False)
 ```
 
 Calculates the osmotic coefficient for each input solution composition.
@@ -82,6 +84,10 @@ Converts a water activity (`aw`) into an osmotic coefficient (`osm`).
 # Pitzer model subfunctions
 
 **pytzer.model** breaks down the full Pitzer model equation into some component subfunctions for clarity.
+
+## pytzer.model.Istr
+
+Calculate the ionic strength of the solution. Input `zs` can be generated using **pytzer.props.charges**.
 
 ## pytzer.model.fG
 
