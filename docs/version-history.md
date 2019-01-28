@@ -12,8 +12,9 @@
   * Fixed zero ionic strength error for **model.Gex_nRT**;
   * Removed `Jp` outputs from all **jfuncs**;
   * Corrected functions in **CoefficientDictionary** `WM13` following intercomparison with Prof S.L. Clegg:
-    * `bC_Na_OH_PP87i`: typos in coefficients;
-    * `bC_Mg_SO4_PP86ii`: eliminated 'difference of two large numbers' error by substitution;
+    * `bC_Mg_SO4_PP86ii`: eliminated 'difference of two large numbers' error, by substitution;
+    * `bC_Na_HSO4_HPR93`: fixed incorrect charge for HSO<sub>4</sub><sup>−</sup>;
+    * `bC_Na_OH_PP87i`: fixed typos in coefficients;
   * Added external package requirements (i.e. **numpy** and **autograd**) to the **setup.py**.
 
 

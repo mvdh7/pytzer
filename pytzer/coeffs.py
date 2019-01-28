@@ -1674,7 +1674,7 @@ def bC_Na_HSO4_HPR93(T):
     Cphi = full_like(T,-0.0039056)
 
     zNa   = float_(+1)
-    zHSO4 = float_(-2)
+    zHSO4 = float_(-1)
     C0    = Cphi / (2 * sqrt(np_abs(zNa*zHSO4)))
 
     C1 = zeros_like(T)
