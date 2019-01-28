@@ -253,17 +253,20 @@ class CoefficientDictionary:
 
     def get_contents(self):
 
+        # Get list of non-empty function dicts
         ctypes = [self.bC, self.theta, self.psi, self.lambd, self.eta, self.mu]
+        ctypes = [ctype for ctype in ctypes if any(ctype)]
         
-        all_funcs = [[ctype[key].__name__.split('_')[1:] \
-                      for key in ctype.keys()] for ctype in ctypes]
+        # Get unique list of "ions" (includes neutrals)
+        self.ions = unique(concatenate([concatenate(
+            [ctype[key].__name__.split('_')[1:-1] \
+             for key in ctype.keys()]) for ctype in ctypes]))
         
-        self.ions = unique(concatenate([[func[:-1] for func in ftype]
-                                        for ftype in all_funcs][0]))
-        
-        self.srcs = unique(concatenate([[func[-1] for func in ftype] \
-                                       for ftype in all_funcs]))
+        # Get unique list of literature sources
+        self.srcs = unique(concatenate([[ctype[key].__name__.split('_')[-1] \
+             for key in ctype.keys()] for ctype in ctypes]))
 
+        # Sort lists alphabetically
         self.ions.sort()
         self.srcs.sort()
 

@@ -19,7 +19,8 @@
     * `bC_Na_OH_PP87i`: fixed typos in coefficients;
   * Switched **MarChemSpec** **CoefficientDictionary** to *not* use **GT17simopt** for Na<sup>+</sup> :: Cl<sup>−</sup> interaction (stick with M88);
   * Fixed function for `H-Na-HSO4` interaction in **WM13** **CoefficientDictionary**;
-  * Added external package requirements (i.e. **numpy** and **autograd**) to the **setup.py**.
+  * Added external package requirements (i.e. **numpy** and **autograd**) to the **setup.py**;
+  * Fixed **CoefficientDictionary.get_contents** to include neutral species.
 
 
 ## 0.2.1
