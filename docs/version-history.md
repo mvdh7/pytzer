@@ -11,8 +11,10 @@
     * Updated for **pytzer.cfdicts**;
   * Fixed zero ionic strength error for **model.Gex_nRT**;
   * Removed `Jp` outputs from all **jfuncs**;
-  * Corrected functions in **CoefficientDictionary** `WM13` following intercomparison with Prof S.L. Clegg;
-  * Added other package requirements (i.e. **numpy** and **autograd**) to the **setup.py**.
+  * Corrected functions in **CoefficientDictionary** `WM13` following intercomparison with Prof S.L. Clegg:
+    * `bC_Na_OH_PP87i`: typos in coefficients;
+    * `bC_Mg_SO4_PP86ii`: eliminated 'difference of two large numbers' error by substitution;
+  * Added external package requirements (i.e. **numpy** and **autograd**) to the **setup.py**.
 
 
 ## 0.2.1

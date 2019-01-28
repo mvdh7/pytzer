@@ -143,12 +143,17 @@ def PP86ii_eq29(T,q):
     #   5     b0(Tr)     b1(Tr)     b2(Tr)     C0(Tr)    from RM81
 
     Tr = PP86ii_Tr
+    
+    # Substitute to avoid 'difference of two large numbers' error
+    t = T / Tr    
+    # Original fourth line was:
+    #  + q[3] * (T**4/20 + Tr**5/(5*T) - Tr**4/4)
 
-    return q[0] * (T   / 2 + Tr**2/(2*T) - Tr     ) \
-         + q[1] * (T**2/ 6 + Tr**3/(3*T) - Tr**2/2) \
-         + q[2] * (T**3/12 + Tr**4/(4*T) - Tr**3/3) \
-         + q[3] * (T**4/20 + Tr**5/(5*T) - Tr**4/4) \
-         + q[4] * (Tr - Tr**2/T)                    \
+    return q[0] * (T   / 2 + Tr**2/(2*T) - Tr     )   \
+         + q[1] * (T**2/ 6 + Tr**3/(3*T) - Tr**2/2)   \
+         + q[2] * (T**3/12 + Tr**4/(4*T) - Tr**3/3)   \
+         + q[3] * (t**5 + 4 - 5*t) * Tr**5 / (20 * T) \
+         + q[4] * (Tr - Tr**2/T)                      \
          + q[5]
 
 # --- bC: magnesium sulfate ---------------------------------------------------
@@ -498,7 +503,7 @@ def bC_Na_SO4_HM86(T):
 
 def PP87i_eqNaOH(T,a):
 
-    P = 165#Patm_bar
+    P = Patm_bar
 
     return a[0]                  \
          + a[1]  * P             \
@@ -569,6 +574,7 @@ def bC_Na_OH_PP87i(T):
     valid = logical_and(T >= 298.15, T <= 523.15)
 
     return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+    
 
 # --- bC: magnesium chloride --------------------------------------------------
 
