@@ -3,7 +3,7 @@
 
 ## 0.2.2
 
-**Release date:** forthcoming
+**Release date:** 2019-01-28
 
   * Added temperature to the file produced by **print_coeffs**;
   * Improved documentation:

@@ -49,7 +49,7 @@ Other versions are probably fine, but untested. We are using Python 3.6 rather t
 </tr><tr>
 
 <td><code>pytzer.meta</code></td>
-<td><a href="modules/meta">Package metadata</a></td>
+<td><a href="modules/meta">Define package metadata</a></td>
 
 </tr><tr>
 
