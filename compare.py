@@ -30,7 +30,7 @@ print('Coefficient dictionary: WM13 [pytzer-v{}]\n'.format(pz.meta.version))
 
 for cnum in range(5):
 
-    cnames = ['BETA-0','BETA-1','BETA-2','C-0','C-1']
+    cnames = ['beta-0','beta-1','beta-2','C-0','C-1']
     
     print('====================================================')
     print('{:^52}'.format('Coefficient: ' + cnames[cnum]))
