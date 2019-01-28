@@ -103,5 +103,6 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-# Printed coefficients
+# Ignored folders
 print_coeffs/*
+no-release/*

@@ -2,48 +2,45 @@
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 
 from autograd.numpy import exp, float_, full_like, log, nan, size, zeros, \
-                           zeros_like
-from autograd import elementwise_grad as egrad
+                           zeros_like, errstate
 from autograd.extend import primitive, defvjp
-from scipy.misc import derivative
 
 
 # === Pitzer (1975) Eq. (46) ==================================================
 
 def P75_eq46(x):
 
-    def J(x):
+    # P75 Table III
+    C = float_([ 4.118 ,
+                 7.247 ,
+                -4.408 ,
+                 1.837 ,
+                -0.251 ,
+                 0.0164])
 
-        # P75 Table III
-        C = float_([ 4.118 ,
-                     7.247 ,
-                    -4.408 ,
-                     1.837 ,
-                    -0.251 ,
-                     0.0164])
+    Jsum = zeros_like(x)
 
-        Jsum = zeros_like(x)
+    for k in range(6):
+        Jsum = Jsum + C[k] * x**-(k+1)
 
-        for k in range(6):
-            Jsum = Jsum + C[k] * x**-(k+1)
-
-        return -x**2 * log(x) * exp(-10 * x**2) / 6 + 1 / Jsum
-
-    Jp = egrad(J)
-
-    return J(x), Jp(x)
+    return -x**2 * log(x) * exp(-10 * x**2) / 6 + 1 / Jsum
 
 
 # === Pitzer (1975) Eq. (47) ==================================================
 
+P75_eq47_C = float_([4     ,
+                     4.581 ,
+                     0.7237,
+                     0.0120,
+                     0.528 ])
+
 def P75_eq47(x):
 
-    def J(x):
-        return x / (4 + 4.581 * x**-0.7237 * exp(-0.0120 * x**0.528))
-
-    Jp = egrad(J)
-
-    return J(x), Jp(x)
+    with errstate(divide='ignore'):
+        J = x / (P75_eq47_C[0] + P75_eq47_C[1] * x**-P75_eq47_C[2] \
+                 * exp(-P75_eq47_C[3] * x**P75_eq47_C[4]))
+    
+    return J
 
 
 # === Harvie's method as described by Pitzer (1991) Ch. 3, pp. 124-125 ========
@@ -132,28 +129,12 @@ def _Harvie_raw(x):
 
     return J, Jp
 
-# Perform code gymnastics so that autograd can differentiate _Harvie_raw
+# Define the function to use in the model
 @primitive
-def _Harvie_J(x):
-    return _Harvie_raw(x)[0]
-@primitive
-def _Harvie_Jp(x):
-    return _Harvie_raw(x)[1]
-
-_Harvie_dx = 1e-9
-def _Harvie_J_drv(x):
-    return derivative(_Harvie_J,x,  dx=_Harvie_dx) * _Harvie_dx
-def _Harvie_Jp_drv(x):
-    return derivative(_Harvie_Jp,x, dx=_Harvie_dx) * _Harvie_dx
-
-def _Harvie_J_vjp(ans,x):
-    return lambda g: g * _Harvie_J_drv(x)
-def _Harvie_Jp_vjp(ans,x):
-    return lambda g: g * _Harvie_Jp_drv(x)
-
-defvjp(_Harvie_J ,_Harvie_J_vjp )
-defvjp(_Harvie_Jp,_Harvie_Jp_vjp)
-
-# This is the final function to call in pytzer:
 def Harvie(x):
-    return _Harvie_J(x), _Harvie_Jp(x)
+    return _Harvie_raw(x)[0]
+
+# Set up its derivative for autograd
+def _Harvie_vjp(ans,x):
+    return lambda g: g * _Harvie_raw(x)[1]
+defvjp(Harvie,_Harvie_vjp)

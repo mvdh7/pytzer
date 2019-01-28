@@ -153,6 +153,6 @@ References from the peer-reviewed literature (or 'sources') are written as the i
 
 # What actually matters?
 
-For solutes, you could actually use whatever name you like, as long as it was applied consistently throughout the first four items on the list at the top of this page (i.e. in input files, in the `ions` variable, in the `cfdict`, and in the **pytzer.props** functions). If it was your heart's desire, you could rename `Na` (sodium ion) as `GentooPenguin` in all of these places, and everything should still work fine. Using a matching name in the corresponding interaction coefficient functions is for convenience only, and is not *required* for **pytzer** to run correctly.
+For solutes, you could actually use whatever name you like, as long as it was applied consistently throughout the first four items on the list at the top of this page (i.e. in input files, in the `ions` variable, in the `cfdict`, and in the **pytzer.props** functions). If it was your heart's desire, you could rename `Na` (sodium ion) as `GentooPenguin` in all of these places, and everything should still work fine. Using a matching name in the corresponding interaction coefficient functions is also required, in order to use the **CoefficientDictionary** methods like **get_contents**.
 
-The codes used for different references are for convenience only; they do not affect the program.
+The codes used for different references are for convenience only; they do not affect the program. However, they do define the output from **CoefficientDictionary.print_coeffs**.

@@ -119,6 +119,8 @@ class CoefficientDictionary:
 
 #        srcslist = 'Sources: ' + (len(self.srcs)-1)*'{}, ' + '{}\n\n'
 #        f.write(srcslist.format(*self.srcs))
+        
+        f.write('Temperature: {} K\n\n'.format(T))
 
         # Debye-Hueckel slope
         f.write('Debye-Hueckel limiting slope\n')
@@ -251,17 +253,20 @@ class CoefficientDictionary:
 
     def get_contents(self):
 
+        # Get list of non-empty function dicts
         ctypes = [self.bC, self.theta, self.psi, self.lambd, self.eta, self.mu]
+        ctypes = [ctype for ctype in ctypes if any(ctype)]
         
-        all_funcs = [[ctype[key].__name__.split('_')[1:] \
-                      for key in ctype.keys()] for ctype in ctypes]
+        # Get unique list of "ions" (includes neutrals)
+        self.ions = unique(concatenate([concatenate(
+            [ctype[key].__name__.split('_')[1:-1] \
+             for key in ctype.keys()]) for ctype in ctypes]))
         
-        self.ions = unique(concatenate([[func[:-1] for func in ftype]
-                                        for ftype in all_funcs][0]))
-        
-        self.srcs = unique(concatenate([[func[-1] for func in ftype] \
-                                       for ftype in all_funcs]))
+        # Get unique list of literature sources
+        self.srcs = unique(concatenate([[ctype[key].__name__.split('_')[-1] \
+             for key in ctype.keys()] for ctype in ctypes]))
 
+        # Sort lists alphabetically
         self.ions.sort()
         self.srcs.sort()
 
@@ -394,12 +399,12 @@ WM13.name = 'WM13'
 
 # Debye-Hueckel limiting slope and unsymmetrical mixing
 WM13.dh['Aosm'] = coeffs.Aosm_M88
-WM13.jfunc = jfuncs.P75_eq47
+WM13.jfunc = jfuncs.Harvie
 
 # Table A1: Na salts
 WM13.bC['Na-Cl'  ] = coeffs.bC_Na_Cl_M88
 WM13.bC['Na-SO4' ] = coeffs.bC_Na_SO4_HM86
-WM13.bC['Na-HSO4'] = coeffs.bC_Na_HSO4_HPR93viaWM13
+WM13.bC['Na-HSO4'] = coeffs.bC_Na_HSO4_HPR93
 WM13.bC['Na-OH'  ] = coeffs.bC_Na_OH_PP87i
 
 # Table A2: Mg salts
@@ -480,7 +485,7 @@ WM13.psi['K-OH-SO4' ] = coeffs.psi_K_OH_SO4_HMW84
 # Table A9: c-c'-a triplets
 WM13.psi['H-Na-Cl'  ] = coeffs.psi_H_Na_Cl_HMW84
 WM13.psi['H-Na-SO4' ] = coeffs.psi_H_Na_SO4_WM13 # agrees with HMW84
-WM13.psi['H-Na-HSO4'] = coeffs.psi_H_Na_Cl_HMW84
+WM13.psi['H-Na-HSO4'] = coeffs.psi_H_Na_HSO4_HMW84
 
 WM13.psi['H-Mg-Cl'] = coeffs.psi_H_Mg_Cl_HMW84
 WM13.psi['H-Mg-SO4'] = coeffs.psi_H_Mg_SO4_RC99
@@ -527,7 +532,7 @@ MarChemSpec = deepcopy(WM13)
 MarChemSpec.name = 'MarChemSpec'
 
 # Add coefficients from GT17 Supp. Info. Table S6 (simultaneous optimisation)
-MarChemSpec.bC['Na-Cl'    ] = coeffs.bC_Na_Cl_GT17simopt
+#MarChemSpec.bC['Na-Cl'    ] = coeffs.bC_Na_Cl_GT17simopt
 MarChemSpec.bC['trisH-SO4'] = coeffs.bC_trisH_SO4_GT17simopt
 MarChemSpec.bC['trisH-Cl' ] = coeffs.bC_trisH_Cl_GT17simopt
 

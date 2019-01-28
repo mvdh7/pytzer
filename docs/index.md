@@ -1,4 +1,4 @@
-title: Overview
+<!--<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>-->
 
 # pytzer
 
@@ -6,14 +6,13 @@ title: Overview
 
 # Installation
 
-With conda/pip:
+If using conda, first create and activate a new environment with Python 3.6 and numpy 1.15. Then:
 
 ```
-conda create -n pytzer python=3.6 numpy=1.15
-[source] activate pytzer
-pip install autograd
 pip install pytzer
 ```
+
+Other versions are probably fine, but untested. We are using Python 3.6 rather than 3.7 to enable planned integration with MATLAB.
 
 # Modules
 
@@ -46,6 +45,11 @@ pip install pytzer
 
 <td><code>pytzer.jfuncs</code></td>
 <td><a href="modules/jfuncs">Define unsymmetrical mixing functions</a></td>
+
+</tr><tr>
+
+<td><code>pytzer.meta</code></td>
+<td><a href="modules/meta">Package metadata</a></td>
 
 </tr><tr>
 

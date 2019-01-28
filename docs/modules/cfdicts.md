@@ -2,9 +2,9 @@
 
 **pytzer.cfdicts** provides specific combinations of coefficients that have been used in published Pitzer models, to use with **pytzer**.
 
-To use a Pitzer model we need to define a set of coefficients that quantify the interactions between different combinations of ions. We do this by creating a **cfdict** (short for **coefficient dictionary**), which contains functions that evaluate the coefficients for every possible interaction. The functions themselves are defined separately in **pytzer.coeffs**.
+To use a Pitzer model we need to define a set of coefficients that quantify the interactions between different combinations of ions. We do this by creating a **CoefficientDictionary** - or **cfdict** for short - which contains functions that evaluate the coefficients for every possible interaction. The functions themselves are defined separately, in **pytzer.coeffs**.
 
-A number of [pre-defined cfdicts](#pre-defined-cfdicts) are included in **pytzer.cfdicts**. If you want to use of these, all you need to do is assign the variable `cfdict` appropriately:
+A number of [pre-defined cfdicts](#pre-defined-cfdicts) are included in **pytzer.cfdicts**. To use these, all you need to do is assign the variable `cfdict` appropriately:
 
 ```python
 import pytzer as pz
@@ -17,11 +17,9 @@ This `cfdict` can then be passed into all of the **pytzer.model** functions.
 
 <hr />
 
-# Pre-defined cfdicts
+# Pre-defined CoefficientDictionary
 
-Several ready-to-use **cfdicts** are available in this module.
-
-To decode the sources, see the [literature references table](../../name-conventions/#literature-references).
+Several ready-to-use **CoefficientDictionary** are available in this module. To decode their sources, see the [literature references table](../../name-conventions/#literature-references).
 
 <table><tr>
 
@@ -84,28 +82,28 @@ cfdict.print_coeffs(298.15,'coeff_file.txt')
 
 The methods are as follows:
 
-## cfdict.add_zeros
+## .add_zeros
 
-Adds zero-functions for all missing interactions, given a list of ions.
+`CoefficientDictionary.add_zeros(ions)` adds zero-functions for all missing interactions, given a list of ions.
 
-## cfdict.get_contents
+## .get_contents
 
-Scans through all functions within the **cfdict** and puts a list of all ions and all sources in the relevant fields of the **cfdict** itself (i.e. **cfdict.ions** and **cfdict.srcs**).
+`CoefficientDictionary.get_contents()` scans through all functions within the **CoefficientDictionary**, and puts lists of all ions and of all sources in its **ions** and **srcs** fields.
 
-Ions and sources are determined from the function names themselves.
+The lists of ions and sources are determined from the function names themselves.
 
-## cfdict.print_coeffs
+## .print_coeffs
 
-Evaluates all coefficients in a **cfdict** at a single input temperature, and prints the results to a text file.
+`CoefficientDictionary.print_coeffs(T,filename)` evaluates all coefficients in a **cfdict** at a single input temperature (`T`), and prints the results to a text file (`filename`).
 
 
 <hr />
 
-# How cfdicts work
+# How a CoefficientDictionary works
 
-To modify an existing **cfdict**, or create a new one, it is first necessary to understand how they are used within **pytzer**, as follows. A basic understanding of the workings of the Pitzer model is assumed.
+To modify an existing **CoefficientDictionary**, or create a new one, it is first necessary to understand how they are used within **pytzer**, as follows. A basic understanding of the workings of the Pitzer model is assumed.
 
-A **cfdict** is an object of the class `CoefficientDictionary` as defined within **pytzer.cfdicts**. From the initalisation function we can see that it contains the following fields:
+A **CoefficientDictionary** or **cfdict** is an object of the class `CoefficientDictionary` as defined within **pytzer.cfdicts**. From the initalisation function we can see that it contains the following fields:
 
 ```python
 class CoefficientDictionary:
@@ -113,6 +111,7 @@ class CoefficientDictionary:
     # Initialise
     def __init__(self):
         self.name  = ''
+
         self.dh    = {} # Aosm
         self.bC    = {} # c-a
         self.theta = {} # c-c' and a-a'
@@ -121,14 +120,18 @@ class CoefficientDictionary:
         self.lambd = {} # n-c and n-a
         self.eta   = {} # n-c-a
         self.mu    = {} # n-n-n
+
+        self.ions  = []
+        self.srcs  = []
 ```
 
-Each field is then filled with functions from **pytzer.coeffs** that define the Pitzer model interaction coefficients, as follows. (Descriptions of the required contents of the functions themselves are in the separate <a href="../coeffs"><strong>pytzer.coeffs</strong> documentation</a>.)
+Each field is then filled with functions from **pytzer.coeffs** or **pytzer.jfuncs** that define the Pitzer model interaction coefficients, as follows. (Descriptions of the required contents of the functions themselves are in the separate <a href="../coeffs"><strong>pytzer.coeffs</strong> documentation</a>.)
 
 
 ### Debye-Hückel limiting slope
 
 The function for the Debye-Hückel limiting slope (i.e. <i>A<sub>ϕ</sub></i>) is stored as `CoefficientDictionary.dh['Aosm']`.
+
 
 ### Cation-anion interactions
 
@@ -167,7 +170,6 @@ cfdict.psi['Ca-Mg-Cl']  = <Ca-Mg-Cl interaction coefficients function>
 cfdict.psi['Mg-Na-SO4'] = <Mg-Na-SO4 interaction coefficients function>
 cfdict.psi['Na-Cl-SO4'] = <Na-Cl-SO4 interaction coefficients function>
 ```
-
 
 ### Neutral interactions
 
