@@ -1,5 +1,11 @@
 # 0.2 (beta)
 
+## 0.2.3
+
+**Release date:** forthcoming
+
+  * Verified both **jfuncs.P75_eq47** and **jfuncs.Harvie**, and their differentials, against Prof D.R. Turner's and Prof S.L. Clegg's implementations.
+
 
 ## 0.2.2
 
