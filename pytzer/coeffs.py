@@ -4,7 +4,7 @@
 from autograd.numpy import exp, float_, full, full_like, log, logical_and, \
                            matmul, size, sqrt, zeros_like
 from autograd.numpy import abs as np_abs
-from .constants import Patm_bar
+from .constants import atm2Pa, Patm_bar
 
 COEFFS_PRESSURE = float_(0.101325) # MPa
 
@@ -503,7 +503,7 @@ def bC_Na_SO4_HM86(T):
 
 def PP87i_eqNaOH(T,a):
 
-    P = Patm_bar
+    P = COEFFS_PRESSURE * 1e6 * Patm_bar / atm2Pa
 
     return a[0]                  \
          + a[1]  * P             \
