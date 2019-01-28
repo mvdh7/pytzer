@@ -482,7 +482,7 @@ WM13.psi['K-OH-SO4' ] = coeffs.psi_K_OH_SO4_HMW84
 # Table A9: c-c'-a triplets
 WM13.psi['H-Na-Cl'  ] = coeffs.psi_H_Na_Cl_HMW84
 WM13.psi['H-Na-SO4' ] = coeffs.psi_H_Na_SO4_WM13 # agrees with HMW84
-WM13.psi['H-Na-HSO4'] = coeffs.psi_H_Na_Cl_HMW84
+WM13.psi['H-Na-HSO4'] = coeffs.psi_H_Na_HSO4_HMW84
 
 WM13.psi['H-Mg-Cl'] = coeffs.psi_H_Mg_Cl_HMW84
 WM13.psi['H-Mg-SO4'] = coeffs.psi_H_Mg_SO4_RC99

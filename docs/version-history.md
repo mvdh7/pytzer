@@ -18,6 +18,7 @@
     * `bC_Na_HSO4_HPR93`: fixed incorrect charge for HSO<sub>4</sub><sup>−</sup>;
     * `bC_Na_OH_PP87i`: fixed typos in coefficients;
   * Switched **MarChemSpec** **CoefficientDictionary** to *not* use **GT17simopt** for Na<sup>+</sup> :: Cl<sup>−</sup> interaction (stick with M88);
+  * Fixed function for `H-Na-HSO4` interaction in **WM13** **CoefficientDictionary**;
   * Added external package requirements (i.e. **numpy** and **autograd**) to the **setup.py**.
 
 
