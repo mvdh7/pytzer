@@ -4,8 +4,8 @@
 
 **Release date:** forthcoming
 
-  * Verified both **jfuncs.P75_eq47** and **jfuncs.Harvie**, and their differentials, against Prof D.R. Turner's and Prof S.L. Clegg's implementations.
-
+  * Verified both **jfuncs.P75_eq47** and **jfuncs.Harvie**, and their differentials, against Prof D.R. Turner's and Prof S.L. Clegg's implementations;
+  * Began assembling MIAMI **CoefficientDictionary** following MP98.
 
 ## 0.2.2
 

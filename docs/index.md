@@ -48,11 +48,6 @@ Other versions are probably fine, but untested. We are using Python 3.6 rather t
 
 </tr><tr>
 
-<td><code>pytzer.meta</code></td>
-<td><a href="modules/meta">Define package metadata</a></td>
-
-</tr><tr>
-
 <td><code>pytzer.props</code></td>
 <td><a href="modules/props">Define universal ionic properties</a></td>
 
@@ -60,6 +55,11 @@ Other versions are probably fine, but untested. We are using Python 3.6 rather t
 
 <td><code>pytzer.constants</code></td>
 <td><a href="modules/constants">Define physical constants</a></td>
+
+</tr><tr>
+
+<td><code>pytzer.meta</code></td>
+<td><a href="modules/meta">Define package metadata</a></td>
 
 </tr></table>
 

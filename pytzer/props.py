@@ -7,7 +7,11 @@ from autograd.numpy import array, float_
 def charges(ions):
 
     # Define dict of charges
-    z = {'Ba'   : float_(+2),
+    #   Order: neutrals, then cations, then anions,
+    #          and alphabetical within each section.
+    z = {'tris' : float_(0),
+
+         'Ba'   : float_(+2),
          'Ca'   : float_(+2),
          'Cs'   : float_(+1),
          'H'    : float_(+1),
@@ -16,16 +20,19 @@ def charges(ions):
          'Mg'   : float_(+2),
          'MgOH' : float_(+1),
          'Na'   : float_(+1),
+         'Sr'   : float_(+2),
          'trisH': float_(+1),
          'Zn'   : float_(+2),
 
+         'BOH4' : float_(-1),
          'Br'   : float_(-1),
          'Cl'   : float_(-1),
+         'I'    : float_(-1),
+         'F'    : float_(-1),
          'OH'   : float_(-1),
          'HSO4' : float_(-1),
          'SO4'  : float_(-2),
-         
-         'tris' : float_(0)}
+         'SO4'  : float_(-2)}
 
     # Extract charges from dict
     zs = array([z[ion] for ion in ions])

@@ -11,12 +11,12 @@ from copy import deepcopy
 
 class CoefficientDictionary:
 
-    
+
 # ------------------------------------------------------------ Initialise -----
-    
+
     def __init__(self):
         self.name  = ''
-        
+
         self.dh    = {} # Aosm
         self.bC    = {} # c-a
         self.theta = {} # c-c' and a-a'
@@ -25,12 +25,12 @@ class CoefficientDictionary:
         self.lambd = {} # n-c and n-a
         self.eta   = {} # n-c-a
         self.mu    = {} # n-n-n
-        
+
         self.ions  = array([])
         self.srcs  = array([])
 
 # ------------------------------------------ Populate with zero-functions -----
-        
+
     def add_zeros(self,ions):
 
         # Get lists of cations and anions
@@ -106,20 +106,20 @@ class CoefficientDictionary:
 
 
 # ------------------- Print all coefficient values at a given temperature -----
-                
+
     def print_coeffs(self,T,filename):
 
         f = open(filename,'w')
 
         f.write('Coefficient dictionary: {} [pytzer-v{}]\n\n'.format( \
                 self.name,version))
-        
+
         ionslist = 'Ions: ' + (len(self.ions)-1)*'{}, ' + '{}\n\n'
         f.write(ionslist.format(*self.ions))
 
 #        srcslist = 'Sources: ' + (len(self.srcs)-1)*'{}, ' + '{}\n\n'
 #        f.write(srcslist.format(*self.srcs))
-        
+
         f.write('Temperature: {} K\n\n'.format(T))
 
         # Debye-Hueckel slope
@@ -137,7 +137,7 @@ class CoefficientDictionary:
         f.write('\n')
         f.write('c-a pairs (betas and Cs)\n')
         f.write('========================\n')
-        
+
         bChead = 2*'{:7}' + 5*'{:^13}'    + 3*'{:>6}'    + '  {:15}\n'
         bCvals = 2*'{:7}' + 5*'{:>13.5e}' + 3*'{:>6.1f}' + '  {:15}\n'
         f.write(bChead.format('cat','ani', 'b0','b1','b2','C0','C1',
@@ -160,7 +160,7 @@ class CoefficientDictionary:
 
         thetaHead = 2*'{:7}' + '{:^13}'    + '  {:15}\n'
         thetaVals = 2*'{:7}' + '{:>13.5e}' + '  {:15}\n'
-        
+
         f.write(thetaHead.format('ion1','ion2','theta','source'))
 
         for theta in self.theta.keys():
@@ -198,7 +198,7 @@ class CoefficientDictionary:
 
         lambdHead = 2*'{:7}' + '{:^13}'    + '  {:15}\n'
         lambdVals = 2*'{:7}' + '{:>13.5e}' + '  {:15}\n'
-        
+
         f.write(lambdHead.format('neut','ion','lambda','source'))
 
         for lambd in self.lambd.keys():
@@ -256,12 +256,12 @@ class CoefficientDictionary:
         # Get list of non-empty function dicts
         ctypes = [self.bC, self.theta, self.psi, self.lambd, self.eta, self.mu]
         ctypes = [ctype for ctype in ctypes if any(ctype)]
-        
+
         # Get unique list of "ions" (includes neutrals)
         self.ions = unique(concatenate([concatenate(
             [ctype[key].__name__.split('_')[1:-1] \
              for key in ctype.keys()]) for ctype in ctypes]))
-        
+
         # Get unique list of literature sources
         self.srcs = unique(concatenate([[ctype[key].__name__.split('_')[-1] \
              for key in ctype.keys()] for ctype in ctypes]))
@@ -525,6 +525,7 @@ WM13.psi['Ca-K-HSO4'] = coeffs.psi_Ca_K_HSO4_WM13 # agrees with HMW84
 
 WM13.get_contents()
 
+
 #------------------------------------------------------------ MarChemSpec -----
 
 # Begin with WM13
@@ -549,5 +550,87 @@ MarChemSpec.lambd['tris-Ca'   ] = coeffs.lambd_tris_Ca_GT17simopt
 MarChemSpec.add_zeros(array(['H','Na','Mg','Ca','K','MgOH','trisH','Cl','SO4',
                              'HSO4','OH','tris']))
 MarChemSpec.get_contents()
+
+
+#--------------------------------------- Millero & Pierrot 1998 aka MIAMI -----
+
+MIAMI = CoefficientDictionary()
+MIAMI.name = 'MIAMI'
+
+MIAMI.dh['Aosm'] = coeffs.Aosm_M88
+MIAMI.jfunc = jfuncs.Harvie
+
+# Table A1
+MIAMI.bC['Na-Cl' ] = coeffs.bC_Na_Cl_M88
+MIAMI.bC['K-Cl'  ] = coeffs.bC_K_Cl_GM89
+MIAMI.bC['K-SO4' ] = coeffs.bC_K_SO4_GM89
+MIAMI.bC['Ca-Cl' ] = coeffs.bC_Ca_Cl_GM89
+MIAMI.bC['Ca-SO4'] = coeffs.bC_Ca_SO4_M88
+MIAMI.bC['Ca-SO3'] = coeffs.bC_Ca_SO3_MP98
+MIAMI.bC['Sr-SO4'] = coeffs.bC_Sr_SO4_MP98
+
+# Table A2
+MIAMI.bC['Mg-Cl' ] = coeffs.bC_Mg_Cl_PP87i
+MIAMI.bC['Mg-SO4'] = coeffs.bC_Mg_SO4_PP86ii
+
+# Table A3
+MIAMI.bC['Na-HSO4'] = coeffs.bC_Na_HSO4_MP98
+#MIAMI.bC['Na-HCO3'] = coeffs.bC_Na_HCO3_PP82
+MIAMI.bC['Na-SO4' ] = coeffs.bC_Na_SO4_HPR93
+#MIAMI.bC['Na-CO3' ] = coeffs.bC_Na_CO3_PP82
+MIAMI.bC['Na-BOH4'] = coeffs.bC_Na_BOH4_SRRJ87
+#MIAMI.bC['Na-HS'  ] = coeffs.bC_Na_HS_H88
+#MIAMI.bC['Na-CNS' ] = coeffs.bC_Na_CNS_SP78
+#MIAMI.bC['Na-SO3' ] = coeffs.bC_Na_SO3_M89
+#MIAMI.bC['Na-HSO3'] = coeffs.bC_Na_HSO3_M89
+
+# Table A4
+#MIAMI.bC['K-HCO3 '] = coeffs.bC_K_HCO3_R83
+#MIAMI.bC['K-CO3'  ] = coeffs.bC_K_CO3_S87a
+MIAMI.bC['K-BOH4' ] = coeffs.bC_K_BOH4_SRRJ87
+#MIAMI.bC['K-HS'   ] = coeffs.bC_K_HS_M95
+#MIAMI.bC['K-H2PO4'] = coeffs.bC_K_H2PO4_SP78
+#MIAMI.bC['K-CNS'  ] = coeffs.bC_K_CNS_SP78
+
+# Table A5
+#MIAMI.bC['Mg-Br'  ] = coeffs.bC_Mg_Br_SP78
+#MIAMI.bC['Mg-BOH4'] = coeffs.bC_Mg_BOH4_S87b
+#MIAMI.bC['Mg-ClO4'] = coeffs.bC_Mg_ClO4_SP78
+#MIAMI.bC['Ca-Br'  ] = coeffs.bC_Ca_Br_SP78
+#MIAMI.bC['Ca-BOH4'] = coeffs.bC_Ca_BOH4_S87b
+#MIAMI.bC['Ca-ClO4'] = coeffs.bC_Ca_ClO4_SP78
+
+# Table A6
+MIAMI.bC['Sr-Br'  ] = coeffs.bC_Sr_Br_SP78
+MIAMI.bC['Sr-Cl'  ] = coeffs.bC_Sr_Cl_SP78 # not in table but in text §4.6
+#MIAMI.bC['Sr-NO3' ] = coeffs.bC_Sr_NO3_SP78
+#MIAMI.bC['Sr-ClO4'] = coeffs.bC_Sr_ClO4_SP78
+#MIAMI.bC['Sr-HSO3'] = coeffs.bC_Sr_HSO3_SP78
+#MIAMI.bC['Sr-BOH4'] = coeffs.bC_Ca_BOH4_S87b
+
+# Table A7
+MIAMI.bC['Na-I'   ] = coeffs.bC_Na_I_MP98
+MIAMI.bC['Na-Br'  ] = coeffs.bC_Na_Br_MP98
+MIAMI.bC['Na-F'   ] = coeffs.bC_Na_F_MP98
+MIAMI.bC['K-Br'   ] = coeffs.bC_K_Br_MP98
+MIAMI.bC['K-F'    ] = coeffs.bC_K_F_MP98
+MIAMI.bC['K-OH'   ] = coeffs.bC_K_OH_MP98
+MIAMI.bC['K-I'    ] = coeffs.bC_K_I_MP98
+#MIAMI.bC['Na-ClO3'] = coeffs.bC_Na_ClO3_MP98
+#MIAMI.bC['K-ClO3' ] = coeffs.bC_K_ClO3_MP98
+#MIAMI.bC['Na-ClO4'] = coeffs.bC_Na_ClO4_MP98
+#MIAMI.bC['Na-BrO3'] = coeffs.bC_Na_BrO3_MP98
+#MIAMI.bC['K-BrO3' ] = coeffs.bC_K_BrO3_MP98
+#MIAMI.bC['Na-NO3' ] = coeffs.bC_Na_NO3_MP98
+#MIAMI.bC['K-NO3'  ] = coeffs.bC_K_NO3_MP98
+#MIAMI.bC['Mg-NO3' ] = coeffs.bC_Mg_NO3_MP98
+#MIAMI.bC['Ca-NO3' ] = coeffs.bC_Ca_NO3_MP98
+#MIAMI.bC['H-Br'   ] = coeffs.bC_H_Br_MP98
+#MIAMI.bC['Sr-Cl'  ] = coeffs.bC_Sr_Cl_MP98
+#MIAMI.bC['NH4-Cl' ] = coeffs.bC_NH4_Cl_MP98
+#MIAMI.bC['NH4-Br' ] = coeffs.bC_NH4_Br_MP98
+#MIAMI.bC['NH4-F'  ] = coeffs.bC_NH4_F_MP98
+
+MIAMI.get_contents()
 
 #==============================================================================
