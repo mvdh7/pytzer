@@ -43,20 +43,6 @@ def P75_eq47(x):
     return J
 
 
-#def P75_eq47_dx(x):
-#    
-#    a = P75_eq47_C[0]
-#    b = P75_eq47_C[0]
-#    c = P75_eq47_C[0]
-#    d = P75_eq47_C[0]
-#    f = P75_eq47_C[0]
-#    
-#    Jp = x * (-b*c*x**(-c-1)*exp(-d*x**f) - b*d*f*x**(-c+f-1)*exp(-d*x**f)) \
-#        / (a + b*x**-c*exp(-d*x**f))**2
-#    
-#    return Jp
-
-
 # === Harvie's method as described by Pitzer (1991) Ch. 3, pp. 124-125 ========
 
 # Define the raw function - doesn't work in pytzer (not autograd-able)

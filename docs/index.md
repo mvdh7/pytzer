@@ -6,9 +6,13 @@
 
 # Installation
 
+If using conda, first create and activate a new environment with Python 3.6 and numpy 1.15. Then:
+
 ```
 pip install pytzer
 ```
+
+Other versions are probably fine, but untested. We are using Python 3.6 rather than 3.7 to enable planned integration with MATLAB.
 
 # Modules
 
