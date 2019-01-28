@@ -143,10 +143,12 @@ def _Harvie_raw(x):
 
     return J, Jp
 
+# Define the function to use in the model
 @primitive
 def Harvie(x):
     return _Harvie_raw(x)[0]
 
+# Set up its derivative for autograd
 def _Harvie_vjp(ans,x):
     return lambda g: g * _Harvie_raw(x)[1]
 defvjp(Harvie,_Harvie_vjp)
