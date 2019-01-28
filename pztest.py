@@ -1,31 +1,48 @@
 import pytzer as pz
 import numpy as np 
-from autograd import elementwise_grad as egrad
+#from autograd import elementwise_grad as egrad
 
-filename = 'testfiles/GenerateConcs.csv'
+filename = 'testfiles/PP87i Table 4.csv'
 
 mols,ions,T = pz.io.getmols(filename)
 
-cf = pz.cfdicts.WM13
+T[:] = 273.15 + 350
 
-# Test jfunc differentiation Harvie
+cf = pz.cfdicts.MarChemSpec
 
-x = np.array([1.5])
+ln_acfs = pz.model.ln_acfs(mols,ions,T,cf)
 
-J, Jp = pz.jfuncs._Harvie_raw(x)
+ln_acfMX = np.vstack(pz.model.ln_acf2ln_acf_MX(ln_acfs[:,0],ln_acfs[:,1],1,1))
 
-Jg = egrad(lambda x: pz.jfuncs.Harvie(x)[0])(x)
-
-print(Jp,Jg)
+acfMX = np.exp(ln_acfMX)
 
 # Print out coefficient values to file
 
-#cf.print_coeffs(298.15,'print_coeffs/pytzer-v0-2-1-1_WM13_25.txt')
+cf.print_coeffs(298.15,'print_coeffs/pytzer-v0-2-1-3_WM13_25.txt')
 
-#cf.add_zeros(np.array(['Ba','Ca']))
+#acfMX_target = 
 
-## Cut out zero ionic strengths and do calculations
+#osm = pz.model.osm(mols,ions,T,cf)
+#aw = pz.model.osm2aw(mols,osm)
+
+
+
+# Test jfunc differentiation Harvie
+
+#x = np.array([1.5])
 #
+#J, Jp = pz.jfuncs._Harvie_raw(x)
+#
+#Jg = egrad(lambda x: pz.jfuncs.Harvie(x)[0])(x)
+#
+#print(Jp,Jg)
+#
+
+#
+##cf.add_zeros(np.array(['Ba','Ca']))
+#
+# Cut out zero ionic strengths and do calculations
+
 #zs = pz.props.charges(ions)[0]
 #I = np.vstack(0.5 * (np.sum(mols * zs**2, 1)))
 #
@@ -33,11 +50,18 @@ print(Jp,Jg)
 #osm     = np.full_like(T   , np.nan)
 #acfs    = np.full_like(mols, np.nan)
 #
-#L = (I > -1).ravel()
+#L = (I > 0).ravel()
 #
 #nargs = (mols[L,:], ions, T[L], cf)
 #
 #Gex_nRT[L  ] = pz.model.Gex_nRT(*nargs)
+#
+#import numba
+#
+#Gex_numba = numba.autojit(pz.model.Gex_nRT)
+#
+#Gex2 = Gex_numba(*nargs)
+
 #osm    [L  ] = pz.model.osm    (*nargs)
 #acfs   [L,:] = pz.model.acfs   (*nargs)
 
