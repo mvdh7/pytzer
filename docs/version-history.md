@@ -10,11 +10,12 @@
     * Added neutrals, and made other updates, for **pytzer.coeffs**;
     * Updated for **pytzer.cfdicts**;
   * Fixed zero ionic strength error for **model.Gex_nRT**;
-  * Removed `Jp` outputs from all **jfuncs**;
+  * Removed `Jp` outputs from all **jfuncs**, and set up correct differentiation for `Harvie`;
   * Corrected functions in **CoefficientDictionary** `WM13` following intercomparison with Prof S.L. Clegg:
     * `bC_Mg_SO4_PP86ii`: eliminated 'difference of two large numbers' error, by substitution;
     * `bC_Na_HSO4_HPR93`: fixed incorrect charge for HSO<sub>4</sub><sup>−</sup>;
     * `bC_Na_OH_PP87i`: fixed typos in coefficients;
+  * Switched **MarChemSpec** **CoefficientDictionary** to *not* use **GT17simopt** for Na<sup>+</sup> :: Cl<sup>−</sup> interaction (stick with M88);
   * Added external package requirements (i.e. **numpy** and **autograd**) to the **setup.py**.
 
 

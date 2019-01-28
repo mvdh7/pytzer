@@ -529,7 +529,7 @@ MarChemSpec = deepcopy(WM13)
 MarChemSpec.name = 'MarChemSpec'
 
 # Add coefficients from GT17 Supp. Info. Table S6 (simultaneous optimisation)
-MarChemSpec.bC['Na-Cl'    ] = coeffs.bC_Na_Cl_GT17simopt
+#MarChemSpec.bC['Na-Cl'    ] = coeffs.bC_Na_Cl_GT17simopt
 MarChemSpec.bC['trisH-SO4'] = coeffs.bC_trisH_SO4_GT17simopt
 MarChemSpec.bC['trisH-Cl' ] = coeffs.bC_trisH_Cl_GT17simopt
 
