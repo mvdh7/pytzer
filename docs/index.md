@@ -6,12 +6,7 @@
 
 # Installation
 
-With conda/pip:
-
 ```
-conda create -n pytzer python=3.6 numpy=1.15
-[source] activate pytzer
-pip install autograd
 pip install pytzer
 ```
 
@@ -46,6 +41,11 @@ pip install pytzer
 
 <td><code>pytzer.jfuncs</code></td>
 <td><a href="modules/jfuncs">Define unsymmetrical mixing functions</a></td>
+
+</tr><tr>
+
+<td><code>pytzer.meta</code></td>
+<td><a href="modules/meta">Package metadata</a></td>
 
 </tr><tr>
 

@@ -9,6 +9,8 @@
   * Improved documentation:
     * Added neutrals, and made other updates, for **pytzer.coeffs**;
     * Updated for **pytzer.cfdicts**;
+    * Added **pytzer.meta** page;
+    * Updated installation instructions;
   * Fixed zero ionic strength error for **model.Gex_nRT**;
   * Removed `Jp` outputs from all **jfuncs**, and set up correct differentiation for `Harvie`;
   * Corrected functions in **CoefficientDictionary** `WM13` following intercomparison with Prof S.L. Clegg:

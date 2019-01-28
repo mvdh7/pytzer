@@ -5,12 +5,9 @@
 
 Pitzer model for chemical speciation, under ongoing testing and development.
 
-Installation with conda/pip:
+Installation:
 
 ```
-conda create -n pytzer python=3.6 numpy=1.15
-[source] activate pytzer
-pip install autograd
 pip install pytzer
 ```
 
