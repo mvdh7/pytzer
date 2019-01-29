@@ -4,15 +4,15 @@ import pytzer as pz
 # Import Clegg's bC and ao values
 clegg_filename = 'print_coeffs/FastPitz.Rs1'
 
-clegg_bC_ions = np.genfromtxt(clegg_filename, skip_header=35, skip_footer=86,
+clegg_bC_ions = np.genfromtxt(clegg_filename, skip_header=35, skip_footer=86+7,
                               usecols=range(5,7), dtype='U')
 
 clegg_bC_ions = np.vstack(['-'.join(ions) for ions in clegg_bC_ions])
 
-clegg_bC = np.genfromtxt(clegg_filename, skip_header=35, skip_footer=86,
+clegg_bC = np.genfromtxt(clegg_filename, skip_header=35, skip_footer=86+7,
                          usecols=range(5))
 
-clegg_ao = np.genfromtxt(clegg_filename, skip_header=67, skip_footer=57,
+clegg_ao = np.genfromtxt(clegg_filename, skip_header=67, skip_footer=57+7,
                          usecols=range(4))
 
 # Get coefficients from pytzer.cfdicts.WM13
@@ -35,7 +35,8 @@ for cnum in range(5):
     print('====================================================')
     print('{:^52}'.format('Coefficient: ' + cnames[cnum]))
     print('----------------------------------------------------')
-    print('{:>10} {:^12} {:^12} {:^12}'.format('Ions','pytzer','Clegg','C - py'))
+    print('{:>10} {:^12} {:^12} {:^12}'.format('Ions','pytzer',
+                                               'Clegg','C - py'))
     
     for ix,ions in enumerate(WM13_bC_ions):
         
