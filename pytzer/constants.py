@@ -9,6 +9,7 @@ R  = float_(8.3144598)     # Universal gas const. / J /mol /K          [CODATA]
 F  = float_(96485.33289)   #   Faraday const.     / C /mol             [CODATA]
 b  = float_(1.2)           # Pitzer model coeff.  / sqrt(kg/mol)  [Pitzer 1991]
 Patm_bar = float_(1.01325) # Atmospheric pressure / bar/atm
+Tzero = float_(273.15)     # Zero degrees Celsius / K
 
 # Unit conversion factors
 cal2J   = float_(4.184)         #  ENERGY  calorie    to Joule  / cal/J

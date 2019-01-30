@@ -4,7 +4,7 @@
 from autograd.numpy import exp, float_, full, full_like, log, logical_and, \
                            matmul, size, sqrt, zeros_like
 from autograd.numpy import abs as np_abs
-from .constants import atm2Pa, Patm_bar
+from .constants import atm2Pa, Patm_bar, Tzero
 
 COEFFS_PRESSURE = float_(0.101325) # MPa
 
@@ -1595,7 +1595,8 @@ def bC_H_Cl_CMR93(T):
 
 def theta_H_K_CMR93(T):
 
-    theta = float_(0.005) - float_(0.0002275) * T
+    # assuming CMR93's lowercase t means temperature in degC
+    theta = float_(0.005) - float_(0.0002275) * (T - Tzero)
 
     valid = logical_and(T >= 273.15, T <= 328.15)
 
@@ -1605,7 +1606,8 @@ def theta_H_K_CMR93(T):
 
 def theta_H_Na_CMR93(T):
 
-    theta = float_(0.0342) - float_(0.000209) * T
+    # assuming CMR93's lowercase t means temperature in degC
+    theta = float_(0.0342) - float_(0.000209) * (T - Tzero)
 
     valid = logical_and(T >= 273.15, T <= 328.15)
 
@@ -2216,12 +2218,14 @@ def psi_Mg_HSO4_SO4_RC99(T):
 
 #%%############################################################################
 # === WATERS & MILLERO 2013 ===================================================
-
+#
 # Some are functions that WM13 declared came from another source, but I
 #  couldn't find them there, so copied directly from WM13 instead.
 #
 # Others were just declared by WM13 as zero. These all seem to agree with
 #  HMW84; it's unclear why HMW84 wasn't cited by WM13 for these.
+
+# --- theta: 
 
 # --- bC: sodium sulfate ------------------------------------------------------
 
