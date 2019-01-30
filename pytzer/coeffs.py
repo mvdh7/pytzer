@@ -54,20 +54,6 @@ def mu_none(T):
 ###############################################################################
 
 #%%############################################################################
-# === CONSTANT AOSM ===========================================================
-
-def Aosm_25(T):
-
-    # Value from Pitzer (1991) Chapter 3 Table 1 (page 99)
-    Aosm = full_like(T,0.3915)
-    valid = T == 298.15
-
-    return Aosm, valid
-
-# === CONSTANT AOSM ===========================================================
-###############################################################################
-
-#%%############################################################################
 # === ROY ET AL. 1980 =========================================================
 
 # --- theta: hydrogen magnesium -----------------------------------------------
@@ -1991,8 +1977,6 @@ def psi_Mg_HSO4_SO4_RC99(T):
 #
 # Others were just declared by WM13 as zero. These all seem to agree with
 #  HMW84; it's unclear why HMW84 wasn't cited by WM13 for these.
-
-# --- theta: 
 
 # --- bC: sodium sulfate ------------------------------------------------------
 
@@ -4670,3 +4654,38 @@ def bC_Na_CO3_PP82(T):
 
 # === PEIPER & PITZER 1982 ====================================================
 ###############################################################################
+
+#%%############################################################################
+# === MARCHEMSPEC SPECIALS ====================================================
+#
+# These are functions used for testing within the MarChemSpec project
+
+def Aosm_MarChemSpec25(T):
+
+    # Value from Pitzer (1991) Chapter 3 Table 1 (page 99)
+    Aosm = full_like(T,0.3915)
+    valid = T == 298.15
+
+    return Aosm, valid
+
+# --- theta: hydrogen sodium --------------------------------------------------
+    
+def theta_H_Na_MarChemSpec25(T):
+    
+    theta = full_like(T,0.036)
+    valid = T == 298.15
+    
+    return theta, valid
+
+# --- theta: hydrogen potassium -----------------------------------------------
+    
+def theta_H_K_MarChemSpec25(T):
+    
+    theta = full_like(T,0.005)
+    valid = T == 298.15
+    
+    return theta, valid
+
+# === MARCHEMSPEC SPECIALS ====================================================
+###############################################################################
+    

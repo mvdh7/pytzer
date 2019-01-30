@@ -526,9 +526,23 @@ WM13.psi['Ca-K-HSO4'] = coeffs.psi_Ca_K_HSO4_WM13 # agrees with HMW84
 WM13.get_contents()
 
 
+#----------------------------------------------------- WM13_MarChemSpec25 -----
+
+WM13_MarChemSpec25 = deepcopy(WM13)
+WM13_MarChemSpec25.name = 'WM13_MarChemSpec25'
+
+WM13_MarChemSpec25.dh['Aosm'] = coeffs.Aosm_MarChemSpec25
+WM13_MarChemSpec25.jfunc = jfuncs.P75_eq47
+
+WM13_MarChemSpec25.theta['H-Na'] = coeffs.theta_H_Na_MarChemSpec25
+WM13_MarChemSpec25.theta['H-K' ] = coeffs.theta_H_K_MarChemSpec25
+
+WM13_MarChemSpec25.get_contents()
+
+
 #------------------------------------------------------------ MarChemSpec -----
 
-# Begin with WM13
+# Begin with WM13_MarChemSpec
 MarChemSpec = deepcopy(WM13)
 MarChemSpec.name = 'MarChemSpec'
 
