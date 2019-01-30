@@ -6,7 +6,8 @@
 
   * Testing activity coefficients against Prof D.R. Turner's and Prof S.L. Clegg's implementations:
     * Corrected `alph1` for **bC_Ca_OH_HMW84** to 2;
-    * Fixed temperature units for **theta_H_Na_CMR93** and **theta_H_K_CMR93**.
+    * Fixed temperature units for **theta_H_Na_CMR93** and **theta_H_K_CMR93**;
+    * Deleted duplicate MP98 functions in **coeffs**.
 
 
 ## 0.2.3
