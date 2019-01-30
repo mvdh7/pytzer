@@ -2903,7 +2903,7 @@ def bC_Ca_OH_HMW84(T):
     zOH = float_(-1)
     C0 = Cphi / (2 * sqrt(np_abs(zCa*zOH)))
     C1 = zeros_like(T)
-    alph1 = float_(1.4)
+    alph1 = float_(2)
     alph2 = float_(12)
     omega = -9
     valid = T == 298.15
