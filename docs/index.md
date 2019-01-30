@@ -2,7 +2,8 @@
 
 # pytzer
 
-**pytzer** is a Python 3.6+ implementation of the Pitzer model for chemical speciation (Pitzer, 1991).
+**pytzer** is a Python 3.6+ implementation of the Pitzer model for chemical activities in aqueous solutions (Pitzer, 1991).
+
 
 # Installation
 
@@ -13,6 +14,12 @@ pip install pytzer
 ```
 
 Other versions are probably fine, but untested. We are using Python 3.6 rather than 3.7 to enable planned integration with MATLAB.
+
+
+# Development status
+
+**pytzer** is in beta. Tests of the accuracy of its coefficients and equations are underway, so results may change. API may change and functions may be added or removed. Use at your own peril!
+
 
 # Modules
 

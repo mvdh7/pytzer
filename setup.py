@@ -9,7 +9,7 @@ setuptools.setup(
     version      = __version__,
     author       = 'Matthew P. Humphreys',
     author_email = 'm.p.humphreys@cantab.net',
-    description  = 'Pitzer model for chemical speciation',
+    description  = 'Pitzer model for chemical activities in aqueous solutions',
     url          = 'https://github.com/mvdh7/pytzer',
     packages     = setuptools.find_packages(),
     install_requires = ['autograd==1.2',
