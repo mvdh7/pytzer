@@ -591,9 +591,9 @@ MIAMI.bC['Mg-SO4'] = coeffs.bC_Mg_SO4_PP86ii
 
 # Table A3
 MIAMI.bC['Na-HSO4'] = coeffs.bC_Na_HSO4_MP98
-#MIAMI.bC['Na-HCO3'] = coeffs.bC_Na_HCO3_PP82
+MIAMI.bC['Na-HCO3'] = coeffs.bC_Na_HCO3_PP82
 MIAMI.bC['Na-SO4' ] = coeffs.bC_Na_SO4_HPR93
-#MIAMI.bC['Na-CO3' ] = coeffs.bC_Na_CO3_PP82
+MIAMI.bC['Na-CO3' ] = coeffs.bC_Na_CO3_PP82
 MIAMI.bC['Na-BOH4'] = coeffs.bC_Na_BOH4_SRRJ87
 #MIAMI.bC['Na-HS'  ] = coeffs.bC_Na_HS_H88
 #MIAMI.bC['Na-CNS' ] = coeffs.bC_Na_CNS_SP78
@@ -647,6 +647,11 @@ MIAMI.bC['K-I'    ] = coeffs.bC_K_I_MP98
 #MIAMI.bC['NH4-Br' ] = coeffs.bC_NH4_Br_MP98
 #MIAMI.bC['NH4-F'  ] = coeffs.bC_NH4_F_MP98
 
+# Table A10
+MIAMI.theta['Cl-CO3' ] = coeffs.theta_Cl_CO3_PP82
+MIAMI.theta['Cl-HCO3'] = coeffs.theta_Cl_HCO3_PP82
+
+# Get contents
 MIAMI.get_contents()
 
 #==============================================================================

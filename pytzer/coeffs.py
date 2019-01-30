@@ -4638,19 +4638,102 @@ def bC_Sr_Cl_SP78(T):
 #%%############################################################################
 # === PEIPER & PITZER 1982 ====================================================
 
-PP82_Tr = float_(298.15)
+# The equation below was derived by MP Humphreys.
+
+def PP82_eqMPH(T,q):
+    
+    Tr = float_(298.15)
+    
+    return q[0] + q[1] * (T - Tr) + q[2] * (T - Tr)**2 / 2
+
+# --- bC: sodium carbonate ----------------------------------------------------
 
 def bC_Na_CO3_PP82(T):
 
     # I have no idea where MP98 got their T**2 coefficients from
     #   or why they are so small.
-    b0 = 0.0362 + 1.79e-3 * (T - PP82_Tr) -  4.22e-5 * (T - PP82_Tr) / 2
-    b1 = 1.51   + 2.05e-3 * (T - PP82_Tr) - 16.8e-5  * (T - PP82_Tr) / 2
+    b0 = PP82_eqMPH(T,float_([
+          0.0362 ,
+          1.79e-3,
+        - 4.22e-5]))
+    
+    b1 = PP82_eqMPH(T,float_([
+          1.51   ,
+          2.05e-3,
+        -16.8e-5 ]))
+    
     b2 = zeros_like(T)
 
     Cphi = full_like(T,0.0052)
+    zNa  = float_(+1)
+    zCO3 = float_(-2)
 
-    # UNFINISHED!
+    C0 = Cphi / (2 * sqrt(np_abs(zNa*zCO3)))
+    C1 = zeros_like(T)
+
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+
+    valid = logical_and(T >= 273.15, T <= 323.15)
+
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+    
+# --- bC: sodium bicarbonate --------------------------------------------------
+
+def bC_Na_HCO3_PP82(T):
+
+    # I have no idea where MP98 got their T**2 coefficients from
+    #   or why they are so small.
+    b0 = PP82_eqMPH(T,float_([
+         0.028  ,
+         1.00e-3,
+        -2.6e-5 ]))
+    
+    b1 = PP82_eqMPH(T,float_([
+         0.044  ,
+         1.10e-3,
+        -4.3e-5 ]))
+    
+    b2 = zeros_like(T)
+
+    C0 = zeros_like(T)
+    C1 = zeros_like(T)
+
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+
+    valid = logical_and(T >= 273.15, T <= 323.15)
+
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# --- theta: chloride bicarbonate ---------------------------------------------
+    
+def theta_Cl_HCO3_PP82(T):
+    
+    theta = full_like(T,0.0359)
+    valid = T == 298.15
+    
+    return theta, valid
+
+# --- theta: chloride carbonate -----------------------------------------------
+    
+def theta_Cl_CO3_PP82(T):
+    
+    theta = full_like(T,-0.053)
+    valid = T == 298.15
+    
+    return theta, valid
+
+# --- psi: sodium chloride bicarbonate ----------------------------------------
+    
+def psi_Na_Cl_HCO3_PP82(T):
+    
+    psi   = full_like(T,-0.0143)
+    valid = T == 298.15
+    
+    return psi, valid
 
 # === PEIPER & PITZER 1982 ====================================================
 ###############################################################################

@@ -8,7 +8,9 @@
     * Assembled new **CoefficientDictionary** WM13_MarChemSpec25 for testing;
     * Corrected `alph1` for **bC_Ca_OH_HMW84** to 2;
     * Fixed temperature units for **theta_H_Na_CMR93** and **theta_H_K_CMR93**;
-    * Deleted duplicate MP98 functions in **coeffs**.
+    * Deleted duplicate MP98 functions in **coeffs**;
+  * Continued adding coefficient functions to **cfdicts.MIAMI**:
+    * All from PP82 (`Na-CO3` and `Na-HCO3` interactions).
 
 
 ## 0.2.3
