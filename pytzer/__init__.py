@@ -1,4 +1,4 @@
-# pytzer: the Pitzer model for chemical speciation
+# pytzer: Pitzer model for chemical activities in aqueous solutions
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 #
 # This program is free software: you can redistribute it and/or modify
@@ -14,9 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-__all__ = ['cfdicts', 'coeffs', 'constants', 'io', 'jfuncs', 'model', 'props',
-           'meta']
+__all__ = ['cfdicts', 'coeffs', 'constants', 'io', 'jfuncs', 'meta', 'model', 
+           'props']
 
-from . import cfdicts, coeffs, constants, io, jfuncs, model, props, meta
+from . import cfdicts, coeffs, constants, io, jfuncs, meta, model, props
 
 __version__ = meta.version

@@ -1,4 +1,4 @@
-# pytzer: the Pitzer model for chemical speciation
+# pytzer: Pitzer model for chemical activities in aqueous solutions
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 
 from autograd.numpy import exp, float_, full_like, log, nan, size, zeros, \
@@ -39,7 +39,7 @@ def P75_eq47(x):
     with errstate(divide='ignore'):
         J = x / (P75_eq47_C[0] + P75_eq47_C[1] * x**-P75_eq47_C[2] \
                  * exp(-P75_eq47_C[3] * x**P75_eq47_C[4]))
-    
+
     return J
 
 

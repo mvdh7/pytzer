@@ -1,4 +1,4 @@
-# pytzer: the Pitzer model for chemical speciation
+# pytzer: Pitzer model for chemical activities in aqueous solutions
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 
 from autograd.numpy import exp, float_, full, full_like, log, logical_and, \
@@ -51,6 +51,20 @@ def mu_none(T):
     return mu, valid
 
 # === ZERO FUNCTIONS ==========================================================
+###############################################################################
+
+#%%############################################################################
+# === CONSTANT AOSM ===========================================================
+
+def Aosm_25(T):
+
+    # Value from Pitzer (1991) Chapter 3 Table 1 (page 99)
+    Aosm = full_like(T,0.3915)
+    valid = T == 298.15
+
+    return Aosm, valid
+
+# === CONSTANT AOSM ===========================================================
 ###############################################################################
 
 #%%############################################################################
@@ -143,9 +157,9 @@ def PP86ii_eq29(T,q):
     #   5     b0(Tr)     b1(Tr)     b2(Tr)     C0(Tr)    from RM81
 
     Tr = PP86ii_Tr
-    
+
     # Substitute to avoid 'difference of two large numbers' error
-    t = T / Tr    
+    t = T / Tr
     # Original fourth line was:
     #  + q[3] * (T**4/20 + Tr**5/(5*T) - Tr**4/4)
 
@@ -532,7 +546,7 @@ def bC_Na_OH_PP87i(T):
                                     1.1931122e+1,
                                     2.4824963e00,
                                    -4.8217410e-3]))
-    
+
     b1    = PP87i_eqNaOH(T,float_([ 4.6286977e+2,
                                     0           ,
                                    -1.0294181e+4,
@@ -574,7 +588,7 @@ def bC_Na_OH_PP87i(T):
     valid = logical_and(T >= 298.15, T <= 523.15)
 
     return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
-    
+
 
 # --- bC: magnesium chloride --------------------------------------------------
 
@@ -1730,8 +1744,6 @@ def Aosm_CRP94(T): # CRP94 Appendix II
     for C in range(2,size(a_Aosm)):
         Tmx[:,C] = 2 * X * Tmx[:,C-1] - Tmx[:,C-2]
 
-    print(Tmx)
-
     # Solve for Aosm (CRP94 E.AII1)
     Aosm = matmul(Tmx,a_Aosm)
 
@@ -1878,7 +1890,7 @@ def bC_Na_I_MP98(T):
                                 -2.54  ,
                                  8.28  ]))
 
-    b2    = 0
+    b2    = zeros_like(T)
 
     Cphi  = MP98_eq15(T,float_([ 0.0018,
                                  0     ,
@@ -1888,7 +1900,7 @@ def bC_Na_I_MP98(T):
     zI    = float_(-1)
     C0    = Cphi / (2 * sqrt(np_abs(zNa*zI)))
 
-    C1    = 0
+    C1    = zeros_like(T)
 
     alph1 = float_(2)
     alph2 = -9
@@ -1910,7 +1922,7 @@ def bC_Na_Br_MP98(T):
                                 - 1.06   ,
                                  10.79   ]))
 
-    b2    = 0
+    b2    = zeros_like(T)
 
     Cphi  = MP98_eq15(T,float_([  0.00116,
                                   0.16405,
@@ -1920,7 +1932,7 @@ def bC_Na_Br_MP98(T):
     zBr   = float_(-1)
     C0    = Cphi / (2 * sqrt(np_abs(zNa*zBr)))
 
-    C1    = 0
+    C1    = zeros_like(T)
 
     alph1 = float_(2)
     alph2 = -9
@@ -1942,9 +1954,9 @@ def bC_Na_F_MP98(T):
                                   0       ,
                                   8.7e-4  ]))
 
-    b2    = 0
+    b2    = zeros_like(T)
     C0    = 0
-    C1    = 0
+    C1    = zeros_like(T)
 
     alph1 = float_(2)
     alph2 = -9
@@ -1966,7 +1978,7 @@ def bC_K_Br_MP98(T):
                                 - 0.762  ,
                                   1.74   ]))
 
-    b2    = 0
+    b2    = zeros_like(T)
 
     Cphi  = MP98_eq15(T,float_([- 0.0018 ,
                                   0.216  ,
@@ -1976,7 +1988,7 @@ def bC_K_Br_MP98(T):
     zBr   = float_(-1)
     C0    = Cphi / (2 * sqrt(np_abs(zK*zBr)))
 
-    C1    = 0
+    C1    = zeros_like(T)
 
     alph1 = float_(2)
     alph2 = -9
@@ -1998,7 +2010,7 @@ def bC_K_F_MP98(T):
                                   0      ,
                                   5.44   ]))
 
-    b2    = 0
+    b2    = zeros_like(T)
 
     Cphi  = MP98_eq15(T,float_([  0.00093,
                                   0      ,
@@ -2008,7 +2020,7 @@ def bC_K_F_MP98(T):
     zF    = float_(-1)
     C0    = Cphi / (2 * sqrt(np_abs(zK*zF)))
 
-    C1    = 0
+    C1    = zeros_like(T)
 
     alph1 = float_(2)
     alph2 = -9
@@ -2030,7 +2042,7 @@ def bC_K_OH_MP98(T):
                                 - 2.59   ,
                                  11.86   ])) # copy of KI
 
-    b2    = 0
+    b2    = zeros_like(T)
 
     Cphi  = MP98_eq15(T,float_([- 0.0041 ,
                                   0.0638 ,
@@ -2040,7 +2052,7 @@ def bC_K_OH_MP98(T):
     zOH   = float_(-1)
     C0    = Cphi / (2 * sqrt(np_abs(zK*zOH)))
 
-    C1    = 0
+    C1    = zeros_like(T)
 
     alph1 = float_(2)
     alph2 = -9
@@ -2062,7 +2074,7 @@ def bC_K_I_MP98(T):
                                 - 1.8    ,
                                  11.86   ]))
 
-    b2    = 0
+    b2    = zeros_like(T)
 
     Cphi  = MP98_eq15(T,float_([- 0.00414,
                                   0      ,
@@ -2072,7 +2084,7 @@ def bC_K_I_MP98(T):
     zI    = float_(-1)
     C0    = Cphi / (2 * sqrt(np_abs(zK*zI)))
 
-    C1    = 0
+    C1    = zeros_like(T)
 
     alph1 = float_(2)
     alph2 = -9
@@ -4482,4 +4494,408 @@ def psi_H_CO3_HCO3_HMW84(T):
     return psi, valid
 
 # === HARVIE, MOLLER AND WEARE 1984 ===========================================
+###############################################################################
+
+#%%############################################################################
+# === MILLERO & PIERROT 1998 ==================================================
+
+def MP98_eq15(T,q):
+
+    # q[0] = PR
+    # q[1] = PJ  * 1e5
+    # q[2] = PRL * 1e4
+
+    Tr = float_(298.15)
+
+    return q[0] + q[1]*1e-5 * (Tr**3/3 - Tr**2 * q[2]*1e-4) * (1/T - 1/Tr) \
+        + q[1]*1e-5 * (T**2 - Tr**2) / 6
+
+# --- bC: sodium iodide -------------------------------------------------------
+
+def bC_Na_I_MP98(T):
+
+    b0    = MP98_eq15(T,float_([ 0.1195,
+                                -1.01  ,
+                                 8.355 ]))
+
+    b1    = MP98_eq15(T,float_([ 0.3439,
+                                -2.54  ,
+                                 8.28  ]))
+
+    b2    = zeros_like(T)
+
+    Cphi  = MP98_eq15(T,float_([ 0.0018,
+                                 0     ,
+                                -0.835 ]))
+
+    zNa   = float_(+1)
+    zI    = float_(-1)
+    C0    = Cphi / (2 * sqrt(np_abs(zNa*zI)))
+
+    C1    = zeros_like(T)
+
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+
+    valid = logical_and(T >= 273.15, T <= 323.15)
+
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# --- bC: sodium bromide ------------------------------------------------------
+
+def bC_Na_Br_MP98(T):
+
+    b0    = MP98_eq15(T,float_([  0.0973 ,
+                                - 1.3    ,
+                                  7.692  ]))
+
+    b1    = MP98_eq15(T,float_([  0.2791 ,
+                                - 1.06   ,
+                                 10.79   ]))
+
+    b2    = zeros_like(T)
+
+    Cphi  = MP98_eq15(T,float_([  0.00116,
+                                  0.16405,
+                                - 0.93   ]))
+
+    zNa   = float_(+1)
+    zBr   = float_(-1)
+    C0    = Cphi / (2 * sqrt(np_abs(zNa*zBr)))
+
+    C1    = zeros_like(T)
+
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+
+    valid = logical_and(T >= 273.15, T <= 323.15)
+
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# --- bC: sodium fluoride -----------------------------------------------------
+
+def bC_Na_F_MP98(T):
+
+    b0    = MP98_eq15(T,float_([  0.215   ,
+                                - 2.37    ,
+                                  5.361e-4]))
+
+    b1    = MP98_eq15(T,float_([  0.2107  ,
+                                  0       ,
+                                  8.7e-4  ]))
+
+    b2    = zeros_like(T)
+    C0    = zeros_like(T)
+    C1    = zeros_like(T)
+
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+
+    valid = logical_and(T >= 273.15, T <= 323.15)
+
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# --- bC: potassium bromide ---------------------------------------------------
+
+def bC_K_Br_MP98(T):
+
+    b0    = MP98_eq15(T,float_([  0.0569 ,
+                                - 1.43   ,
+                                  7.39   ]))
+
+    b1    = MP98_eq15(T,float_([  0.2122 ,
+                                - 0.762  ,
+                                  1.74   ]))
+
+    b2    = zeros_like(T)
+
+    Cphi  = MP98_eq15(T,float_([- 0.0018 ,
+                                  0.216  ,
+                                - 0.7004 ]))
+
+    zK    = float_(+1)
+    zBr   = float_(-1)
+    C0    = Cphi / (2 * sqrt(np_abs(zK*zBr)))
+
+    C1    = zeros_like(T)
+
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+
+    valid = logical_and(T >= 273.15, T <= 323.15)
+
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# --- bC: potassium fluoride --------------------------------------------------
+
+def bC_K_F_MP98(T):
+
+    b0    = MP98_eq15(T,float_([  0.08089,
+                                - 1.39   ,
+                                  2.14   ]))
+
+    b1    = MP98_eq15(T,float_([  0.2021 ,
+                                  0      ,
+                                  5.44   ]))
+
+    b2    = zeros_like(T)
+
+    Cphi  = MP98_eq15(T,float_([  0.00093,
+                                  0      ,
+                                  0.595  ]))
+
+    zK    = float_(+1)
+    zF    = float_(-1)
+    C0    = Cphi / (2 * sqrt(np_abs(zK*zF)))
+
+    C1    = zeros_like(T)
+
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+
+    valid = logical_and(T >= 273.15, T <= 323.15)
+
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# --- bC: potassium hydroxide -------------------------------------------------
+
+def bC_K_OH_MP98(T):
+
+    b0    = MP98_eq15(T,float_([  0.1298 ,
+                                - 0.946  ,
+                                  9.914  ])) # copy of KI
+
+    b1    = MP98_eq15(T,float_([  0.32   ,
+                                - 2.59   ,
+                                 11.86   ])) # copy of KI
+
+    b2    = zeros_like(T)
+
+    Cphi  = MP98_eq15(T,float_([- 0.0041 ,
+                                  0.0638 ,
+                                - 0.944  ])) # copy of KI
+
+    zK    = float_(+1)
+    zOH   = float_(-1)
+    C0    = Cphi / (2 * sqrt(np_abs(zK*zOH)))
+
+    C1    = zeros_like(T)
+
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+
+    valid = logical_and(T >= 273.15, T <= 323.15)
+
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# --- bC: potassium iodide ----------------------------------------------------
+
+def bC_K_I_MP98(T):
+
+    b0    = MP98_eq15(T,float_([  0.0746 ,
+                                - 0.748  ,
+                                  9.914  ]))
+
+    b1    = MP98_eq15(T,float_([  0.2517 ,
+                                - 1.8    ,
+                                 11.86   ]))
+
+    b2    = zeros_like(T)
+
+    Cphi  = MP98_eq15(T,float_([- 0.00414,
+                                  0      ,
+                                - 0.944  ]))
+
+    zK    = float_(+1)
+    zI    = float_(-1)
+    C0    = Cphi / (2 * sqrt(np_abs(zK*zI)))
+
+    C1    = zeros_like(T)
+
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+
+    valid = logical_and(T >= 273.15, T <= 323.15)
+
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+#~~~~ Table A3 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def MP98_eqTableA3(T,abc):
+    Tr = float_(298.15)
+    return abc[0] + abc[1] * (T - Tr) + abc[2] * (T - Tr)**2
+
+# --- bC: sodium bisulfate ----------------------------------------------------
+#
+# MP98 cite Pierrot et al. (1997) J Solution Chem 26(1),
+#   but their equations look quite different, and there is no Cphi there.
+# This equation is therefore directly from MP98.
+
+def bC_Na_HSO4_MP98(T):
+
+    b0 = MP98_eqTableA3(T,float_([ 0.544    ,
+                                  -1.8478e-3,
+                                   5.3937e-5]))
+
+    b1 = MP98_eqTableA3(T,float_([ 0.3826401,
+                                  -1.8431e-2,
+                                   0        ]))
+
+    b2 = zeros_like(T)
+
+    Cphi = full_like(T,0.003905)
+
+    zNa   = float_(+1)
+    zHSO4 = float_(-1)
+
+    C0 = Cphi / (2 * sqrt(np_abs(zNa*zHSO4)))
+    C1 = zeros_like(T)
+
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+
+    valid = logical_and(T >= 273.15, T <= 323.15)
+
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+
+#~~~~ Copies ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# This section contains assignments that MP98 gave for unknown coefficients.
+#
+# They must be assigned in this format (using def) for CoefficientDictionary
+#   methods like get_contents() to work properly.
+
+def bC_Ca_SO3_MP98(T): return bC_Ca_SO4_M88(T)
+def bC_Sr_SO4_MP98(T): return bC_Ca_SO4_M88(T)
+
+# === MILLERO & PIERROT 1998 ==================================================
+###############################################################################
+
+#%%############################################################################
+# === PITZER & MARGOYA 1973 ===================================================
+
+# --- bC: strontium bromide ---------------------------------------------------
+
+def bC_Sr_Br_PM73(T):
+
+    # PM73 cite Robinson & Stokes (1965) Electrolyte Solutions, 2nd Ed.
+
+    b0 = full_like(T,0.4415 * 3/4)
+    b1 = full_like(T,2.282  * 3/4)
+    b2 = zeros_like(T)
+
+    Cphi = full_like(T,0.00231 * 3/2**2.5)
+    zSr = float_(+2)
+    zBr = float_(-1)
+
+    C0 = Cphi / (2 * sqrt(np_abs(zSr*zBr)))
+    C1 = zeros_like(T)
+
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+
+    valid = T == 298.15
+
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# --- bC: strontium chloride --------------------------------------------------
+
+def bC_Sr_Cl_PM73(T):
+
+    # PM73 cite Robinson & Stokes (1965) Electrolyte Solutions, 2nd Ed.
+
+    b0 = full_like(T,0.3810 * 3/4)
+    b1 = full_like(T,2.223  * 3/4)
+    b2 = zeros_like(T)
+
+    Cphi = full_like(T,-0.00246 * 3/2**2.5)
+    zSr = float_(+2)
+    zCl = float_(-1)
+
+    C0 = Cphi / (2 * sqrt(np_abs(zSr*zCl)))
+    C1 = zeros_like(T)
+
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+
+    valid = T == 298.15
+
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# === PITZER & MARGOYA 1973 ===================================================
+###############################################################################
+
+###############################################################################
+# === SILVESTER & PITZER 1978 =================================================
+
+# General procedure:
+#  - Inherit 298.15 K value from PM73;
+#  - Add temperature derivative correction from SP78.
+
+SP78_Tr = float_(298.15)
+
+# --- bC: strontium bromide ---------------------------------------------------
+
+def bC_Sr_Br_SP78(T):
+
+    # SP78 cite Lange & Streeck (1930) Z Phys Chem Abt A 152
+
+    b0r,b1r,b2,C0,C1, alph1,alph2,omega, _ = bC_Sr_Br_PM73(T)
+
+    b0 = b0r + float_(-0.437 * 1e-3 * 3/4) * (T - SP78_Tr)
+    b1 = b1r + float_( 8.71  * 1e-3 * 3/4) * (T - SP78_Tr)
+
+    # Validity range declared by MP98
+    valid = logical_and(T >= 283.15,T <= 313.15)
+
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# --- bC: strontium chloride --------------------------------------------------
+
+def bC_Sr_Cl_SP78(T):
+
+    # SP78 cite Lange & Streeck (1930) Z Phys Chem Abt A 152
+
+    b0r,b1r,b2,C0,C1, alph1,alph2,omega, _ = bC_Sr_Br_PM73(T)
+
+    b0 = b0r + float_(0.956 * 1e-3 * 3/4) * (T - SP78_Tr)
+    b1 = b1r + float_(3.79  * 1e-3 * 3/4) * (T - SP78_Tr)
+
+    # Validity range declared by MP98
+    valid = logical_and(T >= 283.15,T <= 313.15)
+
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# === SILVESTER & PITZER 1978 =================================================
+###############################################################################
+
+#%%############################################################################
+# === PEIPER & PITZER 1982 ====================================================
+
+PP82_Tr = float_(298.15)
+
+def bC_Na_CO3_PP82(T):
+
+    # I have no idea where MP98 got their T**2 coefficients from
+    #   or why they are so small.
+    b0 = 0.0362 + 1.79e-3 * (T - PP82_Tr) -  4.22e-5 * (T - PP82_Tr) / 2
+    b1 = 1.51   + 2.05e-3 * (T - PP82_Tr) - 16.8e-5  * (T - PP82_Tr) / 2
+    b2 = zeros_like(T)
+
+    Cphi = full_like(T,0.0052)
+
+    # UNFINISHED!
+
+# === PEIPER & PITZER 1982 ====================================================
 ###############################################################################

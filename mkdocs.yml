@@ -1,6 +1,6 @@
 site_name: pytzer
 site_author: Matthew P. Humphreys
-site_description: Pitzer model for chemical speciation
+site_description: Pitzer model for chemical activities in aqueous solutions
 copyright: Copyright &copy; 2019 Matthew P. Humphreys (GNU GPLv3).
 repo_url: https://github.com/mvdh7/pytzer
 

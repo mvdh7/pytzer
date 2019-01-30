@@ -1,5 +1,12 @@
 # 0.2 (beta)
 
+## 0.2.3
+
+**Release date:** 2019-01-30
+
+  * Verified both **jfuncs.P75_eq47** and **jfuncs.Harvie**, and their differentials, against Prof D.R. Turner's and Prof S.L. Clegg's implementations;
+  * Began assembling MIAMI **CoefficientDictionary** following MP98;
+  * Added constant <i>A<sub>ϕ</sub></i> function for 25 °C following P91 to **coeffs.Aosm_25** for MarChemSpec project testing.
 
 ## 0.2.2
 

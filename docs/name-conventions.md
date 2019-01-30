@@ -122,6 +122,9 @@ References from the peer-reviewed literature (or 'sources') are written as the i
 <td><code>P91</code></td>
 <td>Pitzer, K. S. (1991). “Ion Interaction Approach: Theory and Data Correlation,” in *Activity Coefficients in Electrolyte Solutions, 2nd Edition*, ed. K. S. Pitzer (CRC Press, Florida, USA), 75–153.</td></tr><tr>
 
+<td><code>PP82</code></td>
+<td>PEIPER AND PITZER</td></tr><tr>
+
 <td><code>PP87i</code></td>
 <td>Pabalan, R. T., and Pitzer, K. S. (1987). Thermodynamics of NaOH(aq) in hydrothermal solutions. <i>Geochim. Cosmochim. Acta</i> 51, 829–837. <a href="https://doi.org/10.1016/0016-7037(87)90096-2">doi:10.1016/0016-7037(87)90096-2</a>.</td></tr><tr>
 
