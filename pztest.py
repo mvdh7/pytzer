@@ -46,4 +46,5 @@ savemat('testfiles/threeway/threeway.mat',
          'T'   : T   ,
          'acfs': acfs,
          'osm' : osm ,
-         'aw'  : aw  })
+         'aw'  : aw  ,
+         'I'   : I   })

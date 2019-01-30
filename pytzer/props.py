@@ -31,7 +31,6 @@ def charges(ions):
          'F'    : float_(-1),
          'OH'   : float_(-1),
          'HSO4' : float_(-1),
-         'SO4'  : float_(-2),
          'SO4'  : float_(-2)}
 
     # Extract charges from dict

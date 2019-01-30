@@ -537,6 +537,8 @@ WM13_MarChemSpec25.jfunc = jfuncs.P75_eq47
 WM13_MarChemSpec25.theta['H-Na'] = coeffs.theta_H_Na_MarChemSpec25
 WM13_MarChemSpec25.theta['H-K' ] = coeffs.theta_H_K_MarChemSpec25
 
+WM13_MarChemSpec25.psi['Mg-MgOH-Cl'] = coeffs.psi_Mg_MgOH_Cl_HMW84
+
 WM13_MarChemSpec25.get_contents()
 
 

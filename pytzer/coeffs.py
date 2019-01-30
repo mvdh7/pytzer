@@ -4686,6 +4686,16 @@ def theta_H_K_MarChemSpec25(T):
     
     return theta, valid
 
+# --- psi: magnesium magnesium-hydroxide chloride -----------------------------
+    
+def psi_Mg_MgOH_Cl_MarChemSpec25(T):
+    
+    # source Clegg/unknown
+    psi   = full_like(T,2.8e-2)
+    valid = T == 298.15
+
+    return psi, valid
+
 # === MARCHEMSPEC SPECIALS ====================================================
 ###############################################################################
     
