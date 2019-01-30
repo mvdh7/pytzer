@@ -14,9 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-__all__ = ['cfdicts', 'coeffs', 'constants', 'io', 'jfuncs', 'model', 'props',
-           'meta']
+__all__ = ['cfdicts', 'coeffs', 'constants', 'io', 'jfuncs', 'meta', 'model', 
+           'props']
 
-from . import cfdicts, coeffs, constants, io, jfuncs, model, props, meta
+from . import cfdicts, coeffs, constants, io, jfuncs, meta, model, props
 
 __version__ = meta.version
