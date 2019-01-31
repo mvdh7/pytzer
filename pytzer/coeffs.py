@@ -1490,7 +1490,7 @@ def bC_Ca_HSO4_P91(T):
     # Convert C0 back to Cphi
     zCa   = float_(+2)
     zHSO4 = float_(-1)
-    Cphi  = C0 * (2 * sqrt(np_abs(zCa*zHSO4)))
+    Cphi  = C0 * 2 * sqrt(np_abs(zCa*zHSO4))
 
     # Temperature derivatives should be in P91/Chapter 3, according to WM13,
     #  but I can't find them there.
@@ -1498,6 +1498,9 @@ def bC_Ca_HSO4_P91(T):
     b0   = b0   + 8.3e-4  * (T - TR)
     b1   = b1   + 5.8e-3  * (T - TR)
     Cphi = Cphi - 1.09e-4 * (T - TR)
+    
+    # Convert Cphi back to C0
+    C0 = Cphi / (2 * sqrt(np_abs(zCa*zHSO4)))
 
     return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
