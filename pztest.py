@@ -1,21 +1,19 @@
 from copy import deepcopy
 import pytzer as pz
-import numpy as np 
-from scipy.io import savemat
+import numpy as np
 
+# Import test dataset
 filename = 'testfiles/GenerateConcs.csv'
-
 mols,ions,T = pz.io.getmols(filename)
 
+# Set up CoefficientDictionary
 cf = deepcopy(pz.cfdicts.MarChemSpec25)
-
-#cf.lambd['tris-trisH'] = pz.coeffs.lambd_none
-
 cf.add_zeros(ions) # just in case
 
+# Print out coefficients at 298.15 K
 cf.print_coeffs(298.15,'print_coeffs/' + cf.name + '.txt')
 
-# Cut out zero ionic strengths and do calculations
+# Separate out zero ionic strengths
 zs = pz.props.charges(ions)[0]
 I = np.vstack(0.5 * (np.sum(mols * zs**2, 1)))
 
@@ -28,6 +26,7 @@ L = (I > 0).ravel()
 nargsL  = (mols[ L,:], ions, T[ L], cf)
 nargsLx = (mols[~L,:], ions, T[~L], cf)
 
+# Do calculations
 print('Calculating excess Gibbs energies...')
 Gex_nRT[ L] = pz.model.Gex_nRT(*nargsL)
 Gex_nRT[~L] = pz.model.Gex_nRT(*nargsLx, Izero=True)
@@ -43,11 +42,13 @@ print('Calculating activity coefficients...')
 acfs[ L,:] = pz.model.acfs(*nargsL)
 acfs[~L,:] = pz.model.acfs(*nargsLx, Izero=True)
 
-savemat('testfiles/threeway/threeway.mat',
-        {'mols': mols,
-         'ions': ions,
-         'T'   : T   ,
-         'acfs': acfs,
-         'osm' : osm ,
-         'aw'  : aw  ,
-         'I'   : I   })
+## Save results for plotting in MATLAB
+# from scipy.io import savemat
+# savemat('testfiles/threeway/threeway.mat',
+#         {'mols': mols,
+#          'ions': ions,
+#          'T'   : T   ,
+#          'acfs': acfs,
+#          'osm' : osm ,
+#          'aw'  : aw  ,
+#          'I'   : I   })
