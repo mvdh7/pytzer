@@ -39,6 +39,7 @@ class CoefficientDictionary:
         # Sort lists into alphabetical order
         cations.sort()
         anions.sort()
+        neutrals.sort()
 
         # Populate cfdict with zero functions where no function exists
 
@@ -79,28 +80,34 @@ class CoefficientDictionary:
                         self.psi[istr] = coeffs.psi_none
 
         # Neutral interactions
-        for neutral in neutrals:
+        for N0, neutral0 in enumerate(neutrals):
 
             # n-c lambdas
             for cation in cations:
-                inc = '-'.join((neutral,cation))
+                inc = '-'.join((neutral0,cation))
                 if inc not in self.lambd.keys():
                     self.lambd[inc] = coeffs.lambd_none
 
                 # n-c-a etas
                 for anion in anions:
-                    inca = '-'.join((neutral,cation,anion))
+                    inca = '-'.join((neutral0,cation,anion))
                     if inca not in self.eta.keys():
                         self.eta[inca] = coeffs.eta_none
 
             # n-a lambdas
             for anion in anions:
-                ina = '-'.join((neutral,anion))
+                ina = '-'.join((neutral0,anion))
                 if ina not in self.lambd.keys():
                     self.lambd[ina] = coeffs.lambd_none
 
+            # n-n' lambdas including n-n
+            for neutral1 in neutrals[N0:]:
+                inn = '-'.join((neutral0,neutral1))
+                if inn not in self.lambd.keys():
+                    self.lambd[inn] = coeffs.lambd_none
+
             # n-n-n mus
-            innn = '-'.join((neutral,neutral,neutral))
+            innn = '-'.join((neutral0,neutral0,neutral0))
             if innn not in self.mu.keys():
                 self.mu[innn] = coeffs.mu_none
 
@@ -544,28 +551,28 @@ WM13_MarChemSpec25.get_contents()
 
 #------------------------------------------------------------ MarChemSpec -----
 
-# Begin with WM13_MarChemSpec
-MarChemSpec = deepcopy(WM13)
-MarChemSpec.name = 'MarChemSpec'
+# Begin with WM13_MarChemSpec25
+MarChemSpec25 = deepcopy(WM13_MarChemSpec25)
+MarChemSpec25.name = 'MarChemSpec25'
 
 # Add coefficients from GT17 Supp. Info. Table S6 (simultaneous optimisation)
-#MarChemSpec.bC['Na-Cl'    ] = coeffs.bC_Na_Cl_GT17simopt
-MarChemSpec.bC['trisH-SO4'] = coeffs.bC_trisH_SO4_GT17simopt
-MarChemSpec.bC['trisH-Cl' ] = coeffs.bC_trisH_Cl_GT17simopt
+#MarChemSpec25.bC['Na-Cl'    ] = coeffs.bC_Na_Cl_GT17simopt
+MarChemSpec25.bC['trisH-SO4'] = coeffs.bC_trisH_SO4_GT17simopt
+MarChemSpec25.bC['trisH-Cl' ] = coeffs.bC_trisH_Cl_GT17simopt
 
-MarChemSpec.theta['H-trisH'] = coeffs.theta_H_trisH_GT17simopt
+MarChemSpec25.theta['H-trisH'] = coeffs.theta_H_trisH_GT17simopt
 
-MarChemSpec.psi['H-trisH-Cl'] = coeffs.psi_H_trisH_Cl_GT17simopt
+MarChemSpec25.psi['H-trisH-Cl'] = coeffs.psi_H_trisH_Cl_GT17simopt
 
-MarChemSpec.lambd['tris-trisH'] = coeffs.lambd_tris_trisH_GT17simopt
-MarChemSpec.lambd['tris-Na'   ] = coeffs.lambd_tris_Na_GT17simopt
-MarChemSpec.lambd['tris-K'    ] = coeffs.lambd_tris_K_GT17simopt
-MarChemSpec.lambd['tris-Mg'   ] = coeffs.lambd_tris_Mg_GT17simopt
-MarChemSpec.lambd['tris-Ca'   ] = coeffs.lambd_tris_Ca_GT17simopt
+MarChemSpec25.lambd['tris-trisH'] = coeffs.lambd_tris_trisH_GT17simopt
+MarChemSpec25.lambd['tris-Na'   ] = coeffs.lambd_tris_Na_GT17simopt
+MarChemSpec25.lambd['tris-K'    ] = coeffs.lambd_tris_K_GT17simopt
+MarChemSpec25.lambd['tris-Mg'   ] = coeffs.lambd_tris_Mg_GT17simopt
+MarChemSpec25.lambd['tris-Ca'   ] = coeffs.lambd_tris_Ca_GT17simopt
 
-MarChemSpec.add_zeros(array(['H','Na','Mg','Ca','K','MgOH','trisH','Cl','SO4',
-                             'HSO4','OH','tris']))
-MarChemSpec.get_contents()
+MarChemSpec25.add_zeros(array(['H','Na','Mg','Ca','K','MgOH','trisH','Cl',
+                               'SO4','HSO4','OH','tris']))
+MarChemSpec25.get_contents()
 
 
 #--------------------------------------- Millero & Pierrot 1998 aka MIAMI -----

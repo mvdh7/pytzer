@@ -192,12 +192,21 @@ def Gex_nRT(mols,ions,T,cfdict, Izero=False):
                 Gex_nRT = Gex_nRT + 2 * vstack(neus[:,N] * anis[:,A0]) \
                                       * cfdict.lambd[ina](T)[0]
 
-    # Add n-n-n interactions
-    for N, neutral in enumerate(neutrals):
+    # Add neutral-only interactions
+    for N0, neutral0 in enumerate(neutrals):
+        
+        # n-n' including n-n
+        for N1, neutral1 in enumerate(neutrals):
+            
+            inn = '-'.join((neutral0,neutral1))
+            
+            Gex_nRT = Gex_nRT + 2 * vstack(neus[:,N0] * neus[:,N1]) \
+                                  * cfdict.lambd[inn](T)[0]
 
-        innn = '-'.join((neutral,neutral,neutral))
+        # n-n-n
+        innn = '-'.join((neutral0,neutral0,neutral0))
 
-        Gex_nRT = Gex_nRT + vstack(neus[:,N]**3) * cfdict.mu[innn](T)[0]
+        Gex_nRT = Gex_nRT + vstack(neus[:,N0]**3) * cfdict.mu[innn](T)[0]
 
 
     return Gex_nRT

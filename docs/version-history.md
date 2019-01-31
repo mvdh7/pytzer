@@ -10,7 +10,8 @@
     * Fixed temperature units for **theta_H_Na_CMR93** and **theta_H_K_CMR93**;
     * Deleted duplicate MP98 functions in **coeffs**;
   * Continued adding coefficient functions to **cfdicts.MIAMI**:
-    * All from PP82 (`Na-CO3` and `Na-HCO3` interactions).
+    * All from PP82 (`Na-CO3` and `Na-HCO3` interactions);
+  * Added equations for neutral-neutral interactions (lambda coefficient) to **model.Gex_nRT** and also to **cfdicts.add_zeros** method.
 
 
 ## 0.2.3
