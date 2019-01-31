@@ -1,10 +1,32 @@
 # 0.2 (beta)
 
+## 0.2.4
+
+**Release date:** 2019-01-31
+
+  * Testing activity coefficients against Prof D.R. Turner's and Prof S.L. Clegg's implementations (GIVAKT and FastPitz respectively):
+    * Assembled new **CoefficientDictionary** WM13_MarChemSpec25 for testing;
+    * Corrected `alph1` for **bC_Ca_OH_HMW84** to 2;
+    * Fixed temperature units for **theta_H_Na_CMR93** and **theta_H_K_CMR93**;
+    * Deleted duplicate MP98 functions in **coeffs**;
+    * Added functions with temporary values for 298.15 K for *λ*(tris, tris), *ζ*(tris, Na, Cl) and *μ*(tris, tris, tris) to **MarChemSpec25** **CoefficientDictionary**;
+    * <u>**pytzer** activity and osmotic coefficients agree perfectly (to 6 significant figures) with FastPitz at 298.15 K with the **MarChemSpec25** **CoefficientDictionary**</u>;
+  * Continued adding coefficient functions to **cfdicts.MIAMI**:
+    * All from PP82 (`Na-CO3` and `Na-HCO3` interactions);
+  * Added equations for neutral-neutral interactions (lambda coefficient) to **model.Gex_nRT** and also to **cfdicts.add_zeros** method;
+  * Changed to evaluating all neutral interactions (including with ions) even at zero ionic strength;
+  * Updated nomenclature for consistency with P91: `eta` (*η*) is now `zeta` (*ζ*).
+
+
 ## 0.2.3
+
+*The build of v0.2.3 had errors that prevented installation. These were fixed by v0.2.3.3, which is otherwise identical.*
 
 **Release date:** 2019-01-30
 
-  * Verified both **jfuncs.P75_eq47** and **jfuncs.Harvie**, and their differentials, against Prof D.R. Turner's and Prof S.L. Clegg's implementations;
+  * Verified both **jfuncs.P75_eq47** and **jfuncs.Harvie**, and their derivatives, against Prof D.R. Turner's and Prof S.L. Clegg's implementations (GIVAKT and FastPitz respectively):
+    * <u>**P75_eq47** returns identical results (to >10 significant figures) in every case</u>;
+    * <u>**Harvie** agrees perfectly (to >10 significant figures) with GIVAKT, but FastPitz differs from both by up to 5%</u>;
   * Began assembling MIAMI **CoefficientDictionary** following MP98;
   * Added constant <i>A<sub>ϕ</sub></i> function for 25 °C following P91 to **coeffs.Aosm_25** for MarChemSpec project testing.
 

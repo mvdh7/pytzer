@@ -4,7 +4,7 @@
 from autograd.numpy import exp, float_, full, full_like, log, logical_and, \
                            matmul, size, sqrt, zeros_like
 from autograd.numpy import abs as np_abs
-from .constants import atm2Pa, Patm_bar
+from .constants import atm2Pa, Patm_bar, Tzero
 
 COEFFS_PRESSURE = float_(0.101325) # MPa
 
@@ -40,10 +40,10 @@ def lambd_none(T):
     valid = T > 0
     return lambd, valid
 
-def eta_none(T):
-    eta   = zeros_like(T)
+def zeta_none(T):
+    zeta  = zeros_like(T)
     valid = T > 0
-    return eta, valid
+    return zeta, valid
 
 def mu_none(T):
     mu    = zeros_like(T)
@@ -51,20 +51,6 @@ def mu_none(T):
     return mu, valid
 
 # === ZERO FUNCTIONS ==========================================================
-###############################################################################
-
-#%%############################################################################
-# === CONSTANT AOSM ===========================================================
-
-def Aosm_25(T):
-
-    # Value from Pitzer (1991) Chapter 3 Table 1 (page 99)
-    Aosm = full_like(T,0.3915)
-    valid = T == 298.15
-
-    return Aosm, valid
-
-# === CONSTANT AOSM ===========================================================
 ###############################################################################
 
 #%%############################################################################
@@ -1595,7 +1581,8 @@ def bC_H_Cl_CMR93(T):
 
 def theta_H_K_CMR93(T):
 
-    theta = float_(0.005) - float_(0.0002275) * T
+    # assuming CMR93's lowercase t means temperature in degC
+    theta = float_(0.005) - float_(0.0002275) * (T - Tzero)
 
     valid = logical_and(T >= 273.15, T <= 328.15)
 
@@ -1605,7 +1592,8 @@ def theta_H_K_CMR93(T):
 
 def theta_H_Na_CMR93(T):
 
-    theta = float_(0.0342) - float_(0.000209) * T
+    # assuming CMR93's lowercase t means temperature in degC
+    theta = float_(0.0342) - float_(0.000209) * (T - Tzero)
 
     valid = logical_and(T >= 273.15, T <= 328.15)
 
@@ -1865,239 +1853,6 @@ def dissoc_HSO4_CRP94(T):
 ###############################################################################
 
 #%%############################################################################
-# === MILLERO & PIERROT 1998 ==================================================
-
-def MP98_eq15(T,q):
-
-    # q[0] = PR
-    # q[1] = PJ  * 1e5
-    # q[2] = PRL * 1e4
-
-    Tr = float_(298.15)
-
-    return q[0] + q[1]*1e-5 * (Tr**3/3 - Tr**2 * q[2]*1e-4) * (1/T - 1/Tr) \
-        + q[1]*1e-5 * (T**2 - Tr**2) / 6
-
-# --- bC: sodium iodide -------------------------------------------------------
-
-def bC_Na_I_MP98(T):
-
-    b0    = MP98_eq15(T,float_([ 0.1195,
-                                -1.01  ,
-                                 8.355 ]))
-
-    b1    = MP98_eq15(T,float_([ 0.3439,
-                                -2.54  ,
-                                 8.28  ]))
-
-    b2    = zeros_like(T)
-
-    Cphi  = MP98_eq15(T,float_([ 0.0018,
-                                 0     ,
-                                -0.835 ]))
-
-    zNa   = float_(+1)
-    zI    = float_(-1)
-    C0    = Cphi / (2 * sqrt(np_abs(zNa*zI)))
-
-    C1    = zeros_like(T)
-
-    alph1 = float_(2)
-    alph2 = -9
-    omega = -9
-
-    valid = logical_and(T >= 273.15, T <= 323.15)
-
-    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
-
-# --- bC: sodium bromide ------------------------------------------------------
-
-def bC_Na_Br_MP98(T):
-
-    b0    = MP98_eq15(T,float_([  0.0973 ,
-                                - 1.3    ,
-                                  7.692  ]))
-
-    b1    = MP98_eq15(T,float_([  0.2791 ,
-                                - 1.06   ,
-                                 10.79   ]))
-
-    b2    = zeros_like(T)
-
-    Cphi  = MP98_eq15(T,float_([  0.00116,
-                                  0.16405,
-                                - 0.93   ]))
-
-    zNa   = float_(+1)
-    zBr   = float_(-1)
-    C0    = Cphi / (2 * sqrt(np_abs(zNa*zBr)))
-
-    C1    = zeros_like(T)
-
-    alph1 = float_(2)
-    alph2 = -9
-    omega = -9
-
-    valid = logical_and(T >= 273.15, T <= 323.15)
-
-    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
-
-# --- bC: sodium fluoride -----------------------------------------------------
-
-def bC_Na_F_MP98(T):
-
-    b0    = MP98_eq15(T,float_([  0.215   ,
-                                - 2.37    ,
-                                  5.361e-4]))
-
-    b1    = MP98_eq15(T,float_([  0.2107  ,
-                                  0       ,
-                                  8.7e-4  ]))
-
-    b2    = zeros_like(T)
-    C0    = 0
-    C1    = zeros_like(T)
-
-    alph1 = float_(2)
-    alph2 = -9
-    omega = -9
-
-    valid = logical_and(T >= 273.15, T <= 323.15)
-
-    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
-
-# --- bC: potassium bromide ---------------------------------------------------
-
-def bC_K_Br_MP98(T):
-
-    b0    = MP98_eq15(T,float_([  0.0569 ,
-                                - 1.43   ,
-                                  7.39   ]))
-
-    b1    = MP98_eq15(T,float_([  0.2122 ,
-                                - 0.762  ,
-                                  1.74   ]))
-
-    b2    = zeros_like(T)
-
-    Cphi  = MP98_eq15(T,float_([- 0.0018 ,
-                                  0.216  ,
-                                - 0.7004 ]))
-
-    zK    = float_(+1)
-    zBr   = float_(-1)
-    C0    = Cphi / (2 * sqrt(np_abs(zK*zBr)))
-
-    C1    = zeros_like(T)
-
-    alph1 = float_(2)
-    alph2 = -9
-    omega = -9
-
-    valid = logical_and(T >= 273.15, T <= 323.15)
-
-    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
-
-# --- bC: potassium fluoride --------------------------------------------------
-
-def bC_K_F_MP98(T):
-
-    b0    = MP98_eq15(T,float_([  0.08089,
-                                - 1.39   ,
-                                  2.14   ]))
-
-    b1    = MP98_eq15(T,float_([  0.2021 ,
-                                  0      ,
-                                  5.44   ]))
-
-    b2    = zeros_like(T)
-
-    Cphi  = MP98_eq15(T,float_([  0.00093,
-                                  0      ,
-                                  0.595  ]))
-
-    zK    = float_(+1)
-    zF    = float_(-1)
-    C0    = Cphi / (2 * sqrt(np_abs(zK*zF)))
-
-    C1    = zeros_like(T)
-
-    alph1 = float_(2)
-    alph2 = -9
-    omega = -9
-
-    valid = logical_and(T >= 273.15, T <= 323.15)
-
-    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
-
-# --- bC: potassium hydroxide -------------------------------------------------
-
-def bC_K_OH_MP98(T):
-
-    b0    = MP98_eq15(T,float_([  0.1298 ,
-                                - 0.946  ,
-                                  9.914  ])) # copy of KI
-
-    b1    = MP98_eq15(T,float_([  0.32   ,
-                                - 2.59   ,
-                                 11.86   ])) # copy of KI
-
-    b2    = zeros_like(T)
-
-    Cphi  = MP98_eq15(T,float_([- 0.0041 ,
-                                  0.0638 ,
-                                - 0.944  ])) # copy of KI
-
-    zK    = float_(+1)
-    zOH   = float_(-1)
-    C0    = Cphi / (2 * sqrt(np_abs(zK*zOH)))
-
-    C1    = zeros_like(T)
-
-    alph1 = float_(2)
-    alph2 = -9
-    omega = -9
-
-    valid = logical_and(T >= 273.15, T <= 323.15)
-
-    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
-
-# --- bC: potassium iodide ----------------------------------------------------
-
-def bC_K_I_MP98(T):
-
-    b0    = MP98_eq15(T,float_([  0.0746 ,
-                                - 0.748  ,
-                                  9.914  ]))
-
-    b1    = MP98_eq15(T,float_([  0.2517 ,
-                                - 1.8    ,
-                                 11.86   ]))
-
-    b2    = zeros_like(T)
-
-    Cphi  = MP98_eq15(T,float_([- 0.00414,
-                                  0      ,
-                                - 0.944  ]))
-
-    zK    = float_(+1)
-    zI    = float_(-1)
-    C0    = Cphi / (2 * sqrt(np_abs(zK*zI)))
-
-    C1    = zeros_like(T)
-
-    alph1 = float_(2)
-    alph2 = -9
-    omega = -9
-
-    valid = logical_and(T >= 273.15, T <= 323.15)
-
-    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
-
-# === MILLERO & PIERROT 1998 ==================================================
-###############################################################################
-
-#%%############################################################################
 # === ARCHER 1999 =============================================================
 
 def A99_eq22(T,a):
@@ -2216,7 +1971,7 @@ def psi_Mg_HSO4_SO4_RC99(T):
 
 #%%############################################################################
 # === WATERS & MILLERO 2013 ===================================================
-
+#
 # Some are functions that WM13 declared came from another source, but I
 #  couldn't find them there, so copied directly from WM13 instead.
 #
@@ -2903,7 +2658,7 @@ def bC_Ca_OH_HMW84(T):
     zOH = float_(-1)
     C0 = Cphi / (2 * sqrt(np_abs(zCa*zOH)))
     C1 = zeros_like(T)
-    alph1 = float_(1.4)
+    alph1 = float_(2)
     alph2 = float_(12)
     omega = -9
     valid = T == 298.15
@@ -4883,19 +4638,170 @@ def bC_Sr_Cl_SP78(T):
 #%%############################################################################
 # === PEIPER & PITZER 1982 ====================================================
 
-PP82_Tr = float_(298.15)
+# The equation below was derived by MP Humphreys.
+
+def PP82_eqMPH(T,q):
+    
+    Tr = float_(298.15)
+    
+    return q[0] + q[1] * (T - Tr) + q[2] * (T - Tr)**2 / 2
+
+# --- bC: sodium carbonate ----------------------------------------------------
 
 def bC_Na_CO3_PP82(T):
 
     # I have no idea where MP98 got their T**2 coefficients from
     #   or why they are so small.
-    b0 = 0.0362 + 1.79e-3 * (T - PP82_Tr) -  4.22e-5 * (T - PP82_Tr) / 2
-    b1 = 1.51   + 2.05e-3 * (T - PP82_Tr) - 16.8e-5  * (T - PP82_Tr) / 2
+    b0 = PP82_eqMPH(T,float_([
+          0.0362 ,
+          1.79e-3,
+        - 4.22e-5]))
+    
+    b1 = PP82_eqMPH(T,float_([
+          1.51   ,
+          2.05e-3,
+        -16.8e-5 ]))
+    
     b2 = zeros_like(T)
 
     Cphi = full_like(T,0.0052)
+    zNa  = float_(+1)
+    zCO3 = float_(-2)
 
-    # UNFINISHED!
+    C0 = Cphi / (2 * sqrt(np_abs(zNa*zCO3)))
+    C1 = zeros_like(T)
+
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+
+    valid = logical_and(T >= 273.15, T <= 323.15)
+
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+    
+# --- bC: sodium bicarbonate --------------------------------------------------
+
+def bC_Na_HCO3_PP82(T):
+
+    # I have no idea where MP98 got their T**2 coefficients from
+    #   or why they are so small.
+    b0 = PP82_eqMPH(T,float_([
+         0.028  ,
+         1.00e-3,
+        -2.6e-5 ]))
+    
+    b1 = PP82_eqMPH(T,float_([
+         0.044  ,
+         1.10e-3,
+        -4.3e-5 ]))
+    
+    b2 = zeros_like(T)
+
+    C0 = zeros_like(T)
+    C1 = zeros_like(T)
+
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+
+    valid = logical_and(T >= 273.15, T <= 323.15)
+
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# --- theta: chloride bicarbonate ---------------------------------------------
+    
+def theta_Cl_HCO3_PP82(T):
+    
+    theta = full_like(T,0.0359)
+    valid = T == 298.15
+    
+    return theta, valid
+
+# --- theta: chloride carbonate -----------------------------------------------
+    
+def theta_Cl_CO3_PP82(T):
+    
+    theta = full_like(T,-0.053)
+    valid = T == 298.15
+    
+    return theta, valid
+
+# --- psi: sodium chloride bicarbonate ----------------------------------------
+    
+def psi_Na_Cl_HCO3_PP82(T):
+    
+    psi   = full_like(T,-0.0143)
+    valid = T == 298.15
+    
+    return psi, valid
 
 # === PEIPER & PITZER 1982 ====================================================
 ###############################################################################
+
+#%%############################################################################
+# === MARCHEMSPEC SPECIALS ====================================================
+#
+# These are functions used for testing within the MarChemSpec project
+
+def Aosm_MarChemSpec25(T):
+
+    # Value from Pitzer (1991) Chapter 3 Table 1 (page 99)
+    Aosm = full_like(T,0.3915)
+    valid = T == 298.15
+
+    return Aosm, valid
+
+# --- theta: hydrogen sodium --------------------------------------------------
+    
+def theta_H_Na_MarChemSpec25(T):
+    
+    theta = full_like(T,0.036)
+    valid = T == 298.15
+    
+    return theta, valid
+
+# --- theta: hydrogen potassium -----------------------------------------------
+    
+def theta_H_K_MarChemSpec25(T):
+    
+    theta = full_like(T,0.005)
+    valid = T == 298.15
+    
+    return theta, valid
+
+# --- lambd: tris tris --------------------------------------------------------
+#    
+# Temporary value from "MODEL PARAMETERS FOR TRIS Tests.docx" (2019-01-31)
+
+def lambd_tris_tris_MarChemSpec25(T):
+    
+    lambd = full_like(T,-0.006392)
+    valid = T == 298.15
+    
+    return lambd, valid
+
+# --- eta: tris sodium chloride -----------------------------------------------
+#
+# Temporary value from "MODEL PARAMETERS FOR TRIS Tests.docx" (2019-01-31)
+    
+def zeta_tris_Na_Cl_MarChemSpec25(T):
+    
+    zeta  = full_like(T,-0.003231)
+    valid = T == 298.15
+    
+    return zeta, valid
+
+# --- mu: tris tris tris ------------------------------------------------------
+#
+# Temporary value from "MODEL PARAMETERS FOR TRIS Tests.docx" (2019-01-31)
+    
+def mu_tris_tris_tris_MarChemSpec25(T):
+    
+    mu    = full_like(T,0.0009529)
+    valid = T == 298.15
+    
+    return mu, valid
+
+# === MARCHEMSPEC SPECIALS ====================================================
+###############################################################################
+    
