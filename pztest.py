@@ -7,10 +7,13 @@ filename = 'testfiles/GenerateConcs.csv'
 
 mols,ions,T = pz.io.getmols(filename)
 
-cf = deepcopy(pz.cfdicts.WM13_MarChemSpec25)
-cf.add_zeros(ions)
+cf = deepcopy(pz.cfdicts.MarChemSpec25)
 
-cf.print_coeffs(298.15,'print_coeffs/WM13_MarChemSpec25.txt')
+cf.lambd['tris-trisH'] = pz.coeffs.lambd_none
+
+cf.add_zeros(ions) # just in case
+
+cf.print_coeffs(298.15,'print_coeffs/' + cf.name + '.txt')
 
 # Cut out zero ionic strengths and do calculations
 zs = pz.props.charges(ions)[0]

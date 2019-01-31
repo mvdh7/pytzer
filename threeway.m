@@ -5,9 +5,27 @@ pz.ions = cellstr(pz.ions)';
 pz.acfs = round(pz.acfs,6,'significant');
 pz.osm = round(pz.osm,6,'significant');
 
-% Load Simon's results
+% Load Simon's results - no tris
+fid = fopen('testfiles/threeway/FastPitz_notris.Rs1');
+fpx_data = textscan(fid,repmat('%f',1,29), 'headerlines',162);
+
+fclose(fid);
+
+fpx.T = fpx_data{1} + 298.15;
+fpx.P = fpx_data{2};
+
+fpx.aw  = fpx_data{3};
+fpx.osm = fpx_data{4};
+
+fpx.I = fpx_data{5};
+
+fpx.acfs = cat(2,fpx_data{6:17});
+fpx.mols = cat(2,fpx_data{18:29});
+
+% Load Simon's results - with tris
 fid = fopen('testfiles/threeway/FastPitz.Rs1');
-fp_data = textscan(fid,repmat('%f',1,29), 'headerlines',162);
+fp_data = textscan(fid,repmat('%f',1,29), 'headerlines',203);
+
 fclose(fid);
 
 fp.T = fp_data{1} + 298.15;
@@ -21,7 +39,7 @@ fp.I = fp_data{5};
 fp.acfs = cat(2,fp_data{6:17});
 fp.mols = cat(2,fp_data{18:29});
 
-clear ans fid fp_data
+clear ans fid fp_data fpx_data
 
 % % Load David's results
 % fid = fopen('testfiles/threeway/GIVAKT.csv');
@@ -51,7 +69,7 @@ clear num
 
 %% =================================================== (1) Compare mols ===
 
-xl.acfs(fp.mols == 0) = fp.acfs(fp.mols == 0);
+% xl.acfs(fp.mols == 0) = fp.acfs(fp.mols == 0);
 
 fvar = 'acfs';
 
@@ -59,7 +77,7 @@ figure(1); clf
 printsetup(gcf,[10 12])
 
 subplot(2,1,1)
-    imagesc(xl.(fvar) - fp.(fvar))
+    imagesc(xl.(fvar) - fpx.(fvar))
     
     fcb = colorbar;
     fcb.TickDirection = 'out';
@@ -90,7 +108,7 @@ subplot(2,1,1)
     
     ylabel('Row number')
     
-    text(0,1.1,['(a) ' fvar ': GIVAKT ' endash ' FastPitz'], ...
+    text(0,1.1,['(a) ' fvar ': GIVAKT ' endash ' FastPitz (no tris)'], ...
         'fontname','arial', 'fontsize',9, 'units','normalized')
 
 subplot(2,1,2)
@@ -125,12 +143,12 @@ subplot(2,1,2)
     
     ylabel('Row number')
     
-    text(0,1.1,['(b) ' fvar ': pytzer ' endash ' FastPitz'], ...
+    text(0,1.1,['(b) ' fvar ': pytzer ' endash ' FastPitz (with tris)'], ...
         'fontname','arial', 'fontsize',9, 'units','normalized')
 
 colormap(cbrew_ryb(256))
     
-print('-r300',['testfiles/threeway/' fvar],'-dpng')
+% print('-r300',['testfiles/threeway/' fvar],'-dpng')
 
 %%
 fvar = 'osm';
@@ -176,7 +194,7 @@ subplot(2,1,2); hold on
     text(0,1.1,['(b) ' fvar ': pytzer ' endash ' FastPitz'], ...
         'fontname','arial', 'fontsize',9, 'units','normalized')
     
-print('-r300',['testfiles/threeway/' fvar],'-dpng')
+% print('-r300',['testfiles/threeway/' fvar],'-dpng')
     
 %% Get osmotic coefficient discrepancies (pytzer vs FastPitz)
 
@@ -190,40 +208,37 @@ for R = 1:size(badmols,1)
     disp([num2str(badosm(R)) ' ' strjoin(pz.ions(RL))] )
 end %for R
 
-%% Get activity discrepancies (pytzer vs FastPitz)
-
-acfs_diff = pz.acfs - fp.acfs;
-
-badacfix = find(any(abs(acfs_diff) > 0,2));
-
-badamols  = pz.mols  (badacfix,:);
-bad_diffs = acfs_diff(badacfix,:);
-
-clc
-for R = 1:size(badamols,1)
-    RL = badamols(R,:) > 0;
-    EL = abs(bad_diffs(R,:)) > 0;
-    disp([num2str(badacfix(R)) ' / ions are: ' strjoin(pz.ions(RL)) ...
-        ' / errors in: ' strjoin(pz.ions(EL)) ' / errors: ' ...
-        num2str(bad_diffs(R,EL))] )
-end %for R
 
 %%
 figure(3); clf
 printsetup(gcf,[8 8])
 
-fdiff = abs(xl.acfs - fp.acfs);
+% fdiff = abs(xl.acfs - fpx.acfs); % GIVAKT vs FastPitz, no tris
+fdiff = abs(pz.acfs - fp.acfs); % pytzer vs FastPitz, with tris
 
-x = imagesc(0.5*ones(size(fp.mols)));
-x.AlphaData = fp.mols > 0;
+% Everything
+u = imagesc(-1.5*ones(size(fp.mols)));
 
 hold on
 
-y = imagesc(1.5*ones(size(fp.mols)));
-y.AlphaData = fdiff > 0;
+% Values disagree
+v = imagesc(-0.5*ones(size(fp.mols)));
+v.AlphaData = fdiff > 0;
 
-colormap([0.1 0.6 1;
-          1 0.4 0.4])
+% Molality > 0
+x = imagesc(0.5*ones(size(fp.mols)));
+x.AlphaData = fp.mols > 0;
+
+% Values agree, molality > 0
+y = imagesc(1.5*ones(size(fp.mols)));
+y.AlphaData = fp.mols > 0 & fdiff == 0;
+
+colormap([0.5 0.85 1;
+          1 0.7 0.7;
+          0.9 0.2 0.2;
+          0 0.4 0.9])
+
+% colorbar
 
 setaxes(gca,8)
 set(gca, 'XTick',0:12, 'YTick',[1 100:100:600])
@@ -233,3 +248,18 @@ xtickangle(45)
 
 ylabel('Row number')
       
+% Get activity discrepancies
+
+badacfix = find(any(abs(fdiff) > 0,2));
+
+badamols  = pz.mols  (badacfix,:);
+bad_diffs = fdiff(badacfix,:);
+
+clc
+for R = 1:size(badamols,1)
+    RL = badamols(R,:) > 0;
+    EL = abs(bad_diffs(R,:)) > 0;
+    disp([num2str(badacfix(R)) ' / ions are: ' strjoin(pz.ions(RL)) ...
+        ' / errors in: ' strjoin(pz.ions(EL)) ' / errors: ' ...
+        num2str(bad_diffs(R,EL))] )
+end %for R
