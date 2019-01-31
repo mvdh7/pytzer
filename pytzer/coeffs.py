@@ -1981,6 +1981,22 @@ def psi_Mg_HSO4_SO4_RC99(T):
 # Others were just declared by WM13 as zero. These all seem to agree with
 #  HMW84; it's unclear why HMW84 wasn't cited by WM13 for these.
 
+# --- theta: calcium hydrogen -------------------------------------------------
+
+def theta_Ca_H_MarChemSpec(T):
+    # 1. WM13 cite the wrong reference for this (they say RXX80)
+    # 2. The equation given by WM13 doesn't match RGO82
+    # 3. RGO82 give a 25degC value but no temperature coefficient
+    # So MarChemSpec uses RGO82's 25degC value plus the WM13 temperature cxn
+    
+    thetar = theta_Ca_H_RGO82(T)[0]
+    
+    theta = thetar + 3.275e-4 * (T - 298.15)
+    
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    
+    return theta, valid
+
 # --- bC: sodium sulfate ------------------------------------------------------
 
 def bC_Na_HSO4_HPR93viaWM13(T):

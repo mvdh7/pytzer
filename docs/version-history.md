@@ -6,7 +6,8 @@
 
   * Testing **MarChemSpec05** against **FastPitz** at 278.15 K:
     * Corrected `b0` equation in `bC_K_HSO4_P91`;
-    * Fixed conversion of `Cphi` back to `C0` in `bC_Ca_HSO4_P91`.
+    * Fixed conversion of `Cphi` back to `C0` in `bC_Ca_HSO4_P91`;
+    * Added `theta_Ca_H_MarChemSpec` to combine RGO82 and WM13 equations.
 
 
 ## 0.2.4
