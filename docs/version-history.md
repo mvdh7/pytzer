@@ -18,6 +18,8 @@
 
 ## 0.2.3
 
+*The build of v0.2.3 had errors that prevented installation. These were fixed by v0.2.3.3, which is otherwise identical.*
+
 **Release date:** 2019-01-30
 
   * Verified both **jfuncs.P75_eq47** and **jfuncs.Harvie**, and their differentials, against Prof D.R. Turner's and Prof S.L. Clegg's implementations;
