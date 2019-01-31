@@ -1514,7 +1514,7 @@ def bC_K_HSO4_P91(T):
     # Temperature derivatives should be in P91/Chapter 3, according to WM13,
     #  but I can't find them there.
     # Values here are therefore directly from WM13/TableA3.
-    b0 = b0 + 6e5      * (T - TR)
+    b0 = b0 + 6e-5     * (T - TR)
     b1 = b1 + 1.007e-2 * (T - TR)
 
     return b0,b1,b2,C0,C1, alph1,alph2,omega, valid

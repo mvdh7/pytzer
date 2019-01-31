@@ -4,7 +4,8 @@
 
 **Release date:** forthcoming
 
-  * Testing **MarChemSpec25** at 278.15 K.
+  * Testing **MarChemSpec05** against **FastPitz** at 278.15 K:
+    * Corrected `b0` equation in `bC_K_HSO4_P91`.
 
 
 ## 0.2.4
