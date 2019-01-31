@@ -4769,15 +4769,38 @@ def theta_H_K_MarChemSpec25(T):
     
     return theta, valid
 
-# --- psi: magnesium magnesium-hydroxide chloride -----------------------------
-    
-def psi_Mg_MgOH_Cl_MarChemSpec25(T):
-    
-    # source Clegg/unknown
-    psi   = full_like(T,2.8e-2)
-    valid = T == 298.15
+# --- lambd: tris tris --------------------------------------------------------
+#    
+# Temporary value from "MODEL PARAMETERS FOR TRIS Tests.docx" (2019-01-31)
 
-    return psi, valid
+def lambd_tris_tris_MarChemSpec25(T):
+    
+    lambd = full_like(T,-0.006392)
+    valid = T == 298.15
+    
+    return lambd, valid
+
+# --- eta: tris sodium chloride -----------------------------------------------
+#
+# Temporary value from "MODEL PARAMETERS FOR TRIS Tests.docx" (2019-01-31)
+    
+def eta_tris_Na_Cl_MarChemSpec25(T):
+    
+    eta   = full_like(T,-0.003231)
+    valid = T == 298.15
+    
+    return eta, valid
+
+# --- mu: tris tris tris ------------------------------------------------------
+#
+# Temporary value from "MODEL PARAMETERS FOR TRIS Tests.docx" (2019-01-31)
+    
+def mu_tris_tris_tris_MarChemSpec25(T):
+    
+    mu    = full_like(T,0.0009529)
+    valid = T == 298.15
+    
+    return mu, valid
 
 # === MARCHEMSPEC SPECIALS ====================================================
 ###############################################################################

@@ -4,14 +4,15 @@
 
 **Release date:** forthcoming
 
-  * Testing activity coefficients against Prof D.R. Turner's and Prof S.L. Clegg's implementations:
+  * Testing activity coefficients against Prof D.R. Turner's and Prof S.L. Clegg's implementations (GIVAKT and FastPitz respectively):
     * Assembled new **CoefficientDictionary** WM13_MarChemSpec25 for testing;
     * Corrected `alph1` for **bC_Ca_OH_HMW84** to 2;
     * Fixed temperature units for **theta_H_Na_CMR93** and **theta_H_K_CMR93**;
     * Deleted duplicate MP98 functions in **coeffs**;
   * Continued adding coefficient functions to **cfdicts.MIAMI**:
     * All from PP82 (`Na-CO3` and `Na-HCO3` interactions);
-  * Added equations for neutral-neutral interactions (lambda coefficient) to **model.Gex_nRT** and also to **cfdicts.add_zeros** method.
+  * Added equations for neutral-neutral interactions (lambda coefficient) to **model.Gex_nRT** and also to **cfdicts.add_zeros** method;
+  * Added functions with temporary values for 298.15 K for *λ*(tris,tris), *η*(tris,Na,Cl) and *μ*(tris,tris,tris) to **MarChemSpec25** **CoefficientDictionary**, for testing.
 
 
 ## 0.2.3

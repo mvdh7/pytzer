@@ -569,6 +569,11 @@ MarChemSpec25.lambd['tris-Na'   ] = coeffs.lambd_tris_Na_GT17simopt
 MarChemSpec25.lambd['tris-K'    ] = coeffs.lambd_tris_K_GT17simopt
 MarChemSpec25.lambd['tris-Mg'   ] = coeffs.lambd_tris_Mg_GT17simopt
 MarChemSpec25.lambd['tris-Ca'   ] = coeffs.lambd_tris_Ca_GT17simopt
+MarChemSpec25.lambd['tris-tris' ] = coeffs.lambd_tris_tris_MarChemSpec25
+
+MarChemSpec25.eta['tris-Na-Cl'] = coeffs.eta_tris_Na_Cl_MarChemSpec25
+
+MarChemSpec25.mu['tris-tris-tris'] = coeffs.mu_tris_tris_tris_MarChemSpec25
 
 MarChemSpec25.add_zeros(array(['H','Na','Mg','Ca','K','MgOH','trisH','Cl',
                                'SO4','HSO4','OH','tris']))
