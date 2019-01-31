@@ -9,12 +9,12 @@
     * Corrected `alph1` for **bC_Ca_OH_HMW84** to 2;
     * Fixed temperature units for **theta_H_Na_CMR93** and **theta_H_K_CMR93**;
     * Deleted duplicate MP98 functions in **coeffs**;
+    * Added functions with temporary values for 298.15 K for *λ*(tris,tris), *ζ*(tris,Na,Cl) and *μ*(tris,tris,tris) to **MarChemSpec25** **CoefficientDictionary**;
   * Continued adding coefficient functions to **cfdicts.MIAMI**:
     * All from PP82 (`Na-CO3` and `Na-HCO3` interactions);
   * Added equations for neutral-neutral interactions (lambda coefficient) to **model.Gex_nRT** and also to **cfdicts.add_zeros** method;
   * Changed to evaluating all neutral interactions (including with ions) even at zero ionic strength;
-  * Updated nomenclature for consistency with P91: `eta` is now `zeta`;
-  * Added functions with temporary values for 298.15 K for *λ*(tris,tris), *ζ*(tris,Na,Cl) and *μ*(tris,tris,tris) to **MarChemSpec25** **CoefficientDictionary**, for testing.
+  * Updated nomenclature for consistency with P91: `eta` is now `zeta`.
 
 
 ## 0.2.3

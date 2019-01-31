@@ -12,7 +12,7 @@ There are six different types of coefficient functions, each representing a diff
 
   1. `lambd_`, for interactions between one neutral solute and one ion (*λ*);
 
-  1. `eta_`, for interactions between one neutral solute, one cation and one anion (*η*); and
+  1. `zeta_`, for interactions between one neutral solute, one cation and one anion (*ζ*); and
 
   1. `mu_`, for interactions between three neutral solutes of the same type (*μ*).
 
