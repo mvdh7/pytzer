@@ -38,7 +38,7 @@ for cnum in range(5):
     print('{:^52}'.format('Coefficient: ' + cnames[cnum]))
     print('----------------------------------------------------')
     print('{:>10} {:^12} {:^12} {:^12}'.format('Ions','pytzer',
-                                               'FastPitz','C - py'))
+                                               'FastPitz','fp-pz'))
     
     for ix,ions in enumerate(WM13_bC_ions):
         

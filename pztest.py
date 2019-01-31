@@ -48,7 +48,7 @@ acfs[~L,:] = pz.model.acfs(*nargsLx, Izero=True)
 
 # Save results for plotting in MATLAB
 from scipy.io import savemat
-savemat('testfiles/threeway/threeway5.mat',
+savemat('testfiles/threeway/threeway05.mat',
         {'mols': mols,
          'ions': ions,
          'T'   : T   ,
