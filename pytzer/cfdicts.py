@@ -581,6 +581,12 @@ MarChemSpec25.add_zeros(array(['H','Na','Mg','Ca','K','MgOH','trisH','Cl',
 MarChemSpec25.get_contents()
 
 
+# Begin with WM13_MarChemSpec25
+MarChemSpec05 = deepcopy(WM13_MarChemSpec25)
+MarChemSpec05.name = 'MarChemSpec05'
+
+MarChemSpec05.dh['Aosm'] = coeffs.Aosm_MarChemSpec05
+
 #--------------------------------------- Millero & Pierrot 1998 aka MIAMI -----
 
 MIAMI = CoefficientDictionary()

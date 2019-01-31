@@ -4743,10 +4743,20 @@ def psi_Na_Cl_HCO3_PP82(T):
 #
 # These are functions used for testing within the MarChemSpec project
 
+# For 298.15 K
 def Aosm_MarChemSpec25(T):
 
     # Value from Pitzer (1991) Chapter 3 Table 1 (page 99)
     Aosm = full_like(T,0.3915)
+    valid = T == 298.15
+
+    return Aosm, valid
+
+# For 278.15 K
+def Aosm_MarChemSpec05(T):
+
+    # Value from FastPitz
+    Aosm = full_like(T,0.3792)
     valid = T == 298.15
 
     return Aosm, valid

@@ -1,5 +1,12 @@
 # 0.2 (beta)
 
+## 0.2.5
+
+**Release date:** forthcoming
+
+  * Testing **MarChemSpec25** at 278.15 K.
+
+
 ## 0.2.4
 
 **Release date:** 2019-01-31

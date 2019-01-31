@@ -6,12 +6,16 @@ import numpy as np
 filename = 'testfiles/GenerateConcs.csv'
 mols,ions,T = pz.io.getmols(filename)
 
+# Change temperature
+TEMP = np.float_(278.15)
+T[:] = TEMP
+
 # Set up CoefficientDictionary
-cf = deepcopy(pz.cfdicts.MarChemSpec25)
+cf = deepcopy(pz.cfdicts.MarChemSpec05)
 cf.add_zeros(ions) # just in case
 
 # Print out coefficients at 298.15 K
-cf.print_coeffs(298.15,'print_coeffs/' + cf.name + '.txt')
+cf.print_coeffs(TEMP,'print_coeffs/' + cf.name + '.txt')
 
 # Separate out zero ionic strengths
 zs = pz.props.charges(ions)[0]
@@ -42,13 +46,13 @@ print('Calculating activity coefficients...')
 acfs[ L,:] = pz.model.acfs(*nargsL)
 acfs[~L,:] = pz.model.acfs(*nargsLx, Izero=True)
 
-## Save results for plotting in MATLAB
-# from scipy.io import savemat
-# savemat('testfiles/threeway/threeway.mat',
-#         {'mols': mols,
-#          'ions': ions,
-#          'T'   : T   ,
-#          'acfs': acfs,
-#          'osm' : osm ,
-#          'aw'  : aw  ,
-#          'I'   : I   })
+# Save results for plotting in MATLAB
+from scipy.io import savemat
+savemat('testfiles/threeway/threeway5.mat',
+        {'mols': mols,
+         'ions': ions,
+         'T'   : T   ,
+         'acfs': acfs,
+         'osm' : osm ,
+         'aw'  : aw  ,
+         'I'   : I   })

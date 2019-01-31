@@ -106,6 +106,7 @@ venv.bak/
 # Ignored folders
 print_coeffs/*
 no-release/*
+testfiles/threeway/*
 
 # Documents
 *.docx
