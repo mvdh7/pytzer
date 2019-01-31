@@ -119,7 +119,7 @@ def Gex_nRT(mols,ions,T,cfdict, Izero=False):
 
                     Gex_nRT = Gex_nRT \
                             + vstack(neus[:,N] * cats[:,C0] * anis[:,A]) \
-                            * cfdict.eta[inca](T)[0]
+                            * cfdict.zeta[inca](T)[0]
 
             # Add c-c' interactions
             for xC1, cation1 in enumerate(cations[C0+1:]):

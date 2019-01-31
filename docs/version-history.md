@@ -12,7 +12,8 @@
   * Continued adding coefficient functions to **cfdicts.MIAMI**:
     * All from PP82 (`Na-CO3` and `Na-HCO3` interactions);
   * Added equations for neutral-neutral interactions (lambda coefficient) to **model.Gex_nRT** and also to **cfdicts.add_zeros** method;
-  * Added functions with temporary values for 298.15 K for *λ*(tris,tris), *η*(tris,Na,Cl) and *μ*(tris,tris,tris) to **MarChemSpec25** **CoefficientDictionary**, for testing.
+  * Updated nomenclature for consistency with P91: `eta` is now `zeta`;
+  * Added functions with temporary values for 298.15 K for *λ*(tris,tris), *ζ*(tris,Na,Cl) and *μ*(tris,tris,tris) to **MarChemSpec25** **CoefficientDictionary**, for testing.
 
 
 ## 0.2.3

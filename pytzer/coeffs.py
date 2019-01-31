@@ -40,10 +40,10 @@ def lambd_none(T):
     valid = T > 0
     return lambd, valid
 
-def eta_none(T):
-    eta   = zeros_like(T)
+def zeta_none(T):
+    zeta  = zeros_like(T)
     valid = T > 0
-    return eta, valid
+    return zeta, valid
 
 def mu_none(T):
     mu    = zeros_like(T)
@@ -4784,12 +4784,12 @@ def lambd_tris_tris_MarChemSpec25(T):
 #
 # Temporary value from "MODEL PARAMETERS FOR TRIS Tests.docx" (2019-01-31)
     
-def eta_tris_Na_Cl_MarChemSpec25(T):
+def zeta_tris_Na_Cl_MarChemSpec25(T):
     
-    eta   = full_like(T,-0.003231)
+    zeta  = full_like(T,-0.003231)
     valid = T == 298.15
     
-    return eta, valid
+    return zeta, valid
 
 # --- mu: tris tris tris ------------------------------------------------------
 #

@@ -23,7 +23,7 @@ class CoefficientDictionary:
         self.jfunc = [] # unsymmetrical mixing
         self.psi   = {} # c-c'-a and c-a-a'
         self.lambd = {} # n-c and n-a
-        self.eta   = {} # n-c-a
+        self.zeta  = {} # n-c-a
         self.mu    = {} # n-n-n
 
         self.ions  = array([])
@@ -88,11 +88,11 @@ class CoefficientDictionary:
                 if inc not in self.lambd.keys():
                     self.lambd[inc] = coeffs.lambd_none
 
-                # n-c-a etas
+                # n-c-a zetas
                 for anion in anions:
                     inca = '-'.join((neutral0,cation,anion))
-                    if inca not in self.eta.keys():
-                        self.eta[inca] = coeffs.eta_none
+                    if inca not in self.zeta.keys():
+                        self.zeta[inca] = coeffs.zeta_none
 
             # n-a lambdas
             for anion in anions:
@@ -200,8 +200,8 @@ class CoefficientDictionary:
 
         # Write neutral-ion coefficients (lambdas)
         f.write('\n')
-        f.write('n-c and n-a pairs (lambdas)\n')
-        f.write('===========================\n')
+        f.write('n-c, n-a and n-n\' pairs (lambdas)\n')
+        f.write('=================================\n')
 
         lambdHead = 2*'{:7}' + '{:^13}'    + '  {:15}\n'
         lambdVals = 2*'{:7}' + '{:>13.5e}' + '  {:15}\n'
@@ -217,24 +217,24 @@ class CoefficientDictionary:
 
             f.write(lambdVals.format(neut,ion, eval_lambd, src))
 
-        # Write neutral-cation-anion triplet coefficients (etas)
+        # Write neutral-cation-anion triplet coefficients (zetas)
         f.write('\n')
-        f.write('n-c-a triplets (etas)\n')
-        f.write('=====================\n')
+        f.write('n-c-a triplets (zetas)\n')
+        f.write('======================\n')
 
-        etaHead = 3*'{:7}' + '{:^12}'    + '  {:15}\n'
-        etaVals = 3*'{:7}' + '{:>12.5e}' + '  {:15}\n'
+        zetaHead = 3*'{:7}' + '{:^12}'    + '  {:15}\n'
+        zetaVals = 3*'{:7}' + '{:>12.5e}' + '  {:15}\n'
 
-        f.write(etaHead.format('neut','cat','ani','eta','source'))
+        f.write(zetaHead.format('neut','cat','ani','zeta','source'))
 
-        for eta in self.eta.keys():
+        for zeta in self.zeta.keys():
 
-            neut,cat,ani = eta.split('-')
-            eval_eta = self.eta[eta](T)[0]
+            neut,cat,ani = zeta.split('-')
+            eval_zeta = self.zeta[zeta](T)[0]
 
-            src = self.eta[eta].__name__.split('_')[-1]
+            src = self.zeta[zeta].__name__.split('_')[-1]
 
-            f.write(etaVals.format(neut,cat,ani,eval_eta,src))
+            f.write(zetaVals.format(neut,cat,ani,eval_zeta,src))
 
         # Write neutral-neutral-neutral triplet coefficients (mus)
         f.write('\n')
@@ -261,7 +261,8 @@ class CoefficientDictionary:
     def get_contents(self):
 
         # Get list of non-empty function dicts
-        ctypes = [self.bC, self.theta, self.psi, self.lambd, self.eta, self.mu]
+        ctypes = [self.bC, self.theta, self.psi, self.lambd, 
+                  self.zeta, self.mu]
         ctypes = [ctype for ctype in ctypes if any(ctype)]
 
         # Get unique list of "ions" (includes neutrals)
@@ -571,7 +572,7 @@ MarChemSpec25.lambd['tris-Mg'   ] = coeffs.lambd_tris_Mg_GT17simopt
 MarChemSpec25.lambd['tris-Ca'   ] = coeffs.lambd_tris_Ca_GT17simopt
 MarChemSpec25.lambd['tris-tris' ] = coeffs.lambd_tris_tris_MarChemSpec25
 
-MarChemSpec25.eta['tris-Na-Cl'] = coeffs.eta_tris_Na_Cl_MarChemSpec25
+MarChemSpec25.zeta['tris-Na-Cl'] = coeffs.zeta_tris_Na_Cl_MarChemSpec25
 
 MarChemSpec25.mu['tris-tris-tris'] = coeffs.mu_tris_tris_tris_MarChemSpec25
 
