@@ -9,7 +9,7 @@ mols,ions,T = pz.io.getmols(filename)
 
 cf = deepcopy(pz.cfdicts.MarChemSpec25)
 
-cf.lambd['tris-trisH'] = pz.coeffs.lambd_none
+#cf.lambd['tris-trisH'] = pz.coeffs.lambd_none
 
 cf.add_zeros(ions) # just in case
 

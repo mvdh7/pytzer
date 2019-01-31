@@ -24,7 +24,7 @@ fpx.mols = cat(2,fpx_data{18:29});
 
 % Load Simon's results - with tris
 fid = fopen('testfiles/threeway/FastPitz.Rs1');
-fp_data = textscan(fid,repmat('%f',1,29), 'headerlines',203);
+fp_data = textscan(fid,repmat('%f',1,29), 'headerlines',204);
 
 fclose(fid);
 
@@ -233,10 +233,10 @@ x.AlphaData = fp.mols > 0;
 y = imagesc(1.5*ones(size(fp.mols)));
 y.AlphaData = fp.mols > 0 & fdiff == 0;
 
-colormap([0.5 0.85 1;
-          1 0.7 0.7;
-          0.9 0.2 0.2;
-          0 0.4 0.9])
+colormap([0.8 0.9 1;
+          1 0.6 0.6;
+          0.9 0.1 0.1;
+          0.6 0.8 1])
 
 % colorbar
 
