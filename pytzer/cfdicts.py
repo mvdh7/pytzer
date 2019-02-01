@@ -133,7 +133,7 @@ class CoefficientDictionary:
         f.write('Debye-Hueckel limiting slope\n')
         f.write('============================\n')
 
-        eval_Aosm = self.dh['Aosm'](T)[0]
+        eval_Aosm = self.dh['Aosm'](array(T))[0][0]
 
         src = self.dh['Aosm'].__name__.split('_')[-1]
 
@@ -582,11 +582,17 @@ MarChemSpec25.add_zeros(array(['H','Na','Mg','Ca','K','MgOH','trisH','Cl',
 MarChemSpec25.get_contents()
 
 
-# Begin with WM13_MarChemSpec25
+# Begin with WM13_MarChemSpec25, switch to constant 5 degC Aosm
 MarChemSpec05 = deepcopy(MarChemSpec25)
 MarChemSpec05.name = 'MarChemSpec05'
 
 MarChemSpec05.dh['Aosm'] = coeffs.Aosm_MarChemSpec05
+
+# Begin with WM13_MarChemSpec25, switch to CRP94 corrected Aosm
+MarChemSpec = deepcopy(MarChemSpec25)
+MarChemSpec.name = 'MarChemSpec'
+
+MarChemSpec.dh['Aosm'] = coeffs.Aosm_MarChemSpec
 
 #--------------------------------------- Millero & Pierrot 1998 aka MIAMI -----
 

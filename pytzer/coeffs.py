@@ -1635,8 +1635,7 @@ def bC_Na_HSO4_HPR93(T):
 def Aosm_CRP94(T): # CRP94 Appendix II
 
     # Transform temperature
-    T = T.ravel()
-    X = (2 * T - 373.15 - 234.15) / (373.15 - 234.15)
+    X = (2 * T.ravel() - 373.15 - 234.15) / (373.15 - 234.15)
 
     # Set coefficients - CRP94 Table 11
     a_Aosm = float_( \
@@ -4769,6 +4768,14 @@ def Aosm_MarChemSpec05(T):
     Aosm = full_like(T,0.3792)
     valid = T == 298.15
 
+    return Aosm, valid
+
+# Following CRP94 but with a correction to match AW90
+def Aosm_MarChemSpec(T):
+    
+    Aosm  = Aosm_CRP94(T)[0] + 2.99e-8
+    valid = logical_and(T >= 234.15, T <= 373.15)
+    
     return Aosm, valid
 
 # --- theta: hydrogen sodium --------------------------------------------------

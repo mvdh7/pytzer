@@ -16,7 +16,9 @@ The convention in **pytzer** is to just write out the chemical formula for the r
 
 ## Elemental ions
 
-The elemental ions are listed in order of atomic number.
+The elemental ions are arranged in groups and listed in order of atomic number.
+
+Each transition metal may have multiple possible oxidation states. These are indicated in the code with `j` for each positive charge and `q` for each negative: for example, iron(II) and iron(III) (Fe<sup>2+</sup> and Fe<sup>3+</sup>) become `Fejj` and `Fejjj` respectively, while V<sup>1−</sup> would become `Vq`. The letters `j` and `q` are used to avoid confusion: they do not appear in the symbol for any element.
 
 <table><tr>
 
@@ -24,14 +26,41 @@ The elemental ions are listed in order of atomic number.
 <td><strong>Formula</strong></td>
 <td><strong>Name in pytzer</strong></td>
 
-</tr><tr><td>Hydrogen</td>  <td>H<sup>+</sup></td>   <td><code>H</code></td>
-</tr><tr><td>Lithium</td>   <td>Li<sup>+</sup></td>  <td><code>Li</code></td>
-</tr><tr><td>Sodium</td>    <td>Na<sup>+</sup></td>  <td><code>Na</code></td>
+</tr><tr><td align="center" colspan="3"><em>Alkali metals</em></td>
+
+</tr><tr><td>Hydrogen</td>  <td>H<sup>+</sup></td>  <td><code>H</code></td>
+</tr><tr><td>Lithium</td>   <td>Li<sup>+</sup></td> <td><code>Li</code></td>
+</tr><tr><td>Sodium</td>    <td>Na<sup>+</sup></td> <td><code>Na</code></td>
+</tr><tr><td>Potassium</td> <td>K<sup>+</sup></td>  <td><code>K</code></td>
+</tr><tr><td>Rubidium</td>  <td>Rb<sup>+</sup></td> <td><code>Rb</code></td>
+</tr><tr><td>Caesium</td>   <td>Cs<sup>+</sup></td> <td><code>Cs</code></td>
+
+</tr><tr><td align="center" colspan="3"><em>Alkaline earth metals</em></td>
+
 </tr><tr><td>Magnesium</td> <td>Mg<sup>2+</sup></td> <td><code>Mg</code></td>
-</tr><tr><td>Chlorine</td>  <td>Cl<sup>−</sup></td>  <td><code>Cl</code></td>
-</tr><tr><td>Potassium</td> <td>K<sup>+</sup></td>   <td><code>K</code></td>
 </tr><tr><td>Calcium</td>   <td>Ca<sup>2+</sup></td> <td><code>Ca</code></td>
-</tr><tr><td>Caesium</td>   <td>Cs<sup>+</sup></td>  <td><code>Cs</code></td>
+</tr><tr><td>Strontium</td> <td>Sr<sup>2+</sup></td> <td><code>Sr</code></td>
+</tr><tr><td>Barium</td>    <td>Ba<sup>2+</sup></td> <td><code>Ba</code></td>
+
+</tr><tr><td align="center" colspan="3"><em>Transition metals</em></td>
+
+</tr><tr><td>Manganese(II)</td> <td>Mn<sup>2+</sup></td> <td><code>Mnjj</code></td>
+</tr><tr><td>Iron(II)</td>      <td>Fe<sup>2+</sup></td> <td><code>Fejj</code></td>
+</tr><tr><td>Iron(III)</td>     <td>Fe<sup>3+</sup></td> <td><code>Fejjj</code></td>
+</tr><tr><td>Cobalt(II)</td>    <td>Co<sup>2+</sup></td> <td><code>Cojj</code></td>
+</tr><tr><td>Nickel(II)</td>    <td>Ni<sup>2+</sup></td> <td><code>Nijj</code></td>
+</tr><tr><td>Copper(II)</td>    <td>Cu<sup>2+</sup></td> <td><code>Cujj</code></td>
+</tr><tr><td>Cadmium(II)</td>   <td>Cd<sup>2+</sup></td> <td><code>Cdjj</code></td>
+
+</tr><tr><td align="center" colspan="3"><em>Halogens</em></td>
+
+</tr><tr><td>Fluoride</td> <td>F<sup>−</sup></td>  <td><code>F</code></td>
+</tr><tr><td>Chloride</td> <td>Cl<sup>−</sup></td> <td><code>Cl</code></td>
+</tr><tr><td>Iodide</td>   <td>I<sup>2−</sup></td> <td><code>I</code></td>
+
+</tr><tr><td align="center" colspan="3"><em>Lanthanides</em></td>
+
+</tr><tr><td>Lanthanum</td> <td>La<sup>3+</sup></td> <td><code>La</code></td>
 
 </tr></table>
 
@@ -49,10 +78,19 @@ The other ions are listed approximately in order of the atomic number of their m
 </tr><tr><td>Bicarbonate</td> <td>HCO<sub>3</sub><sup>−</sup></td> <td><code>HCO3</code></td>
 </tr><tr><td>Carbonate</td> <td>CO<sub>3</sub><sup>2−</sup></td> <td><code>CO3</code></td>
 </tr><tr><td>TrisH<sup>+</sup></td> <td>(HOCH<sub>2</sub>)<sub>3</sub>CNH<sub>3</sub><sup>+</sup></td> <td><code>trisH</code></td>
+</tr><tr><td>Nitrate</td> <td>NO<sub>3</sub><sup>−</sup></td> <td><code>NO3</code></td>
 </tr><tr><td>Hydroxide</td> <td>OH<sup>−</sup></td> <td><code>OH</code></td>
+</tr><tr><td>Dihydrogen phosphate</td> <td>H<sub>2</sub>PO<sub>4</sub><sup>−</sup></td> <td><code>H2PO4</code></td>
+</tr><tr><td>Thiocyanate</td> <td>SCN<sup>−</sup></td> <td><code>SCN</code></td>
 </tr><tr><td>Bisulfate</td> <td>HSO<sub>4</sub><sup>−</sup></td> <td><code>HSO4</code></td>
 </tr><tr><td>Sulfate</td> <td>SO<sub>4</sub><sup>2−</sup></td> <td><code>SO4</code></td>
+</tr><tr><td>Chlorate</td> <td>ClO<sub>3</sub><sup>−</sup></td> <td><code>ClO3</code></td>
+</tr><tr><td>Perchlorate</td> <td>ClO<sub>4</sub><sup>−</sup></td> <td><code>ClO4</code></td>
 </tr><tr><td>Magnesium hydroxide</td> <td>MgOH<sup>+</sup></td> <td><code>MgOH</code></td>
+</tr><tr><td>Ferrocyanide</td> <td>[Fe(CN)<sub>6</sub>]<sup>4−</sup></td> <td><code>FejjCN6</code></td>
+</tr><tr><td>Ferricyanide</td> <td>[Fe(CN)<sub>6</sub>]<sup>3−</sup></td> <td><code>FejjjCN6</code></td>
+</tr><tr><td>Bromate</td> <td>BrO<sub>3</sub><sup>−</sup></td> <td><code>BrO3</code></td>
+</tr><tr><td>Iodate</td> <td>IO<sub>3</sub><sup>−</sup></td> <td><code>IO3</code></td>
 
 </tr></table>
 
@@ -85,6 +123,9 @@ References from the peer-reviewed literature (or 'sources') are written as the i
 
 <td><code>A99</code></td>
 <td>Archer, D. G. (1999). Thermodynamic Properties of the KCl+H<sub>2</sub>O System. <i>J. Phys. Chem. Ref. Data</i> 28, 1–17. <a href="https://doi.org/10.1063/1.556034">doi:10.1063/1.556034</a>.</td></tr><tr>
+
+<td><code>AW90</code></td>
+<td>Archer, D. G., and Wang, P. (1990). The Dielectric Constant of Water and Debye‐Hückel Limiting Law Slopes. <i>J. Phys. Chem. Ref. Data</i> 19, 371–411. <a href="https://doi.org/10.1063/1.555853">doi:10.1063/1.555853</a>.</td></tr><tr>
 
 <td><code>CMR93</code></td>
 <td>Campbell, D. M., Millero, F. J., Roy, R., Roy, L., Lawson, M., Vogel, K. M., et al. (1993). The standard potential for the hydrogen-silver, silver chloride electrode in synthetic seawater. <i>Mar. Chem.</i> 44, 221–233. <a href="https://doi.org/10.1016/0304-4203(93)90204-2">doi:10.1016/0304-4203(93)90204-2</a>.</td></tr><tr>
