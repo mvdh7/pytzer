@@ -7,7 +7,12 @@
   * Testing **MarChemSpec05** against **FastPitz** at 278.15 K:
     * Corrected `b0` equation in `bC_K_HSO4_P91`;
     * Fixed conversion of `Cphi` back to `C0` in `bC_Ca_HSO4_P91`;
-    * Added `theta_Ca_H_MarChemSpec` to combine RGO82 and WM13 equations.
+    * Added `theta_Ca_H_MarChemSpec` to combine RGO82 and WM13 equations;
+    * Added new module **pytzer.tables** to store long lists of coefficients stored in tables;
+    * Added basic **tables** page to documentation;
+    * Updated `bC_` functions for `Ca-SO4`, `Ca-HSO4` and `K-HSO4`:
+      * Used data from new **pytzer.tables** module;
+      * Relabelled from `P91` to `WM13`, to better reflect their provenance.
 
 
 ## 0.2.4

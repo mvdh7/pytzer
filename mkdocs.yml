@@ -15,6 +15,7 @@ nav:
         - .cfdicts – coefficient dictionaries: modules/cfdicts.md
         - .model – the Pitzer model:           modules/model.md
         - .coeffs – interaction coefficients:  modules/coeffs.md
+        - .tables - coefficient tables:        modules/tables.md
         - .jfuncs – unsymmetrical mixing:      modules/jfuncs.md
         - .props – universal ionic properties: modules/props.md
         - .constants – physical constants:     modules/constants.md

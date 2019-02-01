@@ -422,14 +422,14 @@ WM13.bC['Mg-HSO4'] = coeffs.bC_Mg_HSO4_RC99
 
 # Table A3: Ca salts
 WM13.bC['Ca-Cl'  ] = coeffs.bC_Ca_Cl_GM89
-WM13.bC['Ca-SO4' ] = coeffs.bC_Ca_SO4_P91
-WM13.bC['Ca-HSO4'] = coeffs.bC_Ca_HSO4_P91
+WM13.bC['Ca-SO4' ] = coeffs.bC_Ca_SO4_WM13
+WM13.bC['Ca-HSO4'] = coeffs.bC_Ca_HSO4_WM13
 WM13.bC['Ca-OH'  ] = coeffs.bC_Ca_OH_HMW84
 
 # Table A4: K salts
 WM13.bC['K-Cl'  ] = coeffs.bC_K_Cl_GM89
 WM13.bC['K-SO4' ] = coeffs.bC_K_SO4_HM86
-WM13.bC['K-HSO4'] = coeffs.bC_K_HSO4_P91
+WM13.bC['K-HSO4'] = coeffs.bC_K_HSO4_WM13
 WM13.bC['K-OH'  ] = coeffs.bC_K_OH_HMW84
 
 # Table A5: H+ interactions
