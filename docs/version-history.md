@@ -11,7 +11,8 @@
   * Updated `bC_` functions for `Ca-SO4`, `Ca-HSO4` and `K-HSO4`:
     * Used data from new **pytzer.tables** module;
     * Relabelled from `P91` to `WM13`, to better reflect their provenance;
-  * Added `Aosm_MarChemSpec`, which adds a small offset to `Aosm_CRP94` to make it consistent with AW90 and FastPitz.
+  * Added `Aosm_MarChemSpec`, which adds a small offset to `Aosm_CRP94` to make it consistent with AW90 and FastPitz;
+  * Created new **MarChemSpec** **CoefficientDictionary**, with temperature-varying `Aosm_MarChemSpec`.
 
 
 ## 0.2.4
@@ -29,7 +30,7 @@
     * All from PP82 (`Na-CO3` and `Na-HCO3` interactions);
   * Added equations for neutral-neutral interactions (lambda coefficient) to **model.Gex_nRT** and also to **cfdicts.add_zeros** method;
   * Changed to evaluating all neutral interactions (including with ions) even at zero ionic strength;
-  * Updated nomenclature for consistency with P91: `eta` (*η*) is now `zeta` (*ζ*).
+  * Updated nomenclature for consistency with P91, MP98 and others: `eta` (*η*) is now `zeta` (*ζ*).
 
 
 ## 0.2.3
