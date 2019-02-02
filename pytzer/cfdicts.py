@@ -622,7 +622,7 @@ MIAMI.bC['Na-SO4' ] = coeffs.bC_Na_SO4_HPR93
 MIAMI.bC['Na-CO3' ] = coeffs.bC_Na_CO3_PP82
 MIAMI.bC['Na-BOH4'] = coeffs.bC_Na_BOH4_SRRJ87
 #MIAMI.bC['Na-HS'  ] = coeffs.bC_Na_HS_H88
-#MIAMI.bC['Na-CNS' ] = coeffs.bC_Na_CNS_SP78
+#MIAMI.bC['Na-SCN' ] = coeffs.bC_Na_CNS_SP78
 #MIAMI.bC['Na-SO3' ] = coeffs.bC_Na_SO3_M89
 #MIAMI.bC['Na-HSO3'] = coeffs.bC_Na_HSO3_M89
 
