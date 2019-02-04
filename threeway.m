@@ -2,7 +2,7 @@
 pz = load('testfiles/threeway/temptestUpVec.mat');
 pz.ions = cellstr(pz.ions)';
 pz.acfs = round(pz.acfs,6,'significant');
-pz.osm = round(pz.osm,6,'significant');
+pz.osm = round(pz.osm,7,'significant');
 
 pz2 = load('testfiles/threeway/temptestDownVec.mat');
 pz2.acfs = flipud(round(pz2.acfs,6,'significant'));
@@ -44,7 +44,7 @@ writetable(out,'testfiles/TempTestingAcfs.txt')
 % fpx.mols = cat(2,fpx_data{18:29});
 
 % Load Simon's results - with tris
-fid = fopen('testfiles/threeway/FastPitzTempTesting.Rs1');
+fid = fopen('testfiles/threeway/FastPitz.Rs1');
 fp_data = textscan(fid,repmat('%f',1,29), 'headerlines',204);
 
 fclose(fid);
@@ -237,10 +237,10 @@ printsetup(gcf,[8 8])
 subplot(1,4,1:3)
 
     % fdiff = abs(xl.acfs - fpx.acfs); % GIVAKT vs FastPitz, no tris
-%     fdiff = abs(pz.acfs - fp.acfs); % pytzer vs FastPitz, with tris
+    fdiff = abs(pz.acfs - fp.acfs); % pytzer vs FastPitz, with tris
 
-    fdiff = abs(pz.acfs - pz2.acfs); % pytzer vs FastPitz, with tris
-    fdosm = pz.osm - pz2.osm;
+%     fdiff = abs(pz.acfs - pz2.acfs); % pytzer vs FastPitz, with tris
+    fdosm = pz.osm - fp.osm;
 
     % Everything
     u = imagesc(-1.5*ones(size(fdiff)));
@@ -276,10 +276,10 @@ subplot(1,4,1:3)
 
 subplot(1,4,4); hold on
 
-    xlim([0.5 numel(pz.(fvar))+0.5])
-    ylim(0.0100001 * [-1 1])
+    xlim([0.5 numel(pz.osm)+0.5])
+    ylim(0.0000100001 * [-1 1])
 
-     bar(1:numel(fp.(fvar)),fdosm, ...
+     bar(1:numel(fp.osm),fdosm, ...
         'facecolor','r', 'edgecolor','r')
     plot(get(gca,'xlim'),[0 0],'k')
 
@@ -289,7 +289,7 @@ subplot(1,4,4); hold on
 %     set(gca, 'YTickLabel',num2str(get(gca,'ytick')','%.2f'))
     
     xlabel('Row number')
-    ylabel(['\Delta ' fvar])
+    ylabel('\Delta osm')
     
 %     text(0,1.1,['(b) ' fvar ': pytzer ' endash ' FastPitz'], ...
 %         'fontname','arial', 'fontsize',9, 'units','normalized')
