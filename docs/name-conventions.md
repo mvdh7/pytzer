@@ -50,7 +50,11 @@ Each transition metal may have multiple possible oxidation states. These are ind
 </tr><tr><td>Cobalt(II)</td>    <td>Co<sup>2+</sup></td> <td><code>Cojj</code></td>
 </tr><tr><td>Nickel(II)</td>    <td>Ni<sup>2+</sup></td> <td><code>Nijj</code></td>
 </tr><tr><td>Copper(II)</td>    <td>Cu<sup>2+</sup></td> <td><code>Cujj</code></td>
-</tr><tr><td>Cadmium(II)</td>   <td>Cd<sup>2+</sup></td> <td><code>Cdjj</code></td>
+
+</tr><tr><td align="center" colspan="3"><em>Post-transition metals</em></td>
+
+</tr><tr><td>Zinc(II)</td>    <td>Zn<sup>2+</sup></td> <td><code>Znjj</code></td>
+</tr><tr><td>Cadmium(II)</td> <td>Cd<sup>2+</sup></td> <td><code>Cdjj</code></td>
 
 </tr><tr><td align="center" colspan="3"><em>Halogens</em></td>
 
