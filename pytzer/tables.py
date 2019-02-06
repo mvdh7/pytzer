@@ -1,6 +1,9 @@
 # pytzer: Pitzer model for chemical activities in aqueous solutions
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 
+# The first set of tables from Pitzer (1991) Chapter 3 are all just
+#  reproductions of the values listed by Silvester and Pitzer (1979).
+
 # Pitzer (1991), Chapter 3, Table 12 [p109-p110]
 # First temperature derivatives of b0, b1 and Cphi for 1-1 electrolytes
 # 'max' gives maximum applicable molality in mol/kg
@@ -74,7 +77,7 @@ P91_Ch3_T13_I = {
 # alph1 = 1.4 for the M-SO4 b1's, alph1 = 2.0 otherwise
 # alph2 = 12.0 throughout
 #
-# Na3-FeCN5 is believed to be a typo for Na3-FeCN6
+# Na3-FeCN5 is a typo for Na3-FeCN6
 P91_Ch3_T13_II = {
     'info': 'First temperature derivatives of b0, b1, b2 and C0 ' \
           + 'for 3-1 and 2-2 electrolytes',
