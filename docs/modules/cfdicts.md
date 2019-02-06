@@ -123,7 +123,7 @@ class CoefficientDictionary:
         self.jfunc = [] # unsymmetrical mixing
         self.psi   = {} # c-c'-a and c-a-a'
         self.lambd = {} # n-c and n-a
-        self.eta   = {} # n-c-a
+        self.zeta  = {} # n-c-a
         self.mu    = {} # n-n-n
 
         self.ions  = []
