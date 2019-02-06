@@ -113,3 +113,4 @@ testfiles/threeway/*
 
 # MATLAB
 *.asv
+*.mat
