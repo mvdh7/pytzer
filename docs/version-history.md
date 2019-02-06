@@ -2,7 +2,7 @@
 
 ## 0.2.5
 
-**Release date:** forthcoming
+**Release date:** 2019-02-06
 
   * <u>Testing **MarChemSpec05** against **FastPitz** at 278.15 K - perfect agreement to 6 significant figures</u>;
   * Added `theta_Ca_H_MarChemSpec` to combine RGO82 and WM13 equations;
