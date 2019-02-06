@@ -621,7 +621,7 @@ MIAMI.bC['Na-HCO3'] = coeffs.bC_Na_HCO3_PP82
 MIAMI.bC['Na-SO4' ] = coeffs.bC_Na_SO4_HPR93
 MIAMI.bC['Na-CO3' ] = coeffs.bC_Na_CO3_PP82
 MIAMI.bC['Na-BOH4'] = coeffs.bC_Na_BOH4_SRRJ87
-#MIAMI.bC['Na-HS'  ] = coeffs.bC_Na_HS_H88
+MIAMI.bC['Na-HS'  ] = coeffs.bC_Na_HS_HPM88
 #MIAMI.bC['Na-SCN' ] = coeffs.bC_Na_CNS_SP78
 #MIAMI.bC['Na-SO3' ] = coeffs.bC_Na_SO3_M89
 #MIAMI.bC['Na-HSO3'] = coeffs.bC_Na_HSO3_M89
@@ -630,16 +630,16 @@ MIAMI.bC['Na-BOH4'] = coeffs.bC_Na_BOH4_SRRJ87
 #MIAMI.bC['K-HCO3 '] = coeffs.bC_K_HCO3_R83
 #MIAMI.bC['K-CO3'  ] = coeffs.bC_K_CO3_S87a
 MIAMI.bC['K-BOH4' ] = coeffs.bC_K_BOH4_SRRJ87
-#MIAMI.bC['K-HS'   ] = coeffs.bC_K_HS_M95
-#MIAMI.bC['K-H2PO4'] = coeffs.bC_K_H2PO4_SP78
-#MIAMI.bC['K-CNS'  ] = coeffs.bC_K_CNS_SP78
+MIAMI.bC['K-HS'   ] = coeffs.bC_K_HS_HPM88
+MIAMI.bC['K-H2PO4'] = coeffs.bC_K_H2PO4_SP78
+MIAMI.bC['K-CNS'  ] = coeffs.bC_K_CNS_SP78
 
 # Table A5
 #MIAMI.bC['Mg-Br'  ] = coeffs.bC_Mg_Br_SP78
-#MIAMI.bC['Mg-BOH4'] = coeffs.bC_Mg_BOH4_S87b
+MIAMI.bC['Mg-BOH4'] = coeffs.bC_Mg_BOH4_SRM87
 #MIAMI.bC['Mg-ClO4'] = coeffs.bC_Mg_ClO4_SP78
 #MIAMI.bC['Ca-Br'  ] = coeffs.bC_Ca_Br_SP78
-#MIAMI.bC['Ca-BOH4'] = coeffs.bC_Ca_BOH4_S87b
+MIAMI.bC['Ca-BOH4'] = coeffs.bC_Ca_BOH4_SRM87
 #MIAMI.bC['Ca-ClO4'] = coeffs.bC_Ca_ClO4_SP78
 
 # Table A6
@@ -648,7 +648,7 @@ MIAMI.bC['Sr-Cl'  ] = coeffs.bC_Sr_Cl_SP78 # not in table but in text §4.6
 #MIAMI.bC['Sr-NO3' ] = coeffs.bC_Sr_NO3_SP78
 #MIAMI.bC['Sr-ClO4'] = coeffs.bC_Sr_ClO4_SP78
 #MIAMI.bC['Sr-HSO3'] = coeffs.bC_Sr_HSO3_SP78
-#MIAMI.bC['Sr-BOH4'] = coeffs.bC_Ca_BOH4_S87b
+MIAMI.bC['Sr-BOH4'] = coeffs.bC_Sr_BOH4_MP98
 
 # Table A7
 MIAMI.bC['Na-I'   ] = coeffs.bC_Na_I_MP98
@@ -672,6 +672,10 @@ MIAMI.bC['K-I'    ] = coeffs.bC_K_I_MP98
 #MIAMI.bC['NH4-Cl' ] = coeffs.bC_NH4_Cl_MP98
 #MIAMI.bC['NH4-Br' ] = coeffs.bC_NH4_Br_MP98
 #MIAMI.bC['NH4-F'  ] = coeffs.bC_NH4_F_MP98
+
+# Table A8
+MIAMI.bC['Mg-HS'] = coeffs.bC_Mg_HS_HPM88
+MIAMI.bC['Ca-HS'] = coeffs.bC_Ca_HS_HPM88
 
 # Table A10
 MIAMI.theta['Cl-CO3' ] = coeffs.theta_Cl_CO3_PP82

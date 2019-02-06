@@ -157,6 +157,9 @@ References from the peer-reviewed literature (or 'sources') are written as the i
 <td><code>HM86</code></td>
 <td>Holmes, H. F., and Mesmer, R. E. (1986). Thermodynamics of aqueous solutions of the alkali metal sulfates. <i>J. Solution Chem.</i> 15, 495–517. <a href="https://doi.org/10.1007/BF00644892">doi:10.1007/BF00644892</a>.</td></tr><tr>
 
+<td><code>HPM88</code></td>
+<td>Hershey, J. P., Plese, T., and Millero, F. J. (1988). The <i>pK</i><sub>1</sub><sup>* </sup> for the dissociation of H<sub>2</sub>S in various ionic media. <i>Geochim. Cosmochim. Acta</i> 52, 2047–2051. <a href="https://doi.org/10.1016/0016-7037(88)90183-4">doi:10.1016/0016-7037(88)90183-4</a>.</td></tr><tr>
+
 <td><code>HPR93</code></td>
 <td>Hovey, J. K., Pitzer, K. S., and Rard, J. A. (1993). Thermodynamics of Na<sub>2</sub>SO<sub>4</sub>(aq) at temperatures <i>T</i> from 273 K to 373 K and of {(1-<i>y</i>)H<sub>2</sub>SO<sub>4</sub>+<i>y</i>Na<sub>2</sub>SO<sub>4</sub>}(aq) at <i>T</i> = 298.15 K.  <a href="https://doi.org/10.1006/jcht.1993.1016">doi:10.1006/jcht.1993.1016</a>.</td></tr><tr>
 
@@ -189,6 +192,9 @@ References from the peer-reviewed literature (or 'sources') are written as the i
 
 <td><code>RM81i</code></td>
 <td>Rard, J. A., and Miller, D. G. (1981). Isopiestic Determination of the Osmotic Coefficients of Aqueous Na<sub>2</sub>SO<sub>4</sub>, MgSO<sub>4</sub>, and Na<sub>2</sub>SO<sub>4</sub>-MgSO<sub>4</sub> at 25 °C. <i>J. Chem. Eng. Data</i> 26, 33–38. <a href="https://doi.org/10.1021/je00023a013">doi:10.1021/je00023a013</a>.</td></tr><tr>
+
+<td><code>SRM87</code></td>
+<td>Simonson, J. M., Roy, R. N., Mrad, D., Lord, P., Roy, L. N., and Johnson, D. A. (1987). The thermodynamics of aqueous borate solutions II. Mixtures of boric acid with calcium or magnesium borate and chloride. <i>J. Solution Chem.</i> 17, 435–446. <a href="https://doi.org/10.1007/BF00647311">doi:10.1007/BF00647311</a>.</td></tr><tr>
 
 <td><code>SRRJ87</code></td>
 <td>Simonson, J. M., Roy, R. N., Roy, L. N., and Johnson, D. A. (1987). The thermodynamics of aqueous borate solutions I. Mixtures of boric acid with sodium or potassium borate and chloride. <i>J. Solution Chem.</i> 16, 791–803. <a href="https://doi.org/10.1007/BF00650749">doi:10.1007/BF00650749</a>.</td></tr><tr>

@@ -778,7 +778,79 @@ def psi_Na_BOH4_Cl_SRRJ87(T):
 
     return psi, valid
 
-# === SIMONSON ET AL 1987 =====================================================
+# === SIMONSON ET AL 1987i ====================================================
+###############################################################################
+
+#%%############################################################################
+# === SIMONSON ET AL 1987ii ===================================================
+
+def SRM87_eqTableIII(T,abc):
+    
+    return abc[0] \
+         + abc[1] * 1e-3 * (T - 298.15) \
+         + abc[2] * 1e-3 * (T - 303.15)**2
+         
+# --- bc: magnesium borate ----------------------------------------------------
+         
+def bC_Mg_BOH4_SRM87(T):
+    
+    b0 = SRM87_eqTableIII(T,float_([
+        - 0.6230,
+          6.496 ,
+          0     ]))
+    
+    b1 = SRM87_eqTableIII(T,float_([
+          0.2515,
+        -17.13  ,
+          0     ]))
+    
+    b2 = SRM87_eqTableIII(T,float_([
+        -11.47  ,
+          0     ,
+        - 3.240 ]))
+    
+    C0 = zeros_like(T)
+    C1 = zeros_like(T)
+    
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+
+    valid = logical_and(T >= 278.15, T <= 528.15)
+
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# --- bc: magnesium borate ----------------------------------------------------
+         
+def bC_Ca_BOH4_SRM87(T):
+    
+    b0 = SRM87_eqTableIII(T,float_([
+        - 0.4462,
+          5.393 ,
+          0     ]))
+    
+    b1 = SRM87_eqTableIII(T,float_([
+        - 0.8680,
+        -18.20  ,
+          0     ]))
+    
+    b2 = SRM87_eqTableIII(T,float_([
+        -15.88  ,
+          0     ,
+        - 2.858 ]))
+    
+    C0 = zeros_like(T)
+    C1 = zeros_like(T)
+    
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+
+    valid = logical_and(T >= 278.15, T <= 528.15)
+
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# === SIMONSON ET AL 1987ii ===================================================
 ###############################################################################
 
 #%%############################################################################
@@ -4540,6 +4612,7 @@ def bC_Na_HSO4_MP98(T):
 
 def bC_Ca_SO3_MP98(T): return bC_Ca_SO4_M88(T)
 def bC_Sr_SO4_MP98(T): return bC_Ca_SO4_M88(T)
+def bC_Sr_BOH4_MP98(T): return bC_Ca_BOH4_SRM87(T)
 
 # === MILLERO & PIERROT 1998 ==================================================
 ###############################################################################
@@ -4597,6 +4670,47 @@ def bC_Sr_Cl_PM73(T):
 
     return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
+# --- bC: potassium dihydrogen-phosphate --------------------------------------
+
+def bC_K_H2PO4_PM73(T):
+
+    b0 = full_like(T,-0.0678)
+    b1 = full_like(T,-0.1042)
+    b2 = zeros_like(T)
+    C0 = zeros_like(T)
+    C1 = zeros_like(T)
+
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+
+    valid = T == 298.15
+
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# --- bC: potassium thiocyanate -----------------------------------------------
+
+def bC_K_SCN_PM73(T):
+
+    b0 = full_like(T,0.0416)
+    b1 = full_like(T,0.2302)
+    b2 = zeros_like(T)
+    
+    Cphi = full_like(T,-0.00252)
+    zK   = float_(+1)
+    zSCN = float_(-1)
+
+    C0 = Cphi / (2 * sqrt(np_abs(zK*zSCN)))
+    C1 = zeros_like(T)
+
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+
+    valid = T == 298.15
+
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
 # === PITZER & MARGOYA 1973 ===================================================
 ###############################################################################
 
@@ -4635,6 +4749,58 @@ def bC_Sr_Cl_SP78(T):
 
     b0 = b0r + float_(0.956 * 1e-3 * 3/4) * (T - SP78_Tr)
     b1 = b1r + float_(3.79  * 1e-3 * 3/4) * (T - SP78_Tr)
+
+    # Validity range declared by MP98
+    valid = logical_and(T >= 283.15,T <= 313.15)
+
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# --- bC: potassium dihydrogen-phosphate --------------------------------------
+
+def bC_K_H2PO4_SP78(T):
+
+    b0r,b1r,b2,C0r,C1, alph1,alph2,omega, _ = bC_K_H2PO4_PM73(T)
+    
+    b0 = b0r + float_( 6.045 * 1e-4) * (T - SP78_Tr)
+    b1 = b1r + float_(28.6   * 1e-4) * (T - SP78_Tr)    
+
+    zK     = float_(+1)
+    zH2PO4 = float_(-1)
+    
+    Cphi = C0r * (2 * sqrt(np_abs(zK*zH2PO4))) \
+           + float_(-10.11 * 1e-5) * (T - SP78_Tr)
+
+    C0 = Cphi / (2 * sqrt(np_abs(zK*zH2PO4)))
+
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+
+    # Validity range declared by MP98
+    valid = logical_and(T >= 283.15,T <= 313.15)
+
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# --- bC: potassium thiocyanate -----------------------------------------------
+
+def bC_K_SCN_SP78(T):
+
+    b0r,b1r,b2,C0r,C1, alph1,alph2,omega, _ = bC_K_SCN_PM73(T)
+    
+    b0 = b0r + float_( 6.87 * 1e-4) * (T - SP78_Tr)
+    b1 = b1r + float_(37    * 1e-4) * (T - SP78_Tr)    
+
+    zK   = float_(+1)
+    zSCN = float_(-1)
+    
+    Cphi = C0r * (2 * sqrt(np_abs(zK*zSCN))) \
+           + float_(0.43 * 1e-5) * (T - SP78_Tr)
+
+    C0 = Cphi / (2 * sqrt(np_abs(zK*zSCN)))
+
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
 
     # Validity range declared by MP98
     valid = logical_and(T >= 283.15,T <= 313.15)
@@ -4768,6 +4934,98 @@ def bC_K_HCO3_RGW83(T):
 
 # === ROY ET AL 1983 ==========================================================
 ###############################################################################
+
+#%%############################################################################
+# === HERSHEY ET AL 1988 ======================================================
+
+# --- bC: sodium bisulfide ----------------------------------------------------
+
+def bC_Na_HS_HPM88(T):
+    
+    b0 = 3.66e-1 - 6.75e+1 / T
+    b1 = zeros_like(T)
+    b2 = zeros_like(T)
+    
+    Cphi = full_like(T,-1.27e-2)
+    
+    zNa = float_(+1)
+    zHS = float_(-1)
+    C0 = Cphi / (2 * sqrt(np_abs(zNa*zHS)))
+    
+    C1 = zeros_like(T)
+    
+    alph1 = -9
+    alph2 = -9
+    omega = -9
+    
+    valid = logical_and(T >= 278.15,T <= 318.15)
+    
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# --- bC: potassium bisulfide -------------------------------------------------
+
+def bC_K_HS_HPM88(T):
+    
+    b0 = 6.37e-1 - 1.40e+2 / T
+    b1 = zeros_like(T)
+    b2 = zeros_like(T)
+    
+    Cphi = full_like(T,-1.94e-1)
+    
+    zK  = float_(+1)
+    zHS = float_(-1)
+    C0 = Cphi / (2 * sqrt(np_abs(zK*zHS)))
+    
+    C1 = zeros_like(T)
+    
+    alph1 = -9
+    alph2 = -9
+    omega = -9
+    
+    valid = logical_and(T >= 278.15,T <= 298.15)
+    
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# --- bC: magnesium bisulfide -------------------------------------------------
+
+def bC_Mg_HS_HPM88(T):
+    
+    b0 = full_like(T,1.70e-1)
+    b1 = full_like(T,2.78   )
+    b2 = zeros_like(T)
+    
+    C0 = zeros_like(T)
+    C1 = zeros_like(T)
+    
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    
+    valid = T == 298.15
+    
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# --- bC: calcium bisulfide ---------------------------------------------------
+
+def bC_Ca_HS_HPM88(T):
+    
+    b0 = full_like(T,-1.05e-1)
+    b1 = full_like(T, 3.43   )
+    b2 = zeros_like(T)
+    
+    C0 = zeros_like(T)
+    C1 = zeros_like(T)
+    
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    
+    valid = T == 298.15
+    
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+###############################################################################
+# === HERSHEY ET AL 1988 ======================================================
 
 #%%############################################################################
 # === MARCHEMSPEC SPECIALS ====================================================

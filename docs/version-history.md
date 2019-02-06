@@ -4,6 +4,9 @@
 
 **Release date:** forthcoming
 
+  * Continuing to build **MIAMI** coefficient dictionary:
+    * Added `bC_` functions for borate interactions from SRM87;
+    * Added `bC_` functions for bisulfide interactions from HPM88.
 
 
 ## 0.2.5
