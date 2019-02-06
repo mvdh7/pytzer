@@ -622,7 +622,7 @@ MIAMI.bC['Na-SO4' ] = coeffs.bC_Na_SO4_HPR93
 MIAMI.bC['Na-CO3' ] = coeffs.bC_Na_CO3_PP82
 MIAMI.bC['Na-BOH4'] = coeffs.bC_Na_BOH4_SRRJ87
 MIAMI.bC['Na-HS'  ] = coeffs.bC_Na_HS_HPM88
-#MIAMI.bC['Na-SCN' ] = coeffs.bC_Na_CNS_SP78
+#MIAMI.bC['Na-SCN' ] = coeffs.bC_Na_SCN_SP78
 #MIAMI.bC['Na-SO3' ] = coeffs.bC_Na_SO3_M89
 #MIAMI.bC['Na-HSO3'] = coeffs.bC_Na_HSO3_M89
 
@@ -632,7 +632,7 @@ MIAMI.bC['Na-HS'  ] = coeffs.bC_Na_HS_HPM88
 MIAMI.bC['K-BOH4' ] = coeffs.bC_K_BOH4_SRRJ87
 MIAMI.bC['K-HS'   ] = coeffs.bC_K_HS_HPM88
 MIAMI.bC['K-H2PO4'] = coeffs.bC_K_H2PO4_SP78
-MIAMI.bC['K-CNS'  ] = coeffs.bC_K_CNS_SP78
+MIAMI.bC['K-SCN'  ] = coeffs.bC_K_SCN_SP78
 
 # Table A5
 #MIAMI.bC['Mg-Br'  ] = coeffs.bC_Mg_Br_SP78
@@ -674,8 +674,27 @@ MIAMI.bC['K-I'    ] = coeffs.bC_K_I_MP98
 #MIAMI.bC['NH4-F'  ] = coeffs.bC_NH4_F_MP98
 
 # Table A8
-MIAMI.bC['Mg-HS'] = coeffs.bC_Mg_HS_HPM88
-MIAMI.bC['Ca-HS'] = coeffs.bC_Ca_HS_HPM88
+MIAMI.bC.update({iset: lambda T: coeffs.bC_PM73(T,iset) \
+    for iset in ['Sr-I', 'Na-NO2', 'Na-H2PO4', 'Na-HPO4', 'Na-PO4',
+                 'K-NO2', 'K-HPO4', 'K-PO4', 'Mg-I', 'Ca-I', 'SO4-NH4']})
+#MIAMI.bC['Na-H2AsO4' ] = coeffs.bC_Na_H2AsO4_PM73
+#MIAMI.bC['K-HAsO4'   ] = coeffs.bC_K_HAsO4_PM73
+#MIAMI.bC['Na-HAsO4'  ] = coeffs.bC_Na_HAsO4_PM73
+#MIAMI.bC['Na-AsO4'   ] = coeffs.bC_Na_AsO4_PM73
+#MIAMI.bC['Na-acetate'] = coeffs.bC_Na_acetate_PM73
+MIAMI.bC['K-HSO4' ] = coeffs.bC_K_HSO4_HMW84
+#MIAMI.bC['K-AsO4'    ] = coeffs.bC_K_AsO4_PM73
+#MIAMI.bC['K-acetate' ] = coeffs.bC_K_acetate_PM73
+MIAMI.bC['Mg-HS'  ] = coeffs.bC_Mg_HS_HPM88
+MIAMI.bC['Ca-HSO4'] = coeffs.bC_Ca_HSO4_HMW84
+MIAMI.bC['Ca-HCO3'] = coeffs.bC_Ca_HCO3_HMW84
+MIAMI.bC['Ca-HS'  ] = coeffs.bC_Ca_HS_HPM88
+MIAMI.bC['Ca-OH'  ] = coeffs.bC_Ca_OH_HMW84
+MIAMI.bC['MgOH-Cl'] = coeffs.bC_MgOH_Cl_HMW84
+
+# Table A9
+MIAMI.bC['H-Cl' ] = coeffs.bC_H_Cl_CMR93
+#MIAMI.bC['H-SO4'] = coeffs.bC_H_SO4_Pierrot
 
 # Table A10
 MIAMI.theta['Cl-CO3' ] = coeffs.theta_Cl_CO3_PP82

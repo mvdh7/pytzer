@@ -6,7 +6,8 @@
 
   * Continuing to build **MIAMI** coefficient dictionary:
     * Added `bC_` functions for borate interactions from SRM87;
-    * Added `bC_` functions for bisulfide interactions from HPM88.
+    * Added `bC_` functions for bisulfide interactions from HPM88;
+    * Added new tables of PM73 data, and a new type of coefficient function in `bC_PM73(T,iset)` to use them.
 
 
 ## 0.2.5

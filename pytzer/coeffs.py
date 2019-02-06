@@ -1,11 +1,13 @@
 # pytzer: Pitzer model for chemical activities in aqueous solutions
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 
-from autograd.numpy import exp, float_, full, full_like, log, logical_and, \
-                           matmul, size, sqrt, zeros_like
+from autograd.numpy import array, exp, float_, full, full_like, log, \
+                           logical_and, matmul, size, sqrt, zeros_like
 from autograd.numpy import abs as np_abs
 from .constants import atm2Pa, Patm_bar, Tzero
-from .tables import P91_Ch3_T12, P91_Ch3_T13_I, P91_Ch3_T13_II
+from .tables import P91_Ch3_T12, P91_Ch3_T13_I, P91_Ch3_T13_II, \
+                    PM73_TableI, PM73_TableVI, PM73_TableVIII, PM73_TableIX
+from . import props
 
 COEFFS_PRESSURE = float_(0.101325) # MPa
 
@@ -4619,6 +4621,32 @@ def bC_Sr_BOH4_MP98(T): return bC_Ca_BOH4_SRM87(T)
 
 #%%############################################################################
 # === PITZER & MARGOYA 1973 ===================================================
+
+def bC_PM73(T,iset):
+    
+    zM,zX = props.charges(array(iset.split('-')))[0]
+    
+    PM73_Tables = {-1: PM73_TableI   ,
+                   -2: PM73_TableVI  ,
+                   -3: PM73_TableVIII,
+                   -4: PM73_TableIX  ,
+                   -5: PM73_TableIX  }
+        
+    b0 = full_like(T,PM73_Tables[zM*zX][iset]['b0'])
+    b1 = full_like(T,PM73_Tables[zM*zX][iset]['b1'])
+    b2 = zeros_like(T)
+    
+    Cphi = full_like(T,PM73_Tables[zM*zX][iset]['Cphi'])
+    C0 = Cphi / (2 * sqrt(np_abs(zM*zX)))
+    C1 = zeros_like(T)
+    
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+
+    valid = T == 298.15
+
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 
 # --- bC: strontium bromide ---------------------------------------------------
 
