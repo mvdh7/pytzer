@@ -60,7 +60,7 @@ Each transition metal may have multiple possible oxidation states. These are ind
 
 </tr><tr><td>Fluoride</td> <td>F<sup>−</sup></td>  <td><code>F</code></td>
 </tr><tr><td>Chloride</td> <td>Cl<sup>−</sup></td> <td><code>Cl</code></td>
-</tr><tr><td>Iodide</td>   <td>I<sup>2−</sup></td> <td><code>I</code></td>
+</tr><tr><td>Iodide</td>   <td>I<sup>−</sup></td> <td><code>I</code></td>
 
 </tr><tr><td align="center" colspan="3"><em>Lanthanides</em></td>
 
