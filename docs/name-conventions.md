@@ -88,6 +88,7 @@ The other ions are listed approximately in order of the atomic number of their m
 </tr><tr><td>Thiocyanate</td> <td>SCN<sup>−</sup></td> <td><code>SCN</code></td>
 </tr><tr><td>Bisulfate</td> <td>HSO<sub>4</sub><sup>−</sup></td> <td><code>HSO4</code></td>
 </tr><tr><td>Sulfate</td> <td>SO<sub>4</sub><sup>2−</sup></td> <td><code>SO4</code></td>
+</tr><tr><td>Thiosulfate</td> <td>S<sub>2</sub>O<sub>3</sub><sup>2−</sup></td> <td><code>S2O3</code></td>
 </tr><tr><td>Chlorate</td> <td>ClO<sub>3</sub><sup>−</sup></td> <td><code>ClO3</code></td>
 </tr><tr><td>Perchlorate</td> <td>ClO<sub>4</sub><sup>−</sup></td> <td><code>ClO4</code></td>
 </tr><tr><td>Magnesium hydroxide</td> <td>MgOH<sup>+</sup></td> <td><code>MgOH</code></td>
@@ -95,6 +96,7 @@ The other ions are listed approximately in order of the atomic number of their m
 </tr><tr><td>Ferricyanide</td> <td>[Fe(CN)<sub>6</sub>]<sup>3−</sup></td> <td><code>FejjjCN6</code></td>
 </tr><tr><td>Bromate</td> <td>BrO<sub>3</sub><sup>−</sup></td> <td><code>BrO3</code></td>
 </tr><tr><td>Iodate</td> <td>IO<sub>3</sub><sup>−</sup></td> <td><code>IO3</code></td>
+</tr><tr><td>Uranyl</td> <td>UO<sub>2</sub><sup>2+</sup></td> <td><code>UO2</code></td>
 
 </tr></table>
 

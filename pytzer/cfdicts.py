@@ -3,7 +3,7 @@
 
 from . import coeffs, jfuncs, props
 from .meta import version
-from autograd.numpy import array, concatenate, unique
+from autograd.numpy import array, concatenate, full_like, unique
 from copy import deepcopy
 
 #==============================================================================
@@ -283,7 +283,7 @@ class CoefficientDictionary:
 #=============================== Define specific coefficient dictionaries =====
 
 #------------------------------------------------------------ Møller 1988 -----
-
+#
 # Møller (1988). Geochim. Cosmochim. Acta 52, 821-837,
 #  doi:10.1016/0016-7037(88)90354-7
 #
@@ -321,7 +321,7 @@ M88.psi['Na-Cl-SO4'] = coeffs.psi_Na_Cl_SO4_M88
 M88.get_contents()
 
 #------------------------------------------------ Greenberg & Møller 1989 -----
-
+#
 # Greenberg & Møller (1988). Geochim. Cosmochim. Acta 53, 2503-2518,
 #  doi:10.1016/0016-7037(89)90124-5
 #
@@ -368,7 +368,7 @@ GM89.psi['Na-Cl-SO4'] = coeffs.psi_Na_Cl_SO4_M88
 GM89.get_contents()
 
 #------------------------------------------------------ Clegg et al. 1994 -----
-
+#
 # Clegg et al. (1994). J. Chem. Soc., Faraday Trans. 90, 1875-1894,
 #  doi:10.1039/FT9949001875
 #
@@ -398,7 +398,7 @@ CRP94.psi['H-HSO4-SO4'] = coeffs.psi_H_HSO4_SO4_CRP94
 CRP94.get_contents()
 
 #-------------------------------------------------- Waters & Millero 2013 -----
-
+#
 # Waters and Millero (2013). Mar. Chem. 149, 8-22,
 #  doi:10.1016/j.marchem.2012.11.003
 
