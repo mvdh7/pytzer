@@ -13,7 +13,8 @@
     * Relabelled from `P91` to `WM13`, to better reflect their provenance;
   * Added `Aosm_MarChemSpec`, which adds a small offset to `Aosm_CRP94` to make it consistent with AW90 and FastPitz;
   * Created new **MarChemSpec** **CoefficientDictionary**, with temperature-varying `Aosm_MarChemSpec`;
-  * Added equations and usage examples to documentation for **pytzer.model**.
+  * Added equations and usage examples to documentation for **pytzer.model**;
+  * Wrote **pytzer.blackbox** function and quick-start documentation, for easy end-user testing.
 
 
 ## 0.2.4
