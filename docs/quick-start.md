@@ -36,7 +36,7 @@ pip install pytzer
 
 You can just provide **pytzer** with a CSV file of temperatures and molality values, and have it return the corresponding activity coefficients in a new CSV file, only having to write the bare minimum in Python, as follows.
 
-[1] Create an input CSV file as described in the [import/export documentation](../modules/io/#pytzeriogetmols) - or just download and use the example file [pytzerQuickStart.csv](https://github.com/mvdh7/pytzer/blob/master/testfiles/pytzerQuickStart.csv).
+[1] Create an input CSV file as described in the [import/export documentation](../modules/io/#pytzeriogetmols) - or just save and use the example file [pytzerQuickStart.csv](https://raw.githubusercontent.com/mvdh7/pytzer/master/testfiles/pytzerQuickStart.csv).
 
 [2] Open an Anaconda prompt window (Windows) or the Terminal (Mac/Linux) and activate the pytzer environment ([installation](#installation-with-anacondaminiconda) step [4]).
 
