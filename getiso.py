@@ -1,6 +1,6 @@
 from pandas import read_excel
-from numpy import array, concatenate, float_, logical_not, mean, ones_like, \
-                  pi, size, sqrt, std, unique
+from numpy import append, array, concatenate, float_, logical_not, mean, \
+                  ones_like, pi, size, sqrt, std, unique, vstack
 
 #from numpy import abs as np_abs
 #from numpy import max as np_max
@@ -11,13 +11,19 @@ import pytzer as pz
 
 from copy import deepcopy
 
-cf = deepcopy(pz.cfdicts.MarChemSpec25)
+# Choose electrolyte to examine
+testele = 'NaOH'
 
-cf.ions = concatenate([cf.ions, array(['Li','I','Rb','Cs'])])
-cf.add_zeros(cf.ions)
+cf = deepcopy(pz.cfdicts.MarChemSpec)
 
-cf.bC['Li-Cl'] = pz.coeffs.bC_Li_Cl_HM83
-cf.bC['Cs-Cl'] = pz.coeffs.bC_Cs_Cl_HM83
+#cf.ions = concatenate([cf.ions, array(['Li','I','Rb','Cs'])])
+#cf.add_zeros(cf.ions)
+
+#cf.bC['Na-Cl'] = pz.coeffs.bC_Na_Cl_A92ii
+#cf.bC['K-Cl' ] = pz.coeffs.bC_K_Cl_A99
+
+#cf.bC['Li-Cl'] = pz.coeffs.bC_Li_Cl_HM83
+#cf.bC['Cs-Cl'] = pz.coeffs.bC_Cs_Cl_HM83
     
 e2i = {'NaOH': [array(['Na','OH']), float_([1,1])],
                   
@@ -25,12 +31,12 @@ e2i = {'NaOH': [array(['Na','OH']), float_([1,1])],
                 
        'Zn(NO3)2': [array(['Znjj','NO3']), float_([1,2])],
        
-       'H2SO4' : [array(['H' ,'SO4']), float_([2,1])],
-       'Li2SO4': [array(['Li','SO4']), float_([2,1])],
-       'Na2SO4': [array(['Na','SO4']), float_([2,1])],
-       'MgSO4' : [array(['Mg','SO4']), float_([1,1])],
-       'K2SO4' : [array(['K' ,'SO4']), float_([2,1])],
-       'CuSO4' : [array(['Cu','SO4']), float_([1,1])],
+       'H2SO4' : [array(['H'   ,'SO4']), float_([2,1])],
+       'Li2SO4': [array(['Li'  ,'SO4']), float_([2,1])],
+       'Na2SO4': [array(['Na'  ,'SO4']), float_([2,1])],
+       'MgSO4' : [array(['Mg'  ,'SO4']), float_([1,1])],
+       'K2SO4' : [array(['K'   ,'SO4']), float_([2,1])],
+       'CuSO4' : [array(['Cujj','SO4']), float_([1,1])],
        
        'Na2S2O3': [array(['Na','S2O3']), float_([2,1])],
        
@@ -91,11 +97,11 @@ for r in range(len(isonew.index)):
             
             celes = icell.split('-')
             
-            ctots = irow[i-len(celes):i].values.astype('float64')
+            irc['tots'] = irow[i-len(celes):i].values.astype('float64')
                         
             irc_ions = concatenate([e2i[cele][0] for cele in celes])
                             
-            irc_mols = concatenate([e2i[cele][1] * ctots[c] \
+            irc_mols = concatenate([e2i[cele][1] * irc['tots'][c] \
                 for c, cele in enumerate(celes)])
             
             irc['ions'] = unique(irc_ions)
@@ -105,11 +111,83 @@ for r in range(len(isonew.index)):
             
             irc['T'] = float_([[isonew.temp[r]]])
     
-#%% Get all KCl data
-KCl_ions = [isodict[irow] for irow in isodict.keys()]
+#%% Get all data for a particular electrolyte
 
+# Extract subset of isodict
+testdict = {irow: isodict[irow]             \
+            for irow    in isodict.keys()      \
+             if testele in isodict[irow].keys()}
 
+# Fill out cfdict with zeros if necessary
+testions = unique(concatenate([testdict[irow][icell]['ions'] \
+           for irow  in testdict.keys()                      \
+           for icell in testdict[irow].keys()]))
+cf.ions = unique(append(cf.ions,testions))
+cf.add_zeros(cf.ions)
 
+# Calculate activities
+for irow in testdict.keys():
+    
+    for icell in testdict[irow].keys():
+    
+        trc = testdict[irow][icell]
+        
+        # Calculate ionic strengths
+        trc['zs']   = pz.props.charges(trc['ions'])[0]
+        trc['Istr'] = pz.model.Istr(trc['mols'],trc['zs'])
+        
+        # Calculate osmotic coefficients
+        trc['osm'] = pz.model.osm(trc['mols'],trc['ions'],trc['T'],cf,
+                                  Izero = trc['Istr'] == 0)
+        
+        # Convert into water activities
+        trc['aw'] = pz.model.osm2aw(trc['mols'],trc['osm'])
+        
+
+# Calculate aw difference        
+for irow in testdict.keys():
+    
+    for icell in testdict[irow].keys():
+        
+        if icell != testele:
+            
+            trc = testdict[irow][icell]
+            
+            trc['del_aw'] = trc['aw'] - testdict[irow][testele]['aw']
+  
+    
+#%% Get arrays for plotting
+t_dictrow = vstack([irow for irow  in testdict.keys()
+                         for icell in testdict[irow].keys()
+                          if icell != testele])
+
+t_elemix = array([icell for irow  in testdict.keys()
+                        for icell in testdict[irow].keys()
+                         if icell != testele])
+    
+t_testtot = vstack([testdict[irow][testele]['tots']
+                    for irow in testdict.keys()
+                    for icell in testdict[irow].keys()
+                     if icell != testele])
+    
+t_T = vstack([testdict[irow][testele]['T']
+              for irow in testdict.keys()
+              for icell in testdict[irow].keys()
+               if icell != testele])
+    
+t_delaw = vstack([testdict[irow][icell]['del_aw']
+                  for irow  in testdict.keys()
+                  for icell in testdict[irow].keys()
+                   if icell != testele])
+
+from scipy.io import savemat
+savemat('testfiles/isonew_' + testele + '.mat',
+        {'dictrow': t_dictrow,
+         'elemix' : t_elemix ,
+         'testtot': t_testtot,
+         'T'      : t_T      ,
+         'delaw'  : t_delaw  })
+    
 #%%
 #            irc['osm'] = pz.model.osm(irc['mols'],irc['ions'],irc['T'],cf)
 #            
