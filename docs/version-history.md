@@ -1,5 +1,11 @@
 # 0.2 (beta)
 
+## 0.2.6
+
+**Release date:** forthcoming
+
+
+
 ## 0.2.5
 
 **Release date:** 2019-02-06

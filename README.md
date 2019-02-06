@@ -7,7 +7,7 @@ Pitzer model for chemical activities in aqueous solutions, undergoing beta testi
 
 Installation:
 
-```
+```shell
 pip install pytzer
 ```
 

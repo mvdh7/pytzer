@@ -6,19 +6,19 @@
 
 [3] Create a new environment for **pytzer** by entering the following:
 
-```
+```shell
 conda create -n pytzer python=3.6 numpy
 ```
 
 [4] Activate the new environment. On Windows:
 
-```
+```shell
 activate pytzer
 ```
 
 On Mac/Linux:
 
-```
+```shell
 source activate pytzer
 ```
 
@@ -26,7 +26,7 @@ You should now see the name of the environment (i.e. `pytzer`) appear at the ver
 
 [5] Install **pytzer** into the new environment:
 
-```
+```shell
 pip install pytzer
 ```
 
@@ -44,7 +44,7 @@ You can just provide **pytzer** with a CSV file of temperatures and molality val
 
 [4] Start Python:
 
-```
+```shell
 python
 ```
 
@@ -78,6 +78,6 @@ exit()
 
 [2] Update **pytzer** with pip:
 
-```
+```shell
 pip install pytzer --upgrade --no-cache-dir
 ```
