@@ -5,6 +5,7 @@ from autograd.numpy import exp, float_, full, full_like, log, logical_and, \
                            matmul, size, sqrt, zeros_like
 from autograd.numpy import abs as np_abs
 from .constants import atm2Pa, Patm_bar, Tzero
+from .tables import P91_Ch3_T12, P91_Ch3_T13_I, P91_Ch3_T13_II
 
 COEFFS_PRESSURE = float_(0.101325) # MPa
 
@@ -1456,73 +1457,6 @@ def bC_Na_Cl_A92ii(T):
 ###############################################################################
 
 #%%############################################################################
-# === PITZER 1991 =============================================================
-
-# Mostly just adding a temperature derivative from Pitzer's book chapter to a
-#  constant coefficient value at 298.15 K
-
-# --- bC: calcium sulfate -----------------------------------------------------
-
-def bC_Ca_SO4_P91(T):
-
-    # Define reference temperature
-    TR = float_(298.15)
-
-    # Inherit from HMW84
-    b0,b1,b2,C0,C1, alph1,alph2,omega, valid = bC_Ca_SO4_HMW84(T)
-
-    # Temperature derivatives from P91/Chapter3/Table13 on page 111.
-    b1 = b1 + 5.46e-2 * (T - TR)
-    b2 = b2 - 5.16e-1 * (T - TR)
-
-    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
-
-# --- bC: calcium bisulfate ---------------------------------------------------
-
-def bC_Ca_HSO4_P91(T):
-
-    # Define reference temperature
-    TR = float_(298.15)
-
-    # Inherit from HMW84
-    b0,b1,b2,C0,C1, alph1,alph2,omega, valid = bC_Ca_HSO4_HMW84(T)
-
-    # Convert C0 back to Cphi
-    zCa   = float_(+2)
-    zHSO4 = float_(-1)
-    Cphi  = C0 * (2 * sqrt(np_abs(zCa*zHSO4)))
-
-    # Temperature derivatives should be in P91/Chapter 3, according to WM13,
-    #  but I can't find them there.
-    # Values here are therefore directly from WM13/TableA3.
-    b0   = b0   + 8.3e-4  * (T - TR)
-    b1   = b1   + 5.8e-3  * (T - TR)
-    Cphi = Cphi - 1.09e-4 * (T - TR)
-
-    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
-
-# --- bC: potassium bisulfate -------------------------------------------------
-
-def bC_K_HSO4_P91(T):
-
-    # Define reference temperature
-    TR = float_(298.15)
-
-    # Inherit from HMW84
-    b0,b1,b2,C0,C1, alph1,alph2,omega, valid = bC_K_HSO4_HMW84(T)
-
-    # Temperature derivatives should be in P91/Chapter 3, according to WM13,
-    #  but I can't find them there.
-    # Values here are therefore directly from WM13/TableA3.
-    b0 = b0 + 6e5      * (T - TR)
-    b1 = b1 + 1.007e-2 * (T - TR)
-
-    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
-
-# === PITZER 1991 =============================================================
-###############################################################################
-
-#%%############################################################################
 # === CAMPBELL ET AL 1993 =====================================================
 
 # --- inherit from M88 --------------------------------------------------------
@@ -1701,8 +1635,7 @@ def bC_Na_HSO4_HPR93(T):
 def Aosm_CRP94(T): # CRP94 Appendix II
 
     # Transform temperature
-    T = T.ravel()
-    X = (2 * T - 373.15 - 234.15) / (373.15 - 234.15)
+    X = (2 * T.ravel() - 373.15 - 234.15) / (373.15 - 234.15)
 
     # Set coefficients - CRP94 Table 11
     a_Aosm = float_( \
@@ -1977,6 +1910,82 @@ def psi_Mg_HSO4_SO4_RC99(T):
 #
 # Others were just declared by WM13 as zero. These all seem to agree with
 #  HMW84; it's unclear why HMW84 wasn't cited by WM13 for these.
+
+#~~~~ HMW84 + P91 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# First, a few functions that WM13 constructed by taking 298.15 K coefficients
+#  from HMW84, and correcting for temperature using derivatives from P91
+
+# --- bC: calcium sulfate -----------------------------------------------------
+
+def bC_Ca_SO4_WM13(T):
+
+    # Define reference temperature
+    TR = float_(298.15)
+
+    # Inherit 298.15 K values from HMW84
+    b0,b1,b2,C0,C1, alph1,alph2,omega, valid = bC_Ca_SO4_HMW84(T)
+
+    # WM13 use temperature derivatives from P91
+    # The b0 temperature correction in P91 is zero
+    b1 = b1 + (T - TR) * P91_Ch3_T13_II['Ca-SO4']['b1']
+    b2 = b2 + (T - TR) * P91_Ch3_T13_II['Ca-SO4']['b2']
+    # The C0 temperature correction in P91 is zero
+
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# --- bC: calcium bisulfate ---------------------------------------------------
+
+def bC_Ca_HSO4_WM13(T):
+
+    # Define reference temperature
+    TR = float_(298.15)
+
+    # Inherit 298.15 K values from HMW84
+    b0,b1,b2,C0,C1, alph1,alph2,omega, valid = bC_Ca_HSO4_HMW84(T)
+
+    # WM13 use temperature derivatives for Ca-ClO4 from P91, but with typos
+    b0 = b0 + (T - TR) * P91_Ch3_T13_I['Ca-ClO4']['b0']
+    b1 = b1 + (T - TR) * P91_Ch3_T13_I['Ca-ClO4']['b1']
+    C0 = C0 + (T - TR) * P91_Ch3_T13_I['Ca-ClO4']['C0']
+    
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# --- bC: potassium bisulfate -------------------------------------------------
+
+def bC_K_HSO4_WM13(T):
+
+    # Define reference temperature
+    TR = float_(298.15)
+
+    # Inherit 298.15 K values from HMW84
+    b0,b1,b2,C0,C1, alph1,alph2,omega, valid = bC_K_HSO4_HMW84(T)
+
+    # WM13 use temperature derivatives for K-ClO4 from P91
+    b0 = b0 + (T - TR) * P91_Ch3_T12['K-ClO4']['b0']
+    b1 = b1 + (T - TR) * P91_Ch3_T12['K-ClO4']['b1']
+    # The Cphi temperature correction in P91 is zero
+
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# --- theta: calcium hydrogen -------------------------------------------------
+
+def theta_Ca_H_MarChemSpec(T):
+    # 1. WM13 cite the wrong reference for this (they say RXX80)
+    # 2. The equation given by WM13 doesn't match RGO82
+    # 3. RGO82 give a 25degC value but no temperature coefficient
+    # So MarChemSpec uses RGO82's 25degC value plus the WM13 temperature cxn
+    
+    thetar = theta_Ca_H_RGO82(T)[0]
+    
+    theta = thetar + 3.275e-4 * (T - 298.15)
+    
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    
+    return theta, valid
 
 # --- bC: sodium sulfate ------------------------------------------------------
 
@@ -4739,16 +4748,56 @@ def psi_Na_Cl_HCO3_PP82(T):
 ###############################################################################
 
 #%%############################################################################
+# === ROY ET AL 1983 ==========================================================
+    
+def bC_K_HCO3_RGW83(T):
+    
+    b0 = full_like(T,-0.022)
+    b1 = full_like(T, 0.09 )
+    b2 = zeros_like(T)
+    C0 = zeros_like(T)
+    C1 = zeros_like(T)
+    
+    alph1 = float_(2)
+    alph2 = -9
+    omega = -9
+    
+    valid = T == 298.15
+    
+    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+
+# === ROY ET AL 1983 ==========================================================
+###############################################################################
+
+#%%############################################################################
 # === MARCHEMSPEC SPECIALS ====================================================
 #
 # These are functions used for testing within the MarChemSpec project
 
+# For 298.15 K
 def Aosm_MarChemSpec25(T):
 
     # Value from Pitzer (1991) Chapter 3 Table 1 (page 99)
     Aosm = full_like(T,0.3915)
     valid = T == 298.15
 
+    return Aosm, valid
+
+# For 278.15 K
+def Aosm_MarChemSpec05(T):
+
+    # Value from FastPitz
+    Aosm = full_like(T,0.3792)
+    valid = T == 298.15
+
+    return Aosm, valid
+
+# Following CRP94 but with a correction to match AW90
+def Aosm_MarChemSpec(T):
+    
+    Aosm  = Aosm_CRP94(T)[0] + 2.99e-8
+    valid = logical_and(T >= 234.15, T <= 373.15)
+    
     return Aosm, valid
 
 # --- theta: hydrogen sodium --------------------------------------------------

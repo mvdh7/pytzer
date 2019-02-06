@@ -1,20 +1,25 @@
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
 # pytzer.coeffs
 
 **pytzer.coeffs** contains functions for ionic interaction coefficients.
 
 There are six different types of coefficient functions, each representing a different interaction type. The function names begin with:
 
-  1. `bC_`, for cation-anion interactions (*β*, *C*, *α* and *ω* coefficients);
+  1. `bC_`, for cation-anion interactions ($\beta$, $C$, $\alpha$ and $\omega$ coefficients);
 
-  1. `theta_`, for interactions between pairs of same-charge ions (*θ*);
+  1. `theta_`, for interactions between pairs of same-charge ions ($\theta$);
 
-  1. `psi_`, for three-way interactions between a cation and two anions, or an anion and two cations (*ψ*);
+  1. `psi_`, for three-way interactions between a cation and two anions, or an anion and two cations ($\psi$);
 
-  1. `lambd_`, for interactions between one neutral solute and one ion (*λ*);
+  1. `lambd_`, for interactions between one neutral solute and either one ion or another neutral ($\lambda$);
 
-  1. `zeta_`, for interactions between one neutral solute, one cation and one anion (*ζ*); and
+  1. `zeta_`, for interactions between one neutral solute, one cation and one anion ($\zeta$); and
 
-  1. `mu_`, for interactions between three neutral solutes of the same type (*μ*).
+  1. `mu_`, for interactions between three neutral solutes of the same type ($\mu$).
 
 There is not yet a full list of all the functions available. A number of them are not used by any ready-made **CoefficientDictionary**.
 
@@ -47,9 +52,9 @@ The output variables each have the same shape as the temperature input, with the
 
 ### `bC_` functions
 
-The calculations in **pytzer.model** use a Pitzer model with separate *C*<sub>0</sub> and *C*<sub>1</sub> values, rather than a single *C*<sub><i>ϕ</i></sub>. Where coefficients are originally given in terms of *C*<sub><i>ϕ</i></sub>, this is converted into the equivalent *C*<sub>0</sub> value within the `bC_` function (and *C*<sub>0</sub> set to zero).
+The calculations in **pytzer.model** use a Pitzer model with separate $C_0$ and $C_1$ values, rather than a single $C_\phi$. Where coefficients are originally given in terms of $C_\phi$, this is converted into the equivalent $C_0$ value within the `bC_` function (and $C_1$ set to zero).
 
-Each `bC_` function also returns values for the *α*<sub>1</sub>, *α*<sub>2</sub> and *ω* coefficients that accompany each *β*<sub>1</sub>, *β*<sub>2</sub> and *C*<sub>1</sub>. This is necessary because these auxiliary coefficients differ between electrolytes and between studies.
+Each `bC_` function also returns values for the $\alpha_1$, $\alpha_2$ and $\omega$ coefficients that accompany each $\beta_1$, $\beta_2$ and $C_1$. This is necessary because these auxiliary coefficients differ between electrolytes and between studies.
 
 ```python
 def bC_cation_anion_source(T):
@@ -69,7 +74,7 @@ def bC_cation_anion_source(T):
     return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
 ```
 
-If any of the main five coefficients (i.e. `b0` to `C1`) is not used for any electrolyte, it will be set to an array of zeros of the same shape as input `T`. Unused `alph1`, `alph2` or `omega` coefficents are set to **−9** - if a value of zero was used, it would cause problems going through **pytzer.model**, even though the problematic result is then multiplied by zero.
+If any of the main five coefficients (i.e. `b0` to `C1`) is not used for any electrolyte, it will be set to an array of zeros of the same shape as input `T`. Unused `alph1`, `alph2` or `omega` coefficents are set to **−9**. (If a value of zero was used, it would cause problems going through **pytzer.model**, even though the problematic result is then multiplied by zero.)
 
 
 ### Other functions

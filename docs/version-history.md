@@ -1,5 +1,22 @@
 # 0.2 (beta)
 
+## 0.2.5
+
+**Release date:** 2019-02-06
+
+  * <u>Testing **MarChemSpec05** against **FastPitz** at 278.15 K - perfect agreement to 6 significant figures</u>;
+  * Added `theta_Ca_H_MarChemSpec` to combine RGO82 and WM13 equations;
+  * Added new module **pytzer.tables** to store long lists of coefficients found in tables;
+  * Added basic **tables** page to documentation, and new ions to the name conventions lists;
+  * Updated `bC_` functions for `Ca-SO4`, `Ca-HSO4` and `K-HSO4`:
+    * Used data from new **pytzer.tables** module;
+    * Relabelled from `P91` to `WM13`, to better reflect their provenance;
+  * Added `Aosm_MarChemSpec`, which adds a small offset to `Aosm_CRP94` to make it consistent with AW90 and FastPitz;
+  * Created new **MarChemSpec** **CoefficientDictionary**, with temperature-varying `Aosm_MarChemSpec`;
+  * Added equations and usage examples to documentation for **pytzer.model**;
+  * Wrote **pytzer.blackbox** function and quick-start documentation, for easy end-user testing.
+
+
 ## 0.2.4
 
 **Release date:** 2019-01-31
@@ -15,7 +32,7 @@
     * All from PP82 (`Na-CO3` and `Na-HCO3` interactions);
   * Added equations for neutral-neutral interactions (lambda coefficient) to **model.Gex_nRT** and also to **cfdicts.add_zeros** method;
   * Changed to evaluating all neutral interactions (including with ions) even at zero ionic strength;
-  * Updated nomenclature for consistency with P91: `eta` (*η*) is now `zeta` (*ζ*).
+  * Updated nomenclature for consistency with P91, MP98 and others: `eta` (*η*) is now `zeta` (*ζ*).
 
 
 ## 0.2.3

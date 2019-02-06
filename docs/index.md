@@ -15,6 +15,8 @@ pip install pytzer
 
 Other versions are probably fine, but untested. We are using Python 3.6 rather than 3.7 to enable planned integration with MATLAB.
 
+See the [quick-start guide](quick-start) for more detailed instructions and examples.
+
 
 # Development status
 
@@ -29,42 +31,38 @@ Other versions are probably fine, but untested. We are using Python 3.6 rather t
 <td><strong>Purpose</strong></td>
 
 </tr><tr>
-
 <td><code>pytzer.io</code></td>
 <td><a href="modules/io">Import and export data</a></td>
 
 </tr><tr>
-
 <td><code>pytzer.cfdicts</code></td>
 <td><a href="modules/cfdicts">Define combinations of model coefficients to use</a></td>
 
 </tr><tr>
-
 <td><code>pytzer.model</code></td>
 <td><a href="modules/model">Implement the Pitzer model</a></td>
 
 </tr><tr>
-
 <td><code>pytzer.coeffs</code></td>
 <td><a href="modules/coeffs">Define functions to evaluate model coefficients</a></td>
 
 </tr><tr>
+<td><code>pytzer.tables</code></td>
+<td><a href="modules/tables">Store tables of coefficient values</a></td>
 
+</tr><tr>
 <td><code>pytzer.jfuncs</code></td>
 <td><a href="modules/jfuncs">Define unsymmetrical mixing functions</a></td>
 
 </tr><tr>
-
 <td><code>pytzer.props</code></td>
 <td><a href="modules/props">Define universal ionic properties</a></td>
 
 </tr><tr>
-
 <td><code>pytzer.constants</code></td>
 <td><a href="modules/constants">Define physical constants</a></td>
 
 </tr><tr>
-
 <td><code>pytzer.meta</code></td>
 <td><a href="modules/meta">Define package metadata</a></td>
 

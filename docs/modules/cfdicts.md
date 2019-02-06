@@ -1,3 +1,8 @@
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
 # Introduction
 
 **pytzer.cfdicts** provides specific combinations of coefficients that have been used in published Pitzer models, to use with **pytzer**.
@@ -135,7 +140,7 @@ The function for the Debye-Hückel limiting slope (i.e. <i>A<sub>ϕ</sub></i>) i
 
 ### Cation-anion interactions
 
-Functions to evaluate the *β* and *C* coefficients for interactions between cations and anions are contained within the `cfdict.bC` dict. The function for each specific interaction gets its own field within the dict. The fields are named as `<cation>-<anion>`, with the ionic names matching those described [for an input file](../io/#pytzeriogetmols) - see the page on [naming conventions](../../name-conventions) for a full description. Some examples:
+Functions to evaluate the $\beta$ and $C$ coefficients for interactions between cations and anions are contained within the `cfdict.bC` dict. The function for each specific interaction gets its own field within the dict. The fields are named as `<cation>-<anion>`, with the ionic names matching those described [for an input file](../io/#pytzeriogetmols) - see the page on [naming conventions](../../name-conventions) for a full description. Some examples:
 
 ```python
 cfdict.bC['Na-Cl'] = <Na-Cl interaction coefficients function>
@@ -145,7 +150,7 @@ cfdict.bC['K-SO4'] = <K-SO4 interaction coefficients function>
 
 ### Cation-cation and anion-anion interactions
 
-Functions that evaluate the *θ* coefficients for interactions between ion pairs with a common charge sign are contained within the `cfdict.theta` dict. The function for each specific interaction gets its own field within the dict. The fields are named as `<cation0>-<cation1>`, with the cations in alphabetical order, and with the ionic names matching those described [for an input file](../io/#pytzeriogetmols). Some examples:
+Functions that evaluate the $\theta$ coefficients for interactions between ion pairs with a common charge sign are contained within the `cfdict.theta` dict. The function for each specific interaction gets its own field within the dict. The fields are named as `<cation0>-<cation1>`, with the cations in alphabetical order, and with the ionic names matching those described [for an input file](../io/#pytzeriogetmols). Some examples:
 
 ```python
 cfdict.theta['Ca-Mg']  = <Ca-Mg interaction coefficients function>
@@ -155,7 +160,7 @@ cfdict.theta['Cl-SO4'] = <Cl-SO4 interaction coefficients function>
 
 ### Triplet interactions
 
-Functions that evaluate the *ψ* coefficients for interactions between ion pairs with a common charge sign and a third ion of opposite sign are contained within the `cfdict.psi` dict. The function for each specific triplet interaction gets its own field within the dict. The fields are named as `<ion0>-<ion1>-<ion2>`, with the order of the ions obeying the following rules, given here in order of precedence:
+Functions that evaluate the $\psi$ coefficients for interactions between ion pairs with a common charge sign and a third ion of opposite sign are contained within the `cfdict.psi` dict. The function for each specific triplet interaction gets its own field within the dict. The fields are named as `<ion0>-<ion1>-<ion2>`, with the order of the ions obeying the following rules, given here in order of precedence:
 
   1. Cations before anions;
 
@@ -173,7 +178,7 @@ cfdict.psi['Na-Cl-SO4'] = <Na-Cl-SO4 interaction coefficients function>
 
 ### Neutral interactions
 
-Functions that evaluate the *λ*, *η* and *μ* coefficients for the interactions between a neutral solute and an ion (*λ*), the three-way between a neutral, cation and anion (*η*) and the three-way between three neutrals of the same kind (*μ*) are contained within `cfdict.lambd`, `cfdict.eta` and `cfdict.mu` respectively.
+Functions that evaluate the $\lambda$, $\zeta$ and $\mu$ coefficients for the interactions between a neutral solute and an ion or other neutral ($\lambda$), the three-way between a neutral, cation and anion ($\zeta$) and the three-way between three neutrals of the same kind ($\mu$) are contained within `cfdict.lambd`, `cfdict.eta` and `cfdict.mu` respectively.
 
 The field names obey the rules, in order of precedence:
 

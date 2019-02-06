@@ -8,15 +8,17 @@ theme:
     name: readthedocs
 
 nav:
-    - Overview: index.md
-    - Conventions: name-conventions.md
+    - Overview:          index.md
+    - Quick-start guide: quick-start.md
+    - Conventions:       name-conventions.md
     - pytzer modules:
         - .io – import and export:             modules/io.md
         - .cfdicts – coefficient dictionaries: modules/cfdicts.md
         - .model – the Pitzer model:           modules/model.md
         - .coeffs – interaction coefficients:  modules/coeffs.md
+        - .tables - coefficient tables:        modules/tables.md
         - .jfuncs – unsymmetrical mixing:      modules/jfuncs.md
         - .props – universal ionic properties: modules/props.md
         - .constants – physical constants:     modules/constants.md
         - .meta - package metadata:            modules/meta.md
-    - Version history: version-history.md
+    - Version history:   version-history.md
