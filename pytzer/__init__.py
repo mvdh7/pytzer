@@ -77,4 +77,4 @@ def blackbox(filename):
                                          ['g'+ion for ion in ions]))),
             comments='')
 
-#    return mols,ions,T,cf,Gex_nRT,osm,aw,acfs
+    return mols,ions,T,cf,Gex_nRT,osm,aw,acfs
