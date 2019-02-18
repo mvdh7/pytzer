@@ -79,8 +79,8 @@ def _Harvie_raw(x):
                          -0.000000000002563,
                          -0.000000000010991])
 
-            z = 4 * xs**(1/5) - 2      # Eq. (B-21)
-            dz_dx = 4 * xs**-(4/5) / 5 # Eq. (B-22)
+            z = 4 * xs**0.2 - 2      # Eq. (B-21)
+            dz_dx = 4 * xs**-0.8 / 5 # Eq. (B-22)
 
             bk = zeros(size(ak)+2, dtype='float64')
             dk = zeros(size(ak)+2, dtype='float64')
