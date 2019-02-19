@@ -21,19 +21,57 @@ jacfs = np.concatenate([np.vstack(jdata[:,C])
     if jhead[C] in gions],
     axis=1)
 
+josm = np.vstack(jdata[:,jhead == "osm"])
+jaw  = np.vstack(jdata[:,jhead == "aw" ])
+
 # Compare and plot differences
 dacfs = jacfs - acfs
+dosm  = josm  - osm
+daw   = jaw   - aw
 
 from matplotlib import pyplot as plt
 
-fig,ax = plt.subplots()
+fig,ax = plt.subplots(1,3, gridspec_kw = {'width_ratios':[3, 1, 1]})
 
-vminmax = np.max(np.abs(dacfs))
-cax = ax.imshow(dacfs, cmap="coolwarm", aspect='auto',
-                vmin=-vminmax, vmax=vminmax)
-fig.colorbar(cax, label='Diff. in acf')
+# Solvent activities
+aabsmax = np.max(np.abs(dacfs))
+cax = ax[0].imshow(dacfs, cmap="coolwarm", aspect='auto',
+                   vmin=-aabsmax, vmax=aabsmax)
+fig.colorbar(cax, ax=ax[0], label='Diff. in acf')
 
-plt.xticks(range(len(ions)), rotation=0)
-ax.set_xticklabels(ions)
+ax[0].set_xticks(np.arange(len(ions)))
+ax[0].set_xticklabels(ions)
 
-ax.set_ylabel('Row in file')
+ax[0].set_ylabel('Row in file')
+
+# Osmotic coefficients
+oabsmax = np.max(np.abs(dosm))
+rminmax = np.array([-0.5,len(dosm)+0.5])
+
+ax[1].barh(np.arange(len(dosm)),dosm.ravel(),1, color=0.5*np.array([1,1,1]))
+
+ax[1].plot(np.array([0,0]),rminmax, c='k')
+
+ax[1].set_xlim(oabsmax*np.array([-1,1])*1.1)
+ax[1].set_ylim(rminmax)
+
+ax[1].set_xlabel('Diff. in osm')
+ax[1].set_ylabel('Row in file')
+
+ax[1].invert_yaxis()
+
+# Water activity
+wabsmax = np.max(np.abs(daw))
+rminmax = np.array([-0.5,len(daw)+0.5])
+
+ax[2].barh(np.arange(len(daw)),daw.ravel(),1, color=0.5*np.array([1,1,1]))
+
+ax[2].plot(np.array([0,0]),rminmax, c='k')
+
+ax[2].set_xlim(wabsmax*np.array([-1,1])*1.1)
+ax[2].set_ylim(rminmax)
+
+ax[2].set_xlabel('Diff. in aw')
+ax[2].set_ylabel('Row in file')
+
+ax[2].invert_yaxis()
