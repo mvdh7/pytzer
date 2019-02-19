@@ -28,7 +28,7 @@ from numpy import concatenate, full_like, nan, savetxt, vstack
 from numpy import any as np_any
 from numpy import sum as np_sum
 
-def blackbox(filename):
+def blackbox(filename, savefile=True):
 
     # Import test dataset
     mols,ions,T = io.getmols(filename)
@@ -68,13 +68,14 @@ def blackbox(filename):
     if np_any(~L):
         acfs[~L,:] = model.acfs(*nargsLx, Izero=True)
 
-    # Save results
-    filestem = filename.replace('.csv','')
-    savetxt(filestem + '_py.csv',
-            concatenate((T,mols,osm,aw,acfs), axis=1),
-            delimiter=',',
-            header=','.join(concatenate((['temp'],ions,['osm','aw'],
-                                         ['g'+ion for ion in ions]))),
-            comments='')
+    # Save results unless requested not to
+    if savefile:
+        filestem = filename.replace('.csv','')
+        savetxt(filestem + '_py.csv',
+                concatenate((T,mols,osm,aw,acfs), axis=1),
+                delimiter=',',
+                header=','.join(concatenate((['temp'],ions,['osm','aw'],
+                                             ['g'+ion for ion in ions]))),
+                comments='')
 
     return mols,ions,T,cf,Gex_nRT,osm,aw,acfs
