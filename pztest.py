@@ -7,7 +7,8 @@ filepath = 'testfiles/'
 filestem = 'pytzerPitzer'
 
 # Run black box calculation (uses MarChemSpec cfdict)
-mols,ions,T,cf,Gex_nRT,osm,aw,acfs = pz.blackbox(filepath + filestem + '.csv')
+mols,ions,T,cf,Gex_nRT,osm,aw,acfs \
+    = pz.blackbox(filepath + filestem + '.csv')
 
 # Load results from Julia
 jfilename = filepath + filestem + '_jl.csv'
@@ -21,8 +22,8 @@ jacfs = np.concatenate([np.vstack(jdata[:,C])
     if jhead[C] in gions],
     axis=1)
 
-josm = np.vstack(jdata[:,jhead == "osm"])
-jaw  = np.vstack(jdata[:,jhead == "aw" ])
+josm = np.vstack(jdata[:,jhead == 'osm'])
+jaw  = np.vstack(jdata[:,jhead == 'aw' ])
 
 # Compare and plot differences
 dacfs = jacfs - acfs
@@ -35,7 +36,7 @@ fig,ax = plt.subplots(1,3, gridspec_kw = {'width_ratios':[3, 1, 1]})
 
 # Solvent activities
 aabsmax = np.max(np.abs(dacfs))
-cax = ax[0].imshow(dacfs, cmap="coolwarm", aspect='auto',
+cax = ax[0].imshow(dacfs, cmap='coolwarm', aspect='auto',
                    vmin=-aabsmax, vmax=aabsmax)
 fig.colorbar(cax, ax=ax[0], label='Diff. in acf')
 
@@ -46,7 +47,7 @@ ax[0].set_ylabel('Row in file')
 
 # Osmotic coefficients
 oabsmax = np.max(np.abs(dosm))
-rminmax = np.array([-0.5,len(dosm)+0.5])
+rminmax = np.array([-0.5,len(dosm)-0.5])
 
 ax[1].barh(np.arange(len(dosm)),dosm.ravel(),1, color=0.5*np.array([1,1,1]))
 
@@ -62,7 +63,7 @@ ax[1].invert_yaxis()
 
 # Water activity
 wabsmax = np.max(np.abs(daw))
-rminmax = np.array([-0.5,len(daw)+0.5])
+rminmax = np.array([-0.5,len(daw)-0.5])
 
 ax[2].barh(np.arange(len(daw)),daw.ravel(),1, color=0.5*np.array([1,1,1]))
 

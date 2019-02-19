@@ -28,12 +28,12 @@ from numpy import concatenate, full_like, nan, savetxt, vstack
 from numpy import any as np_any
 from numpy import sum as np_sum
 
-def blackbox(filename, savefile=True):
+def blackbox(filename, cfdict=cfdicts.MarChemSpec, savefile=True):
 
     # Import test dataset
     mols,ions,T = io.getmols(filename)
 
-    cf = deepcopy(cfdicts.MarChemSpec)
+    cf = deepcopy(cfdict)
     cf.add_zeros(ions) # just in case
 
     # Separate out zero ionic strengths

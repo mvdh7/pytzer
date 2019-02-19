@@ -8,7 +8,10 @@
     * Added `bC_` functions for borate interactions from SRM87;
     * Added `bC_` functions for bisulfide interactions from HPM88;
     * Added new tables of PM73 data, and a new type of coefficient function in `bC_PM73(T,iset)` to use them;
-  * Changed output filename extension of **pytzer.blackbox** to **\_py**, and made saving results to file optional (with default behaviour to save).
+  * Updated **pytzer.blackbox**:
+    * Changed output filename extension to **\_py**;
+    * Saving results to file now optional (with default behaviour to save);
+    * Can also optionally use a different **CoefficientDictionary** (default remains **MarChemSpec**).
 
 
 ## 0.2.5
