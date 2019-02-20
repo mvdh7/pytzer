@@ -2,12 +2,12 @@
 
 ## 0.2.6
 
-**Release date:** forthcoming
+**Release date:** 2019-02-20
 
   * Continuing to build MIAMI (i.e. MP98) coefficient dictionary:
     * Added `bC_` functions for borate interactions from SRM87;
     * Added `bC_` functions for bisulfide interactions from HPM88;
-    * Added new tables of PM73 data, and a new type of coefficient function in `bC_PM73(T,iset)` to use them;
+    * Added new tables of PM73 data, and a new type of coefficient function in `bC_PM73(T,iset)` to use them (not yet compatible with all **CoefficientDictionary** methods);
   * Updated **pytzer.blackbox**:
     * Changed output filename extension to **\_py**;
     * Saving results to file now optional (with default behaviour to save);
