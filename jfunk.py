@@ -57,6 +57,8 @@ def fJquad(x):
 
 J_quad = fJquad(x23)
 
+J_quad = pz.jfuncs.numint(x23)
+
 #%% Save results
 savemat('testfiles/jfunk.mat',
         {'T': T,

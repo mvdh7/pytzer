@@ -11,7 +11,8 @@
   * Updated **pytzer.blackbox**:
     * Changed output filename extension to **\_py**;
     * Saving results to file now optional (with default behaviour to save);
-    * Can also optionally use a different **CoefficientDictionary** (default remains **MarChemSpec**).
+    * Can also optionally use a different **CoefficientDictionary** (default remains **MarChemSpec**);
+  * Added numerical integral approach for unsymmetrical mixing *J* function to **jfuncs** (not yet differentiable by autograd).
 
 
 ## 0.2.5
