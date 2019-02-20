@@ -14,7 +14,7 @@ def getmols(filename, delimiter=','):
 
     nan_to_num(data, copy=False)
 
-    TL = head == 'temp'
+    TL = head == 'tempK'
 
     mols = data[:,~TL]
     ions = head[~TL]

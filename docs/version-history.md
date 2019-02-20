@@ -4,6 +4,8 @@
 
 **Release date:** forthcoming
 
+  * Changed `temp` to `tempK` in input files for consistency with **Pitzer.jl**.
+
 
 ## 0.2.6
 

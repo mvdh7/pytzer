@@ -38,7 +38,7 @@ The input file `filename` should be formatted as follows:
   * each column represents the concentration of a different ion (or the temperature);
   * each row characterises a different solution composition.
 
-The header of the column containing the temperatures (in K) must be `temp`.
+The header of the column containing the temperatures (in K) must be `tempK`.
 
 The other columns should be headed with the chemical symbol for the ion, excluding the charge, and without any brackets. Only *internal* stoichiometry should be included: SO<sub>4</sub><sup>2−</sup> becomes `SO4`; Na<sup>+</sup> becomes `Na`, and would *not* be `Na2` even if a solution of Na<sub>2</sub>SO<sub>4</sub> was under investigation. For a more detailed explanation, see the [section on naming conventions](../../name-conventions).
 
@@ -57,7 +57,7 @@ For example, to specify these solutions:
 we could use this CSV file:
 
 ```text
-temp  , Na  , K   , Cl  , SO4
+tempK , Na  , K   , Cl  , SO4
 298.15, 0.10,     , 0.10,
 298.15, 3.00,     , 3.00,
 298.15, 6.25,     , 6.25,
