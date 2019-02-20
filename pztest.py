@@ -4,13 +4,17 @@ import numpy as np
 
 # Import test dataset
 filepath = 'testfiles/'
-filestem = 'pytzerPitzer'
+filestem = 'GenerateConcs'
 
 # Run black box calculation (uses MarChemSpec cfdict)
+from time import time
+
+go = time()
 mols,ions,T,cf,Gex_nRT,osm,aw,acfs \
     = pz.blackbox(filepath + filestem + '.csv')
+print(time() - go)
 
-# Load results from Julia
+#%% Load results from Julia
 jfilename = filepath + filestem + '_jl.csv'
 jdata = np.genfromtxt(jfilename, delimiter=',', skip_header=1)
 jhead = np.genfromtxt(jfilename, delimiter=',', skip_footer=np.shape(jdata)[0],
