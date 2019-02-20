@@ -9,7 +9,7 @@
 
 If using conda, first create and activate a new environment with Python 3.6 and numpy 1.15. Then:
 
-```
+```shell
 pip install pytzer
 ```
 

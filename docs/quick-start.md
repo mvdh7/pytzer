@@ -6,19 +6,19 @@
 
 [3] Create a new environment for **pytzer** by entering the following:
 
-```
+```shell
 conda create -n pytzer python=3.6 numpy
 ```
 
 [4] Activate the new environment. On Windows:
 
-```
+```shell
 activate pytzer
 ```
 
 On Mac/Linux:
 
-```
+```shell
 source activate pytzer
 ```
 
@@ -26,7 +26,7 @@ You should now see the name of the environment (i.e. `pytzer`) appear at the ver
 
 [5] Install **pytzer** into the new environment:
 
-```
+```shell
 pip install pytzer
 ```
 
@@ -44,7 +44,7 @@ You can just provide **pytzer** with a CSV file of temperatures and molality val
 
 [4] Start Python:
 
-```
+```shell
 python
 ```
 
@@ -60,7 +60,7 @@ import pytzer as pz
 pz.blackbox('pytzerQuickStart.csv')
 ```
 
-Once the calculations are complete, a new CSV file will appear, in the same folder as the input file, with the same name as the input file but with **\_out** appended. It contains the input temperature and molality values, followed by the osmotic coefficient (column header: **osm**), water activity (**aw**), and then the activity coefficient of each solute (with column headers e.g. **gNa** for Na<sup>+</sup> activity coefficient).
+Once the calculations are complete, a new CSV file will appear, in the same folder as the input file, with the same name as the input file but with **\_py** appended. It contains the input temperature and molality values, followed by the osmotic coefficient (column header: **osm**), water activity (**aw**), and then the activity coefficient of each solute (with column headers e.g. **gNa** for Na<sup>+</sup> activity coefficient).
 
 The black box function is currently set up to use the **MarChemSpec** [coefficient dictionary](../modules/cfdicts). This is based on the model of Waters and Millero (2013), with some additional terms added for tris interactions. It is still under development, so the results <u>will</u> change as **pytzer** is updated. It contains coefficients for the components: Ca<sup>2+</sup>, Cl<sup>−</sup>, H<sup>+</sup>, HSO<sub>4</sub><sup>−</sup>, K<sup>+</sup>, Mg<sup>2+</sup>, MgOH<sup>+</sup>, Na<sup>+</sup>, OH<sup>−</sup>, SO<sub>4</sub><sup>−</sup>, tris, and trisH<sup>+</sup>. If you have any ions in your input file that are not on this list, then **pytzer** should still work (as long the charges on those ions are defined in **props.charges**), but all interaction coefficients involving those ions will be set to zero.
 
@@ -78,6 +78,6 @@ exit()
 
 [2] Update **pytzer** with pip:
 
-```
+```shell
 pip install pytzer --upgrade --no-cache-dir
 ```

@@ -1,9 +1,28 @@
 # pytzer: Pitzer model for chemical activities in aqueous solutions
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 
-from autograd.numpy import exp, float_, full_like, log, nan, size, zeros, \
-                           zeros_like, errstate
+from autograd.numpy import exp, float_, full_like, inf, log, nan, size, \
+                           zeros, zeros_like, errstate
 from autograd.extend import primitive, defvjp
+from scipy.integrate import quad
+
+# === Numerical integral ======================================================
+
+def numint(x):
+    
+    # P91 Chapter 3 Eq. (B-12) [p123]
+    q = lambda x, y: -(x/y) * exp(-y)
+    
+    J = full_like(x,nan)
+    
+    for i,xi in enumerate(x):
+    
+        # P91 Chapter 3 Eq. (B-13) [p123]
+        J[i] = quad(lambda y: \
+            (1 + q(xi,y) + q(xi,y)**2 / 2 - exp(q(xi,y))) * y**2,
+            0,inf)[0] / xi
+    
+    return J
 
 
 # === Pitzer (1975) Eq. (46) ==================================================
@@ -79,8 +98,8 @@ def _Harvie_raw(x):
                          -0.000000000002563,
                          -0.000000000010991])
 
-            z = 4 * xs**(1/5) - 2      # Eq. (B-21)
-            dz_dx = 4 * xs**-(4/5) / 5 # Eq. (B-22)
+            z = 4 * xs**0.2 - 2      # Eq. (B-21)
+            dz_dx = 4 * xs**-0.8 / 5 # Eq. (B-22)
 
             bk = zeros(size(ak)+2, dtype='float64')
             dk = zeros(size(ak)+2, dtype='float64')
