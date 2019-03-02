@@ -15,10 +15,10 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 __all__ = ['cfdicts', 'coeffs', 'constants', 'io', 'jfuncs', 'meta', 'model',
-           'props', 'tables']
+           'props', 'tables', 'model2']
 
 from . import cfdicts, coeffs, constants, io, jfuncs, meta, model, \
-              props, tables
+              props, tables, model2
 
 __version__ = meta.version
 
