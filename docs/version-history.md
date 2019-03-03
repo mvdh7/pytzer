@@ -4,7 +4,15 @@
 
 **Release date:** forthcoming
 
-  * Changed `temp` to `tempK` in input files for consistency with **Pitzer.jl**.
+  * Transposed all inputs to the excess Gibbs energy function and its derivatives, giving about a 500% speed-up;
+  * For consistency with **Pitzer.jl**:
+    * Simplified osmotic coefficient calculation approach;
+    * Added direct calculation of water activity by differentiation;
+    * Changed both `T` and `temp` to `tempK` in input files and all functions;
+    * Renamed coefficient "dictionary" as "library":
+      * **CoefficientDictionary** class becomes **CoeffLib**;
+      * **cfdict** function inputs become **cflib**;
+    * Updated documentation to reflect these changes.
 
 
 ## 0.2.6
