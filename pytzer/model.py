@@ -206,8 +206,9 @@ def Gex_nRT(mols, ions, tempK, cflib, Izero=False):
                 * 2 * cflib.lambd[ina](tempK)[0]
 
         # n-n' excluding n-n
-        for N1, neutral1 in enumerate(neutrals[N0+1:]):
+        for xN1, neutral1 in enumerate(neutrals[N0+1:]):
 
+            N1 = xN1 + 1
             inn = [neutral0, neutral1]
             inn.sort()
             inn = '-'.join(inn)

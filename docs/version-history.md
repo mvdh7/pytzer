@@ -4,6 +4,8 @@
 
 **Release date:** forthcoming
 
+  * Fixed missing index correction for n-n' interaction loop.
+
 
 ## 0.2.7
 
