@@ -13,4 +13,4 @@ pip install pytzer
 
 Further documentation available: [pytzer.readthedocs.io](https://pytzer.readthedocs.io/en/latest/), including a [quick-start guide](https://pytzer.readthedocs.io/en/latest/quick-start/).
 
-Implemented by [Matthew P. Humphreys](https://mvdh.xyz), University of East Anglia, Norwich, UK.
+Implemented and maintained by [Matthew P. Humphreys](https://mvdh.xyz), University of East Anglia, Norwich, UK.

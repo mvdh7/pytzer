@@ -9,11 +9,11 @@ MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
 
 ## Function inputs
 
-Many of these functions have a common set of inputs: `mols`, `ions`, `T`, `cfdict` and `Izero`.
+Many of these functions have a common set of inputs: `mols`, `ions`, `tempK`, `cflib` and `Izero`.
 
 The first three of these inputs can be generated from an input file by **pytzer.io.getmols** and their formats are described in [the relevant documentation](../io/#pytzeriogetmols). Throughout **pytzer**, when we refer to a variable called `ions` we are including any neutral species in the solution.
 
-The final compulsory input is a **cfdict** (coefficient dictionary), which defines the set of interaction coefficients to use in the model, as described on [the relevant page](../cfdicts).
+The final compulsory input is a **cflib** (coefficient library), which defines the set of interaction coefficients to use in the model, as described on [the relevant page](../cflibs).
 
 `Izero` is an optional input with a default value of `False`. In this case, a full Pitzer model is executed. If `Izero` is instead changed to `True`, then only neutral-only interactions are evaluated: this is the setting to use for solutions with zero ionic strength. If you try to pass a zero-ionic-strength solution through the full model, a `nan` is returned along with lots of divide-by-zero warnings. You must split up your own input data and run the function twice, if you have both types of solution.
 
@@ -61,7 +61,7 @@ In **pytzer**, the excess Gibbs energy is the only physicochemical equation that
 ## .Gex_nRT
 
 ```python
-Gex_nRT = pz.model.Gex_nRT(mols,ions,T,cfdict, Izero=False)
+Gex_nRT = pz.model.Gex_nRT(mols, ions, tempK, cflib, Izero=False)
 ```
 
 Evaluates $G_{ex}/w_wRT$, as defined above.
@@ -91,8 +91,8 @@ To evaluate $\gamma_x$ and $\phi$, **pytzer** evaluates the appropriate differen
 ## .acfs / .ln_acfs
 
 ```python
-ln_acfs = pz.model.ln_acfs(mols,ions,T,cfdict, Izero=False)
-acfs    = pz.model.acfs   (mols,ions,T,cfdict, Izero=False)
+ln_acfs = pz.model.ln_acfs(mols, ions, tempK, cflib, Izero=False)
+acfs    = pz.model.acfs   (mols, ions, tempK, cflib, Izero=False)
 ```
 
 Returns a matrix of activity coefficients ($\gamma_x$, `acfs`) or their natural logarithm ($\ln \gamma_x$, `ln_acfs`) of the same size and shape as input `mols`. Each activity coefficient is for the same ion and solution composition as the corresponding input molality.
@@ -100,7 +100,7 @@ Returns a matrix of activity coefficients ($\gamma_x$, `acfs`) or their natural 
 ## .ln_acf2ln_acf_MX
 
 ```python
-ln_acf_MX = pz.model.ln_acf2ln_acf_MX(ln_acfM,ln_acfX,nM,nX)
+ln_acf_MX = pz.model.ln_acf2ln_acf_MX(ln_acfM, ln_acfX, nM, nX)
 ```
 
 Combines the natural logarithms of the activity coefficients of a cation ($\ln \gamma_c$, `ln_acfM`) and anion ($\ln \gamma_a$, `ln_acfX`) into a mean activity coefficient of an electrolyte ($\ln \gamma_\pm$, `ln_acf_MX`) with stoichiometric ratio between cation and anion of `nM`:`nX`.
@@ -108,15 +108,24 @@ Combines the natural logarithms of the activity coefficients of a cation ($\ln \
 ## .osm
 
 ```python
-osm = pz.model.osm(mols,ions,T,cfdict, Izero=False)
+osm = pz.model.osm(mols, ions, tempK, cflib, Izero=False)
 ```
 
 Calculates the osmotic coefficient ($\phi$) for each input solution composition.
 
+## .aw / .lnaw
+
+```python
+lnaw = pz.model.lnaw(mols, ions, tempK, cflib, Izero=False)
+aw   = pz.model.aw  (mols, ions, tempK, cflib, Izero=False)
+```
+
+Calculates the water activity ($a_w$) or its natural logarithm for each input solution composition.
+
 ## .osm2aw
 
 ```python
-aw = pz.model.osm2aw(mols,osm)
+aw = pz.model.osm2aw(mols, osm)
 ```
 
 Converts an osmotic coefficient ($\phi$, `osm`) into a water activity ($a_w$, `aw`).
@@ -124,7 +133,7 @@ Converts an osmotic coefficient ($\phi$, `osm`) into a water activity ($a_w$, `a
 ## .aw2osm
 
 ```python
-aw = pz.model.aw2osm(mols,aw)
+aw = pz.model.aw2osm(mols, aw)
 ```
 
 Converts a water activity ($a_w$, `aw`) into an osmotic coefficient ($\phi$, `osm`).
@@ -142,7 +151,7 @@ Calculates the ionic strength of the solution ($I$, `I`), following Pitzer (1991
 $$I = \frac{1}{2} \sum_i m_i z_i^2$$
 
 ```python
-I = pz.model.Istr(mols,zs)
+I = pz.model.Istr(mols, zs)
 ```
 
 Input `zs` is a list of the charge on each ion, which can be generated from `ions` using **pytzer.props.charges**.
@@ -156,7 +165,7 @@ $$f_G = \frac{4 I A_\phi}{-b} \ln (1 + b\sqrt{I})$$
 where $b$, here and hereafter, is equal to 1.2 (mol·K<sup>−1</sup>)<sup>1/2</sup> (as defined in **pytzer.constants**).
 
 ```python
-fG = pz.model.fG(T,I,cfdict)
+fG = pz.model.fG(tempK, I, cflib)
 ```
 
 ## .g
@@ -188,10 +197,10 @@ $$B_{ca} = \beta_0 + \beta_1 g(\alpha_1 \sqrt{I}) + \beta_2 g(\alpha_2 \sqrt{I})
 where $\beta_0$, $\beta_1$, $\beta_2$, $\alpha_1$ and $\alpha_2$ take different values for each $ca$ combination, as defined by the functions in **pytzer.coeffs**.
 
 ```python
-B = pz.model.B(T,I,cfdict,iset)
+B = pz.model.B(tempK, I, cflib, iset)
 ```
 
-where input `iset` is a string that references the appropriate entry in **cfdict.bC** for the ion pair (e.g. `'Na-Cl'` for the Na<sup>+</sup>-Cl<sup>−</sup> interaction; see [how a CoefficientDictionary works](../../modules/cfdicts/#how-a-coefficientdictionary-works) for details).
+where input `iset` is a string that references the appropriate entry in **cflib.bC** for the ion pair (e.g. `'Na-Cl'` for the Na<sup>+</sup>-Cl<sup>−</sup> interaction; see [how a CoefficientDictionary works](../../modules/cflibs/#how-a-coefficientdictionary-works) for details).
 
 ## .CT
 
@@ -202,10 +211,10 @@ $$C_{ca}^T = C_0 + 4 C_1 h(\omega \sqrt{I})$$
 where $C_0$, $C_1$ and $\omega$ take different values for each $ca$ combination, as defined by the functions in **pytzer.coeffs**.
 
 ```python
-CT = pz.model.CT(T,I,cfdict,iset)
+CT = pz.model.CT(tempK, I, cflib, iset)
 ```
 
-where input `iset` is a string that references the appropriate entry in **cfdict.bC** for the ion pair (e.g. `'Na-Cl'` for the Na<sup>+</sup>-Cl<sup>−</sup> interaction; see [how a CoefficientDictionary works](../../modules/cfdicts/#how-a-coefficientdictionary-works) for details).
+where input `iset` is a string that references the appropriate entry in **cflib.bC** for the ion pair (e.g. `'Na-Cl'` for the Na<sup>+</sup>-Cl<sup>−</sup> interaction; see [how a CoefficientDictionary works](../../modules/cflibs/#how-a-coefficientdictionary-works) for details).
 
 ## .xij
 
@@ -214,7 +223,7 @@ The variable $x_{ii'}$, following Pitzer (1991), Eq. (B-14):
 $$x_{ii'} = 6 z_i z_{i'} A_\phi \sqrt{I}$$
 
 ```python
-xij = pz.model.xij(T,I,z0,z1,cfdict)
+xij = pz.model.xij(tempK, I, z0, z1, cflib)
 ```
 
 where `z0` and `z1` are the charges on ions $i$ and $i'$ respectively (i.e. $z_i$ and $z_{i'}$).

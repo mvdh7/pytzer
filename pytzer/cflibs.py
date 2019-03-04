@@ -3,13 +3,13 @@
 
 from . import coeffs, jfuncs, props
 from .meta import version
-from autograd.numpy import array, concatenate, full_like, unique
+from autograd.numpy import array, concatenate, unique
 from copy import deepcopy
 
 #==============================================================================
-#===================================== Define CoefficientDictionary class =====
+#================================================== Define CoeffLib class =====
 
-class CoefficientDictionary:
+class CoeffLib:
 
 
 # ------------------------------------------------------------ Initialise -----
@@ -41,7 +41,7 @@ class CoefficientDictionary:
         anions.sort()
         neutrals.sort()
 
-        # Populate cfdict with zero functions where no function exists
+        # Populate CoeffLib with zero functions where no function exists
 
         # betas and Cs
         for cation in cations:
@@ -118,7 +118,7 @@ class CoefficientDictionary:
 
         f = open(filename,'w')
 
-        f.write('Coefficient dictionary: {} [pytzer-v{}]\n\n'.format( \
+        f.write('Coefficient library: {} [pytzer-v{}]\n\n'.format( \
                 self.name,version))
 
         ionslist = 'Ions: ' + (len(self.ions)-1)*'{}, ' + '{}\n\n'
@@ -133,7 +133,7 @@ class CoefficientDictionary:
         f.write('Debye-Hueckel limiting slope\n')
         f.write('============================\n')
 
-        eval_Aosm = self.dh['Aosm'](array(T))[0][0]
+        eval_Aosm = self.dh['Aosm'](array([T]))[0][0]
 
         src = self.dh['Aosm'].__name__.split('_')[-1]
 
@@ -156,7 +156,7 @@ class CoefficientDictionary:
             b0,b1,b2,C0,C1, alph1,alph2,omega, _ = self.bC[bC](T)
 
             src = self.bC[bC].__name__.split('_')[-1]
-
+            
             f.write(bCvals.format(cation,anion, b0,b1,b2,C0,C1,
                                   alph1,alph2,omega, src))
 
@@ -256,7 +256,7 @@ class CoefficientDictionary:
             f.write(muVals.format(neut1,neut2,neut3,eval_mu,src))
 
 
-# -------------------------------- Get all ions and sources in the cfdict -----
+# ------------------------------ Get all ions and sources in the CoeffLib -----
 
     def get_contents(self):
 
@@ -266,9 +266,8 @@ class CoefficientDictionary:
         ctypes = [ctype for ctype in ctypes if any(ctype)]
 
         # Get unique list of "ions" (includes neutrals)
-        self.ions = unique(concatenate([concatenate(
-            [ctype[key].__name__.split('_')[1:-1] \
-             for key in ctype.keys()]) for ctype in ctypes]))
+        self.ions = unique(concatenate([
+            key.split('-') for ctype in ctypes for key in ctype.keys()]))
 
         # Get unique list of literature sources
         self.srcs = unique(concatenate([[ctype[key].__name__.split('_')[-1] \
@@ -280,7 +279,7 @@ class CoefficientDictionary:
 
 
 #==============================================================================
-#=============================== Define specific coefficient dictionaries =====
+#================================== Define specific coefficient libraries =====
 
 #------------------------------------------------------------ Møller 1988 -----
 #
@@ -289,7 +288,7 @@ class CoefficientDictionary:
 #
 # System: Na-Ca-Cl-SO4
 
-M88 = CoefficientDictionary()
+M88 = CoeffLib()
 M88.name = 'M88'
 
 # Debye-Hueckel limiting slope
@@ -327,7 +326,7 @@ M88.get_contents()
 #
 # System: Na-K-Ca-Cl-SO4
 
-GM89 = CoefficientDictionary()
+GM89 = CoeffLib()
 GM89.name = 'GM89'
 
 # Debye-Hueckel limiting slope
@@ -374,7 +373,7 @@ GM89.get_contents()
 #
 # System: H-HSO4-SO4
 
-CRP94 = CoefficientDictionary()
+CRP94 = CoeffLib()
 CRP94.name = 'CRP94'
 
 # Debye-Hueckel limiting slope
@@ -402,7 +401,7 @@ CRP94.get_contents()
 # Waters and Millero (2013). Mar. Chem. 149, 8-22,
 #  doi:10.1016/j.marchem.2012.11.003
 
-WM13 = CoefficientDictionary()
+WM13 = CoeffLib()
 WM13.name = 'WM13'
 
 # Debye-Hueckel limiting slope and unsymmetrical mixing
@@ -595,8 +594,10 @@ MarChemSpec.name = 'MarChemSpec'
 MarChemSpec.dh['Aosm'] = coeffs.Aosm_MarChemSpec
 
 #--------------------------------------- Millero & Pierrot 1998 aka MIAMI -----
+#
+#~~~~~~~~~~~~~~~~~~~~~~~ WORK IN PROGRESS !!!!! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-MIAMI = CoefficientDictionary()
+MIAMI = CoeffLib()
 MIAMI.name = 'MIAMI'
 
 MIAMI.dh['Aosm'] = coeffs.Aosm_M88

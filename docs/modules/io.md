@@ -1,16 +1,17 @@
-# Introduction
+# Import and export data
 
-**pytzer.io** provides a function to import user data ready for use with **pytzer**.
+**pytzer.io** provides functions to import user data ready for use with **pytzer**, and export the results of your calculations.
 
+<hr />
 
-## pytzer.io.getmols
+## .getmols
 
-Imports a table of temperature and molality values, and format them ready for `pz.model` functions.
+Imports a table of temperature and molality values, and format them ready for **pz.model** functions.
 
 ### Syntax
 
 ```python
-mols, ions, T = pz.io.getmols(filename, delimiter=',')
+mols, ions, tempK = pz.io.getmols(filename, delimiter=',', skip_top=0)
 ```
 
 ### Inputs
@@ -28,8 +29,12 @@ mols, ions, T = pz.io.getmols(filename, delimiter=',')
 </tr><tr>
 
 <td><code>delimiter</code></td>
-<td><em>Optional.</em> Specify the column delimiter used in <code>filename</code>.</td>
+<td><em>Optional.</em> Specify the column delimiter used in <code>filename</code>. Defaults to <code>','</code>.</td>
 
+</tr><tr>
+
+<td><code>skip_top</code></td>
+<td><em>Optional.</em> Specify the number of rows in <code>filename</code> above the row containing the headers described below. Defaults to <code>0</code>.</td>
 </tr></table>
 
 The input file `filename` should be formatted as follows:
@@ -38,7 +43,7 @@ The input file `filename` should be formatted as follows:
   * each column represents the concentration of a different ion (or the temperature);
   * each row characterises a different solution composition.
 
-The header of the column containing the temperatures (in K) must be `temp`.
+The header of the column containing the temperatures (in K) must be `tempK`.
 
 The other columns should be headed with the chemical symbol for the ion, excluding the charge, and without any brackets. Only *internal* stoichiometry should be included: SO<sub>4</sub><sup>2−</sup> becomes `SO4`; Na<sup>+</sup> becomes `Na`, and would *not* be `Na2` even if a solution of Na<sub>2</sub>SO<sub>4</sub> was under investigation. For a more detailed explanation, see the [section on naming conventions](../../name-conventions).
 
@@ -57,7 +62,7 @@ For example, to specify these solutions:
 we could use this CSV file:
 
 ```text
-temp  , Na  , K   , Cl  , SO4
+tempK , Na  , K   , Cl  , SO4
 298.15, 0.10,     , 0.10,
 298.15, 3.00,     , 3.00,
 298.15, 6.25,     , 6.25,
@@ -78,19 +83,37 @@ temp  , Na  , K   , Cl  , SO4
 </tr><tr>
 
 <td><code>mols</code></td>
-<td>Concentrations (molality) of ions in solution. Each column represents a different ion. Each row characterises a different solution composition.</td>
+<td>Concentrations (molality) of ions in solution. Each row represents a different ion. Each column characterises a different solution composition.</td>
 <td>mol·kg<sup>−1</sup></td>
 
 </tr><tr>
 
 <td><code>ions</code></td>
-<td>List of the ions, corresponding to the columns in <code>mols</code>.</td>
+<td>List of the ions, corresponding to the rows in <code>mols</code>.</td>
 <td>mol·kg<sup>−1</sup></td>
 
 </tr><tr>
 
-<td><code>T</code></td>
-<td>Solution temperature. Each row corresponds to the matching row in <code>mols</code>.</td>
+<td><code>tempK</code></td>
+<td>Solution temperature. Each value corresponds to the matching column in <code>mols</code>.</td>
 <td>K</td>
 
 </tr></table>
+
+<hr />
+
+## .saveall
+
+Saves the results of all calculations to a CSV file, with a format similar to that described for the input file above.
+
+### Syntax
+
+```python
+pz.io.saveall(filename, mols, ions, tempK, osm, aw, acfs)
+```
+
+### Inputs
+
+The input `filename` gives the name of the file to save, including the path. The file will be overwritten if it already exists, or created if not. It should end with `.csv`.
+
+The other variables are the inputs `mols`, `ions` and `tempK` exactly as created by the **io.getmols** function above, while `osm`, `aw` and `acfs` are the results of the corresponding functions in **model**. *For the current version, there is no flexibility in which calculation results can be provided.*

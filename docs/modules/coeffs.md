@@ -3,7 +3,7 @@ MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
 </script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
 
-# pytzer.coeffs
+# Coefficient functions
 
 **pytzer.coeffs** contains functions for ionic interaction coefficients.
 

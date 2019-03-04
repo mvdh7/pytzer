@@ -4621,10 +4621,12 @@ def bC_Sr_BOH4_MP98(T): return bC_Ca_BOH4_SRM87(T)
 
 #%%############################################################################
 # === PITZER & MARGOYA 1973 ===================================================
+#
+# Experimental function - not production-ready
 
-def bC_PM73(T,iset):
+def bC_PM73(T, iset):
 
-    zM,zX = props.charges(array(iset.split('-')))[0]
+    zM, zX = props.charges(array(iset.split('-')))[0]
 
     PM73_Tables = {-1: PM73_TableI   ,
                    -2: PM73_TableVI  ,

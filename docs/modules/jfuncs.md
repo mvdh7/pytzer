@@ -1,4 +1,4 @@
-# Introduction
+# Unsymmetrical mixing functions
 
 *The casual user has no need to explicitly call this module.*
 
@@ -8,17 +8,21 @@ One of these functions must be contained within the [cfdict](../cfdicts) in orde
 
 # jfunc options
 
-## pytzer.jfuncs.P75_eq46
+## .P75_eq46
 
 Evaluates J following Pitzer (1975) Eq. (46).
 
-## pytzer.jfuncs.P75_eq47
+## .P75_eq47
 
 Evaluates J following Pitzer (1975) Eq. (47).
 
-## pytzer.jfuncs.Harvie
+## .Harvie
 
 Evaluates J following "Harvie's method", as described by Pitzer (1991), pages 124 to 125.
+
+## .numint
+
+Uses a numerical integration method to evaluate J "exactly". *Not currently autograd-able.*
 
 <hr />
 

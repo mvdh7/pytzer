@@ -7,6 +7,8 @@ from autograd.extend import primitive, defvjp
 from scipy.integrate import quad
 
 # === Numerical integral ======================================================
+#
+# Cannot yet be automatically differentiated
 
 def numint(x):
     

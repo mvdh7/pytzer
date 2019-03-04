@@ -13,7 +13,7 @@ nav:
     - Conventions:       name-conventions.md
     - pytzer modules:
         - .io – import and export:             modules/io.md
-        - .cfdicts – coefficient dictionaries: modules/cfdicts.md
+        - .cflibs – coefficient libraries:     modules/cflibs.md
         - .model – the Pitzer model:           modules/model.md
         - .coeffs – interaction coefficients:  modules/coeffs.md
         - .tables - coefficient tables:        modules/tables.md
