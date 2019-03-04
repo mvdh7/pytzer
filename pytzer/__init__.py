@@ -41,31 +41,34 @@ def blackbox(filename, cflib=cflibs.MarChemSpec, savefile=True):
 
     Gex_nRT = full_like(tempK, nan)
     osm     = full_like(tempK, nan)
+    aw      = full_like(tempK, nan)
     acfs    = full_like(mols, nan)
 
     L = (I > 0).ravel()
 
-    nargsL  = (mols[ L,:], ions, tempK[ L], cflib)
-    nargsLx = (mols[~L,:], ions, tempK[~L], cflib)
+    nargsL  = (mols[:, L], ions, tempK[ L], cflib)
+    nargsLx = (mols[:,~L], ions, tempK[~L], cflib)
 
     # Do calculations
     print('Calculating excess Gibbs energies...')
-    Gex_nRT[ L] = model.Gex_nRT(*nargsL)
+    Gex_nRT[L] = model.Gex_nRT(*nargsL)
     if np_any(~L):
         Gex_nRT[~L] = model.Gex_nRT(*nargsLx, Izero=True)
 
     print('Calculating osmotic coefficients...')
-    osm[ L] = model.osm(*nargsL)
+    osm[L] = model.osm(*nargsL)
     if np_any(~L):
         osm[~L] = model.osm(*nargsLx, Izero=True)
 
     print('Calculating water activity...')
-    aw = model.osm2aw(mols,osm)
+    aw[L] = model.aw(*nargsL)
+    if np_any(~L):
+        aw[~L] = model.aw(*nargsLx, Izero=True)
 
     print('Calculating activity coefficients...')
-    acfs[ L,:] = model.acfs(*nargsL)
+    acfs[:,L] = model.acfs(*nargsL)
     if np_any(~L):
-        acfs[~L,:] = model.acfs(*nargsLx, Izero=True)
+        acfs[:,~L] = model.acfs(*nargsLx, Izero=True)
 
     # Save results unless requested not to
     if savefile:

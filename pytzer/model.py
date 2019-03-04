@@ -256,25 +256,26 @@ def osm(mols, ions, tempK, cflib, Izero=False):
 
     ww = full_like(tempK,1.0)
 
-    return 1 - \
-        egrad(lambda ww: ww * Gex_nRT(mols/ww, ions, tempK, cflib))(ww) \
+    return 1 - egrad(
+        lambda ww: ww * Gex_nRT(mols/ww, ions, tempK, cflib, Izero))(ww) \
         / np_sum(mols, axis=0)
 
 
 #--------------------------------------------------------- Water activity -----
 
 # Water activity - direct
-def lnaw(mols, ions, tempK, cflib):
+def lnaw(mols, ions, tempK, cflib, Izero=False):
 
     ww = full_like(tempK, 1.0)
 
-    return (egrad(lambda ww: ww * Gex_nRT(mols/ww, ions, tempK, cflib))(ww) \
+    return (egrad(
+        lambda ww: ww * Gex_nRT(mols/ww, ions, tempK, cflib, Izero))(ww) \
         - np_sum(mols, axis=0)) * Mw
 
 
-def aw(mols, ions, tempK, cflib):
+def aw(mols, ions, tempK, cflib, Izero=False):
 
-    return exp(lnaw(mols, ions, tempK, cflib))
+    return exp(lnaw(mols, ions, tempK, cflib, Izero))
 
 
 #------------------------------------------------------------ Conversions -----
