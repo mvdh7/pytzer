@@ -4,7 +4,7 @@
 
 **Release date:** forthcoming
 
-  * Transposed all inputs to the excess Gibbs energy function and its derivatives, giving about a 500% speed-up;
+  * Transposed all inputs to the excess Gibbs energy function and its derivatives, giving about a 5× speed-up;
   * For consistency with **Pitzer.jl**:
     * Simplified osmotic coefficient calculation approach;
     * Added direct calculation of water activity by differentiation;
@@ -12,7 +12,9 @@
     * Renamed coefficient "dictionary" as "library":
       * **CoefficientDictionary** class becomes **CoeffLib**;
       * **cfdict** function inputs become **cflib**;
-    * Updated documentation to reflect these changes.
+    * Updated documentation to reflect these changes;
+  * Added **io.saveall** function to create CSV file for results;
+  * Switched **CoeffLib.get_contents()** to use dict key names, not function names, to find ions.
 
 
 ## 0.2.6

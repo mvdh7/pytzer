@@ -14,40 +14,39 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-__all__ = ['cfdicts', 'coeffs', 'constants', 'io', 'jfuncs', 'meta', 'model',
-           'props', 'tables', 'model2']
+__all__ = ['cflibs', 'coeffs', 'constants', 'io', 'jfuncs', 'meta', 'model',
+           'props', 'tables']
 
-from . import cfdicts, coeffs, constants, io, jfuncs, meta, model, \
-              props, tables, model2
+from . import cflibs, coeffs, constants, io, jfuncs, meta, model, \
+              props, tables
 
 __version__ = meta.version
 
 # Black box function
 from copy import deepcopy
-from numpy import concatenate, full_like, nan, savetxt, vstack
+from numpy import full_like, nan
 from numpy import any as np_any
-from numpy import sum as np_sum
 
-def blackbox(filename, cfdict=cfdicts.MarChemSpec, savefile=True):
+def blackbox(filename, cflib=cflibs.MarChemSpec, savefile=True):
 
     # Import test dataset
-    mols,ions,T = io.getmols(filename)
+    mols, ions, tempK = io.getmols(filename)
 
-    cf = deepcopy(cfdict)
-    cf.add_zeros(ions) # just in case
+    cflib = deepcopy(cflib)
+    cflib.add_zeros(ions) # just in case
 
     # Separate out zero ionic strengths
     zs = props.charges(ions)[0]
-    I = vstack(0.5 * (np_sum(mols * zs**2, 1)))
+    I = model.Istr(mols, zs)
 
-    Gex_nRT = full_like(T   , nan)
-    osm     = full_like(T   , nan)
+    Gex_nRT = full_like(tempK, nan)
+    osm     = full_like(tempK, nan)
     acfs    = full_like(mols, nan)
 
     L = (I > 0).ravel()
 
-    nargsL  = (mols[ L,:], ions, T[ L], cf)
-    nargsLx = (mols[~L,:], ions, T[~L], cf)
+    nargsL  = (mols[ L,:], ions, tempK[ L], cflib)
+    nargsLx = (mols[~L,:], ions, tempK[~L], cflib)
 
     # Do calculations
     print('Calculating excess Gibbs energies...')
@@ -71,11 +70,7 @@ def blackbox(filename, cfdict=cfdicts.MarChemSpec, savefile=True):
     # Save results unless requested not to
     if savefile:
         filestem = filename.replace('.csv','')
-        savetxt(filestem + '_py.csv',
-                concatenate((T,mols,osm,aw,acfs), axis=1),
-                delimiter=',',
-                header=','.join(concatenate((['temp'],ions,['osm','aw'],
-                                             ['g'+ion for ion in ions]))),
-                comments='')
-
-    return mols,ions,T,cf,Gex_nRT,osm,aw,acfs
+        io.saveall(filestem + '_py.csv', mols, ions, tempK, osm, aw, acfs)
+        
+    print('Finished!')
+    return mols, ions, tempK, cflib, Gex_nRT, osm, aw, acfs

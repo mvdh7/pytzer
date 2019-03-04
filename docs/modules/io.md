@@ -1,16 +1,17 @@
-# Introduction
+# Import and export data
 
-**pytzer.io** provides a function to import user data ready for use with **pytzer**.
+**pytzer.io** provides functions to import user data ready for use with **pytzer**, and export the results of your calculations.
 
+<hr />
 
-## pytzer.io.getmols
+## .getmols
 
-Imports a table of temperature and molality values, and format them ready for `pz.model` functions.
+Imports a table of temperature and molality values, and format them ready for **pz.model** functions.
 
 ### Syntax
 
 ```python
-mols, ions, tempK = pz.io.getmols(filename, delimiter=',')
+mols, ions, tempK = pz.io.getmols(filename, delimiter=',', skip_top=0)
 ```
 
 ### Inputs
@@ -28,8 +29,12 @@ mols, ions, tempK = pz.io.getmols(filename, delimiter=',')
 </tr><tr>
 
 <td><code>delimiter</code></td>
-<td><em>Optional.</em> Specify the column delimiter used in <code>filename</code>.</td>
+<td><em>Optional.</em> Specify the column delimiter used in <code>filename</code>. Defaults to <code>','</code>.</td>
 
+</tr><tr>
+
+<td><code>skip_top</code></td>
+<td><em>Optional.</em> Specify the number of rows in <code>filename</code> above the row containing the headers described below. Defaults to <code>0</code>.</td>
 </tr></table>
 
 The input file `filename` should be formatted as follows:
@@ -94,3 +99,21 @@ tempK , Na  , K   , Cl  , SO4
 <td>K</td>
 
 </tr></table>
+
+<hr />
+
+## .saveall
+
+Saves the results of all calculations to a CSV file, with a format similar to that described for the input file above.
+
+### Syntax
+
+```python
+pz.io.saveall(filename, mols, ions, tempK, osm, aw, acfs)
+```
+
+### Inputs
+
+The input `filename` gives the name of the file to save, including the path. The file will be overwritten if it already exists, or created if not. It should end with `.csv`.
+
+The other variables are the inputs `mols`, `ions` and `tempK` exactly as created by the **io.getmols** function above, while `osm`, `aw` and `acfs` are the results of the corresponding functions in **model**. *For the current version, there is no flexibility in which calculation results can be provided.*
