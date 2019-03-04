@@ -2,7 +2,7 @@
 
 ## 0.2.7
 
-**Release date:** forthcoming
+**Release date:** 2019-03-04
 
   * Transposed all inputs to the excess Gibbs energy function and its derivatives, giving about a 5× speed-up;
   * For consistency with **Pitzer.jl**:
