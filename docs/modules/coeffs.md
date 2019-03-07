@@ -80,7 +80,7 @@ If any of the main five coefficients (i.e. `b0` to `C1`) is not used for any ele
 All the other coefficients do not have auxiliary parameters and consequently have much simpler functions:
 
 ```python
-def coefficient_ion1_ion2[_ion3]_source(T):
+def coefficient_ion1_ion2[_ion3]_source(T, P):
 
     coeff = <coefficient equation/value>
     valid = <logical expression evaluating temperature validity>

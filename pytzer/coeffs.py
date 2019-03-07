@@ -29,27 +29,27 @@ def bC_none(T, P):
 
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
-def theta_none(T):
+def theta_none(T, P):
     theta = 0
     valid = T > 0
     return theta, valid
 
-def psi_none(T):
+def psi_none(T, P):
     psi = 0
     valid = T > 0
     return psi, valid
 
-def lambd_none(T):
+def lambd_none(T, P):
     lambd = 0
     valid = T > 0
     return lambd, valid
 
-def zeta_none(T):
+def zeta_none(T, P):
     zeta  = 0
     valid = T > 0
     return zeta, valid
 
-def mu_none(T):
+def mu_none(T, P):
     mu    = 0
     valid = T > 0
     return mu, valid
@@ -62,7 +62,7 @@ def mu_none(T):
 
 # --- theta: hydrogen magnesium -----------------------------------------------
 
-def theta_H_Mg_RGB80(T):
+def theta_H_Mg_RGB80(T, P):
 
     # RGB80 do provide theta values at 5, 15, 25, 35 and 45 degC, but no
     #  equation to interpolate between them.
@@ -111,7 +111,7 @@ def bC_Mg_SO4_RM81i(T, P):
 
 # --- theta: calcium hydrogen -------------------------------------------------
 
-def theta_Ca_H_RGO82(T):
+def theta_Ca_H_RGO82(T, P):
 
     theta = 0.0612
     valid = T == 298.15
@@ -758,7 +758,7 @@ def bC_Na_BOH4_SRRJ87(T, P):
 
 # --- theta: borate chloride --------------------------------------------------
 
-def theta_BOH4_Cl_SRRJ87(T):
+def theta_BOH4_Cl_SRRJ87(T, P):
 
     # Coefficient from SRRJ87 Table III
 
@@ -770,7 +770,7 @@ def theta_BOH4_Cl_SRRJ87(T):
 
 # --- psi: potassium borate chloride ------------------------------------------
 
-def psi_K_BOH4_Cl_SRRJ87(T):
+def psi_K_BOH4_Cl_SRRJ87(T, P):
 
     psi = 0
 
@@ -780,7 +780,7 @@ def psi_K_BOH4_Cl_SRRJ87(T):
 
 # --- psi: sodium borate chloride ---------------------------------------------
 
-def psi_Na_BOH4_Cl_SRRJ87(T):
+def psi_Na_BOH4_Cl_SRRJ87(T, P):
 
     # Coefficient from SRRJ87 Table III
 
@@ -898,7 +898,7 @@ def Aosm_M88(T):
 
 # --- bC: calcium chloride ----------------------------------------------------
 
-def b0_Ca_Cl_M88(T):
+def b0_Ca_Cl_M88(T, P):
     return M88_eq13(T,float_([-9.41895832e+1,
                               -4.04750026e-2,
                                2.34550368e+3,
@@ -908,7 +908,7 @@ def b0_Ca_Cl_M88(T):
                               -1.39082000e00,
                                0            ]))
 
-def b1_Ca_Cl_M88(T):
+def b1_Ca_Cl_M88(T, P):
     return M88_eq13(T,float_([ 3.47870000e00,
                               -1.54170000e-2,
                                0            ,
@@ -918,7 +918,7 @@ def b1_Ca_Cl_M88(T):
                                0            ,
                                0            ]))
 
-def Cphi_Ca_Cl_M88(T):
+def Cphi_Ca_Cl_M88(T, P):
     return M88_eq13(T,float_([-3.03578731e+1,
                               -1.36264728e-2,
                                7.64582238e+2,
@@ -930,11 +930,11 @@ def Cphi_Ca_Cl_M88(T):
 
 def bC_Ca_Cl_M88(T, P):
 
-    b0    = b0_Ca_Cl_M88(T)
-    b1    = b1_Ca_Cl_M88(T)
+    b0    = b0_Ca_Cl_M88(T, P)
+    b1    = b1_Ca_Cl_M88(T, P)
     b2 = 0
 
-    Cphi  = Cphi_Ca_Cl_M88(T)
+    Cphi  = Cphi_Ca_Cl_M88(T, P)
     zCa   = +2
     zCl   = -1
     C0    = Cphi / (2 * sqrt(np_abs(zCa * zCl)))
@@ -1074,7 +1074,7 @@ def bC_Na_SO4_M88(T, P):
 
 # --- theta: calcium sodium ---------------------------------------------------
 
-def theta_Ca_Na_M88(T):
+def theta_Ca_Na_M88(T, P):
 
     theta = 0.05
 
@@ -1084,7 +1084,7 @@ def theta_Ca_Na_M88(T):
 
 # --- theta: chloride sulfate -------------------------------------------------
 
-def theta_Cl_SO4_M88(T):
+def theta_Cl_SO4_M88(T, P):
 
     theta = 0.07
 
@@ -1094,7 +1094,7 @@ def theta_Cl_SO4_M88(T):
 
 # --- psi: calcium sodium chloride --------------------------------------------
 
-def psi_Ca_Na_Cl_M88(T):
+def psi_Ca_Na_Cl_M88(T, P):
 
     psi = -0.003
 
@@ -1104,7 +1104,7 @@ def psi_Ca_Na_Cl_M88(T):
 
 # --- psi: calcium sodium sulfate ---------------------------------------------
 
-def psi_Ca_Na_SO4_M88(T):
+def psi_Ca_Na_SO4_M88(T, P):
 
     psi = -0.012
 
@@ -1114,7 +1114,7 @@ def psi_Ca_Na_SO4_M88(T):
 
 # --- psi: calcium chloride sulfate -------------------------------------------
 
-def psi_Ca_Cl_SO4_M88(T):
+def psi_Ca_Cl_SO4_M88(T, P):
 
     psi = -0.018
 
@@ -1124,7 +1124,7 @@ def psi_Ca_Cl_SO4_M88(T):
 
 # --- psi: sodium chloride sulfate --------------------------------------------
 
-def psi_Na_Cl_SO4_M88(T):
+def psi_Na_Cl_SO4_M88(T, P):
 
     psi = -0.009
 
@@ -1134,7 +1134,7 @@ def psi_Na_Cl_SO4_M88(T):
 
 # --- dissociation: water -----------------------------------------------------
 
-def dissoc_H2O_M88(T):
+def dissoc_H2O_M88(T, P):
 
     lnKw  = M88_eq13(T,float_([ 1.04031130e+3,
                                 4.86092851e-1,
@@ -1161,7 +1161,7 @@ GM89_eq3 = M88_eq13
 
 # --- bC: calcium chloride ----------------------------------------------------
 
-def Cphi_Ca_Cl_GM89(T):
+def Cphi_Ca_Cl_GM89(T, P):
     return GM89_eq3(T,float_([ 1.93056024e+1,
                                9.77090932e-3,
                               -4.28383748e+2,
@@ -1175,7 +1175,7 @@ def bC_Ca_Cl_GM89(T, P):
 
     b0,b1,b2,_,C1,alph1,alph2,omega,valid = bC_Ca_Cl_M88(T, P)
 
-    Cphi  = Cphi_Ca_Cl_GM89(T)
+    Cphi  = Cphi_Ca_Cl_GM89(T, P)
 
     zCa   = +2
     zCl   = -1
@@ -1272,7 +1272,7 @@ def bC_K_SO4_GM89(T, P):
 
 # --- theta: calcium potassium ------------------------------------------------
 
-def theta_Ca_K_GM89(T):
+def theta_Ca_K_GM89(T, P):
 
     theta = 0.1156
 
@@ -1282,7 +1282,7 @@ def theta_Ca_K_GM89(T):
 
 # --- theta: potassium sodium -------------------------------------------------
 
-def theta_K_Na_GM89(T):
+def theta_K_Na_GM89(T, P):
 
     theta = GM89_eq3(T,float_([-5.02312111e-2,
                                 0            ,
@@ -1299,7 +1299,7 @@ def theta_K_Na_GM89(T):
 
 # --- psi: calcium potassium chloride -----------------------------------------
 
-def psi_Ca_K_Cl_GM89(T):
+def psi_Ca_K_Cl_GM89(T, P):
 
     psi = GM89_eq3(T,float_([ 4.76278977e-2,
                                 0            ,
@@ -1316,7 +1316,7 @@ def psi_Ca_K_Cl_GM89(T):
 
 # --- psi: calcium potassium sulfate ------------------------------------------
 
-def psi_Ca_K_SO4_GM89(T):
+def psi_Ca_K_SO4_GM89(T, P):
 
     theta = 0
 
@@ -1326,7 +1326,7 @@ def psi_Ca_K_SO4_GM89(T):
 
 # --- psi: potassium sodium chloride ------------------------------------------
 
-def psi_K_Na_Cl_GM89(T):
+def psi_K_Na_Cl_GM89(T, P):
 
     psi = GM89_eq3(T,float_([ 1.34211308e-2,
                                 0            ,
@@ -1343,7 +1343,7 @@ def psi_K_Na_Cl_GM89(T):
 
 # --- psi: potassium sodium sulfate -------------------------------------------
 
-def psi_K_Na_SO4_GM89(T):
+def psi_K_Na_SO4_GM89(T, P):
 
     psi = GM89_eq3(T,float_([ 3.48115174e-2,
                                 0            ,
@@ -1360,7 +1360,7 @@ def psi_K_Na_SO4_GM89(T):
 
 # --- psi: potassium chloride sulfate -----------------------------------------
 
-def psi_K_Cl_SO4_GM89(T):
+def psi_K_Cl_SO4_GM89(T, P):
 
     psi = GM89_eq3(T,float_([-2.12481475e-1,
                                 2.84698333e-4,
@@ -1602,7 +1602,7 @@ def bC_H_Cl_CMR93(T, P):
 
 # --- theta: hydrogen potassium -----------------------------------------------
 
-def theta_H_K_CMR93(T):
+def theta_H_K_CMR93(T, P):
 
     # assuming CMR93's lowercase t means temperature in degC
     theta = 0.005 - 0.0002275 * (T - Tzero)
@@ -1613,7 +1613,7 @@ def theta_H_K_CMR93(T):
 
 # --- theta: hydrogen sodium --------------------------------------------------
 
-def theta_H_Na_CMR93(T):
+def theta_H_Na_CMR93(T, P):
 
     # assuming CMR93's lowercase t means temperature in degC
     theta = 0.0342 - 0.000209 * (T - Tzero)
@@ -1624,7 +1624,7 @@ def theta_H_Na_CMR93(T):
 
 # --- psi: hydrogen potassium chloride ----------------------------------------
 
-def psi_H_K_Cl_CMR93(T):
+def psi_H_K_Cl_CMR93(T, P):
 
     psi = 0
 
@@ -1634,7 +1634,7 @@ def psi_H_K_Cl_CMR93(T):
 
 # --- psi: hydrogen sodium chloride -------------------------------------------
 
-def psi_H_Na_Cl_CMR93(T):
+def psi_H_Na_Cl_CMR93(T, P):
 
     psi = 0
 
@@ -1749,13 +1749,13 @@ def Aosm_CRP94(T): # CRP94 Appendix II
               -0.175689013085e-7])
 
     # Set up T matrix - CRP94 Eq. (AII2)
-    Tmx = full((size(T),size(a_Aosm)),1.)
-    Tmx[:,1] = X
-    for C in range(2,size(a_Aosm)):
-        Tmx[:,C] = 2 * X * Tmx[:,C-1] - Tmx[:,C-2]
+    Tmx = full((size(T), size(a_Aosm)), 1.)
+    Tmx[:, 1] = X
+    for C in range(2, size(a_Aosm)):
+        Tmx[:, C] = 2 * X * Tmx[:, C-1] - Tmx[:, C-2]
 
     # Solve for Aosm (CRP94 E.AII1)
-    Aosm = matmul(Tmx,a_Aosm)
+    Aosm = matmul(Tmx, a_Aosm)
 
     # Validity range
     valid = logical_and(T >= 234.15, T <= 373.15)
@@ -1844,7 +1844,7 @@ def bC_H_SO4_CRP94(T, P):
 
 # --- theta: bisulfate sulfate ------------------------------------------------
 
-def theta_HSO4_SO4_CRP94(T):
+def theta_HSO4_SO4_CRP94(T, P):
 
     theta = 0
 
@@ -1854,7 +1854,7 @@ def theta_HSO4_SO4_CRP94(T):
 
 # --- psi: hydrogen bisulfate sulfate -----------------------------------------
 
-def psi_H_HSO4_SO4_CRP94(T):
+def psi_H_HSO4_SO4_CRP94(T, P):
 
     psi = 0
 
@@ -1864,7 +1864,7 @@ def psi_H_HSO4_SO4_CRP94(T):
 
 # --- dissociation: bisulfate -------------------------------------------------
 
-def dissoc_HSO4_CRP94(T):
+def dissoc_HSO4_CRP94(T, P):
 
     valid = logical_and(T >= 273.15, T <= 328.15)
 
@@ -1960,7 +1960,7 @@ def bC_Mg_HSO4_RC99(T, P):
 
 # --- psi: hydrogen magnesium bisulfate ---------------------------------------
 
-def psi_H_Mg_HSO4_RC99(T):
+def psi_H_Mg_HSO4_RC99(T, P):
 
     # RC99 Table 6, left column
     psi = -0.027079
@@ -1970,7 +1970,7 @@ def psi_H_Mg_HSO4_RC99(T):
 
 # --- psi: hydrogen magnesium sulfate -----------------------------------------
 
-def psi_H_Mg_SO4_RC99(T):
+def psi_H_Mg_SO4_RC99(T, P):
 
     # RC99 Table 6, left column
     psi = -0.047368
@@ -1980,7 +1980,7 @@ def psi_H_Mg_SO4_RC99(T):
 
 # --- psi: magnesium bisulfate sulfate ----------------------------------------
 
-def psi_Mg_HSO4_SO4_RC99(T):
+def psi_Mg_HSO4_SO4_RC99(T, P):
 
     # RC99 Table 6, left column
     psi = -0.078418
@@ -2062,13 +2062,13 @@ def bC_K_HSO4_WM13(T, P):
 
 # --- theta: calcium hydrogen -------------------------------------------------
 
-def theta_Ca_H_MarChemSpec(T):
+def theta_Ca_H_MarChemSpec(T, P):
     # 1. WM13 cite the wrong reference for this (they say RXX80)
     # 2. The equation given by WM13 doesn't match RGO82
     # 3. RGO82 give a 25degC value but no temperature coefficient
     # So MarChemSpec uses RGO82's 25degC value plus the WM13 temperature cxn
 
-    thetar = theta_Ca_H_RGO82(T)[0]
+    thetar = theta_Ca_H_RGO82(T, P)[0]
 
     theta = thetar + 3.275e-4 * (T - 298.15)
 
@@ -2084,111 +2084,111 @@ def bC_Na_HSO4_HPR93viaWM13(T, P):
 
 # --- theta: bisulfate sulfate ------------------------------------------------
 
-def theta_HSO4_SO4_WM13(T):
+def theta_HSO4_SO4_WM13(T, P):
     # WM13 Table A7
-    return theta_none(T)
+    return theta_none(T, P)
 
 # --- psi: hydrogen chloride sulfate ------------------------------------------
 
-def psi_H_Cl_SO4_WM13(T):
+def psi_H_Cl_SO4_WM13(T, P):
     # WM13 Table A8
-    return psi_none(T)
+    return psi_none(T, P)
 
 # --- psi: hydrogen chloride hydroxide ----------------------------------------
 
-def psi_H_Cl_OH_WM13(T):
+def psi_H_Cl_OH_WM13(T, P):
     # WM13 Table A8
-    return psi_none(T)
+    return psi_none(T, P)
 
 # --- psi: magnesium chloride hydroxide ---------------------------------------
 
-def psi_Mg_Cl_OH_WM13(T):
+def psi_Mg_Cl_OH_WM13(T, P):
     # WM13 Table A8
-    return psi_none(T)
+    return psi_none(T, P)
 
 # --- psi: calcium bisulfate sulfate ------------------------------------------
 
-def psi_Ca_HSO4_SO4_WM13(T):
+def psi_Ca_HSO4_SO4_WM13(T, P):
     # WM13 Table A8
-    return psi_none(T)
+    return psi_none(T, P)
 
 # --- psi: hydrogen hydroxide sulfate ------------------------------------------
 
-def psi_H_OH_SO4_WM13(T):
+def psi_H_OH_SO4_WM13(T, P):
     # WM13 Table A8
-    return psi_none(T)
+    return psi_none(T, P)
 
 # --- psi: magnesium hydroxide sulfate ----------------------------------------
 
-def psi_Mg_OH_SO4_WM13(T):
+def psi_Mg_OH_SO4_WM13(T, P):
     # WM13 Table A8
-    return psi_none(T)
+    return psi_none(T, P)
 
 # --- psi: calcium hydroxide sulfate ------------------------------------------
 
-def psi_Ca_OH_SO4_WM13(T):
+def psi_Ca_OH_SO4_WM13(T, P):
     # WM13 Table A8
-    return psi_none(T)
+    return psi_none(T, P)
 
 # --- psi: hydrogen sodium sulfate --------------------------------------------
 
-def psi_H_Na_SO4_WM13(T):
+def psi_H_Na_SO4_WM13(T, P):
     # WM13 Table A9
-    return psi_none(T)
+    return psi_none(T, P)
 
 # --- psi: calcium hydrogen sulfate -------------------------------------------
 
-def psi_Ca_H_SO4_WM13(T):
+def psi_Ca_H_SO4_WM13(T, P):
     # WM13 Table A9
-    return psi_none(T)
+    return psi_none(T, P)
 
 # --- psi: calcium hydrogen bisulfate -----------------------------------------
 
-def psi_Ca_H_HSO4_WM13(T):
+def psi_Ca_H_HSO4_WM13(T, P):
     # WM13 Table A9
-    return psi_none(T)
+    return psi_none(T, P)
 
 # --- psi: magnesium sodium bisulfate -----------------------------------------
 
-def psi_Mg_Na_HSO4_WM13(T):
+def psi_Mg_Na_HSO4_WM13(T, P):
     # WM13 Table A9
-    return psi_none(T)
+    return psi_none(T, P)
 
 # --- psi: calcium sodium bisulfate -------------------------------------------
 
-def psi_Ca_Na_HSO4_WM13(T):
+def psi_Ca_Na_HSO4_WM13(T, P):
     # WM13 Table A9
-    return psi_none(T)
+    return psi_none(T, P)
 
 # --- psi: potassium sodium bisulfate -----------------------------------------
 
-def psi_K_Na_HSO4_WM13(T):
+def psi_K_Na_HSO4_WM13(T, P):
     # WM13 Table A9
-    return psi_none(T)
+    return psi_none(T, P)
 
 # --- psi: calcium magnesium bisulfate ----------------------------------------
 
-def psi_Ca_Mg_HSO4_WM13(T):
+def psi_Ca_Mg_HSO4_WM13(T, P):
     # WM13 Table A9
-    return psi_none(T)
+    return psi_none(T, P)
 
 # --- psi: potassium magnesium bisulfate --------------------------------------
 
-def psi_K_Mg_HSO4_WM13(T):
+def psi_K_Mg_HSO4_WM13(T, P):
     # WM13 Table A9
-    return psi_none(T)
+    return psi_none(T, P)
 
 # --- psi: calcium potassium sulfate ------------------------------------------
 
-def psi_Ca_K_SO4_WM13(T):
+def psi_Ca_K_SO4_WM13(T, P):
     # WM13 Table A9
-    return psi_none(T)
+    return psi_none(T, P)
 
 # --- psi: calcium potassium bisulfate ----------------------------------------
 
-def psi_Ca_K_HSO4_WM13(T):
+def psi_Ca_K_HSO4_WM13(T, P):
     # WM13 Table A9
-    return psi_none(T)
+    return psi_none(T, P)
 
 # === WATERS & MILLERO 2013 ===================================================
 ###############################################################################
@@ -2270,7 +2270,7 @@ def bC_trisH_SO4_GT17simopt(T, P):
 
 # --- theta: hydrogen trisH ---------------------------------------------------
 
-def theta_H_trisH_GT17simopt(T):
+def theta_H_trisH_GT17simopt(T, P):
 
     # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
     theta = -0.00575
@@ -2280,7 +2280,7 @@ def theta_H_trisH_GT17simopt(T):
 
 # --- psi: hydrogen trisH chloride --------------------------------------------
 
-def psi_H_trisH_Cl_GT17simopt(T):
+def psi_H_trisH_Cl_GT17simopt(T, P):
 
     # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
     psi = -0.00700
@@ -2290,7 +2290,7 @@ def psi_H_trisH_Cl_GT17simopt(T):
 
 # --- lambd: tris trisH -------------------------------------------------------
 
-def lambd_tris_trisH_GT17simopt(T):
+def lambd_tris_trisH_GT17simopt(T, P):
 
     # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
     lambd = 0.06306
@@ -2300,7 +2300,7 @@ def lambd_tris_trisH_GT17simopt(T):
 
 # --- lambd: tris sodium ------------------------------------------------------
 
-def lambd_tris_Na_GT17simopt(T):
+def lambd_tris_Na_GT17simopt(T, P):
 
     # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
     lambd = 0.01580
@@ -2310,7 +2310,7 @@ def lambd_tris_Na_GT17simopt(T):
 
 # --- lambd: tris potassium ---------------------------------------------------
 
-def lambd_tris_K_GT17simopt(T):
+def lambd_tris_K_GT17simopt(T, P):
 
     # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
     lambd = 0.02895
@@ -2320,7 +2320,7 @@ def lambd_tris_K_GT17simopt(T):
 
 # --- lambd: tris magnesium ---------------------------------------------------
 
-def lambd_tris_Mg_GT17simopt(T):
+def lambd_tris_Mg_GT17simopt(T, P):
 
     # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
     lambd = -0.14505
@@ -2330,7 +2330,7 @@ def lambd_tris_Mg_GT17simopt(T):
 
 # --- lambd: tris calcium -----------------------------------------------------
 
-def lambd_tris_Ca_GT17simopt(T):
+def lambd_tris_Ca_GT17simopt(T, P):
 
     # From G17 Supp. Info. Table S6, 'simultaneous optimisation'
     lambd = -0.31081
@@ -3088,631 +3088,631 @@ def bC_H_CO3_HMW84(T, P):
 
 # --- Auto-generated by HMW84_funcgen_cca.py ----------------------------------
 
-def theta_K_Na_HMW84(T):
+def theta_K_Na_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = -0.012
     valid = T == 298.15
     return theta, valid
 
-def psi_K_Na_Cl_HMW84(T):
+def psi_K_Na_Cl_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.0018
     valid = T == 298.15
     return psi, valid
 
-def psi_K_Na_SO4_HMW84(T):
+def psi_K_Na_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.01
     valid = T == 298.15
     return psi, valid
 
-def psi_K_Na_HSO4_HMW84(T):
+def psi_K_Na_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_K_Na_OH_HMW84(T):
+def psi_K_Na_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_K_Na_HCO3_HMW84(T):
+def psi_K_Na_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.003
     valid = T == 298.15
     return psi, valid
 
-def psi_K_Na_CO3_HMW84(T):
+def psi_K_Na_CO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.003
     valid = T == 298.15
     return psi, valid
 
-def theta_Ca_Na_HMW84(T):
+def theta_Ca_Na_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = 0.07
     valid = T == 298.15
     return theta, valid
 
-def psi_Ca_Na_Cl_HMW84(T):
+def psi_Ca_Na_Cl_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.007
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_Na_SO4_HMW84(T):
+def psi_Ca_Na_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.055
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_Na_HSO4_HMW84(T):
+def psi_Ca_Na_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_Na_OH_HMW84(T):
+def psi_Ca_Na_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_Na_HCO3_HMW84(T):
+def psi_Ca_Na_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_Na_CO3_HMW84(T):
+def psi_Ca_Na_CO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def theta_Mg_Na_HMW84(T):
+def theta_Mg_Na_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = 0.07
     valid = T == 298.15
     return theta, valid
 
-def psi_Mg_Na_Cl_HMW84(T):
+def psi_Mg_Na_Cl_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.012
     valid = T == 298.15
     return psi, valid
 
-def psi_Mg_Na_SO4_HMW84(T):
+def psi_Mg_Na_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.015
     valid = T == 298.15
     return psi, valid
 
-def psi_Mg_Na_HSO4_HMW84(T):
+def psi_Mg_Na_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Mg_Na_OH_HMW84(T):
+def psi_Mg_Na_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_Mg_Na_HCO3_HMW84(T):
+def psi_Mg_Na_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Mg_Na_CO3_HMW84(T):
+def psi_Mg_Na_CO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def theta_MgOH_Na_HMW84(T):
+def theta_MgOH_Na_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = 0.0
     valid = T == 298.15
     return theta, valid
 
-def psi_MgOH_Na_Cl_HMW84(T):
+def psi_MgOH_Na_Cl_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_MgOH_Na_SO4_HMW84(T):
+def psi_MgOH_Na_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_MgOH_Na_HSO4_HMW84(T):
+def psi_MgOH_Na_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_MgOH_Na_OH_HMW84(T):
+def psi_MgOH_Na_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_MgOH_Na_HCO3_HMW84(T):
+def psi_MgOH_Na_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_MgOH_Na_CO3_HMW84(T):
+def psi_MgOH_Na_CO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def theta_H_Na_HMW84(T):
+def theta_H_Na_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = 0.036
     valid = T == 298.15
     return theta, valid
 
-def psi_H_Na_Cl_HMW84(T):
+def psi_H_Na_Cl_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.004
     valid = T == 298.15
     return psi, valid
 
-def psi_H_Na_SO4_HMW84(T):
+def psi_H_Na_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_H_Na_HSO4_HMW84(T):
+def psi_H_Na_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.0129
     valid = T == 298.15
     return psi, valid
 
-def psi_H_Na_OH_HMW84(T):
+def psi_H_Na_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_H_Na_HCO3_HMW84(T):
+def psi_H_Na_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_H_Na_CO3_HMW84(T):
+def psi_H_Na_CO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def theta_Ca_K_HMW84(T):
+def theta_Ca_K_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = 0.032
     valid = T == 298.15
     return theta, valid
 
-def psi_Ca_K_Cl_HMW84(T):
+def psi_Ca_K_Cl_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.025
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_K_SO4_HMW84(T):
+def psi_Ca_K_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_K_HSO4_HMW84(T):
+def psi_Ca_K_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_K_OH_HMW84(T):
+def psi_Ca_K_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_K_HCO3_HMW84(T):
+def psi_Ca_K_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_K_CO3_HMW84(T):
+def psi_Ca_K_CO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def theta_K_Mg_HMW84(T):
+def theta_K_Mg_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = 0.0
     valid = T == 298.15
     return theta, valid
 
-def psi_K_Mg_Cl_HMW84(T):
+def psi_K_Mg_Cl_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.022
     valid = T == 298.15
     return psi, valid
 
-def psi_K_Mg_SO4_HMW84(T):
+def psi_K_Mg_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.048
     valid = T == 298.15
     return psi, valid
 
-def psi_K_Mg_HSO4_HMW84(T):
+def psi_K_Mg_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_K_Mg_OH_HMW84(T):
+def psi_K_Mg_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_K_Mg_HCO3_HMW84(T):
+def psi_K_Mg_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_K_Mg_CO3_HMW84(T):
+def psi_K_Mg_CO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def theta_K_MgOH_HMW84(T):
+def theta_K_MgOH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = 0.0
     valid = T == 298.15
     return theta, valid
 
-def psi_K_MgOH_Cl_HMW84(T):
+def psi_K_MgOH_Cl_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_K_MgOH_SO4_HMW84(T):
+def psi_K_MgOH_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_K_MgOH_HSO4_HMW84(T):
+def psi_K_MgOH_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_K_MgOH_OH_HMW84(T):
+def psi_K_MgOH_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_K_MgOH_HCO3_HMW84(T):
+def psi_K_MgOH_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_K_MgOH_CO3_HMW84(T):
+def psi_K_MgOH_CO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def theta_H_K_HMW84(T):
+def theta_H_K_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = 0.005
     valid = T == 298.15
     return theta, valid
 
-def psi_H_K_Cl_HMW84(T):
+def psi_H_K_Cl_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.011
     valid = T == 298.15
     return psi, valid
 
-def psi_H_K_SO4_HMW84(T):
+def psi_H_K_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.197
     valid = T == 298.15
     return psi, valid
 
-def psi_H_K_HSO4_HMW84(T):
+def psi_H_K_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.0265
     valid = T == 298.15
     return psi, valid
 
-def psi_H_K_OH_HMW84(T):
+def psi_H_K_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_H_K_HCO3_HMW84(T):
+def psi_H_K_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_H_K_CO3_HMW84(T):
+def psi_H_K_CO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def theta_Ca_Mg_HMW84(T):
+def theta_Ca_Mg_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = 0.007
     valid = T == 298.15
     return theta, valid
 
-def psi_Ca_Mg_Cl_HMW84(T):
+def psi_Ca_Mg_Cl_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.012
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_Mg_SO4_HMW84(T):
+def psi_Ca_Mg_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.024
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_Mg_HSO4_HMW84(T):
+def psi_Ca_Mg_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_Mg_OH_HMW84(T):
+def psi_Ca_Mg_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_Mg_HCO3_HMW84(T):
+def psi_Ca_Mg_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_Mg_CO3_HMW84(T):
+def psi_Ca_Mg_CO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def theta_Ca_MgOH_HMW84(T):
+def theta_Ca_MgOH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = 0.0
     valid = T == 298.15
     return theta, valid
 
-def psi_Ca_MgOH_Cl_HMW84(T):
+def psi_Ca_MgOH_Cl_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_MgOH_SO4_HMW84(T):
+def psi_Ca_MgOH_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_MgOH_HSO4_HMW84(T):
+def psi_Ca_MgOH_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_MgOH_OH_HMW84(T):
+def psi_Ca_MgOH_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_MgOH_HCO3_HMW84(T):
+def psi_Ca_MgOH_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_MgOH_CO3_HMW84(T):
+def psi_Ca_MgOH_CO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def theta_Ca_H_HMW84(T):
+def theta_Ca_H_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = 0.092
     valid = T == 298.15
     return theta, valid
 
-def psi_Ca_H_Cl_HMW84(T):
+def psi_Ca_H_Cl_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.015
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_H_SO4_HMW84(T):
+def psi_Ca_H_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_H_HSO4_HMW84(T):
+def psi_Ca_H_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_H_OH_HMW84(T):
+def psi_Ca_H_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_H_HCO3_HMW84(T):
+def psi_Ca_H_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_H_CO3_HMW84(T):
+def psi_Ca_H_CO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def theta_Mg_MgOH_HMW84(T):
+def theta_Mg_MgOH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = 0.0
     valid = T == 298.15
     return theta, valid
 
-def psi_Mg_MgOH_Cl_HMW84(T):
+def psi_Mg_MgOH_Cl_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.028
     valid = T == 298.15
     return psi, valid
 
-def psi_Mg_MgOH_SO4_HMW84(T):
+def psi_Mg_MgOH_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Mg_MgOH_HSO4_HMW84(T):
+def psi_Mg_MgOH_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Mg_MgOH_OH_HMW84(T):
+def psi_Mg_MgOH_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_Mg_MgOH_HCO3_HMW84(T):
+def psi_Mg_MgOH_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Mg_MgOH_CO3_HMW84(T):
+def psi_Mg_MgOH_CO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def theta_H_Mg_HMW84(T):
+def theta_H_Mg_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = 0.1
     valid = T == 298.15
     return theta, valid
 
-def psi_H_Mg_Cl_HMW84(T):
+def psi_H_Mg_Cl_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.011
     valid = T == 298.15
     return psi, valid
 
-def psi_H_Mg_SO4_HMW84(T):
+def psi_H_Mg_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_H_Mg_HSO4_HMW84(T):
+def psi_H_Mg_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.0178
     valid = T == 298.15
     return psi, valid
 
-def psi_H_Mg_OH_HMW84(T):
+def psi_H_Mg_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_H_Mg_HCO3_HMW84(T):
+def psi_H_Mg_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_H_Mg_CO3_HMW84(T):
+def psi_H_Mg_CO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def theta_H_MgOH_HMW84(T):
+def theta_H_MgOH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = 0.0
     valid = T == 298.15
     return theta, valid
 
-def psi_H_MgOH_Cl_HMW84(T):
+def psi_H_MgOH_Cl_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_H_MgOH_SO4_HMW84(T):
+def psi_H_MgOH_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_H_MgOH_HSO4_HMW84(T):
+def psi_H_MgOH_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_H_MgOH_OH_HMW84(T):
+def psi_H_MgOH_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_H_MgOH_HCO3_HMW84(T):
+def psi_H_MgOH_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_H_MgOH_CO3_HMW84(T):
+def psi_H_MgOH_CO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
@@ -3720,631 +3720,631 @@ def psi_H_MgOH_CO3_HMW84(T):
 
 # --- Auto-generated by HMW84_funcgen_caa.py ----------------------------------
 
-def theta_Cl_SO4_HMW84(T):
+def theta_Cl_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = 0.02
     valid = T == 298.15
     return theta, valid
 
-def psi_Na_Cl_SO4_HMW84(T):
+def psi_Na_Cl_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0014
     valid = T == 298.15
     return psi, valid
 
-def psi_K_Cl_SO4_HMW84(T):
+def psi_K_Cl_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_Cl_SO4_HMW84(T):
+def psi_Ca_Cl_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.018
     valid = T == 298.15
     return psi, valid
 
-def psi_Mg_Cl_SO4_HMW84(T):
+def psi_Mg_Cl_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.004
     valid = T == 298.15
     return psi, valid
 
-def psi_MgOH_Cl_SO4_HMW84(T):
+def psi_MgOH_Cl_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_H_Cl_SO4_HMW84(T):
+def psi_H_Cl_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def theta_Cl_HSO4_HMW84(T):
+def theta_Cl_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = -0.006
     valid = T == 298.15
     return theta, valid
 
-def psi_Na_Cl_HSO4_HMW84(T):
+def psi_Na_Cl_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.006
     valid = T == 298.15
     return psi, valid
 
-def psi_K_Cl_HSO4_HMW84(T):
+def psi_K_Cl_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_Cl_HSO4_HMW84(T):
+def psi_Ca_Cl_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Mg_Cl_HSO4_HMW84(T):
+def psi_Mg_Cl_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_MgOH_Cl_HSO4_HMW84(T):
+def psi_MgOH_Cl_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_H_Cl_HSO4_HMW84(T):
+def psi_H_Cl_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.013
     valid = T == 298.15
     return psi, valid
 
-def theta_Cl_OH_HMW84(T):
+def theta_Cl_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = -0.05
     valid = T == 298.15
     return theta, valid
 
-def psi_Na_Cl_OH_HMW84(T):
+def psi_Na_Cl_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.006
     valid = T == 298.15
     return psi, valid
 
-def psi_K_Cl_OH_HMW84(T):
+def psi_K_Cl_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.006
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_Cl_OH_HMW84(T):
+def psi_Ca_Cl_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.025
     valid = T == 298.15
     return psi, valid
 
-def psi_Mg_Cl_OH_HMW84(T):
+def psi_Mg_Cl_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_MgOH_Cl_OH_HMW84(T):
+def psi_MgOH_Cl_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_H_Cl_OH_HMW84(T):
+def psi_H_Cl_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def theta_Cl_HCO3_HMW84(T):
+def theta_Cl_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = 0.03
     valid = T == 298.15
     return theta, valid
 
-def psi_Na_Cl_HCO3_HMW84(T):
+def psi_Na_Cl_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.15
     valid = T == 298.15
     return psi, valid
 
-def psi_K_Cl_HCO3_HMW84(T):
+def psi_K_Cl_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_Cl_HCO3_HMW84(T):
+def psi_Ca_Cl_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Mg_Cl_HCO3_HMW84(T):
+def psi_Mg_Cl_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.096
     valid = T == 298.15
     return psi, valid
 
-def psi_MgOH_Cl_HCO3_HMW84(T):
+def psi_MgOH_Cl_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_H_Cl_HCO3_HMW84(T):
+def psi_H_Cl_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def theta_CO3_Cl_HMW84(T):
+def theta_CO3_Cl_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = -0.02
     valid = T == 298.15
     return theta, valid
 
-def psi_Na_CO3_Cl_HMW84(T):
+def psi_Na_CO3_Cl_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0085
     valid = T == 298.15
     return psi, valid
 
-def psi_K_CO3_Cl_HMW84(T):
+def psi_K_CO3_Cl_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.004
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_CO3_Cl_HMW84(T):
+def psi_Ca_CO3_Cl_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Mg_CO3_Cl_HMW84(T):
+def psi_Mg_CO3_Cl_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_MgOH_CO3_Cl_HMW84(T):
+def psi_MgOH_CO3_Cl_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_H_CO3_Cl_HMW84(T):
+def psi_H_CO3_Cl_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def theta_HSO4_SO4_HMW84(T):
+def theta_HSO4_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = 0.0
     valid = T == 298.15
     return theta, valid
 
-def psi_Na_HSO4_SO4_HMW84(T):
+def psi_Na_HSO4_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.0094
     valid = T == 298.15
     return psi, valid
 
-def psi_K_HSO4_SO4_HMW84(T):
+def psi_K_HSO4_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.0677
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_HSO4_SO4_HMW84(T):
+def psi_Ca_HSO4_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Mg_HSO4_SO4_HMW84(T):
+def psi_Mg_HSO4_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.0425
     valid = T == 298.15
     return psi, valid
 
-def psi_MgOH_HSO4_SO4_HMW84(T):
+def psi_MgOH_HSO4_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_H_HSO4_SO4_HMW84(T):
+def psi_H_HSO4_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def theta_OH_SO4_HMW84(T):
+def theta_OH_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = -0.013
     valid = T == 298.15
     return theta, valid
 
-def psi_Na_OH_SO4_HMW84(T):
+def psi_Na_OH_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.009
     valid = T == 298.15
     return psi, valid
 
-def psi_K_OH_SO4_HMW84(T):
+def psi_K_OH_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.05
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_OH_SO4_HMW84(T):
+def psi_Ca_OH_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Mg_OH_SO4_HMW84(T):
+def psi_Mg_OH_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_MgOH_OH_SO4_HMW84(T):
+def psi_MgOH_OH_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_H_OH_SO4_HMW84(T):
+def psi_H_OH_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def theta_HCO3_SO4_HMW84(T):
+def theta_HCO3_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = 0.01
     valid = T == 298.15
     return theta, valid
 
-def psi_Na_HCO3_SO4_HMW84(T):
+def psi_Na_HCO3_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.005
     valid = T == 298.15
     return psi, valid
 
-def psi_K_HCO3_SO4_HMW84(T):
+def psi_K_HCO3_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_HCO3_SO4_HMW84(T):
+def psi_Ca_HCO3_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Mg_HCO3_SO4_HMW84(T):
+def psi_Mg_HCO3_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.161
     valid = T == 298.15
     return psi, valid
 
-def psi_MgOH_HCO3_SO4_HMW84(T):
+def psi_MgOH_HCO3_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_H_HCO3_SO4_HMW84(T):
+def psi_H_HCO3_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def theta_CO3_SO4_HMW84(T):
+def theta_CO3_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = 0.02
     valid = T == 298.15
     return theta, valid
 
-def psi_Na_CO3_SO4_HMW84(T):
+def psi_Na_CO3_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.005
     valid = T == 298.15
     return psi, valid
 
-def psi_K_CO3_SO4_HMW84(T):
+def psi_K_CO3_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.009
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_CO3_SO4_HMW84(T):
+def psi_Ca_CO3_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Mg_CO3_SO4_HMW84(T):
+def psi_Mg_CO3_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_MgOH_CO3_SO4_HMW84(T):
+def psi_MgOH_CO3_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_H_CO3_SO4_HMW84(T):
+def psi_H_CO3_SO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def theta_HSO4_OH_HMW84(T):
+def theta_HSO4_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = 0.0
     valid = T == 298.15
     return theta, valid
 
-def psi_Na_HSO4_OH_HMW84(T):
+def psi_Na_HSO4_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_K_HSO4_OH_HMW84(T):
+def psi_K_HSO4_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_HSO4_OH_HMW84(T):
+def psi_Ca_HSO4_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Mg_HSO4_OH_HMW84(T):
+def psi_Mg_HSO4_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_MgOH_HSO4_OH_HMW84(T):
+def psi_MgOH_HSO4_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_H_HSO4_OH_HMW84(T):
+def psi_H_HSO4_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def theta_HCO3_HSO4_HMW84(T):
+def theta_HCO3_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = 0.0
     valid = T == 298.15
     return theta, valid
 
-def psi_Na_HCO3_HSO4_HMW84(T):
+def psi_Na_HCO3_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_K_HCO3_HSO4_HMW84(T):
+def psi_K_HCO3_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_HCO3_HSO4_HMW84(T):
+def psi_Ca_HCO3_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Mg_HCO3_HSO4_HMW84(T):
+def psi_Mg_HCO3_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_MgOH_HCO3_HSO4_HMW84(T):
+def psi_MgOH_HCO3_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_H_HCO3_HSO4_HMW84(T):
+def psi_H_HCO3_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def theta_CO3_HSO4_HMW84(T):
+def theta_CO3_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = 0.0
     valid = T == 298.15
     return theta, valid
 
-def psi_Na_CO3_HSO4_HMW84(T):
+def psi_Na_CO3_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_K_CO3_HSO4_HMW84(T):
+def psi_K_CO3_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_CO3_HSO4_HMW84(T):
+def psi_Ca_CO3_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Mg_CO3_HSO4_HMW84(T):
+def psi_Mg_CO3_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_MgOH_CO3_HSO4_HMW84(T):
+def psi_MgOH_CO3_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_H_CO3_HSO4_HMW84(T):
+def psi_H_CO3_HSO4_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def theta_HCO3_OH_HMW84(T):
+def theta_HCO3_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = 0.0
     valid = T == 298.15
     return theta, valid
 
-def psi_Na_HCO3_OH_HMW84(T):
+def psi_Na_HCO3_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_K_HCO3_OH_HMW84(T):
+def psi_K_HCO3_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_HCO3_OH_HMW84(T):
+def psi_Ca_HCO3_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Mg_HCO3_OH_HMW84(T):
+def psi_Mg_HCO3_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_MgOH_HCO3_OH_HMW84(T):
+def psi_MgOH_HCO3_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_H_HCO3_OH_HMW84(T):
+def psi_H_HCO3_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def theta_CO3_OH_HMW84(T):
+def theta_CO3_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = 0.1
     valid = T == 298.15
     return theta, valid
 
-def psi_Na_CO3_OH_HMW84(T):
+def psi_Na_CO3_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.017
     valid = T == 298.15
     return psi, valid
 
-def psi_K_CO3_OH_HMW84(T):
+def psi_K_CO3_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = -0.01
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_CO3_OH_HMW84(T):
+def psi_Ca_CO3_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Mg_CO3_OH_HMW84(T):
+def psi_Mg_CO3_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_MgOH_CO3_OH_HMW84(T):
+def psi_MgOH_CO3_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_H_CO3_OH_HMW84(T):
+def psi_H_CO3_OH_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def theta_CO3_HCO3_HMW84(T):
+def theta_CO3_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     theta = -0.04
     valid = T == 298.15
     return theta, valid
 
-def psi_Na_CO3_HCO3_HMW84(T):
+def psi_Na_CO3_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.002
     valid = T == 298.15
     return psi, valid
 
-def psi_K_CO3_HCO3_HMW84(T):
+def psi_K_CO3_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.012
     valid = T == 298.15
     return psi, valid
 
-def psi_Ca_CO3_HCO3_HMW84(T):
+def psi_Ca_CO3_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_Mg_CO3_HCO3_HMW84(T):
+def psi_Mg_CO3_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
     return psi, valid
 
-def psi_MgOH_CO3_HCO3_HMW84(T):
+def psi_MgOH_CO3_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0
     valid = T == 298.15
     return psi, valid
 
-def psi_H_CO3_HCO3_HMW84(T):
+def psi_H_CO3_HCO3_HMW84(T, P):
 # Coefficients from HMW84 Table 2
     psi = 0.0
     valid = T == 298.15
@@ -4934,7 +4934,7 @@ def bC_Na_HCO3_PP82(T, P):
 
 # --- theta: chloride bicarbonate ---------------------------------------------
 
-def theta_Cl_HCO3_PP82(T):
+def theta_Cl_HCO3_PP82(T, P):
 
     theta = 0.0359
     valid = T == 298.15
@@ -4943,7 +4943,7 @@ def theta_Cl_HCO3_PP82(T):
 
 # --- theta: chloride carbonate -----------------------------------------------
 
-def theta_Cl_CO3_PP82(T):
+def theta_Cl_CO3_PP82(T, P):
 
     theta = -0.053
     valid = T == 298.15
@@ -4952,7 +4952,7 @@ def theta_Cl_CO3_PP82(T):
 
 # --- psi: sodium chloride bicarbonate ----------------------------------------
 
-def psi_Na_Cl_HCO3_PP82(T):
+def psi_Na_Cl_HCO3_PP82(T, P):
 
     psi = -0.0143
     valid = T == 298.15
@@ -5109,7 +5109,7 @@ def Aosm_MarChemSpec(T):
 
 # --- theta: hydrogen sodium --------------------------------------------------
 
-def theta_H_Na_MarChemSpec25(T):
+def theta_H_Na_MarChemSpec25(T, P):
 
     theta = 0.036
     valid = T == 298.15
@@ -5118,7 +5118,7 @@ def theta_H_Na_MarChemSpec25(T):
 
 # --- theta: hydrogen potassium -----------------------------------------------
 
-def theta_H_K_MarChemSpec25(T):
+def theta_H_K_MarChemSpec25(T, P):
 
     theta = 0.005
     valid = T == 298.15
@@ -5129,7 +5129,7 @@ def theta_H_K_MarChemSpec25(T):
 #
 # Temporary value from "MODEL PARAMETERS FOR TRIS Tests.docx" (2019-01-31)
 
-def lambd_tris_tris_MarChemSpec25(T):
+def lambd_tris_tris_MarChemSpec25(T, P):
 
     lambd = -0.006392
     valid = T == 298.15
@@ -5140,7 +5140,7 @@ def lambd_tris_tris_MarChemSpec25(T):
 #
 # Temporary value from "MODEL PARAMETERS FOR TRIS Tests.docx" (2019-01-31)
 
-def zeta_tris_Na_Cl_MarChemSpec25(T):
+def zeta_tris_Na_Cl_MarChemSpec25(T, P):
 
     zeta  = -0.003231
     valid = T == 298.15
@@ -5151,7 +5151,7 @@ def zeta_tris_Na_Cl_MarChemSpec25(T):
 #
 # Temporary value from "MODEL PARAMETERS FOR TRIS Tests.docx" (2019-01-31)
 
-def mu_tris_tris_tris_MarChemSpec25(T):
+def mu_tris_tris_tris_MarChemSpec25(T, P):
 
     mu    = 0.0009529
     valid = T == 298.15

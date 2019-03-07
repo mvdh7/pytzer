@@ -72,6 +72,8 @@ tempK , pres   , Na  , K   , Cl  , SO4
 298.15, 10.1325, 4.00,     ,     , 2.00
 ```
 
+Note: oceanographers typically record pressure within the ocean as only due to the water, so at the sea surface the pressure would be 0 dbar. However, the atmospheric pressure (1 atm = 10.1325 dbar) should also be taken into account for calculations within **pytzer**.
+
 ### Outputs
 
 <table><tr>

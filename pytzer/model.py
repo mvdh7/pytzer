@@ -76,7 +76,6 @@ def Gex_nRT(mols, ions, tempK, pres, cflib, Izero=False):
     # Note that oceanographers record ocean pressure as only due to the water,
     # so at the sea surface pressure = 0 dbar, but the atmospheric pressure
     # should also be taken into account for this model
-    # pres = 10.1325 # 1 atm in dbar
 
     # Ionic strength etc.
     zs, cations, anions, neutrals = props.charges(ions)
@@ -138,7 +137,7 @@ def Gex_nRT(mols, ions, tempK, pres, cflib, Izero=False):
                 iset= '-'.join(iset)
 
                 Gex_nRT = Gex_nRT + cats[CX] * cats[CY] \
-                    * 2 * cflib.theta[iset](tempK)[0]
+                    * 2 * cflib.theta[iset](tempK, pres)[0]
 
                 # Unsymmetrical mixing terms
                 if zCs[CX] != zCs[CY]:
@@ -152,7 +151,7 @@ def Gex_nRT(mols, ions, tempK, pres, cflib, Izero=False):
                     itri = '-'.join((iset, anion))
 
                     Gex_nRT = Gex_nRT + cats[CX] * cats[CY] * anis[A] \
-                        * cflib.psi[itri](tempK)[0]
+                        * cflib.psi[itri](tempK, pres)[0]
 
         # Loop through anions
         for AX, anionx in enumerate(anions):
@@ -167,7 +166,7 @@ def Gex_nRT(mols, ions, tempK, pres, cflib, Izero=False):
                 iset = '-'.join(iset)
 
                 Gex_nRT = Gex_nRT + anis[AX] * anis[AY] \
-                    * 2 * cflib.theta[iset](tempK)[0]
+                    * 2 * cflib.theta[iset](tempK, pres)[0]
 
                 # Unsymmetrical mixing terms
                 if zAs[AX] != zAs[AY]:
@@ -181,7 +180,7 @@ def Gex_nRT(mols, ions, tempK, pres, cflib, Izero=False):
                     itri = '-'.join((cation, iset))
 
                     Gex_nRT = Gex_nRT + anis[AX] * anis[AY] * cats[C] \
-                        * cflib.psi[itri](tempK)[0]
+                        * cflib.psi[itri](tempK, pres)[0]
 
     # Add neutral interactions
     for NX, neutralx in enumerate(neutrals):
@@ -192,7 +191,7 @@ def Gex_nRT(mols, ions, tempK, pres, cflib, Izero=False):
             inc = '-'.join((neutralx, cation))
 
             Gex_nRT = Gex_nRT + neus[NX] * cats[C] \
-                * 2 * cflib.lambd[inc](tempK)[0]
+                * 2 * cflib.lambd[inc](tempK, pres)[0]
 
             # Add n-c-a interactions
             for A, anion in enumerate(anions):
@@ -200,7 +199,7 @@ def Gex_nRT(mols, ions, tempK, pres, cflib, Izero=False):
                 inca = '-'.join((inc, anion))
 
                 Gex_nRT = Gex_nRT + neus[NX] * cats[C] * anis[A] \
-                    * cflib.zeta[inca](tempK)[0]
+                    * cflib.zeta[inca](tempK, pres)[0]
 
         # Add n-a interactions
         for A, anion in enumerate(anions):
@@ -208,7 +207,7 @@ def Gex_nRT(mols, ions, tempK, pres, cflib, Izero=False):
             ina = '-'.join((neutralx, anion))
 
             Gex_nRT = Gex_nRT + neus[NX] * anis[A] \
-                * 2 * cflib.lambd[ina](tempK)[0]
+                * 2 * cflib.lambd[ina](tempK, pres)[0]
 
         # n-n' excluding n-n
         for xNY, neutraly in enumerate(neutrals[NX+1:]):
@@ -219,17 +218,17 @@ def Gex_nRT(mols, ions, tempK, pres, cflib, Izero=False):
             inn = '-'.join(inn)
 
             Gex_nRT = Gex_nRT + neus[NX] * neus[NY] \
-                * 2 * cflib.lambd[inn](tempK)[0]
+                * 2 * cflib.lambd[inn](tempK, pres)[0]
 
         # n-n
         inn = '-'.join((neutralx, neutralx))
 
-        Gex_nRT = Gex_nRT + neus[NX]**2 * cflib.lambd[inn](tempK)[0]
+        Gex_nRT = Gex_nRT + neus[NX]**2 * cflib.lambd[inn](tempK, pres)[0]
 
         # n-n-n
         innn = '-'.join((neutralx,neutralx,neutralx))
 
-        Gex_nRT = Gex_nRT + neus[NX]**3 * cflib.mu[innn](tempK)[0]
+        Gex_nRT = Gex_nRT + neus[NX]**3 * cflib.mu[innn](tempK, pres)[0]
 
 
     return Gex_nRT

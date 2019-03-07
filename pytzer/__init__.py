@@ -45,7 +45,7 @@ def blackbox(filename, cflib=cflibs.MarChemSpec, savefile=True):
     aw      = full_like(tempK, nan)
     acfs    = full_like(mols, nan)
 
-    L = (I > 0).ravel()
+    L = I > 0
 
     nargsL  = (mols[:,  L], ions, tempK[ L], pres[ L], cflib)
     nargsLx = (mols[:, ~L], ions, tempK[~L], pres[~L], cflib)
