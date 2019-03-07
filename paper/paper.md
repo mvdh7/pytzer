@@ -1,5 +1,5 @@
 ---
-title: 'pytzer: Chemical activites in aqueous solutions using automatic differentiation of a Pitzer model'
+title: 'Chemical activites in aqueous solutions using automatic differentiation of a Pitzer model (pytzer)'
 tags:
   - Python
   - chemistry
@@ -18,11 +18,11 @@ bibliography: paper.bib
 
 # Summary
 
-pytzer is a Python implementation of the Pitzer model for calculating chemical activities in aqueous solutions [@P91; @CRP94].
+Pytzer is a Python implementation of the Pitzer model for modelling chemical activities in aqueous solutions [@P91; @CRP94]. The Pitzer model is based on a 'master' equation for the excess Gibbs energy of a solution, which is differentiated with respect to different input variables to determine different properties of the solution. Previous implementations have used algebraic differentials of the excess Gibbs energy equation, but pytzer uses automatic differentiation instead, as implemented by the autograd package [@autograd]. This approach allows the code to be greatly shortened and simplified, and it substantially reduces the scope for typographical errors.
 
 # Availability
 
-pytzer is available at [https://github.com/mvdh7/pytzer](https://github.com/mvdh7/pytzer), together with detailed documentation (which can also be found at [https://pytzer.readthedocs.io](https://pytzer.readthedocs.io)).
+Pytzer is available at [https://github.com/mvdh7/pytzer](https://github.com/mvdh7/pytzer), together with detailed documentation (which can also be found at [https://pytzer.readthedocs.io](https://pytzer.readthedocs.io)). Pytzer can be installed via the Python package index ([https://pypi.org/project/pytzer/](https://pypi.org/project/pytzer/)).
 
 # Acknowledgements
 
