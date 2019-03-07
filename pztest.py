@@ -15,7 +15,6 @@ mols,ions,T,cf,Gex_nRT,osm,aw,acfs \
 print(time() - go)
 
 mols = np.transpose(mols)
-T    = np.vstack(T)
 osm  = np.vstack(osm)
 aw   = np.vstack(aw)
 acfs = np.transpose(acfs)
