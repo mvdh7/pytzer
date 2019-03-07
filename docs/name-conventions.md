@@ -6,7 +6,7 @@ It is necessary to label each solute component in several places within **pytzer
 
   1. In the `ions` variable that goes into the **pytzer.model** function;
 
-  1. In the **cfdict** that defines the interaction coefficients;
+  1. In the **cflib** that defines the interaction coefficients;
 
   1. In the **pytzer.props** functions;
 
@@ -209,6 +209,6 @@ References from the peer-reviewed literature (or 'sources') are written as the i
 
 # What actually matters?
 
-For solutes, you could actually use whatever name you like, as long as it was applied consistently throughout the first four items on the list at the top of this page (i.e. in input files, in the `ions` variable, in the `cfdict`, and in the **pytzer.props** functions). If it was your heart's desire, you could rename `Na` (sodium ion) as `GentooPenguin` in all of these places, and everything should still work fine. Using a matching name in the corresponding interaction coefficient functions is also required, in order to use the **CoefficientDictionary** methods like **get_contents**.
+For solutes, you could actually use whatever name you like, as long as it was applied consistently throughout the first four items on the list at the top of this page (i.e. in input files, in the `ions` variable, in the `cflib`, and in the **pytzer.props** functions). You could rename `Na` (sodium ion) as `Rincewind` in all of these places, and everything should still work fine. Using a matching name in the corresponding interaction coefficient functions is also required, in order to use the **CoeffLib** methods like **get_contents**.
 
-The codes used for different references are for convenience only; they do not affect the program. However, they do define the output from **CoefficientDictionary.print_coeffs**.
+The codes used for different literature references are for convenience only; they do not affect the program. However, they do define the output from **CoeffLib.print_coeffs**.
