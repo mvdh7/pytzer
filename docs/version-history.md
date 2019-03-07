@@ -5,7 +5,8 @@
 **Release date:** forthcoming
 
   * Fixed missing index correction for n-n' interaction loop;
-  * Eliminated unnecessary arrays for constant values in **coeffs**.
+  * Eliminated unnecessary arrays for constant values in **coeffs**;
+  * Added pressure input to all bC functions in **coeffs**.
 
 
 ## 0.2.7

@@ -8,10 +8,16 @@ filestem = 'GenerateConcs'
 
 # Run black box calculation (uses MarChemSpec cfdict)
 from time import time
+from copy import deepcopy
+
+cfltest = deepcopy(pz.cflibs.MarChemSpec)
+cfltest.bC['Na-Cl'] = pz.coeffs.bC_Na_Cl_A92ii
+cfltest.bC['K-Cl'] = pz.coeffs.bC_K_Cl_ZD17
 
 go = time()
 mols,ions,T,cf,Gex_nRT,osm,aw,acfs \
-    = pz.blackbox(filepath + filestem + '.csv')
+    = pz.blackbox(filepath + filestem + '.csv',
+                  cflib = cfltest)
 print(time() - go)
 
 mols = np.transpose(mols)

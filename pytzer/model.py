@@ -31,15 +31,15 @@ def h(x):  # CRP94 Eq. (AI15)
     return (6 - (6 + x*(6 + 3*x + x**2)) * exp(-x)) / x**4
 
 
-def B(tempK, I, cflib, iset): # CRP94 Eq. (AI7)
+def B(tempK, pres, I, cflib, iset): # CRP94 Eq. (AI7)
 
-    b0, b1, b2, _,_, alph1, alph2, _,_ = cflib.bC[iset](tempK)
+    b0, b1, b2, _,_, alph1, alph2, _,_ = cflib.bC[iset](tempK, pres)
 
     return b0 + b1 * g(alph1 * sqrt(I)) + b2 * g(alph2 * sqrt(I))
 
-def CT(tempK, I, cflib, iset): # CRP94 Eq. (AI10)
+def CT(tempK, pres, I, cflib, iset): # CRP94 Eq. (AI10)
 
-    _,_,_, C0, C1, _,_, omega, _ = cflib.bC[iset](tempK)
+    _,_,_, C0, C1, _,_, omega, _ = cflib.bC[iset](tempK, pres)
 
     return C0 + 4 * C1 * h(omega * sqrt(I))
 
@@ -76,6 +76,11 @@ def Zstr(mols, zs):
 
 
 def Gex_nRT(mols, ions, tempK, cflib, Izero=False):
+
+    pres = 10.1325 # 1 atm in dbar
+    # Note that oceanographers record ocean pressure as only due to the water,
+    # so at the sea surface pressure = 0 dbar, but the atmospheric pressure
+    # should also be taken into account for this model
 
     # Ionic strength etc.
     zs, cations, anions, neutrals = props.charges(ions)
@@ -121,7 +126,8 @@ def Gex_nRT(mols, ions, tempK, cflib, Izero=False):
                 iset = '-'.join((cation0,anion))
 
                 Gex_nRT = Gex_nRT + cats[C0] * anis[A] \
-                    * (2*B(tempK, I, cflib, iset) + Z*CT(tempK, I, cflib, iset))
+                    * (2*B(tempK, pres, I, cflib, iset) \
+                    + Z*CT(tempK, pres, I, cflib, iset))
 
             # Add c-c' interactions
             for xC1, cation1 in enumerate(cations[C0+1:]):
