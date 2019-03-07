@@ -7,7 +7,7 @@ tags:
   - Pitzer model
 authors:
   - name: Matthew P. Humphreys
-    orcid:
+    orcid: 0000-0002-9371-7128
     affiliation: 1
 affiliations:
   - name: Centre for Ocean and Atmospheric Sciences, School of Environmental Sciences, University of East Anglia, Norwich, UK
@@ -18,7 +18,7 @@ bibliography: paper.bib
 
 # Summary
 
-pytzer is a Python implementation of the Pitzer model for calculating chemical activities in aqueous solutions .
+pytzer is a Python implementation of the Pitzer model for calculating chemical activities in aqueous solutions [@P91; @CRP94].
 
 # Availability
 
