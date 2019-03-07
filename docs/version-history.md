@@ -4,7 +4,8 @@
 
 **Release date:** forthcoming
 
-  * Fixed missing index correction for n-n' interaction loop.
+  * Fixed missing index correction for n-n' interaction loop;
+  * Eliminated unnecessary arrays for constant values in **coeffs**.
 
 
 ## 0.2.7
