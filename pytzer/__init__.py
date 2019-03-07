@@ -30,8 +30,8 @@ from numpy import any as np_any
 def blackbox(filename, cflib=cflibs.MarChemSpec, savefile=True):
 
     # Import test dataset
-    mols, ions, tempK = io.getmols(filename)
-    pres = full_like(tempK, 10.1325) # temporary fill value
+    mols, ions, tempK, pres = io.getmols(filename)
+    # pres = full_like(tempK, 10.1325) # temporary fill value
 
     cflib = deepcopy(cflib)
     cflib.add_zeros(ions) # just in case
@@ -75,7 +75,7 @@ def blackbox(filename, cflib=cflibs.MarChemSpec, savefile=True):
     if savefile:
         filestem = filename.replace('.csv','')
         io.saveall(filestem + '_py.csv',
-            mols, ions, tempK, osm, aw, acfs)
+            mols, ions, tempK, pres, osm, aw, acfs)
 
     print('Finished!')
     return mols, ions, tempK, pres, cflib, Gex_nRT, osm, aw, acfs

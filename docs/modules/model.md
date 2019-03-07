@@ -9,9 +9,9 @@ MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
 
 ## Function inputs
 
-Many of these functions have a common set of inputs: `mols`, `ions`, `tempK`, `cflib` and `Izero`.
+Many of these functions have a common set of inputs: `mols`, `ions`, `tempK`, `pres`, `cflib` and `Izero`.
 
-The first three of these inputs can be generated from an input file by **pytzer.io.getmols** and their formats are described in [the relevant documentation](../io/#pytzeriogetmols). Throughout **pytzer**, when we refer to a variable called `ions` we are including any neutral species in the solution.
+The first four of these inputs can be generated from an input file by **pytzer.io.getmols** and their formats are described in [the relevant documentation](../io/#pytzeriogetmols). Throughout **pytzer**, when we refer to a variable called `ions` we are including any neutral species in the solution.
 
 The final compulsory input is a **cflib** (coefficient library), which defines the set of interaction coefficients to use in the model, as described on [the relevant page](../cflibs).
 

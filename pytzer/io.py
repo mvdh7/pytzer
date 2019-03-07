@@ -1,8 +1,8 @@
 # pytzer: Pitzer model for chemical activities in aqueous solutions
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 
-from autograd.numpy import concatenate, genfromtxt, nan_to_num, savetxt, \
-                           shape, transpose, vstack
+from autograd.numpy import concatenate, genfromtxt, logical_and, nan_to_num, \
+                           savetxt, shape, transpose, vstack
 
 #==============================================================================
 #=================================================== Import molality data =====
@@ -16,24 +16,28 @@ def getmols(filename, delimiter=',', skip_top=0):
     nan_to_num(data, copy=False)
 
     TL = head == 'tempK'
+    PL = head == 'pres'
 
-    mols  = transpose(data[:,~TL])
-    ions  = head[~TL]
-    tempK = data[:,TL].ravel()
+    mols  = transpose(data[:, logical_and(~TL, ~PL)])
+    ions  = head[logical_and(~TL, ~PL)]
+    tempK = data[:, TL].ravel()
+    pres  = data[:, PL].ravel()
 
-    return mols, ions, tempK
+    return mols, ions, tempK, pres
 
 # Save results
-def saveall(filename, mols, ions, tempK, osm, aw, acfs):
-    
+def saveall(filename, mols, ions, tempK, pres, osm, aw, acfs):
+
     savetxt(filename,
             concatenate((vstack(tempK),
+                         vstack(pres),
                          transpose(mols),
                          vstack(osm),
                          vstack(aw),
-                         transpose(acfs)), 
+                         transpose(acfs)),
                         axis=1),
             delimiter=',',
-            header=','.join(concatenate((['tempK'], ions, ['osm','aw'],
-                                         ['g'+ion for ion in ions]))),
+            header=','.join(concatenate((
+                ['tempK', 'pres'], ions, ['osm', 'aw'],
+                ['g'+ion for ion in ions]))),
             comments='')

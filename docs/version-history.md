@@ -9,7 +9,7 @@ Version 0.3 remains in beta testing. The most significant change from version 0.
 
   * Added pressure input (`pres` in dbar):
     * To all bC functions in **coeffs**;
-    * To all relevant **model** functions;
+    * To all relevant **model**, **io** and **blackbox** functions;
     * To the relevant parts of the documentation;
   * Fixed loop index correction for n-n' interactions;
   * Eliminated unnecessary arrays for constant values in **coeffs**;
