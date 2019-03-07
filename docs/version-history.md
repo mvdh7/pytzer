@@ -1,13 +1,24 @@
-# 0.2 (beta)
+# 0.3 (beta)
 
-## 0.2.8
+Version 0.3 remains in beta testing. The most significant change from version 0.2 is the inclusion of pressure as an input variable.
+
+
+## 0.3.0
 
 **Release date:** forthcoming
 
-  * Added pressure input to all bC functions in **coeffs**;
+  * Added pressure input (`pres` in dbar):
+    * To all bC functions in **coeffs**;
+    * To all relevant **model** functions;
+    * To the relevant parts of the documentation;
   * Fixed loop index correction for n-n' interactions;
   * Eliminated unnecessary arrays for constant values in **coeffs**;
   * Adjusted **model.B** and **model.CT** function inputs to reduce number of **cflib** function calls.
+
+
+# 0.2 (beta)
+
+Version 0.2 included calculation of solute activity coefficients, water activity and osmotic coefficients, as a function of temperature and composition, at a constant pressure of 1 atmosphere.
 
 
 ## 0.2.7

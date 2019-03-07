@@ -31,6 +31,7 @@ def blackbox(filename, cflib=cflibs.MarChemSpec, savefile=True):
 
     # Import test dataset
     mols, ions, tempK = io.getmols(filename)
+    pres = full_like(tempK, 10.1325) # temporary fill value
 
     cflib = deepcopy(cflib)
     cflib.add_zeros(ions) # just in case
@@ -46,8 +47,8 @@ def blackbox(filename, cflib=cflibs.MarChemSpec, savefile=True):
 
     L = (I > 0).ravel()
 
-    nargsL  = (mols[:, L], ions, tempK[ L], cflib)
-    nargsLx = (mols[:,~L], ions, tempK[~L], cflib)
+    nargsL  = (mols[:,  L], ions, tempK[ L], pres[ L], cflib)
+    nargsLx = (mols[:, ~L], ions, tempK[~L], pres[~L], cflib)
 
     # Do calculations
     print('Calculating excess Gibbs energies...')
@@ -68,12 +69,13 @@ def blackbox(filename, cflib=cflibs.MarChemSpec, savefile=True):
     print('Calculating activity coefficients...')
     acfs[:,L] = model.acfs(*nargsL)
     if np_any(~L):
-        acfs[:,~L] = model.acfs(*nargsLx, Izero=True)
+        acfs[:, ~L] = model.acfs(*nargsLx, Izero=True)
 
     # Save results unless requested not to
     if savefile:
         filestem = filename.replace('.csv','')
-        io.saveall(filestem + '_py.csv', mols, ions, tempK, osm, aw, acfs)
-        
+        io.saveall(filestem + '_py.csv',
+            mols, ions, tempK, osm, aw, acfs)
+
     print('Finished!')
-    return mols, ions, tempK, cflib, Gex_nRT, osm, aw, acfs
+    return mols, ions, tempK, pres, cflib, Gex_nRT, osm, aw, acfs

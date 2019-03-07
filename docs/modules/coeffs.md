@@ -41,13 +41,11 @@ Where an equation is provided to evaluate coefficients, rather than a single val
 
 Within the function titles, **neutral**, **cation**, **anion** and **source** should be replaced with appropriate values, as described in the [naming conventions](../../name-conventions).
 
-The input `T` is equivalent to `tempK` elsewhere in **pytzer**: it is always an array of temperature values (in K), for example as output by **io.getmols**. The shorter `T` is preferred here for clarity in the equations.
+The input `T` is equivalent to `tempK`, and `P` to `pres`, elsewhere in **pytzer**: these are always arrays of temperature (in K) and pressure (in dbar), for example as output by **io.getmols**. The shorter `T` and `P` preferred here for clarity in the equations.
 
-Some of these functions are defined as a function of pressure as well as temperature. These components of the equations are retained within the functions, but for now, the standard atmospheric pressure (i.e. 0.101325 MPa) is used in every case, as defined by `COEFFS_PRESSURE` in **pytzer.coeffs**.
+The outputs are the coefficient(s') value(s), and a logical array (`valid`) indicating whether the input temperature(s) fell within the function's validity range. *The validity array is not currently used.*
 
-The outputs are the coefficient(s') value(s), and a logical array (`valid`) indicating whether the input temperature(s) fell within the function's validity range. *The logical array is not currently used.*
-
-Temperature-sensitive output coefficient variables each have the same shape as the temperature input, while those with constant values are returned as scalars.
+Temperature- or pressure-sensitive output coefficient variables each have the same shape as the temperature and pressure inputs, while those with constant values are returned as scalars.
 
 
 ### `bC_` functions
@@ -57,7 +55,7 @@ The calculations in **pytzer.model** use a Pitzer model with separate $C_0$ and 
 Each `bC_` function also returns values for the $\alpha_1$, $\alpha_2$ and $\omega$ coefficients that accompany each $\beta_1$, $\beta_2$ and $C_1$. This is necessary because these auxiliary coefficients differ between electrolytes and between studies.
 
 ```python
-def bC_cation_anion_source(T):
+def bC_cation_anion_source(T, P):
 
     b0 = <b0 equation/value>
     b1 = <b1 equation/value>
@@ -69,9 +67,9 @@ def bC_cation_anion_source(T):
     alph2 = <alph2 value>
     omega = <omega value>
 
-    valid = <logical expression evaluating temperature validity>
+    valid = <logical of temperature/pressure validity>
 
-    return b0,b1,b2,C0,C1, alph1,alph2,omega, valid
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 ```
 
 If any of the main five coefficients (i.e. `b0` to `C1`) is not used for any electrolyte, it will be set to zero. Unused `alph1`, `alph2` or `omega` coefficents are set to **−9**. (If a value of zero was used, it would cause problems going through **pytzer.model**, even though the problematic result is then multiplied by zero.)

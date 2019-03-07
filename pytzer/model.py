@@ -71,12 +71,12 @@ def Zstr(mols, zs):
     return np_sum(mols * np_abs(zs), axis=0)
 
 
-def Gex_nRT(mols, ions, tempK, cflib, Izero=False):
+def Gex_nRT(mols, ions, tempK, pres, cflib, Izero=False):
 
     # Note that oceanographers record ocean pressure as only due to the water,
     # so at the sea surface pressure = 0 dbar, but the atmospheric pressure
     # should also be taken into account for this model
-    pres = 10.1325 # 1 atm in dbar
+    # pres = 10.1325 # 1 atm in dbar
 
     # Ionic strength etc.
     zs, cations, anions, neutrals = props.charges(ions)
@@ -242,8 +242,8 @@ def Gex_nRT(mols, ions, tempK, cflib, Izero=False):
 # Determine activity coefficient function
 ln_acfs = egrad(Gex_nRT)
 
-def acfs(mols, ions, tempK, cflib, Izero=False):
-    return exp(ln_acfs(mols, ions, tempK, cflib, Izero))
+def acfs(mols, ions, tempK, pres, cflib, Izero=False):
+    return exp(ln_acfs(mols, ions, tempK, pres, cflib, Izero))
 
 
 # Get mean activity coefficient for an M_(nM)X_(nX) electrolyte
@@ -258,30 +258,30 @@ def ln_acf2ln_acf_MX(ln_acfM, ln_acfX, nM, nX):
 #---------------------------------------------------- Osmotic coefficient -----
 
 # Osmotic coefficient
-def osm(mols, ions, tempK, cflib, Izero=False):
+def osm(mols, ions, tempK, pres, cflib, Izero=False):
 
     ww = full_like(tempK,1.0)
 
-    return 1 - egrad(
-        lambda ww: ww * Gex_nRT(mols/ww, ions, tempK, cflib, Izero))(ww) \
+    return 1 - egrad(lambda ww: \
+        ww * Gex_nRT(mols/ww, ions, tempK, pres, cflib, Izero))(ww) \
         / np_sum(mols, axis=0)
 
 
 #--------------------------------------------------------- Water activity -----
 
 # Water activity - direct
-def lnaw(mols, ions, tempK, cflib, Izero=False):
+def lnaw(mols, ions, tempK, pres, cflib, Izero=False):
 
     ww = full_like(tempK, 1.0)
 
-    return (egrad(
-        lambda ww: ww * Gex_nRT(mols/ww, ions, tempK, cflib, Izero))(ww) \
+    return (egrad(lambda ww: \
+        ww * Gex_nRT(mols/ww, ions, tempK, pres, cflib, Izero))(ww) \
         - np_sum(mols, axis=0)) * Mw
 
 
-def aw(mols, ions, tempK, cflib, Izero=False):
+def aw(mols, ions, tempK, pres, cflib, Izero=False):
 
-    return exp(lnaw(mols, ions, tempK, cflib, Izero))
+    return exp(lnaw(mols, ions, tempK, pres, cflib, Izero))
 
 
 #------------------------------------------------------------ Conversions -----

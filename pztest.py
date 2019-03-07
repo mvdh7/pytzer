@@ -11,11 +11,11 @@ from time import time
 from copy import deepcopy
 
 cfltest = deepcopy(pz.cflibs.MarChemSpec)
-cfltest.bC['Na-Cl'] = pz.coeffs.bC_Na_Cl_A92ii
-cfltest.bC['K-Cl'] = pz.coeffs.bC_K_Cl_ZD17
+#cfltest.bC['Na-Cl'] = pz.coeffs.bC_Na_Cl_A92ii
+#cfltest.bC['K-Cl'] = pz.coeffs.bC_K_Cl_ZD17
 
 go = time()
-mols,ions,T,cf,Gex_nRT,osm,aw,acfs \
+mols, ions, T, pres, cf, Gex_nRT, osm, aw, acfs \
     = pz.blackbox(filepath + filestem + '.csv',
                   cflib = cfltest)
 print(time() - go)
@@ -91,37 +91,3 @@ ax[2].set_xlabel('Diff. in aw')
 ax[2].set_ylabel('Row in file')
 
 ax[2].invert_yaxis()
-
-#%% Compare dict access
-def sp1(x):
-
-    tdict1 = {'a-b': lambda x: 0.5 * np.sqrt(x)}
-    
-    isum = 0
-    
-    for i in range(10000):
-        
-        istr = ['a', 'b']
-        istr = '-'.join(istr)
-        
-        isum += tdict1[istr](x)
-        
-    return isum
-
-
-def sp2(x):
-
-    tdict2 = {('a', 'b'): lambda x: 0.5 * np.sqrt(x)}
-    
-    isum = 0
-    
-    for i in range(10000):
-        
-        istr = ('a', 'b')
-        
-        isum += tdict2[istr](x)
-        
-    return isum
-
-
-

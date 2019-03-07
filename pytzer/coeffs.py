@@ -10,7 +10,7 @@ from .tables import P91_Ch3_T12, P91_Ch3_T13_I, P91_Ch3_T13_II, \
 from . import props
 
 # Note that variable T in this module is equivalent to tempK elsewhere,
-# and P is equivalent to pres
+# and P is equivalent to pres, for convenience
 
 #%%############################################################################
 # === ZERO FUNCTIONS ==========================================================
