@@ -11,15 +11,15 @@ def gm1drho(tempK, pres):
     # pres in MPa
         
     # AW90 Table 2
-    b = [-4.044525e-2, #0
-         103.6180, #1
-         75.32165, #2
-         -23.23778, #3
-         -3.548184, #4
-         -1246.311, #5
-         263307.7, #6
-         -6.928953e-1, #7
-         -204.4473] #8
+    b = [-4.044525e-2,
+         103.6180,
+         75.32165,
+         -23.23778,
+         -3.548184,
+         -1246.311,
+         263307.7,
+         -6.928953e-1,
+         -204.4473]
     
     # AW90 Eq. (3)
     gm1drho = \
@@ -47,6 +47,8 @@ def g(tempK, pres, rho):
 # Dielectric constant following Archer's DIEL()
 def D(tempK, pres, rho):
     
+    # Note that Archer's code uses different values from AW90 just in this
+    # subroutine (so also different from in Aosm calculation below)
     Mw = 18.0153
     al = 1.444e-24
     k  = 1.380658e-16
@@ -75,11 +77,41 @@ def Aosm(tempK, pres, rho):
         (4 * pi * D(tempK, pres, rho) * E0 * k * tempK))**1.5 / 3
 
 
+# "Density of the saturated liquid", Eq. (2) from WP93
+def rhoWP93(tempK):
+    
+    # output units in kg / m**3
+    
+    # Temperature conversion from WP93 Section 1 on Nomenclature
+    tau = 1 - tempK / 647.096
+    
+    # Coefficients from WP93 Section 4.1
+    b = [1,
+         1.99274064,
+         1.09965342,
+         -0.510839303,
+         -1.75493479,
+         -45.5170352,
+         -6.74694450e5]
+    
+    # WP93 Eq. (2)
+    rhodrhoc = \
+        b[0] + \
+        b[1] * tau**(  1/3) + \
+        b[2] * tau**(  2/3) + \
+        b[3] * tau**(  5/3) + \
+        b[4] * tau**( 16/3) + \
+        b[5] * tau**( 43/3) + \
+        b[6] * tau**(110/3)
+        
+    return rhodrhoc * 322
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
 tempK = array([298.15, 473.15, 623.15, 773.15])
 pres = 0.101325 # 1 atm in MPa
-rho = 1
+
+rho = rhoWP93(tempK) * 1e-3
 
 testgm1drho = gm1drho(tempK, pres)
 
@@ -89,6 +121,6 @@ testD = D(tempK, pres, rho)
 
 testAosm = Aosm(tempK, pres, rho)
 
-
+# Compare at 298.15 vs pytzer
 import pytzer as pz
-pzAosm = pz.coeffs.Aosm_CRP94(tempK)[0][0]
+pzAosm = pz.coeffs.Aosm_MarChemSpec(tempK)[0][0]
