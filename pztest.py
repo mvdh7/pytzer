@@ -14,6 +14,12 @@ mols,ions,T,cf,Gex_nRT,osm,aw,acfs \
     = pz.blackbox(filepath + filestem + '.csv')
 print(time() - go)
 
+mols = np.transpose(mols)
+T    = np.vstack(T)
+osm  = np.vstack(osm)
+aw   = np.vstack(aw)
+acfs = np.transpose(acfs)
+
 #%% Load results from Julia
 jfilename = filepath + filestem + '_jl.csv'
 jdata = np.genfromtxt(jfilename, delimiter=',', skip_header=1)
