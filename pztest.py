@@ -91,3 +91,37 @@ ax[2].set_xlabel('Diff. in aw')
 ax[2].set_ylabel('Row in file')
 
 ax[2].invert_yaxis()
+
+#%% Compare dict access
+def sp1(x):
+
+    tdict1 = {'a-b': lambda x: 0.5 * np.sqrt(x)}
+    
+    isum = 0
+    
+    for i in range(10000):
+        
+        istr = ['a', 'b']
+        istr = '-'.join(istr)
+        
+        isum += tdict1[istr](x)
+        
+    return isum
+
+
+def sp2(x):
+
+    tdict2 = {('a', 'b'): lambda x: 0.5 * np.sqrt(x)}
+    
+    isum = 0
+    
+    for i in range(10000):
+        
+        istr = ('a', 'b')
+        
+        isum += tdict2[istr](x)
+        
+    return isum
+
+
+

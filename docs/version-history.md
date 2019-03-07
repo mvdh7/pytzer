@@ -4,9 +4,10 @@
 
 **Release date:** forthcoming
 
-  * Fixed missing index correction for n-n' interaction loop;
+  * Added pressure input to all bC functions in **coeffs**;
+  * Fixed loop index correction for n-n' interactions;
   * Eliminated unnecessary arrays for constant values in **coeffs**;
-  * Added pressure input to all bC functions in **coeffs**.
+  * Adjusted **model.B** and **model.CT** function inputs to reduce number of **cflib** function calls.
 
 
 ## 0.2.7
