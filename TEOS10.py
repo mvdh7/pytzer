@@ -1,7 +1,10 @@
 from autograd.numpy import array, sqrt
 from autograd import elementwise_grad as grad
 
+# For pure water!
 # Source: http://www.teos-10.org/pubs/IAPWS-2009-Supplementary.pdf
+#
+# TODO: seawater from http://www.teos-10.org/pubs/IAPWS-08.pdf
 
 def g(tempK, pres):
 
