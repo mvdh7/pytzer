@@ -13,7 +13,8 @@ Version 0.3 remains in beta testing. The most significant change from version 0.
     * To the relevant parts of the documentation;
   * Fixed loop index correction for n-n' interactions;
   * Eliminated unnecessary arrays for constant values in **coeffs**;
-  * Adjusted **model.B** and **model.CT** function inputs to reduce number of **cflib** function calls.
+  * Adjusted **model.B** and **model.CT** function inputs to reduce number of **cflib** function calls;
+  * Rewrote CRP94 `Aosm` function to make it autograd-able.
 
 
 # 0.2 (beta)

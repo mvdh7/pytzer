@@ -1723,39 +1723,76 @@ def bC_Na_HSO4_HPR93(T, P):
 
 def Aosm_CRP94(T): # CRP94 Appendix II
 
+    # This function is long-winded to make it autograd-able
+
     # Transform temperature
-    X = (2 * T.ravel() - 373.15 - 234.15) / (373.15 - 234.15)
+    X = (2 * T - 373.15 - 234.15) / (373.15 - 234.15)
 
     # Set coefficients - CRP94 Table 11
-    a_Aosm = float_( \
-             [ 0.797256081240 / 2,
-               0.573389669896e-1,
-               0.977632177788e-3,
-               0.489973732417e-2,
-              -0.313151784342e-2,
-               0.179145971002e-2,
-              -0.920584241844e-3,
-               0.443862726879e-3,
-              -0.203661129991e-3,
-               0.900924147948e-4,
-              -0.388189392385e-4,
-               0.164245088592e-4,
-              -0.686031972567e-5,
-               0.283455806377e-5,
-              -0.115641433004e-5,
-               0.461489672579e-6,
-              -0.177069754948e-6,
-               0.612464488231e-7,
-              -0.175689013085e-7])
+    a_Aosm = [
+         0.797256081240 / 2,
+         0.573389669896e-1,
+         0.977632177788e-3,
+         0.489973732417e-2,
+        -0.313151784342e-2,
+         0.179145971002e-2,
+        -0.920584241844e-3,
+         0.443862726879e-3,
+        -0.203661129991e-3,
+         0.900924147948e-4,
+        -0.388189392385e-4,
+         0.164245088592e-4,
+        -0.686031972567e-5,
+         0.283455806377e-5,
+        -0.115641433004e-5,
+         0.461489672579e-6,
+        -0.177069754948e-6,
+         0.612464488231e-7,
+        -0.175689013085e-7,
+    ]
 
-    # Set up T matrix - CRP94 Eq. (AII2)
-    Tmx = full((size(T), size(a_Aosm)), 1.)
-    Tmx[:, 1] = X
-    for C in range(2, size(a_Aosm)):
-        Tmx[:, C] = 2 * X * Tmx[:, C-1] - Tmx[:, C-2]
+    # Set up T "matrix" - CRP94 Eq. (AII2)
+    Tmx00 = 1
+    Tmx01 = X
+    Tmx02 = 2 * X * Tmx01 - Tmx00
+    Tmx03 = 2 * X * Tmx02 - Tmx01
+    Tmx04 = 2 * X * Tmx03 - Tmx02
+    Tmx05 = 2 * X * Tmx04 - Tmx03
+    Tmx06 = 2 * X * Tmx05 - Tmx04
+    Tmx07 = 2 * X * Tmx06 - Tmx05
+    Tmx08 = 2 * X * Tmx07 - Tmx06
+    Tmx09 = 2 * X * Tmx08 - Tmx07
+    Tmx10 = 2 * X * Tmx09 - Tmx08
+    Tmx11 = 2 * X * Tmx10 - Tmx09
+    Tmx12 = 2 * X * Tmx11 - Tmx10
+    Tmx13 = 2 * X * Tmx12 - Tmx11
+    Tmx14 = 2 * X * Tmx13 - Tmx12
+    Tmx15 = 2 * X * Tmx14 - Tmx13
+    Tmx16 = 2 * X * Tmx15 - Tmx14
+    Tmx17 = 2 * X * Tmx16 - Tmx15
+    Tmx18 = 2 * X * Tmx17 - Tmx16
 
-    # Solve for Aosm (CRP94 E.AII1)
-    Aosm = matmul(Tmx, a_Aosm)
+    # Solve for Aosm - CRP94 (E.AII1)
+    Aosm = \
+        Tmx00 * a_Aosm[ 0] + \
+        Tmx01 * a_Aosm[ 1] + \
+        Tmx02 * a_Aosm[ 2] + \
+        Tmx03 * a_Aosm[ 3] + \
+        Tmx04 * a_Aosm[ 4] + \
+        Tmx05 * a_Aosm[ 5] + \
+        Tmx06 * a_Aosm[ 6] + \
+        Tmx07 * a_Aosm[ 7] + \
+        Tmx08 * a_Aosm[ 8] + \
+        Tmx09 * a_Aosm[ 9] + \
+        Tmx10 * a_Aosm[10] + \
+        Tmx11 * a_Aosm[11] + \
+        Tmx12 * a_Aosm[12] + \
+        Tmx13 * a_Aosm[13] + \
+        Tmx14 * a_Aosm[14] + \
+        Tmx15 * a_Aosm[15] + \
+        Tmx16 * a_Aosm[16] + \
+        Tmx17 * a_Aosm[17] + \
+        Tmx18 * a_Aosm[18]
 
     # Validity range
     valid = logical_and(T >= 234.15, T <= 373.15)
