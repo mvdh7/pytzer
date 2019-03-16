@@ -1,6 +1,8 @@
 # pytzer: Pitzer model for chemical activities in aqueous solutions
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 
+"""Unsymmetrical mixing functions."""
+
 from autograd.numpy import exp, float_, full_like, inf, log, nan, size, \
                            zeros, zeros_like, errstate
 from autograd.extend import primitive, defvjp
@@ -11,26 +13,28 @@ from scipy.integrate import quad
 # Cannot yet be automatically differentiated
 
 def numint(x):
-    
+    """Evaluate unsymmetrical mixing function by numerical integration."""
     # P91 Chapter 3 Eq. (B-12) [p123]
     q = lambda x, y: -(x/y) * exp(-y)
-    
+
     J = full_like(x,nan)
-    
+
     for i,xi in enumerate(x):
-    
+
         # P91 Chapter 3 Eq. (B-13) [p123]
         J[i] = quad(lambda y: \
             (1 + q(xi,y) + q(xi,y)**2 / 2 - exp(q(xi,y))) * y**2,
             0,inf)[0] / xi
-    
+
     return J
 
 
 # === Pitzer (1975) Eq. (46) ==================================================
 
 def P75_eq46(x):
-
+    """Evaluate unsymmetrical mixing function following Pitzer (1975),
+    equation (46).
+    """
     # P75 Table III
     C = float_([ 4.118 ,
                  7.247 ,
@@ -56,6 +60,9 @@ P75_eq47_C = float_([4     ,
                      0.528 ])
 
 def P75_eq47(x):
+    """Evaluate unsymmetrical mixing function following Pitzer (1975),
+    equation (47).
+    """
 
     with errstate(divide='ignore'):
         J = x / (P75_eq47_C[0] + P75_eq47_C[1] * x**-P75_eq47_C[2] \
@@ -153,6 +160,7 @@ def _Harvie_raw(x):
 # Define the function to use in the model
 @primitive
 def Harvie(x):
+    """Evaluate unsymmetrical mixing function using Harvie's method."""
     return _Harvie_raw(x)[0]
 
 # Set up its derivative for autograd
