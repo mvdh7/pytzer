@@ -34,7 +34,7 @@ pip install pytzer
 
 # Running pytzer as a "black box"
 
-You can just provide **pytzer** with a CSV file of temperatures and molality values, and have it return the corresponding activity coefficients in a new CSV file, only having to write the bare minimum in Python, as follows.
+You can just provide **pytzer** with a CSV file of temperature, pressures and molality values, and have it return the corresponding activity coefficients in a new CSV file, only having to write the bare minimum in Python, as follows.
 
 [1] Create an input CSV file as described in the [import/export documentation](../modules/io/#pytzeriogetmols) - or just save and use the example file [pytzerQuickStart.csv](https://raw.githubusercontent.com/mvdh7/pytzer/master/testfiles/pytzerQuickStart.csv).
 
