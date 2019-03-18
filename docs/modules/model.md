@@ -214,7 +214,7 @@ where $C_0$, $C_1$ and $\omega$ take different values for each $ca$ combination,
 CT = pz.model.CT(tempK, I, cflib, iset)
 ```
 
-where input `iset` is a string that references the appropriate entry in **cflib.bC** for the ion pair (e.g. `'Na-Cl'` for the Na<sup>+</sup>-Cl<sup>−</sup> interaction; see [how a CoefficientDictionary works](../../modules/cflibs/#how-a-coefficientdictionary-works) for details).
+where input `iset` is a string that references the appropriate entry in **cflib.bC** for the ion pair (e.g. `'Na-Cl'` for the Na<sup>+</sup>-Cl<sup>−</sup> interaction; see [how a CoeffLib works](../../modules/cflibs/#how-a-coefflib-works) for details).
 
 ## .xij
 
@@ -233,6 +233,10 @@ where `z0` and `z1` are the charges on ions $i$ and $i'$ respectively (i.e. $z_i
 The function $^E\theta_{ii'}$, following Pitzer (1991), Eq. (B-15):
 
 $$^E\theta_{ii'} = \frac{z_i z_i'}{4 I} \Bigl[J(x_{ii'}) - \frac{1}{2} J(x_{ii}) - \frac{1}{2} J(x_{i'i'})\Bigr]$$
+
+```python
+etheta = pz.model.etheta(tempK, I, z0, z1, cflib)
+```
 
 This is only evaluated when $z_i \neq z_{i'}$. Otherwise, it is equal to zero.
 
