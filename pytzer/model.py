@@ -259,7 +259,7 @@ def ln_acf2ln_acf_MX(ln_acfM, ln_acfX, nM, nX):
 # Osmotic coefficient
 def osm(mols, ions, tempK, pres, cflib, Izero=False):
 
-    ww = full_like(tempK,1.0)
+    ww = full_like(tempK, 1.0)
 
     return 1 - egrad(lambda ww: \
         ww * Gex_nRT(mols/ww, ions, tempK, pres, cflib, Izero))(ww) \
