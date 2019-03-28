@@ -16,7 +16,6 @@ from . import props
 # === ZERO FUNCTIONS ==========================================================
 
 def bC_none(T, P):
-
     b0 = 0
     b1 = 0
     b2 = 0
@@ -26,7 +25,6 @@ def bC_none(T, P):
     alph2 = -9
     omega = -9
     valid = T > 0
-
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 def theta_none(T, P):
@@ -45,12 +43,12 @@ def lambd_none(T, P):
     return lambd, valid
 
 def zeta_none(T, P):
-    zeta  = 0
+    zeta = 0
     valid = T > 0
     return zeta, valid
 
 def mu_none(T, P):
-    mu    = 0
+    mu = 0
     valid = T > 0
     return mu, valid
 

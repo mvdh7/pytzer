@@ -1,6 +1,8 @@
 # pytzer: Pitzer model for chemical activities in aqueous solutions
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 
+"""Calculate activities using the Pitzer model."""
+
 from autograd.numpy import array, exp, full_like, log, \
                            shape, sqrt, vstack, zeros_like
 from autograd.numpy import abs as np_abs
@@ -16,7 +18,7 @@ from . import props
 
 
 def fG(tempK, I, cflib): # from CRP94 Eq. (AI1)
-
+    """Calculate the Debye-Hueckel component of the excess Gibbs energy."""
     return -4 * cflib.dh['Aosm'](tempK)[0] * I * log(1 + b*sqrt(I)) / b
 
 
@@ -24,20 +26,22 @@ def fG(tempK, I, cflib): # from CRP94 Eq. (AI1)
 #============================================== Pitzer model subfunctions =====
 
 
-def g(x): # CRP94 Eq. (AI13)
+def g(x):
+    """g function following CRP94 Eq. (AI13)."""
     return 2 * (1 - (1 + x) * exp(-x)) / x**2
 
-def h(x):  # CRP94 Eq. (AI15)
+def h(x):
+    """h function following CRP94 Eq. (AI15)."""
     return (6 - (6 + x*(6 + 3*x + x**2)) * exp(-x)) / x**4
 
 
-def B(I, b0, b1, b2, alph1, alph2): # CRP94 Eq. (AI7)
-
+def B(I, b0, b1, b2, alph1, alph2):
+    """B function following CRP94 Eq. (AI7)."""
     return b0 + b1 * g(alph1 * sqrt(I)) + b2 * g(alph2 * sqrt(I))
 
-def CT(I, C0, C1, omega): # CRP94 Eq. (AI10)
-
-    return C0 + 4 * C1 * h(omega * sqrt(I))
+def CT(I, C0, C1, omega):
+    """CT function following CRP94 Eq. (AI10)."""
+    return C0 + 4*C1 * h(omega * sqrt(I))
 
 
 #==============================================================================
@@ -45,18 +49,16 @@ def CT(I, C0, C1, omega): # CRP94 Eq. (AI10)
 
 
 def xij(tempK, I, z0, z1, cflib):
-
+    """xij function for unsymmetrical mixing."""
     return 6 * z0*z1 * cflib.dh['Aosm'](tempK)[0] * sqrt(I)
 
 def etheta(tempK, I, z0, z1, cflib):
-
+    """etheta function for unsymmetrical mixing."""
     x00 = xij(tempK, I, z0, z0, cflib)
     x01 = xij(tempK, I, z0, z1, cflib)
     x11 = xij(tempK, I, z1, z1, cflib)
-
     etheta = z0*z1 * (cflib.jfunc(x01) \
              - 0.5 * (cflib.jfunc(x00) + cflib.jfunc(x11))) / (4 * I)
-
     return etheta
 
 
@@ -65,13 +67,16 @@ def etheta(tempK, I, z0, z1, cflib):
 
 
 def Istr(mols, zs):
+    """Calculate the ionic strength."""
     return 0.5 * np_sum(mols * zs**2, axis=0)
 
 def Zstr(mols, zs):
+    """Calculate the Z function."""
     return np_sum(mols * np_abs(zs), axis=0)
 
 
 def Gex_nRT(mols, ions, tempK, pres, cflib, Izero=False):
+    """Calculate the excess Gibbs energy of a solution."""
 
     # Note that oceanographers record ocean pressure as only due to the water,
     # so at the sea surface pressure = 0 dbar, but the atmospheric pressure
@@ -239,24 +244,26 @@ def Gex_nRT(mols, ions, tempK, pres, cflib, Izero=False):
 
 
 # Determine activity coefficient function
-ln_acfs = egrad(Gex_nRT)
+def ln_acfs(mols, ions, tempK, pres, cflib, Izero=False):
+    """Calculate the natural logarithms of the activity coefficients
+    of all solutes.
+    """
+    return egrad(Gex_nRT)(mols, ions, tempK, pres, cflib, Izero)
 
 def acfs(mols, ions, tempK, pres, cflib, Izero=False):
+    """Calculate the activity coefficients of all solutes."""
     return exp(ln_acfs(mols, ions, tempK, pres, cflib, Izero))
-
 
 # Get mean activity coefficient for an M_(nM)X_(nX) electrolyte
 def ln_acf2ln_acf_MX(ln_acfM, ln_acfX, nM, nX):
+    """Calculate the mean activity coefficient for an electrolyte."""
     return (nM * ln_acfM + nX * ln_acfX) / (nM + nX)
-
 
 #==============================================================================
 #=============================== Osmotic coefficient and solvent activity =====
 
-
 #---------------------------------------------------- Osmotic coefficient -----
 
-# Osmotic coefficient
 def osm(mols, ions, tempK, pres, cflib, Izero=False):
 
     ww = full_like(tempK, 1.0)
@@ -265,33 +272,27 @@ def osm(mols, ions, tempK, pres, cflib, Izero=False):
         ww * Gex_nRT(mols/ww, ions, tempK, pres, cflib, Izero))(ww) \
         / np_sum(mols, axis=0)
 
-
 #--------------------------------------------------------- Water activity -----
 
-# Water activity - direct
 def lnaw(mols, ions, tempK, pres, cflib, Izero=False):
-
+    """Calculate the natural log of the water activity."""
     ww = full_like(tempK, 1.0)
-
     return (egrad(lambda ww: \
         ww * Gex_nRT(mols/ww, ions, tempK, pres, cflib, Izero))(ww) \
         - np_sum(mols, axis=0)) * Mw
 
-
 def aw(mols, ions, tempK, pres, cflib, Izero=False):
-
+    """Calculate the water activity."""
     return exp(lnaw(mols, ions, tempK, pres, cflib, Izero))
-
 
 #------------------------------------------------------------ Conversions -----
 
-# Convert osmotic coefficient to water activity
 def osm2aw(mols, osm):
+    """Convert osmotic coefficient to water activity."""
     return exp(-osm * Mw * np_sum(mols, axis=0))
 
-# Convert water activity to osmotic coefficient
 def aw2osm(mols, aw):
+    """Convert water activity to osmotic coefficient."""
     return -log(aw) / (Mw * np_sum(mols, axis=0))
-
 
 #==============================================================================

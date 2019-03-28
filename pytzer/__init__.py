@@ -14,24 +14,26 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-__all__ = ['cflibs', 'coeffs', 'constants', 'io', 'jfuncs', 'meta', 'model',
-           'props', 'tables']
+"""Pitzer model for chemical activities in aqueous solutions."""
 
 from . import cflibs, coeffs, constants, io, jfuncs, meta, model, \
-              props, tables
+    props, tables
 
+__all__ = ['cflibs', 'coeffs', 'constants', 'io', 'jfuncs', 'meta', 'model',
+    'props', 'tables']
 __version__ = meta.version
+__author__ = 'Matthew P. Humphreys'
 
-# Black box function
 from copy import deepcopy
 from numpy import full_like, nan
 from numpy import any as np_any
 
 def blackbox(filename, cflib=cflibs.MarChemSpec, savefile=True):
-
+    """Import a CSV file with molality data, calculate all activity
+    coefficients, and save results to a new CSV file.
+    """
     # Import test dataset
     mols, ions, tempK, pres = io.getmols(filename)
-    # pres = full_like(tempK, 10.1325) # temporary fill value
 
     cflib = deepcopy(cflib)
     cflib.add_zeros(ions) # just in case
@@ -41,9 +43,9 @@ def blackbox(filename, cflib=cflibs.MarChemSpec, savefile=True):
     I = model.Istr(mols, zs)
 
     Gex_nRT = full_like(tempK, nan)
-    osm     = full_like(tempK, nan)
-    aw      = full_like(tempK, nan)
-    acfs    = full_like(mols, nan)
+    osm = full_like(tempK, nan)
+    aw = full_like(tempK, nan)
+    acfs = full_like(mols, nan)
 
     L = I > 0
 

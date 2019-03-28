@@ -1,6 +1,8 @@
 # pytzer: Pitzer model for chemical activities in aqueous solutions
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 
+"""Specify tabulated Pitzer model coefficient values."""
+
 # The first set of tables from Pitzer (1991) Chapter 3 are all just
 #  reproductions of the values listed by Silvester and Pitzer (1979).
 
@@ -258,4 +260,3 @@ PM73_TableIX = {
         'Na-P3O10': {'b0':  1.86900 * 3/5, 'b1': 36.10000 * 3/5, 'Cphi': -0.16300 * 3/5**(3/2)},
          'K-P3O10': {'b0':  1.93900 * 3/5, 'b1': 39.64000 * 3/5, 'Cphi': -0.10550 * 3/5**(3/2)},
     }
-

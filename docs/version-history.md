@@ -1,6 +1,6 @@
 # 0.3 (beta)
 
-Version 0.3 remains in beta testing. The most significant change from version 0.2 is the inclusion of pressure as an input variable.
+Version 0.3 remains in beta testing. The most significant change from version 0.2 is the addition of pressure as an input variable.
 
 
 ## 0.3.0
@@ -14,12 +14,13 @@ Version 0.3 remains in beta testing. The most significant change from version 0.
   * Fixed loop index correction for n-n' interactions;
   * Eliminated unnecessary arrays for constant values in **coeffs**;
   * Adjusted **model.B** and **model.CT** function inputs to reduce number of **cflib** function calls;
-  * Rewrote CRP94 `Aosm` function to make it autograd-able.
+  * Rewrote CRP94 `Aosm` function to make it autograd-able;
+  * Added docstrings throughout (except for functions in **coeffs**).
 
 
 # 0.2 (beta)
 
-Version 0.2 included calculation of solute activity coefficients, water activity and osmotic coefficients, as a function of temperature and composition, at a constant pressure of 1 atmosphere.
+Version 0.2 includes calculation of solute activity coefficients, water activity and osmotic coefficients, as a function of temperature and composition, at a constant pressure of 1 atmosphere.
 
 
 ## 0.2.7
