@@ -17,7 +17,7 @@ cfltest = deepcopy(pz.cflibs.MarChemSpec)
 go = time()
 mols, ions, T, pres, cf, Gex_nRT, osm, aw, acfs \
     = pz.blackbox(filepath + filestem + '.csv',
-                  cflib = cfltest)
+                  cflib=cfltest)
 print(time() - go)
 
 mols = np.transpose(mols)
