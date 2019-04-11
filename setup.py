@@ -12,13 +12,15 @@ setuptools.setup(
     description  = 'Pitzer model for chemical activities in aqueous solutions',
     url          = 'https://github.com/mvdh7/pytzer',
     packages     = setuptools.find_packages(),
-    install_requires = ['autograd==1.2',
-                        'numpy>=1.15'],
+    install_requires = [
+        'numpy>=1.15',
+        'scipy>=1.2'],
+    dependency_links = ['https://github.com/mvdh7/autograd/tarball/master'],
     long_description = long_description,
     long_description_content_type = 'text/markdown',
     classifiers = (
         'Development Status :: 4 - Beta',
-        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Operating System :: OS Independent',
         'Natural Language :: English',
