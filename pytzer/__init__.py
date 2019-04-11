@@ -39,7 +39,7 @@ from copy import deepcopy
 from numpy import full_like, nan
 from numpy import any as np_any
 
-def blackbox(filename, cflib=cflibs.MarChemSpecPres, savefile=True):
+def blackbox(filename, cflib=cflibs.Seawater, savefile=True):
     """Import a CSV file with molality data, calculate all activity
     coefficients, and save results to a new CSV file.
     """

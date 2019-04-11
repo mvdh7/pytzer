@@ -32,19 +32,19 @@ class CoeffLib:
         """Add zero-functions for missing combinations of solutes."""
         # Get lists of cations and anions
         _, cations, anions, neutrals = props.charges(ions)
-        
+
         # Sort lists into alphabetical order
         cations.sort()
         anions.sort()
         neutrals.sort()
-        
+
         # betas and Cs
         for cation in cations:
             for anion in anions:
                 istr = '-'.join((cation, anion))
                 if istr not in self.bC.keys():
                     self.bC[istr] = coeffs.bC_none
-                    
+
         # c-c'-a thetas and psis
         for C0, cation0 in enumerate(cations):
             for cation1 in cations[C0+1:]:
@@ -55,7 +55,7 @@ class CoeffLib:
                     istr = '-'.join((cation0, cation1, anion))
                     if istr not in self.psi.keys():
                         self.psi[istr] = coeffs.psi_none
-                        
+
         # c-a-a' thetas and psis
         for A0, anion0 in enumerate(anions):
             for anion1 in anions[A0+1:]:
@@ -66,34 +66,34 @@ class CoeffLib:
                     istr = '-'.join((cation, anion0, anion1))
                     if istr not in self.psi.keys():
                         self.psi[istr] = coeffs.psi_none
-                        
+
         # Neutral interactions
         for N0, neutral0 in enumerate(neutrals):
-            
+
             # n-c lambdas
             for cation in cations:
                 inc = '-'.join((neutral0, cation))
                 if inc not in self.lambd.keys():
                     self.lambd[inc] = coeffs.lambd_none
-                    
+
                 # n-c-a zetas
                 for anion in anions:
                     inca = '-'.join((neutral0, cation, anion))
                     if inca not in self.zeta.keys():
                         self.zeta[inca] = coeffs.zeta_none
-                        
+
             # n-a lambdas
             for anion in anions:
                 ina = '-'.join((neutral0, anion))
                 if ina not in self.lambd.keys():
                     self.lambd[ina] = coeffs.lambd_none
-                    
+
             # n-n' lambdas including n-n
             for neutral1 in neutrals[N0:]:
                 inn = '-'.join((neutral0, neutral1))
                 if inn not in self.lambd.keys():
                     self.lambd[inn] = coeffs.lambd_none
-                    
+
             # n-n-n mus
             innn = '-'.join((neutral0, neutral0, neutral0))
             if innn not in self.mu.keys():
@@ -540,9 +540,11 @@ MarChemSpec.name = 'MarChemSpec'
 
 MarChemSpec.dh['Aosm'] = debyehueckel.Aosm_MarChemSpec
 
-#---------------------------------------------- MarChemSpec with pressure -----
-MarChemSpecPres = deepcopy(MarChemSpec)
-MarChemSpecPres.dh['Aosm'] = debyehueckel.Aosm_AW90
+#------------------------------------ Seawater: MarChemSpec with pressure -----
+Seawater = deepcopy(MarChemSpec)
+Seawater.dh['Aosm'] = debyehueckel.Aosm_AW90
+Seawater.bC['Na-Cl'] = coeffs.bC_Na_Cl_A92ii
+Seawater.bC['K-Cl'] = coeffs.bC_K_Cl_ZD17
 
 #--------------------------------------- Millero & Pierrot 1998 aka MIAMI -----
 #
