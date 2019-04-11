@@ -6,13 +6,11 @@ from autograd import elementwise_grad as egrad
 
 # Properties of pure water
 # Source: http://www.teos-10.org/pubs/IAPWS-2009-Supplementary.pdf
-# Validity: 100 < pres < 1e8 Pa; (270.5 - pres*7.43e-8) <= tempK <= 313.15 K
+# Validity: 100 < presPa < 1e8 Pa; (270.5 - presPa*7.43e-8) < tempK < 313.15 K
 # Seawater available from http://www.teos-10.org/pubs/IAPWS-08.pdf
 
-def Gibbs(tempK, pres):
+def Gibbs(tempK, presPa):
     """Gibbs energy function."""
-    # Convert dbar to Pa
-    presPa = pres * 10000
     # Coefficients of the Gibbs function as defined in Table 2:
     Gdict = {
         (0, 0):  0.101342743139674e3,
@@ -76,60 +74,60 @@ gtp = egrad(gt, argnum=1)
 gpp = egrad(gp, argnum=1)
 
 # Define functions for solution properties
-def rho(tempK, pres):
+def rho(tempK, presPa):
     """Density in kg/m**3."""
     # Table 3, Eq. (4)
-    return 1 / gp(tempK, pres)
+    return 1 / gp(tempK, presPa)
 
-def s(tempK, pres):
+def s(tempK, presPa):
     """Specific entropy in J/(kg*K)."""
     # Table 3, Eq. (5)
-    return -gt(tempK, pres)
+    return -gt(tempK, presPa)
 
-def cp(tempK, pres):
+def cp(tempK, presPa):
     """Specific isobaric heat capacity in J/(kg*K)."""
     # Table 3, Eq. (6)
-    return -tempK * gtt(tempK, pres)
+    return -tempK * gtt(tempK, presPa)
 
-def h(tempK, pres):
+def h(tempK, presPa):
     """Specific enthalpy in J/kg."""
     # Table 3, Eq. (7)
-    return Gibbs(tempK, pres) + tempK * s(tempK, pres)
+    return Gibbs(tempK, presPa) + tempK * s(tempK, presPa)
 
-def u(tempK, pres):
+def u(tempK, presPa):
     """Specific internal energy in J/kg."""
     # Table 3, Eq. (8)
-    return Gibbs(tempK, pres) + tempK * s(tempK, pres) - \
-        pres * gp(tempK, pres)
+    return Gibbs(tempK, presPa) + tempK * s(tempK, presPa) - \
+        presPa * gp(tempK, presPa)
 
-def f(tempK, pres):
+def f(tempK, presPa):
     """Specific Helmholtz energy in J/kg."""
     # Table 3, Eq. (9)
-    return Gibbs(tempK, pres) - pres * gp(tempK, pres)
+    return Gibbs(tempK, presPa) - presPa * gp(tempK, presPa)
 
-def alpha(tempK, pres):
+def alpha(tempK, presPa):
     """Thermal expansion coefficient in 1/K."""
     # Table 3, Eq. (10)
-    return gtp(tempK, pres) / gp(tempK, pres)
+    return gtp(tempK, presPa) / gp(tempK, presPa)
 
-def bs(tempK, pres):
-    """Isentropic temp.-press. coefficient, adiabatic lapse rate in K/Pa."""
+def bs(tempK, presPa):
+    """Isentropic temp.-presPas. coefficient, adiabatic lapse rate in K/Pa."""
     # Table 3, Eq. (11)
-    return -gtp(tempK, pres) / gp(tempK, pres)
+    return -gtp(tempK, presPa) / gp(tempK, presPa)
 
-def kt(tempK, pres):
-    """Isothermal compressibility in 1/Pa."""
+def kt(tempK, presPa):
+    """Isothermal compresPasibility in 1/Pa."""
     # Table 3, Eq. (12)
-    return -gpp(tempK, pres) / gp(tempK, pres)
+    return -gpp(tempK, presPa) / gp(tempK, presPa)
 
-def ks(tempK, pres):
-    """Isentropic compressibility in 1/Pa."""
+def ks(tempK, presPa):
+    """Isentropic compresPasibility in 1/Pa."""
     # Table 3, Eq. (13)
-    return (gtp(tempK, pres)**2 - gtt(tempK, pres) * gpp(tempK, pres)) / \
-        (gp(tempK, pres) * gtt(tempK, pres))
+    return (gtp(tempK, presPa)**2 - gtt(tempK, presPa) * gpp(tempK, presPa)) / \
+        (gp(tempK, presPa) * gtt(tempK, presPa))
 
-def w(tempK, pres):
+def w(tempK, presPa):
     """Speed of sound in m/s."""
     # Table 3, Eq. (14)
-    return gp(tempK, pres) * sqrt(gtt(tempK, pres) / \
-        (gtp(tempK, pres)**2 - gtt(tempK, pres) * gpp(tempK, pres)))
+    return gp(tempK, presPa) * sqrt(gtt(tempK, presPa) / \
+        (gtp(tempK, presPa)**2 - gtt(tempK, presPa) * gpp(tempK, presPa)))

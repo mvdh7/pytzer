@@ -94,7 +94,7 @@ def rhoWP93(tempK):
 #pres = 0.101325 # 1 atm in MPa
     
 tempK = np.arange(263.15, 314.15, 5)
-pres = np.full_like(tempK, 70.0)
+pres = np.full_like(tempK, 70) # MPa
 
 import pytzer as pz
 

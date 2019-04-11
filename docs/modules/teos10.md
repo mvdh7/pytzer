@@ -10,13 +10,13 @@ Formulation for Liquid Water for Oceanographic Use](http://www.teos-10.org/pubs/
 Every function uses a common syntax:
 
 ```python
-property = pz.teos10.property(tempK, pres)
+property = pz.teos10.property(tempK, presPa)
 ```
 
 **Inputs:**
 
   * `tempK` - water temperature in K;
-  * `pres` - water pressure in dbar.
+  * `presPa` - water pressure in Pa.
 
 **Output:**
 
@@ -33,6 +33,6 @@ The following properties can be calculated, all for pure water:
   * `f` - specific Helmholtz energy in J·kg<sup>−1</sup>;
   * `alpha` - thermal expansion coefficient in K<sup>−1</sup>;
   * `bs` - isentropic temperature-pressure coefficient/adiabatic lapse rate in K·Pa<sup>−1</sup>;
-  * `kt` - isothermal compressibility in dbar<sup>−1</sup>;
-  * `ks` - isentropic compressibility in dbar<sup>−1</sup>;
+  * `kt` - isothermal compressibility in Pa<sup>−1</sup>;
+  * `ks` - isentropic compressibility in Pa<sup>−1</sup>;
   * `w` - speed of sound in m·s<sup>−1</sup>.
