@@ -10,7 +10,7 @@ filestem = 'GenerateConcs'
 from time import time
 from copy import deepcopy
 
-cfltest = deepcopy(pz.cflibs.MarChemSpec)
+cfltest = deepcopy(pz.cflibs.MarChemSpecPres)
 #cfltest.bC['Na-Cl'] = pz.coeffs.bC_Na_Cl_A92ii
 #cfltest.bC['K-Cl'] = pz.coeffs.bC_K_Cl_ZD17
 
