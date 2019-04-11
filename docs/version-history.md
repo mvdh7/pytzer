@@ -1,6 +1,6 @@
 # 0.3 (beta)
 
-Version 0.3 remains in beta testing. The most significant change from version 0.2 is the addition of pressure as an input variable.
+Version 0.3 remains in beta testing. The most significant change from version 0.2 is the addition of pressure as an input variable. However, most of the interaction coefficients are still not yet pressure sensitive.
 
 
 ## 0.3.0
