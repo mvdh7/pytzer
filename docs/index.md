@@ -7,13 +7,14 @@
 
 # Installation
 
-If using conda, first create and activate a new environment with Python 3.6 and numpy 1.15. Then:
+If using conda, first create and activate a new environment with Python v3.6+, numpy v1.15+ and scipy v1.2+. Other versions are probably fine, but untested. Then:
 
 ```shell
 pip install pytzer
+pip install git+https://github.com/mvdh7/autograd#egg=autograd --upgrade --no-cache-dir
 ```
 
-Other versions are probably fine, but untested. We are using Python 3.6 rather than 3.7 to enable planned integration with MATLAB.
+The second line above is optional. It upgrades [autograd](https://github.com/HIPS/autograd) to the latest version that has been tested with pytzer, which eliminates some deprecation warnings that may appear when using the relatively old autograd version available from PyPI. You could also switch `mvdh7` in the link to `HIPS` to get the very latest autograd straight from the horse's mouth.
 
 See the [quick-start guide](quick-start) for more detailed instructions and examples.
 

@@ -13,9 +13,9 @@ setuptools.setup(
     url          = 'https://github.com/mvdh7/pytzer',
     packages     = setuptools.find_packages(),
     install_requires = [
+        'autograd==1.2',
         'numpy>=1.15',
         'scipy>=1.2'],
-    dependency_links = ['https://github.com/mvdh7/autograd/tarball/master'],
     long_description = long_description,
     long_description_content_type = 'text/markdown',
     classifiers = (
