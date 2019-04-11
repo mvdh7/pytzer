@@ -17,10 +17,10 @@
 """Pitzer model for chemical activities in aqueous solutions."""
 
 from . import cflibs, coeffs, constants, io, jfuncs, meta, model, \
-    props, tables
+    props, tables, teos10
 
 __all__ = ['cflibs', 'coeffs', 'constants', 'io', 'jfuncs', 'meta', 'model',
-    'props', 'tables']
+    'props', 'tables', 'teos10']
 __version__ = meta.version
 __author__ = 'Matthew P. Humphreys'
 

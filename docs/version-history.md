@@ -11,6 +11,7 @@ Version 0.3 remains in beta testing. The most significant change from version 0.
     * To all functions in **coeffs** except for `Aosm` functions;
     * To all relevant **model**, **io** and **blackbox** functions;
     * To the relevant parts of the documentation;
+  * Added **teos10** module to calculate various properties of pure water;
   * Fixed loop index correction for n-n' interactions;
   * Eliminated unnecessary arrays for constant values in **coeffs**;
   * Adjusted **model.B** and **model.CT** function inputs to reduce number of **cflib** function calls;

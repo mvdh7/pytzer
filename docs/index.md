@@ -63,6 +63,10 @@ See the [quick-start guide](quick-start) for more detailed instructions and exam
 <td><a href="modules/constants">Define physical constants</a></td>
 
 </tr><tr>
+<td><code>.teos10</code></td>
+<td><a href="modules/teos10">Properties of pure water</a></td>
+
+</tr><tr>
 <td><code>.meta</code></td>
 <td><a href="modules/meta">Define package metadata</a></td>
 
@@ -76,7 +80,7 @@ Its ongoing development is funded by the [Natural Environment Research Council](
 
 # License
 
-<img src="img/1920px-GPLv3_Logo.svg.png" width="25%" />
+<!--<img src="img/1920px-GPLv3_Logo.svg.png" width="25%" />-->
 
 The entirety of **pytzer** is licensed under the [GNU General Public License version 3 (GPLv3)](https://www.gnu.org/licenses/gpl-3.0.en.html).
 

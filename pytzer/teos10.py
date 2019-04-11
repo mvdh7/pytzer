@@ -1,13 +1,18 @@
-from autograd.numpy import array, sqrt
+# pytzer: Pitzer model for chemical activities in aqueous solutions
+# Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
+
+from autograd.numpy import sqrt
 from autograd import elementwise_grad as egrad
 
-# For pure water
+# Properties of pure water
 # Source: http://www.teos-10.org/pubs/IAPWS-2009-Supplementary.pdf
 # Validity: 100 < pres < 1e8 Pa; (270.5 - pres*7.43e-8) <= tempK <= 313.15 K
 # Seawater available from http://www.teos-10.org/pubs/IAPWS-08.pdf
 
 def Gibbs(tempK, pres):
     """Gibbs energy function."""
+    # Convert dbar to Pa
+    presPa = pres * 10000
     # Coefficients of the Gibbs function as defined in Table 2:
     Gdict = {
         (0, 0):  0.101342743139674e3,
@@ -54,7 +59,7 @@ def Gibbs(tempK, pres):
     }
     # Convert temperature and pressure:
     ctau = (tempK - 273.15) / 40
-    cpi  = (pres - 101325) / 1e8
+    cpi  = (presPa - 101325) / 1e8
     # Initialise with zero and increment following Eq. (1):
     Gsum = 0
     for j in range(8):
@@ -122,31 +127,9 @@ def ks(tempK, pres):
     # Table 3, Eq. (13)
     return (gtp(tempK, pres)**2 - gtt(tempK, pres) * gpp(tempK, pres)) / \
         (gp(tempK, pres) * gtt(tempK, pres))
-        
+
 def w(tempK, pres):
     """Speed of sound in m/s."""
     # Table 3, Eq. (14)
     return gp(tempK, pres) * sqrt(gtt(tempK, pres) / \
         (gtp(tempK, pres)**2 - gtt(tempK, pres) * gpp(tempK, pres)))
-
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-# Evaluate check values from Table 6 - all perfect
-tempK = array([273.15, 273.15, 313.15]) # K
-pres = array([101325, 1e8, 101325]) # Pa
-
-test00_Gibbs = Gibbs(tempK, pres)
-test01_gt = gt(tempK, pres)
-test02_gp = gp(tempK, pres)
-test03_gtt = gtt(tempK, pres)
-test04_gtp = gtp(tempK, pres)
-test05_gpp = gpp(tempK, pres)
-test06_h = h(tempK, pres)
-test07_f = f(tempK, pres)
-test08_u = u(tempK, pres)
-test09_s = s(tempK, pres)
-test10_rho = rho(tempK, pres)
-test11_cp = cp(tempK, pres)
-test12_w = w(tempK, pres)
