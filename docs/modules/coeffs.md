@@ -56,19 +56,15 @@ Each `bC_` function also returns values for the $\alpha_1$, $\alpha_2$ and $\ome
 
 ```python
 def bC_cation_anion_source(T, P):
-
     b0 = <b0 equation/value>
     b1 = <b1 equation/value>
     b2 = <b2 equation/value>
     C0 = <C0 equation/value>
     C1 = <C1 equation/value>
-
     alph1 = <alph1 value>
     alph2 = <alph2 value>
     omega = <omega value>
-
     valid = <logical of temperature/pressure validity>
-
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 ```
 
@@ -81,10 +77,8 @@ All the other coefficients do not have auxiliary parameters and consequently hav
 
 ```python
 def coefficient_ion1_ion2[_ion3]_source(T, P):
-
     coeff = <coefficient equation/value>
     valid = <logical expression evaluating temperature validity>
-
     return coeff, valid
 ```
 

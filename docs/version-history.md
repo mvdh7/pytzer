@@ -7,11 +7,11 @@ Version 0.3 remains in beta testing. The most significant change from version 0.
 
 **Release date:** forthcoming
 
-  * Added pressure input (`pres` in dbar):
-    * To all functions in **coeffs** except for `Aosm` functions;
-    * To all relevant **model**, **io** and **blackbox** functions;
-    * To the relevant parts of the documentation;
+  * Moved Debye-Hückel functions (for <i>A<sub>ϕ</sub></i>) from **coeffs** into new module **debyehueckel**;
+  * Added Archer and Wang (1990) calculation of <i>A<sub>ϕ</sub></i>;
+  * Added pressure input (`pres` in dbar) to all relevant functions in **coeffs**, **debyehueckel**, **model**, **io** and **blackbox** functions;
   * Added **teos10** module to calculate various properties of pure water;
+  * Added **MarChemSpecPres** coefficient library - like **MarChemSpec**, but with pressure-dependent <i>A<sub>ϕ</sub></i> term (following Archer and Wang, 1990);
   * Fixed loop index correction for n-n' interactions;
   * Eliminated unnecessary arrays for constant values in **coeffs**;
   * Adjusted **model.B** and **model.CT** function inputs to reduce number of **cflib** function calls;

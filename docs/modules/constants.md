@@ -7,7 +7,6 @@
 ## Universal constants
 
 <table><tr>
-
 <td><strong>Variable</strong></td>
 <td><strong>Description</strong></td>
 <td><strong>Value</strong></td>
@@ -15,7 +14,6 @@
 <td><strong>Source</strong></td>
 
 </tr><tr>
-
 <td><code>Mw</code></td>
 <td>Molar mass of water</td>
 <td>0.018015</td>
@@ -23,7 +21,6 @@
 <td>PubChem</td>
 
 </tr><tr>
-
 <td><code>R</code></td>
 <td>Universal gas constant</td>
 <td>8.3144598</td>
@@ -31,12 +28,18 @@
 <td>CODATA</td>
 
 </tr><tr>
-
 <td><code>F</code></td>
 <td>Faraday constant</td>
 <td>96485.33289</td>
 <td>C·mol<sup>−1</sup></td>
 <td>CODATA</td>
+
+</tr><tr>
+<td><code>NA</code></td>
+<td>Avogadro's constant</td>
+<td>6.0221367×10<sup>23</sup></td>
+<td>mol<sup>−1</sup></td>
+<td>&nbsp;</td>
 
 </tr></table>
 

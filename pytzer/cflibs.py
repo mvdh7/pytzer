@@ -3,7 +3,7 @@
 
 """Assemble dicts of Pitzer model coefficient functions."""
 
-from . import coeffs, jfuncs, props
+from . import coeffs, debyehueckel, jfuncs, props
 from .meta import version
 from autograd.numpy import array, concatenate, unique
 from copy import deepcopy
@@ -30,78 +30,70 @@ class CoeffLib:
 # ------------------------------------------ Populate with zero-functions -----
     def add_zeros(self, ions):
         """Add zero-functions for missing combinations of solutes."""
-
         # Get lists of cations and anions
         _, cations, anions, neutrals = props.charges(ions)
-
+        
         # Sort lists into alphabetical order
         cations.sort()
         anions.sort()
         neutrals.sort()
-
+        
         # betas and Cs
         for cation in cations:
             for anion in anions:
-
                 istr = '-'.join((cation, anion))
                 if istr not in self.bC.keys():
                     self.bC[istr] = coeffs.bC_none
-
+                    
         # c-c'-a thetas and psis
         for C0, cation0 in enumerate(cations):
             for cation1 in cations[C0+1:]:
-
                 istr = '-'.join((cation0, cation1))
                 if istr not in self.theta.keys():
                     self.theta[istr] = coeffs.theta_none
-
                 for anion in anions:
-
                     istr = '-'.join((cation0, cation1, anion))
                     if istr not in self.psi.keys():
                         self.psi[istr] = coeffs.psi_none
-
+                        
         # c-a-a' thetas and psis
         for A0, anion0 in enumerate(anions):
             for anion1 in anions[A0+1:]:
-
                 istr = '-'.join((anion0, anion1))
                 if istr not in self.theta.keys():
                     self.theta[istr] = coeffs.theta_none
-
                 for cation in cations:
-
                     istr = '-'.join((cation, anion0, anion1))
                     if istr not in self.psi.keys():
                         self.psi[istr] = coeffs.psi_none
-
+                        
         # Neutral interactions
         for N0, neutral0 in enumerate(neutrals):
-
+            
             # n-c lambdas
             for cation in cations:
                 inc = '-'.join((neutral0, cation))
                 if inc not in self.lambd.keys():
                     self.lambd[inc] = coeffs.lambd_none
-
+                    
                 # n-c-a zetas
                 for anion in anions:
                     inca = '-'.join((neutral0, cation, anion))
                     if inca not in self.zeta.keys():
                         self.zeta[inca] = coeffs.zeta_none
-
+                        
             # n-a lambdas
             for anion in anions:
                 ina = '-'.join((neutral0, anion))
                 if ina not in self.lambd.keys():
                     self.lambd[ina] = coeffs.lambd_none
-
+                    
             # n-n' lambdas including n-n
             for neutral1 in neutrals[N0:]:
                 inn = '-'.join((neutral0, neutral1))
                 if inn not in self.lambd.keys():
                     self.lambd[inn] = coeffs.lambd_none
-
+                    
             # n-n-n mus
             innn = '-'.join((neutral0, neutral0, neutral0))
             if innn not in self.mu.keys():
@@ -247,7 +239,7 @@ M88 = CoeffLib()
 M88.name = 'M88'
 
 # Debye-Hueckel limiting slope
-M88.dh['Aosm'] = coeffs.Aosm_M88
+M88.dh['Aosm'] = debyehueckel.Aosm_M88
 
 # Cation-anion interactions (betas and Cs)
 M88.bC['Ca-Cl' ] = coeffs.bC_Ca_Cl_M88
@@ -285,7 +277,7 @@ GM89 = CoeffLib()
 GM89.name = 'GM89'
 
 # Debye-Hueckel limiting slope
-GM89.dh['Aosm'] = coeffs.Aosm_M88
+GM89.dh['Aosm'] = debyehueckel.Aosm_M88
 
 # Cation-anion interactions (betas and Cs)
 GM89.bC['Ca-Cl' ] = coeffs.bC_Ca_Cl_GM89
@@ -332,7 +324,7 @@ CRP94 = CoeffLib()
 CRP94.name = 'CRP94'
 
 # Debye-Hueckel limiting slope
-CRP94.dh['Aosm'] = coeffs.Aosm_CRP94
+CRP94.dh['Aosm'] = debyehueckel.Aosm_CRP94
 
 # Cation-anion interactions (betas and Cs)
 CRP94.bC['H-HSO4'] = coeffs.bC_H_HSO4_CRP94
@@ -360,7 +352,7 @@ WM13 = CoeffLib()
 WM13.name = 'WM13'
 
 # Debye-Hueckel limiting slope and unsymmetrical mixing
-WM13.dh['Aosm'] = coeffs.Aosm_M88
+WM13.dh['Aosm'] = debyehueckel.Aosm_M88
 WM13.jfunc = jfuncs.Harvie
 
 # Table A1: Na salts
@@ -493,7 +485,7 @@ WM13.get_contents()
 WM13_MarChemSpec25 = deepcopy(WM13)
 WM13_MarChemSpec25.name = 'WM13_MarChemSpec25'
 
-WM13_MarChemSpec25.dh['Aosm'] = coeffs.Aosm_MarChemSpec25
+WM13_MarChemSpec25.dh['Aosm'] = debyehueckel.Aosm_MarChemSpec25
 WM13_MarChemSpec25.jfunc = jfuncs.P75_eq47
 
 WM13_MarChemSpec25.theta['H-Na'] = coeffs.theta_H_Na_MarChemSpec25
@@ -540,13 +532,17 @@ MarChemSpec25.get_contents()
 MarChemSpec05 = deepcopy(MarChemSpec25)
 MarChemSpec05.name = 'MarChemSpec05'
 
-MarChemSpec05.dh['Aosm'] = coeffs.Aosm_MarChemSpec05
+MarChemSpec05.dh['Aosm'] = debyehueckel.Aosm_MarChemSpec05
 
 # Begin with WM13_MarChemSpec25, switch to CRP94 corrected Aosm
 MarChemSpec = deepcopy(MarChemSpec25)
 MarChemSpec.name = 'MarChemSpec'
 
-MarChemSpec.dh['Aosm'] = coeffs.Aosm_MarChemSpec
+MarChemSpec.dh['Aosm'] = debyehueckel.Aosm_MarChemSpec
+
+#---------------------------------------------- MarChemSpec with pressure -----
+MarChemSpecPres = deepcopy(MarChemSpec)
+MarChemSpecPres.dh['Aosm'] = debyehueckel.Aosm_AW90
 
 #--------------------------------------- Millero & Pierrot 1998 aka MIAMI -----
 #
@@ -555,7 +551,7 @@ MarChemSpec.dh['Aosm'] = coeffs.Aosm_MarChemSpec
 MIAMI = CoeffLib()
 MIAMI.name = 'MIAMI'
 
-MIAMI.dh['Aosm'] = coeffs.Aosm_M88
+MIAMI.dh['Aosm'] = debyehueckel.Aosm_M88
 MIAMI.jfunc = jfuncs.Harvie
 
 # Table A1

@@ -1,6 +1,8 @@
 # pytzer: Pitzer model for chemical activities in aqueous solutions
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 
+"""Evaluate Pitzer model interaction coefficients."""
+
 from autograd.numpy import array, exp, float_, full_like, log, \
                            logical_and, sqrt
 from autograd.numpy import abs as np_abs
@@ -61,11 +63,9 @@ def mu_none(T, P):
 # --- theta: hydrogen magnesium -----------------------------------------------
 
 def theta_H_Mg_RGB80(T, P):
-
     # RGB80 do provide theta values at 5, 15, 25, 35 and 45 degC, but no
     #  equation to interpolate between them.
     # This function just returns the 25 degC value.
-
     theta = 0.0620
     valid = T == 298.15
 
@@ -80,25 +80,18 @@ def theta_H_Mg_RGB80(T, P):
 # --- bC: magnesium sulfate ---------------------------------------------------
 
 def bC_Mg_SO4_RM81i(T, P):
-
     b0 = 0.21499
     b1 = 3.3646
     b2 = -32.743
-
     Cphi = 0.02797
-
     zMg  = +2
     zSO4 = -2
     C0 = Cphi / (2 * sqrt(np_abs(zMg * zSO4)))
-
     C1 = 0
-
     alph1 = 1.4
     alph2 = 12
     omega = -9
-
     valid = T == 298.15
-
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 # === RARD & MILLER 1981i =====================================================
@@ -110,10 +103,8 @@ def bC_Mg_SO4_RM81i(T, P):
 # --- theta: calcium hydrogen -------------------------------------------------
 
 def theta_Ca_H_RGO82(T, P):
-
     theta = 0.0612
     valid = T == 298.15
-
     return theta, valid
 
 # === ROY ET AL. 1982 =========================================================
@@ -125,9 +116,7 @@ def theta_Ca_H_RGO82(T, P):
 PP86ii_Tr = 298.15
 
 def PP86ii_eq28(T,q):
-
     Tr = PP86ii_Tr
-
     return ((T**2 - Tr**2) * q[0] / 2 \
           + (T**3 - Tr**3) * q[1] / 3 \
           + (T**4 - Tr**4) * q[2] / 4 \
@@ -135,7 +124,6 @@ def PP86ii_eq28(T,q):
           +         Tr**2  * q[4]) / T**2
 
 def PP86ii_eq29(T,q):
-
     # q[x]     b0         b1         b2         C0
     #   0      q6         q10        q12        q15
     #   1      q7         q11        q13        q16
@@ -143,14 +131,11 @@ def PP86ii_eq29(T,q):
     #   3      q9          0          0         q18
     #   4    b0L(Tr)    b1L(Tr)    b2L(Tr)    C0L(Tr)
     #   5     b0(Tr)     b1(Tr)     b2(Tr)     C0(Tr)    from RM81
-
     Tr = PP86ii_Tr
-
     # Substitute to avoid 'difference of two large numbers' error
     t = T / Tr
     # Original fourth line was:
     #  + q[3] * (T**4/20 + Tr**5/(5*T) - Tr**4/4)
-
     return q[0] * (T   / 2 + Tr**2/(2*T) - Tr     )   \
          + q[1] * (T**2/ 6 + Tr**3/(3*T) - Tr**2/2)   \
          + q[2] * (T**3/12 + Tr**4/(4*T) - Tr**3/3)   \
@@ -876,23 +861,6 @@ def M88_eq13(T, a):
          + a[5] * T**2      \
          + a[6] / (680.-T)  \
          + a[7] / (T-227.)
-
-# --- Debye-Hueckel slope -----------------------------------------------------
-
-def Aosm_M88(T):
-
-    Aosm  = M88_eq13(T,float_([ 3.36901532e-1,
-                               -6.32100430e-4,
-                                9.14252359e00,
-                               -1.35143986e-2,
-                                2.26089488e-3,
-                                1.92118597e-6,
-                                4.52586464e+1,
-                                0            ]))
-
-    valid = logical_and(T >= 273.15, T <= 573.15)
-
-    return Aosm, valid
 
 # --- bC: calcium chloride ----------------------------------------------------
 
@@ -1716,86 +1684,6 @@ def bC_Na_HSO4_HPR93(T, P):
 
 #%%############################################################################
 # === CLEGG ET AL 1994 ========================================================
-
-# --- Debye-Hueckel slope -----------------------------------------------------
-
-def Aosm_CRP94(T): # CRP94 Appendix II
-
-    # This function is long-winded to make it autograd-able
-
-    # Transform temperature
-    X = (2 * T - 373.15 - 234.15) / (373.15 - 234.15)
-
-    # Set coefficients - CRP94 Table 11
-    a_Aosm = [
-         0.797256081240 / 2,
-         0.573389669896e-1,
-         0.977632177788e-3,
-         0.489973732417e-2,
-        -0.313151784342e-2,
-         0.179145971002e-2,
-        -0.920584241844e-3,
-         0.443862726879e-3,
-        -0.203661129991e-3,
-         0.900924147948e-4,
-        -0.388189392385e-4,
-         0.164245088592e-4,
-        -0.686031972567e-5,
-         0.283455806377e-5,
-        -0.115641433004e-5,
-         0.461489672579e-6,
-        -0.177069754948e-6,
-         0.612464488231e-7,
-        -0.175689013085e-7,
-    ]
-
-    # Set up T "matrix" - CRP94 Eq. (AII2)
-    Tmx00 = 1
-    Tmx01 = X
-    Tmx02 = 2 * X * Tmx01 - Tmx00
-    Tmx03 = 2 * X * Tmx02 - Tmx01
-    Tmx04 = 2 * X * Tmx03 - Tmx02
-    Tmx05 = 2 * X * Tmx04 - Tmx03
-    Tmx06 = 2 * X * Tmx05 - Tmx04
-    Tmx07 = 2 * X * Tmx06 - Tmx05
-    Tmx08 = 2 * X * Tmx07 - Tmx06
-    Tmx09 = 2 * X * Tmx08 - Tmx07
-    Tmx10 = 2 * X * Tmx09 - Tmx08
-    Tmx11 = 2 * X * Tmx10 - Tmx09
-    Tmx12 = 2 * X * Tmx11 - Tmx10
-    Tmx13 = 2 * X * Tmx12 - Tmx11
-    Tmx14 = 2 * X * Tmx13 - Tmx12
-    Tmx15 = 2 * X * Tmx14 - Tmx13
-    Tmx16 = 2 * X * Tmx15 - Tmx14
-    Tmx17 = 2 * X * Tmx16 - Tmx15
-    Tmx18 = 2 * X * Tmx17 - Tmx16
-
-    # Solve for Aosm - CRP94 (E.AII1)
-    Aosm = \
-        Tmx00 * a_Aosm[ 0] + \
-        Tmx01 * a_Aosm[ 1] + \
-        Tmx02 * a_Aosm[ 2] + \
-        Tmx03 * a_Aosm[ 3] + \
-        Tmx04 * a_Aosm[ 4] + \
-        Tmx05 * a_Aosm[ 5] + \
-        Tmx06 * a_Aosm[ 6] + \
-        Tmx07 * a_Aosm[ 7] + \
-        Tmx08 * a_Aosm[ 8] + \
-        Tmx09 * a_Aosm[ 9] + \
-        Tmx10 * a_Aosm[10] + \
-        Tmx11 * a_Aosm[11] + \
-        Tmx12 * a_Aosm[12] + \
-        Tmx13 * a_Aosm[13] + \
-        Tmx14 * a_Aosm[14] + \
-        Tmx15 * a_Aosm[15] + \
-        Tmx16 * a_Aosm[16] + \
-        Tmx17 * a_Aosm[17] + \
-        Tmx18 * a_Aosm[18]
-
-    # Validity range
-    valid = logical_and(T >= 234.15, T <= 373.15)
-
-    return Aosm, valid
 
 # --- betas and Cs ------------------------------------------------------------
 
@@ -5114,34 +5002,6 @@ def bC_Ca_HS_HPM88(T, P):
 #%%############################################################################
 # === MARCHEMSPEC SPECIALS ====================================================
 #
-# These are functions used for testing within the MarChemSpec project
-
-# For 298.15 K
-def Aosm_MarChemSpec25(T):
-
-    # Value from Pitzer (1991) Chapter 3 Table 1 (page 99)
-    Aosm = 0.3915
-    valid = T == 298.15
-
-    return Aosm, valid
-
-# For 278.15 K
-def Aosm_MarChemSpec05(T):
-
-    # Value from FastPitz
-    Aosm = 0.3792
-    valid = T == 298.15
-
-    return Aosm, valid
-
-# Following CRP94 but with a correction to match AW90
-def Aosm_MarChemSpec(T):
-
-    Aosm  = Aosm_CRP94(T)[0] + 2.99e-8
-    valid = logical_and(T >= 234.15, T <= 373.15)
-
-    return Aosm, valid
-
 # --- theta: hydrogen sodium --------------------------------------------------
 
 def theta_H_Na_MarChemSpec25(T, P):
