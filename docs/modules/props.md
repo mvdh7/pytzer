@@ -1,13 +1,13 @@
-# Introduction
+# Solute properties
 
 *The casual user has no need to explicitly call this module.*
 
-**pytzer.props** contains functions that retrieve the universal properties of ions and electrolytes. By *universal*, we mean that these do not change depending on the exact model set-up, unlike the Pitzer model coefficients.
+`.props` contains functions that retrieve the universal properties of ions and electrolytes. By *universal*, we mean that these do not change depending on the exact model set-up, unlike the Pitzer model coefficients.
 
 
-## pytzer.props.charges
+## `.charges` - solute charges
 
-For an input array of "ion" names - following the **pytzer** [naming conventions](../../name-conventions) - returns the charge on each ion, and separate lists of cations, anions, and neutral species.
+For an input array of "ion" names - following the Pytzer [naming conventions](../../name-conventions) - returns the charge on each ion, and separate lists of cations, anions, and neutral species.
 
 ### Syntax
 

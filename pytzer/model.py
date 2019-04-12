@@ -1,292 +1,238 @@
 # pytzer: Pitzer model for chemical activities in aqueous solutions
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 
-from autograd.numpy import array, exp, full_like, log, \
-                           shape, sqrt, vstack, zeros_like
+"""Calculate activities using the Pitzer model."""
+
+from autograd.numpy import exp, full_like, log, sqrt, vstack, zeros_like
 from autograd.numpy import abs as np_abs
 from autograd.numpy import any as np_any
 from autograd.numpy import sum as np_sum
 from autograd import elementwise_grad as egrad
-from .constants import b, Mw, R
+from .constants import b, Mw
+from .cflibs import Seawater
 from . import props
 
 
 #==============================================================================
 #=================================================== Debye-Hueckel slopes =====
 
-
-def fG(tempK, I, cflib): # from CRP94 Eq. (AI1)
-
-    return -4 * cflib.dh['Aosm'](tempK)[0] * I * log(1 + b*sqrt(I)) / b
+def fG(tempK, pres, I, cflib): # from CRP94 Eq. (AI1)
+    """Calculate the Debye-Hueckel component of the excess Gibbs energy."""
+    return -4 * cflib.dh['Aosm'](tempK, pres)[0] * I * log(1 + b*sqrt(I)) / b
 
 
 #==============================================================================
 #============================================== Pitzer model subfunctions =====
 
-
-def g(x): # CRP94 Eq. (AI13)
+def g(x):
+    """g function following CRP94 Eq. (AI13)."""
     return 2 * (1 - (1 + x) * exp(-x)) / x**2
 
-def h(x):  # CRP94 Eq. (AI15)
+def h(x):
+    """h function following CRP94 Eq. (AI15)."""
     return (6 - (6 + x*(6 + 3*x + x**2)) * exp(-x)) / x**4
 
-
-def B(tempK, I, cflib, iset): # CRP94 Eq. (AI7)
-
-    b0, b1, b2, _,_, alph1, alph2, _,_ = cflib.bC[iset](tempK)
-
+def B(I, b0, b1, b2, alph1, alph2):
+    """B function following CRP94 Eq. (AI7)."""
     return b0 + b1 * g(alph1 * sqrt(I)) + b2 * g(alph2 * sqrt(I))
 
-def CT(tempK, I, cflib, iset): # CRP94 Eq. (AI10)
-
-    _,_,_, C0, C1, _,_, omega, _ = cflib.bC[iset](tempK)
-
-    return C0 + 4 * C1 * h(omega * sqrt(I))
+def CT(I, C0, C1, omega):
+    """CT function following CRP94 Eq. (AI10)."""
+    return C0 + 4*C1 * h(omega * sqrt(I))
 
 
 #==============================================================================
 #============================================= Unsymmetrical mixing terms =====
 
+def xij(tempK, pres, I, z0, z1, cflib):
+    """xij function for unsymmetrical mixing."""
+    return 6 * z0*z1 * cflib.dh['Aosm'](tempK, pres)[0] * sqrt(I)
 
-def xij(tempK, I, z0, z1, cflib):
-
-    return 6 * z0*z1 * cflib.dh['Aosm'](tempK)[0] * sqrt(I)
-
-def etheta(tempK, I, z0, z1, cflib):
-
-    x00 = xij(tempK, I, z0, z0, cflib)
-    x01 = xij(tempK, I, z0, z1, cflib)
-    x11 = xij(tempK, I, z1, z1, cflib)
-
+def etheta(tempK, pres, I, z0, z1, cflib):
+    """etheta function for unsymmetrical mixing."""
+    x00 = xij(tempK, pres, I, z0, z0, cflib)
+    x01 = xij(tempK, pres, I, z0, z1, cflib)
+    x11 = xij(tempK, pres, I, z1, z1, cflib)
     etheta = z0*z1 * (cflib.jfunc(x01) \
              - 0.5 * (cflib.jfunc(x00) + cflib.jfunc(x11))) / (4 * I)
-
     return etheta
 
 
 #==============================================================================
 #==================================================== Excess Gibbs energy =====
 
-
 def Istr(mols, zs):
+    """Calculate the ionic strength."""
     return 0.5 * np_sum(mols * zs**2, axis=0)
 
 def Zstr(mols, zs):
+    """Calculate the Z function."""
     return np_sum(mols * np_abs(zs), axis=0)
 
-
-def Gex_nRT(mols, ions, tempK, cflib, Izero=False):
-
+def Gex_nRT(mols, ions, tempK, pres, cflib=Seawater, Izero=False):
+    """Calculate the excess Gibbs energy of a solution."""
+    # Note that oceanographers record ocean pressure as only due to the water,
+    # so at the sea surface pressure = 0 dbar, but the atmospheric pressure
+    # should also be taken into account for this model
     # Ionic strength etc.
     zs, cations, anions, neutrals = props.charges(ions)
     zs = vstack(zs)
     I = Istr(mols, zs)
     Z = Zstr(mols, zs)
-
     # Split up concentrations
     if np_any(zs == 0):
-        neus = vstack([mols[N] for N,_ in enumerate(zs) if zs[N] == 0])
+        neus = vstack([mols[N] for N, _ in enumerate(zs) if zs[N] == 0])
     else:
         neus = []
-
     if np_any(zs > 0):
-        cats = vstack([mols[C] for C,_ in enumerate(zs) if zs[C] > 0])
+        cats = vstack([mols[C] for C, _ in enumerate(zs) if zs[C] > 0])
     else:
         cats = []
-
     if np_any(zs < 0):
-        anis = vstack([mols[A] for A,_ in enumerate(zs) if zs[A] < 0])
+        anis = vstack([mols[A] for A, _ in enumerate(zs) if zs[A] < 0])
     else:
         anis = []
-
     # Split up charges
     zCs = vstack(zs[zs > 0])
     zAs = vstack(zs[zs < 0])
-
     # Initialise with zeros
     Gex_nRT = zeros_like(tempK)
-
     # Don't do ionic calculations if Izero is requested
     if not Izero:
-
         # Begin with Debye-Hueckel component
-        Gex_nRT = Gex_nRT + fG(tempK, I, cflib)
-
+        Gex_nRT = Gex_nRT + fG(tempK, pres, I, cflib)
         # Loop through cations
-        for C0, cation0 in enumerate(cations):
-
+        for CX, cationx in enumerate(cations):
             # Add c-a interactions
             for A, anion in enumerate(anions):
-
-                iset = '-'.join((cation0,anion))
-
-                Gex_nRT = Gex_nRT + cats[C0] * anis[A] \
-                    * (2*B(tempK, I, cflib, iset) + Z*CT(tempK, I, cflib, iset))
-
+                iset = '-'.join((cationx, anion))
+                b0, b1, b2, C0, C1, alph1, alph2, omega, _ = \
+                    cflib.bC[iset](tempK, pres)
+                Gex_nRT = Gex_nRT + cats[CX] * anis[A] \
+                    * (2 * B(I, b0, b1, b2, alph1, alph2) \
+                    + Z * CT(I, C0, C1, omega))
             # Add c-c' interactions
-            for xC1, cation1 in enumerate(cations[C0+1:]):
-
-                C1 = xC1 + C0 + 1
-
-                iset = [cation0, cation1]
+            for xCY, cationy in enumerate(cations[CX+1:]):
+                CY = xCY + CX + 1
+                iset = [cationx, cationy]
                 iset.sort()
                 iset= '-'.join(iset)
-
-                Gex_nRT = Gex_nRT + cats[C0] * cats[C1] \
-                    * 2 * cflib.theta[iset](tempK)[0]
-
+                Gex_nRT = Gex_nRT + cats[CX] * cats[CY] \
+                    * 2 * cflib.theta[iset](tempK, pres)[0]
                 # Unsymmetrical mixing terms
-                if zCs[C0] != zCs[C1]:
-
-                    Gex_nRT = Gex_nRT + cats[C0] * cats[C1] \
-                        * 2 * etheta(tempK, I, zCs[C0], zCs[C1], cflib)
-
+                if zCs[CX] != zCs[CY]:
+                    Gex_nRT = Gex_nRT + cats[CX] * cats[CY] \
+                        * 2 * etheta(tempK, pres, I, zCs[CX], zCs[CY], cflib)
                 # Add c-c'-a interactions
                 for A, anion in enumerate(anions):
-
                     itri = '-'.join((iset, anion))
-
-                    Gex_nRT = Gex_nRT + cats[C0] * cats[C1] * anis[A] \
-                        * cflib.psi[itri](tempK)[0]
-
+                    Gex_nRT = Gex_nRT + cats[CX] * cats[CY] * anis[A] \
+                        * cflib.psi[itri](tempK, pres)[0]
         # Loop through anions
-        for A0, anion0 in enumerate(anions):
-
+        for AX, anionx in enumerate(anions):
             # Add a-a' interactions
-            for xA1, anion1 in enumerate(anions[A0+1:]):
-
-                A1 = xA1 + A0 + 1
-
-                iset = [anion0, anion1]
+            for xAY, aniony in enumerate(anions[AX+1:]):
+                AY = xAY + AX + 1
+                iset = [anionx, aniony]
                 iset.sort()
                 iset = '-'.join(iset)
-
-                Gex_nRT = Gex_nRT + anis[A0] * anis[A1] \
-                    * 2 * cflib.theta[iset](tempK)[0]
-
+                Gex_nRT = Gex_nRT + anis[AX] * anis[AY] \
+                    * 2 * cflib.theta[iset](tempK, pres)[0]
                 # Unsymmetrical mixing terms
-                if zAs[A0] != zAs[A1]:
-
-                    Gex_nRT = Gex_nRT + anis[A0] * anis[A1] \
-                        * 2 * etheta(tempK, I, zAs[A0], zAs[A1], cflib)
-
+                if zAs[AX] != zAs[AY]:
+                    Gex_nRT = Gex_nRT + anis[AX] * anis[AY] \
+                        * 2 * etheta(tempK, pres, I, zAs[AX], zAs[AY], cflib)
                 # Add c-a-a' interactions
                 for C, cation in enumerate(cations):
-
                     itri = '-'.join((cation, iset))
-
-                    Gex_nRT = Gex_nRT + anis[A0] * anis[A1] * cats[C] \
-                        * cflib.psi[itri](tempK)[0]
-
+                    Gex_nRT = Gex_nRT + anis[AX] * anis[AY] * cats[C] \
+                        * cflib.psi[itri](tempK, pres)[0]
     # Add neutral interactions
-    for N0, neutral0 in enumerate(neutrals):
-
+    for NX, neutralx in enumerate(neutrals):
         # Add n-c interactions
         for C, cation in enumerate(cations):
-
-            inc = '-'.join((neutral0, cation))
-
-            Gex_nRT = Gex_nRT + neus[N0] * cats[C] \
-                * 2 * cflib.lambd[inc](tempK)[0]
-
+            inc = '-'.join((neutralx, cation))
+            Gex_nRT = Gex_nRT + neus[NX] * cats[C] \
+                * 2 * cflib.lambd[inc](tempK, pres)[0]
             # Add n-c-a interactions
             for A, anion in enumerate(anions):
-
                 inca = '-'.join((inc, anion))
-
-                Gex_nRT = Gex_nRT + neus[N0] * cats[C] * anis[A] \
-                    * cflib.zeta[inca](tempK)[0]
-
+                Gex_nRT = Gex_nRT + neus[NX] * cats[C] * anis[A] \
+                    * cflib.zeta[inca](tempK, pres)[0]
         # Add n-a interactions
         for A, anion in enumerate(anions):
-
-            ina = '-'.join((neutral0, anion))
-
-            Gex_nRT = Gex_nRT + neus[N0] * anis[A] \
-                * 2 * cflib.lambd[ina](tempK)[0]
-
+            ina = '-'.join((neutralx, anion))
+            Gex_nRT = Gex_nRT + neus[NX] * anis[A] \
+                * 2 * cflib.lambd[ina](tempK, pres)[0]
         # n-n' excluding n-n
-        for N1, neutral1 in enumerate(neutrals[N0+1:]):
-
-            inn = [neutral0, neutral1]
+        for xNY, neutraly in enumerate(neutrals[NX+1:]):
+            NY = xNY + NX + 1
+            inn = [neutralx, neutraly]
             inn.sort()
             inn = '-'.join(inn)
-
-            Gex_nRT = Gex_nRT + neus[N0] * neus[N1] \
-                * 2 * cflib.lambd[inn](tempK)[0]
-
+            Gex_nRT = Gex_nRT + neus[NX] * neus[NY] \
+                * 2 * cflib.lambd[inn](tempK, pres)[0]
         # n-n
-        inn = '-'.join((neutral0, neutral0))
-
-        Gex_nRT = Gex_nRT + neus[N0]**2 * cflib.lambd[inn](tempK)[0]
-
+        inn = '-'.join((neutralx, neutralx))
+        Gex_nRT = Gex_nRT + neus[NX]**2 * cflib.lambd[inn](tempK, pres)[0]
         # n-n-n
-        innn = '-'.join((neutral0,neutral0,neutral0))
-
-        Gex_nRT = Gex_nRT + neus[N0]**3 * cflib.mu[innn](tempK)[0]
-
-
+        innn = '-'.join((neutralx,neutralx,neutralx))
+        Gex_nRT = Gex_nRT + neus[NX]**3 * cflib.mu[innn](tempK, pres)[0]
     return Gex_nRT
 
 
 #==============================================================================
 #=========================================== Solute activity coefficients =====
 
-
 # Determine activity coefficient function
-ln_acfs = egrad(Gex_nRT)
+def ln_acfs(mols, ions, tempK, pres, cflib=Seawater, Izero=False):
+    """Calculate the natural logarithms of the activity coefficients
+    of all solutes.
+    """
+    return egrad(Gex_nRT)(mols, ions, tempK, pres, cflib, Izero)
 
-def acfs(mols, ions, tempK, cflib, Izero=False):
-    return exp(ln_acfs(mols, ions, tempK, cflib, Izero))
-
+def acfs(mols, ions, tempK, pres, cflib=Seawater, Izero=False):
+    """Calculate the activity coefficients of all solutes."""
+    return exp(ln_acfs(mols, ions, tempK, pres, cflib, Izero))
 
 # Get mean activity coefficient for an M_(nM)X_(nX) electrolyte
 def ln_acf2ln_acf_MX(ln_acfM, ln_acfX, nM, nX):
+    """Calculate the mean activity coefficient for an electrolyte."""
     return (nM * ln_acfM + nX * ln_acfX) / (nM + nX)
-
 
 #==============================================================================
 #=============================== Osmotic coefficient and solvent activity =====
 
-
 #---------------------------------------------------- Osmotic coefficient -----
 
-# Osmotic coefficient
-def osm(mols, ions, tempK, cflib, Izero=False):
-
-    ww = full_like(tempK,1.0)
-
-    return 1 - egrad(
-        lambda ww: ww * Gex_nRT(mols/ww, ions, tempK, cflib, Izero))(ww) \
+def osm(mols, ions, tempK, pres, cflib=Seawater, Izero=False):
+    """Calculate the osmotic coefficient."""
+    ww = full_like(tempK, 1.0)
+    return 1 - egrad(lambda ww: \
+        ww * Gex_nRT(mols/ww, ions, tempK, pres, cflib, Izero))(ww) \
         / np_sum(mols, axis=0)
-
 
 #--------------------------------------------------------- Water activity -----
 
-# Water activity - direct
-def lnaw(mols, ions, tempK, cflib, Izero=False):
-
+def lnaw(mols, ions, tempK, pres, cflib=Seawater, Izero=False):
+    """Calculate the natural log of the water activity."""
     ww = full_like(tempK, 1.0)
-
-    return (egrad(
-        lambda ww: ww * Gex_nRT(mols/ww, ions, tempK, cflib, Izero))(ww) \
+    return (egrad(lambda ww: \
+        ww * Gex_nRT(mols/ww, ions, tempK, pres, cflib, Izero))(ww) \
         - np_sum(mols, axis=0)) * Mw
 
-
-def aw(mols, ions, tempK, cflib, Izero=False):
-
-    return exp(lnaw(mols, ions, tempK, cflib, Izero))
-
+def aw(mols, ions, tempK, pres, cflib=Seawater, Izero=False):
+    """Calculate the water activity."""
+    return exp(lnaw(mols, ions, tempK, pres, cflib, Izero))
 
 #------------------------------------------------------------ Conversions -----
 
-# Convert osmotic coefficient to water activity
 def osm2aw(mols, osm):
+    """Convert osmotic coefficient to water activity."""
     return exp(-osm * Mw * np_sum(mols, axis=0))
 
-# Convert water activity to osmotic coefficient
 def aw2osm(mols, aw):
+    """Convert water activity to osmotic coefficient."""
     return -log(aw) / (Mw * np_sum(mols, axis=0))
-
 
 #==============================================================================

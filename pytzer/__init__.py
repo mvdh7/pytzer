@@ -14,66 +14,70 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-__all__ = ['cflibs', 'coeffs', 'constants', 'io', 'jfuncs', 'meta', 'model',
-           'props', 'tables']
+"""Pitzer model for chemical activities in aqueous solutions."""
 
-from . import cflibs, coeffs, constants, io, jfuncs, meta, model, \
-              props, tables
+from . import cflibs, coeffs, constants, debyehueckel, io, jfuncs, \
+    meta, model, props, tables, teos10
 
+__all__ = [
+    'cflibs',
+    'coeffs',
+    'constants',
+    'debyehueckel',
+    'io',
+    'jfuncs',
+    'meta',
+    'model',
+    'props',
+    'tables',
+    'teos10',
+]
 __version__ = meta.version
+__author__ = 'Matthew P. Humphreys'
 
-# Black box function
 from copy import deepcopy
 from numpy import full_like, nan
 from numpy import any as np_any
 
-def blackbox(filename, cflib=cflibs.MarChemSpec, savefile=True):
-
+def blackbox(filename, cflib=cflibs.Seawater, savefile=True):
+    """Import a CSV file with molality data, calculate all activity
+    coefficients, and save results to a new CSV file.
+    """
     # Import test dataset
-    mols, ions, tempK = io.getmols(filename)
-
+    mols, ions, tempK, pres = io.getmols(filename)
     cflib = deepcopy(cflib)
     cflib.add_zeros(ions) # just in case
-
     # Separate out zero ionic strengths
     zs = props.charges(ions)[0]
     I = model.Istr(mols, zs)
-
     Gex_nRT = full_like(tempK, nan)
-    osm     = full_like(tempK, nan)
-    aw      = full_like(tempK, nan)
-    acfs    = full_like(mols, nan)
-
-    L = (I > 0).ravel()
-
-    nargsL  = (mols[:, L], ions, tempK[ L], cflib)
-    nargsLx = (mols[:,~L], ions, tempK[~L], cflib)
-
+    osm = full_like(tempK, nan)
+    aw = full_like(tempK, nan)
+    acfs = full_like(mols, nan)
+    L = I > 0
+    nargsL  = (mols[:,  L], ions, tempK[ L], pres[ L], cflib)
+    nargsLx = (mols[:, ~L], ions, tempK[~L], pres[~L], cflib)
     # Do calculations
     print('Calculating excess Gibbs energies...')
     Gex_nRT[L] = model.Gex_nRT(*nargsL)
     if np_any(~L):
         Gex_nRT[~L] = model.Gex_nRT(*nargsLx, Izero=True)
-
     print('Calculating osmotic coefficients...')
     osm[L] = model.osm(*nargsL)
     if np_any(~L):
         osm[~L] = model.osm(*nargsLx, Izero=True)
-
     print('Calculating water activity...')
     aw[L] = model.aw(*nargsL)
     if np_any(~L):
         aw[~L] = model.aw(*nargsLx, Izero=True)
-
     print('Calculating activity coefficients...')
     acfs[:,L] = model.acfs(*nargsL)
     if np_any(~L):
-        acfs[:,~L] = model.acfs(*nargsLx, Izero=True)
-
+        acfs[:, ~L] = model.acfs(*nargsLx, Izero=True)
     # Save results unless requested not to
     if savefile:
         filestem = filename.replace('.csv','')
-        io.saveall(filestem + '_py.csv', mols, ions, tempK, osm, aw, acfs)
-        
+        io.saveall(filestem + '_py.csv',
+            mols, ions, tempK, pres, osm, aw, acfs)
     print('Finished!')
-    return mols, ions, tempK, cflib, Gex_nRT, osm, aw, acfs
+    return mols, ions, tempK, pres, cflib, Gex_nRT, osm, aw, acfs

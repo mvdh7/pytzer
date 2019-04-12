@@ -1,4 +1,29 @@
+# 0.3 (beta)
+
+Version 0.3 remains in beta testing. The most significant change from version 0.2 is adding pressure as an input variable. However, most of the interaction coefficients are still not yet pressure-sensitive.
+
+
+## 0.3.0
+
+**Release date:** 2019-04-12
+
+  * Moved Debye-Hückel functions (for <i>A<sub>ϕ</sub></i>) from **coeffs** into new module **debyehueckel**;
+  * Added Archer and Wang (1990) calculation of <i>A<sub>ϕ</sub></i>;
+  * Added pressure input (`pres` in dbar) to all relevant functions in **coeffs**, **debyehueckel**, **model**, **io** and **blackbox** functions;
+  * Added **teos10** module to calculate various properties of pure water;
+  * Added **Seawater** coefficient library - like **MarChemSpec**, but with pressure-dependent <i>A<sub>ϕ</sub></i> term (following Archer and Wang, 1990), and other general improvements;
+  * Made `cflib` input optional for all **model** functions (default = Seawater);
+  * Fixed loop index correction for n-n' interactions;
+  * Eliminated unnecessary arrays for constant values in **coeffs**;
+  * Adjusted **model.B** and **model.CT** function inputs to reduce number of **cflib** function calls;
+  * Rewrote CRP94 `Aosm` function to make it autograd-able;
+  * Added docstrings throughout (except for functions in **coeffs**).
+
+
 # 0.2 (beta)
+
+Version 0.2 includes calculation of solute activity coefficients, water activity and osmotic coefficients, as a function of temperature and composition, at a constant pressure of 1 atmosphere.
+
 
 ## 0.2.7
 
