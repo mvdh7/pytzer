@@ -12,6 +12,7 @@ Version 0.3 remains in beta testing. The most significant change from version 0.
   * Added pressure input (`pres` in dbar) to all relevant functions in **coeffs**, **debyehueckel**, **model**, **io** and **blackbox** functions;
   * Added **teos10** module to calculate various properties of pure water;
   * Added **Seawater** coefficient library - like **MarChemSpec**, but with pressure-dependent <i>A<sub>ϕ</sub></i> term (following Archer and Wang, 1990), and other general improvements;
+  * Made `cflib` input optional for all **model** functions (default = Seawater);
   * Fixed loop index correction for n-n' interactions;
   * Eliminated unnecessary arrays for constant values in **coeffs**;
   * Adjusted **model.B** and **model.CT** function inputs to reduce number of **cflib** function calls;

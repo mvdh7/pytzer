@@ -9,6 +9,7 @@ from autograd.numpy import any as np_any
 from autograd.numpy import sum as np_sum
 from autograd import elementwise_grad as egrad
 from .constants import b, Mw
+from .cflibs import Seawater
 from . import props
 
 
@@ -68,7 +69,7 @@ def Zstr(mols, zs):
     """Calculate the Z function."""
     return np_sum(mols * np_abs(zs), axis=0)
 
-def Gex_nRT(mols, ions, tempK, pres, cflib, Izero=False):
+def Gex_nRT(mols, ions, tempK, pres, cflib=Seawater, Izero=False):
     """Calculate the excess Gibbs energy of a solution."""
     # Note that oceanographers record ocean pressure as only due to the water,
     # so at the sea surface pressure = 0 dbar, but the atmospheric pressure
@@ -184,13 +185,13 @@ def Gex_nRT(mols, ions, tempK, pres, cflib, Izero=False):
 #=========================================== Solute activity coefficients =====
 
 # Determine activity coefficient function
-def ln_acfs(mols, ions, tempK, pres, cflib, Izero=False):
+def ln_acfs(mols, ions, tempK, pres, cflib=Seawater, Izero=False):
     """Calculate the natural logarithms of the activity coefficients
     of all solutes.
     """
     return egrad(Gex_nRT)(mols, ions, tempK, pres, cflib, Izero)
 
-def acfs(mols, ions, tempK, pres, cflib, Izero=False):
+def acfs(mols, ions, tempK, pres, cflib=Seawater, Izero=False):
     """Calculate the activity coefficients of all solutes."""
     return exp(ln_acfs(mols, ions, tempK, pres, cflib, Izero))
 
@@ -204,7 +205,7 @@ def ln_acf2ln_acf_MX(ln_acfM, ln_acfX, nM, nX):
 
 #---------------------------------------------------- Osmotic coefficient -----
 
-def osm(mols, ions, tempK, pres, cflib, Izero=False):
+def osm(mols, ions, tempK, pres, cflib=Seawater, Izero=False):
     """Calculate the osmotic coefficient."""
     ww = full_like(tempK, 1.0)
     return 1 - egrad(lambda ww: \
@@ -213,14 +214,14 @@ def osm(mols, ions, tempK, pres, cflib, Izero=False):
 
 #--------------------------------------------------------- Water activity -----
 
-def lnaw(mols, ions, tempK, pres, cflib, Izero=False):
+def lnaw(mols, ions, tempK, pres, cflib=Seawater, Izero=False):
     """Calculate the natural log of the water activity."""
     ww = full_like(tempK, 1.0)
     return (egrad(lambda ww: \
         ww * Gex_nRT(mols/ww, ions, tempK, pres, cflib, Izero))(ww) \
         - np_sum(mols, axis=0)) * Mw
 
-def aw(mols, ions, tempK, pres, cflib, Izero=False):
+def aw(mols, ions, tempK, pres, cflib=Seawater, Izero=False):
     """Calculate the water activity."""
     return exp(lnaw(mols, ions, tempK, pres, cflib, Izero))
 
