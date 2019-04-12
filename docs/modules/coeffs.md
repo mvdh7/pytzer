@@ -5,6 +5,8 @@ MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
 
 # Coefficient functions
 
+*The casual user has no need to explicitly call this module.*
+
 **pytzer.coeffs** contains functions for ionic interaction coefficients.
 
 There are six different types of coefficient functions, each representing a different interaction type. The function names begin with:

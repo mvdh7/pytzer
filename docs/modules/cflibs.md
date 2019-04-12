@@ -1,30 +1,32 @@
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
-</script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+MathJax.Ajax.config.path["mhchem"] =
+  "https://cdnjs.cloudflare.com/ajax/libs/mathjax-mhchem/3.3.2";
+MathJax.Hub.Config({TeX: {extensions: ["[mhchem]/mhchem.js"]}});
+</script><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
 
 # Coefficient libraries
 
-**pytzer.cflibs** provides specific combinations of coefficients that have been used in published Pitzer models, to use with **pytzer**.
+*The casual user has no need to explicitly call this module.*
 
-To use a Pitzer model we need to define a set of coefficients that quantify the interactions between different combinations of ions. We do this by creating a **coefficient library**, which contains functions that evaluate the coefficients for every possible interaction. The functions themselves are defined separately, in **pytzer.coeffs**.
+`.cflibs` provides specific combinations of coefficients that have been used in published Pitzer models, to use with Pytzer.
+
+To use a Pitzer model we need to define a set of coefficients that quantify the interactions between different combinations of ions. We do this by creating a **coefficient library**, which contains functions that evaluate the coefficients for every possible interaction. The functions themselves [are defined separately](../coeffs).
 
 A number of [pre-defined coefficient libraries](#pre-defined-coefficient-libraries) are included in **pytzer.cflibs**. To use these, all you need to do is assign the variable `cflib` appropriately:
 
 ```python
-import pytzer as pz
-
-# Use M88 coefficients
-cflib = pz.cflibs.M88
+>>> import pytzer as pz
+>>> cflib = pz.cflibs.M88 # Use M88 coefficients
 ```
 
-This `cflib` can then be passed into all of the **pytzer.model** functions.
+This `cflib` can then be passed into all of the [Pitzer model functions](../model).
 
 <hr />
 
-# Pre-defined coefficient libraries
+## Pre-defined coefficient libraries
 
-Several ready-to-use coefficient libraries are available in this module. To decode their sources, see the [literature references table](../../name-conventions/#literature-references).
+Several ready-to-use coefficient libraries are available in this module. To decode their sources, see the [literature references table](../../references).
 
 <table><tr>
 
@@ -34,29 +36,29 @@ Several ready-to-use coefficient libraries are available in this module. To deco
 
 </tr><tr>
 <td>CRP94</td>
-<td>H<sup>+</sup> :: HSO<sub>4</sub><sup>−</sup> :: SO<sub>4</sub><sup>2−</sup></td>
-<td>Clegg et al. (1994)</td>
+<td>$\ce{H^+}$, $\ce{HSO4^-}$, $\ce{SO4^2-}$</td>
+<td><a href="../../references/#CRP94">CRP94</a></td>
 
 </tr><tr>
 <td>GM89</td>
-<td>Ca<sup>2+</sup> :: Cl<sup>−</sup> :: K<sup>+</sup> :: Na<sup>+</sup> :: SO<sub>4</sub><sup>2−</sup></td>
-<td>Greenberg and Møller (1989)</td>
+<td>$\ce{Ca^2+}$, $\ce{Cl^-}$, $\ce{K^+}$, $\ce{Na^+}$, $\ce{SO4^2-}$</td>
+<td><a href="../../references/#GM89">GM89</a></td>
 
 </tr><tr>
 <td>M88</td>
-<td>Ca<sup>2+</sup> :: Cl<sup>−</sup> :: Na<sup>+</sup> :: SO<sub>4</sub><sup>2−</sup></td>
-<td>Møller (1988)</td>
+<td>$\ce{Ca^2+}$, $\ce{Cl^-}$, $\ce{Na^+}$, $\ce{SO4^2-}$</td>
+<td><a href="../../references/#M88">M88</a></td>
 
 </tr><tr>
 <td>WM13</td>
-<td>Ca<sup>2+</sup> :: Cl<sup>−</sup> :: H<sup>+</sup> :: HSO<sub>4</sub><sup>−</sup> :: K<sup>+</sup> :: Mg<sup>2+</sup> :: MgOH<sup>+</sup> :: Na<sup>+</sup> :: OH<sup>−</sup> :: SO<sub>4</sub><sup>2−</sup></td>
-<td>Waters and Millero (2013)</td>
+<td>$\ce{Ca^2+}$, $\ce{Cl^-}$, $\ce{H^+}$, $\ce{HSO4^-}$, $\ce{K^+}$, $\ce{Mg^2+}$, $\ce{MgOH^+}$, $\ce{Na^+}$, $\ce{OH^-}$, $\ce{SO4^2-}$</td>
+<td><a href="../../references/#WM13">WM13</a></td>
 
 </tr></table>
 
 <hr />
 
-# cflib methods
+## cflib methods
 
 A few handy methods are provided as part of the **CoeffLib** class. Brief summaries are provided below, and here is a usage example of all of them together:
 
@@ -87,26 +89,26 @@ cflib.print_coeffs(298.15,'coeff_file.txt')
 
 The methods are as follows:
 
-## .add_zeros
+### .add_zeros
 
 `CoeffLib.add_zeros(ions)` adds zero-functions for all missing interactions, given a list of ions.
 
-## .get_contents
+### .get_contents
 
 `CoeffLib.get_contents()` scans through all functions within the **CoeffLib**, and puts lists of all ions and of all sources in its **ions** and **srcs** fields.
 
 The list of ions is determined from the dict keys, while sources are determined from the function names.
 
-## .print_coeffs
+### .print_coeffs
 
-`CoeffLib.print_coeffs(T,filename)` evaluates all coefficients in a **cflib** at a single input temperature (`T`), and prints the results to a text file (`filename`).
+`CoeffLib.print_coeffs(T,filename)` evaluates all coefficients in a **cflib** at a single input temperature and pressure, and prints the results to a text file (`filename`).
 
 
 <hr />
 
-# How a CoeffLib works
+## How a CoeffLib works
 
-To modify an existing **CoeffLib**, or create a new one, it is first necessary to understand how they are used within **pytzer**, as follows. A basic understanding of the workings of the Pitzer model is assumed.
+To modify an existing **CoeffLib**, or create a new one, it is first necessary to understand how they are used within Pytzer, as follows. A basic understanding of the workings of the Pitzer model is assumed.
 
 A **CoeffLib** or **cflib** is an object of the class `CoeffLib` as defined within **pytzer.cflibs**. From the initalisation function we can see that it contains the following fields:
 
@@ -130,7 +132,7 @@ class CoeffLib:
         self.srcs  = []
 ```
 
-Each field is then filled with functions from **pytzer.coeffs** or **pytzer.jfuncs** that define the Pitzer model interaction coefficients, as follows. (Descriptions of the required contents of the functions themselves are in the separate <a href="../coeffs"><strong>pytzer.coeffs</strong> documentation</a>.)
+Each field is then filled with functions from **pytzer.debyehueckel**, **pytzer.coeffs** or **pytzer.jfuncs** that define the Pitzer model interaction coefficients, as follows. (Descriptions of the required contents of the functions themselves are in the separate <a href="../coeffs"><strong>pytzer.coeffs</strong> documentation</a>.)
 
 
 ### Debye-Hückel limiting slope
@@ -199,7 +201,7 @@ Different options for the functions needed here can be found in **pytzer.jfuncs*
 <hr />
 
 
-# Modify an existing cflib
+## Modify an existing cflib
 
 The functions within an existing cflib can easily be switched by reassignment. For example, if you wanted to use the Møller (1988) model, but replace only the Na-Cl interaction equations with the model of Archer (1992), you could write:
 
@@ -229,7 +231,7 @@ cflib.bC['Na-Cl'] = pz.coeffs.bC_Na_Cl_A92ii
 
 <hr />
 
-# Build your own
+## Build your own
 
 You can also construct your own **cflib** from scratch. In the example below, we initialise a `cflib` using the `pytzer.cflibs.CoeffLib` class. We add functions from `pytzer.coeffs` for the system Na-Ca-Cl using functions from Møller (1988). Finally, we use the method `add_zeros` to fill out any interactions that we have neglected to provide functions for with zeros.
 
@@ -272,7 +274,7 @@ mycflib.psi['H-Mg-OH'] = coeffs.psi_zero   # ignore H-Mg-OH interactions
 
 ## Print out coefficients
 
-You can use the function **CoeffLib.print_coeffs** to create a file containing every coefficient, evaluated at a single input temperature of your choice. For example:
+You can use the function **CoeffLib.print_coeffs** to create a file containing every coefficient, evaluated at a single input temperature and pressure of your choice. For example:
 
 ```python
 mycflib.print_coeffs(298.15,'myCoeffs.txt')

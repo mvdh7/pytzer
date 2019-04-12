@@ -1,4 +1,4 @@
-site_name: pytzer
+site_name: Pytzer
 site_author: Matthew P. Humphreys
 site_description: Pitzer model for chemical activities in aqueous solutions
 copyright: Copyright &copy; 2019 Matthew P. Humphreys (GNU GPLv3).
@@ -8,19 +8,20 @@ theme:
     name: readthedocs
 
 nav:
-    - Overview: index.md
-    - Quick-start guide: quick-start.md
-    - Conventions: name-conventions.md
-    - pytzer modules:
-        - .io – import and export: modules/io.md
-        - .cflibs – coefficient libraries: modules/cflibs.md
-        - .model – the Pitzer model: modules/model.md
-        - .coeffs – interaction coefficients: modules/coeffs.md
-        - .tables - coefficient tables: modules/tables.md
-        - .debyehueckel – Debye-Hückel limiting slopes: modules/debyehueckel.md
-        - .jfuncs – unsymmetrical mixing: modules/jfuncs.md
-        - .props – universal ionic properties: modules/props.md
-        - .constants – physical constants: modules/constants.md
-        - .teos10 - TEOS-10 properties: modules/teos10.md
-        - .meta - package metadata: modules/meta.md
-    - Version history: version-history.md
+  - Overview: index.md
+  - Quick-start guide: quick-start.md
+  - Conventions: name-conventions.md
+  - Pytzer modules:
+    - .io – import and export data: modules/io.md
+    - .model – the Pitzer model: modules/model.md
+    - .cflibs – coefficient libraries: modules/cflibs.md
+    - .coeffs – interaction coefficients: modules/coeffs.md
+    - .tables - coefficient tables: modules/tables.md
+    - .debyehueckel – Debye-Hückel limiting slopes: modules/debyehueckel.md
+    - .jfuncs – unsymmetrical mixing: modules/jfuncs.md
+    - .props – solute properties: modules/props.md
+    - .constants – physical constants: modules/constants.md
+    - .teos10 - TEOS-10 properties: modules/teos10.md
+    - .meta - package metadata: modules/meta.md
+  - References: references.md
+  - Version history: version-history.md

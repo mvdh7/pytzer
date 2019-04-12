@@ -1,86 +1,69 @@
-# Installation with Anaconda/Miniconda
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+MathJax.Ajax.config.path["mhchem"] =
+  "https://cdnjs.cloudflare.com/ajax/libs/mathjax-mhchem/3.3.2";
+MathJax.Hub.Config({TeX: {extensions: ["[mhchem]/mhchem.js"]}});
+</script><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+## Installation with Anaconda/Miniconda
 
 [1] Download and install [Anaconda](https://www.anaconda.com/distribution/) (or [Miniconda](https://conda.io/en/latest/miniconda.html) if you prefer). Use the Python 3.X version if you have no preference, but either will do.
 
 [2] Open an Anaconda prompt window (Windows) or the Terminal (Mac/Linux).
 
-[3] Create a new environment for **pytzer** by entering the following:
+[3] Create a new environment for Pytzer:
 
-```shell
-conda create -n pytzer python=3.6 numpy
-```
+    conda create -n pytzer python=3.7.3 numpy=1.16.1 scipy=1.2.1
 
-[4] Activate the new environment. On Windows:
+Other recent versions of Python, NumPy and SciPy will probably work fine too, but they have not been tested with Pytzer.
 
-```shell
-activate pytzer
-```
+[<span id="inst4">4</span>] Activate the new environment:
 
-On Mac/Linux:
+    conda activate pytzer    # Windows or Linux
+    source activate pytzer   # Mac
 
-```shell
-source activate pytzer
-```
+You should now see the name of the environment (i.e. `pytzer`) appear at the start of each new line in the command window.
 
-You should now see the name of the environment (i.e. `pytzer`) appear at the very start of each new line in the command window.
+[5] Install Pytzer into the `pytzer` environment:
 
-[5] Install **pytzer** into the new environment:
+    pip install pytzer
+    pip install git+https://github.com/mvdh7/autograd#egg=autograd --upgrade --no-cache-dir
 
-```shell
-pip install pytzer
-pip install git+https://github.com/mvdh7/autograd#egg=autograd --upgrade --no-cache-dir
-```
-
-The second line above is optional. It upgrades [autograd](https://github.com/HIPS/autograd) to the latest version that has been tested with pytzer, which eliminates some deprecation warnings that may appear when using the relatively old autograd version available from PyPI. You could also switch `mvdh7` in the URL to `HIPS` to get the very latest autograd straight from the horse's mouth.
+The second line above is strongly recommended, but optional. It upgrades [Autograd](https://github.com/HIPS/autograd) to the latest version that has been tested with Pytzer, which eliminates some deprecation warnings that may appear when using the relatively old Autograd version available from PyPI. You could also switch `mvdh7` in the URL to `HIPS` to get the very latest Autograd straight from the horse's mouth.
 
 <hr />
 
-# Running pytzer as a "black box"
+## Running Pytzer as a "black box"
 
-You can just provide **pytzer** with a CSV file of temperature, pressures and molality values, and have it return the corresponding activity coefficients in a new CSV file, only having to write the bare minimum in Python, as follows.
+You can just provide Pytzer with a CSV file of temperature, pressures and molality values, and have it return the corresponding activity coefficients in a new CSV file, only having to write the bare minimum in Python, as follows.
 
 [1] Create an input CSV file as described in the [import/export documentation](../modules/io/#pytzeriogetmols) - or just save and use the example file [pytzerQuickStart.csv](https://raw.githubusercontent.com/mvdh7/pytzer/master/testfiles/pytzerQuickStart.csv).
 
-[2] Open an Anaconda prompt window (Windows) or the Terminal (Mac/Linux) and activate the pytzer environment ([installation](#installation-with-anacondaminiconda) step [4]).
+[2] Open an Anaconda prompt window (Windows) or the Terminal (Mac/Linux) and activate the `pytzer` environment (i.e. [installation](#installation-with-anacondaminiconda) step [4]).
 
 [3] Navigate to the folder containing the input CSV file ([using cd](https://en.wikipedia.org/wiki/Cd_(command))).
 
 [4] Start Python:
 
-```shell
-python
-```
+    python
 
-[5] Import **pytzer**:
+[5] Import Pytzer (as `pz`, by convention) and then run its "black box" function on your input file:
 
 ```python
-import pytzer as pz
+>>> import pytzer as pz
+>>> pz.blackbox('pytzerQuickStart.csv')
 ```
 
-[6] Run **pytzer** on your input file:
+Once the calculations are complete, a new CSV file will appear, in the same folder as the input file, with the same name as the input file but with `_py` appended. It contains the input temperature and molality values, followed by the osmotic coefficient (column header: `osm`), water activity (`aw`), and then the activity coefficient of each solute (with column headers e.g. `gNa` for the $\gamma(\ce{Na+})$ activity coefficient).
 
-```python
-pz.blackbox('pytzerQuickStart.csv')
-```
-
-Once the calculations are complete, a new CSV file will appear, in the same folder as the input file, with the same name as the input file but with **\_py** appended. It contains the input temperature and molality values, followed by the osmotic coefficient (column header: **osm**), water activity (**aw**), and then the activity coefficient of each solute (with column headers e.g. **gNa** for Na<sup>+</sup> activity coefficient).
-
-The black box function is currently set up to use the **MarChemSpec** [coefficient dictionary](../modules/cfdicts). This is based on the model of Waters and Millero (2013), with some additional terms added for tris interactions. It is still under development, so the results <u>will</u> change as **pytzer** is updated. It contains coefficients for the components: Ca<sup>2+</sup>, Cl<sup>−</sup>, H<sup>+</sup>, HSO<sub>4</sub><sup>−</sup>, K<sup>+</sup>, Mg<sup>2+</sup>, MgOH<sup>+</sup>, Na<sup>+</sup>, OH<sup>−</sup>, SO<sub>4</sub><sup>−</sup>, tris, and trisH<sup>+</sup>. If you have any ions in your input file that are not on this list, then **pytzer** should still work (as long the charges on those ions are defined in **props.charges**), but all interaction coefficients involving those ions will be set to zero.
-
-[7] To exit Python, and return to the Anaconda prompt or Terminal:
-
-```python
-exit()
-```
+The black box function is currently set up to use the Seawater [coefficient library](../modules/cflibs). This is based on the model of Waters and Millero [[WM13](../references/#WM13)], with [a few modifications](../modules/cflibs/#Seawater). It is still under development, so the results will probably change as Pytzer is updated. The Seawater coefficient library contains coefficients for the components: $\ce{Na+}$, $\ce{K+}$, $\ce{Ca^2+}$, $\ce{Mg^2+}$, $\ce{MgOH+}$, $\ce{H+}$, $\ce{OH-}$, $\ce{Cl-}$, $\ce{HSO4-}$, $\ce{SO4^2-}$, $\ce{tris}$, and $\ce{trisH+}$. If you have any other solutes in your input file, Pytzer should still work (as long the charges on those solutes are defined in [props.charges](../modules/props/#charges-solute-charges)), but all interaction coefficients involving those solutes will be set to zero.
 
 <hr />
 
-# Updating pytzer
+## Updating Pytzer
 
-[1] Open an Anaconda prompt window (Windows) or the Terminal (Mac/Linux) and activate the pytzer environment ([installation](#installation-with-anacondaminiconda) step [4]).
+[1] Open an Anaconda prompt window (Windows) or the Terminal (Mac/Linux) and activate the pytzer environment ([installation step [4]](#inst4)).
 
-[2] Update **pytzer** with pip:
+[2] Update Pytzer with pip:
 
-```shell
-pip install pytzer --upgrade --no-cache-dir
-```
+    pip install pytzer --upgrade --no-cache-dir
