@@ -7,7 +7,7 @@
 
 ## `.charges` - solute charges
 
-For an input array of "ion" names - following the **pytzer** [naming conventions](../../name-conventions) - returns the charge on each ion, and separate lists of cations, anions, and neutral species.
+For an input array of "ion" names - following the Pytzer [naming conventions](../../name-conventions) - returns the charge on each ion, and separate lists of cations, anions, and neutral species.
 
 ### Syntax
 

@@ -2,7 +2,7 @@
 
 *The casual user has no need to explicitly call this module.*
 
-**pytzer.constants** contains physical constants required by **pytzer**.
+**pytzer.constants** contains physical constants required by Pytzer.
 
 ## Universal constants
 

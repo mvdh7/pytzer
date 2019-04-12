@@ -1,4 +1,4 @@
-# pytzer
+# Pytzer
 
 [![pypi badge](https://img.shields.io/pypi/v/pytzer.svg?style=popout)](https://pypi.org/project/pytzer/)
 

@@ -7,7 +7,7 @@ MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
 
 *The casual user has no need to explicitly call this module.*
 
-**pytzer.coeffs** contains functions for ionic interaction coefficients.
+`.coeffs` contains functions for ionic interaction coefficients.
 
 There are six different types of coefficient functions, each representing a different interaction type. The function names begin with:
 
@@ -23,27 +23,27 @@ There are six different types of coefficient functions, each representing a diff
 
   1. `mu_`, for interactions between three neutral solutes of the same type ($\mu$).
 
-There is not yet a full list of all the functions available. A number of them are not used by any ready-made **cflib**.
+There is not yet a full list of all the functions available. A number of them are not used by any ready-made coefficient library.
 
 
 ## Philosophy
 
 The main principle followed when constructing these functions is to maintain a **single source of truth**. This manifests itself in several ways.
 
-Coefficient functions are only created for studies that report something new. If a new study reports coefficient equations or values but is simply copying them exactly from an older study, the newer study does not get a new function. Rather, when constructing a **cflib** to represent the newer study, the older study's function should be selected.
+Coefficient functions are only created for studies that report something new. If a new study reports coefficient equations or values but is simply copying them exactly from an older study, the newer study does not get a new function. Rather, when constructing a coefficient library to represent the newer study, the older study's function should be selected.
 
 If a new study takes an older study's coefficients and modifies them in some way, this will be represented in the code: the function for the new study will call the older study's function to get the original values, and then modify them, rather than re-declaring the original values itself.
 
 Where an equation is provided to evaluate coefficients, rather than a single value, this equation will be written out once only, in its own function. All of the coefficient functions that use this equation will then simply pass the relevant coefficients into that function.
 
-**pytzer** takes these steps because the literature is littered with typos. Papers that compile coefficients from multiple sources into a complex model are particularly problematic. Our approach should minimise the opportunity for these errors to occur, and better still, once an error is detected, it will only ever need to be fixed in one place. When we *do* identify a specific typo in a study, this will be noted in comments within the coefficient's function, and adjust the function to use the correct value, if it can be found. We keep a separate summary of all of these corrections, which will be published for reference in due course.
+Pytzer takes these steps because the literature is littered with typos. Papers that compile coefficients from multiple sources into a complex model are particularly problematic. Our approach should minimise the opportunity for these errors to occur, and better still, once an error is detected, it will only ever need to be fixed in one place. When we *do* identify a specific typo in a study, this will be noted in comments within the coefficient's function, and adjust the function to use the correct value, if it can be found. We keep a separate summary of all of these corrections, which will be published for reference in due course.
 
 
 ## Syntax
 
 Within the function titles, **neutral**, **cation**, **anion** and **source** should be replaced with appropriate values, as described in the [naming conventions](../../name-conventions).
 
-The input `T` is equivalent to `tempK`, and `P` to `pres`, elsewhere in **pytzer**: these are always arrays of temperature (in K) and pressure (in dbar), for example as output by **io.getmols**. The shorter `T` and `P` preferred here for clarity in the equations.
+The input `T` is equivalent to `tempK`, and `P` to `pres`, elsewhere in Pytzer: these are always arrays of temperature (in K) and pressure (in dbar), for example as output by **io.getmols**. The shorter `T` and `P` preferred here for clarity in the equations.
 
 The outputs are the coefficient(s') value(s), and a logical array (`valid`) indicating whether the input temperature(s) fell within the function's validity range. *The validity array is not currently used.*
 

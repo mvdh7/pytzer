@@ -1,5 +1,7 @@
 # TEOS-10 properties
 
+*The casual user has no need to explicitly call this module.*
+
 `.teos10` contains the **specific Gibbs energy** master equation for pure water recommended by the International Association for the Properties of Water and Steam (IAPWS), along with functions to evaluate its derivative properties. All derivatives of the master equation are computed automatically by autograd.
 
 The source for these equations is the [Supplementary Release on a Computationally Efficient Thermodynamic
