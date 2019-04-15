@@ -11,8 +11,8 @@ from .tables import P91_Ch3_T12, P91_Ch3_T13_I, P91_Ch3_T13_II, \
     PM73_TableI, PM73_TableVI, PM73_TableVIII, PM73_TableIX
 from . import props
 
-# Note that variable T in this module is equivalent to tempK elsewhere,
-# and P is equivalent to pres, for convenience
+# Note that variable T in this module is equivalent to tempK elsewhere (in K),
+# and P is equivalent to pres (in dbar), for convenience
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Zero functions ~~~~~
 def bC_none(T, P):
