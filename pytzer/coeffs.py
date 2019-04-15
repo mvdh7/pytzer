@@ -306,7 +306,7 @@ def bC_K_Cl_HM83(T, P):
                                    4.9567e-7,
                                    0        ]))
 
-    zK    = +1
+    zK = +1
     zCl = -1
     C0 = Cphi / (2 * sqrt(np_abs(zK * zCl)))
 
@@ -415,7 +415,7 @@ def bC_K_SO4_HM86(T, P):
                                 0         ,
                                 0         ]))
 
-    zK    = +1
+    zK = +1
     zSO4 = -2
     C0 = Cphi / (2 * sqrt(np_abs(zK * zSO4)))
 
@@ -623,7 +623,7 @@ def bC_K_Cl_SRRJ87(T, P):
                                 -0.639 ,
                                  0.613 ]))
 
-    zK    = +1
+    zK = +1
     zCl = -1
     C0 = Cphi / (2 * sqrt(np_abs(zK * zCl)))
 
@@ -691,7 +691,7 @@ def bC_K_BOH4_SRRJ87(T, P):
                                 - 9.56  ,
                                   0     ]))
 
-    zK    = +1
+    zK = +1
     zCl = -1
     C0 = Cphi / (2 * sqrt(np_abs(zK * zCl)))
 
@@ -850,12 +850,12 @@ def bC_Ca_BOH4_SRM87(T, P):
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Møller (1988) ~~~~~
 def M88_eq13(T, a):
-    """Møller (1988) Equation 13."""
+    """M88 Equation 13."""
     return a[0] + a[1]*T + a[2]/T + a[3]*log(T) + a[4]/(T - 263) \
         + a[5]*T**2 + a[6]/(680 - T) + a[7]/(T - 227)
 
 def b0_Ca_Cl_M88(T, P):
-    """beta0: calcium chloride (Møller, 1988)."""
+    """beta0: calcium chloride [M88]."""
     return M88_eq13(T, float_([
         -9.41895832e+1,
         -4.04750026e-2,
@@ -868,7 +868,7 @@ def b0_Ca_Cl_M88(T, P):
     ]))
 
 def b1_Ca_Cl_M88(T, P):
-    """beta1: calcium chloride (Møller, 1988)."""
+    """beta1: calcium chloride [M88]."""
     return M88_eq13(T, float_([
          3.47870000e00,
         -1.54170000e-2,
@@ -878,7 +878,7 @@ def b1_Ca_Cl_M88(T, P):
     ]))
 
 def Cphi_Ca_Cl_M88(T, P):
-    """Cphi: calcium chloride (Møller, 1988)."""
+    """Cphi: calcium chloride [M88]."""
     return M88_eq13(T, float_([
         -3.03578731e+1,
         -1.36264728e-2,
@@ -891,7 +891,7 @@ def Cphi_Ca_Cl_M88(T, P):
     ]))
 
 def bC_Ca_Cl_M88(T, P):
-    """c-a: calcium chloride (Møller, 1988)."""
+    """c-a: calcium chloride [M88]."""
     b0 = b0_Ca_Cl_M88(T, P)
     b1 = b1_Ca_Cl_M88(T, P)
     b2 = 0
@@ -907,7 +907,7 @@ def bC_Ca_Cl_M88(T, P):
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 def bC_Ca_SO4_M88(T, P):
-    """c-a: calcium sulfate (Møller, 1988)."""
+    """c-a: calcium sulfate [M88]."""
     b0 = 0.15
     b1 = 3.00
     b2 = M88_eq13(T, float_([
@@ -924,7 +924,7 @@ def bC_Ca_SO4_M88(T, P):
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 def bC_Na_Cl_M88(T, P):
-    """c-a: sodium chloride (Møller, 1988)."""
+    """c-a: sodium chloride [M88]."""
     b0 = M88_eq13(T, float_([
          1.43783204e+1,
          5.60767406e-3,
@@ -964,7 +964,7 @@ def bC_Na_Cl_M88(T, P):
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 def bC_Na_SO4_M88(T, P):
-    """c-a: sodium sulfate (Møller, 1988)."""
+    """c-a: sodium sulfate [M88]."""
     b0 = M88_eq13(T, float_([
          8.16920027e+1,
          3.01104957e-2,
@@ -1006,266 +1006,200 @@ def bC_Na_SO4_M88(T, P):
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 def theta_Ca_Na_M88(T, P):
-    """c-c': calcium sodium (Møller, 1988)."""
+    """c-c': calcium sodium [M88]."""
     theta = 0.05
     valid = logical_and(T >= 298.15, T <= 523.15)
     return theta, valid
 
 def theta_Cl_SO4_M88(T, P):
-    """a-a': chloride sulfate (Møller, 1988)."""
+    """a-a': chloride sulfate [M88]."""
     theta = 0.07
     valid = logical_and(T >= 298.15, T <= 423.15)
     return theta, valid
 
 def psi_Ca_Na_Cl_M88(T, P):
-    """c-c'-a: calcium sodium chloride (Møller, 1988)."""
+    """c-c'-a: calcium sodium chloride [M88]."""
     psi = -0.003
     valid = logical_and(T >= 298.15, T <= 523.15)
     return psi, valid
 
 def psi_Ca_Na_SO4_M88(T, P):
-    """c-c'-a: calcium sodium sulfate (Møller, 1988)."""
+    """c-c'-a: calcium sodium sulfate [M88]."""
     psi = -0.012
     valid = logical_and(T >= 298.15, T <= 523.15)
     return psi, valid
 
 def psi_Ca_Cl_SO4_M88(T, P):
-    """c-a-a': calcium chloride sulfate (Møller, 1988)."""
+    """c-a-a': calcium chloride sulfate [M88]."""
     psi = -0.018
     valid = logical_and(T >= 298.15, T <= 523.15)
     return psi, valid
 
 def psi_Na_Cl_SO4_M88(T, P):
-    """c-a-a': sodium chloride sulfate (Møller, 1988)."""
+    """c-a-a': sodium chloride sulfate [M88]."""
     psi = -0.009
     valid = logical_and(T >= 298.15, T <= 423.15)
     return psi, valid
 
-#%%############################################################################
-# === GREENBERG & MOLLER 1989 =================================================
-
-# --- inherit from M88 --------------------------------------------------------
-
-GM89_eq3 = M88_eq13
-
-# --- bC: calcium chloride ----------------------------------------------------
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Greenberg and Møller (1989) ~~~~~
+def GM89_eq3(T, a):
+    """GM89 Equation 3."""
+    return M88_eq13(T, a)
 
 def Cphi_Ca_Cl_GM89(T, P):
-    return GM89_eq3(T, float_([ 1.93056024e+1,
-                               9.77090932e-3,
-                              -4.28383748e+2,
-                              -3.57996343e00,
-                               8.82068538e-2,
-                              -4.62270238e-6,
-                               9.91113465e00,
-                               0]))
+    """Cphi: calcium chloride [GM89]."""
+    return GM89_eq3(T, float_([
+         1.93056024e+1,
+         9.77090932e-3,
+        -4.28383748e+2,
+        -3.57996343e00,
+         8.82068538e-2,
+        -4.62270238e-6,
+         9.91113465e00,
+         0,
+    ]))
 
 def bC_Ca_Cl_GM89(T, P):
-
-    b0,b1,b2,_,C1,alph1,alph2,omega,valid = bC_Ca_Cl_M88(T, P)
-
+    """c-a: calcium chloride [GM89]."""
+    b0, b1, b2, _, C1, alph1, alph2, omega, valid = bC_Ca_Cl_M88(T, P)
     Cphi = Cphi_Ca_Cl_GM89(T, P)
-
-    zCa   = +2
+    zCa = +2
     zCl = -1
     C0 = Cphi / (2 * sqrt(np_abs(zCa * zCl)))
-
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
-# --- bC: potassium chloride --------------------------------------------------
 
 def bC_K_Cl_GM89(T, P):
-
-    b0 = GM89_eq3(T, float_([ 2.67375563e+1,
-                                1.00721050e-2,
-                               -7.58485453e+2,
-                               -4.70624175e00,
-                                0,
-                               -3.75994338e-6,
-                                0,
-                                0]))
-
-    b1 = GM89_eq3(T, float_([-7.41559626e00,
-                                0,
-                                3.22892989e+2,
-                                1.16438557e00,
-                                0,
-                                0,
-                                0,
-                               -5.94578140e00]))
-
+    """c-a: potassium chloride [GM89]."""
+    b0 = GM89_eq3(T, float_([
+         2.67375563e+1,
+         1.00721050e-2,
+        -7.58485453e+2,
+        -4.70624175e00,
+         0,
+        -3.75994338e-6,
+         0, 0,
+    ]))
+    b1 = GM89_eq3(T, float_([
+        -7.41559626e00,
+         0,
+         3.22892989e+2,
+         1.16438557e00,
+         0, 0, 0,
+        -5.94578140e00,
+    ]))
     b2 = 0
-
-    Cphi = GM89_eq3(T, float_([-3.30531334e00,
-                               -1.29807848e-3,
-                                9.12712100e+1,
-                                5.86450181e-1,
-                                0,
-                                4.95713573e-7,
-                                0,
-                                0]))
-
-    zK    = +1
+    Cphi = GM89_eq3(T, float_([
+        -3.30531334e00,
+        -1.29807848e-3,
+         9.12712100e+1,
+         5.86450181e-1,
+         0,
+         4.95713573e-7,
+         0, 0,
+    ]))
+    zK = +1
     zCl = -1
     C0 = Cphi / (2 * sqrt(np_abs(zK * zCl)))
-
     C1 = 0
-
     alph1 = 2
     alph2 = -9
     omega = -9
-
     valid = logical_and(T >= 273.15, T <= 523.15)
-
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
-# --- bC: potassium sulfate ---------------------------------------------------
 
 def bC_K_SO4_GM89(T, P):
-
-    b0 = GM89_eq3(T, float_([ 4.07908797e+1,
-                                8.26906675e-3,
-                               -1.41842998e+3,
-                               -6.74728848e00,
-                                0,
-                                0,
-                                0,
-                                0]))
-
-    b1 = GM89_eq3(T, float_([-1.31669651e+1,
-                                2.35793239e-2,
-                                2.06712594e+3,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0]))
-
+    """c-a: potassium sulfate [GM89]."""
+    b0 = GM89_eq3(T, float_([
+         4.07908797e+1,
+         8.26906675e-3,
+        -1.41842998e+3,
+        -6.74728848e00,
+         0, 0, 0, 0,
+    ]))
+    b1 = GM89_eq3(T, float_([
+        -1.31669651e+1,
+         2.35793239e-2,
+         2.06712594e+3,
+         0, 0, 0, 0, 0,
+    ]))
     b2 = 0
-
     Cphi = -0.0188
-
-    zK    = +1
+    zK = +1
     zSO4 = -2
     C0 = Cphi / (2 * sqrt(np_abs(zK * zSO4)))
-
     C1 = 0
-
     alph1 = 2
     alph2 = -9
     omega = -9
-
     valid = logical_and(T >= 273.15, T <= 523.15)
-
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
-# --- theta: calcium potassium ------------------------------------------------
-
 def theta_Ca_K_GM89(T, P):
-
+    """c-c': calcium potassium [GM89]."""
     theta = 0.1156
-
     valid = logical_and(T >= 273.15, T <= 523.15)
-
     return theta, valid
-
-# --- theta: potassium sodium -------------------------------------------------
 
 def theta_K_Na_GM89(T, P):
-
-    theta = GM89_eq3(T, float_([-5.02312111e-2,
-                                0,
-                                1.40213141e+1,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0]))
-
+    """c-c': potassium sodium [GM89]."""
+    theta = GM89_eq3(T, float_([
+        -5.02312111e-2,
+         0,
+         1.40213141e+1,
+         0, 0, 0, 0, 0,
+    ]))
     valid = logical_and(T >= 273.15, T <= 523.15)
-
     return theta, valid
-
-# --- psi: calcium potassium chloride -----------------------------------------
 
 def psi_Ca_K_Cl_GM89(T, P):
-
-    psi = GM89_eq3(T, float_([ 4.76278977e-2,
-                                0,
-                               -2.70770507e+1,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0]))
-
+    """c-c'-a: calcium potassium chloride [GM89]."""
+    psi = GM89_eq3(T, float_([
+         4.76278977e-2,
+         0,
+        -2.70770507e+1,
+         0, 0, 0, 0, 0,
+    ]))
     valid = logical_and(T >= 273.15, T <= 523.15)
-
     return psi, valid
-
-# --- psi: calcium potassium sulfate ------------------------------------------
 
 def psi_Ca_K_SO4_GM89(T, P):
-
-    theta = 0
-
+    """c-c'-a: calcium potassium sulfate [GM89]."""
+    psi = 0
     valid = logical_and(T >= 273.15, T <= 523.15)
-
-    return theta, valid
-
-# --- psi: potassium sodium chloride ------------------------------------------
+    return psi, valid
 
 def psi_K_Na_Cl_GM89(T, P):
-
-    psi = GM89_eq3(T, float_([ 1.34211308e-2,
-                                0,
-                               -5.10212917e00,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0]))
-
+    """c-c'-a: potassium sodium chloride [GM89]."""
+    psi = GM89_eq3(T, float_([
+         1.34211308e-2,
+         0,
+        -5.10212917e00,
+         0, 0, 0, 0, 0,
+    ]))
     valid = logical_and(T >= 273.15, T <= 523.15)
-
     return psi, valid
-
-# --- psi: potassium sodium sulfate -------------------------------------------
 
 def psi_K_Na_SO4_GM89(T, P):
-
-    psi = GM89_eq3(T, float_([ 3.48115174e-2,
-                                0,
-                               -8.21656777e00,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0]))
-
+    """c-c'-a: potassium sodium sulfate [GM89]."""
+    psi = GM89_eq3(T, float_([
+         3.48115174e-2,
+         0,
+        -8.21656777e00,
+         0, 0, 0, 0, 0,
+    ]))
     valid = logical_and(T >= 273.15, T <= 423.15)
-
     return psi, valid
-
-# --- psi: potassium chloride sulfate -----------------------------------------
 
 def psi_K_Cl_SO4_GM89(T, P):
-
-    psi = GM89_eq3(T, float_([-2.12481475e-1,
-                                2.84698333e-4,
-                                3.75619614e+1,
-                                0,
-                                0,
-                                0,
-                                0,
-                                0]))
-
+    """c-a-a': potassium chloride sulfate [GM89]."""
+    psi = GM89_eq3(T, float_([
+        -2.12481475e-1,
+         2.84698333e-4,
+         3.75619614e+1,
+         0, 0, 0, 0, 0,
+    ]))
     valid = logical_and(T >= 273.15, T <= 523.15)
-
     return psi, valid
-
-# === GREENBERG & MOLLER 1989 =================================================
-###############################################################################
 
 #%%############################################################################
 # === ARCHER 1992 =============================================================
@@ -4319,7 +4253,7 @@ def bC_K_Br_MP98(T, P):
                                   0.216  ,
                                 - 0.7004 ]))
 
-    zK    = +1
+    zK = +1
     zBr   = -1
     C0 = Cphi / (2 * sqrt(np_abs(zK * zBr)))
 
@@ -4351,7 +4285,7 @@ def bC_K_F_MP98(T, P):
                                   0      ,
                                   0.595  ]))
 
-    zK    = +1
+    zK = +1
     zF    = -1
     C0 = Cphi / (2 * sqrt(np_abs(zK * zF)))
 
@@ -4383,7 +4317,7 @@ def bC_K_OH_MP98(T, P):
                                   0.0638 ,
                                 - 0.944  ])) # copy of KI
 
-    zK    = +1
+    zK = +1
     zOH   = -1
     C0 = Cphi / (2 * sqrt(np_abs(zK * zOH)))
 
@@ -4415,7 +4349,7 @@ def bC_K_I_MP98(T, P):
                                   0      ,
                                 - 0.944  ]))
 
-    zK    = +1
+    zK = +1
     zI    = -1
     C0 = Cphi / (2 * sqrt(np_abs(zK * zI)))
 
