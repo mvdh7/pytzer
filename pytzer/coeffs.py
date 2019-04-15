@@ -89,6 +89,8 @@ def theta_Ca_H_RGO82(T, P):
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Phutela and Pitzer (1986) ~~~~~
 PP86ii_Tr = 298.15
 
+def PP86ii_eq28(T, q):
+    """PP86ii equation 28."""
     Tr = PP86ii_Tr
     return ((T**2 - Tr**2) * q[0] / 2 \
           + (T**3 - Tr**3) * q[1] / 3 \
@@ -96,7 +98,7 @@ PP86ii_Tr = 298.15
           + (T**5 - Tr**5) * q[3] / 5 \
           +         Tr**2  * q[4]) / T**2
 
-def PP86ii_eq29(T,q):
+def PP86ii_eq29(T, q):
     """PP86ii equation 29."""
     # q[x]     b0         b1         b2         C0
     #   0      q6         q10        q12        q15
