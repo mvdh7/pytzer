@@ -3,6 +3,13 @@
 Version 0.3 remains in beta testing. The most significant change from version 0.2 is adding pressure as an input variable. However, most of the interaction coefficients are still not yet pressure-sensitive.
 
 
+## 0.3.1
+
+**Release date:** forthcoming
+
+  * Added docstrings to functions in **coeffs** module.
+
+
 ## 0.3.0
 
 **Release date:** 2019-04-12
