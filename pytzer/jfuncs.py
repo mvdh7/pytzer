@@ -8,6 +8,10 @@ from autograd.numpy import exp, float_, full_like, inf, log, nan, size, \
 from autograd.extend import primitive, defvjp
 from scipy.integrate import quad
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Zero function ~~~~~
+def none(x):
+    return zeros_like(x)
+
 # === Numerical integral ======================================================
 #
 # Cannot yet be automatically differentiated
@@ -64,7 +68,6 @@ def P75_eq47(x):
 
 
 # === Harvie's method as described by Pitzer (1991) Ch. 3, pp. 124-125 ========
-
 # Define the raw function - doesn't work in pytzer (not autograd-able)
 # Use Harvie() instead (code comes afterwards)
 def _Harvie_raw(x):

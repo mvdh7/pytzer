@@ -55,8 +55,11 @@ In alphanumerical order of the source codes:
 <td id="MP98"><code>MP98</code></td>
 <td>Millero, F. J., and Pierrot, D. (1998). A Chemical Equilibrium Model for Natural Waters. <i>Aquat. Geochem.</i> 4, 153–199. <a href="https://doi.org/10.1023/A:1009656023546">doi:10.1023/A:1009656023546</a>.</td></tr><tr>
 
+<td id="P75"><code>P75</code></td>
+<td>Pitzer, K. S. (1975). Thermodynamics of electrolytes. V. effects of higher-order electrostatic terms. <i>J. Solution Chem.</i> 4, 249–265. <a href="https://doi.org/10.1007/BF00646562">doi:10.1007/BF00646562</a>.</td></tr><tr>
+
 <td id="P91"><code>P91</code></td>
-<td>Pitzer, K. S. (1991). “Ion Interaction Approach: Theory and Data Correlation,” in *Activity Coefficients in Electrolyte Solutions, 2nd Edition*, ed. K. S. Pitzer (CRC Press, Florida, USA), 75–153.</td></tr><tr>
+<td>Pitzer, K. S. (1991). “Ion Interaction Approach: Theory and Data Correlation,” in <i>Activity Coefficients in Electrolyte Solutions, 2nd Edition</i>, ed. K. S. Pitzer (CRC Press, Florida, USA), 75–153.</td></tr><tr>
 
 <td id="PP82"><code>PP82</code></td>
 <td>Peiper, J. C., and Pitzer, K. S. (1982). Thermodynamics of aqueous carbonate solutions including mixtures of sodium carbonate, bicarbonate, and chloride. <i>J. Chem. Thermodyn.</i> 14, 613–638. <a href="https://doi.org/10.1016/0021-9614(82)90078-7">doi:10.1016/0021-9614(82)90078-7</a>.</td></tr><tr>
