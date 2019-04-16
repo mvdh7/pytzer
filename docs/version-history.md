@@ -7,7 +7,8 @@ Version 0.3 remains in beta testing. The most significant change from version 0.
 
 **Release date:** forthcoming
 
-  * Added docstrings to functions in **coeffs** module.
+  * Added docstrings to functions in **coeffs** module;
+  * Added **matrix** module with alternative matrix-based model implementation.
 
 
 ## 0.3.0
