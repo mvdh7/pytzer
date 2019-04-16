@@ -58,6 +58,9 @@ Pytzer is in beta. Tests of the accuracy of its coefficients and equations are u
 </tr><tr><td><code>.teos10</code></td>
 <td><a href="modules/teos10">Calculate properties of pure water</a></td>
 
+</tr><tr><td><code>.matrix</code></td>
+<td><a href="modules/meta">Alternative matrix-based implementation</a></td>
+
 </tr><tr><td><code>.meta</code></td>
 <td><a href="modules/meta">Define package metadata</a></td>
 

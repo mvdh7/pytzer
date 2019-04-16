@@ -1,4 +1,4 @@
-# pytzer: Pitzer model for chemical activities in aqueous solutions
+# Pytzer: Pitzer model for chemical activities in aqueous solutions
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@
 """Pitzer model for chemical activities in aqueous solutions."""
 
 from . import cflibs, coeffs, constants, debyehueckel, io, jfuncs, \
-    meta, model, props, tables, teos10
+    matrix, meta, model, props, tables, teos10
 
 __all__ = [
     'cflibs',
@@ -26,6 +26,7 @@ __all__ = [
     'debyehueckel',
     'io',
     'jfuncs',
+    'matrix',
     'meta',
     'model',
     'props',

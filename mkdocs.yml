@@ -22,6 +22,7 @@ nav:
     - .props – solute properties: modules/props.md
     - .constants – physical constants: modules/constants.md
     - .teos10 - TEOS-10 properties: modules/teos10.md
+    - .matrix - matrix model: modules/matrix.md
     - .meta - package metadata: modules/meta.md
   - References: references.md
   - Version history: version-history.md
