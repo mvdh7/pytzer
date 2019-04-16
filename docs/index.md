@@ -26,45 +26,17 @@ Pytzer is in beta. Tests of the accuracy of its coefficients and equations are u
 
 ## Modules
 
-<table><tr>
-
-<td><strong>Module</strong></td>
-<td><strong>Purpose</strong></td>
-
-</tr><tr><td><code>.io</code></td>
-<td><a href="modules/io">Import and export data</a></td>
-
-</tr><tr><td><code>.model</code></td>
-<td><a href="modules/model">Implement the Pitzer model</a></td>
-
-</tr><tr><td><code>.cflibs</code></td>
-<td><a href="modules/cflibs">Define combinations of model coefficients to use</a></td>
-
-</tr><tr><td><code>.coeffs</code></td>
-<td><a href="modules/coeffs">Define functions to evaluate Pitzer model coefficients</a></td>
-
-</tr><tr><td><code>.tables</code></td>
-<td><a href="modules/tables">Store tables of coefficient values</a></td>
-
-</tr><tr><td><code>.jfuncs</code></td>
-<td><a href="modules/jfuncs">Define unsymmetrical mixing functions</a></td>
-
-</tr><tr><td><code>.props</code></td>
-<td><a href="modules/props">Define universal ionic properties</a></td>
-
-</tr><tr><td><code>.constants</code></td>
-<td><a href="modules/constants">Define physical constants</a></td>
-
-</tr><tr><td><code>.teos10</code></td>
-<td><a href="modules/teos10">Calculate properties of pure water</a></td>
-
-</tr><tr><td><code>.matrix</code></td>
-<td><a href="modules/meta">Alternative matrix-based implementation</a></td>
-
-</tr><tr><td><code>.meta</code></td>
-<td><a href="modules/meta">Define package metadata</a></td>
-
-</tr></table>
+  * `.io` - imports and exports data;
+  * `.model` - implements the Pitzer model;
+  * `.cflibs` - defines combinations of model coefficients (i.e. *coefficient libraries*) to use in the model;
+  * `.tables` - stores tables of model coefficient values;
+  * `.debyehueckel` - defines functions for Debye-Hückel limiting slopes;
+  * `.jfuncs` - defines unsymmetrical mixing functions;
+  * `.props` - defines universal solute properties;
+  * `.constants` - defines physicochemical constants;
+  * `.teos10` - calculates properties of pure water;
+  * `.matrix` - implements an alternative matrix-based Pitzer model;
+  * `.meta` - stores metadata about the Pytzer package.
 
 ## Acknowledgements
 
