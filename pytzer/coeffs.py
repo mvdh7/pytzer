@@ -1345,7 +1345,7 @@ def MP98_eq15(T,q):
 
 def bC_Na_I_MP98(T, P):
     """c-a: sodium iodide [MP98]."""
-    b0 = MP98_eq15(T, float_([]
+    b0 = MP98_eq15(T, float_([
          0.1195,
         -1.01,
          8.355,
