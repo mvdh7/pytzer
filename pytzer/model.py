@@ -26,7 +26,7 @@ def fG(tempK, pres, I, cflib): # from CRP94 Eq. (AI1)
 
 def g(x):
     """g function following CRP94 Eq. (AI13)."""
-    return 2 * (1 - (1 + x) * exp(-x)) / x**2
+    return 2*(1 - (1 + x)*exp(-x)) / x**2
 
 def h(x):
     """h function following CRP94 Eq. (AI15)."""
@@ -34,11 +34,11 @@ def h(x):
 
 def B(I, b0, b1, b2, alph1, alph2):
     """B function following CRP94 Eq. (AI7)."""
-    return b0 + b1 * g(alph1 * sqrt(I)) + b2 * g(alph2 * sqrt(I))
+    return b0 + b1*g(alph1*sqrt(I)) + b2*g(alph2*sqrt(I))
 
 def CT(I, C0, C1, omega):
     """CT function following CRP94 Eq. (AI10)."""
-    return C0 + 4*C1 * h(omega * sqrt(I))
+    return C0 + 4*C1*h(omega*sqrt(I))
 
 
 #==============================================================================
@@ -53,8 +53,8 @@ def etheta(tempK, pres, I, z0, z1, cflib):
     x00 = xij(tempK, pres, I, z0, z0, cflib)
     x01 = xij(tempK, pres, I, z0, z1, cflib)
     x11 = xij(tempK, pres, I, z1, z1, cflib)
-    etheta = z0*z1 * (cflib.jfunc(x01) \
-             - 0.5 * (cflib.jfunc(x00) + cflib.jfunc(x11))) / (4 * I)
+    etheta = z0*z1 * (cflib.jfunc(x01)
+        - 0.5 * (cflib.jfunc(x00) + cflib.jfunc(x11))) / (4 * I)
     return etheta
 
 
