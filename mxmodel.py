@@ -3,16 +3,20 @@ from autograd import numpy as np
 from autograd import elementwise_grad as egrad
 
 # Define inputs
-mols_mx = np.array([[1.5, 1.5, 0.5, 0.5]])
-ions = np.array(['Na', 'Cl', 'Mg', 'SO4'])
+mols_mx = np.array([[1.5, 1.5, 1.0, 0.5, 1.0]])
+ions = np.array(['Na', 'Cl', 'K', 'Mg', 'SO4'])
 tempK = np.array([298.15])
 pres = np.array([10.1325])
 cflib = pz.cflibs.CoeffLib()
 cflib.dh['Aosm'] = pz.debyehueckel.Aosm_AW90
 cflib.bC['Na-Cl'] = pz.coeffs.bC_Na_Cl_A92ii
+cflib.bC['K-Cl'] = pz.coeffs.bC_K_Cl_A99
 cflib.bC['Na-SO4'] = pz.coeffs.bC_Na_SO4_HPR93
 cflib.bC['Mg-SO4'] = pz.coeffs.bC_Mg_SO4_PP86ii
 cflib.bC['Mg-Cl'] = pz.coeffs.bC_Mg_Cl_PP87i
+cflib.theta['Mg-Na'] = pz.coeffs.theta_Mg_Na_HMW84
+cflib.theta['Cl-SO4'] = pz.coeffs.theta_Cl_SO4_HMW84
+cflib.theta['K-Na'] = pz.coeffs.theta_K_Na_HMW84
 cflib.jfunc = pz.jfuncs.none
 cflib.add_zeros(ions)
 
@@ -41,6 +45,5 @@ Gex_mx = pz.matrix.Gex_nRT(mols_mx, *allmxs)
 # Try molality derivative
 facfs_pz = egrad(pz.model.Gex_nRT)
 facfs_mx = egrad(pz.matrix.Gex_nRT)
-
 acfs_pz = facfs_pz(mols_pz, ions, tempK, pres, cflib)
 acfs_mx = facfs_mx(mols_mx, *allmxs)
