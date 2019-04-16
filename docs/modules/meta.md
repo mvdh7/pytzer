@@ -1,9 +1,9 @@
-# pytzer metadata
+# Pytzer package metadata
 
 *The casual user has no need to explicitly call this module.*
 
-**pytzer.meta** contains metadata about **pytzer**.
+`.meta` contains metadata about Pytzer.
 
-## Version
+## `.version` - version number
 
-**meta.version** acts as the single-source-of-truth version number.
+Acts as the single-source-of-truth version number for Pytzer.
