@@ -10,7 +10,7 @@ from autograd.numpy import sum as np_sum
 from autograd import elementwise_grad as egrad
 from .constants import b, Mw
 from .cflibs import Seawater
-from . import props
+from . import properties
 
 
 #==============================================================================
@@ -75,7 +75,7 @@ def Gex_nRT(mols, ions, tempK, pres, cflib=Seawater, Izero=False):
     # so at the sea surface pressure = 0 dbar, but the atmospheric pressure
     # should also be taken into account for this model
     # Ionic strength etc.
-    zs, cations, anions, neutrals = props.charges(ions)
+    zs, cations, anions, neutrals = properties.charges(ions)
     zs = vstack(zs)
     I = Istr(mols, zs)
     Z = Zstr(mols, zs)

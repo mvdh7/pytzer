@@ -15,7 +15,7 @@ It is necessary to label each solute component in several places within Pytzer:
 
   1. In the [coefficient library](../modules/cflibs) that defines the interaction coefficients;
 
-  1. In the functions defining [solute properties](modules/props);
+  1. In the functions defining [solute properties](modules/properties);
 
   1. In the names of the [interaction coefficient functions](modules/coeffs).
 

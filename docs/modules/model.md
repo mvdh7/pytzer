@@ -182,7 +182,7 @@ $$I = \frac{1}{2} \sum_i m_i z_i^2$$
 >>> I = pz.model.Istr(mols, zs)
 ```
 
-Input `zs` is a list of the charge on each ion, which can be generated from `ions` using the [solute properties functions](../props).
+Input `zs` is a list of the charge on each ion, which can be generated from `ions` using the [solute properties functions](../properties).
 
 <br />
 

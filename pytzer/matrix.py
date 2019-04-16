@@ -3,7 +3,7 @@
 
 from autograd.numpy import array, log, size, sqrt, transpose, zeros
 from autograd.numpy import abs as np_abs
-from . import props
+from . import properties
 from .cflibs import Seawater
 from .constants import b
 from .model import g, h
@@ -70,7 +70,7 @@ def Gex_nRT(mols, zs, Aosm, b0mx, b1mx, b2mx, C0mx, C1mx,
 
 def assemble(ions, tempK, pres, cflib=Seawater):
     """Assemble coefficient matrices."""
-    zs, cations, anions, _ = props.charges(ions)
+    zs, cations, anions, _ = properties.charges(ions)
     zs = transpose(zs)
     Aosm = cflib.dh['Aosm'](tempK, pres)[0][0]
     b0mx = zeros((size(cations), size(anions)))

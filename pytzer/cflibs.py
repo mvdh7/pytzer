@@ -3,7 +3,7 @@
 
 """Assemble dicts of Pitzer model coefficient functions."""
 
-from . import coeffs, debyehueckel, jfuncs, props
+from . import coeffs, debyehueckel, jfuncs, properties
 from .meta import version
 from autograd.numpy import array, concatenate, unique
 from copy import deepcopy
@@ -31,7 +31,7 @@ class CoeffLib:
     def add_zeros(self, ions):
         """Add zero-functions for missing combinations of solutes."""
         # Get lists of cations and anions
-        _, cations, anions, neutrals = props.charges(ions)
+        _, cations, anions, neutrals = properties.charges(ions)
 
         # Sort lists into alphabetical order
         cations.sort()

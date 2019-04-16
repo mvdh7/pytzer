@@ -2,7 +2,7 @@
 
 *The casual user has no need to explicitly call this module.*
 
-`.props` contains functions that retrieve the universal properties of ions and electrolytes. By *universal*, we mean that these do not change depending on the exact model set-up, unlike the Pitzer model coefficients.
+`.properties` contains functions that retrieve the universal properties of ions and electrolytes. By *universal*, we mean that these do not change depending on the exact model set-up, unlike the Pitzer model coefficients.
 
 
 ## `.charges` - solute charges
@@ -12,7 +12,7 @@ For an input array of "ion" names - following the Pytzer [naming conventions](..
 **Syntax:**
 
 ```python
-zs, cations, anions, neutrals = pytzer.props.charges(ions)
+zs, cations, anions, neutrals = pz.properties.charges(ions)
 ```
 
 **Input:**

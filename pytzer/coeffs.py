@@ -8,7 +8,7 @@ from autograd.numpy import abs as np_abs
 from .constants import Tzero
 from .tables import P91_Ch3_T12, P91_Ch3_T13_I, P91_Ch3_T13_II, \
     PM73_TableI, PM73_TableVI, PM73_TableVIII, PM73_TableIX
-from . import props
+from . import properties
 
 # Note that variable T in this module is equivalent to tempK elsewhere (in K),
 # and P is equivalent to pres (in dbar), for convenience
@@ -60,7 +60,7 @@ def mu_none(T, P):
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Pitzer and Margoya (1973) ~~~~~
 def bC_PM73(T, iset):
     # Experimental function - not production-ready
-    zM, zX = props.charges(array(iset.split('-')))[0]
+    zM, zX = properties.charges(array(iset.split('-')))[0]
     PM73_Tables = {
         -1: PM73_TableI,
         -2: PM73_TableVI,

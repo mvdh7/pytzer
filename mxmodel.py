@@ -22,7 +22,7 @@ cflib.add_zeros(ions)
 
 # Calculate intermediates
 mols_pz = np.vstack(mols_mx[0])
-zs_pz, cations, anions, _ = pz.props.charges(ions)
+zs_pz, cations, anions, _ = pz.properties.charges(ions)
 zs_mx = np.transpose(zs_pz)
 
 # Calculate ionic strength

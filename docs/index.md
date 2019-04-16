@@ -32,7 +32,7 @@ Pytzer is in beta. Tests of the accuracy of its coefficients and equations are u
   * `.tables` - stores tables of model coefficient values;
   * `.debyehueckel` - defines functions for Debye-Hückel limiting slopes;
   * `.jfuncs` - defines unsymmetrical mixing functions;
-  * `.props` - defines universal solute properties;
+  * `.properties` - defines universal solute properties;
   * `.constants` - defines physicochemical constants;
   * `.teos10` - calculates properties of pure water;
   * `.matrix` - implements an alternative matrix-based Pitzer model;

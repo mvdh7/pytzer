@@ -17,7 +17,7 @@
 """Pitzer model for chemical activities in aqueous solutions."""
 
 from . import cflibs, coeffs, constants, debyehueckel, io, jfuncs, \
-    matrix, meta, model, props, tables, teos10
+    matrix, meta, model, properties, tables, teos10
 
 __all__ = [
     'cflibs',
@@ -29,7 +29,7 @@ __all__ = [
     'matrix',
     'meta',
     'model',
-    'props',
+    'properties',
     'tables',
     'teos10',
 ]
@@ -49,7 +49,7 @@ def blackbox(filename, cflib=cflibs.Seawater, savefile=True):
     cflib = deepcopy(cflib)
     cflib.add_zeros(ions) # just in case
     # Separate out zero ionic strengths
-    zs = props.charges(ions)[0]
+    zs = properties.charges(ions)[0]
     I = model.Istr(mols, zs)
     Gex_nRT = full_like(tempK, nan)
     osm = full_like(tempK, nan)
