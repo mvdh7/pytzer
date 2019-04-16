@@ -11,6 +11,8 @@ cflib = pz.cflibs.CoeffLib()
 cflib.dh['Aosm'] = pz.debyehueckel.Aosm_AW90
 cflib.bC['Na-Cl'] = pz.coeffs.bC_Na_Cl_A92ii
 cflib.bC['Na-SO4'] = pz.coeffs.bC_Na_SO4_HPR93
+cflib.bC['Mg-SO4'] = pz.coeffs.bC_Mg_SO4_PP86ii
+cflib.bC['Mg-Cl'] = pz.coeffs.bC_Mg_Cl_PP87i
 cflib.jfunc = pz.jfuncs.none
 cflib.add_zeros(ions)
 
