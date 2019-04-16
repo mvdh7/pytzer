@@ -7,6 +7,7 @@ from . import props
 from .cflibs import Seawater
 from .constants import b
 from .model import g, h
+from .jfuncs import P75_eq47 as jfunc
 
 """Matrix version of the Pitzer model."""
 
@@ -32,17 +33,40 @@ def CT(cats, anis, I, C0, C1, omega):
     CTmx = C0 + 4*C1*h(omega*sqrt(I))
     return cats @ CTmx @ transpose(anis)
 
+def xij(Aosm, I, zs):
+    """xij function for unsymmetrical mixing."""
+    return 6*Aosm*sqrt(I)*(transpose(zs) @ zs)
+
+def xi(Aosm, I, zs):
+    """xi function for unsymmetrical mixing."""
+    return 6*Aosm*sqrt(I) * zs**2
+
+def xj(Aosm, I, zs):
+    """xj function for unsymmetrical mixing."""
+    return 6*Aosm*sqrt(I) * transpose(zs**2)
+
+def etheta(Aosm, I, zs):
+    """etheta function for unsymmetrical mixing."""
+    x01 = xij(Aosm, I, zs)
+    x00 = xi(Aosm, I, zs)
+    x11 = xj(Aosm, I, zs)
+    return (transpose(zs) @ zs) * (jfunc(x01) 
+        - (jfunc(x00) + jfunc(x11))/2) / (4*I)
+
 def Gex_nRT(mols, zs, Aosm, b0mx, b1mx, b2mx, C0mx, C1mx,
         alph1mx, alph2mx, omegamx, thetamxcc, thetamxaa):
+    """Calculate the excess Gibbs energy of a solution."""
     I = Istr(mols, zs)
     Z = Zstr(mols, zs)
     cats = array([mols[zs > 0]])
     anis = array([mols[zs < 0]])
+    zcats = array([zs[zs > 0]])
+    zanis = array([zs[zs < 0]])
     return fG(Aosm, I) \
         + 2*B(cats, anis, I, b0mx, b1mx, b2mx, alph1mx, alph2mx) \
         + Z*CT(cats, anis, I, C0mx, C1mx, omegamx) \
-        + cats @ thetamxcc @ transpose(cats) \
-        + anis @ thetamxaa @ transpose(anis)
+        + cats @ (thetamxcc + etheta(Aosm, I, zcats)) @ transpose(cats) \
+        + anis @ (thetamxaa + etheta(Aosm, I, zanis)) @ transpose(anis)
 
 def assemble(ions, tempK, pres, cflib=Seawater):
     """Assemble coefficient matrices."""

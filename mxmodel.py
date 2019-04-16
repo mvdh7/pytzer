@@ -17,7 +17,7 @@ cflib.bC['Mg-Cl'] = pz.coeffs.bC_Mg_Cl_PP87i
 cflib.theta['Mg-Na'] = pz.coeffs.theta_Mg_Na_HMW84
 cflib.theta['Cl-SO4'] = pz.coeffs.theta_Cl_SO4_HMW84
 cflib.theta['K-Na'] = pz.coeffs.theta_K_Na_HMW84
-cflib.jfunc = pz.jfuncs.none
+cflib.jfunc = pz.jfuncs.P75_eq47
 cflib.add_zeros(ions)
 
 # Calculate intermediates
@@ -47,3 +47,11 @@ facfs_pz = egrad(pz.model.Gex_nRT)
 facfs_mx = egrad(pz.matrix.Gex_nRT)
 acfs_pz = facfs_pz(mols_pz, ions, tempK, pres, cflib)
 acfs_mx = facfs_mx(mols_mx, *allmxs)
+
+# Unsymmetrical term
+zCs = np.array([[1., 1., 2.]])
+unsymm = (allmxs[1], Istr_mx, zCs)
+xij = pz.matrix.xij(*unsymm)
+xi = pz.matrix.xi(*unsymm)
+xj = pz.matrix.xj(*unsymm)
+etheta = pz.matrix.etheta(*unsymm)

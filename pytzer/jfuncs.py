@@ -57,7 +57,6 @@ def P75_eq47(x):
                  * exp(-P75_eq47_C[3] * x**P75_eq47_C[4]))
     return J
 
-
 #~~~~~~~ Harvie's method as described by Pitzer (1991) Ch. 3, pp. 124-125 ~~~~~
 # Define the raw function - doesn't work in pytzer (not autograd-able)
 # Use Harvie() instead (code comes afterwards)
