@@ -3,8 +3,7 @@
 
 """Evaluate Pitzer model interaction coefficients."""
 
-from autograd.numpy import array, exp, float_, full_like, log, \
-    logical_and, sqrt
+from autograd.numpy import array, float_, full_like, log, logical_and, sqrt
 from autograd.numpy import abs as np_abs
 from .constants import Tzero
 from .tables import P91_Ch3_T12, P91_Ch3_T13_I, P91_Ch3_T13_II, \
@@ -58,6 +57,150 @@ def mu_none(T, P):
     valid = T > 0
     return mu, valid
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Pitzer and Margoya (1973) ~~~~~
+def bC_PM73(T, iset):
+    # Experimental function - not production-ready
+    zM, zX = props.charges(array(iset.split('-')))[0]
+    PM73_Tables = {
+        -1: PM73_TableI,
+        -2: PM73_TableVI,
+        -3: PM73_TableVIII,
+        -4: PM73_TableIX,
+        -5: PM73_TableIX,
+    }
+    b0 = full_like(T, PM73_Tables[zM*zX][iset]['b0'])
+    b1 = full_like(T, PM73_Tables[zM*zX][iset]['b1'])
+    b2 = 0
+    Cphi = full_like(T, PM73_Tables[zM*zX][iset]['Cphi'])
+    C0 = Cphi / (2 * sqrt(np_abs(zM * zX)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Sr_Br_PM73(T, P):
+    """c-a: strontium bromide [PM73]."""
+    # PM73 cite Robinson & Stokes (1965) Electrolyte Solutions, 2nd Ed.
+    b0 = 0.4415 * 3/4
+    b1 = 2.282 * 3/4
+    b2 = 0
+    Cphi = 0.00231 * 3/2**2.5
+    zSr = +2
+    zBr = -1
+    C0 = Cphi / (2 * sqrt(np_abs(zSr * zBr)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Sr_Cl_PM73(T, P):
+    """c-a: strontium chloride [PM73]."""
+    # PM73 cite Robinson & Stokes (1965) Electrolyte Solutions, 2nd Ed.
+    b0 = 0.3810 * 3/4
+    b1 = 2.223 * 3/4
+    b2 = 0
+    Cphi = -0.00246 * 3/2**2.5
+    zSr = +2
+    zCl = -1
+    C0 = Cphi / (2 * sqrt(np_abs(zSr * zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_H2PO4_PM73(T, P):
+    """c-a: potassium dihydrogen-phosphate [PM73]."""
+    b0 = -0.0678
+    b1 = -0.1042
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_SCN_PM73(T, P):
+    """c-a: potassium thiocyanate [PM73]."""
+    b0 = 0.0416
+    b1 = 0.2302
+    b2 = 0
+    Cphi = -0.00252
+    zK = +1
+    zSCN = -1
+    C0 = Cphi / (2 * sqrt(np_abs(zK * zSCN)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Silvester and Pitzer (1978) ~~~~~
+# General procedure:
+#  - Inherit 298.15 K value from PM73;
+#  - Add temperature derivative correction from SP78.
+SP78_Tr = 298.15
+
+def bC_Sr_Br_SP78(T, P):
+    """c-a: strontium bromide [SP78]."""
+    # SP78 cite Lange & Streeck (1930) Z Phys Chem Abt A 152
+    b0r, b1r, b2, C0, C1, alph1, alph2, omega, _ = bC_Sr_Br_PM73(T, P)
+    b0 = b0r + (-0.437e-3 * 3/4) * (T - SP78_Tr)
+    b1 = b1r + (8.71e-3 * 3/4) * (T - SP78_Tr)
+    # Validity range declared by MP98
+    valid = logical_and(T >= 283.15,T <= 313.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Sr_Cl_SP78(T, P):
+    """c-a: strontium chloride [SP78]."""
+    # SP78 cite Lange & Streeck (1930) Z Phys Chem Abt A 152
+    b0r, b1r, b2, C0, C1, alph1, alph2, omega, _ = bC_Sr_Br_PM73(T, P)
+    b0 = b0r + (0.956e-3 * 3/4) * (T - SP78_Tr)
+    b1 = b1r + (3.79e-3 * 3/4) * (T - SP78_Tr)
+    # Validity range declared by MP98
+    valid = logical_and(T >= 283.15,T <= 313.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_H2PO4_SP78(T, P):
+    """c-a: potassium dihydrogen-phosphate [SP78]."""
+    b0r, b1r, b2, C0r, C1, alph1, alph2, omega, _ = bC_K_H2PO4_PM73(T, P)
+    b0 = b0r + (6.045e-4) * (T - SP78_Tr)
+    b1 = b1r + (28.6e-4) * (T - SP78_Tr)
+    zK = +1
+    zH2PO4 = -1
+    Cphi = C0r * (2 * sqrt(np_abs(zK * zH2PO4))) - 10.11e-5*(T - SP78_Tr)
+    C0 = Cphi / (2 * sqrt(np_abs(zK * zH2PO4)))
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    # Validity range declared by MP98
+    valid = logical_and(T >= 283.15,T <= 313.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_SCN_SP78(T, P):
+    """c-a: potassium thiocyanate [SP78]."""
+    b0r, b1r, b2, C0r, C1, alph1, alph2, omega, _ = bC_K_SCN_PM73(T, P)
+    b0 = b0r + 6.87e-4*(T - SP78_Tr)
+    b1 = b1r + 37e-4*(T - SP78_Tr)
+    zK   = +1
+    zSCN = -1
+    Cphi = C0r * (2 * sqrt(np_abs(zK * zSCN))) + 0.43e-5*(T - SP78_Tr)
+    C0 = Cphi / (2 * sqrt(np_abs(zK * zSCN)))
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    # Validity range declared by MP98
+    valid = logical_and(T >= 283.15,T <= 313.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Roy et al. (1980) ~~~~~
 def theta_H_Mg_RGB80(T, P):
     """c-c': hydrogen magnesium [RGB80]."""
@@ -84,6 +227,79 @@ def bC_Mg_SO4_RM81i(T, P):
     omega = -9
     valid = T == 298.15
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Peiper and Pitzer (1982) ~~~~~
+def PP82_eqMPH(T,q):
+    """PP82 equation derived by MP Humphreys."""
+    Tr = 298.15
+    return q[0] + q[1] * (T - Tr) + q[2] * (T - Tr)**2 / 2
+
+def bC_Na_CO3_PP82(T, P):
+    """c-a: sodium carbonate [PP82]."""
+    # I have no idea where MP98 got their T**2 coefficients from
+    #   or why they are so small.
+    b0 = PP82_eqMPH(T, float_([
+         0.0362,
+         1.79e-3,
+        -4.22e-5,
+    ]))
+    b1 = PP82_eqMPH(T, float_([
+         1.51,
+         2.05e-3,
+        -16.8e-5,
+    ]))
+    b2 = 0
+    Cphi = 0.0052
+    zNa = +1
+    zCO3 = -2
+    C0 = Cphi / (2 * sqrt(np_abs(zNa * zCO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_HCO3_PP82(T, P):
+    """c-a: sodium bicarbonate [PP82]."""
+    # I have no idea where MP98 got their T**2 coefficients from
+    #   or why they are so small.
+    b0 = PP82_eqMPH(T, float_([
+         0.028,
+         1.00e-3,
+        -2.6e-5,
+    ]))
+    b1 = PP82_eqMPH(T, float_([
+         0.044,
+         1.10e-3,
+        -4.3e-5,
+    ]))
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def theta_Cl_HCO3_PP82(T, P):
+    """a-a': chloride bicarbonate [PP82]."""
+    theta = 0.0359
+    valid = T == 298.15
+    return theta, valid
+
+def theta_Cl_CO3_PP82(T, P):
+    """a-a': chloride carbonate [PP82]."""
+    theta = -0.053
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Na_Cl_HCO3_PP82(T, P):
+    """c-a-a': sodium chloride bicarbonate [PP82]."""
+    psi = -0.0143
+    valid = T == 298.15
+    return psi, valid
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Roy et al. (1982) ~~~~~
 def theta_Ca_H_RGO82(T, P):
@@ -223,6 +439,20 @@ def bC_Li_Cl_HM83(T, P):
     alph2 = -9
     omega = -9
     valid = logical_and(T >= 273.15, T <= 523.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Roy et al. (1983) ~~~~~
+def bC_K_HCO3_RGW83(T, P):
+    """c-a: potassium bicarbonate [RGW83]."""
+    b0 = -0.022
+    b1 = 0.09
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Phutela and Pitzer (1986) ~~~~~
@@ -665,6 +895,65 @@ def bC_Ca_BOH4_SRM87(T, P):
     alph2 = -9
     omega = -9
     valid = logical_and(T >= 278.15, T <= 528.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Hershey et al. (1988) ~~~~~
+def bC_Na_HS_HPM88(T, P):
+    """c-a: sodium bisulfide [HPM88]."""
+    b0 = 3.66e-1 - 6.75e+1 / T
+    b1 = 0
+    b2 = 0
+    Cphi = -1.27e-2
+    zNa = +1
+    zHS = -1
+    C0 = Cphi / (2 * sqrt(np_abs(zNa * zHS)))
+    C1 = 0
+    alph1 = -9
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 278.15,T <= 318.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_HS_HPM88(T, P):
+    """c-a: potassium bisulfide [HPM88]."""
+    b0 = 6.37e-1 - 1.40e+2 / T
+    b1 = 0
+    b2 = 0
+    Cphi = -1.94e-1
+    zK = +1
+    zHS = -1
+    C0 = Cphi / (2 * sqrt(np_abs(zK * zHS)))
+    C1 = 0
+    alph1 = -9
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 278.15,T <= 298.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Mg_HS_HPM88(T, P):
+    """c-a: magnesium bisulfide [HPM88]."""
+    b0 = 1.70e-1
+    b1 = 2.78
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Ca_HS_HPM88(T, P):
+    """c-a: calcium bisulfide [HPM88]."""
+    b0 = -1.05e-1
+    b1 = 3.43
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Møller (1988) ~~~~~
@@ -1994,6 +2283,39 @@ def theta_Ca_H_MarChemSpec(T, P):
     theta = thetar + 3.275e-4*(T - 298.15)
     valid = logical_and(T >= 273.15, T <= 323.15)
     return theta, valid
+
+def theta_H_Na_MarChemSpec25(T, P):
+    """c-c': hydrogen sodium [MarChemSpec]."""
+    theta = 0.036
+    valid = T == 298.15
+    return theta, valid
+
+def theta_H_K_MarChemSpec25(T, P):
+    """c-c': hydrogen potassium [MarChemSpec]."""
+    theta = 0.005
+    valid = T == 298.15
+    return theta, valid
+
+def lambd_tris_tris_MarChemSpec25(T, P):
+    """n-n: tris tris [MarChemSpec]."""
+    # Temporary value from "MODEL PARAMETERS FOR TRIS Tests.docx" (2019-01-31)
+    lambd = -0.006392
+    valid = T == 298.15
+    return lambd, valid
+
+def zeta_tris_Na_Cl_MarChemSpec25(T, P):
+    """n-c-a: tris sodium chloride [MarChemSpec]."""
+    # Temporary value from "MODEL PARAMETERS FOR TRIS Tests.docx" (2019-01-31)
+    zeta = -0.003231
+    valid = T == 298.15
+    return zeta, valid
+
+def mu_tris_tris_tris_MarChemSpec25(T, P):
+    """n-n-n: tris tris tris [MarChemSpec]."""
+    # Temporary value from "MODEL PARAMETERS FOR TRIS Tests.docx" (2019-01-31)
+    mu = 0.0009529
+    valid = T == 298.15
+    return mu, valid
 
 #%%############################################################################
 # === HARVIE, MOLLER AND WEARE 1984 ===========================================
@@ -3839,501 +4161,3 @@ def psi_H_CO3_HCO3_HMW84(T, P):
     psi = 0.0
     valid = T == 298.15
     return psi, valid
-
-# === HARVIE, MOLLER AND WEARE 1984 ===========================================
-###############################################################################
-
-#%%############################################################################
-# === PITZER & MARGOYA 1973 ===================================================
-#
-# Experimental function - not production-ready
-
-def bC_PM73(T, iset):
-
-    zM, zX = props.charges(array(iset.split('-')))[0]
-
-    PM73_Tables = {-1: PM73_TableI,
-                   -2: PM73_TableVI,
-                   -3: PM73_TableVIII,
-                   -4: PM73_TableIX,
-                   -5: PM73_TableIX  }
-
-    b0 = full_like(T,PM73_Tables[zM*zX][iset]['b0'])
-    b1 = full_like(T,PM73_Tables[zM*zX][iset]['b1'])
-    b2 = 0
-
-    Cphi = full_like(T,PM73_Tables[zM*zX][iset]['Cphi'])
-    C0 = Cphi / (2 * sqrt(np_abs(zM * zX)))
-    C1 = 0
-
-    alph1 = 2
-    alph2 = -9
-    omega = -9
-
-    valid = T == 298.15
-
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
-# --- bC: strontium bromide ---------------------------------------------------
-
-def bC_Sr_Br_PM73(T, P):
-
-    # PM73 cite Robinson & Stokes (1965) Electrolyte Solutions, 2nd Ed.
-
-    b0 = full_like(T,0.4415 * 3/4)
-    b1 = full_like(T,2.282  * 3/4)
-    b2 = 0
-
-    Cphi = full_like(T,0.00231 * 3/2**2.5)
-    zSr = +2
-    zBr = -1
-
-    C0 = Cphi / (2 * sqrt(np_abs(zSr * zBr)))
-    C1 = 0
-
-    alph1 = 2
-    alph2 = -9
-    omega = -9
-
-    valid = T == 298.15
-
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
-# --- bC: strontium chloride --------------------------------------------------
-
-def bC_Sr_Cl_PM73(T, P):
-
-    # PM73 cite Robinson & Stokes (1965) Electrolyte Solutions, 2nd Ed.
-
-    b0 = full_like(T,0.3810 * 3/4)
-    b1 = full_like(T,2.223  * 3/4)
-    b2 = 0
-
-    Cphi = full_like(T,-0.00246 * 3/2**2.5)
-    zSr = +2
-    zCl = -1
-
-    C0 = Cphi / (2 * sqrt(np_abs(zSr * zCl)))
-    C1 = 0
-
-    alph1 = 2
-    alph2 = -9
-    omega = -9
-
-    valid = T == 298.15
-
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
-# --- bC: potassium dihydrogen-phosphate --------------------------------------
-
-def bC_K_H2PO4_PM73(T, P):
-
-    b0 = -0.0678
-    b1 = -0.1042
-    b2 = 0
-    C0 = 0
-    C1 = 0
-
-    alph1 = 2
-    alph2 = -9
-    omega = -9
-
-    valid = T == 298.15
-
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
-# --- bC: potassium thiocyanate -----------------------------------------------
-
-def bC_K_SCN_PM73(T, P):
-
-    b0 = 0.0416
-    b1 = 0.2302
-    b2 = 0
-
-    Cphi = -0.00252
-    zK   = +1
-    zSCN = -1
-
-    C0 = Cphi / (2 * sqrt(np_abs(zK * zSCN)))
-    C1 = 0
-
-    alph1 = 2
-    alph2 = -9
-    omega = -9
-
-    valid = T == 298.15
-
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
-# === PITZER & MARGOYA 1973 ===================================================
-###############################################################################
-
-###############################################################################
-# === SILVESTER & PITZER 1978 =================================================
-
-# General procedure:
-#  - Inherit 298.15 K value from PM73;
-#  - Add temperature derivative correction from SP78.
-
-SP78_Tr = 298.15
-
-# --- bC: strontium bromide ---------------------------------------------------
-
-def bC_Sr_Br_SP78(T, P):
-
-    # SP78 cite Lange & Streeck (1930) Z Phys Chem Abt A 152
-
-    b0r,b1r,b2,C0,C1, alph1,alph2,omega, _ = bC_Sr_Br_PM73(T, P)
-
-    b0 = b0r + float_(-0.437 * 1e-3 * 3/4) * (T - SP78_Tr)
-    b1 = b1r + float_( 8.71  * 1e-3 * 3/4) * (T - SP78_Tr)
-
-    # Validity range declared by MP98
-    valid = logical_and(T >= 283.15,T <= 313.15)
-
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
-# --- bC: strontium chloride --------------------------------------------------
-
-def bC_Sr_Cl_SP78(T, P):
-
-    # SP78 cite Lange & Streeck (1930) Z Phys Chem Abt A 152
-
-    b0r,b1r,b2,C0,C1, alph1,alph2,omega, _ = bC_Sr_Br_PM73(T, P)
-
-    b0 = b0r + float_(0.956 * 1e-3 * 3/4) * (T - SP78_Tr)
-    b1 = b1r + float_(3.79  * 1e-3 * 3/4) * (T - SP78_Tr)
-
-    # Validity range declared by MP98
-    valid = logical_and(T >= 283.15,T <= 313.15)
-
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
-# --- bC: potassium dihydrogen-phosphate --------------------------------------
-
-def bC_K_H2PO4_SP78(T, P):
-
-    b0r,b1r,b2,C0r,C1, alph1,alph2,omega, _ = bC_K_H2PO4_PM73(T, P)
-
-    b0 = b0r + float_( 6.045 * 1e-4) * (T - SP78_Tr)
-    b1 = b1r + float_(28.6   * 1e-4) * (T - SP78_Tr)
-
-    zK     = +1
-    zH2PO4 = -1
-
-    Cphi = C0r * (2 * sqrt(np_abs(zK * zH2PO4))) \
-           + float_(-10.11 * 1e-5) * (T - SP78_Tr)
-
-    C0 = Cphi / (2 * sqrt(np_abs(zK * zH2PO4)))
-
-    alph1 = 2
-    alph2 = -9
-    omega = -9
-
-    # Validity range declared by MP98
-    valid = logical_and(T >= 283.15,T <= 313.15)
-
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
-# --- bC: potassium thiocyanate -----------------------------------------------
-
-def bC_K_SCN_SP78(T, P):
-
-    b0r,b1r,b2,C0r,C1, alph1,alph2,omega, _ = bC_K_SCN_PM73(T, P)
-
-    b0 = b0r + float_( 6.87 * 1e-4) * (T - SP78_Tr)
-    b1 = b1r + float_(37    * 1e-4) * (T - SP78_Tr)
-
-    zK   = +1
-    zSCN = -1
-
-    Cphi = C0r * (2 * sqrt(np_abs(zK * zSCN))) \
-           + float_(0.43 * 1e-5) * (T - SP78_Tr)
-
-    C0 = Cphi / (2 * sqrt(np_abs(zK * zSCN)))
-
-    alph1 = 2
-    alph2 = -9
-    omega = -9
-
-    # Validity range declared by MP98
-    valid = logical_and(T >= 283.15,T <= 313.15)
-
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
-# === SILVESTER & PITZER 1978 =================================================
-###############################################################################
-
-#%%############################################################################
-# === PEIPER & PITZER 1982 ====================================================
-
-# The equation below was derived by MP Humphreys.
-
-def PP82_eqMPH(T,q):
-
-    Tr = 298.15
-
-    return q[0] + q[1] * (T - Tr) + q[2] * (T - Tr)**2 / 2
-
-# --- bC: sodium carbonate ----------------------------------------------------
-
-def bC_Na_CO3_PP82(T, P):
-
-    # I have no idea where MP98 got their T**2 coefficients from
-    #   or why they are so small.
-    b0 = PP82_eqMPH(T, float_([
-          0.0362,
-          1.79e-3,
-        - 4.22e-5]))
-
-    b1 = PP82_eqMPH(T, float_([
-          1.51,
-          2.05e-3,
-        -16.8e-5,]))
-
-    b2 = 0
-
-    Cphi = 0.0052
-    zNa  = +1
-    zCO3 = -2
-
-    C0 = Cphi / (2 * sqrt(np_abs(zNa * zCO3)))
-    C1 = 0
-
-    alph1 = 2
-    alph2 = -9
-    omega = -9
-
-    valid = logical_and(T >= 273.15, T <= 323.15)
-
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
-# --- bC: sodium bicarbonate --------------------------------------------------
-
-def bC_Na_HCO3_PP82(T, P):
-
-    # I have no idea where MP98 got their T**2 coefficients from
-    #   or why they are so small.
-    b0 = PP82_eqMPH(T, float_([
-         0.028,
-         1.00e-3,
-        -2.6e-5,]))
-
-    b1 = PP82_eqMPH(T, float_([
-         0.044,
-         1.10e-3,
-        -4.3e-5,]))
-
-    b2 = 0
-
-    C0 = 0
-    C1 = 0
-
-    alph1 = 2
-    alph2 = -9
-    omega = -9
-
-    valid = logical_and(T >= 273.15, T <= 323.15)
-
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
-# --- theta: chloride bicarbonate ---------------------------------------------
-
-def theta_Cl_HCO3_PP82(T, P):
-
-    theta = 0.0359
-    valid = T == 298.15
-
-    return theta, valid
-
-# --- theta: chloride carbonate -----------------------------------------------
-
-def theta_Cl_CO3_PP82(T, P):
-
-    theta = -0.053
-    valid = T == 298.15
-
-    return theta, valid
-
-# --- psi: sodium chloride bicarbonate ----------------------------------------
-
-def psi_Na_Cl_HCO3_PP82(T, P):
-
-    psi = -0.0143
-    valid = T == 298.15
-
-    return psi, valid
-
-# === PEIPER & PITZER 1982 ====================================================
-###############################################################################
-
-#%%############################################################################
-# === ROY ET AL 1983 ==========================================================
-
-def bC_K_HCO3_RGW83(T, P):
-
-    b0 = -0.022
-    b1 = full_like(T, 0.09 )
-    b2 = 0
-    C0 = 0
-    C1 = 0
-
-    alph1 = 2
-    alph2 = -9
-    omega = -9
-
-    valid = T == 298.15
-
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
-# === ROY ET AL 1983 ==========================================================
-###############################################################################
-
-#%%############################################################################
-# === HERSHEY ET AL 1988 ======================================================
-
-# --- bC: sodium bisulfide ----------------------------------------------------
-
-def bC_Na_HS_HPM88(T, P):
-
-    b0 = 3.66e-1 - 6.75e+1 / T
-    b1 = 0
-    b2 = 0
-
-    Cphi = full_like(T,-1.27e-2)
-
-    zNa = +1
-    zHS = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zNa * zHS)))
-
-    C1 = 0
-
-    alph1 = -9
-    alph2 = -9
-    omega = -9
-
-    valid = logical_and(T >= 278.15,T <= 318.15)
-
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
-# --- bC: potassium bisulfide -------------------------------------------------
-
-def bC_K_HS_HPM88(T, P):
-
-    b0 = 6.37e-1 - 1.40e+2 / T
-    b1 = 0
-    b2 = 0
-
-    Cphi = full_like(T,-1.94e-1)
-
-    zK  = +1
-    zHS = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zK * zHS)))
-
-    C1 = 0
-
-    alph1 = -9
-    alph2 = -9
-    omega = -9
-
-    valid = logical_and(T >= 278.15,T <= 298.15)
-
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
-# --- bC: magnesium bisulfide -------------------------------------------------
-
-def bC_Mg_HS_HPM88(T, P):
-
-    b0 = full_like(T,1.70e-1)
-    b1 = full_like(T,2.78   )
-    b2 = 0
-
-    C0 = 0
-    C1 = 0
-
-    alph1 = 2
-    alph2 = -9
-    omega = -9
-
-    valid = T == 298.15
-
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
-# --- bC: calcium bisulfide ---------------------------------------------------
-
-def bC_Ca_HS_HPM88(T, P):
-
-    b0 = full_like(T,-1.05e-1)
-    b1 = full_like(T, 3.43   )
-    b2 = 0
-
-    C0 = 0
-    C1 = 0
-
-    alph1 = 2
-    alph2 = -9
-    omega = -9
-
-    valid = T == 298.15
-
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
-###############################################################################
-# === HERSHEY ET AL 1988 ======================================================
-
-#%%############################################################################
-# === MARCHEMSPEC SPECIALS ====================================================
-#
-# --- theta: hydrogen sodium --------------------------------------------------
-
-def theta_H_Na_MarChemSpec25(T, P):
-
-    theta = 0.036
-    valid = T == 298.15
-
-    return theta, valid
-
-# --- theta: hydrogen potassium -----------------------------------------------
-
-def theta_H_K_MarChemSpec25(T, P):
-
-    theta = 0.005
-    valid = T == 298.15
-
-    return theta, valid
-
-# --- lambd: tris tris --------------------------------------------------------
-#
-# Temporary value from "MODEL PARAMETERS FOR TRIS Tests.docx" (2019-01-31)
-
-def lambd_tris_tris_MarChemSpec25(T, P):
-
-    lambd = -0.006392
-    valid = T == 298.15
-
-    return lambd, valid
-
-# --- eta: tris sodium chloride -----------------------------------------------
-#
-# Temporary value from "MODEL PARAMETERS FOR TRIS Tests.docx" (2019-01-31)
-
-def zeta_tris_Na_Cl_MarChemSpec25(T, P):
-
-    zeta  = -0.003231
-    valid = T == 298.15
-
-    return zeta, valid
-
-# --- mu: tris tris tris ------------------------------------------------------
-#
-# Temporary value from "MODEL PARAMETERS FOR TRIS Tests.docx" (2019-01-31)
-
-def mu_tris_tris_tris_MarChemSpec25(T, P):
-
-    mu    = 0.0009529
-    valid = T == 298.15
-
-    return mu, valid
-
-# === MARCHEMSPEC SPECIALS ====================================================
-###############################################################################
