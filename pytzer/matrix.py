@@ -2,8 +2,9 @@
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 
 from scipy.special import comb
-from autograd.numpy import array, log, size, sqrt, transpose, triu_indices, \
-    zeros
+from autograd import elementwise_grad as egrad
+from autograd.numpy import array, exp, log, size, sqrt, transpose, \
+    triu_indices, zeros
 from autograd.numpy import abs as np_abs
 from . import properties
 from .cflibs import Seawater
@@ -75,6 +76,20 @@ def Gex_nRT(mols, zs, Aosm, b0mx, b1mx, b2mx, C0mx, C1mx,
         + anis @ (thetamxaa + etheta(Aosm, I, zanis)) @ transpose(anis) \
         + catscats @ psimxcca @ transpose(anis) \
         + anisanis @ psimxcaa @ transpose(cats)
+
+def ln_acfs(mols, zs, Aosm, b0mx, b1mx, b2mx, C0mx, C1mx,
+        alph1mx, alph2mx, omegamx, thetamxcc, thetamxaa, psimxcca, psimxcaa):
+    """Calculate the natural logarithms of the activity coefficients
+    of all solutes.
+    """
+    return egrad(Gex_nRT)(mols, zs, Aosm, b0mx, b1mx, b2mx, C0mx, C1mx,
+        alph1mx, alph2mx, omegamx, thetamxcc, thetamxaa, psimxcca, psimxcaa)
+
+def acfs(mols, zs, Aosm, b0mx, b1mx, b2mx, C0mx, C1mx,
+        alph1mx, alph2mx, omegamx, thetamxcc, thetamxaa, psimxcca, psimxcaa):
+    """Calculate the activity coefficients of all solutes."""
+    return exp(ln_acfs(mols, zs, Aosm, b0mx, b1mx, b2mx, C0mx, C1mx,
+        alph1mx, alph2mx, omegamx, thetamxcc, thetamxaa, psimxcca, psimxcaa))
 
 def assemble(ions, tempK, pres, cflib=Seawater):
     """Assemble coefficient matrices."""
