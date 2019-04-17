@@ -1,7 +1,9 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 
-from autograd.numpy import array, log, size, sqrt, transpose, zeros
+from scipy.special import comb
+from autograd.numpy import array, log, size, sqrt, transpose, triu_indices, \
+    zeros
 from autograd.numpy import abs as np_abs
 from . import properties
 from .cflibs import Seawater
@@ -54,7 +56,7 @@ def etheta(Aosm, I, zs):
         - (jfunc(x00) + jfunc(x11))/2) / (4*I)
 
 def Gex_nRT(mols, zs, Aosm, b0mx, b1mx, b2mx, C0mx, C1mx,
-        alph1mx, alph2mx, omegamx, thetamxcc, thetamxaa):
+        alph1mx, alph2mx, omegamx, thetamxcc, thetamxaa, psimxcca, psimxcaa):
     """Calculate the excess Gibbs energy of a solution."""
     I = Istr(mols, zs)
     Z = Zstr(mols, zs)
@@ -62,11 +64,17 @@ def Gex_nRT(mols, zs, Aosm, b0mx, b1mx, b2mx, C0mx, C1mx,
     anis = array([mols[zs < 0]])
     zcats = array([zs[zs > 0]])
     zanis = array([zs[zs < 0]])
+    catscats = array([(transpose(cats) @ cats)
+        [triu_indices(len(cats[0]), k=1)]])
+    anisanis = array([(transpose(anis) @ anis)
+        [triu_indices(len(anis[0]), k=1)]])
     return fG(Aosm, I) \
         + 2*B(cats, anis, I, b0mx, b1mx, b2mx, alph1mx, alph2mx) \
         + Z*CT(cats, anis, I, C0mx, C1mx, omegamx) \
         + cats @ (thetamxcc + etheta(Aosm, I, zcats)) @ transpose(cats) \
-        + anis @ (thetamxaa + etheta(Aosm, I, zanis)) @ transpose(anis)
+        + anis @ (thetamxaa + etheta(Aosm, I, zanis)) @ transpose(anis) \
+        + catscats @ psimxcca @ transpose(anis) \
+        + anisanis @ psimxcaa @ transpose(cats)
 
 def assemble(ions, tempK, pres, cflib=Seawater):
     """Assemble coefficient matrices."""
@@ -83,6 +91,9 @@ def assemble(ions, tempK, pres, cflib=Seawater):
     omegamx = zeros((size(cations), size(anions)))
     thetamxcc = zeros((size(cations), size(cations)))
     thetamxaa = zeros((size(anions), size(anions)))
+    psimxcca = zeros((int(comb(size(cations), 2)), size(anions)))
+    psimxcaa = zeros((int(comb(size(anions), 2)), size(cations)))
+    CC = 0
     for CX, cationx in enumerate(cations):
         for A, anion in enumerate(anions):
             iset = '-'.join((cationx, anion))
@@ -96,6 +107,11 @@ def assemble(ions, tempK, pres, cflib=Seawater):
             iset= '-'.join(iset)
             thetamxcc[CX, CY] = thetamxcc[CY, CX] \
                 = cflib.theta[iset](tempK, pres)[0]
+            for A, anion in enumerate(anions):
+                iset3 = '-'.join((iset, anion))
+                psimxcca[CC, A] = cflib.psi[iset3](tempK, pres)[0]
+            CC = CC + 1
+    AA = 0
     for AX, anionx in enumerate(anions):
         for xAY, aniony in enumerate(anions[AX+1:]):
             AY = xAY + AX + 1
@@ -104,5 +120,9 @@ def assemble(ions, tempK, pres, cflib=Seawater):
             iset = '-'.join(iset)
             thetamxaa[AX, AY] = thetamxaa[AY, AX] \
                 = cflib.theta[iset](tempK, pres)[0]
+            for C, cation in enumerate(cations):
+                iset3 = '-'.join((cation, iset))
+                psimxcaa[AA, C] = cflib.psi[iset3](tempK, pres)[0]
+            AA = AA + 1
     return zs, Aosm, b0mx, b1mx, b2mx, C0mx, C1mx, alph1mx, alph2mx, omegamx, \
-        thetamxcc, thetamxaa
+        thetamxcc, thetamxaa, psimxcca, psimxcaa

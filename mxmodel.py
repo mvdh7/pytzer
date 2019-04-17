@@ -17,6 +17,11 @@ cflib.bC['Mg-Cl'] = pz.coeffs.bC_Mg_Cl_PP87i
 cflib.theta['Mg-Na'] = pz.coeffs.theta_Mg_Na_HMW84
 cflib.theta['Cl-SO4'] = pz.coeffs.theta_Cl_SO4_HMW84
 cflib.theta['K-Na'] = pz.coeffs.theta_K_Na_HMW84
+cflib.psi['K-Na-Cl'] = lambda psi, valid: (1, 0)
+cflib.psi['K-Na-SO4'] = lambda psi, valid: (2, 0)
+cflib.psi['K-Mg-Cl'] = lambda psi, valid: (3, 0)
+cflib.psi['Mg-Na-Cl'] = lambda psi, valid: (4, 0)
+cflib.psi['K-Cl-SO4'] = lambda psi, valid: (5, 0)
 cflib.jfunc = pz.jfuncs.P75_eq47
 cflib.add_zeros(ions)
 
@@ -55,3 +60,5 @@ xij = pz.matrix.xij(*unsymm)
 xi = pz.matrix.xi(*unsymm)
 xj = pz.matrix.xj(*unsymm)
 etheta = pz.matrix.etheta(*unsymm)
+
+print(allmxs[-1])
