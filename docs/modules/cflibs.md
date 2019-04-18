@@ -51,7 +51,7 @@ Several ready-to-use coefficient libraries are available in this module. To deco
 
 </tr><tr>
 <td>WM13</td>
-<td>$\ce{Ca^2+}$, $\ce{Cl^-}$, $\ce{H^+}$, $\ce{HSO4^-}$, $\ce{K^+}$, $\ce{Mg^2+}$, $\ce{MgOH^+}$, $\ce{Na^+}$, $\ce{OH^-}$, $\ce{SO4^2-}$</td>
+<td>$\ce{Ca^2+}$, $\ce{Cl-}$, $\ce{H+}$, $\ce{HSO4-}$, $\ce{K+}$, $\ce{Mg^2+}$, $\ce{MgOH+}$, $\ce{Na+}$, $\ce{OH-}$, $\ce{SO4^2-}$</td>
 <td><a href="../../references/#WM13">WM13</a></td>
 
 </tr></table>
@@ -61,7 +61,6 @@ Several ready-to-use coefficient libraries are available in this module. To deco
 ## cflib methods
 
 A few handy methods are provided as part of the **CoeffLib** class. Brief summaries are provided below, and here is a usage example of all of them together:
-
 
 ```python
 import pytzer as pz
@@ -75,7 +74,7 @@ cflib = deepcopy(pz.cflibs.M88)
 cflib.get_contents()
 
 # Add a new ion into the mix
-cflib.ions = np.append(cflib.ions,'K')
+cflib.ions = np.append(cflib.ions, 'K')
 
 # Add zero-functions for all interactions with the new ion
 cflib.add_zeros(cflib.ions)
@@ -84,25 +83,24 @@ cflib.add_zeros(cflib.ions)
 cflib.name = 'M88-modified'
 
 # Print out the coefficients evaluated at 298.15 K
-cflib.print_coeffs(298.15,'coeff_file.txt')
+cflib.print_coeffs(298.15, 'coeff_file.txt')
 ```
 
 The methods are as follows:
 
-### .add_zeros
+### `.add_zeros` - add entries for missing interactions
 
 `CoeffLib.add_zeros(ions)` adds zero-functions for all missing interactions, given a list of ions.
 
-### .get_contents
+### `.get_contents` - create lists of ions and sources
 
 `CoeffLib.get_contents()` scans through all functions within the **CoeffLib**, and puts lists of all ions and of all sources in its **ions** and **srcs** fields.
 
 The list of ions is determined from the dict keys, while sources are determined from the function names.
 
-### .print_coeffs
+### `.print_coeffs` - print out model coefficients
 
 `CoeffLib.print_coeffs(T,filename)` evaluates all coefficients in a **cflib** at a single input temperature and pressure, and prints the results to a text file (`filename`).
-
 
 <hr />
 
@@ -110,7 +108,7 @@ The list of ions is determined from the dict keys, while sources are determined 
 
 To modify an existing **CoeffLib**, or create a new one, it is first necessary to understand how they are used within Pytzer, as follows. A basic understanding of the workings of the Pitzer model is assumed.
 
-A **CoeffLib** or **cflib** is an object of the class `CoeffLib` as defined within **pytzer.cflibs**. From the initalisation function we can see that it contains the following fields:
+A **CoeffLib** or **cflib** is an object of the class `CoeffLib`. From the initalisation function we can see that it contains the following fields:
 
 ```python
 class CoeffLib:
@@ -118,7 +116,6 @@ class CoeffLib:
     # Initialise
     def __init__(self):
         self.name  = ''
-
         self.dh    = {} # Aosm
         self.bC    = {} # c-a
         self.theta = {} # c-c' and a-a'
@@ -127,12 +124,11 @@ class CoeffLib:
         self.lambd = {} # n-c and n-a
         self.zeta  = {} # n-c-a
         self.mu    = {} # n-n-n
-
         self.ions  = []
         self.srcs  = []
 ```
 
-Each field is then filled with functions from **pytzer.debyehueckel**, **pytzer.coeffs** or **pytzer.jfuncs** that define the Pitzer model interaction coefficients, as follows. (Descriptions of the required contents of the functions themselves are in the separate <a href="../coeffs"><strong>pytzer.coeffs</strong> documentation</a>.)
+Each field is then filled with functions from modules **debyehueckel**, **coeffs** or **jfuncs** that define the Pitzer model interaction coefficients, as follows. (Descriptions of the required contents of the functions themselves are in the separate <a href="../coeffs"><strong>coeffs</strong> documentation</a>.)
 
 
 ### Debye-Hückel limiting slope

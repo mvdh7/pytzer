@@ -605,30 +605,30 @@ MIAMI.bC['Sr-Cl'  ] = coeffs.bC_Sr_Cl_SP78 # not in table but in text §4.6
 MIAMI.bC['Sr-BOH4'] = coeffs.bC_Sr_BOH4_MP98
 
 # Table A7
-MIAMI.bC['Na-I'   ] = coeffs.bC_Na_I_MP98
-MIAMI.bC['Na-Br'  ] = coeffs.bC_Na_Br_MP98
-MIAMI.bC['Na-F'   ] = coeffs.bC_Na_F_MP98
-MIAMI.bC['K-Br'   ] = coeffs.bC_K_Br_MP98
-MIAMI.bC['K-F'    ] = coeffs.bC_K_F_MP98
-MIAMI.bC['K-OH'   ] = coeffs.bC_K_OH_MP98
-MIAMI.bC['K-I'    ] = coeffs.bC_K_I_MP98
-#MIAMI.bC['Na-ClO3'] = coeffs.bC_Na_ClO3_MP98
-#MIAMI.bC['K-ClO3' ] = coeffs.bC_K_ClO3_MP98
-#MIAMI.bC['Na-ClO4'] = coeffs.bC_Na_ClO4_MP98
-#MIAMI.bC['Na-BrO3'] = coeffs.bC_Na_BrO3_MP98
-#MIAMI.bC['K-BrO3' ] = coeffs.bC_K_BrO3_MP98
-#MIAMI.bC['Na-NO3' ] = coeffs.bC_Na_NO3_MP98
-#MIAMI.bC['K-NO3'  ] = coeffs.bC_K_NO3_MP98
-#MIAMI.bC['Mg-NO3' ] = coeffs.bC_Mg_NO3_MP98
-#MIAMI.bC['Ca-NO3' ] = coeffs.bC_Ca_NO3_MP98
-#MIAMI.bC['H-Br'   ] = coeffs.bC_H_Br_MP98
-#MIAMI.bC['Sr-Cl'  ] = coeffs.bC_Sr_Cl_MP98
-#MIAMI.bC['NH4-Cl' ] = coeffs.bC_NH4_Cl_MP98
-#MIAMI.bC['NH4-Br' ] = coeffs.bC_NH4_Br_MP98
-#MIAMI.bC['NH4-F'  ] = coeffs.bC_NH4_F_MP98
+MIAMI.bC['Na-I'] = coeffs.bC_Na_I_MP98
+MIAMI.bC['Na-Br'] = coeffs.bC_Na_Br_MP98
+MIAMI.bC['Na-F'] = coeffs.bC_Na_F_MP98
+MIAMI.bC['K-Br'] = coeffs.bC_K_Br_MP98
+MIAMI.bC['K-F'] = coeffs.bC_K_F_MP98
+MIAMI.bC['K-OH'] = coeffs.bC_K_OH_MP98
+MIAMI.bC['K-I'] = coeffs.bC_K_I_MP98
+MIAMI.bC['Na-ClO3'] = coeffs.bC_Na_ClO3_MP98
+MIAMI.bC['K-ClO3'] = coeffs.bC_K_ClO3_MP98
+MIAMI.bC['Na-ClO4'] = coeffs.bC_Na_ClO4_MP98
+MIAMI.bC['Na-BrO3'] = coeffs.bC_Na_BrO3_MP98
+MIAMI.bC['K-BrO3'] = coeffs.bC_K_BrO3_MP98
+MIAMI.bC['Na-NO3'] = coeffs.bC_Na_NO3_MP98
+MIAMI.bC['K-NO3'] = coeffs.bC_K_NO3_MP98
+MIAMI.bC['Mg-NO3'] = coeffs.bC_Mg_NO3_MP98
+MIAMI.bC['Ca-NO3'] = coeffs.bC_Ca_NO3_MP98
+MIAMI.bC['H-Br'] = coeffs.bC_H_Br_MP98
+MIAMI.bC['Sr-Cl'] = coeffs.bC_Sr_Cl_MP98
+MIAMI.bC['NH4-Cl'] = coeffs.bC_NH4_Cl_MP98
+MIAMI.bC['NH4-Br'] = coeffs.bC_NH4_Br_MP98
+MIAMI.bC['NH4-F'] = coeffs.bC_NH4_F_MP98
 
 # Table A8
-MIAMI.bC.update({iset: lambda T: coeffs.bC_PM73(T,iset) \
+MIAMI.bC.update({iset: lambda T: coeffs.bC_PM73(T, iset) \
     for iset in ['Sr-I', 'Na-NO2', 'Na-H2PO4', 'Na-HPO4', 'Na-PO4',
                  'K-NO2', 'K-HPO4', 'K-PO4', 'Mg-I', 'Ca-I', 'SO4-NH4']})
 #MIAMI.bC['Na-H2AsO4' ] = coeffs.bC_Na_H2AsO4_PM73

@@ -68,10 +68,10 @@ def bC_PM73(T, iset):
         -4: PM73_TableIX,
         -5: PM73_TableIX,
     }
-    b0 = full_like(T, PM73_Tables[zM*zX][iset]['b0'])
-    b1 = full_like(T, PM73_Tables[zM*zX][iset]['b1'])
+    b0 = PM73_Tables[zM*zX][iset]['b0']
+    b1 = PM73_Tables[zM*zX][iset]['b1']
     b2 = 0
-    Cphi = full_like(T, PM73_Tables[zM*zX][iset]['Cphi'])
+    Cphi = PM73_Tables[zM*zX][iset]['Cphi']
     C0 = Cphi / (2 * sqrt(np_abs(zM * zX)))
     C1 = 0
     alph1 = 2
@@ -3655,6 +3655,395 @@ def bC_K_I_MP98(T, P):
     zK = +1
     zI = -1
     C0 = Cphi / (2 * sqrt(np_abs(zK * zI)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_ClO3_MP98(T, P):
+    """c-a: sodium chlorate [MP98]."""
+    b0 = MP98_eq15(T, float_([
+         0.0249,
+        -1.56,
+         10.35,
+    ]))
+    b1 = MP98_eq15(T, float_([
+         0.2455,
+        -2.69,
+         19.07,
+    ]))
+    b2 = 0
+    Cphi = MP98_eq15(T, float_([
+         0.0004,
+         0.222,
+         9.29,
+    ]))
+    zNa = +1
+    zClO3 = -1
+    C0 = Cphi / (2 * sqrt(np_abs(zNa * zClO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_ClO3_MP98(T, P):
+    """c-a: potassium chlorate [MP98]."""
+    b0 = MP98_eq15(T, float_([
+        -0.096,
+         15.1,
+         19.87,
+    ]))
+    b1 = MP98_eq15(T, float_([
+         0.2841,
+        -27,
+         31.8,
+    ]))
+    b2 = 0
+    Cphi = MP98_eq15(T, float_([
+         0,
+        -19.1,
+         0,
+    ]))
+    zK = +1
+    zClO3 = -1
+    C0 = Cphi / (2 * sqrt(np_abs(zK * zClO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_ClO4_MP98(T, P):
+    """c-a: sodium perchlorate [MP98]."""
+    b0 = MP98_eq15(T, float_([
+         0.0554,
+        -0.611,
+         12.96,
+    ]))
+    b1 = MP98_eq15(T, float_([
+         0.2755,
+        -6.35,
+         22.97,
+    ]))
+    b2 = 0
+    Cphi = MP98_eq15(T, float_([
+        -0.00118,
+         0.0562,
+        -1.623,
+    ]))
+    zNa = +1
+    zClO4 = -1
+    C0 = Cphi / (2 * sqrt(np_abs(zNa * zClO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_BrO3_MP98(T, P):
+    """c-a: sodium bromate [MP98]."""
+    b0 = MP98_eq15(T, float_([
+        -0.0205,
+        -6.5,
+         5.59,
+    ]))
+    b1 = MP98_eq15(T, float_([
+        0.191,
+        5.45,
+        34.37,
+    ]))
+    b2 = 0
+    Cphi = MP98_eq15(T, float_([
+        0.0059,
+        2.5,
+        0,
+    ]))
+    zNa = +1
+    zBrO3 = -1
+    C0 = Cphi / (2 * sqrt(np_abs(zNa * zBrO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_BrO3_MP98(T, P):
+    """c-a: potassium bromate [MP98]."""
+    b0 = MP98_eq15(T, float_([
+        -0.129,
+         9.17,
+         5.59,
+    ]))
+    b1 = MP98_eq15(T, float_([
+         0.2565,
+        -20.2,
+         34.37,
+    ]))
+    b2 = 0
+    Cphi = MP98_eq15(T, float_([
+         0,
+        -26.6,
+         0,
+    ]))
+    zK = +1
+    zBrO3 = -1
+    C0 = Cphi / (2 * sqrt(np_abs(zK * zBrO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_NO3_MP98(T, P):
+    """c-a: sodium nitrate [MP98]."""
+    b0 = MP98_eq15(T, float_([
+         0.0068,
+        -2.24,
+         12.66,
+    ]))
+    b1 = MP98_eq15(T, float_([
+         0.1783,
+        -2.96,
+         20.6,
+    ]))
+    b2 = 0
+    Cphi = MP98_eq15(T, float_([
+        -0.00072,
+         0.594,
+        -2.316,
+    ]))
+    zNa = +1
+    zNO3 = -1
+    C0 = Cphi / (2 * sqrt(np_abs(zNa * zNO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_NO3_MP98(T, P):
+    """c-a: potassium nitrate [MP98]."""
+    b0 = MP98_eq15(T, float_([
+        -0.0816,
+        -0.785,
+         2.06,
+    ]))
+    b1 = MP98_eq15(T, float_([
+         0.0494,
+        -8.26,
+         64.5,
+    ]))
+    b2 = 0
+    Cphi = MP98_eq15(T, float_([
+        0.0066,
+        0,
+        3.97,
+    ]))
+    zK = +1
+    zNO3 = -1
+    C0 = Cphi / (2 * sqrt(np_abs(zK * zNO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Mg_NO3_MP98(T, P):
+    """c-a: magnesium nitrate [MP98]."""
+    b0 = MP98_eq15(T, float_([
+         0.367125,
+        -1.2322,
+         5.15,
+    ]))
+    b1 = MP98_eq15(T, float_([
+        1.58475,
+        4.0492,
+        44.925,
+    ]))
+    b2 = 0
+    Cphi = MP98_eq15(T, float_([
+        -0.020625,
+         0, 0,
+    ]))
+    zMg = +2
+    zNO3 = -1
+    C0 = Cphi / (2 * sqrt(np_abs(zMg * zNO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Ca_NO3_MP98(T, P):
+    """c-a: calcium nitrate [MP98]."""
+    b0 = MP98_eq15(T, float_([
+        0.210825,
+        4.0248,
+        5.295,
+    ]))
+    b1 = MP98_eq15(T, float_([
+         1.40925,
+        -13.289,
+         91.875,
+    ]))
+    b2 = 0
+    Cphi = MP98_eq15(T, float_([
+        -0.020142,
+        -15.435,
+         0,
+    ]))
+    zCa = +2
+    zNO3 = -1
+    C0 = Cphi / (2 * sqrt(np_abs(zCa * zNO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_H_Br_MP98(T, P):
+    """c-a: hydrogen bromide [MP98]."""
+    b0 = MP98_eq15(T, float_([
+         0.196,
+        -0.357,
+        -2.049,
+    ]))
+    b1 = MP98_eq15(T, float_([
+         0.3564,
+        -0.913,
+         4.467,
+    ]))
+    b2 = 0
+    Cphi = MP98_eq15(T, float_([
+         0.00827,
+         0.01272,
+        -0.5685,
+    ]))
+    zH = +1
+    zBr = -1
+    C0 = Cphi / (2 * sqrt(np_abs(zH * zBr)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Sr_Cl_MP98(T, P):
+    """c-a: strontium chloride [MP98]."""
+    b0 = MP98_eq15(T, float_([
+         0.28575,
+        -0.18367,
+         7.1,
+    ]))
+    b1 = MP98_eq15(T, float_([
+        1.66725,
+        0,
+        28.425,
+    ]))
+    b2 = 0
+    Cphi = MP98_eq15(T, float_([
+        -0.0013,
+         0, 0,
+    ]))
+    zSr = +2
+    zCl = -1
+    C0 = Cphi / (2 * sqrt(np_abs(zSr * zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_NH4_Cl_MP98(T, P):
+    """c-a: ammonium chloride [MP98]."""
+    b0 = MP98_eq15(T, float_([
+         0.0522,
+        -0.597,
+         0.779,
+    ]))
+    b1 = MP98_eq15(T, float_([
+        0.1918,
+        0.444,
+        12.58,
+    ]))
+    b2 = 0
+    Cphi = MP98_eq15(T, float_([
+        -0.00301,
+         0.0578,
+         0.21,
+    ]))
+    zNH4 = +1
+    zCl = -1
+    C0 = Cphi / (2 * sqrt(np_abs(zNH4 * zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_NH4_Br_MP98(T, P):
+    """c-a: ammonium bromide [MP98]."""
+    b0 = MP98_eq15(T, float_([
+         0.0624,
+        -0.597,
+         0.779,
+    ]))
+    b1 = MP98_eq15(T, float_([
+        0.1947,
+        0,
+        12.58,
+    ]))
+    b2 = 0
+    Cphi = MP98_eq15(T, float_([
+        -0.00436,
+         0,
+         0.21,
+    ]))
+    zNH4 = +1
+    zBr = -1
+    C0 = Cphi / (2 * sqrt(np_abs(zNH4 * zBr)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_NH4_F_MP98(T, P):
+    """c-a: ammonium fluoride [MP98]."""
+    b0 = MP98_eq15(T, float_([
+        0.1306,
+        1.09,
+        0.95,
+    ]))
+    b1 = MP98_eq15(T, float_([
+        0.257,
+        0,
+        5.97,
+    ]))
+    b2 = 0
+    Cphi = MP98_eq15(T, float_([
+        -0.0043,
+         0, 0,
+    ]))
+    zNH4 = +1
+    zF = -1
+    C0 = Cphi / (2 * sqrt(np_abs(zNH4 * zF)))
     C1 = 0
     alph1 = 2
     alph2 = -9
