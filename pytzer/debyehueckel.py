@@ -5,7 +5,7 @@
 
 from autograd.numpy import exp, float_, logical_and, pi, sqrt
 from . import teos10
-from .coeffs import M88_eq13
+from .coefficients import M88_eq13
 from .constants import NA, dbar2Pa, dbar2MPa
 
 def Aosm_M88(tempK, pres):
