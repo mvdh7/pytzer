@@ -16,12 +16,12 @@
 
 """Pitzer model for chemical activities in aqueous solutions."""
 
-from . import cflibs, coeffs, constants, debyehueckel, io, jfuncs, \
+from . import cflibs, coefficients, constants, debyehueckel, io, jfuncs, \
     matrix, meta, model, properties, tables, teos10
 
 __all__ = [
     'cflibs',
-    'coeffs',
+    'coefficients',
     'constants',
     'debyehueckel',
     'io',

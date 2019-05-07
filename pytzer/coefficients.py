@@ -3,7 +3,7 @@
 
 """Evaluate Pitzer model interaction coefficients."""
 
-from autograd.numpy import array, float_, full_like, log, logical_and, sqrt
+from autograd.numpy import array, float_, log, logical_and, sqrt
 from autograd.numpy import abs as np_abs
 from .constants import Tzero
 from .tables import P91_Ch3_T12, P91_Ch3_T13_I, P91_Ch3_T13_II, \

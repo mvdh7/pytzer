@@ -7,10 +7,12 @@ Version 0.3 remains in beta testing. The most significant change from version 0.
 
 **Release date:** forthcoming
 
-  * Added docstrings to all functions in **coeffs** module;
+  * Module **props** renamed as **properties**;
+  * Module **coeffs** renamed as **coefficients**;
+  * Added docstrings to all functions in **coefficients** module;
   * Added **matrix** module with alternative matrix-based model implementation;
-  * Added **none** function to **jfuncs** module to ignore unsymmetrical mixing;
-  * Module **props** renamed as **properties**.
+  * Added **none** function to **jfuncs** module to ignore unsymmetrical mixing.
+
 
 
 ## 0.3.0
