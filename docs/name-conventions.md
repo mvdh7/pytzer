@@ -17,7 +17,7 @@ It is necessary to label each solute component in several places within Pytzer:
 
   1. In the functions defining [solute properties](../modules/properties);
 
-  1. In the names of the [interaction coefficient functions](../modules/coeffs).
+  1. In the names of the [interaction coefficient functions](../modules/coefficients).
 
 The convention in Pytzer is to write out the chemical formula for the relevant solute, including internal stoichiometry, excluding brackets, subscript markers and charges. The following tables list all of the codes used for solutes currently available in Pytzer.
 

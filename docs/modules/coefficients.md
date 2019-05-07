@@ -7,7 +7,7 @@ MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
 
 *The casual user has no need to explicitly call this module.*
 
-`.coeffs` contains functions for ionic interaction coefficients.
+`.coefficients` contains functions for ionic interaction coefficients.
 
 There are six different types of coefficient functions, each representing a different interaction type. The function names begin with:
 

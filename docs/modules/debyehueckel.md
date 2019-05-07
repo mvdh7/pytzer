@@ -9,7 +9,7 @@ MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
 
 `.debyehueckel` contains functions to evaluate the Debye-Hückel limiting slope for the osmotic coefficient (i.e. $A_\phi$).
 
-The syntax for the functions is similar to that for the [interaction coefficients](../coeffs): inputs are `tempK` and `pres`, in K and dbar respectively; outputs are the $A_\phi$ value `Aosm` and a logical validity indicator `valid`.
+The syntax for the functions is similar to that for the [interaction coefficients](../coefficients): inputs are `tempK` and `pres`, in K and dbar respectively; outputs are the $A_\phi$ value `Aosm` and a logical validity indicator `valid`.
 
 Several different calculation approaches are possible. As a function of temperature only, at a pressure of c. 1 atm:
 

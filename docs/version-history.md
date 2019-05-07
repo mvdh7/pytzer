@@ -2,7 +2,6 @@
 
 Version 0.3 remains in beta testing. The most significant change from version 0.2 is adding pressure as an input variable. However, most of the interaction coefficients are still not yet pressure-sensitive.
 
-
 ## 0.3.1
 
 **Release date:** forthcoming
@@ -12,8 +11,6 @@ Version 0.3 remains in beta testing. The most significant change from version 0.
   * Added docstrings to all functions in **coefficients** module;
   * Added **matrix** module with alternative matrix-based model implementation;
   * Added **none** function to **jfuncs** module to ignore unsymmetrical mixing.
-
-
 
 ## 0.3.0
 
@@ -31,11 +28,9 @@ Version 0.3 remains in beta testing. The most significant change from version 0.
   * Rewrote CRP94 `Aosm` function to make it autograd-able;
   * Added docstrings throughout (except for functions in **coeffs**).
 
-
 # 0.2 (beta)
 
 Version 0.2 includes calculation of solute activity coefficients, water activity and osmotic coefficients, as a function of temperature and composition, at a constant pressure of 1 atmosphere.
-
 
 ## 0.2.7
 
@@ -53,7 +48,6 @@ Version 0.2 includes calculation of solute activity coefficients, water activity
   * Added **io.saveall** function to create CSV file for results;
   * Switched **CoeffLib.get_contents()** to use dict key names, not function names, to find ions.
 
-
 ## 0.2.6
 
 **Release date:** 2019-02-20
@@ -67,7 +61,6 @@ Version 0.2 includes calculation of solute activity coefficients, water activity
     * Saving results to file now optional (with default behaviour to save);
     * Can also optionally use a different **CoefficientDictionary** (default remains **MarChemSpec**);
   * Added numerical integral approach for unsymmetrical mixing *J* function to **jfuncs** (not yet differentiable by autograd).
-
 
 ## 0.2.5
 
@@ -85,7 +78,6 @@ Version 0.2 includes calculation of solute activity coefficients, water activity
   * Added equations and usage examples to documentation for **pytzer.model**;
   * Wrote **pytzer.blackbox** function and quick-start documentation, for easy end-user testing.
 
-
 ## 0.2.4
 
 **Release date:** 2019-01-31
@@ -102,7 +94,6 @@ Version 0.2 includes calculation of solute activity coefficients, water activity
   * Added equations for neutral-neutral interactions (lambda coefficient) to **model.Gex_nRT** and also to **cfdicts.add_zeros** method;
   * Changed to evaluating all neutral interactions (including with ions) even at zero ionic strength;
   * Updated nomenclature for consistency with P91, MP98 and others: `eta` (*η*) is now `zeta` (*ζ*).
-
 
 ## 0.2.3
 
@@ -139,7 +130,6 @@ Version 0.2 includes calculation of solute activity coefficients, water activity
   * Fixed **CoefficientDictionary.get_contents** to include neutral species;
   * Added input `Izero=False` to **model.Gex_nRT** and its derivatives, to allow calculations for solutions with zero ionic strength.
 
-
 ## 0.2.1
 
 **Release date:** 2019-01-24
@@ -156,13 +146,11 @@ Version 0.2 includes calculation of solute activity coefficients, water activity
   * Added **meta** module as single-source-of-truth for package version;
   * Updated documentation with basic information on neutral solutes.
 
-
 ## 0.2.0
 
 **Release date:** 2019-01-23
 
 The first beta release, including full documentation on [pytzer.readthedocs.io](https://pytzer.readthedocs.io).
-
 
 # 0.1 (alpha)
 

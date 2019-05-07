@@ -11,7 +11,7 @@ MathJax.Hub.Config({TeX: {extensions: ["[mhchem]/mhchem.js"]}});
 
 `.cflibs` provides specific combinations of coefficients that have been used in published Pitzer models, to use with Pytzer.
 
-To use a Pitzer model we need to define a set of coefficients that quantify the interactions between different combinations of ions. We do this by creating a **coefficient library**, which contains functions that evaluate the coefficients for every possible interaction. The functions themselves [are defined separately](../coeffs).
+To use a Pitzer model we need to define a set of coefficients that quantify the interactions between different combinations of ions. We do this by creating a **coefficient library**, which contains functions that evaluate the coefficients for every possible interaction. The functions themselves [are defined separately](../coefficients).
 
 A number of [pre-defined coefficient libraries](#pre-defined-coefficient-libraries) are included in **pytzer.cflibs**. To use these, all you need to do is assign the variable `cflib` appropriately:
 
@@ -83,7 +83,7 @@ cflib.add_zeros(cflib.ions)
 cflib.name = 'M88-modified'
 
 # Print out the coefficients evaluated at 298.15 K
-cflib.print_coeffs(298.15, 'coeff_file.txt')
+cflib.print_coefficients(298.15, 'coeff_file.txt')
 ```
 
 The methods are as follows:
@@ -98,9 +98,9 @@ The methods are as follows:
 
 The list of ions is determined from the dict keys, while sources are determined from the function names.
 
-### `.print_coeffs` - print out model coefficients
+### `.print_coefficients` - print out model coefficients
 
-`CoeffLib.print_coeffs(T,filename)` evaluates all coefficients in a **cflib** at a single input temperature and pressure, and prints the results to a text file (`filename`).
+`CoeffLib.print_coefficients(T,filename)` evaluates all coefficients in a **cflib** at a single input temperature and pressure, and prints the results to a text file (`filename`).
 
 <hr />
 
@@ -128,7 +128,7 @@ class CoeffLib:
         self.srcs  = []
 ```
 
-Each field is then filled with functions from modules **debyehueckel**, **coeffs** or **jfuncs** that define the Pitzer model interaction coefficients, as follows. (Descriptions of the required contents of the functions themselves are in the separate <a href="../coeffs"><strong>coeffs</strong> documentation</a>.)
+Each field is then filled with functions from modules **debyehueckel**, **coefficients** or **jfuncs** that define the Pitzer model interaction coefficients, as follows. (Descriptions of the required contents of the functions themselves are in the separate <a href="../coefficients"><strong>coefficients</strong> documentation</a>.)
 
 
 ### Debye-Hückel limiting slope
@@ -208,7 +208,7 @@ import pytzer as pz
 cflib = pz.cflibs.M88
 
 # Update Na-Cl interaction function to Archer (1992)
-cflib.bC['Na-Cl'] = pz.coeffs.bC_Na_Cl_A92ii
+cflib.bC['Na-Cl'] = pz.coefficients.bC_Na_Cl_A92ii
 ```
 
 Note that the statement to get the **cflib** (`cflib = pz.cflibs.M88`) only references, not copies, from **pytzer.cflibs**. To copy, and make changes without modifying the original, use:
@@ -222,14 +222,14 @@ cflib = deepcopy(pz.cflibs.M88)
 cflib.name = 'M88-modified' # so we know it's been changed
 
 # Update Na-Cl interaction function to Archer (1992)
-cflib.bC['Na-Cl'] = pz.coeffs.bC_Na_Cl_A92ii
+cflib.bC['Na-Cl'] = pz.coefficients.bC_Na_Cl_A92ii
 ```
 
 <hr />
 
 ## Build your own
 
-You can also construct your own **cflib** from scratch. In the example below, we initialise a `cflib` using the `pytzer.cflibs.CoeffLib` class. We add functions from `pytzer.coeffs` for the system Na-Ca-Cl using functions from Møller (1988). Finally, we use the method `add_zeros` to fill out any interactions that we have neglected to provide functions for with zeros.
+You can also construct your own **cflib** from scratch. In the example below, we initialise a `cflib` using the `pytzer.cflibs.CoeffLib` class. We add functions from `pytzer.coefficients` for the system Na-Ca-Cl using functions from Møller (1988). Finally, we use the method `add_zeros` to fill out any interactions that we have neglected to provide functions for with zeros.
 
 ```python
 import pytzer as pz
@@ -239,41 +239,41 @@ import numpy as np
 mycflib = pz.cflibs.CoeffLib()
 
 # Debye-Hueckel limiting slope
-mycflib.dh['Aosm'] = coeffs.Aosm_M88
+mycflib.dh['Aosm'] = coefficients.Aosm_M88
 
 # Cation-anion interactions (betas and Cs)
-mycflib.bC['Ca-Cl' ] = coeffs.bC_Ca_Cl_M88
-mycflib.bC['Na-Cl' ] = coeffs.bC_Na_Cl_M88
+mycflib.bC['Ca-Cl' ] = coefficients.bC_Ca_Cl_M88
+mycflib.bC['Na-Cl' ] = coefficients.bC_Na_Cl_M88
 
 # Cation-cation and anion-anion interactions (theta)
 # c-c'
-mycflib.theta['Ca-Na' ] = coeffs.theta_Ca_Na_M88
+mycflib.theta['Ca-Na' ] = coefficients.theta_Ca_Na_M88
 
 # Unsymmetrical mixing functions
 mycflib.jfunc = jfuncs.Harvie
 
 # Triplet interactions (psi)
 # c-c'-a
-mycflib.psi['Ca-Na-Cl' ] = coeffs.psi_Ca_Na_Cl_M88
+mycflib.psi['Ca-Na-Cl' ] = coefficients.psi_Ca_Na_Cl_M88
 
 # Fill missing functions with zeros (none in this instance)
 mycflib.add_zeros(np.array(['Na','Ca','Cl']))
 ```
 
-To explicitly assign zeros to any interaction (i.e. the interaction is ignored by the model), you can use the appropriate zero-functions from **pytzer.coeffs**:
+To explicitly assign zeros to any interaction (i.e. the interaction is ignored by the model), you can use the appropriate zero-functions from **pytzer.coefficients**:
 
 ```python
-mycflib.bC['Ba-SO4']   = coeffs.bC_zero    # ignore Ba-SO4 interactions
-mycflib.bC['H-Na']     = coeffs.theta_zero # ignore H-Na interactions
-mycflib.psi['H-Mg-OH'] = coeffs.psi_zero   # ignore H-Mg-OH interactions
+mycflib.bC['Ba-SO4']   = coefficients.bC_zero    # ignore Ba-SO4 interactions
+mycflib.bC['H-Na']     = coefficients.theta_zero # ignore H-Na interactions
+mycflib.psi['H-Mg-OH'] = coefficients.psi_zero   # ignore H-Mg-OH interactions
 ```
 
 ## Print out coefficients
 
-You can use the function **CoeffLib.print_coeffs** to create a file containing every coefficient, evaluated at a single input temperature and pressure of your choice. For example:
+You can use the function **CoeffLib.print_coefficients** to create a file containing every coefficient, evaluated at a single input temperature and pressure of your choice. For example:
 
 ```python
-mycflib.print_coeffs(298.15,'myCoeffs.txt')
+mycflib.print_coefficients(298.15,'mycoefficients.txt')
 ```
 
-would evaluate every coefficient at 298.15 K and print the results to the file **myCoeffs.txt**.
+would evaluate every coefficient at 298.15 K and print the results to the file **mycoefficients.txt**.

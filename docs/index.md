@@ -4,31 +4,27 @@
 
 **Pytzer** is a Python 3.6+ implementation of the Pitzer model for chemical activities in aqueous solutions [[P91](references/#P91)].
 
-
 ## Installation
 
 If using Conda, first create and activate a new environment with Python v3.6+, NumPy v1.15+ and SciPy v1.2+. Other versions are probably fine, but untested. Activate the environment, and then enter:
 
-```shell
-pip install pytzer
-pip install git+https://github.com/mvdh7/autograd#egg=autograd --upgrade --no-cache-dir
-```
+    pip install pytzer
+    pip install git+https://github.com/mvdh7/autograd#egg=autograd --upgrade --no-cache-dir
 
 The second line above is strongly recommended, but optional. It upgrades [Autograd](https://github.com/HIPS/autograd) to the latest version that has been tested with Pytzer, which eliminates some deprecation warnings that may appear when using the relatively old Autograd version available from PyPI. You could also switch `mvdh7` in the URL to `HIPS` to get the very latest Autograd straight from the horse's mouth.
 
 See the [quick-start guide](quick-start) for more detailed instructions and examples.
 
-
 ## Development status
 
 Pytzer is in beta. Tests of the accuracy of its coefficients and equations are underway, so results may change. API may change and functions may be added or removed. Use at your own peril!
-
 
 ## Modules
 
   * `.io` - imports and exports data;
   * `.model` - implements the Pitzer model;
   * `.cflibs` - defines combinations of model coefficients (i.e. *coefficient libraries*) to use in the model;
+  * `.coefficients` - defines interaction coefficients as functions of temperature and pressure;
   * `.tables` - stores tables of model coefficient values;
   * `.debyehueckel` - defines functions for Debye-Hückel limiting slopes;
   * `.jfuncs` - defines unsymmetrical mixing functions;
