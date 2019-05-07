@@ -60,7 +60,7 @@ Several ready-to-use coefficient libraries are available in this module. To deco
 
 ## cflib methods
 
-A few handy methods are provided as part of the **CoeffLib** class. Brief summaries are provided below, and here is a usage example of all of them together:
+A few handy methods are provided as part of the **CoefficientLibrary** class. Brief summaries are provided below, and here is a usage example of all of them together:
 
 ```python
 import pytzer as pz
@@ -90,28 +90,28 @@ The methods are as follows:
 
 ### `.add_zeros` - add entries for missing interactions
 
-`CoeffLib.add_zeros(ions)` adds zero-functions for all missing interactions, given a list of ions.
+`CoefficientLibrary.add_zeros(ions)` adds zero-functions for all missing interactions, given a list of ions.
 
 ### `.get_contents` - create lists of ions and sources
 
-`CoeffLib.get_contents()` scans through all functions within the **CoeffLib**, and puts lists of all ions and of all sources in its **ions** and **srcs** fields.
+`CoefficientLibrary.get_contents()` scans through all functions within the **CoefficientLibrary**, and puts lists of all ions and of all sources in its **ions** and **srcs** fields.
 
 The list of ions is determined from the dict keys, while sources are determined from the function names.
 
 ### `.print_coefficients` - print out model coefficients
 
-`CoeffLib.print_coefficients(T,filename)` evaluates all coefficients in a **cflib** at a single input temperature and pressure, and prints the results to a text file (`filename`).
+`CoefficientLibrary.print_coefficients(T,filename)` evaluates all coefficients in a **cflib** at a single input temperature and pressure, and prints the results to a text file (`filename`).
 
 <hr />
 
-## How a CoeffLib works
+## How a CoefficientLibrary works
 
-To modify an existing **CoeffLib**, or create a new one, it is first necessary to understand how they are used within Pytzer, as follows. A basic understanding of the workings of the Pitzer model is assumed.
+To modify an existing **CoefficientLibrary**, or create a new one, it is first necessary to understand how they are used within Pytzer, as follows. A basic understanding of the workings of the Pitzer model is assumed.
 
-A **CoeffLib** or **cflib** is an object of the class `CoeffLib`. From the initalisation function we can see that it contains the following fields:
+A **CoefficientLibrary** or **cflib** is an object of the class `CoefficientLibrary`. From the initalisation function we can see that it contains the following fields:
 
 ```python
-class CoeffLib:
+class CoefficientLibrary:
 
     # Initialise
     def __init__(self):
@@ -133,7 +133,7 @@ Each field is then filled with functions from modules **debyehueckel**, **coeffi
 
 ### Debye-Hückel limiting slope
 
-The function for the Debye-Hückel limiting slope (i.e. <i>A<sub>ϕ</sub></i>) is stored as `CoeffLib.dh['Aosm']`.
+The function for the Debye-Hückel limiting slope (i.e. <i>A<sub>ϕ</sub></i>) is stored as `CoefficientLibrary.dh['Aosm']`.
 
 
 ### Cation-anion interactions
@@ -229,14 +229,14 @@ cflib.bC['Na-Cl'] = pz.coefficients.bC_Na_Cl_A92ii
 
 ## Build your own
 
-You can also construct your own **cflib** from scratch. In the example below, we initialise a `cflib` using the `pytzer.cflibs.CoeffLib` class. We add functions from `pytzer.coefficients` for the system Na-Ca-Cl using functions from Møller (1988). Finally, we use the method `add_zeros` to fill out any interactions that we have neglected to provide functions for with zeros.
+You can also construct your own **cflib** from scratch. In the example below, we initialise a `cflib` using the `pytzer.cflibs.CoefficientLibrary` class. We add functions from `pytzer.coefficients` for the system Na-Ca-Cl using functions from Møller (1988). Finally, we use the method `add_zeros` to fill out any interactions that we have neglected to provide functions for with zeros.
 
 ```python
 import pytzer as pz
 import numpy as np
 
 # Initialise
-mycflib = pz.cflibs.CoeffLib()
+mycflib = pz.cflibs.CoefficientLibrary()
 
 # Debye-Hueckel limiting slope
 mycflib.dh['Aosm'] = coefficients.Aosm_M88
@@ -270,7 +270,7 @@ mycflib.psi['H-Mg-OH'] = coefficients.psi_zero   # ignore H-Mg-OH interactions
 
 ## Print out coefficients
 
-You can use the function **CoeffLib.print_coefficients** to create a file containing every coefficient, evaluated at a single input temperature and pressure of your choice. For example:
+You can use the function **CoefficientLibrary.print_coefficients** to create a file containing every coefficient, evaluated at a single input temperature and pressure of your choice. For example:
 
 ```python
 mycflib.print_coefficients(298.15,'mycoefficients.txt')

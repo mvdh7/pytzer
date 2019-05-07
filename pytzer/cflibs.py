@@ -10,9 +10,9 @@ from autograd.numpy import array, concatenate, unique
 from copy import deepcopy
 
 #==============================================================================
-#================================================== Define CoeffLib class =====
+#======================================== Define CoefficientLibrary class =====
 
-class CoeffLib:
+class CoefficientLibrary:
 
 # ------------------------------------------------------------ Initialise -----
     def __init__(self):
@@ -204,9 +204,9 @@ class CoeffLib:
             f.write(muVals.format(neut1, neut2, neut3, eval_mu, src))
 
 
-# ------------------------------ Get all ions and sources in the CoeffLib -----
+# -------------------- Get all ions and sources in the CoefficientLibrary -----
     def get_contents(self):
-        """Get all ions and sources in the CoeffLib."""
+        """Get all ions and sources in the CoefficientLibrary."""
 
         # Get list of non-empty function dicts
         ctypes = [self.bC, self.theta, self.psi, self.lambd,
@@ -236,7 +236,7 @@ class CoeffLib:
 #
 # System: Na-Ca-Cl-SO4
 
-M88 = CoeffLib()
+M88 = CoefficientLibrary()
 M88.name = 'M88'
 
 # Debye-Hueckel limiting slope
@@ -274,7 +274,7 @@ M88.get_contents()
 #
 # System: Na-K-Ca-Cl-SO4
 
-GM89 = CoeffLib()
+GM89 = CoefficientLibrary()
 GM89.name = 'GM89'
 
 # Debye-Hueckel limiting slope
@@ -321,7 +321,7 @@ GM89.get_contents()
 #
 # System: H-HSO4-SO4
 
-CRP94 = CoeffLib()
+CRP94 = CoefficientLibrary()
 CRP94.name = 'CRP94'
 
 # Debye-Hueckel limiting slope
@@ -349,7 +349,7 @@ CRP94.get_contents()
 # Waters and Millero (2013). Mar. Chem. 149, 8-22,
 #  doi:10.1016/j.marchem.2012.11.003
 
-WM13 = CoeffLib()
+WM13 = CoefficientLibrary()
 WM13.name = 'WM13'
 
 # Debye-Hueckel limiting slope and unsymmetrical mixing
@@ -551,7 +551,7 @@ Seawater.bC['K-Cl'] = cf.bC_K_Cl_ZD17
 #
 #~~~~~~~~~~~~~~~~~~~~~~~ WORK IN PROGRESS !!!!! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-MIAMI = CoeffLib()
+MIAMI = CoefficientLibrary()
 MIAMI.name = 'MIAMI'
 
 MIAMI.dh['Aosm'] = debyehueckel.Aosm_M88
