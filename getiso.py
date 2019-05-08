@@ -118,19 +118,51 @@ t_elemix = array([icell for irow  in testdict.keys()
 t_testtot = vstack([testdict[irow][testele]['tots']
     for irow in testdict.keys() for icell in testdict[irow].keys()
     if icell != testele])
+t_testIstr = vstack([testdict[irow][testele]['Istr']
+    for irow in testdict.keys() for icell in testdict[irow].keys()
+    if icell != testele])
 t_tempK = vstack([testdict[irow][testele]['tempK'] for irow in testdict.keys()
     for icell in testdict[irow].keys() if icell != testele])
 t_pres = vstack([testdict[irow][testele]['pres'] for irow in testdict.keys()
     for icell in testdict[irow].keys() if icell != testele])
 t_delaw = vstack([testdict[irow][icell]['del_aw'] for irow in testdict.keys()
     for icell in testdict[irow].keys() if icell != testele])
+t_testaw = vstack([testdict[irow][testele]['aw']
+    for irow in testdict.keys() for icell in testdict[irow].keys()
+    if icell != testele])
+t_eleaw = vstack([testdict[irow][icell]['aw']
+    for irow in testdict.keys() for icell in testdict[irow].keys()
+    if icell != testele])
 
 #%% Plot results
 from matplotlib import pyplot as plt
 
 fig, ax = plt.subplots(1, 1)
-L = t_elemix == 'MgCl2-KCl-NaCl'
-ax.scatter(t_testtot[L], t_delaw[L])
+#L = np.logical_not(np.logical_or.reduce((
+#    t_elemix == 'sucrose',
+#    t_elemix == 'glycerol',
+#    t_elemix == 'urea',
+#)))
+L = np.logical_and(
+    np.logical_or.reduce((
+        t_elemix == 'KCl',
+        t_elemix == 'CaCl2',
+        t_elemix == 'MgCl2',
+        t_elemix == 'MgCl2-KCl-NaCl',
+        t_elemix == 'NaCl-KCl',
+    )),
+    t_tempK.ravel() == 298.15,
+)
+#ax.scatter(t_testIstr, t_delaw)
+
+sim_mNaCl = np.arange(0.01, 2.5, 0.01)**2
+sim_mols = np.array([sim_mNaCl, sim_mNaCl])
+sim_ions = np.array(['Na', 'Cl'])
+sim_aw = pz.model.aw(sim_mols, sim_ions, np.full_like(sim_mNaCl, 298.15),
+    np.full_like(sim_mNaCl, 10.1325), cflib=cf, Izero=False)
+
+ax.plot(sim_mNaCl, sim_aw)
+ax.scatter(t_testIstr[L], t_eleaw[L])
 
 #from scipy.io import savemat
 #savemat('testfiles/isonew_' + testele + '.mat',
@@ -139,7 +171,7 @@ ax.scatter(t_testtot[L], t_delaw[L])
 #         'testtot': t_testtot,
 #         'T'      : t_T      ,
 #         'delaw'  : t_delaw  })
-    
+
 #%%
 #            irc['osm'] = pz.model.osm(irc['mols'],irc['ions'],irc['T'],cf)
 #            
