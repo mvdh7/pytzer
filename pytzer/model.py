@@ -92,13 +92,13 @@ def Gex_nRT(mols, ions, tempK, pres, cflib=Seawater, Izero=False):
         anis = vstack([mols[A] for A, _ in enumerate(zs) if zs[A] < 0])
     else:
         anis = []
-    # Split up charges
-    zCs = vstack(zs[zs > 0])
-    zAs = vstack(zs[zs < 0])
     # Initialise with zeros
     Gex_nRT = zeros_like(tempK)
     # Don't do ionic calculations if Izero is requested
     if not Izero:
+        # Split up charges
+        zCs = vstack(zs[zs > 0])
+        zAs = vstack(zs[zs < 0])
         # Begin with Debye-Hueckel component
         Gex_nRT = Gex_nRT + fG(tempK, pres, I, cflib)
         # Loop through cations
