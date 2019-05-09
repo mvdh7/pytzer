@@ -175,7 +175,7 @@ L = np.logical_not(np.logical_or.reduce((
 sim_mNaCl = np.arange(0.01, 2.5, 0.01)**2
 sim_mols = np.array([sim_mNaCl, sim_mNaCl])
 sim_ions = np.array(['Na', 'Cl'])
-sim_aw = pz.model.aw(sim_mols, sim_ions, np.full_like(sim_mNaCl, 298.15),
+sim_aw = pz.model.aw(sim_mols, sim_ions, np.full_like(sim_mNaCl, 323.15),
     np.full_like(sim_mNaCl, 10.1325), cflib=cf, Izero=False)
 
 ax.plot(sim_mNaCl, sim_aw)
