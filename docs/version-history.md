@@ -11,7 +11,8 @@ Version 0.3 remains in beta testing. The most significant change from version 0.
   * Class **CoeffLib** renamed as **CoefficientLibrary**;
   * Added docstrings to all functions in **coefficients** module;
   * Added **matrix** module with alternative matrix-based model implementation;
-  * Added **none** function to **jfuncs** module to ignore unsymmetrical mixing.
+  * Added **none** function to **jfuncs** module to ignore unsymmetrical mixing;
+  * Fixed <i>A<sub>ϕ</sub></i> bug in **CoefficientLibrary** method `print_coeffs`.
 
 ## 0.3.0
 

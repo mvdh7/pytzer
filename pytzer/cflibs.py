@@ -118,7 +118,7 @@ class CoefficientLibrary:
         # Debye-Hueckel slope
         f.write('Debye-Hueckel limiting slope\n')
         f.write('============================\n')
-        eval_Aosm = self.dh['Aosm'](array([T]))[0][0]
+        eval_Aosm = self.dh['Aosm'](T, P)[0]
         src = self.dh['Aosm'].__name__.split('_')[-1]
         f.write('{:^12}  {:15}\n'.format('Aosm','source'))
         f.write('{:>12.9f}  {:15}\n'.format(eval_Aosm,src))
