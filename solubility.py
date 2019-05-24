@@ -18,9 +18,12 @@ r81['lnacfSO4'] = lnacfs[ions == 'SO4'][0]
 r81['acfCaSO4'] = np.exp(pz.model.ln_acf2ln_acf_MX(
     r81.lnacfCa, r81.lnacfSO4, 2, 2))
 r81['delCaSO4'] = r81.expCaSO4 - r81.acfCaSO4
+r81['osm_calc'] = pz.model.osm(*r81vars)
+r81['osm_meas'] = pz.model.aw2osm(mols, r81.aw)
+r81['delosm'] = r81.osm_meas - r81.osm_calc
 
 fxvar = 'sqionstr'
-fyvars = ['delaw', 'delCaSO4']
+fyvars = ['delaw', 'delCaSO4', 'delosm']
 fig, ax = plt.subplots(len(fyvars), 1)
 for f, fyvar in enumerate(fyvars):
     r81.plot.scatter(fxvar, fyvar, ax=ax[f])
