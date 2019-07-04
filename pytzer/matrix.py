@@ -69,13 +69,13 @@ def Gex_nRT(mols, zs, Aosm, b0mx, b1mx, b2mx, C0mx, C1mx,
         [triu_indices(len(cats[0]), k=1)]])
     anisanis = array([(transpose(anis) @ anis)
         [triu_indices(len(anis[0]), k=1)]])
-    return fG(Aosm, I) \
-        + 2*B(cats, anis, I, b0mx, b1mx, b2mx, alph1mx, alph2mx) \
-        + Z*CT(cats, anis, I, C0mx, C1mx, omegamx) \
-        + cats @ (thetamxcc + etheta(Aosm, I, zcats)) @ transpose(cats) \
-        + anis @ (thetamxaa + etheta(Aosm, I, zanis)) @ transpose(anis) \
-        + catscats @ psimxcca @ transpose(anis) \
-        + anisanis @ psimxcaa @ transpose(cats)
+    return (fG(Aosm, I)
+        + 2*B(cats, anis, I, b0mx, b1mx, b2mx, alph1mx, alph2mx)
+        + Z*CT(cats, anis, I, C0mx, C1mx, omegamx)
+        + cats @ (thetamxcc + etheta(Aosm, I, zcats)) @ transpose(cats)
+        + anis @ (thetamxaa + etheta(Aosm, I, zanis)) @ transpose(anis)
+        + catscats @ psimxcca @ transpose(anis)
+        + anisanis @ psimxcaa @ transpose(cats))
 
 def ln_acfs(mols, zs, Aosm, b0mx, b1mx, b2mx, C0mx, C1mx,
         alph1mx, alph2mx, omegamx, thetamxcc, thetamxaa, psimxcca, psimxcaa):
