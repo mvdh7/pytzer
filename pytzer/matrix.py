@@ -180,7 +180,7 @@ def assemble(ions, tempK, pres, cflib=Seawater):
         for C, cation in enumerate(cations):
             for A, anion in enumerate(anions):
                 iset3 = '-'.join((neutral, cation, anion))
-                zetamx[N, C*(size(cations)-1)+A] = (
+                zetamx[N, C*size(anions)+A] = (
                     cflib.zeta[iset3](tempK, pres)[0])
     return (zs, Aosm, b0mx, b1mx, b2mx, C0mx, C1mx, alph1mx, alph2mx, omegamx,
         thetamx, lambdamx, psimxcca, psimxcaa, zetamx, mumx)
