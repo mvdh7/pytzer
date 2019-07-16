@@ -15,13 +15,14 @@ nav:
     - .io – import and export data: modules/io.md
     - .model – the Pitzer model: modules/model.md
     - .cflibs – coefficient libraries: modules/cflibs.md
-    - .coeffs – interaction coefficients: modules/coeffs.md
+    - .coefficients – interaction coefficients: modules/coefficients.md
     - .tables - coefficient tables: modules/tables.md
     - .debyehueckel – Debye-Hückel limiting slopes: modules/debyehueckel.md
     - .jfuncs – unsymmetrical mixing: modules/jfuncs.md
-    - .props – solute properties: modules/props.md
+    - .properties – solute properties: modules/properties.md
     - .constants – physical constants: modules/constants.md
     - .teos10 - TEOS-10 properties: modules/teos10.md
+    - .matrix - matrix model: modules/matrix.md
     - .meta - package metadata: modules/meta.md
   - References: references.md
   - Version history: version-history.md

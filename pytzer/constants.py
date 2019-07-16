@@ -1,8 +1,6 @@
-# pytzer: Pitzer model for chemical activities in aqueous solutions
+# Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
-
 """Define universal constants."""
-
 from autograd.numpy import float_
 
 # Set constant values

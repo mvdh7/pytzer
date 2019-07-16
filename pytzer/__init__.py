@@ -1,4 +1,4 @@
-# pytzer: Pitzer model for chemical activities in aqueous solutions
+# Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 #
 # This program is free software: you can redistribute it and/or modify
@@ -13,22 +13,21 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 """Pitzer model for chemical activities in aqueous solutions."""
-
-from . import cflibs, coeffs, constants, debyehueckel, io, jfuncs, \
-    meta, model, props, tables, teos10
+from . import (cflibs, coefficients, constants, debyehueckel, io, jfuncs,
+    matrix, meta, model, properties, tables, teos10)
 
 __all__ = [
     'cflibs',
-    'coeffs',
+    'coefficients',
     'constants',
     'debyehueckel',
     'io',
     'jfuncs',
+    'matrix',
     'meta',
     'model',
-    'props',
+    'properties',
     'tables',
     'teos10',
 ]
@@ -48,7 +47,7 @@ def blackbox(filename, cflib=cflibs.Seawater, savefile=True):
     cflib = deepcopy(cflib)
     cflib.add_zeros(ions) # just in case
     # Separate out zero ionic strengths
-    zs = props.charges(ions)[0]
+    zs = properties.charges(ions)[0]
     I = model.Istr(mols, zs)
     Gex_nRT = full_like(tempK, nan)
     osm = full_like(tempK, nan)
@@ -74,7 +73,7 @@ def blackbox(filename, cflib=cflibs.Seawater, savefile=True):
     acfs[:,L] = model.acfs(*nargsL)
     if np_any(~L):
         acfs[:, ~L] = model.acfs(*nargsLx, Izero=True)
-    # Save results unless requested not to
+    # Save results, unless requested not to
     if savefile:
         filestem = filename.replace('.csv','')
         io.saveall(filestem + '_py.csv',

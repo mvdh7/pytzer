@@ -1,11 +1,9 @@
-# pytzer: Pitzer model for chemical activities in aqueous solutions
+# Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
-
 """Calculate Debye-Hueckel limiting slopes."""
-
 from autograd.numpy import exp, float_, logical_and, pi, sqrt
 from . import teos10
-from .coeffs import M88_eq13
+from .coefficients import M88_eq13
 from .constants import NA, dbar2Pa, dbar2MPa
 
 def Aosm_M88(tempK, pres):

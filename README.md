@@ -2,7 +2,7 @@
 
 [![pypi badge](https://img.shields.io/pypi/v/pytzer.svg?style=popout)](https://pypi.org/project/pytzer/)
 
-Pitzer model for chemical activities in aqueous solutions, undergoing beta testing and development.
+Pitzer model for chemical activities in aqueous solutions. Undergoing beta testing and development.
 
 **Installation:**
 
@@ -15,4 +15,4 @@ The second line above is strongly recommended, but optional. It upgrades [Autogr
 
 **Documentation:** [pytzer.readthedocs.io](https://pytzer.readthedocs.io/en/latest/), including a [quick-start guide](https://pytzer.readthedocs.io/en/latest/quick-start/).
 
-Implemented and maintained by [Matthew P. Humphreys](https://mvdh.xyz), University of East Anglia, Norwich, UK.
+Pytzer is implemented and maintained by [Matthew P. Humphreys](https://mvdh.xyz) at the University of East Anglia (Norwich, UK).

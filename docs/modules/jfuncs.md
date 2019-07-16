@@ -2,32 +2,12 @@
 
 *The casual user has no need to explicitly call this module.*
 
-**pytzer.jfuncs** provides different ways to evaluate the J function that appears in the [unsymmetrical mixing terms of the Pitzer model](../../modules/model/#etheta).
+`.jfuncs` provides different ways to evaluate the J function that appears in the [unsymmetrical mixing terms of the Pitzer model](../../modules/model/#etheta).
 
-One of these functions must be contained within the [cfdict](../cfdicts) in order to execute the **pytzer.model** functions.
+One of these functions must be contained within the [coefficient library](../cflibs) in order to execute the Pitzer model functions:
 
-# jfunc options
-
-## .P75_eq46
-
-Evaluates J following Pitzer (1975) Eq. (46).
-
-## .P75_eq47
-
-Evaluates J following Pitzer (1975) Eq. (47).
-
-## .Harvie
-
-Evaluates J following "Harvie's method", as described by Pitzer (1991), pages 124 to 125.
-
-## .numint
-
-Uses a numerical integration method to evaluate J "exactly". *Not currently autograd-able.*
-
-<hr />
-
-# References
-
-Pitzer, K. S. (1975). Thermodynamics of electrolytes. V. effects of higher-order electrostatic terms. *J. Solution Chem.* 4, 249–265. [doi:10.1007/BF00646562](https://doi.org/10.1007/BF00646562).
-
-Pitzer, K. S. (1991). “Ion Interaction Approach: Theory and Data Correlation,” in *Activity Coefficients in Electrolyte Solutions, 2nd Edition*, ed. K. S. Pitzer (CRC Press, Florida, USA), 75–153.
+  * `.P75_eq46` - [P75](../../references/#P75) Eq. (46);
+  * `.P75_eq47` - [P75](../../references/#P75) Eq. (47);
+  * `.Harvie` - "Harvie's method", as described by [P91](../../references/#P91), pages 124 to 125;
+  * `.numint` - using numerical integration method to evaluate J "exactly" (note: not currently autograd-able);
+  * `.none` - ignore the unsymmetrical mixing terms.

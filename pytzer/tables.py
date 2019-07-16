@@ -1,46 +1,45 @@
-# pytzer: Pitzer model for chemical activities in aqueous solutions
+# Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
-
 """Specify tabulated Pitzer model coefficient values."""
 
 # The first set of tables from Pitzer (1991) Chapter 3 are all just
 #  reproductions of the values listed by Silvester and Pitzer (1979).
-
+#
 # Pitzer (1991), Chapter 3, Table 12 [p109-p110]
 # First temperature derivatives of b0, b1 and Cphi for 1-1 electrolytes
 # 'max' gives maximum applicable molality in mol/kg
 # INCOMPLETE: only includes values for H, Li, Na, K cations for now
 P91_Ch3_T12 = {
     'info': 'First temperature derivatives of b0, b1 and Cphi ' \
-          + 'for 1-1 electrolytes - INCOMPLETE',
-    'H-Cl'   : {'b0': - 3.081e-4, 'b1':   1.419e-4, 'Cphi': - 6.213e-5, 'max': 4.5},
-    'H-Br'   : {'b0': - 2.049e-4, 'b1':   4.467e-4, 'Cphi': - 5.685e-5, 'max': 6.0},
-    'H-I'    : {'b0': - 0.230e-4, 'b1':   8.860e-4, 'Cphi': - 7.320e-5, 'max': 6.0},
+          + 'for 1-1 electrolytes  -INCOMPLETE',
+    'H-Cl'   : {'b0':  -3.081e-4, 'b1':   1.419e-4, 'Cphi':  -6.213e-5, 'max': 4.5},
+    'H-Br'   : {'b0':  -2.049e-4, 'b1':   4.467e-4, 'Cphi':  -5.685e-5, 'max': 6.0},
+    'H-I'    : {'b0':  -0.230e-4, 'b1':   8.860e-4, 'Cphi':  -7.320e-5, 'max': 6.0},
     'H-ClO4' : {'b0':   4.905e-4, 'b1':  19.310e-4, 'Cphi': -11.770e-5, 'max': 6.0},
-    'Li-Cl'  : {'b0': - 1.685e-4, 'b1':   5.366e-4, 'Cphi': - 4.520e-5, 'max': 6.4},
-    'Li-Br'  : {'b0': - 1.891e-4, 'b1':   6.636e-4, 'Cphi': - 2.813e-5, 'max': 6.0},
-    'Li-ClO4': {'b0':   0.386e-4, 'b1':   7.009e-4, 'Cphi': - 7.712e-5, 'max': 4.0},
+    'Li-Cl'  : {'b0':  -1.685e-4, 'b1':   5.366e-4, 'Cphi':  -4.520e-5, 'max': 6.4},
+    'Li-Br'  : {'b0':  -1.891e-4, 'b1':   6.636e-4, 'Cphi':  -2.813e-5, 'max': 6.0},
+    'Li-ClO4': {'b0':   0.386e-4, 'b1':   7.009e-4, 'Cphi':  -7.712e-5, 'max': 4.0},
     'Na-F'   : {'b0':   5.361e-4, 'b1':   8.700e-4, 'Cphi':   0       , 'max': 0.7},
     'Na-Cl'  : {'b0':   7.159e-4, 'b1':   7.005e-4, 'Cphi': -10.540e-5, 'max': 6.0},
-    'Na-Br'  : {'b0':   7.692e-4, 'b1':  10.790e-4, 'Cphi': - 9.300e-5, 'max': 9.0},
-    'Na-I'   : {'b0':   8.355e-4, 'b1':   8.280e-4, 'Cphi': - 8.350e-5, 'max': 6.0},
+    'Na-Br'  : {'b0':   7.692e-4, 'b1':  10.790e-4, 'Cphi':  -9.300e-5, 'max': 9.0},
+    'Na-I'   : {'b0':   8.355e-4, 'b1':   8.280e-4, 'Cphi':  -8.350e-5, 'max': 6.0},
     'Na-OH'  : {'b0':   7.000e-4, 'b1':   1.340e-4, 'Cphi': -18.940e-5, 'max': 4.2},
-    'Na-ClO3': {'b0':  10.350e-4, 'b1':  19.070e-4, 'Cphi': - 9.290e-5, 'max': 6.4},
+    'Na-ClO3': {'b0':  10.350e-4, 'b1':  19.070e-4, 'Cphi':  -9.290e-5, 'max': 6.4},
     'Na-ClO4': {'b0':  12.960e-4, 'b1':  22.970e-4, 'Cphi': -16.230e-5, 'max': 6.0},
     'Na-BrO3': {'b0':   5.590e-4, 'b1':  34.370e-4, 'Cphi':   0       , 'max': 0.1},
     'Na-IO3' : {'b0':  20.660e-4, 'b1':  60.570e-4, 'Cphi':   0       , 'max': 0.1},
     'Na-SCN' : {'b0':   7.800e-4, 'b1':  20.000e-4, 'Cphi':   0       , 'max': 0.1},
     'Na-NO3' : {'b0':  12.660e-4, 'b1':  20.600e-4, 'Cphi': -23.160e-5, 'max': 2.2},
-    'K-F'    : {'b0':   2.140e-4, 'b1':   5.440e-4, 'Cphi': - 5.950e-5, 'max': 5.9},
-    'K-Cl'   : {'b0':   5.794e-4, 'b1':  10.710e-4, 'Cphi': - 5.095e-5, 'max': 4.5},
-    'K-Br'   : {'b0':   7.390e-4, 'b1':  17.400e-4, 'Cphi': - 7.004e-5, 'max': 5.2},
-    'K-I'    : {'b0':   9.914e-4, 'b1':  11.860e-4, 'Cphi': - 9.440e-5, 'max': 7.0},
+    'K-F'    : {'b0':   2.140e-4, 'b1':   5.440e-4, 'Cphi':  -5.950e-5, 'max': 5.9},
+    'K-Cl'   : {'b0':   5.794e-4, 'b1':  10.710e-4, 'Cphi':  -5.095e-5, 'max': 4.5},
+    'K-Br'   : {'b0':   7.390e-4, 'b1':  17.400e-4, 'Cphi':  -7.004e-5, 'max': 5.2},
+    'K-I'    : {'b0':   9.914e-4, 'b1':  11.860e-4, 'Cphi':  -9.440e-5, 'max': 7.0},
     'K-ClO3' : {'b0':  19.870e-4, 'b1':  31.800e-4, 'Cphi':   0       , 'max': 0.1},
     'K-ClO4' : {'b0':   0.600e-4, 'b1': 100.700e-4, 'Cphi':   0       , 'max': 0.1},
     'K-SCN'  : {'b0':   6.870e-4, 'b1':  37.000e-4, 'Cphi':   0.430e-5, 'max': 3.1},
     'K-NO3'  : {'b0':   2.060e-4, 'b1':  64.500e-4, 'Cphi':  39.700e-5, 'max': 2.4},
-    'K-H2PO4': {'b0':   6.045e-4, 'b1':  28.600e-4, 'Cphi': -10.110e-5, 'max': 1.8}}
-
+    'K-H2PO4': {'b0':   6.045e-4, 'b1':  28.600e-4, 'Cphi': -10.110e-5, 'max': 1.8},
+}
 # Pitzer (1991), Chapter 3, Table 13, Part I [p111]
 # First temperature derivatives of b0, b1 and C0 for 2-1 and 1-2 electrolytes
 # 'max' gives maximum applicable molality in mol/kg
@@ -71,14 +70,13 @@ P91_Ch3_T13_I = {
     'Na-SO4'   : {'b0':  2.367e-3, 'b1':  5.63e-3, 'C0': -1.725e-4, 'max': 3.0},
     'K-SO4'    : {'b0':  1.440e-3, 'b1':  6.70e-3, 'C0':  0       , 'max': 0.1},
     'Rb-SO4'   : {'b0':  0.940e-3, 'b1':  8.64e-3, 'C0':  0       , 'max': 0.1},
-    'Cs-SO4'   : {'b0': -0.893e-3, 'b1': 14.48e-3, 'C0':  0       , 'max': 0.1}}
-
+    'Cs-SO4'   : {'b0': -0.893e-3, 'b1': 14.48e-3, 'C0':  0       , 'max': 0.1},
+}
 # Pitzer (1991), Chapter 3, Table 13, Part II [p111]
 # First temperature derivatives of b0, b1, b2 and C0 for 3-1 and 2-2 electrolytes
 # 'max' gives maximum applicable molality in mol/kg
 # alph1 = 1.4 for the M-SO4 b1's, alph1 = 2.0 otherwise
 # alph2 = 12.0 throughout
-#
 # Na3-FeCN5 is a typo for Na3-FeCN6
 P91_Ch3_T13_II = {
     'info': 'First temperature derivatives of b0, b1, b2 and C0 ' \
@@ -93,12 +91,11 @@ P91_Ch3_T13_II = {
     'Ca-SO4'     : {'b0':  0       , 'b1': 5.460e-2, 'b2': -5.16e-1, 'C0':  0       , 'max': 0.02},
     'Cu-SO4'     : {'b0': -4.400e-3, 'b1': 2.380e-2, 'b2': -4.73e-1, 'C0':  1.200e-3, 'max': 1.0 },
     'Zn-SO4'     : {'b0': -3.660e-3, 'b1': 2.330e-2, 'b2': -3.33e-1, 'C0':  0.990e-3, 'max': 1.0 },
-    'Cd-SO4'     : {'b0': -2.790e-3, 'b1': 1.710e-2, 'b2': -5.22e-1, 'C0':  0.650e-3, 'max': 1.0 }}
+    'Cd-SO4'     : {'b0': -2.790e-3, 'b1': 1.710e-2, 'b2': -5.22e-1, 'C0':  0.650e-3, 'max': 1.0 },
+}
 
 #======== PITZER AND MARGOYA 1973 =============================================
-#
 # Automatically generated with PM73_tablegen.py
-
 PM73_TableI = {
             'H-Cl': {'b0':  0.17750, 'b1':  0.29450, 'Cphi':  0.00080},
             'H-Br': {'b0':  0.19600, 'b1':  0.35640, 'Cphi':  0.00827},
@@ -160,8 +157,7 @@ PM73_TableI = {
           'NH4-Br': {'b0':  0.06240, 'b1':  0.19470, 'Cphi': -0.00436},
         'NH4-ClO4': {'b0': -0.01030, 'b1': -0.01940, 'Cphi':  0.00000},
          'NH4-NO3': {'b0': -0.01540, 'b1':  0.11200, 'Cphi': -0.00003},
-    }
-
+}
 PM73_TableVI = {
            'Mg-Cl': {'b0':  0.46980 * 3/4, 'b1':  2.24200 * 3/4, 'Cphi':  0.00979 * 3/2**(3/2)},
            'Mg-Br': {'b0':  0.57690 * 3/4, 'b1':  2.33700 * 3/4, 'Cphi':  0.00589 * 3/2**(3/2)},
@@ -219,8 +215,7 @@ PM73_TableVI = {
           'Rb-SO4': {'b0':  0.07720 * 3/4, 'b1':  1.48100 * 3/4, 'Cphi': -0.00019 * 3/2**(3/2)},
           'Cs-SO4': {'b0':  0.11840 * 3/4, 'b1':  1.48100 * 3/4, 'Cphi': -0.01131 * 3/2**(3/2)},
          'NH4-SO4': {'b0':  0.05450 * 3/4, 'b1':  0.87800 * 3/4, 'Cphi': -0.00219 * 3/2**(3/2)},
-    }
-
+}
 PM73_TableVIII = {
            'Al-Cl': {'b0':  1.04900 * 2/3, 'b1':  8.76700 * 2/3, 'Cphi':  0.00710 * 2/3**(1/2)},
            'Sr-Cl': {'b0':  1.05000 * 2/3, 'b1':  7.97800 * 2/3, 'Cphi': -0.08400 * 2/3**(1/2)},
@@ -246,8 +241,7 @@ PM73_TableVIII = {
      'Co(en)3-NO3': {'b0':  0.18820 * 2/3, 'b1':  3.93500 * 2/3, 'Cphi':  0.00000 * 2/3**(1/2)},
     'Co(en)3-ClO4': {'b0':  0.16190 * 2/3, 'b1':  5.39500 * 2/3, 'Cphi':  0.00000 * 2/3**(1/2)},
     'Co(pn)3-ClO4': {'b0':  0.20220 * 2/3, 'b1':  3.97600 * 2/3, 'Cphi':  0.00000 * 2/3**(1/2)},
-    }
-
+}
 PM73_TableIX = {
            'Th-Cl': {'b0':  1.62200 * 5/8, 'b1': 21.33000 * 5/8, 'Cphi': -0.33090 * 5/16},
           'Th-NO3': {'b0':  1.54600 * 5/8, 'b1': 18.22000 * 5/8, 'Cphi': -0.59060 * 5/16},
@@ -259,4 +253,4 @@ PM73_TableIX = {
      'MeN-Mo(CN)8': {'b0':  0.93800 * 5/8, 'b1': 15.91000 * 5/8, 'Cphi': -0.33300 * 5/16},
         'Na-P3O10': {'b0':  1.86900 * 3/5, 'b1': 36.10000 * 3/5, 'Cphi': -0.16300 * 3/5**(3/2)},
          'K-P3O10': {'b0':  1.93900 * 3/5, 'b1': 39.64000 * 3/5, 'Cphi': -0.10550 * 3/5**(3/2)},
-    }
+}

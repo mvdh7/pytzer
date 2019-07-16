@@ -13,7 +13,7 @@ MathJax.Hub.Config({TeX: {extensions: ["[mhchem]/mhchem.js"]}});
 
 ## `.getmols` - import CSV dataset
 
-Imports a table of temperature, pressure and molality data, formatted ready for Pytzer's [model functions](../model).
+Imports a table of temperature, pressure and molality data, formatted ready for Pytzer's [model functions](../model). For calculations without equilibration, where the concentration of every individual solute is specified in the input file.
 
 **Syntax:**
 
@@ -26,7 +26,6 @@ Imports a table of temperature, pressure and molality data, formatted ready for 
   * `filename` - path and name of a text file containing a set of solution compositions and corresponding temperatures. See full decription below;
   * `delimiter` - column delimiter. Optional; defaults to `','`.
   * `skip_top` - number of rows in `filename` above the row containing the headers described below. Optional; defaults to `0`.
-
 
 The file should be in comma-separated variable (CSV) format, but if another separator is used this can be specified with `delimiter`. The contents should be formatted as follows:
 
@@ -62,13 +61,42 @@ Note: oceanographers typically record pressure within the ocean as only due to t
 **Outputs:**
 
   * `mols` - concentrations (molality) of solutes in mol·kg<sup>−1</sup>. Each row represents a different ion, while each column characterises a different solution composition;
-  * `ions` - list of the solute codes, corresponding to the rows in <code>mols</code>;
-  * `tempK` - solution temperature in K. Each value corresponds to the matching column in <code>mols</code>;
-  * `pres` - solution pressure in dbar. Each value corresponds to the matching column in <code>mols</code>.
+  * `ions` - list of the solute codes, corresponding to the rows in `mols`;
+  * `tempK` - solution temperature in K. Each value corresponds to the matching column in `mols`;
+  * `pres` - solution pressure in dbar. Each value corresponds to the matching column in `mols`.
 
 <hr />
 
-## .saveall - save to CSV
+## `.gettots` - import CSV dataset
+
+Imports a table of temperature, pressure and molality data, formatted ready for Pytzer's [equilibration functions](../equilibrate). For calculations with equilibration, where some solution components are given as totals.
+
+**Syntax:**
+
+```python
+>>> tots, mols, eles, ions, tempK, pres = pz.io.gettots(filename, delimiter=',', skip_top=0)
+```
+
+**Inputs:**
+
+  * `filename` - path and name of a text file containing a set of solution compositions and corresponding temperatures. See full decription below;
+  * `delimiter` - column delimiter. Optional; defaults to `','`.
+  * `skip_top` - number of rows in `filename` above the row containing the headers described below. Optional; defaults to `0`.
+
+The file should be in comma-separated variable (CSV) format, and its contents follow the same rules as for the `getmols` function above. However, it may also include *total* concentrations for solutes that are in dynamic equilibria to be solved. These are indicated by prefixing the solute name with `t_` in the header row.
+
+**Outputs:**
+
+  * `tots` - total concentrations (molality) of equilibrating solutes in mol·kg<sup>−1</sup>. Each row represents a different set of solutes, while each column characterises a different solution composition;
+  * `mols` - concentrations (molality) of non-equilibrating solutes in mol·kg<sup>−1</sup>. Each row represents a different solute, while each column characterises a different solution composition;
+  * `eles` - list of the solute codes corresponding to the rows in `tots`;
+  * `ions` - list of the solute codes corresponding to the rows in `mols`;
+  * `tempK` - solution temperature in K. Each value corresponds to the matching column in `mols`;
+  * `pres` - solution pressure in dbar. Each value corresponds to the matching column in `mols`.
+
+<hr />
+
+## `.saveall` - save to CSV
 
 Saves the results of all calculations to a CSV file, with a format similar to that described for the input file above.
 
