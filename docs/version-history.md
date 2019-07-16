@@ -1,3 +1,13 @@
+# 0.4 (beta)
+
+Version 0.4 remains in beta testing. The main change from version 0.3 is including solvers to determine the equilibrium composition of aqueous solutions.
+
+**Release date:** forthcoming
+
+## 0.4.0
+
+  
+
 # 0.3 (beta)
 
 Version 0.3 remains in beta testing. The most significant change from version 0.2 is adding pressure as an input variable. However, most of the interaction coefficients are still not yet pressure-sensitive.
