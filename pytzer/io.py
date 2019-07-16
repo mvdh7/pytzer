@@ -30,7 +30,7 @@ def gettots(filename, delimiter=',', skip_top=0):
     PL = head == 'pres'
     tempK = data[:, TL].ravel()
     pres = data[:, PL].ravel()
-    data = data[:, ~TL].transpose()
+    data = data[:, logical_and(~TL, ~PL)].transpose()
     head = head[logical_and(~TL, ~PL)]
     eles = array([ele for ele in head if 't_' in ele])
     ions = array([ion for ion in head if 't_' not in ion])

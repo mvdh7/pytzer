@@ -42,5 +42,3 @@ acfs_mx = pz.matrix.acfs(mols_mx, allmxs)
 # Water activity
 aw_pz = pz.model.aw(mols_pz, ions, tempK, pres, cflib, Izero=Izero)
 aw_mx = pz.matrix.aw(mols_mx, allmxs)
-
-

@@ -32,6 +32,7 @@ Pytzer is in beta. Tests of the accuracy of its coefficients and equations are u
   * `.constants` - defines physicochemical constants;
   * `.teos10` - calculates properties of pure water;
   * `.matrix` - implements an alternative matrix-based Pitzer model;
+  * `.dissociation` - evaluates thermodynamic equilibrium constants;
   * `.meta` - stores metadata about the Pytzer package.
 
 ## Acknowledgements

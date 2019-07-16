@@ -1,20 +1,20 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 """Define ionic properties."""
-from autograd.numpy import float_, vstack
+from autograd.numpy import array, concatenate, float_, vstack
 
-# Get charges for input ions
 def charges(ions):
     """Find the charges on each of a list of ions."""
     # Define dict of charges
     #   Order: neutrals, then cations, then anions,
     #          and alphabetical within each section.
     z = {
+        # Neutrals
         'glycerol': 0,
         'sucrose' : 0,
         'tris'    : 0,
         'urea'    : 0,
-
+        # Cations
         'Ba'   : +2,
         'Ca'   : +2,
         'Cdjj' : +2,
@@ -34,7 +34,7 @@ def charges(ions):
         'trisH': +1,
         'UO2'  : +2,
         'Znjj' : +2,
-
+        # Anions
         'BOH4' : -1,
         'Br'   : -1,
         'Cl'   : -1,
@@ -48,13 +48,24 @@ def charges(ions):
         'S2O3' : -2,
         'SO4'  : -2,
     }
-
-    # Extract charges from dict
+    # Get charges and lists of cation, anion and neutral solute names
     zs = vstack([float_(z[ion]) for ion in ions])
-
-    # Get lists of cation, anion and neutral names
     cations  = [ion for ion in ions if z[ion] > 0]
     anions   = [ion for ion in ions if z[ion] < 0]
     neutrals = [ion for ion in ions if z[ion] == 0]
-
     return zs, cations, anions, neutrals
+
+# Define electrolyte to ions conversion dict
+ele2ions = {
+    't_HSO4': array(['HSO4', 'SO4']),
+    't_Mg': array(['Mg', 'MgOH']),
+    't_trisH': array(['trisH', 'tris']),
+}
+
+def getallions(eles, fixions):
+    """Get all ions given list of electrolytes."""
+    return concatenate([
+        fixions,
+        concatenate([ele2ions[ele] for ele in eles]),
+        ['H', 'OH'],
+    ])
