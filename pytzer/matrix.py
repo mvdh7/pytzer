@@ -1,4 +1,4 @@
-# Pytzer: Pitzer model for chemical activities in aqueous solutions
+# Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 """Pitzer model implemented using matrix notation."""
 from scipy.special import comb
@@ -26,6 +26,7 @@ def fG(Aosm, I):
     return -4*I*Aosm * log(1 + b*sqrt(I)) / b
 
 def BCT(I, Z, b0, b1, b2, alph1, alph2, C0, C1, omega):
+    """Calculate combined B and CT terms."""
     return (b0 + b1*g(alph1*sqrt(I)) + b2*g(alph2*sqrt(I)) +
         (C0 + 4*C1*h(omega*sqrt(I)))*Z/2)
 

@@ -1,13 +1,11 @@
-# Pytzer: Pitzer model for chemical activities in aqueous solutions
+# Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
-
 """Evaluate Pitzer model interaction coefficients."""
-
 from autograd.numpy import array, float_, log, logical_and, sqrt
 from autograd.numpy import abs as np_abs
 from .constants import Tzero
-from .tables import P91_Ch3_T12, P91_Ch3_T13_I, P91_Ch3_T13_II, \
-    PM73_TableI, PM73_TableVI, PM73_TableVIII, PM73_TableIX
+from .tables import (P91_Ch3_T12, P91_Ch3_T13_I, P91_Ch3_T13_II,
+    PM73_TableI, PM73_TableVI, PM73_TableVIII, PM73_TableIX)
 from . import properties
 
 # Note that variable T in this module is equivalent to tempK elsewhere (in K),

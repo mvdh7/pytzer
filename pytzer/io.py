@@ -1,10 +1,8 @@
-# Pytzer: Pitzer model for chemical activities in aqueous solutions
+# Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
-
 """Import solution composition data, and export the results."""
-
-from autograd.numpy import array, concatenate, genfromtxt, logical_and, \
-    nan_to_num, savetxt, shape, transpose, vstack
+from autograd.numpy import (array, concatenate, genfromtxt, logical_and,
+    nan_to_num, savetxt, shape, transpose, vstack)
 
 def getmols(filename, delimiter=',', skip_top=0):
     """Import molality, temperature and pressure data from a CSV file, where

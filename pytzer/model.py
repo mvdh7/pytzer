@@ -1,4 +1,4 @@
-# Pytzer: Pitzer model for chemical activities in aqueous solutions
+# Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 """Calculate solution properties using the Pitzer model."""
 from autograd.numpy import exp, full_like, log, sqrt, vstack, zeros_like

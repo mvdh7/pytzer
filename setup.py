@@ -1,11 +1,12 @@
+# Pytzer: Pitzer model for chemical activities in aqueous solutions.
+# Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 import setuptools
 from pytzer import __version__
 
 with open('README.md','r') as fh:
     long_description = fh.read()
-
 setuptools.setup(
-    name         = 'pytzer',
+    name         = 'Pytzer',
     version      = __version__,
     author       = 'Matthew P. Humphreys',
     author_email = 'm.p.humphreys@cantab.net',

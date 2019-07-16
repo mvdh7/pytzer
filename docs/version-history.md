@@ -4,13 +4,13 @@ Version 0.3 remains in beta testing. The most significant change from version 0.
 
 ## 0.3.1
 
-**Release date:** forthcoming
+**Release date:** 2019-07-16
 
   * Module **props** renamed as **properties**;
   * Module **coeffs** renamed as **coefficients**;
   * Class **CoeffLib** renamed as **CoefficientLibrary**;
   * Added docstrings to all functions in **coefficients** module;
-  * Added **matrix** module with alternative, matrix-based model implementation;
+  * Added **matrix** module with alternative, matrix-based Pitzer model implementation;
   * Added **none** function to **jfuncs** module to ignore unsymmetrical mixing;
   * Fixed <i>A<sub>ϕ</sub></i> bug in **CoefficientLibrary** method `print_coeffs`;
   * In preparation for equilibration calculations:

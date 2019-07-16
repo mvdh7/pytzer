@@ -1,10 +1,8 @@
-# Pytzer: Pitzer model for chemical activities in aqueous solutions
+# Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
-
 """Unsymmetrical mixing functions."""
-
-from autograd.numpy import exp, float_, full_like, inf, log, nan, size, \
-    zeros, zeros_like, errstate
+from autograd.numpy import (errstate, exp, float_, full_like, inf, log, nan,
+    size, zeros, zeros_like)
 from autograd.extend import primitive, defvjp
 from scipy.integrate import quad
 
