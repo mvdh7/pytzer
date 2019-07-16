@@ -2,4 +2,4 @@
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 """Define module metadata."""
 
-version = '0.3.1'
+version = '0.4.0'

@@ -6,7 +6,7 @@ Version 0.4 remains in beta testing. The main change from version 0.3 is includi
 
 ## 0.4.0
 
-  
+  * Module **dissociation** added with functions to evaluate thermodynamic dissociation constants.
 
 # 0.3 (beta)
 
