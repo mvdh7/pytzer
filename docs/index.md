@@ -1,6 +1,6 @@
 <!--<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>-->
 
-# Pytzer v0.3.1
+# Pytzer v0.4.0
 
 **Pytzer** is a Python 3.6+ implementation of the Pitzer model for chemical activities in aqueous solutions [[P91](references/#P91)].
 
@@ -17,7 +17,7 @@ See the [quick-start guide](quick-start) for more detailed instructions and exam
 
 ## Development status
 
-Pytzer is in beta. Tests of the accuracy of its coefficients and equations are underway, so results may change. API may change and functions may be added or removed. Use at your own peril!
+Pytzer is in beta. Tests of the accuracy of its coefficients and equations are underway, so results may change. Its API may change, and modules and functions may be added, removed and renamed. Use at your own peril!
 
 ## Modules
 
@@ -35,6 +35,10 @@ Pytzer is in beta. Tests of the accuracy of its coefficients and equations are u
   * `.matrix` - implements an alternative matrix-based Pitzer model;
   * `.dissociation` - evaluates thermodynamic equilibrium constants;
   * `.meta` - stores metadata about the Pytzer package.
+
+## Citation
+
+A manuscript describing Pytzer is in preparation for publication. Please check back here or [get in touch](https://mvdh.xyz/contact) to find out how to cite Pytzer in your work.
 
 ## Acknowledgements
 
