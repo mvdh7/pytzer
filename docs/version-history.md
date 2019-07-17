@@ -7,6 +7,7 @@ Version 0.4 remains in beta testing. The main change from version 0.3 is includi
 ## 0.4.0
 
   * Module **dissociation** added with functions to evaluate thermodynamic dissociation constants;
+  * Module **equilibrate** added with an equilibrium state solver and associated functions;
   * Fixed indexing error in **matrix.assemble** for the *zeta* coefficient matrix.
 
 # 0.3 (beta)

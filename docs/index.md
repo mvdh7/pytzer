@@ -23,6 +23,7 @@ Pytzer is in beta. Tests of the accuracy of its coefficients and equations are u
 
   * `.io` - imports and exports data;
   * `.model` - implements the Pitzer model;
+  * `.equilibrate` - solves for equilibrium;
   * `.cflibs` - defines combinations of model coefficients (i.e. *coefficient libraries*) to use in the model;
   * `.coefficients` - defines interaction coefficients as functions of temperature and pressure;
   * `.tables` - stores tables of model coefficient values;

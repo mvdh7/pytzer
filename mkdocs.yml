@@ -14,6 +14,7 @@ nav:
   - Pytzer modules:
     - .io – import and export data: modules/io.md
     - .model – the Pitzer model: modules/model.md
+    - .equilibrate - equilibrium solvers: modules/equilibrate.md
     - .cflibs – coefficient libraries: modules/cflibs.md
     - .coefficients – interaction coefficients: modules/coefficients.md
     - .tables - coefficient tables: modules/tables.md
@@ -23,6 +24,7 @@ nav:
     - .constants – physical constants: modules/constants.md
     - .teos10 - TEOS-10 properties: modules/teos10.md
     - .matrix - matrix model: modules/matrix.md
+    - .dissociation - thermodynamic equilibrium constants: modules/dissociation.md
     - .meta - package metadata: modules/meta.md
   - References: references.md
   - Version history: version-history.md
