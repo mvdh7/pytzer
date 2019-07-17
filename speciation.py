@@ -1,26 +1,21 @@
-from copy import deepcopy
-from scipy.optimize import minimize
 from autograd import numpy as np
-from autograd import elementwise_grad as egrad
-from autograd.numpy import array, exp, log, sqrt
-from autograd.numpy import sum as np_sum
 import pytzer as pz
 
 tots, fixmols, eles, fixions, tempK, pres = pz.io.gettots(
-    'testfiles/seawaterMZF93.csv')
+    'testfiles/trisASWequilibrium.csv')
+fixcharges = np.transpose(pz.properties.charges(fixions)[0])
 
 L = 5
 Ltots = tots[:, L]
 Lfixmols = fixmols[:, L]
-LtempK = array([tempK[L]])
-Lpres = array([pres[L]])
+LtempK = np.array([tempK[L]])
+Lpres = np.array([pres[L]])
 eqstate_Julia = [
     29.978530891580323,
     -16.505227391910964,
     9.55561822596657,
     0.0003713411227473853,
 ]
-fixcharges = np.transpose(pz.properties.charges(fixions)[0])
 varmolin = pz.equilibrate.varmols(eqstate_Julia, Ltots, Lfixmols, eles,
     fixions, fixcharges)
 
@@ -41,8 +36,12 @@ varmolout = pz.equilibrate.varmols(eqstate_Julia, Ltots, Lfixmols, eles,
     fixions, fixcharges)
 pHF = -np.log10(varmolout[0])
 
-eqstate_guess = [30, -16, 10, 0]
-fullsolve = pz.equilibrate.solve(eqstate_guess, Ltots, Lfixmols, eles, fixions,
-    fixcharges, allions, allmxs, lnkHSO4, lnkH2O, lnkMgOH, lnktrisH)
-quicksolve = pz.equilibrate.solvequick(eqstate_guess, Ltots, Lfixmols, eles,
-    fixions, fixcharges, allions, allmxs, lnkHSO4, lnkH2O, lnkMgOH, lnktrisH)
+eqstate_guess = [30, 0, 0, 0]
+#fullsolve = pz.equilibrate.solve(eqstate_guess, Ltots, Lfixmols, eles, fixions,
+#    allions, allmxs, lnkHSO4, lnkH2O, lnkMgOH, lnktrisH)
+#quicksolve = pz.equilibrate.solvequick(eqstate_guess, Ltots, Lfixmols, eles,
+#    fixions, allions, allmxs, lnkHSO4, lnkH2O, lnkMgOH, lnktrisH)
+#allmols, allions, eqstates = pz.equilibrate.solveloop(eqstate_guess, tots,
+#    fixmols, eles, fixions, tempK, pres,)
+
+pz.blackbox_equilibrate('testfiles/trisASWequilibrium.csv')

@@ -82,3 +82,52 @@ def blackbox(filename, cflib=cflibs.Seawater, savefile=True):
             mols, ions, tempK, pres, osm, aw, acfs)
     print('Finished!')
     return mols, ions, tempK, pres, cflib, Gex_nRT, osm, aw, acfs
+
+def blackbox_equilibrate(filename, cflib=cflibs.Seawater, savefile=True):
+    """Import a CSV file with molality data, solve for equilibrium speciation,
+    calculate all activity coefficients, and save results to a new CSV file.
+    """
+    # Import test dataset
+    tots, fixmols, eles, fixions, tempK, pres = io.gettots(filename)
+    allions = properties.getallions(eles, fixions)
+    cflib = deepcopy(cflib)
+    cflib.add_zeros(allions) # just in case
+    # Solve for equilibria
+    eqstate_guess = [30.0, 0.0, 0.0, 0.0]
+    allmols, allions, eqstates = equilibrate.solveloop(eqstate_guess, tots,
+        fixmols, eles, fixions, tempK, pres, cflib=cflib)
+    # Separate out zero ionic strengths
+    zs = properties.charges(allions)[0]
+    I = model.Istr(allmols, zs)
+    Gex_nRT = full_like(tempK, nan)
+    osm = full_like(tempK, nan)
+    aw = full_like(tempK, nan)
+    acfs = full_like(allmols, nan)
+    L = I > 0
+    nargsL  = (allmols[:,  L], allions, tempK[ L], pres[ L], cflib)
+    nargsLx = (allmols[:, ~L], allions, tempK[~L], pres[~L], cflib)
+    # Do calculations
+    print('Calculating excess Gibbs energies...')
+    Gex_nRT[L] = model.Gex_nRT(*nargsL)
+    if np_any(~L):
+        Gex_nRT[~L] = model.Gex_nRT(*nargsLx, Izero=True)
+    print('Calculating osmotic coefficients...')
+    osm[L] = model.osm(*nargsL)
+    if np_any(~L):
+        osm[~L] = model.osm(*nargsLx, Izero=True)
+    print('Calculating water activity...')
+    aw[L] = model.aw(*nargsL)
+    if np_any(~L):
+        aw[~L] = model.aw(*nargsLx, Izero=True)
+    print('Calculating activity coefficients...')
+    acfs[:,L] = model.acfs(*nargsL)
+    if np_any(~L):
+        acfs[:, ~L] = model.acfs(*nargsLx, Izero=True)
+    # Save results, unless requested not to
+    if savefile:
+        filestem = filename.replace('.csv','')
+        io.saveall(filestem + '_py.csv',
+            allmols, allions, tempK, pres, osm, aw, acfs)
+    print('Finished!')
+    return (allmols, allions, tempK, pres, cflib, Gex_nRT, osm, aw, acfs,
+        eqstates)
