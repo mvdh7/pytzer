@@ -9,8 +9,6 @@ ions = np.array(['Na', 'Cl', 'K', 'Mg', 'SO4', 'HSO4', 'Ca', 'tris'])
 tempK = np.array([298.15])
 pres = np.array([10.1325])
 cflib = pz.cflibs.Seawater
-#cflib.zeta['tris-Na-Cl'] = pz.coefficients.zeta_none
-#cflib.mu['tris-tris-tris'] = pz.coefficients.mu_none
 
 # Calculate intermediates
 mols_pz = np.vstack(mols_mx[0])
@@ -42,3 +40,11 @@ acfs_mx = pz.matrix.acfs(mols_mx, allmxs)
 # Water activity
 aw_pz = pz.model.aw(mols_pz, ions, tempK, pres, cflib, Izero=Izero)
 aw_mx = pz.matrix.aw(mols_mx, allmxs)
+
+# Unsymmetrical mixing terms
+Aosm = pz.debyehueckel.Aosm_MarChemSpec(tempK, pres)[0]
+xij = pz.matrix.xij(Aosm, Istr_mx, np.array([zs_mx[zs_mx > 0]]))
+xi = pz.matrix.xi(Aosm, Istr_mx, np.array([zs_mx[zs_mx > 0]]))
+xj = pz.matrix.xj(Aosm, Istr_mx, np.array([zs_mx[zs_mx > 0]]))
+Jxij = pz.matrix.jfunc(xij)
+etheta = pz.matrix.etheta(Aosm, Istr_mx, np.array([zs_mx[zs_mx > 0]]))

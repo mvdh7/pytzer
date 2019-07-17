@@ -14,19 +14,19 @@ from .model import g, h
 from .jfuncs import P75_eq47 as jfunc
 
 def Istr(mols, zs):
-    """Calculate the ionic strength."""
+    """Ionic strength."""
     return mols @ transpose(zs**2) / 2
 
 def Zstr(mols, zs):
-    """Calculate the Z function."""
+    """Z function."""
     return mols @ transpose(np_abs(zs))
 
 def fG(Aosm, I):
-    """Calculate the Debye-Hueckel component of the excess Gibbs energy."""
+    """Debye-Hueckel component of the excess Gibbs energy."""
     return -4*I*Aosm * log(1 + b*sqrt(I)) / b
 
 def BCT(I, Z, b0, b1, b2, alph1, alph2, C0, C1, omega):
-    """Calculate combined B and CT terms."""
+    """Combined B and CT terms."""
     return (b0 + b1*g(alph1*sqrt(I)) + b2*g(alph2*sqrt(I)) +
         (C0 + 4*C1*h(omega*sqrt(I)))*Z/2)
 
@@ -43,34 +43,34 @@ def xj(Aosm, I, zs):
     return 6*Aosm*sqrt(I) * transpose(zs**2)
 
 def etheta(Aosm, I, zs):
-    """etheta function for unsymmetrical mixing."""
+    """E-theta function for unsymmetrical mixing."""
     x01 = xij(Aosm, I, zs)
     x00 = xi(Aosm, I, zs)
     x11 = xj(Aosm, I, zs)
-    return (transpose(zs) @ zs) * (jfunc(x01) 
+    return (transpose(zs) @ zs) * (jfunc(x01)
         - (jfunc(x00) + jfunc(x11))/2) / (4*I)
 
 def Gex_nRT(mols, allmxs):
-    """Calculate the excess Gibbs energy of a solution."""
-    zs, Aosm, b0mx, b1mx, b2mx, C0mx, C1mx, alph1mx, alph2mx, omegamx, \
-        thetamx, lambdamx, psimxcca, psimxcaa, zetamx, mumx = allmxs
+    """Excess Gibbs energy of a solution."""
+    (zs, Aosm, b0mx, b1mx, b2mx, C0mx, C1mx, alph1mx, alph2mx, omegamx,
+        thetamx, lambdamx, psimxcca, psimxcaa, zetamx, mumx) = allmxs
     I = Istr(mols, zs)
-    Z = Zstr(mols, zs)
     cats = array([mols[zs > 0]])
     anis = array([mols[zs < 0]])
     neus = array([mols[zs == 0]])
     catsanis = array([(transpose(cats) @ anis).ravel()])
     if I == 0:
-        Gex = (mols @ lambdamx @ transpose(mols) +
+        Gex_nRT = (mols @ lambdamx @ transpose(mols) +
             neus @ zetamx @ transpose(catsanis) + neus**3 @ mumx)[0]
     else:
+        Z = Zstr(mols, zs)
         zcats = array([zs[zs > 0]])
         zanis = array([zs[zs < 0]])
         catscats = array([(transpose(cats) @ cats)
             [triu_indices(len(cats[0]), k=1)]])
         anisanis = array([(transpose(anis) @ anis)
             [triu_indices(len(anis[0]), k=1)]])
-        Gex = (fG(Aosm, I) + mols @ (
+        Gex_nRT = (fG(Aosm, I) + mols @ (
             BCT(I, Z, b0mx, b1mx, b2mx, alph1mx, alph2mx, C0mx, C1mx, omegamx)
                 + thetamx + lambdamx) @ transpose(mols) +
             cats @ etheta(Aosm, I, zcats) @ transpose(cats) +
@@ -78,26 +78,24 @@ def Gex_nRT(mols, allmxs):
             catscats @ psimxcca @ transpose(anis) +
             anisanis @ psimxcaa @ transpose(cats) +
             neus @ zetamx @ transpose(catsanis) + neus**3 @ mumx)[0]
-    return Gex
+    return Gex_nRT
 
 def ln_acfs(mols, allmxs):
-    """Calculate the natural logarithms of the activity coefficients
-    of all solutes.
-    """
+    """Natural logarithms of the activity coefficients of all solutes."""
     return egrad(Gex_nRT)(mols, allmxs)[0]
 
 def acfs(mols, allmxs):
-    """Calculate the activity coefficients of all solutes."""
+    """Activity coefficients of all solutes."""
     return exp(ln_acfs(mols, allmxs))
 
 def lnaw(mols, allmxs):
-    """Calculate the natural log of the water activity."""
+    """Natural log of the water activity."""
     ww = 1.0
     return (egrad(lambda ww:
         ww*Gex_nRT(mols/ww, allmxs))(ww) - np_sum(mols, axis=1))*Mw
 
 def aw(mols, allmxs):
-    """Calculate the water activity."""
+    """Water activity."""
     return exp(lnaw(mols, allmxs))
 
 def assemble(ions, tempK, pres, cflib=Seawater):
