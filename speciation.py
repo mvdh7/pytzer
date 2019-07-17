@@ -24,13 +24,13 @@ allmxs = pz.matrix.assemble(allions, LtempK, Lpres,
     cflib=pz.cflibs.MarChemSpec)
 lnkHSO4 = pz.dissociation.HSO4_CRP94(LtempK, Lpres)
 lnkH2O = pz.dissociation.H2O_MF(LtempK, Lpres)
-lnkMgOH = pz.dissociation.Mg_CW91(LtempK, Lpres)
+lnkMg = pz.dissociation.Mg_CW91(LtempK, Lpres)
 lnktrisH = pz.dissociation.trisH_BH64(LtempK, Lpres)
 
 Gcomp = pz.equilibrate.GibbsComponents(eqstate_Julia, Ltots, Lfixmols, eles,
-    fixions, fixcharges, allions, allmxs, lnkHSO4, lnkH2O, lnkMgOH, lnktrisH)
+    fixions, fixcharges, allions, allmxs, lnkHSO4, lnkH2O, lnkMg, lnktrisH)
 Gtot = pz.equilibrate.Gibbs(eqstate_Julia, Ltots, Lfixmols, eles, fixions,
-    fixcharges, allions,allmxs, lnkHSO4, lnkH2O, lnkMgOH, lnktrisH)
+    fixcharges, allions,allmxs, lnkHSO4, lnkH2O, lnkMg, lnktrisH)
 
 varmolout = pz.equilibrate.varmols(eqstate_Julia, Ltots, Lfixmols, eles,
     fixions, fixcharges)
@@ -38,9 +38,9 @@ pHF = -np.log10(varmolout[0])
 
 eqstate_guess = [30, 0, 0, 0]
 #fullsolve = pz.equilibrate.solve(eqstate_guess, Ltots, Lfixmols, eles, fixions,
-#    allions, allmxs, lnkHSO4, lnkH2O, lnkMgOH, lnktrisH)
+#    allions, allmxs, lnkHSO4, lnkH2O, lnkMg, lnktrisH)
 #quicksolve = pz.equilibrate.solvequick(eqstate_guess, Ltots, Lfixmols, eles,
-#    fixions, allions, allmxs, lnkHSO4, lnkH2O, lnkMgOH, lnktrisH)
+#    fixions, allions, allmxs, lnkHSO4, lnkH2O, lnkMg, lnktrisH)
 #allmols, allions, eqstates = pz.equilibrate.solveloop(eqstate_guess, tots,
 #    fixmols, eles, fixions, tempK, pres,)
 
