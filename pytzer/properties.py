@@ -1,7 +1,7 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 """Define ionic properties."""
-from autograd.numpy import array, concatenate, float_, vstack
+from autograd.numpy import array, concatenate, float_, unique, vstack
 
 def charges(ions):
     """Find the charges on each of a list of ions."""
@@ -56,7 +56,7 @@ def charges(ions):
     return zs, cations, anions, neutrals
 
 # Define electrolyte to ions conversion dict
-ele2ions = {
+_ele2ions = {
     't_HSO4': array(['HSO4', 'SO4']),
     't_Mg': array(['Mg', 'MgOH']),
     't_trisH': array(['trisH', 'tris']),
@@ -64,8 +64,8 @@ ele2ions = {
 
 def getallions(eles, fixions):
     """Get all ions given list of electrolytes."""
-    return concatenate([
+    return unique(concatenate([
         fixions,
-        concatenate([ele2ions[ele] for ele in eles]),
+        concatenate([_ele2ions[ele] for ele in eles]),
         ['H', 'OH'],
-    ])
+    ]))

@@ -16,7 +16,7 @@ eqstate_Julia = [
     9.55561822596657,
     0.0003713411227473853,
 ]
-varmolin = pz.equilibrate.varmols(eqstate_Julia, Ltots, Lfixmols, eles,
+varmolin = pz.equilibrate._varmols(eqstate_Julia, Ltots, Lfixmols, eles,
     fixions, fixcharges)
 
 allions = pz.properties.getallions(eles, fixions)
@@ -27,12 +27,12 @@ lnkH2O = pz.dissociation.H2O_MF(LtempK, Lpres)
 lnkMg = pz.dissociation.Mg_CW91(LtempK, Lpres)
 lnktrisH = pz.dissociation.trisH_BH64(LtempK, Lpres)
 
-Gcomp = pz.equilibrate.GibbsComponents(eqstate_Julia, Ltots, Lfixmols, eles,
+Gcomp = pz.equilibrate._GibbsComponents(eqstate_Julia, Ltots, Lfixmols, eles,
     allions, fixions, fixcharges, allmxs, lnkHSO4, lnkH2O, lnkMg, lnktrisH)
-Gtot = pz.equilibrate.Gibbs(eqstate_Julia, Ltots, Lfixmols, eles, allions,
+Gtot = pz.equilibrate._Gibbs(eqstate_Julia, Ltots, Lfixmols, eles, allions,
     fixions, fixcharges, allmxs, lnkHSO4, lnkH2O, lnkMg, lnktrisH)
 
-varmolout = pz.equilibrate.varmols(eqstate_Julia, Ltots, Lfixmols, eles,
+varmolout = pz.equilibrate._varmols(eqstate_Julia, Ltots, Lfixmols, eles,
     fixions, fixcharges)
 pHF = -np.log10(varmolout[0])
 
@@ -44,4 +44,4 @@ eqstate_guess = [30, 0, 0, 0]
 #allmols, allions, eqstates = pz.equilibrate.solveloop(eqstate_guess, tots,
 #    fixmols, eles, fixions, tempK, pres,)
 
-pz.blackbox_equilibrate('testfiles/trisASWequilibrium.csv')
+allmols = pz.blackbox_equilibrate('testfiles/trisASWequilibrium.csv')[0]

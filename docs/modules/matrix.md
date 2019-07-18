@@ -42,4 +42,4 @@ All other functions in this module will be the matrix equivalents of the functio
 var = pz.matrix.var(mols, allmxs)
 ```
 
-The input `allmxs` is generated using `pz.matrix.assemble` (see above).
+The input `allmxs` is generated using `.assemble` (see above).
