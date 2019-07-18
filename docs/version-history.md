@@ -11,7 +11,10 @@ Version 0.4 remains in beta testing. The main change from version 0.3 is includi
   * Added **blackbox_equilibrate** function to demonstrate equilibration procedure;
   * Fixed indexing error in **matrix.assemble** for the *zeta* coefficient matrix;
   * Module **jfuncs** renamed as **unsymmetrical**;
-  * Module **coefficients** renamed as **parameters**.
+  * As a general terminology change, the Pitzer model interaction *coefficients* are now instead referred to as *parameters*, for better consistency with the published literature. As a consequence:
+    * Module **coefficients** renamed as **parameters**;
+    * Module **cflibs** renamed as **libraries**;
+    * Class **CoefficientLibrary** renamed as **ParameterLibrary**, and its abbreviation **cflib** to **prmlib**.
 
 # 0.3 (beta)
 

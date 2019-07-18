@@ -15,12 +15,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Pitzer model for chemical activities in aqueous solutions."""
 from . import (
-    cflibs,
     constants,
     debyehueckel,
     dissociation,
     equilibrate,
     io,
+    libraries,
     matrix,
     meta,
     model,
@@ -32,12 +32,12 @@ from . import (
 )
 
 __all__ = [
-    'cflibs',
     'constants',
     'debyehueckel',
     'dissociation',
     'equilibrate',
     'io',
+    'libraries',
     'matrix',
     'meta',
     'model',
@@ -54,14 +54,14 @@ from copy import deepcopy
 from numpy import full_like, nan
 from numpy import any as np_any
 
-def blackbox(filename, cflib=cflibs.Seawater, savefile=True):
+def blackbox(filename, prmlib=libraries.Seawater, savefile=True):
     """Import a CSV file with molality data, calculate all activity
     coefficients, and save results to a new CSV file.
     """
     # Import test dataset
     mols, ions, tempK, pres = io.getmols(filename)
-    cflib = deepcopy(cflib)
-    cflib.add_zeros(ions) # just in case
+    prmlib = deepcopy(prmlib)
+    prmlib.add_zeros(ions) # just in case
     # Separate out zero ionic strengths
     zs = properties.charges(ions)[0]
     I = model.Istr(mols, zs)
@@ -70,8 +70,8 @@ def blackbox(filename, cflib=cflibs.Seawater, savefile=True):
     aw = full_like(tempK, nan)
     acfs = full_like(mols, nan)
     L = I > 0
-    nargsL  = (mols[:,  L], ions, tempK[ L], pres[ L], cflib)
-    nargsLx = (mols[:, ~L], ions, tempK[~L], pres[~L], cflib)
+    nargsL  = (mols[:,  L], ions, tempK[ L], pres[ L], prmlib)
+    nargsLx = (mols[:, ~L], ions, tempK[~L], pres[~L], prmlib)
     # Do calculations
     print('Calculating excess Gibbs energies...')
     Gex_nRT[L] = model.Gex_nRT(*nargsL)
@@ -95,21 +95,21 @@ def blackbox(filename, cflib=cflibs.Seawater, savefile=True):
         io.saveall(filestem + '_py.csv',
             mols, ions, tempK, pres, osm, aw, acfs)
     print('Finished!')
-    return mols, ions, tempK, pres, cflib, Gex_nRT, osm, aw, acfs
+    return mols, ions, tempK, pres, prmlib, Gex_nRT, osm, aw, acfs
 
-def blackbox_equilibrate(filename, cflib=cflibs.Seawater, savefile=True):
+def blackbox_equilibrate(filename, prmlib=libraries.Seawater, savefile=True):
     """Import a CSV file with molality data, solve for equilibrium speciation,
     calculate all activity coefficients, and save results to a new CSV file.
     """
     # Import test dataset
     tots, fixmols, eles, fixions, tempK, pres = io.gettots(filename)
     allions = properties.getallions(eles, fixions)
-    cflib = deepcopy(cflib)
-    cflib.add_zeros(allions) # just in case
+    prmlib = deepcopy(prmlib)
+    prmlib.add_zeros(allions) # just in case
     # Solve for equilibria
     eqstate_guess = [30.0, 0.0, 0.0, 0.0]
     allmols, allions, eqstates = equilibrate.solveloop(eqstate_guess, tots,
-        fixmols, eles, fixions, tempK, pres, cflib=cflib)
+        fixmols, eles, fixions, tempK, pres, prmlib=prmlib)
     # Separate out zero ionic strengths
     zs = properties.charges(allions)[0]
     I = model.Istr(allmols, zs)
@@ -118,8 +118,8 @@ def blackbox_equilibrate(filename, cflib=cflibs.Seawater, savefile=True):
     aw = full_like(tempK, nan)
     acfs = full_like(allmols, nan)
     L = I > 0
-    nargsL  = (allmols[:,  L], allions, tempK[ L], pres[ L], cflib)
-    nargsLx = (allmols[:, ~L], allions, tempK[~L], pres[~L], cflib)
+    nargsL  = (allmols[:,  L], allions, tempK[ L], pres[ L], prmlib)
+    nargsLx = (allmols[:, ~L], allions, tempK[~L], pres[~L], prmlib)
     # Do calculations
     print('Calculating excess Gibbs energies...')
     Gex_nRT[L] = model.Gex_nRT(*nargsL)
@@ -143,5 +143,5 @@ def blackbox_equilibrate(filename, cflib=cflibs.Seawater, savefile=True):
         io.saveall(filestem + '_py.csv',
             allmols, allions, tempK, pres, osm, aw, acfs)
     print('Finished!')
-    return (allmols, allions, tempK, pres, cflib, Gex_nRT, osm, aw, acfs,
+    return (allmols, allions, tempK, pres, prmlib, Gex_nRT, osm, aw, acfs,
         eqstates)

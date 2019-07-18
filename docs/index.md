@@ -24,7 +24,7 @@ Pytzer is in beta. Tests of the accuracy of its parameters and equations are und
   * `.io` - imports and exports data;
   * `.model` - implements the Pitzer model;
   * `.equilibrate` - solves for equilibrium;
-  * `.cflibs` - defines combinations of model parameters (i.e. *coefficient libraries*) to use in the model;
+  * `.libraries` - defines combinations of model parameters (i.e. *parameter libraries*) to use in the model;
   * `.parameters` - defines interaction parameters as functions of temperature and pressure;
   * `.tables` - stores tables of model parameter values;
   * `.debyehueckel` - defines functions for Debye-Hückel limiting slopes;

@@ -1,6 +1,8 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
-"""Assemble dicts of Pitzer model interaction parameter functions."""
+"""Assemble dicts of Pitzer model interaction parameter functions into
+parameter libraries.
+"""
 from . import debyehueckel, properties, unsymmetrical
 from . import parameters as prm
 from .meta import version
@@ -8,9 +10,9 @@ from autograd.numpy import array, concatenate, unique
 from copy import deepcopy
 
 #==============================================================================
-#======================================== Define CoefficientLibrary class =====
+#======================================== Define ParameterLibrary class =====
 
-class CoefficientLibrary:
+class ParameterLibrary:
 
 # ------------------------------------------------------------ Initialise -----
     def __init__(self):
@@ -202,9 +204,9 @@ class CoefficientLibrary:
             f.write(muVals.format(neut1, neut2, neut3, eval_mu, src))
 
 
-# -------------------- Get all ions and sources in the CoefficientLibrary -----
+# -------------------- Get all ions and sources in the ParameterLibrary -----
     def get_contents(self):
-        """Get all ions and sources in the CoefficientLibrary."""
+        """Get all ions and sources in the ParameterLibrary."""
 
         # Get list of non-empty function dicts
         ctypes = [self.bC, self.theta, self.psi, self.lambd,
@@ -234,7 +236,7 @@ class CoefficientLibrary:
 #
 # System: Na-Ca-Cl-SO4
 
-M88 = CoefficientLibrary()
+M88 = ParameterLibrary()
 M88.name = 'M88'
 
 # Debye-Hueckel limiting slope
@@ -272,7 +274,7 @@ M88.get_contents()
 #
 # System: Na-K-Ca-Cl-SO4
 
-GM89 = CoefficientLibrary()
+GM89 = ParameterLibrary()
 GM89.name = 'GM89'
 
 # Debye-Hueckel limiting slope
@@ -319,7 +321,7 @@ GM89.get_contents()
 #
 # System: H-HSO4-SO4
 
-CRP94 = CoefficientLibrary()
+CRP94 = ParameterLibrary()
 CRP94.name = 'CRP94'
 
 # Debye-Hueckel limiting slope
@@ -347,7 +349,7 @@ CRP94.get_contents()
 # Waters and Millero (2013). Mar. Chem. 149, 8-22,
 #  doi:10.1016/j.marchem.2012.11.003
 
-WM13 = CoefficientLibrary()
+WM13 = ParameterLibrary()
 WM13.name = 'WM13'
 
 # Debye-Hueckel limiting slope and unsymmetrical mixing
@@ -549,7 +551,7 @@ Seawater.bC['K-Cl'] = prm.bC_K_Cl_ZD17
 #
 #~~~~~~~~~~~~~~~~~~~~~~~ WORK IN PROGRESS !!!!! ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-MIAMI = CoefficientLibrary()
+MIAMI = ParameterLibrary()
 MIAMI.name = 'MIAMI'
 
 MIAMI.dh['Aosm'] = debyehueckel.Aosm_M88

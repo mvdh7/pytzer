@@ -8,7 +8,7 @@ from autograd.numpy import (array, exp, log, ones, size, sqrt, transpose,
 from autograd.numpy import abs as np_abs
 from autograd.numpy import sum as np_sum
 from . import properties
-from .cflibs import Seawater
+from .libraries import Seawater
 from .constants import b, Mw
 from .model import g, h
 from .unsymmetrical import P75_eq47 as jfunc
@@ -98,11 +98,11 @@ def aw(mols, allmxs):
     """Water activity."""
     return exp(lnaw(mols, allmxs))
 
-def assemble(ions, tempK, pres, cflib=Seawater):
+def assemble(ions, tempK, pres, prmlib=Seawater):
     """Assemble parameter matrices."""
     zs, cations, anions, neutrals = properties.charges(ions)
     zs = transpose(zs)
-    Aosm = cflib.dh['Aosm'](tempK, pres)[0][0]
+    Aosm = prmlib.dh['Aosm'](tempK, pres)[0][0]
     iisize = (size(ions), size(ions))
     b0mx = zeros(iisize)
     b1mx = zeros(iisize)
@@ -123,33 +123,33 @@ def assemble(ions, tempK, pres, cflib=Seawater):
         for IY, iony in enumerate(ions):
             if ionx in cations and iony in anions:
                 iset = '-'.join((ionx, iony))
-                b0mx[IX, IY], b1mx[IX, IY], b2mx[IX, IY], C0mx[IX, IY], \
-                    C1mx[IX, IY], alph1mx[IX, IY], alph2mx[IX, IY], \
-                    omegamx[IX, IY], _  = cflib.bC[iset](tempK, pres)
+                (b0mx[IX, IY], b1mx[IX, IY], b2mx[IX, IY], C0mx[IX, IY],
+                    C1mx[IX, IY], alph1mx[IX, IY], alph2mx[IX, IY],
+                    omegamx[IX, IY], _)  = prmlib.bC[iset](tempK, pres)
             elif ionx in anions and iony in cations:
                 iset = '-'.join((iony, ionx))
-                b0mx[IX, IY], b1mx[IX, IY], b2mx[IX, IY], C0mx[IX, IY], \
-                    C1mx[IX, IY], alph1mx[IX, IY], alph2mx[IX, IY], \
-                    omegamx[IX, IY], _  = cflib.bC[iset](tempK, pres)
+                (b0mx[IX, IY], b1mx[IX, IY], b2mx[IX, IY], C0mx[IX, IY],
+                    C1mx[IX, IY], alph1mx[IX, IY], alph2mx[IX, IY],
+                    omegamx[IX, IY], _)  = prmlib.bC[iset](tempK, pres)
             elif (((ionx in cations and iony in cations) or
                     (ionx in anions and iony in anions)) and
                     ionx != iony):
                 iset = [ionx, iony]
                 iset.sort()
                 iset = '-'.join(iset)
-                thetamx[IX, IY] = cflib.theta[iset](tempK, pres)[0]
+                thetamx[IX, IY] = prmlib.theta[iset](tempK, pres)[0]
             elif ionx in neutrals:
                 iset = [ionx, iony]
                 if iony in neutrals:
                     iset.sort()
                 iset = '-'.join(iset)
-                lambdamx[IX, IY] = cflib.lambd[iset](tempK, pres)[0]
+                lambdamx[IX, IY] = prmlib.lambd[iset](tempK, pres)[0]
             elif iony in neutrals:
                 iset = [iony, ionx]
                 if ionx in neutrals:
                     iset.sort()
                 iset = '-'.join(iset)
-                lambdamx[IX, IY] = cflib.lambd[iset](tempK, pres)[0]
+                lambdamx[IX, IY] = prmlib.lambd[iset](tempK, pres)[0]
     # Ionic triplet interactions:
     CC = 0
     for CX, cationx in enumerate(cations):
@@ -159,7 +159,7 @@ def assemble(ions, tempK, pres, cflib=Seawater):
             iset= '-'.join(iset)
             for A, anion in enumerate(anions):
                 iset3 = '-'.join((iset, anion))
-                psimxcca[CC, A] = cflib.psi[iset3](tempK, pres)[0]
+                psimxcca[CC, A] = prmlib.psi[iset3](tempK, pres)[0]
             CC = CC + 1
     AA = 0
     for AX, anionx in enumerate(anions):
@@ -169,16 +169,16 @@ def assemble(ions, tempK, pres, cflib=Seawater):
             iset = '-'.join(iset)
             for C, cation in enumerate(cations):
                 iset3 = '-'.join((cation, iset))
-                psimxcaa[AA, C] = cflib.psi[iset3](tempK, pres)[0]
+                psimxcaa[AA, C] = prmlib.psi[iset3](tempK, pres)[0]
             AA = AA + 1
     # Neutral triplets:
     for N, neutral in enumerate(neutrals):
         iset3 = '-'.join((neutral, neutral, neutral))
-        mumx[N, 0] = cflib.mu[iset3](tempK, pres)[0]
+        mumx[N, 0] = prmlib.mu[iset3](tempK, pres)[0]
         for C, cation in enumerate(cations):
             for A, anion in enumerate(anions):
                 iset3 = '-'.join((neutral, cation, anion))
                 zetamx[N, C*size(anions)+A] = (
-                    cflib.zeta[iset3](tempK, pres)[0])
+                    prmlib.zeta[iset3](tempK, pres)[0])
     return (zs, Aosm, b0mx, b1mx, b2mx, C0mx, C1mx, alph1mx, alph2mx, omegamx,
         thetamx, lambdamx, psimxcca, psimxcaa, zetamx, mumx)

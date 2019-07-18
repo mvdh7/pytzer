@@ -6,7 +6,7 @@ from scipy.optimize import minimize
 from autograd import elementwise_grad as egrad
 from autograd.numpy import array, exp, full, full_like, log, sqrt, transpose
 from autograd.numpy import sum as np_sum
-from . import cflibs, dissociation, matrix, properties
+from . import dissociation, libraries, matrix, properties
 
 def sig01(x):
     """Numerically stable logistic sigmoid function."""
@@ -163,7 +163,7 @@ def solvequick(eqstate_guess, tots1, fixmols1, eles, allions, fixions, allmxs,
     return eqstate
 
 def solveloop(eqstate_guess, tots, fixmols, eles, fixions, tempK, pres,
-        cflib=cflibs.Seawater):
+        prmlib=libraries.Seawater):
     """Run solver through a loop of input data."""
     eqstates = full((len(tots[0]), len(eqstate_guess)), 0.0)
     allions = properties.getallions(eles, fixions)
@@ -175,7 +175,7 @@ def solveloop(eqstate_guess, tots, fixmols, eles, fixions, tempK, pres,
     for L in range(len(tots[0])):
         print('Solving {} of {}...'.format(L+1, len(tots[0])))
         allmxs = matrix.assemble(allions, array([tempK[L]]), array([pres[L]]),
-            cflib)
+            prmlib)
         Largs = (eqstate_guess, tots[:, L], fixmols[:, L], eles,
             allions, fixions, allmxs, _lnkHSO4[L], _lnkH2O[L], _lnkMg[L],
             _lnktrisH[L])

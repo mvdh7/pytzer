@@ -23,13 +23,13 @@ There are six different types of parameter functions, each representing a differ
 
   6. `mu_`, for interactions between three neutral solutes of the same type ($\mu$).
 
-There is not yet a full list of all the functions available. A number of them are not used by any ready-made coefficient library.
+There is not yet a full list of all the functions available. A number of them are not used by any ready-made parameter library.
 
 ## Philosophy
 
 The main principle followed when constructing these functions is to maintain a **single source of truth**. This manifests itself in several ways.
 
-Coefficient functions are only created for studies that report something new. If a new study reports parameter equations or values but is simply copying them exactly from an older study, the newer study does not get a new function. Rather, when constructing a coefficient library to represent the newer study, the older study's function should be selected.
+Coefficient functions are only created for studies that report something new. If a new study reports parameter equations or values but is simply copying them exactly from an older study, the newer study does not get a new function. Rather, when constructing a parameter library to represent the newer study, the older study's function should be selected.
 
 If a new study takes an older study's parameters and modifies them in some way, this will be represented in the code: the function for the new study will call the older study's function to get the original values, and then modify them, rather than re-declaring the original values itself.
 

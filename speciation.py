@@ -21,7 +21,7 @@ varmolin = pz.equilibrate.varmols(eqstate_Julia, Ltots, Lfixmols, eles,
 
 allions = pz.properties.getallions(eles, fixions)
 allmxs = pz.matrix.assemble(allions, LtempK, Lpres,
-    cflib=pz.cflibs.MarChemSpec)
+    prmlib=pz.libraries.MarChemSpec)
 lnkHSO4 = pz.dissociation.HSO4_CRP94(LtempK, Lpres)
 lnkH2O = pz.dissociation.H2O_MF(LtempK, Lpres)
 lnkMg = pz.dissociation.Mg_CW91(LtempK, Lpres)

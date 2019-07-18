@@ -11,9 +11,9 @@ MathJax.Hub.Config({TeX: {extensions: ["[mhchem]/mhchem.js"]}});
 
 ## Function inputs
 
-Many of these functions have a common set of inputs: `mols`, `ions`, `tempK`, `pres`, `cflib` and `Izero`. The first four of these can be generated from an input CSV file; their formats are described in the [import/export documentation](../io/#getmols-import-csv-dataset). Throughout Pytzer, when we refer to `ions` we include any neutral species in the solution.
+Many of these functions have a common set of inputs: `mols`, `ions`, `tempK`, `pres`, `prmlib` and `Izero`. The first four of these can be generated from an input CSV file; their formats are described in the [import/export documentation](../io/#getmols-import-csv-dataset). Throughout Pytzer, when we refer to `ions` we include any neutral species in the solution.
 
-The next input `cflib` is a [coefficient library](../cflibs), which defines the set of interaction parameters to use in the model. The [Seawater](../cflibs#Seawater) library is used by default.
+The next input `prmlib` is a [coefficient library](../libraries), which defines the set of interaction parameters to use in the model. The [Seawater](../libraries#Seawater) library is used by default.
 
 `Izero` is another optional input. The default value of `False` executes a full Pitzer model. If `Izero` is instead changed to `True`, then only neutral interactions are evaluated: this is the setting to use for solutions with zero ionic strength. If you try to pass a zero-ionic-strength solution through the full model, a `nan` is returned along with lots of divide-by-zero warnings. You must split up your own input data and run the function twice, if you have both types of solution. The [black box function](../../quick-start/#running-pytzer-as-a-black-box) handles this split automatically.
 
@@ -65,7 +65,7 @@ Evaluates $G_{ex}/w_wRT$, as defined above.
 **Syntax:**
 
 ```python
->>> Gex_nRT = pz.model.Gex_nRT(mols, ions, tempK, pres, cflib=pz.cflibs.Seawater, Izero=False)
+>>> Gex_nRT = pz.model.Gex_nRT(mols, ions, tempK, pres, prmlib=pz.libraries.Seawater, Izero=False)
 ```
 
 <hr />
@@ -99,8 +99,8 @@ Returns a matrix of activity coefficients ($\gamma_x$, `acfs`) or their natural 
 **Syntax:**
 
 ```python
->>> ln_acfs = pz.model.ln_acfs(mols, ions, tempK, pres, cflib=pz.cflibs.Seawater, Izero=False)
->>> acfs = pz.model.acfs(mols, ions, tempK, pres, cflib=pz.cflibs.Seawater, Izero=False)
+>>> ln_acfs = pz.model.ln_acfs(mols, ions, tempK, pres, prmlib=pz.libraries.Seawater, Izero=False)
+>>> acfs = pz.model.acfs(mols, ions, tempK, pres, prmlib=pz.libraries.Seawater, Izero=False)
 ```
 
 <br />
@@ -124,7 +124,7 @@ Calculates the osmotic coefficient ($\phi$) for each input solution composition.
 **Syntax:**
 
 ```python
->>> osm = pz.model.osm(mols, ions, tempK, pres, cflib=pz.cflibs.Seawater, Izero=False)
+>>> osm = pz.model.osm(mols, ions, tempK, pres, prmlib=pz.libraries.Seawater, Izero=False)
 ```
 
 <br />
@@ -136,8 +136,8 @@ Calculates the water activity ($a_w$) or its natural logarithm for each input so
 **Syntax:**
 
 ```python
->>> lnaw = pz.model.lnaw(mols, ions, tempK, pres, cflib=pz.cflibs.Seawater, Izero=False)
->>> aw = pz.model.aw(mols, ions, tempK, pres, cflib=pz.cflibs.Seawater, Izero=False)
+>>> lnaw = pz.model.lnaw(mols, ions, tempK, pres, prmlib=pz.libraries.Seawater, Izero=False)
+>>> aw = pz.model.aw(mols, ions, tempK, pres, prmlib=pz.libraries.Seawater, Izero=False)
 ```
 
 <br />
@@ -197,7 +197,7 @@ where $b$, here and hereafter, is equal to 1.2 (mol·K<sup>−1</sup>)<sup>1/2</
 **Syntax:**
 
 ```python
->>> fG = pz.model.fG(tempK, pres, I, cflib)
+>>> fG = pz.model.fG(tempK, pres, I, prmlib)
 ```
 <br />
 
@@ -270,7 +270,7 @@ $$x_{ii'} = 6 z_i z_{i'} A_\phi \sqrt{I}$$
 **Syntax:**
 
 ```python
->>> xij = pz.model.xij(tempK, I, z0, z1, cflib)
+>>> xij = pz.model.xij(tempK, I, z0, z1, prmlib)
 ```
 
 where `z0` and `z1` are the charges on ions $i$ and $i'$ respectively (i.e. $z_i$ and $z_{i'}$).
@@ -286,7 +286,7 @@ $$^E\theta_{ii'} = \frac{z_i z_i'}{4 I} \Bigl[J(x_{ii'}) - \frac{1}{2} J(x_{ii})
 **Syntax:**
 
 ```python
->>> etheta = pz.model.etheta(tempK, I, z0, z1, cflib)
+>>> etheta = pz.model.etheta(tempK, I, z0, z1, prmlib)
 ```
 
 This is only evaluated when $z_i \neq z_{i'}$. Otherwise, it is equal to zero.

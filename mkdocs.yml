@@ -15,11 +15,11 @@ nav:
     - .io – import and export data: modules/io.md
     - .model – the Pitzer model: modules/model.md
     - .equilibrate - equilibrium solvers: modules/equilibrate.md
-    - .cflibs – coefficient libraries: modules/cflibs.md
-    - .parameters – interaction parameters: modules/parameters.md
+    - .libraries – parameter libraries: modules/libraries.md
+    - .parameters – interaction parameter functions: modules/parameters.md
     - .tables - parameter tables: modules/tables.md
     - .debyehueckel – Debye-Hückel limiting slopes: modules/debyehueckel.md
-    - .unsymmetrical – unsymmetrical mixing: modules/unsymmetrical.md
+    - .unsymmetrical – unsymmetrical mixing terms: modules/unsymmetrical.md
     - .properties – solute properties: modules/properties.md
     - .constants – physical constants: modules/constants.md
     - .teos10 - TEOS-10 properties: modules/teos10.md

@@ -11,7 +11,7 @@ Generates parameter matrices needed for the Pitzer model functions in this modul
 **Syntax:**
 
 ```python
-allmxs = pz.matrix.assemble(ions, tempK, pres, cflib=Seawater)
+allmxs = pz.matrix.assemble(ions, tempK, pres, prmlib=Seawater)
 ```
 
 **Inputs:**
@@ -19,7 +19,7 @@ allmxs = pz.matrix.assemble(ions, tempK, pres, cflib=Seawater)
   * `ions` - list of ions, as described in the [import/export documentation](../io/#getmols-import-csv-dataset);
   * `tempK` - a single temperature in K;
   * `pres` - a single pressure in dbar;
-  * `cflib` - a coefficient library (optional, defaults to **Seawater**).
+  * `prmlib` - a parameter library (optional, defaults to **Seawater**).
 
 **Outputs:**
 
