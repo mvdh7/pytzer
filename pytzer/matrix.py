@@ -32,15 +32,15 @@ def BCT(I, Z, b0, b1, b2, alph1, alph2, C0, C1, omega):
 
 def xij(Aosm, I, zs):
     """xij function for unsymmetrical mixing."""
-    return 6*Aosm*sqrt(I)*(transpose(zs) @ zs)
+    return (transpose(zs) @ zs) * 6*Aosm*sqrt(I)
 
 def xi(Aosm, I, zs):
     """xi function for unsymmetrical mixing."""
-    return 6*Aosm*sqrt(I) * zs**2
+    return zs**2 * 6*Aosm*sqrt(I)
 
 def xj(Aosm, I, zs):
     """xj function for unsymmetrical mixing."""
-    return 6*Aosm*sqrt(I) * transpose(zs**2)
+    return transpose(zs**2) * 6*Aosm*sqrt(I)
 
 def etheta(Aosm, I, zs):
     """E-theta function for unsymmetrical mixing."""

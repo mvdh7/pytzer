@@ -15,11 +15,11 @@ def numint(x):
     # Cannot yet be automatically differentiated
     # P91 Chapter 3 Eq. (B-12) [p123]
     q = lambda x, y: -(x/y) * exp(-y)
-    J = full_like(x,nan)
-    for i,xi in enumerate(x):
+    J = full_like(x, nan)
+    for i, xi in enumerate(x):
         # P91 Chapter 3 Eq. (B-13) [p123]
-        J[i] = quad(lambda y: (1 + q(xi,y) + q(xi,y)**2 / 2 
-                - exp(q(xi,y)))*y**2,
+        J[i] = quad(lambda y: (1 + q(xi, y) + q(xi, y)**2 / 2 
+                - exp(q(xi, y)))*y**2,
             0, inf)[0] / xi
     return J
 
@@ -28,35 +28,36 @@ def P75_eq46(x):
     equation (46).
     """
     # P75 Table III
-    C = float_([ 4.118 ,
-                 7.247 ,
-                -4.408 ,
-                 1.837 ,
-                -0.251 ,
-                 0.0164])
+    C = float_([
+         4.118,
+         7.247,
+        -4.408,
+         1.837,
+        -0.251,
+         0.0164,
+    ])
     Jsum = zeros_like(x)
     for k in range(6):
-        Jsum = Jsum + C[k] * x**-(k+1)
-    return -x**2 * log(x) * exp(-10 * x**2) / 6 + 1 / Jsum
+        Jsum = Jsum + C[k]*x**-(k+1)
+    return -x**2*log(x)*exp(-10*x**2)/6 + 1/Jsum
 
 def P75_eq47(x):
     """Evaluate unsymmetrical mixing function following Pitzer (1975),
     equation (47).
     """
-    P75_eq47_C = float_([
-        4,
+    C = float_([
+        4.0,
         4.581,
         0.7237,
         0.0120,
         0.528,
     ])
     with errstate(divide='ignore'):
-        J = x / (P75_eq47_C[0] + P75_eq47_C[1] * x**-P75_eq47_C[2] \
-                 * exp(-P75_eq47_C[3] * x**P75_eq47_C[4]))
+        J = x/(C[0] + C[1]*x**-C[2]*exp(-C[3]*x**C[4]))
     return J
 
 #~~~~~~~ Harvie's method as described by Pitzer (1991) Ch. 3, pp. 124-125 ~~~~~
-# Define the raw function - doesn't work in pytzer (not autograd-able)
+# Define the raw function - doesn't work in Pytzer (not autograd-able)
 # Use Harvie() instead (code comes afterwards)
 def _Harvie_raw(x):
     J  = full_like(x, nan, dtype='float64')
