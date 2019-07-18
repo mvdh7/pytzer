@@ -75,8 +75,8 @@ def GibbsTrisH(mH, lnacfH, mtris, lnacftris, mtrisH, lnacftrisH, lnktrisH):
     return (lnacftris + log(mtris) - lnacftrisH - log(mtrisH) + lnacfH
         + log(mH) - lnktrisH)
 
-def GibbsComponents(eqstate, tots1, fixmols1, eles, fixions, fixcharges,
-        allions, allmxs, lnkHSO4, lnkH2O, lnkMg, lnktrisH, ideal=False):
+def GibbsComponents(eqstate, tots1, fixmols1, eles, allions, fixions,
+        fixcharges, allmxs, lnkHSO4, lnkH2O, lnkMg, lnktrisH, ideal=False):
     """Evaluate the Gibbs energy for each component equilibrium."""
     mH, mOH, mHSO4, mSO4, mMg, mMgOH, mtris, mtrisH = varmols(
         eqstate, tots1, fixmols1, eles, fixions, fixcharges)
@@ -129,21 +129,21 @@ def GibbsComponents(eqstate, tots1, fixmols1, eles, fixions, fixcharges,
         gtrisH = eqstate[3]
     return gH2O, gHSO4, gMg, gtrisH
 
-def Gibbs(eqstate, tots1, fixmols1, eles, fixions, fixcharges, allions, allmxs,
+def Gibbs(eqstate, tots1, fixmols1, eles, allions, fixions, fixcharges, allmxs,
         lnkHSO4, lnkH2O, lnkMg, lnktrisH, ideal=False):
     """Evaluate the total Gibbs energy to be minimised for all equilibria."""
     gH2O, gHSO4, gMg, gtrisH = GibbsComponents(eqstate, tots1, fixmols1, eles,
-        fixions, fixcharges, allions, allmxs, lnkHSO4, lnkH2O, lnkMg,
+        allions, fixions, fixcharges, allmxs, lnkHSO4, lnkH2O, lnkMg,
         lnktrisH, ideal)
     return gHSO4**2 + gH2O**2 + gMg**2 + gtrisH**2
 
 _GibbsGrad = egrad(Gibbs)
 
-def solve(eqstate_guess, tots1, fixmols1, eles, fixions, allions, allmxs,
+def solve(eqstate_guess, tots1, fixmols1, eles, allions, fixions, allmxs,
         lnkHSO4, lnkH2O, lnkMg, lnktrisH, ideal=False):
     """Solve for the solution's equilibrium state."""
     fixcharges = transpose(properties.charges(fixions)[0])
-    Gargs = (tots1, fixmols1, eles, fixions, fixcharges, allions, allmxs,
+    Gargs = (tots1, fixmols1, eles, allions, fixions, fixcharges, allmxs,
         lnkHSO4, lnkH2O, lnkMg, lnktrisH, ideal)
     eqstate = minimize(
         lambda eqstate: Gibbs(eqstate, *Gargs),
@@ -153,10 +153,10 @@ def solve(eqstate_guess, tots1, fixmols1, eles, fixions, allions, allmxs,
     )
     return eqstate
 
-def solvequick(eqstate_guess, tots1, fixmols1, eles, fixions, allions, allmxs,
+def solvequick(eqstate_guess, tots1, fixmols1, eles, allions, fixions, allmxs,
         lnkHSO4, lnkH2O, lnkMg, lnktrisH):
     """Solve ideal case first to speed up computation."""
-    Sargs = (tots1, fixmols1, eles, fixions, allions, allmxs, lnkHSO4, lnkH2O,
+    Sargs = (tots1, fixmols1, eles, allions, fixions, allmxs, lnkHSO4, lnkH2O,
         lnkMg, lnktrisH)
     eqstate_ideal = solve(eqstate_guess, *Sargs, ideal=True)['x']
     eqstate = solve(eqstate_ideal, *Sargs, ideal=False)
@@ -177,7 +177,7 @@ def solveloop(eqstate_guess, tots, fixmols, eles, fixions, tempK, pres,
         allmxs = matrix.assemble(allions, array([tempK[L]]), array([pres[L]]),
             cflib)
         Largs = (eqstate_guess, tots[:, L], fixmols[:, L], eles,
-            fixions, allions, allmxs, _lnkHSO4[L], _lnkH2O[L], _lnkMg[L],
+            allions, fixions, allmxs, _lnkHSO4[L], _lnkH2O[L], _lnkMg[L],
             _lnktrisH[L])
         if L == 0:
             eqstates[L] = solvequick(*Largs)['x']
@@ -185,11 +185,11 @@ def solveloop(eqstate_guess, tots, fixmols, eles, fixions, tempK, pres,
             eqstates[L] = solve(*Largs)['x']
         eqstate_guess = eqstates[L]
         allmols[L] = eqstate2mols(
-            eqstates[L], tots[:, L], eles, fixmols[:, L], fixions)[0]
+            eqstates[L], tots[:, L], fixmols[:, L], eles, fixions)[0]
     print('Solving complete!')
     return transpose(allmols), allions, eqstates
 
-def eqstate2mols(eqstate, tots1, eles, fixmols1, fixions):
+def eqstate2mols(eqstate, tots1, fixmols1, eles, fixions):
     """Convert eqstate solution to arrays required for Pytzer functions."""
     fixcharges = transpose(properties.charges(fixions)[0])
     mH, mOH, mHSO4, mSO4, mMg, mMgOH, mtris, mtrisH = varmols(

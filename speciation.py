@@ -28,9 +28,9 @@ lnkMg = pz.dissociation.Mg_CW91(LtempK, Lpres)
 lnktrisH = pz.dissociation.trisH_BH64(LtempK, Lpres)
 
 Gcomp = pz.equilibrate.GibbsComponents(eqstate_Julia, Ltots, Lfixmols, eles,
-    fixions, fixcharges, allions, allmxs, lnkHSO4, lnkH2O, lnkMg, lnktrisH)
-Gtot = pz.equilibrate.Gibbs(eqstate_Julia, Ltots, Lfixmols, eles, fixions,
-    fixcharges, allions,allmxs, lnkHSO4, lnkH2O, lnkMg, lnktrisH)
+    allions, fixions, fixcharges, allmxs, lnkHSO4, lnkH2O, lnkMg, lnktrisH)
+Gtot = pz.equilibrate.Gibbs(eqstate_Julia, Ltots, Lfixmols, eles, allions,
+    fixions, fixcharges, allmxs, lnkHSO4, lnkH2O, lnkMg, lnktrisH)
 
 varmolout = pz.equilibrate.varmols(eqstate_Julia, Ltots, Lfixmols, eles,
     fixions, fixcharges)
