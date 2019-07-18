@@ -7,6 +7,8 @@ MathJax.Hub.Config({TeX: {extensions: ["[mhchem]/mhchem.js"]}});
 
 # Thermodynamic equilibrium constants
 
+*The casual user has no need to explicitly call this module.*
+
 `.dissociation` contains functions to evaluate thermodynamic equilibrium constants from temperature and pressure.
 
 The functions all use the same syntax:

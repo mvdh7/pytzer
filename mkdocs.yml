@@ -11,10 +11,11 @@ nav:
   - Overview: index.md
   - Quick-start guide: quick-start.md
   - Conventions: name-conventions.md
-  - Pytzer modules:
+  - Main Pytzer modules:
     - .io – import and export data: modules/io.md
     - .model – the Pitzer model: modules/model.md
     - .equilibrate - equilibrium solvers: modules/equilibrate.md
+  - Advanced Pytzer modules:
     - .libraries – parameter libraries: modules/libraries.md
     - .parameters – interaction parameter functions: modules/parameters.md
     - .tables - parameter tables: modules/tables.md

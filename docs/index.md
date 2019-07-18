@@ -21,18 +21,23 @@ Pytzer is in beta. Tests of the accuracy of its parameters and equations are und
 
 ## Modules
 
+Most users will only need to make use of a few of Pytzer's modules:
+
   * `.io` - imports and exports data;
-  * `.model` - implements the Pitzer model;
-  * `.equilibrate` - solves for equilibrium;
-  * `.libraries` - defines combinations of model parameters (i.e. *parameter libraries*) to use in the model;
+  * `.model` - implements the Pitzer model without chemical speciation;
+  * `.equilibrate` - solves for equilibrium.
+
+The remaining modules will only be of interest to more advanced users:
+
+  * `.libraries` - defines combinations of model parameters (i.e. *parameter libraries*) for the model;
   * `.parameters` - defines interaction parameters as functions of temperature and pressure;
   * `.tables` - stores tables of model parameter values;
   * `.debyehueckel` - defines functions for Debye-Hückel limiting slopes;
   * `.unsymmetrical` - defines unsymmetrical mixing functions;
-  * `.properties` - defines universal solute properties;
+  * `.properties` - defines solute properties (e.g. ionic charges, ions in each electrolyte);
   * `.constants` - defines physicochemical constants;
   * `.teos10` - calculates properties of pure water;
-  * `.matrix` - implements an alternative matrix-based Pitzer model;
+  * `.matrix` - implements an alternative matrix-based Pitzer model, used to solve equilibria;
   * `.dissociation` - evaluates thermodynamic equilibrium constants;
   * `.meta` - stores metadata about the Pytzer package.
 
