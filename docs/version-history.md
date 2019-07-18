@@ -9,7 +9,8 @@ Version 0.4 remains in beta testing. The main change from version 0.3 is includi
   * Module **dissociation** added with functions to evaluate thermodynamic dissociation constants;
   * Module **equilibrate** added with an equilibrium solver and associated functions;
   * Added **blackbox_equilibrate** function to demonstrate equilibration procedure;
-  * Fixed indexing error in **matrix.assemble** for the *zeta* coefficient matrix.
+  * Fixed indexing error in **matrix.assemble** for the *zeta* coefficient matrix;
+  * Module **jfuncs** renamed as **unsymmetrical**.
 
 # 0.3 (beta)
 

@@ -1,7 +1,7 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 """Assemble dicts of Pitzer model coefficient functions."""
-from . import debyehueckel, jfuncs, properties
+from . import debyehueckel, properties, unsymmetrical
 from . import coefficients as cf
 from .meta import version
 from autograd.numpy import array, concatenate, unique
@@ -253,7 +253,7 @@ M88.theta['Ca-Na' ] = cf.theta_Ca_Na_M88
 M88.theta['Cl-SO4'] = cf.theta_Cl_SO4_M88
 
 # Unsymmetrical mixing functions
-M88.jfunc = jfuncs.Harvie
+M88.jfunc = unsymmetrical.Harvie
 
 # Triplet interactions (psi)
 # c-c'-a
@@ -295,7 +295,7 @@ GM89.theta['K-Na'  ] = cf.theta_K_Na_GM89
 GM89.theta['Cl-SO4'] = cf.theta_Cl_SO4_M88
 
 # Unsymmetrical mixing terms
-GM89.jfunc = jfuncs.Harvie
+GM89.jfunc = unsymmetrical.Harvie
 
 # Triplet interactions (psi)
 # c-c'-a
@@ -334,7 +334,7 @@ CRP94.bC['H-SO4' ] = cf.bC_H_SO4_CRP94
 CRP94.theta['HSO4-SO4'] = cf.theta_HSO4_SO4_CRP94
 
 # Unsymmetrical mixing terms
-CRP94.jfunc = jfuncs.P75_eq47
+CRP94.jfunc = unsymmetrical.P75_eq47
 
 # Triplet interactions (psi)
 # c-a-a'
@@ -352,7 +352,7 @@ WM13.name = 'WM13'
 
 # Debye-Hueckel limiting slope and unsymmetrical mixing
 WM13.dh['Aosm'] = debyehueckel.Aosm_M88
-WM13.jfunc = jfuncs.Harvie
+WM13.jfunc = unsymmetrical.Harvie
 
 # Table A1: Na salts
 WM13.bC['Na-Cl'  ] = cf.bC_Na_Cl_M88
@@ -485,7 +485,7 @@ WM13_MarChemSpec25 = deepcopy(WM13)
 WM13_MarChemSpec25.name = 'WM13_MarChemSpec25'
 
 WM13_MarChemSpec25.dh['Aosm'] = debyehueckel.Aosm_MarChemSpec25
-WM13_MarChemSpec25.jfunc = jfuncs.P75_eq47
+WM13_MarChemSpec25.jfunc = unsymmetrical.P75_eq47
 
 WM13_MarChemSpec25.theta['H-Na'] = cf.theta_H_Na_MarChemSpec25
 WM13_MarChemSpec25.theta['H-K' ] = cf.theta_H_K_MarChemSpec25
@@ -553,7 +553,7 @@ MIAMI = CoefficientLibrary()
 MIAMI.name = 'MIAMI'
 
 MIAMI.dh['Aosm'] = debyehueckel.Aosm_M88
-MIAMI.jfunc = jfuncs.Harvie
+MIAMI.jfunc = unsymmetrical.Harvie
 
 # Table A1
 MIAMI.bC['Na-Cl' ] = cf.bC_Na_Cl_M88

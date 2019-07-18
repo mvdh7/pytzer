@@ -28,7 +28,7 @@ Pytzer is in beta. Tests of the accuracy of its coefficients and equations are u
   * `.coefficients` - defines interaction coefficients as functions of temperature and pressure;
   * `.tables` - stores tables of model coefficient values;
   * `.debyehueckel` - defines functions for Debye-Hückel limiting slopes;
-  * `.jfuncs` - defines unsymmetrical mixing functions;
+  * `.unsymmetrical` - defines unsymmetrical mixing functions;
   * `.properties` - defines universal solute properties;
   * `.constants` - defines physicochemical constants;
   * `.teos10` - calculates properties of pure water;

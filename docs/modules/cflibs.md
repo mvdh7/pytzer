@@ -128,7 +128,7 @@ class CoefficientLibrary:
         self.srcs  = []
 ```
 
-Each field is then filled with functions from modules **debyehueckel**, **coefficients** or **jfuncs** that define the Pitzer model interaction coefficients, as follows. (Descriptions of the required contents of the functions themselves are in the separate <a href="../coefficients"><strong>coefficients</strong> documentation</a>.)
+Each field is then filled with functions from modules **debyehueckel**, **coefficients** or **unsymmetrical** that define the Pitzer model interaction coefficients, as follows. (Descriptions of the required contents of the functions themselves are in the separate <a href="../coefficients"><strong>coefficients</strong> documentation</a>.)
 
 
 ### Debye-Hückel limiting slope
@@ -191,7 +191,7 @@ Assigning functions is exactly the same as described for the other interaction t
 
 A function to evaluate the J and J' equations are contained in `cflib.jfunc`. Unlike the other fields within the **cflib**, only one function is provided, so this field directly contains the relevant function, rather than storing it in a dict.
 
-Different options for the functions needed here can be found in **pytzer.jfuncs**.
+Different options for the functions needed here can be found in **pytzer.unsymmetrical**.
 
 
 <hr />
@@ -250,7 +250,7 @@ mycflib.bC['Na-Cl' ] = coefficients.bC_Na_Cl_M88
 mycflib.theta['Ca-Na' ] = coefficients.theta_Ca_Na_M88
 
 # Unsymmetrical mixing functions
-mycflib.jfunc = jfuncs.Harvie
+mycflib.jfunc = unsymmetrical.Harvie
 
 # Triplet interactions (psi)
 # c-c'-a

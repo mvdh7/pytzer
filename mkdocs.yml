@@ -19,7 +19,7 @@ nav:
     - .coefficients – interaction coefficients: modules/coefficients.md
     - .tables - coefficient tables: modules/tables.md
     - .debyehueckel – Debye-Hückel limiting slopes: modules/debyehueckel.md
-    - .jfuncs – unsymmetrical mixing: modules/jfuncs.md
+    - .unsymmetrical – unsymmetrical mixing: modules/unsymmetrical.md
     - .properties – solute properties: modules/properties.md
     - .constants – physical constants: modules/constants.md
     - .teos10 - TEOS-10 properties: modules/teos10.md

@@ -14,8 +14,22 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Pitzer model for chemical activities in aqueous solutions."""
-from . import (cflibs, coefficients, constants, debyehueckel, dissociation,
-    equilibrate, io, jfuncs, matrix, meta, model, properties, tables, teos10)
+from . import (
+    cflibs,
+    coefficients,
+    constants,
+    debyehueckel,
+    dissociation,
+    equilibrate,
+    io,
+    matrix,
+    meta,
+    model,
+    properties,
+    tables,
+    teos10,
+    unsymmetrical,
+)
 
 __all__ = [
     'cflibs',
@@ -25,13 +39,13 @@ __all__ = [
     'dissociation',
     'equilibrate',
     'io',
-    'jfuncs',
     'matrix',
     'meta',
     'model',
     'properties',
     'tables',
     'teos10',
+    'unsymmetrical',
 ]
 __version__ = meta.version
 __author__ = 'Matthew P. Humphreys'

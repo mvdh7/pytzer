@@ -11,7 +11,7 @@ from . import properties
 from .cflibs import Seawater
 from .constants import b, Mw
 from .model import g, h
-from .jfuncs import P75_eq47 as jfunc
+from .unsymmetrical import P75_eq47 as jfunc
 
 def Istr(mols, zs):
     """Ionic strength."""
