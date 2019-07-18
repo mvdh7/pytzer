@@ -10,8 +10,8 @@
 # 'max' gives maximum applicable molality in mol/kg
 # INCOMPLETE: only includes values for H, Li, Na, K cations for now
 P91_Ch3_T12 = {
-    'info': 'First temperature derivatives of b0, b1 and Cphi ' \
-          + 'for 1-1 electrolytes  -INCOMPLETE',
+    'info': ('First temperature derivatives of b0, b1 and Cphi '
+          + 'for 1-1 electrolytes - INCOMPLETE'),
     'H-Cl'   : {'b0':  -3.081e-4, 'b1':   1.419e-4, 'Cphi':  -6.213e-5, 'max': 4.5},
     'H-Br'   : {'b0':  -2.049e-4, 'b1':   4.467e-4, 'Cphi':  -5.685e-5, 'max': 6.0},
     'H-I'    : {'b0':  -0.230e-4, 'b1':   8.860e-4, 'Cphi':  -7.320e-5, 'max': 6.0},

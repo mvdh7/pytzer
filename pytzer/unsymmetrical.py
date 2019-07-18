@@ -18,9 +18,9 @@ def numint(x):
     J = full_like(x, nan)
     for i, xi in enumerate(x):
         # P91 Chapter 3 Eq. (B-13) [p123]
-        J[i] = quad(lambda y: (1 + q(xi, y) + q(xi, y)**2 / 2
-                - exp(q(xi, y)))*y**2,
-            0, inf)[0] / xi
+        J[i] = quad(
+            lambda y: (1 + q(xi, y) + q(xi, y)**2/2 - exp(q(xi, y)))*y**2,
+            0, inf)[0]/xi
     return J
 
 def P75_eq46(x):
