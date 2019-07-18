@@ -16,8 +16,8 @@ nav:
     - .model – the Pitzer model: modules/model.md
     - .equilibrate - equilibrium solvers: modules/equilibrate.md
     - .cflibs – coefficient libraries: modules/cflibs.md
-    - .coefficients – interaction coefficients: modules/coefficients.md
-    - .tables - coefficient tables: modules/tables.md
+    - .parameters – interaction parameters: modules/parameters.md
+    - .tables - parameter tables: modules/tables.md
     - .debyehueckel – Debye-Hückel limiting slopes: modules/debyehueckel.md
     - .unsymmetrical – unsymmetrical mixing: modules/unsymmetrical.md
     - .properties – solute properties: modules/properties.md

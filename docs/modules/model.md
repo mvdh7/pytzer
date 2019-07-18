@@ -13,7 +13,7 @@ MathJax.Hub.Config({TeX: {extensions: ["[mhchem]/mhchem.js"]}});
 
 Many of these functions have a common set of inputs: `mols`, `ions`, `tempK`, `pres`, `cflib` and `Izero`. The first four of these can be generated from an input CSV file; their formats are described in the [import/export documentation](../io/#getmols-import-csv-dataset). Throughout Pytzer, when we refer to `ions` we include any neutral species in the solution.
 
-The next input `cflib` is a [coefficient library](../cflibs), which defines the set of interaction coefficients to use in the model. The [Seawater](../cflibs#Seawater) library is used by default.
+The next input `cflib` is a [coefficient library](../cflibs), which defines the set of interaction parameters to use in the model. The [Seawater](../cflibs#Seawater) library is used by default.
 
 `Izero` is another optional input. The default value of `False` executes a full Pitzer model. If `Izero` is instead changed to `True`, then only neutral interactions are evaluated: this is the setting to use for solutions with zero ionic strength. If you try to pass a zero-ionic-strength solution through the full model, a `nan` is returned along with lots of divide-by-zero warnings. You must split up your own input data and run the function twice, if you have both types of solution. The [black box function](../../quick-start/#running-pytzer-as-a-black-box) handles this split automatically.
 
@@ -36,13 +36,13 @@ $$+ \sum_n \sum_c \sum_a m_n m_c m_a \zeta_{nca} + \sum_n m_n^3 \mu_{nnn} $$
 
 On the left hand side, we have the excess Gibbs energy ($G_{ex}$) divided by the universal gas constant ($R$ in J·mol·K<sup>−1</sup>, defined in [the 'constants' module](../constants)), temperature ($T$ in K), and mass of pure water ($w_w$ in kg, set to unity).
 
-The first term on the right ($f_G$) is the Debye-Hückel approximation, a function of ionic strength evaluated by the function `fG` ([see below](#fg)). It includes the Debye-Hückel limiting slope $A_\phi$, which is evaluated using an [interaction coefficient function](../coefficients).
+The first term on the right ($f_G$) is the Debye-Hückel approximation, a function of ionic strength evaluated by the function `fG` ([see below](#fg)). It includes the Debye-Hückel limiting slope $A_\phi$, which is evaluated using an [interaction parameter function](../parameters).
 
 The Pitzer model then adds a series of corrections to this approximation for each dissolved cation ($c$), anion ($a$) and neutral component ($n$). In the equation above, $i$ refers to any ion and $j$ refers to an ion of the opposite sign charge. The term $i'$ refers to a different ion from $i$, but with the same sign charge. Similarly, $n'$ refers to a different neutral component from $n$.
 
 The $m_x$ terms indicate the molality of component $x$, in mol·kg<sup>−1</sup>.
 
-The $B_{ca}$ and $C_{ca}^T$ terms account for cation-anion interactions, and are evaluated by the functions `B` and `CT` ([see below](#b)). $B_{ca}$ depends on the empirical coefficients $\beta_0$, $\beta_1$, $\beta_2$, $\alpha_1$ and $\alpha_2$, and $C_{ca}^{T}$ on $C_0$, $C_1$ and $\omega$. $Z$ is defined by [P91](../../references/#P91), Eq. (66):
+The $B_{ca}$ and $C_{ca}^T$ terms account for cation-anion interactions, and are evaluated by the functions `B` and `CT` ([see below](#b)). $B_{ca}$ depends on the empirical parameters $\beta_0$, $\beta_1$, $\beta_2$, $\alpha_1$ and $\alpha_2$, and $C_{ca}^{T}$ on $C_0$, $C_1$ and $\omega$. $Z$ is defined by [P91](../../references/#P91), Eq. (66):
 
 $$Z = \sum_i m_i |z_i|$$
 
@@ -54,7 +54,7 @@ $$\Theta_{ii'} = \theta_{ii'} + ^E\theta_{ii'}$$
 
 where the $^E\theta_{ii'}$ term is a function of ionic strength, evaluated by `etheta` ([see below](#etheta)).
 
-Finally, the "Greek letter terms" ($\beta_0$, $\beta_1$, $\beta_2$, $\alpha_1$, $\alpha_2$, $C_0$, $C_1$, $\omega$, $\theta_{ii'}$, $\psi_{ii'j}$, $\lambda_{nx}$, $\zeta_{nca}$ and $\mu_{nnn}$) are empirical coefficients, different for each combination of ions and neutral species, functions of temperature and sometimes pressure.
+Finally, the "Greek letter terms" ($\beta_0$, $\beta_1$, $\beta_2$, $\alpha_1$, $\alpha_2$, $C_0$, $C_1$, $\omega$, $\theta_{ii'}$, $\psi_{ii'j}$, $\lambda_{nx}$, $\zeta_{nca}$ and $\mu_{nnn}$) are empirical parameters, different for each combination of ions and neutral species, functions of temperature and sometimes pressure.
 
 In Pytzer, the excess Gibbs energy is the only physicochemical equation that is actually explicitly written out. All other properties are determined by taking the appropriate differential of the excess Gibbs energy. These differentials are determined automatically by [Autograd](https://github.com/HIPS/autograd).
 
@@ -235,7 +235,7 @@ The function $B_{ca}$, following [P91](../../references/#P91), Eq. (49):
 
 $$B_{ca} = \beta_0 + \beta_1 g(\alpha_1 \sqrt{I}) + \beta_2 g(\alpha_2 \sqrt{I})$$
 
-where $\beta_0$, $\beta_1$, $\beta_2$, $\alpha_1$ and $\alpha_2$ take different values for each $ca$ combination, as defined by the functions in **pytzer.coefficients**.
+where $\beta_0$, $\beta_1$, $\beta_2$, $\alpha_1$ and $\alpha_2$ take different values for each $ca$ combination, as defined by the functions in **pytzer.parameters**.
 
 **Syntax:**
 
@@ -251,7 +251,7 @@ The function $C_{ca}^T$, following [CRP94](../../references/#CRP94) Eq. (AI10):
 
 $$C_{ca}^T = C_0 + 4 C_1 h(\omega \sqrt{I})$$
 
-where $C_0$, $C_1$ and $\omega$ take different values for each $ca$ combination, as defined by the functions in **pytzer.coefficients**.
+where $C_0$, $C_1$ and $\omega$ take different values for each $ca$ combination, as defined by the functions in **pytzer.parameters**.
 
 **Syntax:**
 

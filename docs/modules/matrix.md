@@ -6,7 +6,7 @@ This version of the code runs much faster than the equivalent `.model` functions
 
 ## `.assemble` - prepare for matrix calculation
 
-Generates coefficient matrices needed for the Pitzer model functions in this module.
+Generates parameter matrices needed for the Pitzer model functions in this module.
 
 **Syntax:**
 

@@ -99,7 +99,7 @@ class CoefficientLibrary:
                 self.mu[innn] = prm.mu_none
 
 # ------------------- Print all parameter values at a given temperature -----
-    def print_coeffs(self, T, P, filename):
+    def print_parameters(self, T, P, filename):
         """Print all parameter values at a given temperature and pressure
         to a text file.
         """

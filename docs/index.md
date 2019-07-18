@@ -17,16 +17,16 @@ See the [quick-start guide](quick-start) for more detailed instructions and exam
 
 ## Development status
 
-Pytzer is in beta. Tests of the accuracy of its coefficients and equations are underway, so results may change. Its API may change, and modules and functions may be added, removed and renamed. Use at your own peril!
+Pytzer is in beta. Tests of the accuracy of its parameters and equations are underway, so results may change. Its API may change, and modules and functions may be added, removed and renamed. Use at your own peril!
 
 ## Modules
 
   * `.io` - imports and exports data;
   * `.model` - implements the Pitzer model;
   * `.equilibrate` - solves for equilibrium;
-  * `.cflibs` - defines combinations of model coefficients (i.e. *coefficient libraries*) to use in the model;
-  * `.coefficients` - defines interaction coefficients as functions of temperature and pressure;
-  * `.tables` - stores tables of model coefficient values;
+  * `.cflibs` - defines combinations of model parameters (i.e. *coefficient libraries*) to use in the model;
+  * `.parameters` - defines interaction parameters as functions of temperature and pressure;
+  * `.tables` - stores tables of model parameter values;
   * `.debyehueckel` - defines functions for Debye-Hückel limiting slopes;
   * `.unsymmetrical` - defines unsymmetrical mixing functions;
   * `.properties` - defines universal solute properties;
