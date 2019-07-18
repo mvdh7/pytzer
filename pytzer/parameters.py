@@ -1,6 +1,6 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
-"""Evaluate Pitzer model interaction coefficients."""
+"""Evaluate Pitzer model interaction parameters."""
 from autograd.numpy import array, float_, log, logical_and, sqrt
 from autograd.numpy import abs as np_abs
 from .constants import Tzero
@@ -234,7 +234,7 @@ def PP82_eqMPH(T,q):
 
 def bC_Na_CO3_PP82(T, P):
     """c-a: sodium carbonate [PP82]."""
-    # I have no idea where MP98 got their T**2 coefficients from
+    # I have no idea where MP98 got their T**2 parameters from
     #   or why they are so small.
     b0 = PP82_eqMPH(T, float_([
          0.0362,
@@ -260,7 +260,7 @@ def bC_Na_CO3_PP82(T, P):
 
 def bC_Na_HCO3_PP82(T, P):
     """c-a: sodium bicarbonate [PP82]."""
-    # I have no idea where MP98 got their T**2 coefficients from
+    # I have no idea where MP98 got their T**2 parameters from
     #   or why they are so small.
     b0 = PP82_eqMPH(T, float_([
          0.028,
@@ -2545,7 +2545,7 @@ def SRRJ87_eq7(T, a):
 
 def bC_K_Cl_SRRJ87(T, P):
     """c-a: potassium chloride [SRRJ87]."""
-    # Coefficients from SRRJ87 Table III
+    # Parameters from SRRJ87 Table III
     b0 = SRRJ87_eq7(T, float_([
          0.0481,
          0.592,
@@ -2574,7 +2574,7 @@ def bC_K_Cl_SRRJ87(T, P):
 
 def bC_Na_Cl_SRRJ87(T, P):
     """c-a: sodium chloride [SRRJ87]."""
-    # Coefficients from SRRJ87 Table III
+    # Parameters from SRRJ87 Table III
     b0 = SRRJ87_eq7(T, float_([
          0.0754,
          0.792,
@@ -2603,7 +2603,7 @@ def bC_Na_Cl_SRRJ87(T, P):
 
 def bC_K_BOH4_SRRJ87(T, P):
     """c-a: potassium borate [SRRJ87]."""
-    # Coefficients from SRRJ87 Table III
+    # Parameters from SRRJ87 Table III
     b0 = SRRJ87_eq7(T, float_([
         0.1469,
         2.881,
@@ -2632,7 +2632,7 @@ def bC_K_BOH4_SRRJ87(T, P):
 
 def bC_Na_BOH4_SRRJ87(T, P):
     """c-a: sodium borate [SRRJ87]."""
-    # Coefficients from SRRJ87 Table III
+    # Parameters from SRRJ87 Table III
     b0 = SRRJ87_eq7(T, float_([
         -0.0510,
          5.264,
@@ -2661,7 +2661,7 @@ def bC_Na_BOH4_SRRJ87(T, P):
 
 def theta_BOH4_Cl_SRRJ87(T, P):
     """a-a': borate chloride [SRRJ87]."""
-    # Coefficient from SRRJ87 Table III
+    # Parameter from SRRJ87 Table III
     theta = -0.056
     valid = logical_and(T >= 278.15, T <= 328.15)
     return theta, valid
@@ -2674,7 +2674,7 @@ def psi_K_BOH4_Cl_SRRJ87(T, P):
 
 def psi_Na_BOH4_Cl_SRRJ87(T, P):
     """c-a-a': sodium borate chloride [SRRJ87]."""
-    # Coefficient from SRRJ87 Table III
+    # Parameter from SRRJ87 Table III
     psi = -0.019
     valid = logical_and(T >= 278.15, T <= 328.15)
     return psi, valid
@@ -3179,7 +3179,7 @@ def A92ii_eq36(T, P, a):
 def bC_Na_Cl_A92ii(T, P):
     """c-a: sodium chloride [A92ii]."""
     P_MPa = P / 100 # Convert dbar to MPa
-    # Coefficients from A92ii Table 2, with noted corrections
+    # Parameters from A92ii Table 2, with noted corrections
     b0 = A92ii_eq36(T, P_MPa, [
           0.242408292826506,
           0,
@@ -3357,7 +3357,7 @@ def bC_Na_SO4_HPR93(T, P):
 
 def bC_Na_HSO4_HPR93(T, P):
     """c-a: sodium bisulfate, low ionic strengths [HPR93]."""
-    # Coefficients from HPR93 Table 3 for low ionic strengths
+    # Parameters from HPR93 Table 3 for low ionic strengths
     b0 = 0.0670967
     b1 = 0.3826401
     b2 = 0
@@ -3417,7 +3417,7 @@ def bC_H_HSO4_CRP94(T, P):
 
 def bC_H_SO4_CRP94(T, P):
     """c-a: hydrogen sulfate [CRP94]."""
-    # Evaluate coefficients, parameters from CRP94 Table 6
+    # Evaluate parameters from CRP94 Table 6
     b0 = CRP94_eq24(T, float_([
         0.0348925351,
         4.97207803,
@@ -4180,7 +4180,7 @@ def psi_Mg_HSO4_SO4_RC99(T, P):
 #  couldn't find them there, so copied directly from WM13 instead.
 # Others were just declared by WM13 as zero. These all seem to agree with
 #  HMW84; it's unclear why HMW84 wasn't cited by WM13 for these.
-# First, a few functions that WM13 constructed by taking 298.15 K coefficients
+# First, a few functions that WM13 constructed by taking 298.15 K parameters
 #  from HMW84, and correcting for temperature using derivatives from P91.
 
 def bC_Ca_SO4_WM13(T, P):
@@ -4504,7 +4504,7 @@ def theta_Ca_H_MarChemSpec(T, P):
     """c-c': calcium hydrogen [MarChemSpec]."""
     # 1. WM13 cite the wrong reference for this (they say RXX80)
     # 2. The equation given by WM13 doesn't match RGO82
-    # 3. RGO82 give a 25degC value but no temperature coefficient
+    # 3. RGO82 give a 25degC value but no temperature parameter
     # So MarChemSpec uses RGO82's 25degC value plus the WM13 temperature cxn
     thetar = theta_Ca_H_RGO82(T, P)[0]
     theta = thetar + 3.275e-4*(T - 298.15)

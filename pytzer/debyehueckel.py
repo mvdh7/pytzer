@@ -3,12 +3,12 @@
 """Calculate Debye-Hueckel limiting slopes."""
 from autograd.numpy import exp, float_, logical_and, pi, sqrt
 from . import teos10
-from .coefficients import M88_eq13
+from .parameters import M88_eq13
 from .constants import NA, dbar2Pa, dbar2MPa
 
 def Aosm_M88(tempK, pres):
     """From Moller (1988)."""
-    Aosm  = M88_eq13(tempK, float_([ 
+    Aosm  = M88_eq13(tempK, float_([
         3.36901532e-1,
        -6.32100430e-4,
         9.14252359e00,
@@ -29,7 +29,7 @@ def Aosm_CRP94(tempK, pres):
     # This function is long-winded to make it autograd-able w.r.t. temperature
     # Transform temperature:
     X = (2*tempK - 607.3) / 139
-    # Set coefficients - CRP94 Table 11:
+    # Set parameters - CRP94 Table 11:
     a_Aosm = [
          0.797256081240 / 2,
          0.573389669896e-1,
@@ -104,7 +104,7 @@ def Aosm_MarChemSpec25(tempK, pres):
     Aosm = 0.3915
     valid = logical_and(tempK == 298.15, pres == 10.1325)
     return Aosm, valid
- 
+
 def Aosm_MarChemSpec05(tempK, pres):
     """For 278.15 K; value from FastPitz."""
     Aosm = 0.3792
@@ -148,7 +148,7 @@ def _gm1drho(tempK, presMPa):
             b[6] / tempK**2 + \
             b[7] * presMPa/tempK + \
             b[8] * presMPa/tempK**2 \
-        ) 
+        )
     return gm1drho
 
 def _g(tempK, presMPa, rho):
@@ -163,7 +163,7 @@ def _D(tempK, presMPa, rho):
     al = 1.444e-24
     k  = 1.380658e-16
     mu = 1.84e-18
-    A = (al + _g(tempK, presMPa, rho)*mu**2 / (3*k*tempK)) * 4*pi*NA*rho/(3*Mw)    
+    A = (al + _g(tempK, presMPa, rho)*mu**2 / (3*k*tempK)) * 4*pi*NA*rho/(3*Mw)
     return (1 + 9*A + 3*sqrt(9*A**2 + 2*A + 1)) / 4
 
 def Aosm_AW90(tempK, pres):

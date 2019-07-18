@@ -16,7 +16,6 @@
 """Pitzer model for chemical activities in aqueous solutions."""
 from . import (
     cflibs,
-    coefficients,
     constants,
     debyehueckel,
     dissociation,
@@ -25,6 +24,7 @@ from . import (
     matrix,
     meta,
     model,
+    parameters,
     properties,
     tables,
     teos10,
@@ -33,7 +33,6 @@ from . import (
 
 __all__ = [
     'cflibs',
-    'coefficients',
     'constants',
     'debyehueckel',
     'dissociation',
@@ -42,6 +41,7 @@ __all__ = [
     'matrix',
     'meta',
     'model',
+    'parameters',
     'properties',
     'tables',
     'teos10',

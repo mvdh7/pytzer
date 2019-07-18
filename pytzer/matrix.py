@@ -99,7 +99,7 @@ def aw(mols, allmxs):
     return exp(lnaw(mols, allmxs))
 
 def assemble(ions, tempK, pres, cflib=Seawater):
-    """Assemble coefficient matrices."""
+    """Assemble parameter matrices."""
     zs, cations, anions, neutrals = properties.charges(ions)
     zs = transpose(zs)
     Aosm = cflib.dh['Aosm'](tempK, pres)[0][0]

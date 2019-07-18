@@ -167,7 +167,6 @@ def Gex_nRT(mols, ions, tempK, pres, cflib=Seawater, Izero=False):
         Gex_nRT = Gex_nRT + neus[NX]**3 * cflib.mu[innn](tempK, pres)[0]
     return Gex_nRT
 
-
 # Solute activity coefficients
 def ln_acfs(mols, ions, tempK, pres, cflib=Seawater, Izero=False):
     """Calculate the natural logarithms of the activity coefficients

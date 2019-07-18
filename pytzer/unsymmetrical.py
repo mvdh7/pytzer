@@ -18,7 +18,7 @@ def numint(x):
     J = full_like(x, nan)
     for i, xi in enumerate(x):
         # P91 Chapter 3 Eq. (B-13) [p123]
-        J[i] = quad(lambda y: (1 + q(xi, y) + q(xi, y)**2 / 2 
+        J[i] = quad(lambda y: (1 + q(xi, y) + q(xi, y)**2 / 2
                 - exp(q(xi, y)))*y**2,
             0, inf)[0] / xi
     return J
@@ -97,7 +97,7 @@ def _Harvie_raw(x):
                 dk[i] = bk[i+1] + z*dk[i+1] - dk[i+2] # Eq. (B-24)
         else:
             # Values from Table B-1, final column (akII)
-            ak = float_([ 
+            ak = float_([
                  0.628023320520852,
                  0.462762985338493,
                  0.150044637187895,

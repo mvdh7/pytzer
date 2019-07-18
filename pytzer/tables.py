@@ -1,6 +1,6 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
-"""Specify tabulated Pitzer model coefficient values."""
+"""Specify tabulated Pitzer model interaction parameter values."""
 
 # The first set of tables from Pitzer (1991) Chapter 3 are all just
 #  reproductions of the values listed by Silvester and Pitzer (1979).
