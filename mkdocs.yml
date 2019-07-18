@@ -10,6 +10,7 @@ theme:
 nav:
   - Overview: index.md
   - Quick-start guide: quick-start.md
+  - Example workflows: workflows.md
   - Conventions: name-conventions.md
   - Main Pytzer modules:
     - .io – import and export data: modules/io.md
