@@ -14,7 +14,8 @@ Version 0.4 remains in beta testing. The main change from version 0.3 is includi
   * As a general terminology change, the Pitzer model interaction *coefficients* are now instead referred to as *parameters*, for better consistency with the published literature. As a consequence:
     * Module **coefficients** renamed as **parameters**;
     * Module **cflibs** renamed as **libraries**;
-    * Class **CoefficientLibrary** renamed as **ParameterLibrary**, and its abbreviation **cflib** to **prmlib**.
+    * Class **CoefficientLibrary** renamed as **ParameterLibrary**, and its abbreviation **cflib** to **prmlib**;
+  * Parameter libraries can now be stored in separate script files.
 
 # 0.3 (beta)
 
