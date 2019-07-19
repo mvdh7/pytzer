@@ -12,7 +12,6 @@ mols = np.array([[1.0], [1.0]])*6.095
 ions = np.array(['Na', 'Cl'])
 tempK = np.array([298.15])
 pres = np.array([10.10325])
-lnksolNaCl = ((-potentials['NaCl'] + (potentials['Na'] + potentials['Cl']))
-    * 298.15/tempK[0])
+lnksolNaCl = -potentials['NaCl'] + (potentials['Na'] + potentials['Cl'])
 acfs = pz.model.acfs(mols, ions, tempK, pres)
 lnksolNaCl_test = np.sum(np.log(acfs*mols))
