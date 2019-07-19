@@ -16,6 +16,7 @@ Version 0.4 remains in beta testing. The main change from version 0.3 is includi
     * Module **cflibs** renamed as **libraries**;
     * Class **CoefficientLibrary** renamed as **ParameterLibrary**, and its abbreviation **cflib** to **prmlib**;
   * Parameter libraries can now be stored in separate script files.
+  * Added complete [HMW84](../references/#HMW84) parameter library.
 
 # 0.3 (beta)
 
