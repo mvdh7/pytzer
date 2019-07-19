@@ -6,7 +6,7 @@ from scipy.optimize import minimize
 from autograd import elementwise_grad as egrad
 from autograd.numpy import array, exp, full, full_like, log, sqrt, transpose
 from autograd.numpy import sum as np_sum
-from . import dissociation, libraries, matrix, properties
+from . import libraries, matrix, properties
 
 def _sig01(x):
     """Numerically stable logistic sigmoid function."""
@@ -24,7 +24,7 @@ def _varmols(eqstate, tots1, fixmols1, eles, fixions, fixcharges):
             mHSO4 = tHSO4*aHSO4
             mSO4 = tHSO4 - mHSO4
             zbHSO4 = -mHSO4 - 2*mSO4
-        else: # if tHSO4 <= 0
+        else: # if tHSO4 == 0
             mHSO4 = 0
             mSO4 = 0
             zbHSO4 = 0
@@ -35,7 +35,7 @@ def _varmols(eqstate, tots1, fixmols1, eles, fixions, fixcharges):
             mMg = tMg*aMgOH
             mMgOH = tMg - mMg
             zbMg = 2*mMg + mMgOH
-        else: # if tMg <= 0
+        else: # if tMg == 0
             mMg = 0
             mMgOH = 0
             zbMg = 0
@@ -46,7 +46,7 @@ def _varmols(eqstate, tots1, fixmols1, eles, fixions, fixcharges):
             mtrisH = ttrisH * atrisH
             mtris = ttrisH - mtrisH
             zbtrisH = mtrisH
-        else: # if ttrisH <= 0
+        else: # if ttrisH == 0
             mtrisH = 0
             mtris = 0
             zbtrisH = 0
@@ -76,18 +76,18 @@ def _GibbstrisH(mH, lnacfH, mtris, lnacftris, mtrisH, lnacftrisH, lnktrisH):
         + log(mH) - lnktrisH)
 
 def _GibbsComponents(eqstate, tots1, fixmols1, eles, allions, fixions,
-        fixcharges, allmxs, lnkHSO4, lnkH2O, lnkMg, lnktrisH, ideal=False):
+        fixcharges, allmxs, lnkH2O, lnkHSO4, lnkMg, lnktrisH, ideal=False):
     """Evaluate the Gibbs energy for each component equilibrium."""
     mH, mOH, mHSO4, mSO4, mMg, mMgOH, mtris, mtrisH = _varmols(
         eqstate, tots1, fixmols1, eles, fixions, fixcharges)
     allmols = deepcopy(fixmols1)
     for ele in eles:
-        if ele == 't_Mg':
-            allmols = [*allmols, mMg, mMgOH]
-        elif ele == 't_HSO4':
+        if ele == 't_HSO4':
             allmols = [*allmols, mHSO4, mSO4]
+        elif ele == 't_Mg':
+            allmols = [*allmols, mMg, mMgOH]
         elif ele == 't_trisH':
-            allmols = [*allmols, mtrisH, mtris]
+            allmols = [*allmols, mtris, mtrisH]
     allmols = array([[*allmols, mH, mOH]])
     # Get activities:
     if ideal:
@@ -130,21 +130,21 @@ def _GibbsComponents(eqstate, tots1, fixmols1, eles, allions, fixions,
     return gH2O, gHSO4, gMg, gtrisH
 
 def _Gibbs(eqstate, tots1, fixmols1, eles, allions, fixions, fixcharges,
-        allmxs, lnkHSO4, lnkH2O, lnkMg, lnktrisH, ideal=False):
+        allmxs, lnkH2O, lnkHSO4, lnkMg, lnktrisH, ideal=False):
     """Evaluate the total Gibbs energy to be minimised for all equilibria."""
     gH2O, gHSO4, gMg, gtrisH = _GibbsComponents(eqstate, tots1, fixmols1, eles,
-        allions, fixions, fixcharges, allmxs, lnkHSO4, lnkH2O, lnkMg,
+        allions, fixions, fixcharges, allmxs, lnkH2O, lnkHSO4, lnkMg,
         lnktrisH, ideal)
     return gHSO4**2 + gH2O**2 + gMg**2 + gtrisH**2
 
 _GibbsGrad = egrad(_Gibbs)
 
 def solve(eqstate_guess, tots1, fixmols1, eles, allions, fixions, allmxs,
-        lnkHSO4, lnkH2O, lnkMg, lnktrisH, ideal=False):
+        lnkH2O, lnkHSO4, lnkMg, lnktrisH, ideal=False):
     """Solve for the solution's equilibrium state."""
     fixcharges = transpose(properties.charges(fixions)[0])
     Gargs = (tots1, fixmols1, eles, allions, fixions, fixcharges, allmxs,
-        lnkHSO4, lnkH2O, lnkMg, lnktrisH, ideal)
+        lnkH2O, lnkHSO4, lnkMg, lnktrisH, ideal)
     eqstate = minimize(
         lambda eqstate: _Gibbs(eqstate, *Gargs),
         eqstate_guess,
@@ -154,9 +154,9 @@ def solve(eqstate_guess, tots1, fixmols1, eles, allions, fixions, allmxs,
     return eqstate
 
 def solvequick(eqstate_guess, tots1, fixmols1, eles, allions, fixions, allmxs,
-        lnkHSO4, lnkH2O, lnkMg, lnktrisH):
+        lnkH2O, lnkHSO4, lnkMg, lnktrisH):
     """Solve ideal case first to speed up computation."""
-    Sargs = (tots1, fixmols1, eles, allions, fixions, allmxs, lnkHSO4, lnkH2O,
+    Sargs = (tots1, fixmols1, eles, allions, fixions, allmxs, lnkH2O, lnkHSO4,
         lnkMg, lnktrisH)
     eqstate_ideal = solve(eqstate_guess, *Sargs, ideal=True)['x']
     eqstate = solve(eqstate_ideal, *Sargs, ideal=False)
@@ -168,16 +168,16 @@ def solveloop(eqstate_guess, tots, fixmols, eles, fixions, tempK, pres,
     eqstates = full((len(tots[0]), len(eqstate_guess)), 0.0)
     allions = properties.getallions(eles, fixions)
     allmols = full((len(tots[0]), len(allions)), 0.0)
-    _lnkHSO4 = dissociation.HSO4_CRP94(tempK, pres)
-    _lnkH2O = dissociation.H2O_MF(tempK, pres)
-    _lnkMg = dissociation.Mg_CW91(tempK, pres)
-    _lnktrisH = dissociation.trisH_BH64(tempK, pres)
+    _lnkH2O = prmlib.lnk['H2O'](tempK, pres)
+    _lnkHSO4 = prmlib.lnk['HSO4'](tempK, pres)
+    _lnkMg = prmlib.lnk['Mg'](tempK, pres)
+    _lnktrisH = prmlib.lnk['trisH'](tempK, pres)
     for L in range(len(tots[0])):
         print('Solving {} of {}...'.format(L+1, len(tots[0])))
         allmxs = matrix.assemble(allions, array([tempK[L]]), array([pres[L]]),
             prmlib)
         Largs = (eqstate_guess, tots[:, L], fixmols[:, L], eles,
-            allions, fixions, allmxs, _lnkHSO4[L], _lnkH2O[L], _lnkMg[L],
+            allions, fixions, allmxs, _lnkH2O[L], _lnkHSO4[L], _lnkMg[L],
             _lnktrisH[L])
         if L == 0:
             eqstates[L] = solvequick(*Largs)['x']

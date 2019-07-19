@@ -44,4 +44,5 @@ eqstate_guess = [30, 0, 0, 0]
 #allmols, allions, eqstates = pz.equilibrate.solveloop(eqstate_guess, tots,
 #    fixmols, eles, fixions, tempK, pres,)
 
-allmols = pz.blackbox_equilibrate('testfiles/trisASWequilibrium.csv')[0]
+allmols, allions, tempK, pres, prmlib, Gex_nRT, osm, aw, acfs, eqstates \
+    = pz.blackbox_equilibrate('testfiles/trisASWequilibrium.csv')

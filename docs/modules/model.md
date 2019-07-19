@@ -20,10 +20,10 @@ The next input `prmlib` is a [coefficient library](../libraries), which defines 
 All of the usage examples below assume that you have first imported Pytzer as `pz`:
 
 ```python
->>> import pytzer as pz
+import pytzer as pz
 ```
 
-<hr />
+---
 
 ## Excess Gibbs energy
 
@@ -65,10 +65,11 @@ Evaluates $G_{ex}/w_wRT$, as defined above.
 **Syntax:**
 
 ```python
->>> Gex_nRT = pz.model.Gex_nRT(mols, ions, tempK, pres, prmlib=pz.libraries.Seawater, Izero=False)
+Gex_nRT = pz.model.Gex_nRT(mols, ions, tempK, pres,
+    prmlib=pz.libraries.Seawater, Izero=False)
 ```
 
-<hr />
+---
 
 ## Activity and osmotic coefficients
 
@@ -99,8 +100,10 @@ Returns a matrix of activity coefficients ($\gamma_x$, `acfs`) or their natural 
 **Syntax:**
 
 ```python
->>> ln_acfs = pz.model.ln_acfs(mols, ions, tempK, pres, prmlib=pz.libraries.Seawater, Izero=False)
->>> acfs = pz.model.acfs(mols, ions, tempK, pres, prmlib=pz.libraries.Seawater, Izero=False)
+ln_acfs = pz.model.ln_acfs(mols, ions, tempK, pres,
+    prmlib=pz.libraries.Seawater, Izero=False)
+acfs = pz.model.acfs(mols, ions, tempK, pres,
+    prmlib=pz.libraries.Seawater, Izero=False)
 ```
 
 <br />
@@ -112,7 +115,7 @@ Combines the natural logarithms of the activity coefficients of a cation ($\ln \
 **Syntax:**
 
 ```python
->>> ln_acf_MX = pz.model.ln_acf2ln_acf_MX(ln_acfM, ln_acfX, nM, nX)
+ln_acf_MX = pz.model.ln_acf2ln_acf_MX(ln_acfM, ln_acfX, nM, nX)
 ```
 
 <br />
@@ -124,7 +127,8 @@ Calculates the osmotic coefficient ($\phi$) for each input solution composition.
 **Syntax:**
 
 ```python
->>> osm = pz.model.osm(mols, ions, tempK, pres, prmlib=pz.libraries.Seawater, Izero=False)
+osm = pz.model.osm(mols, ions, tempK, pres,
+    prmlib=pz.libraries.Seawater, Izero=False)
 ```
 
 <br />
@@ -136,8 +140,10 @@ Calculates the water activity ($a_w$) or its natural logarithm for each input so
 **Syntax:**
 
 ```python
->>> lnaw = pz.model.lnaw(mols, ions, tempK, pres, prmlib=pz.libraries.Seawater, Izero=False)
->>> aw = pz.model.aw(mols, ions, tempK, pres, prmlib=pz.libraries.Seawater, Izero=False)
+lnaw = pz.model.lnaw(mols, ions, tempK, pres,
+    prmlib=pz.libraries.Seawater, Izero=False)
+aw = pz.model.aw(mols, ions, tempK, pres,
+    prmlib=pz.libraries.Seawater, Izero=False)
 ```
 
 <br />
@@ -149,7 +155,7 @@ Converts an osmotic coefficient ($\phi$, `osm`) into a water activity ($a_w$, `a
 **Syntax:**
 
 ```python
->>> aw = pz.model.osm2aw(mols, osm)
+aw = pz.model.osm2aw(mols, osm)
 ```
 
 <br />
@@ -161,10 +167,10 @@ Converts a water activity ($a_w$, `aw`) into an osmotic coefficient ($\phi$, `os
 **Syntax:**
 
 ```python
->>> osm = pz.model.aw2osm(mols, aw)
+osm = pz.model.aw2osm(mols, aw)
 ```
 
-<hr />
+---
 
 ## Pitzer model subfunctions
 
@@ -179,7 +185,7 @@ $$I = \frac{1}{2} \sum_i m_i z_i^2$$
 **Syntax:**
 
 ```python
->>> I = pz.model.Istr(mols, zs)
+I = pz.model.Istr(mols, zs)
 ```
 
 Input `zs` is a list of the charge on each ion, which can be generated from `ions` using the [solute properties functions](../properties).
@@ -197,7 +203,7 @@ where $b$, here and hereafter, is equal to 1.2 (mol·K<sup>−1</sup>)<sup>1/2</
 **Syntax:**
 
 ```python
->>> fG = pz.model.fG(tempK, pres, I, prmlib)
+fG = pz.model.fG(tempK, pres, I, prmlib)
 ```
 <br />
 
@@ -210,7 +216,7 @@ $$g = 2[1 - (1 + x) \exp(-x)] / x^2$$
 **Syntax:**
 
 ```python
->>> g = pz.model.g(x)
+g = pz.model.g(x)
 ```
 
 <br />
@@ -224,7 +230,7 @@ $$h = \\{ 6 - [6 + x (6 + 3x + x^2)] \exp(-x) \\} / x^4$$
 **Syntax:**
 
 ```python
->>> h = pz.model.h(x)
+h = pz.model.h(x)
 ```
 
 <br />
@@ -240,7 +246,7 @@ where $\beta_0$, $\beta_1$, $\beta_2$, $\alpha_1$ and $\alpha_2$ take different 
 **Syntax:**
 
 ```python
->>> B = pz.model.B(I, b0, b1, b2, alph1, alph2)
+B = pz.model.B(I, b0, b1, b2, alph1, alph2)
 ```
 
 <br />
@@ -256,7 +262,7 @@ where $C_0$, $C_1$ and $\omega$ take different values for each $ca$ combination,
 **Syntax:**
 
 ```python
->>> CT = pz.model.CT(I, C0, C1, omega)
+CT = pz.model.CT(I, C0, C1, omega)
 ```
 
 <br />
@@ -270,7 +276,7 @@ $$x_{ii'} = 6 z_i z_{i'} A_\phi \sqrt{I}$$
 **Syntax:**
 
 ```python
->>> xij = pz.model.xij(tempK, I, z0, z1, prmlib)
+xij = pz.model.xij(tempK, I, z0, z1, prmlib)
 ```
 
 where `z0` and `z1` are the charges on ions $i$ and $i'$ respectively (i.e. $z_i$ and $z_{i'}$).
@@ -286,7 +292,7 @@ $$^E\theta_{ii'} = \frac{z_i z_i'}{4 I} \Bigl[J(x_{ii'}) - \frac{1}{2} J(x_{ii})
 **Syntax:**
 
 ```python
->>> etheta = pz.model.etheta(tempK, I, z0, z1, prmlib)
+etheta = pz.model.etheta(tempK, I, z0, z1, prmlib)
 ```
 
 This is only evaluated when $z_i \neq z_{i'}$. Otherwise, it is equal to zero.
