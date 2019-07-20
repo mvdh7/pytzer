@@ -30,8 +30,8 @@ bC['Na-SCN'] = prm.bC_Na_SCN_SP78
 bC['Na-SO3'] = prm.bC_Na_SO3_MHJZ89
 bC['Na-HSO3'] = prm.bC_Na_HSO3_MHJZ89
 # Table A4
-#bC['K-HCO3'] = prm.bC_K_HCO3_R83
-#bC['K-CO3'] = prm.bC_K_CO3_S87a
+bC['K-HCO3'] = prm.bC_K_HCO3_RGWW83
+bC['K-CO3'] = prm.bC_K_CO3_SRG87
 bC['K-BOH4'] = prm.bC_K_BOH4_SRRJ87
 bC['K-HS'] = prm.bC_K_HS_HPM88
 bC['K-H2PO4'] = prm.bC_K_H2PO4_SP78

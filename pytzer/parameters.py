@@ -468,17 +468,18 @@ def bC_Li_Cl_HM83(T, P):
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Roy et al. (1983) ~~~~~
-def bC_K_HCO3_RGW83(T, P):
-    """c-a: potassium bicarbonate [RGW83]."""
-    b0 = -0.022
-    b1 = 0.09
+def bC_K_HCO3_RGWW83(T, P):
+    """c-a: potassium bicarbonate [RGWW83]."""
+    b0 = -0.022 + 0.996e-3*(T - 298.15) # +/- 0.014 on constant term
+    b1 = 0.09 + 1.104e-3*(T - 298.15) # +/- 0.04 on constant term
     b2 = 0
     C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    # Validity range declared by MP98, but they have different equations!
+    valid = logical_and(T >= 278.15, T <= 318.15)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Harvie et al. (1984) ~~~~~
@@ -2614,7 +2615,22 @@ def bC_Mg_Cl_PP87i(T, P):
     valid = logical_and(T >= 298.15, T <= 473.15)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Simonson et al. (1987a) ~~~~~
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Simonson, Roy & Gibbons (1987) ~~~~~
+def bC_K_CO3_SRG87(T, P):
+    """c-a: potassium carbonate [SRG87]."""
+    b0 = 0.1288 + 1.1e-3*(T - 298.15) - 5.1e-6*(T - 298.15)**2
+    b1 = 1.433 + 4.36e-3*(T - 298.15) + 2.07e-5*(T - 298.15)**2
+    b2 = 0
+    # MP98 declare Cphi = 0.0005, but I can't find that anywhere in SRG87
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 278.15, T <= 368.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Simonson et al. (1987) ~~~~~
 def SRRJ87_eq7(T, a):
     """SRRJ87 equation 7."""
     Tr = 298.15

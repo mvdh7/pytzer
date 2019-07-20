@@ -85,6 +85,9 @@ In alphanumerical order of the source codes:
 <td id="RM81i"><code>RM81i</code></td>
 <td>Rard, J. A., and Miller, D. G. (1981). Isopiestic Determination of the Osmotic Coefficients of Aqueous Na<sub>2</sub>SO<sub>4</sub>, MgSO<sub>4</sub>, and Na<sub>2</sub>SO<sub>4</sub>-MgSO<sub>4</sub> at 25 °C. <i>J. Chem. Eng. Data</i> 26, 33–38. <a href="https://doi.org/10.1021/je00023a013">doi:10.1021/je00023a013</a>.</td></tr><tr>
 
+<td id="SRG87"><code>SRG87</code></td>
+<td>Simonson, J. M., Roy, R. N., and Gibbons, J. J. (1987). Thermodynamics of Aqueous Mixed Potassium Carbonate, Bicarbonate, and Chloride Solutions to 368 K. <i>J. Chem. Eng. Data</i> 32(1), 41–45. <a href="https://doi.org/10.1021/je00047a011">doi:10.1021/je00047a011</a>.</td></tr><tr>
+
 <td id="SRM87"><code>SRM87</code></td>
 <td>Simonson, J. M., Roy, R. N., Mrad, D., Lord, P., Roy, L. N., and Johnson, D. A. (1987). The thermodynamics of aqueous borate solutions II. Mixtures of boric acid with calcium or magnesium borate and chloride. <i>J. Solution Chem.</i> 17, 435–446. <a href="https://doi.org/10.1007/BF00647311">doi:10.1007/BF00647311</a>.</td></tr><tr>
 
