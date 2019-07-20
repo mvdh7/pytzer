@@ -7,44 +7,45 @@ dh = {'Aosm': debyehueckel.Aosm_M88}
 jfunc = unsymmetrical.Harvie
 bC = {}
 theta = {}
+psi = {}
 # Table A1
-bC['Na-Cl' ] = prm.bC_Na_Cl_M88
-bC['K-Cl'  ] = prm.bC_K_Cl_GM89
-bC['K-SO4' ] = prm.bC_K_SO4_GM89
-bC['Ca-Cl' ] = prm.bC_Ca_Cl_GM89
+bC['Na-Cl'] = prm.bC_Na_Cl_M88
+bC['K-Cl'] = prm.bC_K_Cl_GM89
+bC['K-SO4'] = prm.bC_K_SO4_GM89
+bC['Ca-Cl'] = prm.bC_Ca_Cl_GM89
 bC['Ca-SO4'] = prm.bC_Ca_SO4_M88
 bC['Ca-SO3'] = prm.bC_Ca_SO3_MP98
 bC['Sr-SO4'] = prm.bC_Sr_SO4_MP98
 # Table A2
-bC['Mg-Cl' ] = prm.bC_Mg_Cl_PP87i
+bC['Mg-Cl'] = prm.bC_Mg_Cl_PP87i
 bC['Mg-SO4'] = prm.bC_Mg_SO4_PP86ii
 # Table A3
 bC['Na-HSO4'] = prm.bC_Na_HSO4_MP98
 bC['Na-HCO3'] = prm.bC_Na_HCO3_PP82
-bC['Na-SO4' ] = prm.bC_Na_SO4_HPR93
-bC['Na-CO3' ] = prm.bC_Na_CO3_PP82
+bC['Na-SO4'] = prm.bC_Na_SO4_HPR93
+bC['Na-CO3'] = prm.bC_Na_CO3_PP82
 bC['Na-BOH4'] = prm.bC_Na_BOH4_SRRJ87
-bC['Na-HS'  ] = prm.bC_Na_HS_HPM88
-#bC['Na-SCN' ] = prm.bC_Na_SCN_SP78
-#bC['Na-SO3' ] = prm.bC_Na_SO3_M89
-#bC['Na-HSO3'] = prm.bC_Na_HSO3_M89
+bC['Na-HS'] = prm.bC_Na_HS_HPM88
+bC['Na-SCN'] = prm.bC_Na_SCN_SP78
+bC['Na-SO3'] = prm.bC_Na_SO3_MHJZ89
+bC['Na-HSO3'] = prm.bC_Na_HSO3_MHJZ89
 # Table A4
-#bC['K-HCO3 '] = prm.bC_K_HCO3_R83
-#bC['K-CO3'  ] = prm.bC_K_CO3_S87a
-bC['K-BOH4' ] = prm.bC_K_BOH4_SRRJ87
-bC['K-HS'   ] = prm.bC_K_HS_HPM88
+#bC['K-HCO3'] = prm.bC_K_HCO3_R83
+#bC['K-CO3'] = prm.bC_K_CO3_S87a
+bC['K-BOH4'] = prm.bC_K_BOH4_SRRJ87
+bC['K-HS'] = prm.bC_K_HS_HPM88
 bC['K-H2PO4'] = prm.bC_K_H2PO4_SP78
-bC['K-SCN'  ] = prm.bC_K_SCN_SP78
+bC['K-SCN'] = prm.bC_K_SCN_SP78
 # Table A5
-#bC['Mg-Br'  ] = prm.bC_Mg_Br_SP78
+#bC['Mg-Br'] = prm.bC_Mg_Br_SP78
 bC['Mg-BOH4'] = prm.bC_Mg_BOH4_SRM87
 #bC['Mg-ClO4'] = prm.bC_Mg_ClO4_SP78
-#bC['Ca-Br'  ] = prm.bC_Ca_Br_SP78
+#bC['Ca-Br'] = prm.bC_Ca_Br_SP78
 bC['Ca-BOH4'] = prm.bC_Ca_BOH4_SRM87
 #bC['Ca-ClO4'] = prm.bC_Ca_ClO4_SP78
 # Table A6
-bC['Sr-Br'  ] = prm.bC_Sr_Br_SP78
-bC['Sr-Cl'  ] = prm.bC_Sr_Cl_SP78 # not in table but in text §4.6
+bC['Sr-Br'] = prm.bC_Sr_Br_SP78
+bC['Sr-Cl'] = prm.bC_Sr_Cl_SP78 # not in table but in text §4.6
 #bC['Sr-NO3' ] = prm.bC_Sr_NO3_SP78
 #bC['Sr-ClO4'] = prm.bC_Sr_ClO4_SP78
 #bC['Sr-HSO3'] = prm.bC_Sr_HSO3_SP78
@@ -95,3 +96,6 @@ bC['H-Cl' ] = prm.bC_H_Cl_CMR93
 # Table A10
 theta['Cl-CO3' ] = prm.theta_Cl_CO3_PP82
 theta['Cl-HCO3'] = prm.theta_Cl_HCO3_PP82
+# Table A11
+theta['Cl-SO3'] = prm.theta_Cl_SO3_MHJZ89
+psi['Na-Cl-SO3'] = prm.psi_Na_Cl_SO3_MHJZ89

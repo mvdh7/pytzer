@@ -141,6 +141,22 @@ def bC_K_SCN_PM73(T, P):
     valid = T == 298.15
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
+def bC_Na_SCN_PM73(T, P):
+    """c-a: sodium thiocyanate [PM73]."""
+    b0 = 0.1005
+    b1 = 0.3582
+    b2 = 0
+    Cphi = -0.00303
+    zNa = +1
+    zSCN = -1
+    C0 = Cphi / (2 * sqrt(np_abs(zNa * zSCN)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Silvester and Pitzer (1978) ~~~~~
 # General procedure:
 #  - Inherit 298.15 K value from PM73;
@@ -188,10 +204,22 @@ def bC_K_SCN_SP78(T, P):
     b0r, b1r, b2, C0r, C1, alph1, alph2, omega, _ = bC_K_SCN_PM73(T, P)
     b0 = b0r + 6.87e-4*(T - SP78_Tr)
     b1 = b1r + 37e-4*(T - SP78_Tr)
-    zK   = +1
+    zK = +1
     zSCN = -1
     Cphi = C0r * (2 * sqrt(np_abs(zK * zSCN))) + 0.43e-5*(T - SP78_Tr)
     C0 = Cphi / (2 * sqrt(np_abs(zK * zSCN)))
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    # Validity range declared by MP98
+    valid = logical_and(T >= 283.15,T <= 313.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_SCN_SP78(T, P):
+    """c-a: sodium thiocyanate [SP78]."""
+    b0r, b1r, b2, C0, C1, alph1, alph2, omega, _ = bC_Na_SCN_PM73(T, P)
+    b0 = b0r + 0.00078*(T - SP78_Tr)
+    b1 = b1r + 0.002*(T - SP78_Tr)
     alph1 = 2
     alph2 = -9
     omega = -9
@@ -3196,34 +3224,79 @@ def psi_K_Cl_SO4_GM89(T, P):
     valid = logical_and(T >= 273.15, T <= 523.15)
     return psi, valid
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Millero et al. (1989) ~~~~~
+def bC_Na_SO3_MHJZ89(T, P):
+    """c-a: sodium sulfite [MHJZ89]."""
+    b0 = 5.88444 - 1730.55/T # Eq. (36)
+    b1 = -19.4549 + 6153.78/T # Eq. (37)
+    b2 = 0
+    Cphi = -1.2355 + 367.07/T # Eq. (38)
+    zNa = +1
+    zSO3 = -2
+    C0 = Cphi/(2*sqrt(np_abs(zNa*zSO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_HSO3_MHJZ89(T, P):
+    """c-a: sodium hydrogen-sulfite [MHJZ89]."""
+    b0 = 4.3407 - 1248.66/T # Eq. (29)
+    b1 = -13.146 + 4014.80/T # Eq. (30)
+    b2 = 0
+    Cphi = 0.9565 + 277.85/T # Eq. (31), note difference from MP98 Table A3
+    zNa = +1
+    zHSO3 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zNa*zHSO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def theta_Cl_SO3_MHJZ89(T, P):
+    """a-a': chloride sulfite [MHJZ89]."""
+    theta = 0.099 # +/- 0.004
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return theta, valid
+
+def psi_Na_Cl_SO3_MHJZ89(T, P):
+    """c-a-a': sodium chloride sulfite [MHJZ89]."""
+    psi = -0.0156 # +/- 0.001
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return psi, valid
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Archer (1992) ~~~~~
 def A92ii_eq36(T, P, a):
     """A92ii equation 36, with pressure in MPa."""
     # a[5] and a[6] multipliers are corrected for typos in A92ii
-    return  a[ 0] \
-          + a[ 1] * 10**-3*T \
-          + a[ 2] * 4e-6*T**2 \
-          + a[ 3] * 1 / (T - 200) \
-          + a[ 4] * 1 / T \
-          + a[ 5] * 100 / (T - 200)**2 \
-          + a[ 6] * 200 / T**2 \
-          + a[ 7] * 8e-9*T**3 \
-          + a[ 8] * 1 / (650 - T)**0.5 \
-          + a[ 9] * 10**-5*P \
-          + a[10] * 2e-4*P / (T - 225) \
-          + a[11] * 100*P / (650 - T)**3 \
-          + a[12] * 2e-8*P*T \
-          + a[13] * 2e-4*P / (650 - T) \
-          + a[14] * 10**-7*P**2 \
-          + a[15] * 2e-6*P**2 / (T - 225)\
-          + a[16] * P**2 / (650 - T)**3 \
-          + a[17] * 2e-10*P**2*T \
-          + a[18] * 4e-13*P**2*T**2 \
-          + a[19] * 0.04*P / (T - 225)**2 \
-          + a[20] * 4e-11*P*T**2 \
-          + a[21] * 2e-8*P**3 / (T - 225) \
-          + a[22] * 0.01*P**3 / (650 - T)**3 \
-          + a[23] * 200 / (650 - T)**3
+    return (a[ 0]
+          + a[ 1] * 10**-3*T
+          + a[ 2] * 4e-6*T**2
+          + a[ 3] * 1 / (T - 200)
+          + a[ 4] * 1 / T
+          + a[ 5] * 100 / (T - 200)**2
+          + a[ 6] * 200 / T**2
+          + a[ 7] * 8e-9*T**3
+          + a[ 8] * 1 / (650 - T)**0.5
+          + a[ 9] * 10**-5*P
+          + a[10] * 2e-4*P / (T - 225)
+          + a[11] * 100*P / (650 - T)**3
+          + a[12] * 2e-8*P*T
+          + a[13] * 2e-4*P / (650 - T)
+          + a[14] * 10**-7*P**2
+          + a[15] * 2e-6*P**2 / (T - 225)
+          + a[16] * P**2 / (650 - T)**3
+          + a[17] * 2e-10*P**2*T
+          + a[18] * 4e-13*P**2*T**2
+          + a[19] * 0.04*P / (T - 225)**2
+          + a[20] * 4e-11*P*T**2
+          + a[21] * 2e-8*P**3 / (T - 225)
+          + a[22] * 0.01*P**3 / (650 - T)**3
+          + a[23] * 200 / (650 - T)**3)
 
 def bC_Na_Cl_A92ii(T, P):
     """c-a: sodium chloride [A92ii]."""
@@ -3516,8 +3589,8 @@ def MP98_eq15(T,q):
     # q[1] = PJ  * 1e5
     # q[2] = PRL * 1e4
     Tr = 298.15
-    return q[0] + q[1]*1e-5 * (Tr**3/3 - Tr**2 * q[2]*1e-4) * (1/T - 1/Tr) \
-        + q[1]*1e-5 * (T**2 - Tr**2) / 6
+    return (q[0] + q[1]*1e-5 * (Tr**3/3 - Tr**2 * q[2]*1e-4)*(1/T - 1/Tr)
+        + q[1]*1e-5*(T**2 - Tr**2)/6)
 
 def bC_Na_I_MP98(T, P):
     """c-a: sodium iodide [MP98]."""
@@ -4435,30 +4508,30 @@ def lambd_tris_Ca_GT17simopt(T, P):
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Zezin and Driesner (2017) ~~~~~
 def ZD17_eq8(T, P, b):
     """ZD17 equation 8, pressure in MPa."""
-    return b[ 0] \
-         + b[ 1] *  T/1000 \
-         + b[ 2] * (T/500)**2 \
-         + b[ 3] / (T - 215) \
-         + b[ 4] * 1e4 / (T - 215)**3 \
-         + b[ 5] * 1e2 / (T - 215)**2 \
-         + b[ 6] * 2e2 /  T**2 \
-         + b[ 7] * (T/500)**3 \
-         + b[ 8] / (650 - T)**0.5 \
-         + b[ 9] * 1e-5 * P \
-         + b[10] * 2e-4 * P / (T - 225) \
-         + b[11] * 1e2  * P / (650 - T)**3 \
-         + b[12] * 1e-5 * P *  T/500 \
-         + b[13] * 2e-4 * P / (650 - T) \
-         + b[14] * 1e-7 * P**2 \
-         + b[15] * 2e-6 * P**2 / (T - 225) \
-         + b[16] * P**2 / (650 - T)**3 \
-         + b[17] * 1e-7 * P**2 *  T/500 \
-         + b[18] * 1e-7 * P**2 * (T/500)**2 \
-         + b[19] * 4e-2 * P / (T - 225)**2 \
-         + b[20] * 1e-5 * P * (T/500)**2 \
-         + b[21] * 2e-8 * P**3 / (T - 225) \
-         + b[22] * 1e-2 * P**3 / (650 - T)**3 \
-         + b[23] * 2e2  / (650 - T)**3
+    return (b[ 0]
+          + b[ 1] * T/1000
+          + b[ 2] * (T/500)**2
+          + b[ 3] / (T - 215)
+          + b[ 4] * 1e4 / (T - 215)**3
+          + b[ 5] * 1e2 / (T - 215)**2
+          + b[ 6] * 2e2 /  T**2
+          + b[ 7] * (T/500)**3
+          + b[ 8] / (650 - T)**0.5
+          + b[ 9] * 1e-5 * P
+          + b[10] * 2e-4 * P / (T - 225)
+          + b[11] * 1e2  * P / (650 - T)**3
+          + b[12] * 1e-5 * P *  T/500
+          + b[13] * 2e-4 * P / (650 - T)
+          + b[14] * 1e-7 * P**2
+          + b[15] * 2e-6 * P**2 / (T - 225)
+          + b[16] * P**2 / (650 - T)**3
+          + b[17] * 1e-7 * P**2 *  T/500
+          + b[18] * 1e-7 * P**2 * (T/500)**2
+          + b[19] * 4e-2 * P / (T - 225)**2
+          + b[20] * 1e-5 * P * (T/500)**2
+          + b[21] * 2e-8 * P**3 / (T - 225)
+          + b[22] * 1e-2 * P**3 / (650 - T)**3
+          + b[23] * 2e2  / (650 - T)**3)
 
 def bC_K_Cl_ZD17(T, P):
     """c-a: potassium chloride [ZD17]."""

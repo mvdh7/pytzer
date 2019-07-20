@@ -52,6 +52,9 @@ In alphanumerical order of the source codes:
 <td id="M88"><code>M88</code></td>
 <td>Møller, N. (1988). The prediction of mineral solubilities in natural waters: A chemical equilibrium model for the Na-Ca-Cl-SO<sub>4</sub>-H<sub>2</sub>O system, to high temperature and concentration. <i>Geochim. Cosmochim. Acta</i> 52, 821–837. <a href="https://doi.org/10.1016/0016-7037(88)90354-7">doi:10.1016/0016-7037(88)90354-7</a>.</td></tr><tr>
 
+<td id="MHJZ89"><code>MHJZ89</code></td>
+<td>Millero, F. J., Hershey, J. B., Johnson, G., and Zhang, J.-Z. (1989). The solubility of SO<sub>2</sub> and the dissociation of H<sub>2</sub>SO<sub>3</sub> in NaCl solutions.  <i>J. Atmos. Chem.</i> 8(4), 377–389. <a href="https://doi.org/10.1007/BF00052711">doi:10.1007/BF00052711</a>.</td></tr><tr>
+
 <td id="MP98"><code>MP98</code></td>
 <td>Millero, F. J., and Pierrot, D. (1998). A Chemical Equilibrium Model for Natural Waters. <i>Aquat. Geochem.</i> 4, 153–199. <a href="https://doi.org/10.1023/A:1009656023546">doi:10.1023/A:1009656023546</a>.</td></tr><tr>
 
