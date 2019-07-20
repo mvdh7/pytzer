@@ -76,13 +76,13 @@ bC['NH4-F'] = prm.bC_NH4_F_MP98
 bC.update({iset: lambda T: prm.bC_PM73(T, iset)
     for iset in ['Sr-I', 'Na-NO2', 'Na-H2PO4', 'Na-HPO4', 'Na-PO4',
         'K-NO2', 'K-HPO4', 'K-PO4', 'Mg-I', 'Ca-I', 'SO4-NH4']})
-#bC['Na-H2AsO4' ] = prm.bC_Na_H2AsO4_PM73
-#bC['K-HAsO4'   ] = prm.bC_K_HAsO4_PM73
-#bC['Na-HAsO4'  ] = prm.bC_Na_HAsO4_PM73
-#bC['Na-AsO4'   ] = prm.bC_Na_AsO4_PM73
+bC['Na-H2AsO4' ] = prm.bC_Na_H2AsO4_PM73
+bC['K-HAsO4'   ] = prm.bC_K_HAsO4_PM73
+bC['Na-HAsO4'  ] = prm.bC_Na_HAsO4_PM73
+bC['Na-AsO4'   ] = prm.bC_Na_AsO4_PM73
 #bC['Na-acetate'] = prm.bC_Na_acetate_PM73
 bC['K-HSO4' ] = prm.bC_K_HSO4_HMW84
-#bC['K-AsO4'    ] = prm.bC_K_AsO4_PM73
+bC['K-AsO4'    ] = prm.bC_K_AsO4_PM73
 #bC['K-acetate' ] = prm.bC_K_acetate_PM73
 bC['Mg-HS'  ] = prm.bC_Mg_HS_HPM88
 bC['Ca-HSO4'] = prm.bC_Ca_HSO4_HMW84

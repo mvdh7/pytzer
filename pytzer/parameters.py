@@ -78,33 +78,17 @@ def bC_PM73(T, iset):
     valid = T == 298.15
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
-def bC_Sr_Br_PM73(T, P):
-    """c-a: strontium bromide [PM73]."""
-    # PM73 cite Robinson & Stokes (1965) Electrolyte Solutions, 2nd Ed.
-    b0 = 0.4415 * 3/4
-    b1 = 2.282 * 3/4
-    b2 = 0
-    Cphi = 0.00231 * 3/2**2.5
-    zSr = +2
-    zBr = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zSr * zBr)))
-    C1 = 0
-    alph1 = 2
-    alph2 = -9
-    omega = -9
-    valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
-def bC_Sr_Cl_PM73(T, P):
-    """c-a: strontium chloride [PM73]."""
-    # PM73 cite Robinson & Stokes (1965) Electrolyte Solutions, 2nd Ed.
-    b0 = 0.3810 * 3/4
-    b1 = 2.223 * 3/4
+def bC_H_Cl_PM73(T, P):
+    """"c-a: hydrogen chloride [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.1775
+    b1 = 0.2945
     b2 = 0
-    Cphi = -0.00246 * 3/2**2.5
-    zSr = +2
+    Cphi = 0.0008
+    zH = +1
     zCl = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zSr * zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(zH*zCl)))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -112,12 +96,16 @@ def bC_Sr_Cl_PM73(T, P):
     valid = T == 298.15
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
-def bC_K_H2PO4_PM73(T, P):
-    """c-a: potassium dihydrogen-phosphate [PM73]."""
-    b0 = -0.0678
-    b1 = -0.1042
+def bC_H_Br_PM73(T, P):
+    """"c-a: hydrogen bromide [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.196
+    b1 = 0.3564
     b2 = 0
-    C0 = 0
+    Cphi = 0.00827
+    zH = +1
+    zBr = -1
+    C0 = Cphi/(2*sqrt(np_abs(zH*zBr)))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -125,15 +113,305 @@ def bC_K_H2PO4_PM73(T, P):
     valid = T == 298.15
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
-def bC_K_SCN_PM73(T, P):
-    """c-a: potassium thiocyanate [PM73]."""
-    b0 = 0.0416
-    b1 = 0.2302
+def bC_H_I_PM73(T, P):
+    """"c-a: hydrogen iodide [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.2362
+    b1 = 0.392
     b2 = 0
-    Cphi = -0.00252
-    zK = +1
-    zSCN = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zK * zSCN)))
+    Cphi = 0.0011
+    zH = +1
+    zI = -1
+    C0 = Cphi/(2*sqrt(np_abs(zH*zI)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_H_ClO4_PM73(T, P):
+    """"c-a: hydrogen perchlorate [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.1747
+    b1 = 0.2931
+    b2 = 0
+    Cphi = 0.00819
+    zH = +1
+    zClO4 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zH*zClO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_H_NO3_PM73(T, P):
+    """"c-a: hydrogen nitrate [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.1119
+    b1 = 0.3206
+    b2 = 0
+    Cphi = 0.001
+    zH = +1
+    zNO3 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zH*zNO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Li_Cl_PM73(T, P):
+    """"c-a: lithium chloride [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.1494
+    b1 = 0.3074
+    b2 = 0
+    Cphi = 0.00359
+    zLi = +1
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zLi*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Li_Br_PM73(T, P):
+    """"c-a: lithium bromide [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.1748
+    b1 = 0.2547
+    b2 = 0
+    Cphi = 0.0053
+    zLi = +1
+    zBr = -1
+    C0 = Cphi/(2*sqrt(np_abs(zLi*zBr)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Li_I_PM73(T, P):
+    """"c-a: lithium iodide [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.2104
+    b1 = 0.373
+    b2 = 0
+    Cphi = 0.0
+    zLi = +1
+    zI = -1
+    C0 = Cphi/(2*sqrt(np_abs(zLi*zI)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Li_OH_PM73(T, P):
+    """"c-a: lithium hydroxide [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.015
+    b1 = 0.14
+    b2 = 0
+    Cphi = 0.0
+    zLi = +1
+    zOH = -1
+    C0 = Cphi/(2*sqrt(np_abs(zLi*zOH)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Li_ClO4_PM73(T, P):
+    """"c-a: lithium perchlorate [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.1973
+    b1 = 0.3996
+    b2 = 0
+    Cphi = 0.0008
+    zLi = +1
+    zClO4 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zLi*zClO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Li_NO2_PM73(T, P):
+    """"c-a: lithium nitrite [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.1336
+    b1 = 0.325
+    b2 = 0
+    Cphi = -0.0053
+    zLi = +1
+    zNO2 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zLi*zNO2)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Li_NO3_PM73(T, P):
+    """"c-a: lithium nitrate [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.142
+    b1 = 0.278
+    b2 = 0
+    Cphi = -0.00551
+    zLi = +1
+    zNO3 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zLi*zNO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_F_PM73(T, P):
+    """"c-a: sodium fluoride [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.0215
+    b1 = 0.2107
+    b2 = 0
+    Cphi = 0.0
+    zNa = +1
+    zF = -1
+    C0 = Cphi/(2*sqrt(np_abs(zNa*zF)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_Cl_PM73(T, P):
+    """"c-a: sodium chloride [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.0765
+    b1 = 0.2664
+    b2 = 0
+    Cphi = 0.00127
+    zNa = +1
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zNa*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_Br_PM73(T, P):
+    """"c-a: sodium bromide [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.0973
+    b1 = 0.2791
+    b2 = 0
+    Cphi = 0.00116
+    zNa = +1
+    zBr = -1
+    C0 = Cphi/(2*sqrt(np_abs(zNa*zBr)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_I_PM73(T, P):
+    """"c-a: sodium iodide [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.1195
+    b1 = 0.3439
+    b2 = 0
+    Cphi = 0.0018
+    zNa = +1
+    zI = -1
+    C0 = Cphi/(2*sqrt(np_abs(zNa*zI)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_OH_PM73(T, P):
+    """"c-a: sodium hydroxide [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.0864
+    b1 = 0.253
+    b2 = 0
+    Cphi = 0.0044
+    zNa = +1
+    zOH = -1
+    C0 = Cphi/(2*sqrt(np_abs(zNa*zOH)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_ClO3_PM73(T, P):
+    """"c-a: sodium chlorate [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.0249
+    b1 = 0.2455
+    b2 = 0
+    Cphi = 0.0004
+    zNa = +1
+    zClO3 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zNa*zClO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_ClO4_PM73(T, P):
+    """"c-a: sodium perchlorate [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.0554
+    b1 = 0.2755
+    b2 = 0
+    Cphi = -0.00118
+    zNa = +1
+    zClO4 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zNa*zClO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_BrO3_PM73(T, P):
+    """"c-a: sodium bromate [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = -0.0205
+    b1 = 0.191
+    b2 = 0
+    Cphi = 0.0059
+    zNa = +1
+    zBrO3 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zNa*zBrO3)))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -142,14 +420,695 @@ def bC_K_SCN_PM73(T, P):
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 def bC_Na_SCN_PM73(T, P):
-    """c-a: sodium thiocyanate [PM73]."""
+    """"c-a: sodium thiocyanate [PM73]."""
+    # Coefficients from PM73 Table I
     b0 = 0.1005
     b1 = 0.3582
     b2 = 0
     Cphi = -0.00303
     zNa = +1
     zSCN = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zNa * zSCN)))
+    C0 = Cphi/(2*sqrt(np_abs(zNa*zSCN)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_NO2_PM73(T, P):
+    """"c-a: sodium nitrite [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.0641
+    b1 = 0.1015
+    b2 = 0
+    Cphi = -0.0049
+    zNa = +1
+    zNO2 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zNa*zNO2)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_NO3_PM73(T, P):
+    """"c-a: sodium nitrate [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.0068
+    b1 = 0.1783
+    b2 = 0
+    Cphi = -0.00072
+    zNa = +1
+    zNO3 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zNa*zNO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_H2PO4_PM73(T, P):
+    """"c-a: sodium dihydrogen-phosphate [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = -0.0533
+    b1 = 0.0396
+    b2 = 0
+    Cphi = 0.00795
+    zNa = +1
+    zH2PO4 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zNa*zH2PO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_H2AsO4_PM73(T, P):
+    """"c-a: sodium dihydrogen-arsenate [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = -0.0442
+    b1 = 0.2895
+    b2 = 0
+    Cphi = 0.0
+    zNa = +1
+    zH2AsO4 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zNa*zH2AsO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_BO2_PM73(T, P):
+    """"c-a: sodium oxido(oxo)borane [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = -0.0526
+    b1 = 0.1104
+    b2 = 0
+    Cphi = 0.0154
+    zNa = +1
+    zBO2 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zNa*zBO2)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_BF4_PM73(T, P):
+    """"c-a: sodium tetrafluoroborate [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = -0.0252
+    b1 = 0.1824
+    b2 = 0
+    Cphi = 0.0021
+    zNa = +1
+    zBF4 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zNa*zBF4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_F_PM73(T, P):
+    """"c-a: potassium fluoride [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.08089
+    b1 = 0.2021
+    b2 = 0
+    Cphi = 0.00093
+    zK = +1
+    zF = -1
+    C0 = Cphi/(2*sqrt(np_abs(zK*zF)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_Cl_PM73(T, P):
+    """"c-a: potassium chloride [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.04835
+    b1 = 0.2122
+    b2 = 0
+    Cphi = -0.00084
+    zK = +1
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zK*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_Br_PM73(T, P):
+    """"c-a: potassium bromide [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.0569
+    b1 = 0.2212
+    b2 = 0
+    Cphi = -0.0018
+    zK = +1
+    zBr = -1
+    C0 = Cphi/(2*sqrt(np_abs(zK*zBr)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_I_PM73(T, P):
+    """"c-a: potassium iodide [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.0746
+    b1 = 0.2517
+    b2 = 0
+    Cphi = -0.00414
+    zK = +1
+    zI = -1
+    C0 = Cphi/(2*sqrt(np_abs(zK*zI)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_OH_PM73(T, P):
+    """"c-a: potassium hydroxide [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.1298
+    b1 = 0.32
+    b2 = 0
+    Cphi = 0.0041
+    zK = +1
+    zOH = -1
+    C0 = Cphi/(2*sqrt(np_abs(zK*zOH)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_ClO3_PM73(T, P):
+    """"c-a: potassium chlorate [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = -0.096
+    b1 = 0.2481
+    b2 = 0
+    Cphi = 0.0
+    zK = +1
+    zClO3 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zK*zClO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_BrO3_PM73(T, P):
+    """"c-a: potassium bromate [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = -0.129
+    b1 = 0.2565
+    b2 = 0
+    Cphi = 0.0
+    zK = +1
+    zBrO3 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zK*zBrO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_SCN_PM73(T, P):
+    """"c-a: potassium thiocyanate [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.0416
+    b1 = 0.2302
+    b2 = 0
+    Cphi = -0.00252
+    zK = +1
+    zSCN = -1
+    C0 = Cphi/(2*sqrt(np_abs(zK*zSCN)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_NO2_PM73(T, P):
+    """"c-a: potassium nitrite [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.0151
+    b1 = 0.015
+    b2 = 0
+    Cphi = 0.0007
+    zK = +1
+    zNO2 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zK*zNO2)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_NO3_PM73(T, P):
+    """"c-a: potassium nitrate [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = -0.0816
+    b1 = 0.0494
+    b2 = 0
+    Cphi = 0.0066
+    zK = +1
+    zNO3 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zK*zNO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_H2PO4_PM73(T, P):
+    """"c-a: potassium dihydrogen-phosphate [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = -0.0678
+    b1 = -0.1042
+    b2 = 0
+    Cphi = 0.0
+    zK = +1
+    zH2PO4 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zK*zH2PO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_H2AsO4_PM73(T, P):
+    """"c-a: potassium dihydrogen-arsenate [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = -0.0584
+    b1 = 0.0626
+    b2 = 0
+    Cphi = 0.0
+    zK = +1
+    zH2AsO4 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zK*zH2AsO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_PtF6_PM73(T, P):
+    """"c-a: potassium platinum-hexafluoride [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = -0.163
+    b1 = -0.282
+    b2 = 0
+    Cphi = 0.0
+    zK = +1
+    zPtF6 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zK*zPtF6)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Rb_F_PM73(T, P):
+    """"c-a: rubidium fluoride [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.1141
+    b1 = 0.2842
+    b2 = 0
+    Cphi = -0.0105
+    zRb = +1
+    zF = -1
+    C0 = Cphi/(2*sqrt(np_abs(zRb*zF)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Rb_Cl_PM73(T, P):
+    """"c-a: rubidium chloride [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.0441
+    b1 = 0.1483
+    b2 = 0
+    Cphi = -0.00101
+    zRb = +1
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zRb*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Rb_Br_PM73(T, P):
+    """"c-a: rubidium bromide [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.0396
+    b1 = 0.153
+    b2 = 0
+    Cphi = -0.00144
+    zRb = +1
+    zBr = -1
+    C0 = Cphi/(2*sqrt(np_abs(zRb*zBr)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Rb_I_PM73(T, P):
+    """"c-a: rubidium iodide [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.0397
+    b1 = 0.133
+    b2 = 0
+    Cphi = -0.00108
+    zRb = +1
+    zI = -1
+    C0 = Cphi/(2*sqrt(np_abs(zRb*zI)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Rb_NO2_PM73(T, P):
+    """"c-a: rubidium nitrite [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.0269
+    b1 = -0.1553
+    b2 = 0
+    Cphi = -0.00366
+    zRb = +1
+    zNO2 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zRb*zNO2)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Rb_NO3_PM73(T, P):
+    """"c-a: rubidium nitrate [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = -0.0789
+    b1 = -0.0172
+    b2 = 0
+    Cphi = 0.00529
+    zRb = +1
+    zNO3 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zRb*zNO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Cs_F_PM73(T, P):
+    """"c-a: caesium fluoride [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.1306
+    b1 = 0.257
+    b2 = 0
+    Cphi = -0.0043
+    zCs = +1
+    zF = -1
+    C0 = Cphi/(2*sqrt(np_abs(zCs*zF)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Cs_Cl_PM73(T, P):
+    """"c-a: caesium chloride [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.03
+    b1 = 0.0558
+    b2 = 0
+    Cphi = 0.00038
+    zCs = +1
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zCs*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Cs_Br_PM73(T, P):
+    """"c-a: caesium bromide [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.0279
+    b1 = 0.0139
+    b2 = 0
+    Cphi = 4e-05
+    zCs = +1
+    zBr = -1
+    C0 = Cphi/(2*sqrt(np_abs(zCs*zBr)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Cs_I_PM73(T, P):
+    """"c-a: caesium iodide [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.0244
+    b1 = 0.0262
+    b2 = 0
+    Cphi = -0.00365
+    zCs = +1
+    zI = -1
+    C0 = Cphi/(2*sqrt(np_abs(zCs*zI)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Cs_OH_PM73(T, P):
+    """"c-a: caesium hydroxide [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.15
+    b1 = 0.3
+    b2 = 0
+    Cphi = 0.0
+    zCs = +1
+    zOH = -1
+    C0 = Cphi/(2*sqrt(np_abs(zCs*zOH)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Cs_NO3_PM73(T, P):
+    """"c-a: caesium nitrate [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = -0.0758
+    b1 = -0.0669
+    b2 = 0
+    Cphi = 0.0
+    zCs = +1
+    zNO3 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zCs*zNO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Cs_NO2_PM73(T, P):
+    """"c-a: caesium nitrite [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.0427
+    b1 = 0.06
+    b2 = 0
+    Cphi = -0.0051
+    zCs = +1
+    zNO2 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zCs*zNO2)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Ag_NO3_PM73(T, P):
+    """"c-a: silver nitrate [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = -0.0856
+    b1 = 0.0025
+    b2 = 0
+    Cphi = 0.00591
+    zAg = +1
+    zNO3 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zAg*zNO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Tl_ClO4_PM73(T, P):
+    """"c-a: thallium perchlorate [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = -0.087
+    b1 = -0.023
+    b2 = 0
+    Cphi = 0.0
+    zTl = +1
+    zClO4 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zTl*zClO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Tl_NO3_PM73(T, P):
+    """"c-a: thallium nitrate [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = -0.105
+    b1 = -0.378
+    b2 = 0
+    Cphi = 0.0
+    zTl = +1
+    zNO3 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zTl*zNO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_NH4_Cl_PM73(T, P):
+    """"c-a: ammonium chloride [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.0522
+    b1 = 0.1918
+    b2 = 0
+    Cphi = -0.00301
+    zNH4 = +1
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zNH4*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_NH4_Br_PM73(T, P):
+    """"c-a: ammonium bromide [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = 0.0624
+    b1 = 0.1947
+    b2 = 0
+    Cphi = -0.00436
+    zNH4 = +1
+    zBr = -1
+    C0 = Cphi/(2*sqrt(np_abs(zNH4*zBr)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_NH4_ClO4_PM73(T, P):
+    """"c-a: ammonium perchlorate [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = -0.0103
+    b1 = -0.0194
+    b2 = 0
+    Cphi = 0.0
+    zNH4 = +1
+    zClO4 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zNH4*zClO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_NH4_NO3_PM73(T, P):
+    """"c-a: ammonium nitrate [PM73]."""
+    # Coefficients from PM73 Table I
+    b0 = -0.0154
+    b1 = 0.112
+    b2 = 0
+    Cphi = -3e-05
+    zNH4 = +1
+    zNO3 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zNH4*zNO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Mg_Cl_PM73(T, P):
+    """"c-a: magnesium chloride [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.4698 * 3/4
+    b1 = 2.242 * 3/4
+    b2 = 0
+    Cphi = 0.00979 * 3/2**(5/2)
+    zMg = +2
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zMg*zCl)))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -158,7 +1117,8 @@ def bC_Na_SCN_PM73(T, P):
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 def bC_Mg_Br_PM73(T, P):
-    """c-a: magnesium bromide [PM73]."""
+    """"c-a: magnesium bromide [PM73]."""
+    # Coefficients from PM73 Table VI
     b0 = 0.5769 * 3/4
     b1 = 2.337 * 3/4
     b2 = 0
@@ -173,8 +1133,26 @@ def bC_Mg_Br_PM73(T, P):
     valid = T == 298.15
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
+def bC_Mg_I_PM73(T, P):
+    """"c-a: magnesium iodide [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.6536 * 3/4
+    b1 = 2.4055 * 3/4
+    b2 = 0
+    Cphi = 0.01496 * 3/2**(5/2)
+    zMg = +2
+    zI = -1
+    C0 = Cphi/(2*sqrt(np_abs(zMg*zI)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
 def bC_Mg_ClO4_PM73(T, P):
-    """c-a: magnesium perchlorate [PM73]."""
+    """"c-a: magnesium perchlorate [PM73]."""
+    # Coefficients from PM73 Table VI
     b0 = 0.6615 * 3/4
     b1 = 2.678 * 3/4
     b2 = 0
@@ -189,8 +1167,43 @@ def bC_Mg_ClO4_PM73(T, P):
     valid = T == 298.15
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
+def bC_Mg_NO3_PM73(T, P):
+    """"c-a: magnesium nitrate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.4895 * 3/4
+    b1 = 2.113 * 3/4
+    b2 = 0
+    Cphi = -0.03889 * 3/2**(5/2)
+    zMg = +2
+    zNO3 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zMg*zNO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Ca_Cl_PM73(T, P):
+    """"c-a: calcium chloride [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.4212 * 3/4
+    b1 = 2.152 * 3/4
+    b2 = 0
+    Cphi = -0.00064 * 3/2**(5/2)
+    zCa = +2
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zCa*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
 def bC_Ca_Br_PM73(T, P):
-    """c-a: calcium bromide [PM73]."""
+    """"c-a: calcium bromide [PM73]."""
+    # Coefficients from PM73 Table VI
     b0 = 0.5088 * 3/4
     b1 = 2.151 * 3/4
     b2 = 0
@@ -205,8 +1218,26 @@ def bC_Ca_Br_PM73(T, P):
     valid = T == 298.15
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
+def bC_Ca_I_PM73(T, P):
+    """"c-a: calcium iodide [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.5839 * 3/4
+    b1 = 2.409 * 3/4
+    b2 = 0
+    Cphi = -0.00158 * 3/2**(5/2)
+    zCa = +2
+    zI = -1
+    C0 = Cphi/(2*sqrt(np_abs(zCa*zI)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
 def bC_Ca_ClO4_PM73(T, P):
-    """c-a: calcium perchlorate [PM73]."""
+    """"c-a: calcium perchlorate [PM73]."""
+    # Coefficients from PM73 Table VI
     b0 = 0.6015 * 3/4
     b1 = 2.342 * 3/4
     b2 = 0
@@ -214,6 +1245,1383 @@ def bC_Ca_ClO4_PM73(T, P):
     zCa = +2
     zClO4 = -1
     C0 = Cphi/(2*sqrt(np_abs(zCa*zClO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Ca_NO3_PM73(T, P):
+    """"c-a: calcium nitrate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.2811 * 3/4
+    b1 = 1.879 * 3/4
+    b2 = 0
+    Cphi = -0.03798 * 3/2**(5/2)
+    zCa = +2
+    zNO3 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zCa*zNO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Sr_Cl_PM73(T, P):
+    """"c-a: strontium chloride [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.381 * 3/4
+    b1 = 2.223 * 3/4
+    b2 = 0
+    Cphi = -0.00246 * 3/2**(5/2)
+    zSr = +2
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zSr*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Sr_Br_PM73(T, P):
+    """"c-a: strontium bromide [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.4415 * 3/4
+    b1 = 2.282 * 3/4
+    b2 = 0
+    Cphi = 0.00231 * 3/2**(5/2)
+    zSr = +2
+    zBr = -1
+    C0 = Cphi/(2*sqrt(np_abs(zSr*zBr)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Sr_I_PM73(T, P):
+    """"c-a: strontium iodide [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.535 * 3/4
+    b1 = 2.48 * 3/4
+    b2 = 0
+    Cphi = 0.00501 * 3/2**(5/2)
+    zSr = +2
+    zI = -1
+    C0 = Cphi/(2*sqrt(np_abs(zSr*zI)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Sr_ClO4_PM73(T, P):
+    """"c-a: strontium perchlorate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.5692 * 3/4
+    b1 = 2.089 * 3/4
+    b2 = 0
+    Cphi = -0.02472 * 3/2**(5/2)
+    zSr = +2
+    zClO4 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zSr*zClO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Sr_NO3_PM73(T, P):
+    """"c-a: strontium nitrate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.1795 * 3/4
+    b1 = 1.84 * 3/4
+    b2 = 0
+    Cphi = -0.03757 * 3/2**(5/2)
+    zSr = +2
+    zNO3 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zSr*zNO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Ba_Cl_PM73(T, P):
+    """"c-a: barium chloride [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.3504 * 3/4
+    b1 = 1.995 * 3/4
+    b2 = 0
+    Cphi = -0.03654 * 3/2**(5/2)
+    zBa = +2
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zBa*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Ba_Br_PM73(T, P):
+    """"c-a: barium bromide [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.4194 * 3/4
+    b1 = 2.093 * 3/4
+    b2 = 0
+    Cphi = -0.03009 * 3/2**(5/2)
+    zBa = +2
+    zBr = -1
+    C0 = Cphi/(2*sqrt(np_abs(zBa*zBr)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Ba_I_PM73(T, P):
+    """"c-a: barium iodide [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.5625 * 3/4
+    b1 = 2.249 * 3/4
+    b2 = 0
+    Cphi = -0.03286 * 3/2**(5/2)
+    zBa = +2
+    zI = -1
+    C0 = Cphi/(2*sqrt(np_abs(zBa*zI)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Ba_OH_PM73(T, P):
+    """"c-a: barium hydroxide [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.229 * 3/4
+    b1 = 1.6 * 3/4
+    b2 = 0
+    Cphi = 0.0 * 3/2**(5/2)
+    zBa = +2
+    zOH = -1
+    C0 = Cphi/(2*sqrt(np_abs(zBa*zOH)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Ba_ClO4_PM73(T, P):
+    """"c-a: barium perchlorate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.4819 * 3/4
+    b1 = 2.101 * 3/4
+    b2 = 0
+    Cphi = -0.05894 * 3/2**(5/2)
+    zBa = +2
+    zClO4 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zBa*zClO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Ba_NO3_PM73(T, P):
+    """"c-a: barium nitrate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = -0.043 * 3/4
+    b1 = 1.07 * 3/4
+    b2 = 0
+    Cphi = 0.0 * 3/2**(5/2)
+    zBa = +2
+    zNO3 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zBa*zNO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Mnjj_Cl_PM73(T, P):
+    """"c-a: manganese(II) chloride [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.1363 * 3/4
+    b1 = 2.067 * 3/4
+    b2 = 0
+    Cphi = -0.03865 * 3/2**(5/2)
+    zMnjj = +2
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zMnjj*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Fejj_Cl_PM73(T, P):
+    """"c-a: iron(II) chloride [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.4479 * 3/4
+    b1 = 2.043 * 3/4
+    b2 = 0
+    Cphi = -0.01623 * 3/2**(5/2)
+    zFejj = +2
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zFejj*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Cojj_Cl_PM73(T, P):
+    """"c-a: cobalt(II) chloride [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.4857 * 3/4
+    b1 = 1.936 * 3/4
+    b2 = 0
+    Cphi = -0.02869 * 3/2**(5/2)
+    zCojj = +2
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zCojj*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Cojj_Br_PM73(T, P):
+    """"c-a: cobalt(II) bromide [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.5693 * 3/4
+    b1 = 2.213 * 3/4
+    b2 = 0
+    Cphi = -0.00127 * 3/2**(5/2)
+    zCojj = +2
+    zBr = -1
+    C0 = Cphi/(2*sqrt(np_abs(zCojj*zBr)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Cojj_I_PM73(T, P):
+    """"c-a: cobalt(II) iodide [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.695 * 3/4
+    b1 = 2.23 * 3/4
+    b2 = 0
+    Cphi = -0.0088 * 3/2**(5/2)
+    zCojj = +2
+    zI = -1
+    C0 = Cphi/(2*sqrt(np_abs(zCojj*zI)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Cojj_NO3_PM73(T, P):
+    """"c-a: cobalt(II) nitrate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.4159 * 3/4
+    b1 = 2.254 * 3/4
+    b2 = 0
+    Cphi = -0.01436 * 3/2**(5/2)
+    zCojj = +2
+    zNO3 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zCojj*zNO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Nijj_Cl_PM73(T, P):
+    """"c-a: nickel(II) chloride [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.4639 * 3/4
+    b1 = 2.108 * 3/4
+    b2 = 0
+    Cphi = -0.00702 * 3/2**(5/2)
+    zNijj = +2
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zNijj*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Cujj_Cl_PM73(T, P):
+    """"c-a: copper(II) chloride [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.4107 * 3/4
+    b1 = 1.835 * 3/4
+    b2 = 0
+    Cphi = -0.07624 * 3/2**(5/2)
+    zCujj = +2
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zCujj*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Cujj_NO3_PM73(T, P):
+    """"c-a: copper(II) nitrate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.4224 * 3/4
+    b1 = 1.907 * 3/4
+    b2 = 0
+    Cphi = -0.04136 * 3/2**(5/2)
+    zCujj = +2
+    zNO3 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zCujj*zNO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Znjj_Cl_PM73(T, P):
+    """"c-a: zinc(II) chloride [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.3469 * 3/4
+    b1 = 2.19 * 3/4
+    b2 = 0
+    Cphi = -0.1659 * 3/2**(5/2)
+    zZnjj = +2
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zZnjj*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Znjj_Br_PM73(T, P):
+    """"c-a: zinc(II) bromide [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.6213 * 3/4
+    b1 = 2.179 * 3/4
+    b2 = 0
+    Cphi = -0.2035 * 3/2**(5/2)
+    zZnjj = +2
+    zBr = -1
+    C0 = Cphi/(2*sqrt(np_abs(zZnjj*zBr)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Znjj_I_PM73(T, P):
+    """"c-a: zinc(II) iodide [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.6428 * 3/4
+    b1 = 2.594 * 3/4
+    b2 = 0
+    Cphi = -0.0269 * 3/2**(5/2)
+    zZnjj = +2
+    zI = -1
+    C0 = Cphi/(2*sqrt(np_abs(zZnjj*zI)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Znjj_ClO4_PM73(T, P):
+    """"c-a: zinc(II) perchlorate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.6747 * 3/4
+    b1 = 2.396 * 3/4
+    b2 = 0
+    Cphi = 0.02134 * 3/2**(5/2)
+    zZnjj = +2
+    zClO4 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zZnjj*zClO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Znjj_NO3_PM73(T, P):
+    """"c-a: zinc(II) nitrate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.4641 * 3/4
+    b1 = 2.255 * 3/4
+    b2 = 0
+    Cphi = -0.02955 * 3/2**(5/2)
+    zZnjj = +2
+    zNO3 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zZnjj*zNO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Cdjj_NO3_PM73(T, P):
+    """"c-a: cadmium(II) nitrate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.382 * 3/4
+    b1 = 2.224 * 3/4
+    b2 = 0
+    Cphi = -0.04836 * 3/2**(5/2)
+    zCdjj = +2
+    zNO3 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zCdjj*zNO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Pbjj_ClO4_PM73(T, P):
+    """"c-a: lead(II) perchlorate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.4443 * 3/4
+    b1 = 2.296 * 3/4
+    b2 = 0
+    Cphi = -0.01667 * 3/2**(5/2)
+    zPbjj = +2
+    zClO4 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zPbjj*zClO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Pbjj_NO3_PM73(T, P):
+    """"c-a: lead(II) nitrate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = -0.0482 * 3/4
+    b1 = 0.38 * 3/4
+    b2 = 0
+    Cphi = 0.01005 * 3/2**(5/2)
+    zPbjj = +2
+    zNO3 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zPbjj*zNO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_UO2_Cl_PM73(T, P):
+    """"c-a: uranium-dioxide chloride [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.5698 * 3/4
+    b1 = 2.192 * 3/4
+    b2 = 0
+    Cphi = -0.06951 * 3/2**(5/2)
+    zUO2 = +2
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zUO2*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_UO2_ClO4_PM73(T, P):
+    """"c-a: uranium-dioxide perchlorate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.8151 * 3/4
+    b1 = 2.859 * 3/4
+    b2 = 0
+    Cphi = 0.04089 * 3/2**(5/2)
+    zUO2 = +2
+    zClO4 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zUO2*zClO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_UO2_NO3_PM73(T, P):
+    """"c-a: uranium-dioxide nitrate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.6143 * 3/4
+    b1 = 2.151 * 3/4
+    b2 = 0
+    Cphi = -0.05948 * 3/2**(5/2)
+    zUO2 = +2
+    zNO3 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zUO2*zNO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Li_SO4_PM73(T, P):
+    """"c-a: lithium sulfate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.1817 * 3/4
+    b1 = 1.694 * 3/4
+    b2 = 0
+    Cphi = -0.00753 * 3/2**(5/2)
+    zLi = +1
+    zSO4 = -2
+    C0 = Cphi/(2*sqrt(np_abs(zLi*zSO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_SO4_PM73(T, P):
+    """"c-a: sodium sulfate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.0261 * 3/4
+    b1 = 1.484 * 3/4
+    b2 = 0
+    Cphi = 0.00938 * 3/2**(5/2)
+    zNa = +1
+    zSO4 = -2
+    C0 = Cphi/(2*sqrt(np_abs(zNa*zSO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_S2O3_PM73(T, P):
+    """"c-a: sodium thiosulfate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.0882 * 3/4
+    b1 = 1.701 * 3/4
+    b2 = 0
+    Cphi = 0.00705 * 3/2**(5/2)
+    zNa = +1
+    zS2O3 = -2
+    C0 = Cphi/(2*sqrt(np_abs(zNa*zS2O3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_CrO4_PM73(T, P):
+    """"c-a: sodium chromate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.125 * 3/4
+    b1 = 1.826 * 3/4
+    b2 = 0
+    Cphi = -0.00407 * 3/2**(5/2)
+    zNa = +1
+    zCrO4 = -2
+    C0 = Cphi/(2*sqrt(np_abs(zNa*zCrO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_CO3_PM73(T, P):
+    """"c-a: sodium carbonate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.253 * 3/4
+    b1 = 1.128 * 3/4
+    b2 = 0
+    Cphi = -0.09057 * 3/2**(5/2)
+    zNa = +1
+    zCO3 = -2
+    C0 = Cphi/(2*sqrt(np_abs(zNa*zCO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_HPO4_PM73(T, P):
+    """"c-a: sodium hydrogen-phosphate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = -0.0777 * 3/4
+    b1 = 1.954 * 3/4
+    b2 = 0
+    Cphi = 0.0554 * 3/2**(5/2)
+    zNa = +1
+    zHPO4 = -2
+    C0 = Cphi/(2*sqrt(np_abs(zNa*zHPO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_HAsO4_PM73(T, P):
+    """"c-a: sodium hydrogen-arsenate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.0407 * 3/4
+    b1 = 2.173 * 3/4
+    b2 = 0
+    Cphi = 0.0034 * 3/2**(5/2)
+    zNa = +1
+    zHAsO4 = -2
+    C0 = Cphi/(2*sqrt(np_abs(zNa*zHAsO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_SO4_PM73(T, P):
+    """"c-a: potassium sulfate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.0666 * 3/4
+    b1 = 1.039 * 3/4
+    b2 = 0
+    Cphi = 0.0 * 3/2**(5/2)
+    zK = +1
+    zSO4 = -2
+    C0 = Cphi/(2*sqrt(np_abs(zK*zSO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_CrO4_PM73(T, P):
+    """"c-a: potassium chromate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.1011 * 3/4
+    b1 = 1.652 * 3/4
+    b2 = 0
+    Cphi = -0.00147 * 3/2**(5/2)
+    zK = +1
+    zCrO4 = -2
+    C0 = Cphi/(2*sqrt(np_abs(zK*zCrO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_PtCN4_PM73(T, P):
+    """"c-a: potassium platinocyanide [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.0881 * 3/4
+    b1 = 3.164 * 3/4
+    b2 = 0
+    Cphi = 0.0247 * 3/2**(5/2)
+    zK = +1
+    zPtCN4 = -2
+    C0 = Cphi/(2*sqrt(np_abs(zK*zPtCN4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_HPO4_PM73(T, P):
+    """"c-a: potassium hydrogen-phosphate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.033 * 3/4
+    b1 = 1.699 * 3/4
+    b2 = 0
+    Cphi = 0.0309 * 3/2**(5/2)
+    zK = +1
+    zHPO4 = -2
+    C0 = Cphi/(2*sqrt(np_abs(zK*zHPO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_HAsO4_PM73(T, P):
+    """"c-a: potassium hydrogen-arsenate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.1728 * 3/4
+    b1 = 2.198 * 3/4
+    b2 = 0
+    Cphi = -0.0336 * 3/2**(5/2)
+    zK = +1
+    zHAsO4 = -2
+    C0 = Cphi/(2*sqrt(np_abs(zK*zHAsO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Rb_SO4_PM73(T, P):
+    """"c-a: rubidium sulfate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.0772 * 3/4
+    b1 = 1.481 * 3/4
+    b2 = 0
+    Cphi = -0.00019 * 3/2**(5/2)
+    zRb = +1
+    zSO4 = -2
+    C0 = Cphi/(2*sqrt(np_abs(zRb*zSO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Cs_SO4_PM73(T, P):
+    """"c-a: caesium sulfate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.1184 * 3/4
+    b1 = 1.481 * 3/4
+    b2 = 0
+    Cphi = -0.01131 * 3/2**(5/2)
+    zCs = +1
+    zSO4 = -2
+    C0 = Cphi/(2*sqrt(np_abs(zCs*zSO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_NH4_SO4_PM73(T, P):
+    """"c-a: ammonium sulfate [PM73]."""
+    # Coefficients from PM73 Table VI
+    b0 = 0.0545 * 3/4
+    b1 = 0.878 * 3/4
+    b2 = 0
+    Cphi = -0.00219 * 3/2**(5/2)
+    zNH4 = +1
+    zSO4 = -2
+    C0 = Cphi/(2*sqrt(np_abs(zNH4*zSO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Aljjj_Cl_PM73(T, P):
+    """"c-a: aluminium(III) chloride [PM73]."""
+    # Coefficients from PM73 Table VIII
+    b0 = 1.049 * 2/3
+    b1 = 8.767 * 2/3
+    b2 = 0
+    Cphi = 0.0071 * 2/3**(3/2)
+    zAljjj = +3
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zAljjj*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Sr_Cl_PM73(T, P):
+    """"c-a: strontium chloride [PM73]."""
+    # Coefficients from PM73 Table VIII
+    b0 = 1.05 * 2/3
+    b1 = 7.978 * 2/3
+    b2 = 0
+    Cphi = -0.084 * 2/3**(3/2)
+    zSr = +3
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zSr*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Y_Cl_PM73(T, P):
+    """"c-a: yttrium chloride [PM73]."""
+    # Coefficients from PM73 Table VIII
+    b0 = 0.9599 * 2/3
+    b1 = 8.166 * 2/3
+    b2 = 0
+    Cphi = -0.0587 * 2/3**(3/2)
+    zY = +3
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zY*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_La_Cl_PM73(T, P):
+    """"c-a: lanthanum chloride [PM73]."""
+    # Coefficients from PM73 Table VIII
+    b0 = 0.9158 * 2/3
+    b1 = 8.231 * 2/3
+    b2 = 0
+    Cphi = -0.0831 * 2/3**(3/2)
+    zLa = +3
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zLa*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Ce_Cl_PM73(T, P):
+    """"c-a: cerium chloride [PM73]."""
+    # Coefficients from PM73 Table VIII
+    b0 = 0.9187 * 2/3
+    b1 = 8.227 * 2/3
+    b2 = 0
+    Cphi = -0.0809 * 2/3**(3/2)
+    zCe = +3
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zCe*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Pr_Cl_PM73(T, P):
+    """"c-a: praeseodymium chloride [PM73]."""
+    # Coefficients from PM73 Table VIII
+    b0 = 0.903 * 2/3
+    b1 = 8.181 * 2/3
+    b2 = 0
+    Cphi = -0.0727 * 2/3**(3/2)
+    zPr = +3
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zPr*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Nd_Cl_PM73(T, P):
+    """"c-a: neodymium chloride [PM73]."""
+    # Coefficients from PM73 Table VIII
+    b0 = 0.9175 * 2/3
+    b1 = 8.104 * 2/3
+    b2 = 0
+    Cphi = -0.0737 * 2/3**(3/2)
+    zNd = +3
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zNd*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Sm_Cl_PM73(T, P):
+    """"c-a: samarium chloride [PM73]."""
+    # Coefficients from PM73 Table VIII
+    b0 = 0.933 * 2/3
+    b1 = 8.273 * 2/3
+    b2 = 0
+    Cphi = -0.0728 * 2/3**(3/2)
+    zSm = +3
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zSm*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Eu_Cl_PM73(T, P):
+    """"c-a: europium chloride [PM73]."""
+    # Coefficients from PM73 Table VIII
+    b0 = 0.937 * 2/3
+    b1 = 8.385 * 2/3
+    b2 = 0
+    Cphi = -0.0687 * 2/3**(3/2)
+    zEu = +3
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zEu*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Cr_Cl_PM73(T, P):
+    """"c-a: chromium chloride [PM73]."""
+    # Coefficients from PM73 Table VIII
+    b0 = 1.1046 * 2/3
+    b1 = 7.883 * 2/3
+    b2 = 0
+    Cphi = -0.1172 * 2/3**(3/2)
+    zCr = +3
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zCr*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Cr_NO3_PM73(T, P):
+    """"c-a: chromium nitrate [PM73]."""
+    # Coefficients from PM73 Table VIII
+    b0 = 1.056 * 2/3
+    b1 = 7.777 * 2/3
+    b2 = 0
+    Cphi = -0.1533 * 2/3**(3/2)
+    zCr = +3
+    zNO3 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zCr*zNO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Ga_ClO4_PM73(T, P):
+    """"c-a: gallium perchlorate [PM73]."""
+    # Coefficients from PM73 Table VIII
+    b0 = 1.2381 * 2/3
+    b1 = 9.794 * 2/3
+    b2 = 0
+    Cphi = 0.0904 * 2/3**(3/2)
+    zGa = +3
+    zClO4 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zGa*zClO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_In_Cl_PM73(T, P):
+    """"c-a: indium chloride [PM73]."""
+    # Coefficients from PM73 Table VIII
+    b0 = -1.68 * 2/3
+    b1 = -3.85 * 2/3
+    b2 = 0
+    Cphi = 0.0 * 2/3**(3/2)
+    zIn = +3
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zIn*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_PO4_PM73(T, P):
+    """"c-a: sodium phosphate [PM73]."""
+    # Coefficients from PM73 Table VIII
+    b0 = 0.2672 * 2/3
+    b1 = 5.777 * 2/3
+    b2 = 0
+    Cphi = -0.1339 * 2/3**(3/2)
+    zNa = +1
+    zPO4 = -3
+    C0 = Cphi/(2*sqrt(np_abs(zNa*zPO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_AsO4_PM73(T, P):
+    """"c-a: sodium arsenate [PM73]."""
+    # Coefficients from PM73 Table VIII
+    b0 = 0.3582 * 2/3
+    b1 = 5.895 * 2/3
+    b2 = 0
+    Cphi = -0.124 * 2/3**(3/2)
+    zNa = +1
+    zAsO4 = -3
+    C0 = Cphi/(2*sqrt(np_abs(zNa*zAsO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_PO4_PM73(T, P):
+    """"c-a: potassium phosphate [PM73]."""
+    # Coefficients from PM73 Table VIII
+    b0 = 0.5594 * 2/3
+    b1 = 5.958 * 2/3
+    b2 = 0
+    Cphi = -0.2255 * 2/3**(3/2)
+    zK = +1
+    zPO4 = -3
+    C0 = Cphi/(2*sqrt(np_abs(zK*zPO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_P3O9_PM73(T, P):
+    """"c-a: potassium trimetaphosphate [PM73]."""
+    # Coefficients from PM73 Table VIII
+    b0 = 0.4867 * 2/3
+    b1 = 8.349 * 2/3
+    b2 = 0
+    Cphi = -0.0886 * 2/3**(3/2)
+    zK = +1
+    zP3O9 = -3
+    C0 = Cphi/(2*sqrt(np_abs(zK*zP3O9)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_AsO4_PM73(T, P):
+    """"c-a: potassium arsenate [PM73]."""
+    # Coefficients from PM73 Table VIII
+    b0 = 0.7491 * 2/3
+    b1 = 6.511 * 2/3
+    b2 = 0
+    Cphi = -0.3376 * 2/3**(3/2)
+    zK = +1
+    zAsO4 = -3
+    C0 = Cphi/(2*sqrt(np_abs(zK*zAsO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_FeCN6_PM73(T, P):
+    """"c-a: potassium ferricyanide [PM73]."""
+    # Coefficients from PM73 Table VIII
+    b0 = 0.5035 * 2/3
+    b1 = 7.121 * 2/3
+    b2 = 0
+    Cphi = -0.1176 * 2/3**(3/2)
+    zK = +1
+    zFeCN6 = -3
+    C0 = Cphi/(2*sqrt(np_abs(zK*zFeCN6)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_CoCN6_PM73(T, P):
+    """"c-a: potassium Co(CN)6 [PM73]."""
+    # Coefficients from PM73 Table VIII
+    b0 = 0.5603 * 2/3
+    b1 = 5.815 * 2/3
+    b2 = 0
+    Cphi = -0.1603 * 2/3**(3/2)
+    zK = +1
+    zCoCN6 = -3
+    C0 = Cphi/(2*sqrt(np_abs(zK*zCoCN6)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Coen3_Cl_PM73(T, P):
+    """"c-a: tris(ethylenediamine)cobalt(III) chloride [PM73]."""
+    # Coefficients from PM73 Table VIII
+    b0 = 0.2603 * 2/3
+    b1 = 3.563 * 2/3
+    b2 = 0
+    Cphi = -0.0916 * 2/3**(3/2)
+    zCoen3 = +1
+    zCl = -3
+    C0 = Cphi/(2*sqrt(np_abs(zCoen3*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Coen3_NO3_PM73(T, P):
+    """"c-a: tris(ethylenediamine)cobalt(III) nitrate [PM73]."""
+    # Coefficients from PM73 Table VIII
+    b0 = 0.1882 * 2/3
+    b1 = 3.935 * 2/3
+    b2 = 0
+    Cphi = 0.0 * 2/3**(3/2)
+    zCoen3 = +1
+    zNO3 = -3
+    C0 = Cphi/(2*sqrt(np_abs(zCoen3*zNO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Coen3_ClO4_PM73(T, P):
+    """"c-a: tris(ethylenediamine)cobalt(III) perchlorate [PM73]."""
+    # Coefficients from PM73 Table VIII
+    b0 = 0.1619 * 2/3
+    b1 = 5.395 * 2/3
+    b2 = 0
+    Cphi = 0.0 * 2/3**(3/2)
+    zCoen3 = +1
+    zClO4 = -3
+    C0 = Cphi/(2*sqrt(np_abs(zCoen3*zClO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Copn3_ClO4_PM73(T, P):
+    """"c-a: Copn3 perchlorate [PM73]."""
+    # Coefficients from PM73 Table VIII
+    b0 = 0.2022 * 2/3
+    b1 = 3.976 * 2/3
+    b2 = 0
+    Cphi = 0.0 * 2/3**(3/2)
+    zCopn3 = +1
+    zClO4 = -3
+    C0 = Cphi/(2*sqrt(np_abs(zCopn3*zClO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Th_Cl_PM73(T, P):
+    """"c-a: thorium chloride [PM73]."""
+    # Coefficients from PM73 Table IX
+    b0 = 1.622 * 2/3
+    b1 = 21.33 * 2/3
+    b2 = 0
+    Cphi = -0.3309 * 2/3**(3/2)
+    zTh = +4
+    zCl = -1
+    C0 = Cphi/(2*sqrt(np_abs(zTh*zCl)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Th_NO3_PM73(T, P):
+    """"c-a: thorium nitrate [PM73]."""
+    # Coefficients from PM73 Table IX
+    b0 = 1.546 * 2/3
+    b1 = 18.22 * 2/3
+    b2 = 0
+    Cphi = -0.5906 * 2/3**(3/2)
+    zTh = +4
+    zNO3 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zTh*zNO3)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_P2O7_PM73(T, P):
+    """"c-a: sodium diphosphate [PM73]."""
+    # Coefficients from PM73 Table IX
+    b0 = 0.699 * 5/8
+    b1 = 17.16 * 5/8
+    b2 = 0
+    Cphi = 0.0 * 5/16
+    zNa = +1
+    zP2O7 = -4
+    C0 = Cphi/(2*sqrt(np_abs(zNa*zP2O7)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_P2O7_PM73(T, P):
+    """"c-a: potassium diphosphate [PM73]."""
+    # Coefficients from PM73 Table IX
+    b0 = 0.977 * 5/8
+    b1 = 17.88 * 5/8
+    b2 = 0
+    Cphi = -0.2418 * 5/16
+    zK = +1
+    zP2O7 = -4
+    C0 = Cphi/(2*sqrt(np_abs(zK*zP2O7)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_FeCN6_PM73(T, P):
+    """"c-a: potassium ferricyanide [PM73]."""
+    # Coefficients from PM73 Table IX
+    b0 = 1.021 * 5/8
+    b1 = 16.23 * 5/8
+    b2 = 0
+    Cphi = -0.5579 * 5/16
+    zK = +1
+    zFeCN6 = -4
+    C0 = Cphi/(2*sqrt(np_abs(zK*zFeCN6)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_MoCN8_PM73(T, P):
+    """"c-a: potassium Mo(CN)8 [PM73]."""
+    # Coefficients from PM73 Table IX
+    b0 = 0.854 * 5/8
+    b1 = 18.53 * 5/8
+    b2 = 0
+    Cphi = -0.3499 * 5/16
+    zK = +1
+    zMoCN8 = -4
+    C0 = Cphi/(2*sqrt(np_abs(zK*zMoCN8)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_WCN8_PM73(T, P):
+    """"c-a: potassium W(CN)8 [PM73]."""
+    # Coefficients from PM73 Table IX
+    b0 = 1.032 * 5/8
+    b1 = 18.49 * 5/8
+    b2 = 0
+    Cphi = -0.4937 * 5/16
+    zK = +1
+    zWCN8 = -4
+    C0 = Cphi/(2*sqrt(np_abs(zK*zWCN8)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_MeN_MoCN8_PM73(T, P):
+    """"c-a: MeN Mo(CN)8 [PM73]."""
+    # Coefficients from PM73 Table IX
+    b0 = 0.938 * 5/8
+    b1 = 15.91 * 5/8
+    b2 = 0
+    Cphi = -0.333 * 5/16
+    zMeN = +1
+    zMoCN8 = -4
+    C0 = Cphi/(2*sqrt(np_abs(zMeN*zMoCN8)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_P3O10_PM73(T, P):
+    """"c-a: sodium triphosphate-pentaanion [PM73]."""
+    # Coefficients from PM73 Table IX
+    b0 = 1.869 * 3/5
+    b1 = 36.1 * 3/5
+    b2 = 0
+    Cphi = -0.163 * 3/5**(3/2)
+    zNa = +1
+    zP3O10 = -5
+    C0 = Cphi/(2*sqrt(np_abs(zNa*zP3O10)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_P3O10_PM73(T, P):
+    """"c-a: potassium triphosphate-pentaanion [PM73]."""
+    # Coefficients from PM73 Table IX
+    b0 = 1.939 * 3/5
+    b1 = 39.64 * 3/5
+    b2 = 0
+    Cphi = -0.1055 * 3/5**(3/2)
+    zK = +1
+    zP3O10 = -5
+    C0 = Cphi/(2*sqrt(np_abs(zK*zP3O10)))
     C1 = 0
     alph1 = 2
     alph2 = -9
