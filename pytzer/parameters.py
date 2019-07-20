@@ -157,6 +157,70 @@ def bC_Na_SCN_PM73(T, P):
     valid = T == 298.15
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
+def bC_Mg_Br_PM73(T, P):
+    """c-a: magnesium bromide [PM73]."""
+    b0 = 0.5769 * 3/4
+    b1 = 2.337 * 3/4
+    b2 = 0
+    Cphi = 0.00589 * 3/2**(5/2)
+    zMg = +2
+    zBr = -1
+    C0 = Cphi/(2*sqrt(np_abs(zMg*zBr)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Mg_ClO4_PM73(T, P):
+    """c-a: magnesium perchlorate [PM73]."""
+    b0 = 0.6615 * 3/4
+    b1 = 2.678 * 3/4
+    b2 = 0
+    Cphi = 0.01806 * 3/2**(5/2)
+    zMg = +2
+    zClO4 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zMg*zClO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Ca_Br_PM73(T, P):
+    """c-a: calcium bromide [PM73]."""
+    b0 = 0.5088 * 3/4
+    b1 = 2.151 * 3/4
+    b2 = 0
+    Cphi = -0.00485 * 3/2**(5/2)
+    zCa = +2
+    zBr = -1
+    C0 = Cphi/(2*sqrt(np_abs(zCa*zBr)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Ca_ClO4_PM73(T, P):
+    """c-a: calcium perchlorate [PM73]."""
+    b0 = 0.6015 * 3/4
+    b1 = 2.342 * 3/4
+    b2 = 0
+    Cphi = -0.00943 * 3/2**(5/2)
+    zCa = +2
+    zClO4 = -1
+    C0 = Cphi/(2*sqrt(np_abs(zCa*zClO4)))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Silvester and Pitzer (1978) ~~~~~
 # General procedure:
 #  - Inherit 298.15 K value from PM73;
@@ -192,9 +256,6 @@ def bC_K_H2PO4_SP78(T, P):
     zH2PO4 = -1
     Cphi = C0r * (2 * sqrt(np_abs(zK * zH2PO4))) - 10.11e-5*(T - SP78_Tr)
     C0 = Cphi / (2 * sqrt(np_abs(zK * zH2PO4)))
-    alph1 = 2
-    alph2 = -9
-    omega = -9
     # Validity range declared by MP98
     valid = logical_and(T >= 283.15,T <= 313.15)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
@@ -208,9 +269,6 @@ def bC_K_SCN_SP78(T, P):
     zSCN = -1
     Cphi = C0r * (2 * sqrt(np_abs(zK * zSCN))) + 0.43e-5*(T - SP78_Tr)
     C0 = Cphi / (2 * sqrt(np_abs(zK * zSCN)))
-    alph1 = 2
-    alph2 = -9
-    omega = -9
     # Validity range declared by MP98
     valid = logical_and(T >= 283.15,T <= 313.15)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
@@ -220,9 +278,50 @@ def bC_Na_SCN_SP78(T, P):
     b0r, b1r, b2, C0, C1, alph1, alph2, omega, _ = bC_Na_SCN_PM73(T, P)
     b0 = b0r + 0.00078*(T - SP78_Tr)
     b1 = b1r + 0.002*(T - SP78_Tr)
-    alph1 = 2
-    alph2 = -9
-    omega = -9
+    # Validity range declared by MP98
+    valid = logical_and(T >= 283.15,T <= 313.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Mg_Br_SP78(T, P):
+    """c-a: magnesium bromide [SP78]."""
+    b0r, b1r, b2, C0, C1, alph1, alph2, omega, _ = bC_Mg_Br_PM73(T, P)
+    b0 = b0r + (T - SP78_Tr)*-0.075e-3*3/4
+    b1 = b1r + (T - SP78_Tr)*5.15e-3*3/4
+    # Validity range declared by MP98
+    valid = logical_and(T >= 273.15,T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Mg_ClO4_SP78(T, P):
+    """c-a: magnesium perchlorate [SP78]."""
+    b0r, b1r, b2, C0r, C1, alph1, alph2, omega, _ = bC_Mg_ClO4_PM73(T, P)
+    b0 = b0r + (T - SP78_Tr)*0.697e-3*3/4
+    b1 = b1r + (T - SP78_Tr)*6e-3*3/4
+    zMg = +2
+    zClO4 = -1
+    Cphi = C0r*(2*sqrt(np_abs(zMg*zClO4))) + (T - SP78_Tr)*-6.65e-4*3/2**(5/2)
+    C0 = Cphi/(2*sqrt(np_abs(zMg*zClO4)))
+    # Validity range declared by MP98
+    valid = logical_and(T >= 283.15,T <= 313.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Ca_Br_SP78(T, P):
+    """c-a: calcium bromide [SP78]."""
+    b0r, b1r, b2, C0, C1, alph1, alph2, omega, _ = bC_Mg_Br_PM73(T, P)
+    b0 = b0r + (T - SP78_Tr)*-0.697e-3*3/4
+    b1 = b1r + (T - SP78_Tr)*8.05e-3*3/4
+    # Validity range declared by MP98
+    valid = logical_and(T >= 283.15,T <= 313.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Ca_ClO4_SP78(T, P):
+    """c-a: calcium perchlorate [SP78]."""
+    b0r, b1r, b2, C0r, C1, alph1, alph2, omega, _ = bC_Ca_ClO4_PM73(T, P)
+    b0 = b0r + (T - SP78_Tr)*1.106e-3*3/4
+    b1 = b1r + (T - SP78_Tr)*6.77e-3*3/4
+    zCa = +2
+    zClO4 = -1
+    Cphi = C0r*(2*sqrt(np_abs(zCa*zClO4))) + (T - SP78_Tr)*-5.83e-4*3/2**(5/2)
+    C0 = Cphi/(2*sqrt(np_abs(zCa*zClO4)))
     # Validity range declared by MP98
     valid = logical_and(T >= 283.15,T <= 313.15)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid

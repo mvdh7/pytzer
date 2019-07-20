@@ -37,12 +37,12 @@ bC['K-HS'] = prm.bC_K_HS_HPM88
 bC['K-H2PO4'] = prm.bC_K_H2PO4_SP78
 bC['K-SCN'] = prm.bC_K_SCN_SP78
 # Table A5
-#bC['Mg-Br'] = prm.bC_Mg_Br_SP78
+bC['Mg-Br'] = prm.bC_Mg_Br_SP78
 bC['Mg-BOH4'] = prm.bC_Mg_BOH4_SRM87
-#bC['Mg-ClO4'] = prm.bC_Mg_ClO4_SP78
-#bC['Ca-Br'] = prm.bC_Ca_Br_SP78
+bC['Mg-ClO4'] = prm.bC_Mg_ClO4_SP78
+bC['Ca-Br'] = prm.bC_Ca_Br_SP78
 bC['Ca-BOH4'] = prm.bC_Ca_BOH4_SRM87
-#bC['Ca-ClO4'] = prm.bC_Ca_ClO4_SP78
+bC['Ca-ClO4'] = prm.bC_Ca_ClO4_SP78
 # Table A6
 bC['Sr-Br'] = prm.bC_Sr_Br_SP78
 bC['Sr-Cl'] = prm.bC_Sr_Cl_SP78 # not in table but in text §4.6
