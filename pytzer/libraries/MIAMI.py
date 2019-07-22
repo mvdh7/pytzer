@@ -5,7 +5,6 @@ from .. import debyehueckel, unsymmetrical
 name = 'MIAMI'
 dh = {'Aosm': debyehueckel.Aosm_M88}
 jfunc = unsymmetrical.Harvie
-
 bC = {
 # Table A1
     'Na-Cl': prm.bC_Na_Cl_M88,
@@ -111,7 +110,6 @@ bC = {
     'H-Cl': prm.bC_H_Cl_CMR93,
 #    'H-SO4': prm.bC_H_SO4_Pierrot,
 } # end of bC dict
-
 theta = {
 # Table A10
     'H-Sr': prm.theta_H_Sr_RGRG86,
@@ -152,7 +150,6 @@ theta = {
     'Cl-SO3': prm.theta_Cl_SO3_MHJZ89,
 #    'acetate-Cl',
 } # end of theta dict
-
 psi = {
 # Table A10
     'K-Na-Cl': prm.psi_K_Na_Cl_GM89,
@@ -202,11 +199,11 @@ psi = {
     'Mg-HCO3-SO4': prm.psi_Mg_HCO3_SO4_HMW84,
     'Na-Cl-HSO4': prm.psi_Na_Cl_HSO4_HMW84,
     'K-HSO4-SO4': prm.psi_K_HSO4_SO4_HMW84,
-    'Na-Cl-OH': prm.psi_Na_Cl_OH_HMW84, # ref. mislabelled by MP98
-    'K-Cl-OH': prm.psi_K_Cl_OH_HMW84, # ref. mislabelled by MP98
-    'Ca-Cl-OH': prm.psi_Ca_Cl_OH_HMW84, # ref. mislabelled by MP98
-    'Na-OH-SO4': prm.psi_Na_OH_SO4_HMW84, # ref. mislabelled by MP98
-    'K-OH-SO4': prm.psi_K_OH_SO4_HMW84, # ref. mislabelled by MP98
+    'Na-Cl-OH': prm.psi_Na_Cl_OH_HMW84, # ref. presumably mislabelled by MP98
+    'K-Cl-OH': prm.psi_K_Cl_OH_HMW84, # ref. presumably mislabelled by MP98
+    'Ca-Cl-OH': prm.psi_Ca_Cl_OH_HMW84, # ref. presumably mislabelled by MP98
+    'Na-OH-SO4': prm.psi_Na_OH_SO4_HMW84, # ref. presumably mislabelled by MP98
+    'K-OH-SO4': prm.psi_K_OH_SO4_HMW84, # ref. presumably mislabelled by MP98
     'Na-Br-OH': prm.psi_Na_Br_OH_PK74,
     'K-Br-OH': prm.psi_K_Br_OH_PK74,
     'Na-Cl-NO3': prm.psi_Na_Cl_NO3_PK74,
