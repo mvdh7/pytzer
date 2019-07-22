@@ -16,7 +16,7 @@ nav:
     - .io – import and export data: modules/io.md
     - .model – the Pitzer model: modules/model.md
     - .equilibrate - equilibrium solvers: modules/equilibrate.md
-  - Advanced Pytzer modules:
+  - Behind the scenes:
     - .libraries – parameter libraries: modules/libraries.md
     - .parameters – interaction parameter functions: modules/parameters.md
     - .tables - parameter tables: modules/tables.md
