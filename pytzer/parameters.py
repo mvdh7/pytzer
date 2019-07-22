@@ -6841,6 +6841,26 @@ def bC_Sr_BOH4_MP98(T, P):
     """c-a: strontium borate [MP98]."""
     return bC_Ca_BOH4_SRM87(T, P)
 
+def bC_Ca_HSO3_MP98(T, P):
+    """c-a: calcium sulfite [MP98]."""
+    return bC_Ca_HSO4_HMW84(T, P)
+
+def bC_Sr_HSO4_MP98(T, P):
+    """c-a: strontium bisulfate [MP98]."""
+    return bC_Ca_HSO4_HMW84(T, P)
+
+def bC_Sr_HCO3_MP98(T, P):
+    """c-a: strontium bicarbonate [MP98]."""
+    return bC_Ca_HCO3_HMW84(T, P)
+
+def bC_Sr_HSO3_MP98(T, P):
+    """c-a: strontium sulfite [MP98]."""
+    return bC_Ca_HSO3_MP98(T, P)
+
+def bC_Sr_OH_MP98(T, P):
+    """c-a: strontium hydroxide [MP98]."""
+    return bC_Ca_OH_HMW84(T, P)
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Archer (1999) ~~~~~
 def A99_eq22(T, a):
     """A99 equation 22."""
