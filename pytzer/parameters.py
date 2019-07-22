@@ -54,7 +54,7 @@ def mu_none(T, P):
     valid = T > 0
     return mu, valid
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Pitzer and Margoya (1973) ~~~~~
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Pitzer & Margoya (1973) ~~~~~
 def bC_PM73(T, iset):
     # Experimental function - not production-ready
     zM, zX = properties.charges(array(iset.split('-')))[0]
@@ -2327,6 +2327,505 @@ def bC_K_P3O10_PM73(T, P):
     valid = T == 298.15
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Pitzer and Kim (1974) ~~~~~
+def theta_Mg_Na_PK74(T, P):
+    """c-c': magnesium sodium [PK74]."""
+    theta = 0.0
+    valid = T == 298.15
+    return theta, valid
+
+def theta_Ca_Na_PK74(T, P):
+    """c-c': calcium sodium [PK74]."""
+    theta = 0.0
+    valid = T == 298.15
+    return theta, valid
+
+def theta_K_Na_PK74(T, P):
+    """c-c': potassium sodium [PK74]."""
+    theta = -0.012
+    valid = T == 298.15
+    return theta, valid
+
+def theta_Li_Na_PK74(T, P):
+    """c-c': lithium sodium [PK74]."""
+    theta = 0.012
+    valid = T == 298.15
+    return theta, valid
+
+def theta_Ba_Na_PK74(T, P):
+    """c-c': barium sodium [PK74]."""
+    theta = -0.003
+    valid = T == 298.15
+    return theta, valid
+
+def theta_Na_Znjj_PK74(T, P):
+    """c-c': sodium zinc(II) [PK74]."""
+    theta = 0.0
+    valid = T == 298.15
+    return theta, valid
+
+def theta_Mnjj_Na_PK74(T, P):
+    """c-c': manganese(II) sodium [PK74]."""
+    theta = 0.0
+    valid = T == 298.15
+    return theta, valid
+
+def theta_Cs_Na_PK74(T, P):
+    """c-c': caesium sodium [PK74]."""
+    theta = -0.033
+    valid = T == 298.15
+    return theta, valid
+
+def theta_H_Na_PK74(T, P):
+    """c-c': hydrogen sodium [PK74]."""
+    theta = 0.036
+    valid = T == 298.15
+    return theta, valid
+
+def theta_Ca_Mg_PK74(T, P):
+    """c-c': calcium magnesium [PK74]."""
+    theta = 0.01
+    valid = T == 298.15
+    return theta, valid
+
+def theta_Ca_K_PK74(T, P):
+    """c-c': calcium potassium [PK74]."""
+    theta = -0.04
+    valid = T == 298.15
+    return theta, valid
+
+def theta_K_Li_PK74(T, P):
+    """c-c': potassium lithium [PK74]."""
+    theta = -0.022
+    valid = T == 298.15
+    return theta, valid
+
+def theta_Ba_K_PK74(T, P):
+    """c-c': barium potassium [PK74]."""
+    theta = -0.072
+    valid = T == 298.15
+    return theta, valid
+
+def theta_Cs_K_PK74(T, P):
+    """c-c': caesium potassium [PK74]."""
+    theta = 0.0
+    valid = T == 298.15
+    return theta, valid
+
+def theta_H_K_PK74(T, P):
+    """c-c': hydrogen potassium [PK74]."""
+    theta = 0.005
+    valid = T == 298.15
+    return theta, valid
+
+def theta_H_Sr_PK74(T, P):
+    """c-c': hydrogen strontium [PK74]."""
+    theta = -0.02
+    valid = T == 298.15
+    return theta, valid
+
+def theta_Ba_Li_PK74(T, P):
+    """c-c': barium lithium [PK74]."""
+    theta = -0.07
+    valid = T == 298.15
+    return theta, valid
+
+def theta_Cs_Li_PK74(T, P):
+    """c-c': caesium lithium [PK74]."""
+    theta = -0.095
+    valid = T == 298.15
+    return theta, valid
+
+def theta_H_Li_PK74(T, P):
+    """c-c': hydrogen lithium [PK74]."""
+    theta = 0.015
+    valid = T == 298.15
+    return theta, valid
+
+def theta_H_NH4_PK74(T, P):
+    """c-c': hydrogen ammonium [PK74]."""
+    theta = -0.016
+    valid = T == 298.15
+    return theta, valid
+
+def theta_Ba_Cs_PK74(T, P):
+    """c-c': barium caesium [PK74]."""
+    theta = -0.15
+    valid = T == 298.15
+    return theta, valid
+
+def theta_Ba_H_PK74(T, P):
+    """c-c': barium hydrogen [PK74]."""
+    theta = -0.036
+    valid = T == 298.15
+    return theta, valid
+
+def theta_H_Mnjj_PK74(T, P):
+    """c-c': hydrogen manganese(II) [PK74]."""
+    theta = 0.0
+    valid = T == 298.15
+    return theta, valid
+
+def theta_Cs_H_PK74(T, P):
+    """c-c': caesium hydrogen [PK74]."""
+    theta = -0.044
+    valid = T == 298.15
+    return theta, valid
+
+def theta_Et4N_H_PK74(T, P):
+    """c-c': tetraethylammonium hydrogen [PK74]."""
+    theta = 0.0
+    valid = T == 298.15
+    return theta, valid
+
+def theta_H_Me4N_PK74(T, P):
+    """c-c': hydrogen tetramethylammonium [PK74]."""
+    theta = 0.0
+    valid = T == 298.15
+    return theta, valid
+
+def theta_Cl_SO4_PK74(T, P):
+    """a-a': chloride sulfate [PK74]."""
+    theta = -0.035
+    valid = T == 298.15
+    return theta, valid
+
+def theta_Br_Cl_PK74(T, P):
+    """a-a': bromide chloride [PK74]."""
+    theta = 0.0
+    valid = T == 298.15
+    return theta, valid
+
+def theta_Cl_NO3_PK74(T, P):
+    """a-a': chloride nitrate [PK74]."""
+    theta = 0.016
+    valid = T == 298.15
+    return theta, valid
+
+def theta_Cl_OH_PK74(T, P):
+    """a-a': chloride hydroxide [PK74]."""
+    theta = -0.05
+    valid = T == 298.15
+    return theta, valid
+
+def theta_Br_OH_PK74(T, P):
+    """a-a': bromide hydroxide [PK74]."""
+    theta = -0.065
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Mg_Na_Cl_PK74(T, P):
+    """c-c'-a: magnesium sodium chloride [PK74]."""
+    psi = 0.0
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_Na_Cl_PK74(T, P):
+    """c-c'-a: calcium sodium chloride [PK74]."""
+    psi = 0.0
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_Na_Cl_PK74(T, P):
+    """c-c'-a: potassium sodium chloride [PK74]."""
+    psi = -0.0018
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Li_Na_Cl_PK74(T, P):
+    """c-c'-a: lithium sodium chloride [PK74]."""
+    psi = -0.003
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ba_Na_Cl_PK74(T, P):
+    """c-c'-a: barium sodium chloride [PK74]."""
+    psi = 0.0
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mnjj_Na_Cl_PK74(T, P):
+    """c-c'-a: manganese(II) sodium chloride [PK74]."""
+    psi = -0.003
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Cs_Na_Cl_PK74(T, P):
+    """c-c'-a: caesium sodium chloride [PK74]."""
+    psi = -0.003
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_Na_Cl_PK74(T, P):
+    """c-c'-a: hydrogen sodium chloride [PK74]."""
+    psi = -0.004
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_Mg_Cl_PK74(T, P):
+    """c-c'-a: calcium magnesium chloride [PK74]."""
+    psi = 0.0
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_K_Cl_PK74(T, P):
+    """c-c'-a: calcium potassium chloride [PK74]."""
+    psi = -0.015
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_Li_Cl_PK74(T, P):
+    """c-c'-a: potassium lithium chloride [PK74]."""
+    psi = -0.01
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ba_K_Cl_PK74(T, P):
+    """c-c'-a: barium potassium chloride [PK74]."""
+    psi = 0.0
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Cs_K_Cl_PK74(T, P):
+    """c-c'-a: caesium potassium chloride [PK74]."""
+    psi = -0.0013
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_K_Cl_PK74(T, P):
+    """c-c'-a: hydrogen potassium chloride [PK74]."""
+    psi = -0.007
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_Sr_Cl_PK74(T, P):
+    """c-c'-a: hydrogen strontium chloride [PK74]."""
+    psi = 0.018
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ba_Li_Cl_PK74(T, P):
+    """c-c'-a: barium lithium chloride [PK74]."""
+    psi = 0.019
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Cs_Li_Cl_PK74(T, P):
+    """c-c'-a: caesium lithium chloride [PK74]."""
+    psi = -0.0094
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_Li_Cl_PK74(T, P):
+    """c-c'-a: hydrogen lithium chloride [PK74]."""
+    psi = 0.0
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_NH4_Cl_PK74(T, P):
+    """c-c'-a: hydrogen ammonium chloride [PK74]."""
+    psi = 0.0
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ba_Cs_Cl_PK74(T, P):
+    """c-c'-a: barium caesium chloride [PK74]."""
+    psi = 0.0
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ba_H_Cl_PK74(T, P):
+    """c-c'-a: barium hydrogen chloride [PK74]."""
+    psi = 0.024
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_Mnjj_Cl_PK74(T, P):
+    """c-c'-a: hydrogen manganese(II) chloride [PK74]."""
+    psi = 0.0
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Cs_H_Cl_PK74(T, P):
+    """c-c'-a: caesium hydrogen chloride [PK74]."""
+    psi = -0.019
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Et4N_H_Cl_PK74(T, P):
+    """c-c'-a: tetraethylammonium hydrogen chloride [PK74]."""
+    psi = 0.0
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_Me4N_Cl_PK74(T, P):
+    """c-c'-a: hydrogen tetramethylammonium chloride [PK74]."""
+    psi = 0.0
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mg_Na_SO4_PK74(T, P):
+    """c-c'-a: magnesium sodium sulfate [PK74]."""
+    psi = 0.0
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_Na_SO4_PK74(T, P):
+    """c-c'-a: potassium sodium sulfate [PK74]."""
+    psi = -0.01
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_Na_Br_PK74(T, P):
+    """c-c'-a: potassium sodium bromide [PK74]."""
+    psi = -0.0022
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Na_Znjj_Br_PK74(T, P):
+    """c-c'-a: sodium zinc(II) bromide [PK74]."""
+    psi = 0.0
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_Na_Br_PK74(T, P):
+    """c-c'-a: hydrogen sodium bromide [PK74]."""
+    psi = -0.012
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_K_Br_PK74(T, P):
+    """c-c'-a: hydrogen potassium bromide [PK74]."""
+    psi = -0.021
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_Li_Br_PK74(T, P):
+    """c-c'-a: hydrogen lithium bromide [PK74]."""
+    psi = 0.0
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_Na_NO3_PK74(T, P):
+    """c-c'-a: potassium sodium nitrate [PK74]."""
+    psi = -0.0012
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Li_Na_NO3_PK74(T, P):
+    """c-c'-a: lithium sodium nitrate [PK74]."""
+    psi = -0.0072
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Li_Na_ClO4_PK74(T, P):
+    """c-c'-a: lithium sodium perchlorate [PK74]."""
+    psi = -0.008
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_Na_ClO4_PK74(T, P):
+    """c-c'-a: hydrogen sodium perchlorate [PK74]."""
+    psi = -0.016
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_Li_ClO4_PK74(T, P):
+    """c-c'-a: hydrogen lithium perchlorate [PK74]."""
+    psi = -0.0017
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Li_Na_OAc_PK74(T, P):
+    """c-c'-a: lithium sodium OAc [PK74]."""
+    psi = -0.0043
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Na_Cl_SO4_PK74(T, P):
+    """c-a-a': sodium chloride sulfate [PK74]."""
+    psi = 0.007
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Na_Br_Cl_PK74(T, P):
+    """c-a-a': sodium bromide chloride [PK74]."""
+    psi = 0.0
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Na_Cl_NO3_PK74(T, P):
+    """c-a-a': sodium chloride nitrate [PK74]."""
+    psi = -0.006
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Na_Cl_OH_PK74(T, P):
+    """c-a-a': sodium chloride hydroxide [PK74]."""
+    psi = -0.006
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Na_Br_OH_PK74(T, P):
+    """c-a-a': sodium bromide hydroxide [PK74]."""
+    psi = -0.018
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mg_Cl_SO4_PK74(T, P):
+    """c-a-a': magnesium chloride sulfate [PK74]."""
+    psi = 0.0
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Mg_Cl_NO3_PK74(T, P):
+    """c-a-a': magnesium chloride nitrate [PK74]."""
+    psi = 0.0
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Ca_Cl_NO3_PK74(T, P):
+    """c-a-a': calcium chloride nitrate [PK74]."""
+    psi = -0.017
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_Cl_SO4_PK74(T, P):
+    """c-a-a': potassium chloride sulfate [PK74]."""
+    psi = 0.0
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_Br_Cl_PK74(T, P):
+    """c-a-a': potassium bromide chloride [PK74]."""
+    psi = 0.0
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_Cl_NO3_PK74(T, P):
+    """c-a-a': potassium chloride nitrate [PK74]."""
+    psi = -0.006
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_Cl_OH_PK74(T, P):
+    """c-a-a': potassium chloride hydroxide [PK74]."""
+    psi = -0.008
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_Br_OH_PK74(T, P):
+    """c-a-a': potassium bromide hydroxide [PK74]."""
+    psi = -0.014
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Li_Cl_NO3_PK74(T, P):
+    """c-a-a': lithium chloride nitrate [PK74]."""
+    psi = -0.003
+    valid = T == 298.15
+    return psi, valid
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Silvester and Pitzer (1978) ~~~~~
 # Auto-generated functions
 # General procedure:
@@ -3015,6 +3514,15 @@ def theta_H_Mg_RGB80(T, P):
     valid = T == 298.15
     return theta, valid
 
+def psi_H_Mg_Cl_RGB80(T, P):
+    """c-c': hydrogen magnesium chloride [RGB80]."""
+    # RGB80 do provide theta values at 5, 15, 25, 35 and 45 degC, but no
+    #  equation to interpolate between them.
+    # This function just returns the 25 degC value.
+    theta = 0.0010
+    valid = T == 298.15
+    return theta, valid
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Rard and Miller (1981i) ~~~~~
 def bC_Mg_SO4_RM81i(T, P):
     """c-a: magnesium sulfate [RM81i]."""
@@ -3232,6 +3740,49 @@ def bC_Li_Cl_HM83(T, P):
     omega = -9
     valid = logical_and(T >= 273.15, T <= 523.15)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Millero (1983) ~~~~~
+def theta_Cl_H2AsO4_M83(T, P):
+    """c-c': chloride dihydrogen-arsenate [M83]."""
+    # NOTE: this coefficient is for use only WITHOUT unsymmetrical mixing!
+    theta = 0.228
+    valid = T == 298.15
+    return theta, valid
+
+def theta_Cl_HAsO4_M83(T, P):
+    """c-c': chloride hydrogen-arsenate [M83]."""
+    # NOTE: this coefficient is for use only WITHOUT unsymmetrical mixing!
+    theta = 0.122
+    valid = T == 298.15
+    return theta, valid
+
+def theta_AsO4_Cl_M83(T, P):
+    """c-c': arsenate chloride [M83]."""
+    # NOTE: this coefficient is for use only WITHOUT unsymmetrical mixing!
+    theta = 0.060
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Na_Cl_H2AsO4_M83(T, P):
+    """c-c'-a: sodium chloride dihydrogen-arsenate [M83]."""
+    # NOTE: this coefficient is for use only WITHOUT unsymmetrical mixing!
+    psi = 0
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Na_Cl_HAsO4_M83(T, P):
+    """c-c'-a: sodium chloride hydrogen-arsenate [M83]."""
+    # NOTE: this coefficient is for use only WITHOUT unsymmetrical mixing!
+    psi = 0
+    valid = T == 298.15
+    return psi, valid
+
+def psi_Na_AsO4_Cl_M83(T, P):
+    """c-c'-a: sodium arsenate chloride [M83]."""
+    # NOTE: this coefficient is for use only WITHOUT unsymmetrical mixing!
+    psi = 0
+    valid = T == 298.15
+    return psi, valid
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Roy et al. (1983) ~~~~~
 def bC_K_HCO3_RGWW83(T, P):
@@ -5065,7 +5616,221 @@ def lambd_CO2_HSO4_HMW84(T, P):
     valid = T == 298.15
     return lambd, valid
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Phutela and Pitzer (1986) ~~~~~
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Felmy & Weare (1986) ~~~~~
+def bC_Na_BOH4_FW86(T, P):
+    """c-a: sodium borate [FW86]."""
+    b0 = -0.0427
+    b1 = 0.089
+    b2 = 0
+    Cphi = 0.0114
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['BOH4'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_B3O3OH4_FW86(T, P):
+    """c-a: sodium triborate [FW86]."""
+    b0 = -0.056
+    b1 = -0.910
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_B4O5OH4_FW86(T, P):
+    """c-a: sodium tetraborate [FW86]."""
+    b0 = -0.11
+    b1 = -0.40
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_BOH4_FW86(T, P):
+    """c-a: potassium borate [FW86]."""
+    b0 = 0.035
+    b1 = 0.14
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_B3O3OH4_FW86(T, P):
+    """c-a: potassium triborate [FW86]."""
+    b0 = -0.13
+    b1 = 0
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_B4O5OH4_FW86(T, P):
+    """c-a: potassium tetraborate [FW86]."""
+    b0 = -0.022
+    b1 = 0
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_MgBOH4_Cl_FW86(T, P):
+    """c-a: magnesium-borate chloride [FW86]."""
+    b0 = 0.16
+    b1 = 0
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_CaBOH4_Cl_FW86(T, P):
+    """c-a: calcium-borate chloride [FW86]."""
+    b0 = 0.12
+    b1 = 0
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def theta_BOH4_Cl_FW86(T, P):
+    """a-a': borate chloride [FW86]."""
+    theta = -0.065
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Na_BOH4_Cl_FW86(T, P):
+    """c-a-a': sodium borate chloride [FW86]."""
+    psi = -0.0073
+    valid = T == 298.15
+    return psi, valid
+
+def theta_BOH4_SO4_FW86(T, P):
+    """a-a': borate sulfate [FW86]."""
+    theta = -0.012
+    valid = T == 298.15
+    return theta, valid
+
+def theta_B3O3OH4_Cl_FW86(T, P):
+    """a-a': triborate chloride [FW86]."""
+    theta = 0.12
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Na_B3O3OH4_Cl_FW86(T, P):
+    """c-a-a': sodium triborate chloride [FW86]."""
+    psi = -0.024
+    valid = T == 298.15
+    return psi, valid
+
+def theta_B3O3OH4_SO4_FW86(T, P):
+    """a-a': triborate sulfate [FW86]."""
+    theta = 0.10
+    valid = T == 298.15
+    return theta, valid
+
+def theta_B3O3OH4_HCO3_FW86(T, P):
+    """a-a': triborate bicarbonate [FW86]."""
+    theta = -0.10
+    valid = T == 298.15
+    return theta, valid
+
+def theta_B4O5OH4_Cl_FW86(T, P):
+    """a-a': tetraborate chloride [FW86]."""
+    theta = 0.074
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Na_B4O5OH4_Cl_FW86(T, P):
+    """c-a-a': sodium tetraborate chloride [FW86]."""
+    psi = 0.026
+    valid = T == 298.15
+    return psi, valid
+
+def theta_B4O5OH4_SO4_FW86(T, P):
+    """a-a': tetraborate sulfate [FW86]."""
+    theta = 0.12
+    valid = T == 298.15
+    return theta, valid
+
+def theta_B4O5OH4_HCO3_FW86(T, P):
+    """a-a': tetraborate bicarbonate [FW86]."""
+    theta = -0.087
+    valid = T == 298.15
+    return theta, valid
+
+def lambd_BOH3_Cl_FW86(T, P):
+    """n-a: boric-acid chloride [FW86]."""
+    lambd = 0.091
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_BOH3_SO4_FW86(T, P):
+    """n-a: boric-acid sulfate [FW86]."""
+    lambd = 0.018
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_BOH3_B3O3OH4_FW86(T, P):
+    """n-a: boric-acid triborate [FW86]."""
+    lambd = -0.20
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_BOH3_Na_FW86(T, P):
+    """n-c: boric-acid sodium [FW86]."""
+    lambd = -0.097
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_BOH3_K_FW86(T, P):
+    """n-c: boric-acid potassium [FW86]."""
+    lambd = -0.14
+    valid = T == 298.15
+    return lambd, valid
+
+def zeta_BOH3_H_Cl(T, P):
+    """n-c-a: boric-acid hydrogen chloride [FW86]."""
+    zeta = -0.0102
+    valid = T == 298.15
+    return zeta, valid
+
+def zeta_BOH3_Na_SO4(T, P):
+    """n-c-a: boric-acid sodium sulfate [FW86]."""
+    zeta = 0.046
+    valid = T == 298.15
+    return zeta, valid
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Phutela & Pitzer (1986) ~~~~~
 PP86ii_Tr = 298.15
 
 def PP86ii_eq28(T, q):
@@ -5222,6 +5987,29 @@ def bC_Na_SO4_HM86(T, P):
     valid = logical_and(T >= 298.15, T <= 523.15)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Roy et al. (1986) ~~~~~
+def bC_Sr_Cl_RGRG86(T, P):
+    """c-a: strontium chloride [RGRG86]."""
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Sr_Cl_PM73(T, P)
+    b0 = b0 + (T - 298.15)*-3.073e-4
+    b1 = b1 + (T - 298.15)*122.379e-4
+    C0 = (C0 + (T - 298.15)*-6.688e-4 /
+        2*sqrt(np_abs(i2c['Sr']*i2c['Cl'])))
+    valid = logical_and(T >= 278.15, T <= 318.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def theta_H_Sr_RGRG86(T, P):
+    """c-c': hydrogen strontium [RGRG86]."""
+    theta = 0.0591 + (T - 298.15)*0.00045
+    valid = logical_and(T >= 278.15, T <= 318.15)
+    return theta, valid
+
+def psi_H_Sr_Cl_RGRG86(T, P):
+    """c-c'-a: hydrogen strontium chloride [RGRG86]."""
+    psi = 0.0054 + (T - 298.15)*0.00021
+    valid = logical_and(T >= 278.15, T <= 318.15)
+    return psi, valid
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Pabalan and Pitzer (1987i) ~~~~~
 # Note that there are two Pabalan & Pitzer (1987)'s: one compiling a suite of
 #  electrolytes (PP87ii), and one just for NaOH (PP87i).
@@ -5229,22 +6017,22 @@ def bC_Na_SO4_HM86(T, P):
 #  care with reference codes!
 def PP87i_eqNaOH(T, P, a):
     """PP87i equation for sodium hydroxide, with pressure in bar."""
-    return a[ 0] \
-         + a[ 1] * P \
-         + a[ 2] / T \
-         + a[ 3] * P / T \
-         + a[ 4] * log(T) \
-         + a[ 5] * T \
-         + a[ 6] * T * P \
-         + a[ 7] * T**2 \
-         + a[ 8] * T**2 * P \
-         + a[ 9] / (T - 227) \
-         + a[10] / (647 - T) \
-         + a[11] * P / (647 - T)
+    return (a[ 0]
+          + a[ 1] * P
+          + a[ 2] / T
+          + a[ 3] * P / T
+          + a[ 4] * log(T)
+          + a[ 5] * T
+          + a[ 6] * T * P
+          + a[ 7] * T**2
+          + a[ 8] * T**2 * P
+          + a[ 9] / (T - 227)
+          + a[10] / (647 - T)
+          + a[11] * P / (647 - T))
 
 def bC_Na_OH_PP87i(T, P):
     """c-a: sodium hydroxide [PP87i]."""
-    P_bar = P / 10 # Convert dbar to bar
+    P_bar = P/10 # convert dbar to bar
     b0 = PP87i_eqNaOH(T, P_bar, [
          2.7682478e+2,
         -2.8131778e-3,
@@ -5300,6 +6088,105 @@ def bC_Mg_Cl_PP87i(T, P):
     C0 = Cphi/(2*sqrt(np_abs(i2c['Mg']*i2c['Cl'])))
     valid = logical_and(T >= 298.15, T <= 473.15)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Pabalan and Pitzer (1987ii) ~~~~~
+def theta_K_Na_PP87ii(T, P):
+    """c-c': potassium sodium [PP87ii]."""
+    theta = -0.012
+    # Validity range declared by MP98 for theta(Na, Mg) from this study
+    valid = logical_and(T >= 298.15, T <= 523.25)
+    return theta, valid
+
+def theta_Mg_Na_PP87ii(T, P):
+    """c-c': magnesium sodium [PP87ii]."""
+    theta = 0.07
+    # Validity range declared by MP98 for theta(Na, Mg) from this study
+    valid = logical_and(T >= 298.15, T <= 523.25)
+    return theta, valid
+
+def theta_K_Mg_PP87ii(T, P):
+    """c-c': potassium magnesium [PP87ii]."""
+    theta = 0
+    # Validity range declared by MP98 for theta(Na, Mg) from this study
+    valid = logical_and(T >= 298.15, T <= 523.25)
+    return theta, valid
+
+def theta_Cl_SO4_PP87ii(T, P):
+    """a-a': chloride sulfate [PP87ii]."""
+    theta = 0.030
+    # Validity range declared by MP98 for theta(Na, Mg) from this study
+    valid = logical_and(T >= 298.15, T <= 523.25)
+    return theta, valid
+
+def theta_Cl_OH_PP87ii(T, P):
+    """a-a': chloride hydroxide [PP87ii]."""
+    theta = -0.050
+    # Validity range declared by MP98 for theta(Na, Mg) from this study
+    valid = logical_and(T >= 298.15, T <= 523.25)
+    return theta, valid
+
+def theta_OH_SO4_PP87ii(T, P):
+    """a-a': hydroxide sulfate [PP87ii]."""
+    theta = -0.013
+    # Validity range declared by MP98 for theta(Na, Mg) from this study
+    valid = logical_and(T >= 298.15, T <= 523.25)
+    return theta, valid
+
+def psi_K_Na_Cl_PP87ii(T, P):
+    """c-c'-a: potassium sodium chloride [PP87ii]."""
+    psi = -6.81e-3 + 1.68e-5*T
+    # Validity range declared by MP98 for theta(Na, Mg) from this study
+    valid = logical_and(T >= 298.15, T <= 523.25)
+    return psi, valid
+
+def psi_Mg_Na_Cl_PP87ii(T, P):
+    """c-c'-a: magnesium sodium chloride [PP87ii]."""
+    psi = 1.99e-2 - 9.51/T
+    # Validity range declared by MP98 for theta(Na, Mg) from this study
+    valid = logical_and(T >= 298.15, T <= 523.25)
+    return psi, valid
+
+def psi_K_Mg_Cl_PP87ii(T, P):
+    """c-c'-a: potassium magnesium chloride [PP87ii]."""
+    psi = 2.586e-2 - 14.27/T
+    # Validity range declared by MP98 for theta(Na, Mg) from this study
+    valid = logical_and(T >= 298.15, T <= 523.25)
+    return psi, valid
+
+def psi_Na_Cl_SO4_PP87ii(T, P):
+    """c-a-a': sodium chloride sulfate [PP87ii]."""
+    psi = 0
+    # Validity range declared by MP98 for theta(Na, Mg) from this study
+    valid = logical_and(T >= 298.15, T <= 523.25)
+    return psi, valid
+
+def psi_K_Cl_SO4_PP87ii(T, P):
+    """c-a-a': potassium chloride sulfate [PP87ii]."""
+    psi = -5e-3
+    # Validity range declared by MP98 for theta(Na, Mg) from this study
+    valid = logical_and(T >= 298.15, T <= 523.25)
+    return psi, valid
+
+def psi_Mg_Cl_SO4_PP87ii(T, P):
+    """c-a-a': magnesium chloride sulfate [PP87ii]."""
+    psi = -1.174e-1 + 32.63/T
+    # Validity range declared by MP98 for theta(Na, Mg) from this study
+    valid = logical_and(T >= 298.15, T <= 523.25)
+    return psi, valid
+
+def psi_Na_Cl_OH_PP87ii(T, P):
+    """c-a-a': sodium chloride hydroxide [PP87ii]."""
+    psi = 2.73e-2 - 9.93/T
+    # Validity range declared by MP98 for theta(Na, Mg) from this study
+    valid = logical_and(T >= 298.15, T <= 523.25)
+    return psi, valid
+
+def psi_Na_OH_SO4_PP87ii(T, P):
+    """c-a-a': sodium hydroxide sulfate [PP87ii]."""
+    psi = 3.02e-2 - 11.69/T
+    # Validity range declared by MP98 for theta(Na, Mg) from this study
+    valid = logical_and(T >= 298.15, T <= 523.25)
+    return psi, valid
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Simonson, Roy & Gibbons (1987) ~~~~~
 def bC_K_CO3_SRG87(T, P):
@@ -5902,6 +6789,87 @@ def psi_K_Cl_SO4_GM89(T, P):
     valid = logical_and(T >= 273.15, T <= 523.15)
     return psi, valid
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Hershey et al. (1989) ~~~~~
+def bC_Mg_H2PO4_HFM89(T, P):
+    """c-a: magnesium dihydrogen-phosphate [HFM89]."""
+    b0 = -3.55
+    b1 = 16.9
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Mg_HPO4_HFM89(T, P):
+    """c-a: magnesium hydrogen-phosphate [HFM89]."""
+    b0 = -17.5
+    b1 = 27.4
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 1.4
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def theta_Cl_H2PO4_HFM89(T, P):
+    """a-a': chloride dihydrogen-phosphate [HFM89]."""
+    theta = 0.10
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Na_Cl_H2PO4_HFM89(T, P):
+    """c-a-a': sodium chloride dihydrogen-phosphate [HFM89]."""
+    psi = -0.028
+    valid = T == 298.15
+    return psi, valid
+
+def theta_Cl_HPO4_HFM89(T, P):
+    """a-a': chloride hydrogen-phosphate [HFM89]."""
+    theta = -0.105
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Na_Cl_HPO4_HFM89(T, P):
+    """c-a-a': sodium chloride hydrogen-phosphate [HFM89]."""
+    psi = -0.003
+    valid = T == 298.15
+    return psi, valid
+
+def theta_Cl_PO4_HFM89(T, P):
+    """a-a': chloride phosphate [HFM89]."""
+    theta = -0.59
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Na_Cl_PO4_HFM89(T, P):
+    """c-a-a': sodium chloride phosphate [HFM89]."""
+    psi = 0.110
+    valid = T == 298.15
+    return psi, valid
+
+def lambd_H3PO4_Na_HFM89(T, P):
+    """n-c: phosphoric-acid sodium [HFM89]."""
+    lambd = 0.075
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_H3PO4_Cl_HFM89(T, P):
+    """n-a: phosphoric-acid chloride [HFM89]."""
+    lambd = 0
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_MgHPO4_Na_HFM89(T, P):
+    """n-n': magnesium-hydrogen-phosphate sodium [HFM89]."""
+    lambd = -0.124
+    valid = T == 298.15
+    return lambd, valid
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Millero et al. (1989) ~~~~~
 def bC_Na_SO3_MHJZ89(T, P):
     """c-a: sodium sulfite [MHJZ89]."""
@@ -6251,8 +7219,40 @@ def psi_H_HSO4_SO4_CRP94(T, P):
     valid = logical_and(T >= 273.15, T <= 328.15)
     return psi, valid
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Pierrot et al. (1997) ~~~~~
+def bC_Na_HSO4_PMR97(T, P):
+    """c-a: sodium bisulfate [PMR97]."""
+    b0 = 0.030101 - 0.362e-3*(T - 298.15) # Eq. (26)
+    b1 = 0.818686 - 0.019671*(T - 298.15) # Eq. (27)
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 278.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def psi_H_Na_Cl_PMR97(T, P):
+    """c-c'-a: hydrogen sodium chloride [PMR97]."""
+    psi = 0.0002
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return psi, valid
+
+def psi_H_Na_SO4_PMR97(T, P):
+    """c-c'-a: hydrogen sodium sulfate [PMR97]."""
+    psi = 0
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return psi, valid
+
+def psi_H_Na_HSO4_PMR97(T, P):
+    """c-c'-a: hydrogen sodium bisulfate [PMR97]."""
+    psi = 0
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return psi, valid
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Millero and Pierrot (1998) ~~~~~
-def MP98_eq15(T,q):
+def MP98_eq15(T, q):
     # q[0] = PR
     # q[1] = PJ  * 1e5
     # q[2] = PRL * 1e4
@@ -6860,6 +7860,76 @@ def bC_Sr_HSO3_MP98(T, P):
 def bC_Sr_OH_MP98(T, P):
     """c-a: strontium hydroxide [MP98]."""
     return bC_Ca_OH_HMW84(T, P)
+
+def theta_Cl_F_MP98(T, P):
+    """a-a': chloride fluoride [MP98]."""
+    # MP98 state value is "determined from CB88 data"
+    theta = 0.01
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Na_Cl_F_MP98(T, P):
+    """c-a-a': sodium chloride fluoride [MP98]."""
+    # MP98 state value is "determined from CB88 data"
+    psi = 0.0023
+    valid = T == 298.15
+    return psi, valid
+
+def theta_CO3_HCO3_MP98(T, P):
+    """a-a': carbonate bicarbonate [MP98]."""
+    theta = 0
+    valid = logical_and(T >= 273.15, T <= 333.15)
+    return theta, valid
+
+def psi_Na_CO3_HCO3_MP98(T, P):
+    """c-a-a': sodium carbonate bicarbonate [MP98]."""
+    psi = 0
+    valid = logical_and(T >= 273.15, T <= 333.15)
+    return psi, valid
+
+def psi_K_CO3_HCO3_MP98(T, P):
+    """c-a-a': potassium carbonate bicarbonate [MP98]."""
+    psi = 0
+    valid = logical_and(T >= 273.15, T <= 333.15)
+    return psi, valid
+
+def psi_Na_BOH4_Cl_MP98(T, P):
+    """c-a-a': sodium borate chloride [MP98]."""
+    # MP98 say "determined from OK43 and Hershey et al. (1986b) data"
+    psi = -0.0132
+    valid = logical_and(T >= 273.15, T <= 318.15)
+    return psi, valid
+
+def psi_Mg_BOH4_Cl_MP98(T, P):
+    """c-a-a': magnesium borate chloride [MP98]."""
+    # MP98 say "determined from Hershey et al. (1986b) and Simonson et al.
+    #     (1987b) data"
+    psi = -0.235
+    valid = logical_and(T >= 273.15, T <= 318.15)
+    return psi, valid
+
+def psi_Ca_BOH4_Cl_MP98(T, P):
+    """c-a-a': calcium borate chloride [MP98]."""
+    # MP98 say "determined from Hershey et al. (1986b) and Simonson et al.
+    #     (1987b) data"
+    psi = -0.8
+    valid = logical_and(T >= 273.15, T <= 318.15)
+    return psi, valid
+
+def theta_Cl_OH_MP98(T, P):
+    """a-a': chloride hydroxide [MP98]."""
+    # MP98 say "determined from HO58 data"
+    theta = -0.05 + (T - 298.15)*3.125e-4 + (T - 298.15)**2*-8.362e-6
+    # MP98 don't give validity range
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return theta, valid
+
+def theta_BOH4_Cl_MP98(T, P):
+    """a-a': borate chloride [MP98]."""
+    # MP98 say "determined from OK43 and Hershey et al. (1986b) data"
+    theta = -0.0323 + (T - 298.15)*-0.42333e-4 + (T - 298.15)**2*-21.926e-6
+    valid = logical_and(T >= 273.15, T <= 318.15)
+    return theta, valid
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Archer (1999) ~~~~~
 def A99_eq22(T, a):

@@ -106,6 +106,7 @@ _ion2name = {
     'Na': 'sodium',
     'Nd': 'neodymium',
     'Nijj': 'nickel(II)',
+    'OAc': 'OAc',
     'OH': 'hydroxide',
     'P2O7': 'diphosphate',
     'P3O10': 'triphosphate-pentaanion',
