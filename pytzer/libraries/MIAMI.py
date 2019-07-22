@@ -46,8 +46,8 @@ bC['Ca-ClO4'] = prm.bC_Ca_ClO4_SP78
 # Table A6
 bC['Sr-Br'] = prm.bC_Sr_Br_SP78
 bC['Sr-Cl'] = prm.bC_Sr_Cl_SP78 # not in table but in text §4.6
-#bC['Sr-NO3' ] = prm.bC_Sr_NO3_SP78
-#bC['Sr-ClO4'] = prm.bC_Sr_ClO4_SP78
+bC['Sr-NO3'] = prm.bC_Sr_NO3_SP78
+bC['Sr-ClO4'] = prm.bC_Sr_ClO4_SP78
 #bC['Sr-HSO3'] = prm.bC_Sr_HSO3_SP78
 bC['Sr-BOH4'] = prm.bC_Sr_BOH4_MP98
 # Table A7
@@ -73,28 +73,36 @@ bC['NH4-Cl'] = prm.bC_NH4_Cl_MP98
 bC['NH4-Br'] = prm.bC_NH4_Br_MP98
 bC['NH4-F'] = prm.bC_NH4_F_MP98
 # Table A8
-bC.update({iset: lambda T: prm.bC_PM73(T, iset)
-    for iset in ['Sr-I', 'Na-NO2', 'Na-H2PO4', 'Na-HPO4', 'Na-PO4',
-        'K-NO2', 'K-HPO4', 'K-PO4', 'Mg-I', 'Ca-I', 'SO4-NH4']})
-bC['Na-H2AsO4' ] = prm.bC_Na_H2AsO4_PM73
-bC['K-HAsO4'   ] = prm.bC_K_HAsO4_PM73
-bC['Na-HAsO4'  ] = prm.bC_Na_HAsO4_PM73
-bC['Na-AsO4'   ] = prm.bC_Na_AsO4_PM73
+bC['Sr-I'] = prm.bC_Sr_I_PM73
+bC['Na-NO2'] = prm.bC_Na_NO2_PM73
+bC['Na-H2PO4'] = prm.bC_Na_H2PO4_PM73
+bC['Na-HPO4'] = prm.bC_Na_HPO4_PM73
+bC['Na-PO4'] = prm.bC_Na_PO4_PM73
+bC['K-NO2'] = prm.bC_K_NO2_PM73
+bC['K-HPO4'] = prm.bC_K_HPO4_PM73
+bC['K-PO4'] = prm.bC_K_PO4_PM73
+bC['Mg-I'] = prm.bC_Mg_I_PM73
+bC['Ca-I'] = prm.bC_Ca_I_PM73
+bC['SO4-NH4'] = prm.bC_SO4_NH4_PM73
+bC['Na-H2AsO4'] = prm.bC_Na_H2AsO4_PM73
+bC['K-HAsO4'] = prm.bC_K_HAsO4_PM73
+bC['Na-HAsO4'] = prm.bC_Na_HAsO4_PM73
+bC['Na-AsO4'] = prm.bC_Na_AsO4_PM73
 #bC['Na-acetate'] = prm.bC_Na_acetate_PM73
-bC['K-HSO4' ] = prm.bC_K_HSO4_HMW84
-bC['K-AsO4'    ] = prm.bC_K_AsO4_PM73
-#bC['K-acetate' ] = prm.bC_K_acetate_PM73
-bC['Mg-HS'  ] = prm.bC_Mg_HS_HPM88
+bC['K-HSO4'] = prm.bC_K_HSO4_HMW84
+bC['K-AsO4'] = prm.bC_K_AsO4_PM73
+#bC['K-acetate'] = prm.bC_K_acetate_PM73
+bC['Mg-HS'] = prm.bC_Mg_HS_HPM88
 bC['Ca-HSO4'] = prm.bC_Ca_HSO4_HMW84
 bC['Ca-HCO3'] = prm.bC_Ca_HCO3_HMW84
-bC['Ca-HS'  ] = prm.bC_Ca_HS_HPM88
-bC['Ca-OH'  ] = prm.bC_Ca_OH_HMW84
+bC['Ca-HS'] = prm.bC_Ca_HS_HPM88
+bC['Ca-OH'] = prm.bC_Ca_OH_HMW84
 bC['MgOH-Cl'] = prm.bC_MgOH_Cl_HMW84
 # Table A9
-bC['H-Cl' ] = prm.bC_H_Cl_CMR93
+bC['H-Cl'] = prm.bC_H_Cl_CMR93
 #bC['H-SO4'] = prm.bC_H_SO4_Pierrot
 # Table A10
-theta['Cl-CO3' ] = prm.theta_Cl_CO3_PP82
+theta['Cl-CO3'] = prm.theta_Cl_CO3_PP82
 theta['Cl-HCO3'] = prm.theta_Cl_HCO3_PP82
 # Table A11
 theta['Cl-SO3'] = prm.theta_Cl_SO3_MHJZ89

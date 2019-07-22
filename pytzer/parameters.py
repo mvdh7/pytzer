@@ -7,10 +7,9 @@ from .constants import Tzero
 from .tables import (P91_Ch3_T12, P91_Ch3_T13_I, P91_Ch3_T13_II,
     PM73_TableI, PM73_TableVI, PM73_TableVIII, PM73_TableIX)
 from . import properties
-
+from .properties import _ion2charge as i2c
 # Note that variable T in this module is equivalent to tempK elsewhere (in K),
 # and P is equivalent to pres (in dbar), for convenience
-
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Zero functions ~~~~~
 def bC_none(T, P):
     """c-a: no interaction effect."""
@@ -45,8 +44,8 @@ def lambd_none(T, P):
 
 def zeta_none(T, P):
     """n-c-a: no interaction effect."""
-    zeta = 0
     valid = T > 0
+    zeta = 0
     return zeta, valid
 
 def mu_none(T, P):
@@ -70,14 +69,13 @@ def bC_PM73(T, iset):
     b1 = PM73_Tables[zM*zX][iset]['b1']
     b2 = 0
     Cphi = PM73_Tables[zM*zX][iset]['Cphi']
-    C0 = Cphi / (2 * sqrt(np_abs(zM * zX)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['M']*i2c['X'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
     omega = -9
     valid = T == 298.15
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
 
 def bC_H_Cl_PM73(T, P):
     """"c-a: hydrogen chloride [PM73]."""
@@ -86,9 +84,7 @@ def bC_H_Cl_PM73(T, P):
     b1 = 0.2945
     b2 = 0
     Cphi = 0.0008
-    zH = +1
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zH*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -103,9 +99,7 @@ def bC_H_Br_PM73(T, P):
     b1 = 0.3564
     b2 = 0
     Cphi = 0.00827
-    zH = +1
-    zBr = -1
-    C0 = Cphi/(2*sqrt(np_abs(zH*zBr)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['Br'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -120,9 +114,7 @@ def bC_H_I_PM73(T, P):
     b1 = 0.392
     b2 = 0
     Cphi = 0.0011
-    zH = +1
-    zI = -1
-    C0 = Cphi/(2*sqrt(np_abs(zH*zI)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['I'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -137,9 +129,7 @@ def bC_H_ClO4_PM73(T, P):
     b1 = 0.2931
     b2 = 0
     Cphi = 0.00819
-    zH = +1
-    zClO4 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zH*zClO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['ClO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -154,9 +144,7 @@ def bC_H_NO3_PM73(T, P):
     b1 = 0.3206
     b2 = 0
     Cphi = 0.001
-    zH = +1
-    zNO3 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zH*zNO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['NO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -171,9 +159,7 @@ def bC_Li_Cl_PM73(T, P):
     b1 = 0.3074
     b2 = 0
     Cphi = 0.00359
-    zLi = +1
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zLi*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Li']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -188,9 +174,7 @@ def bC_Li_Br_PM73(T, P):
     b1 = 0.2547
     b2 = 0
     Cphi = 0.0053
-    zLi = +1
-    zBr = -1
-    C0 = Cphi/(2*sqrt(np_abs(zLi*zBr)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Li']*i2c['Br'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -205,9 +189,7 @@ def bC_Li_I_PM73(T, P):
     b1 = 0.373
     b2 = 0
     Cphi = 0.0
-    zLi = +1
-    zI = -1
-    C0 = Cphi/(2*sqrt(np_abs(zLi*zI)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Li']*i2c['I'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -222,9 +204,7 @@ def bC_Li_OH_PM73(T, P):
     b1 = 0.14
     b2 = 0
     Cphi = 0.0
-    zLi = +1
-    zOH = -1
-    C0 = Cphi/(2*sqrt(np_abs(zLi*zOH)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Li']*i2c['OH'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -239,9 +219,7 @@ def bC_Li_ClO4_PM73(T, P):
     b1 = 0.3996
     b2 = 0
     Cphi = 0.0008
-    zLi = +1
-    zClO4 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zLi*zClO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Li']*i2c['ClO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -256,9 +234,7 @@ def bC_Li_NO2_PM73(T, P):
     b1 = 0.325
     b2 = 0
     Cphi = -0.0053
-    zLi = +1
-    zNO2 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zLi*zNO2)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Li']*i2c['NO2'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -273,9 +249,7 @@ def bC_Li_NO3_PM73(T, P):
     b1 = 0.278
     b2 = 0
     Cphi = -0.00551
-    zLi = +1
-    zNO3 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zLi*zNO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Li']*i2c['NO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -290,9 +264,7 @@ def bC_Na_F_PM73(T, P):
     b1 = 0.2107
     b2 = 0
     Cphi = 0.0
-    zNa = +1
-    zF = -1
-    C0 = Cphi/(2*sqrt(np_abs(zNa*zF)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['F'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -307,9 +279,7 @@ def bC_Na_Cl_PM73(T, P):
     b1 = 0.2664
     b2 = 0
     Cphi = 0.00127
-    zNa = +1
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zNa*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -324,9 +294,7 @@ def bC_Na_Br_PM73(T, P):
     b1 = 0.2791
     b2 = 0
     Cphi = 0.00116
-    zNa = +1
-    zBr = -1
-    C0 = Cphi/(2*sqrt(np_abs(zNa*zBr)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['Br'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -341,9 +309,7 @@ def bC_Na_I_PM73(T, P):
     b1 = 0.3439
     b2 = 0
     Cphi = 0.0018
-    zNa = +1
-    zI = -1
-    C0 = Cphi/(2*sqrt(np_abs(zNa*zI)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['I'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -358,9 +324,7 @@ def bC_Na_OH_PM73(T, P):
     b1 = 0.253
     b2 = 0
     Cphi = 0.0044
-    zNa = +1
-    zOH = -1
-    C0 = Cphi/(2*sqrt(np_abs(zNa*zOH)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['OH'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -375,9 +339,7 @@ def bC_Na_ClO3_PM73(T, P):
     b1 = 0.2455
     b2 = 0
     Cphi = 0.0004
-    zNa = +1
-    zClO3 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zNa*zClO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['ClO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -392,9 +354,7 @@ def bC_Na_ClO4_PM73(T, P):
     b1 = 0.2755
     b2 = 0
     Cphi = -0.00118
-    zNa = +1
-    zClO4 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zNa*zClO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['ClO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -409,9 +369,7 @@ def bC_Na_BrO3_PM73(T, P):
     b1 = 0.191
     b2 = 0
     Cphi = 0.0059
-    zNa = +1
-    zBrO3 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zNa*zBrO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['BrO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -426,9 +384,7 @@ def bC_Na_SCN_PM73(T, P):
     b1 = 0.3582
     b2 = 0
     Cphi = -0.00303
-    zNa = +1
-    zSCN = -1
-    C0 = Cphi/(2*sqrt(np_abs(zNa*zSCN)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['SCN'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -443,9 +399,7 @@ def bC_Na_NO2_PM73(T, P):
     b1 = 0.1015
     b2 = 0
     Cphi = -0.0049
-    zNa = +1
-    zNO2 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zNa*zNO2)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['NO2'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -460,9 +414,7 @@ def bC_Na_NO3_PM73(T, P):
     b1 = 0.1783
     b2 = 0
     Cphi = -0.00072
-    zNa = +1
-    zNO3 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zNa*zNO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['NO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -477,9 +429,7 @@ def bC_Na_H2PO4_PM73(T, P):
     b1 = 0.0396
     b2 = 0
     Cphi = 0.00795
-    zNa = +1
-    zH2PO4 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zNa*zH2PO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['H2PO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -494,9 +444,7 @@ def bC_Na_H2AsO4_PM73(T, P):
     b1 = 0.2895
     b2 = 0
     Cphi = 0.0
-    zNa = +1
-    zH2AsO4 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zNa*zH2AsO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['H2AsO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -511,9 +459,7 @@ def bC_Na_BO2_PM73(T, P):
     b1 = 0.1104
     b2 = 0
     Cphi = 0.0154
-    zNa = +1
-    zBO2 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zNa*zBO2)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['BO2'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -528,9 +474,7 @@ def bC_Na_BF4_PM73(T, P):
     b1 = 0.1824
     b2 = 0
     Cphi = 0.0021
-    zNa = +1
-    zBF4 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zNa*zBF4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['BF4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -545,9 +489,7 @@ def bC_K_F_PM73(T, P):
     b1 = 0.2021
     b2 = 0
     Cphi = 0.00093
-    zK = +1
-    zF = -1
-    C0 = Cphi/(2*sqrt(np_abs(zK*zF)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['F'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -562,9 +504,7 @@ def bC_K_Cl_PM73(T, P):
     b1 = 0.2122
     b2 = 0
     Cphi = -0.00084
-    zK = +1
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zK*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -579,9 +519,7 @@ def bC_K_Br_PM73(T, P):
     b1 = 0.2212
     b2 = 0
     Cphi = -0.0018
-    zK = +1
-    zBr = -1
-    C0 = Cphi/(2*sqrt(np_abs(zK*zBr)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['Br'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -596,9 +534,7 @@ def bC_K_I_PM73(T, P):
     b1 = 0.2517
     b2 = 0
     Cphi = -0.00414
-    zK = +1
-    zI = -1
-    C0 = Cphi/(2*sqrt(np_abs(zK*zI)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['I'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -613,9 +549,7 @@ def bC_K_OH_PM73(T, P):
     b1 = 0.32
     b2 = 0
     Cphi = 0.0041
-    zK = +1
-    zOH = -1
-    C0 = Cphi/(2*sqrt(np_abs(zK*zOH)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['OH'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -630,9 +564,7 @@ def bC_K_ClO3_PM73(T, P):
     b1 = 0.2481
     b2 = 0
     Cphi = 0.0
-    zK = +1
-    zClO3 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zK*zClO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['ClO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -647,9 +579,7 @@ def bC_K_BrO3_PM73(T, P):
     b1 = 0.2565
     b2 = 0
     Cphi = 0.0
-    zK = +1
-    zBrO3 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zK*zBrO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['BrO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -664,9 +594,7 @@ def bC_K_SCN_PM73(T, P):
     b1 = 0.2302
     b2 = 0
     Cphi = -0.00252
-    zK = +1
-    zSCN = -1
-    C0 = Cphi/(2*sqrt(np_abs(zK*zSCN)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['SCN'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -681,9 +609,7 @@ def bC_K_NO2_PM73(T, P):
     b1 = 0.015
     b2 = 0
     Cphi = 0.0007
-    zK = +1
-    zNO2 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zK*zNO2)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['NO2'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -698,9 +624,7 @@ def bC_K_NO3_PM73(T, P):
     b1 = 0.0494
     b2 = 0
     Cphi = 0.0066
-    zK = +1
-    zNO3 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zK*zNO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['NO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -715,9 +639,7 @@ def bC_K_H2PO4_PM73(T, P):
     b1 = -0.1042
     b2 = 0
     Cphi = 0.0
-    zK = +1
-    zH2PO4 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zK*zH2PO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['H2PO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -732,9 +654,7 @@ def bC_K_H2AsO4_PM73(T, P):
     b1 = 0.0626
     b2 = 0
     Cphi = 0.0
-    zK = +1
-    zH2AsO4 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zK*zH2AsO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['H2AsO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -749,9 +669,7 @@ def bC_K_PtF6_PM73(T, P):
     b1 = -0.282
     b2 = 0
     Cphi = 0.0
-    zK = +1
-    zPtF6 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zK*zPtF6)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['PtF6'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -766,9 +684,7 @@ def bC_Rb_F_PM73(T, P):
     b1 = 0.2842
     b2 = 0
     Cphi = -0.0105
-    zRb = +1
-    zF = -1
-    C0 = Cphi/(2*sqrt(np_abs(zRb*zF)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Rb']*i2c['F'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -783,9 +699,7 @@ def bC_Rb_Cl_PM73(T, P):
     b1 = 0.1483
     b2 = 0
     Cphi = -0.00101
-    zRb = +1
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zRb*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Rb']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -800,9 +714,7 @@ def bC_Rb_Br_PM73(T, P):
     b1 = 0.153
     b2 = 0
     Cphi = -0.00144
-    zRb = +1
-    zBr = -1
-    C0 = Cphi/(2*sqrt(np_abs(zRb*zBr)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Rb']*i2c['Br'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -817,9 +729,7 @@ def bC_Rb_I_PM73(T, P):
     b1 = 0.133
     b2 = 0
     Cphi = -0.00108
-    zRb = +1
-    zI = -1
-    C0 = Cphi/(2*sqrt(np_abs(zRb*zI)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Rb']*i2c['I'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -834,9 +744,7 @@ def bC_Rb_NO2_PM73(T, P):
     b1 = -0.1553
     b2 = 0
     Cphi = -0.00366
-    zRb = +1
-    zNO2 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zRb*zNO2)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Rb']*i2c['NO2'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -851,9 +759,7 @@ def bC_Rb_NO3_PM73(T, P):
     b1 = -0.0172
     b2 = 0
     Cphi = 0.00529
-    zRb = +1
-    zNO3 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zRb*zNO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Rb']*i2c['NO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -868,9 +774,7 @@ def bC_Cs_F_PM73(T, P):
     b1 = 0.257
     b2 = 0
     Cphi = -0.0043
-    zCs = +1
-    zF = -1
-    C0 = Cphi/(2*sqrt(np_abs(zCs*zF)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Cs']*i2c['F'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -885,9 +789,7 @@ def bC_Cs_Cl_PM73(T, P):
     b1 = 0.0558
     b2 = 0
     Cphi = 0.00038
-    zCs = +1
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zCs*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Cs']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -902,9 +804,7 @@ def bC_Cs_Br_PM73(T, P):
     b1 = 0.0139
     b2 = 0
     Cphi = 4e-05
-    zCs = +1
-    zBr = -1
-    C0 = Cphi/(2*sqrt(np_abs(zCs*zBr)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Cs']*i2c['Br'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -919,9 +819,7 @@ def bC_Cs_I_PM73(T, P):
     b1 = 0.0262
     b2 = 0
     Cphi = -0.00365
-    zCs = +1
-    zI = -1
-    C0 = Cphi/(2*sqrt(np_abs(zCs*zI)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Cs']*i2c['I'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -936,9 +834,7 @@ def bC_Cs_OH_PM73(T, P):
     b1 = 0.3
     b2 = 0
     Cphi = 0.0
-    zCs = +1
-    zOH = -1
-    C0 = Cphi/(2*sqrt(np_abs(zCs*zOH)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Cs']*i2c['OH'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -953,9 +849,7 @@ def bC_Cs_NO3_PM73(T, P):
     b1 = -0.0669
     b2 = 0
     Cphi = 0.0
-    zCs = +1
-    zNO3 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zCs*zNO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Cs']*i2c['NO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -970,9 +864,7 @@ def bC_Cs_NO2_PM73(T, P):
     b1 = 0.06
     b2 = 0
     Cphi = -0.0051
-    zCs = +1
-    zNO2 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zCs*zNO2)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Cs']*i2c['NO2'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -987,9 +879,7 @@ def bC_Ag_NO3_PM73(T, P):
     b1 = 0.0025
     b2 = 0
     Cphi = 0.00591
-    zAg = +1
-    zNO3 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zAg*zNO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Ag']*i2c['NO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1004,9 +894,7 @@ def bC_Tl_ClO4_PM73(T, P):
     b1 = -0.023
     b2 = 0
     Cphi = 0.0
-    zTl = +1
-    zClO4 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zTl*zClO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Tl']*i2c['ClO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1021,9 +909,7 @@ def bC_Tl_NO3_PM73(T, P):
     b1 = -0.378
     b2 = 0
     Cphi = 0.0
-    zTl = +1
-    zNO3 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zTl*zNO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Tl']*i2c['NO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1038,9 +924,7 @@ def bC_NH4_Cl_PM73(T, P):
     b1 = 0.1918
     b2 = 0
     Cphi = -0.00301
-    zNH4 = +1
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zNH4*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['NH4']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1055,9 +939,7 @@ def bC_NH4_Br_PM73(T, P):
     b1 = 0.1947
     b2 = 0
     Cphi = -0.00436
-    zNH4 = +1
-    zBr = -1
-    C0 = Cphi/(2*sqrt(np_abs(zNH4*zBr)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['NH4']*i2c['Br'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1072,9 +954,7 @@ def bC_NH4_ClO4_PM73(T, P):
     b1 = -0.0194
     b2 = 0
     Cphi = 0.0
-    zNH4 = +1
-    zClO4 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zNH4*zClO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['NH4']*i2c['ClO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1089,9 +969,7 @@ def bC_NH4_NO3_PM73(T, P):
     b1 = 0.112
     b2 = 0
     Cphi = -3e-05
-    zNH4 = +1
-    zNO3 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zNH4*zNO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['NH4']*i2c['NO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1106,9 +984,7 @@ def bC_Mg_Cl_PM73(T, P):
     b1 = 2.242 * 3/4
     b2 = 0
     Cphi = 0.00979 * 3/2**(5/2)
-    zMg = +2
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zMg*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Mg']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1123,9 +999,7 @@ def bC_Mg_Br_PM73(T, P):
     b1 = 2.337 * 3/4
     b2 = 0
     Cphi = 0.00589 * 3/2**(5/2)
-    zMg = +2
-    zBr = -1
-    C0 = Cphi/(2*sqrt(np_abs(zMg*zBr)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Mg']*i2c['Br'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1140,9 +1014,7 @@ def bC_Mg_I_PM73(T, P):
     b1 = 2.4055 * 3/4
     b2 = 0
     Cphi = 0.01496 * 3/2**(5/2)
-    zMg = +2
-    zI = -1
-    C0 = Cphi/(2*sqrt(np_abs(zMg*zI)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Mg']*i2c['I'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1157,9 +1029,7 @@ def bC_Mg_ClO4_PM73(T, P):
     b1 = 2.678 * 3/4
     b2 = 0
     Cphi = 0.01806 * 3/2**(5/2)
-    zMg = +2
-    zClO4 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zMg*zClO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Mg']*i2c['ClO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1174,9 +1044,7 @@ def bC_Mg_NO3_PM73(T, P):
     b1 = 2.113 * 3/4
     b2 = 0
     Cphi = -0.03889 * 3/2**(5/2)
-    zMg = +2
-    zNO3 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zMg*zNO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Mg']*i2c['NO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1191,9 +1059,7 @@ def bC_Ca_Cl_PM73(T, P):
     b1 = 2.152 * 3/4
     b2 = 0
     Cphi = -0.00064 * 3/2**(5/2)
-    zCa = +2
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zCa*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Ca']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1208,9 +1074,7 @@ def bC_Ca_Br_PM73(T, P):
     b1 = 2.151 * 3/4
     b2 = 0
     Cphi = -0.00485 * 3/2**(5/2)
-    zCa = +2
-    zBr = -1
-    C0 = Cphi/(2*sqrt(np_abs(zCa*zBr)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Ca']*i2c['Br'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1225,9 +1089,7 @@ def bC_Ca_I_PM73(T, P):
     b1 = 2.409 * 3/4
     b2 = 0
     Cphi = -0.00158 * 3/2**(5/2)
-    zCa = +2
-    zI = -1
-    C0 = Cphi/(2*sqrt(np_abs(zCa*zI)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Ca']*i2c['I'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1242,9 +1104,7 @@ def bC_Ca_ClO4_PM73(T, P):
     b1 = 2.342 * 3/4
     b2 = 0
     Cphi = -0.00943 * 3/2**(5/2)
-    zCa = +2
-    zClO4 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zCa*zClO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Ca']*i2c['ClO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1259,9 +1119,7 @@ def bC_Ca_NO3_PM73(T, P):
     b1 = 1.879 * 3/4
     b2 = 0
     Cphi = -0.03798 * 3/2**(5/2)
-    zCa = +2
-    zNO3 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zCa*zNO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Ca']*i2c['NO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1276,9 +1134,7 @@ def bC_Sr_Cl_PM73(T, P):
     b1 = 2.223 * 3/4
     b2 = 0
     Cphi = -0.00246 * 3/2**(5/2)
-    zSr = +2
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zSr*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Sr']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1293,9 +1149,7 @@ def bC_Sr_Br_PM73(T, P):
     b1 = 2.282 * 3/4
     b2 = 0
     Cphi = 0.00231 * 3/2**(5/2)
-    zSr = +2
-    zBr = -1
-    C0 = Cphi/(2*sqrt(np_abs(zSr*zBr)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Sr']*i2c['Br'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1310,9 +1164,7 @@ def bC_Sr_I_PM73(T, P):
     b1 = 2.48 * 3/4
     b2 = 0
     Cphi = 0.00501 * 3/2**(5/2)
-    zSr = +2
-    zI = -1
-    C0 = Cphi/(2*sqrt(np_abs(zSr*zI)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Sr']*i2c['I'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1327,9 +1179,7 @@ def bC_Sr_ClO4_PM73(T, P):
     b1 = 2.089 * 3/4
     b2 = 0
     Cphi = -0.02472 * 3/2**(5/2)
-    zSr = +2
-    zClO4 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zSr*zClO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Sr']*i2c['ClO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1344,9 +1194,7 @@ def bC_Sr_NO3_PM73(T, P):
     b1 = 1.84 * 3/4
     b2 = 0
     Cphi = -0.03757 * 3/2**(5/2)
-    zSr = +2
-    zNO3 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zSr*zNO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Sr']*i2c['NO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1361,9 +1209,7 @@ def bC_Ba_Cl_PM73(T, P):
     b1 = 1.995 * 3/4
     b2 = 0
     Cphi = -0.03654 * 3/2**(5/2)
-    zBa = +2
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zBa*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Ba']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1378,9 +1224,7 @@ def bC_Ba_Br_PM73(T, P):
     b1 = 2.093 * 3/4
     b2 = 0
     Cphi = -0.03009 * 3/2**(5/2)
-    zBa = +2
-    zBr = -1
-    C0 = Cphi/(2*sqrt(np_abs(zBa*zBr)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Ba']*i2c['Br'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1395,9 +1239,7 @@ def bC_Ba_I_PM73(T, P):
     b1 = 2.249 * 3/4
     b2 = 0
     Cphi = -0.03286 * 3/2**(5/2)
-    zBa = +2
-    zI = -1
-    C0 = Cphi/(2*sqrt(np_abs(zBa*zI)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Ba']*i2c['I'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1412,9 +1254,7 @@ def bC_Ba_OH_PM73(T, P):
     b1 = 1.6 * 3/4
     b2 = 0
     Cphi = 0.0 * 3/2**(5/2)
-    zBa = +2
-    zOH = -1
-    C0 = Cphi/(2*sqrt(np_abs(zBa*zOH)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Ba']*i2c['OH'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1429,9 +1269,7 @@ def bC_Ba_ClO4_PM73(T, P):
     b1 = 2.101 * 3/4
     b2 = 0
     Cphi = -0.05894 * 3/2**(5/2)
-    zBa = +2
-    zClO4 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zBa*zClO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Ba']*i2c['ClO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1446,9 +1284,7 @@ def bC_Ba_NO3_PM73(T, P):
     b1 = 1.07 * 3/4
     b2 = 0
     Cphi = 0.0 * 3/2**(5/2)
-    zBa = +2
-    zNO3 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zBa*zNO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Ba']*i2c['NO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1463,9 +1299,7 @@ def bC_Mnjj_Cl_PM73(T, P):
     b1 = 2.067 * 3/4
     b2 = 0
     Cphi = -0.03865 * 3/2**(5/2)
-    zMnjj = +2
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zMnjj*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Mnjj']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1480,9 +1314,7 @@ def bC_Fejj_Cl_PM73(T, P):
     b1 = 2.043 * 3/4
     b2 = 0
     Cphi = -0.01623 * 3/2**(5/2)
-    zFejj = +2
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zFejj*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Fejj']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1497,9 +1329,7 @@ def bC_Cojj_Cl_PM73(T, P):
     b1 = 1.936 * 3/4
     b2 = 0
     Cphi = -0.02869 * 3/2**(5/2)
-    zCojj = +2
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zCojj*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Cojj']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1514,9 +1344,7 @@ def bC_Cojj_Br_PM73(T, P):
     b1 = 2.213 * 3/4
     b2 = 0
     Cphi = -0.00127 * 3/2**(5/2)
-    zCojj = +2
-    zBr = -1
-    C0 = Cphi/(2*sqrt(np_abs(zCojj*zBr)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Cojj']*i2c['Br'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1531,9 +1359,7 @@ def bC_Cojj_I_PM73(T, P):
     b1 = 2.23 * 3/4
     b2 = 0
     Cphi = -0.0088 * 3/2**(5/2)
-    zCojj = +2
-    zI = -1
-    C0 = Cphi/(2*sqrt(np_abs(zCojj*zI)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Cojj']*i2c['I'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1548,9 +1374,7 @@ def bC_Cojj_NO3_PM73(T, P):
     b1 = 2.254 * 3/4
     b2 = 0
     Cphi = -0.01436 * 3/2**(5/2)
-    zCojj = +2
-    zNO3 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zCojj*zNO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Cojj']*i2c['NO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1565,9 +1389,7 @@ def bC_Nijj_Cl_PM73(T, P):
     b1 = 2.108 * 3/4
     b2 = 0
     Cphi = -0.00702 * 3/2**(5/2)
-    zNijj = +2
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zNijj*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Nijj']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1582,9 +1404,7 @@ def bC_Cujj_Cl_PM73(T, P):
     b1 = 1.835 * 3/4
     b2 = 0
     Cphi = -0.07624 * 3/2**(5/2)
-    zCujj = +2
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zCujj*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Cujj']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1599,9 +1419,7 @@ def bC_Cujj_NO3_PM73(T, P):
     b1 = 1.907 * 3/4
     b2 = 0
     Cphi = -0.04136 * 3/2**(5/2)
-    zCujj = +2
-    zNO3 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zCujj*zNO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Cujj']*i2c['NO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1616,9 +1434,7 @@ def bC_Znjj_Cl_PM73(T, P):
     b1 = 2.19 * 3/4
     b2 = 0
     Cphi = -0.1659 * 3/2**(5/2)
-    zZnjj = +2
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zZnjj*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Znjj']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1633,9 +1449,7 @@ def bC_Znjj_Br_PM73(T, P):
     b1 = 2.179 * 3/4
     b2 = 0
     Cphi = -0.2035 * 3/2**(5/2)
-    zZnjj = +2
-    zBr = -1
-    C0 = Cphi/(2*sqrt(np_abs(zZnjj*zBr)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Znjj']*i2c['Br'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1650,9 +1464,7 @@ def bC_Znjj_I_PM73(T, P):
     b1 = 2.594 * 3/4
     b2 = 0
     Cphi = -0.0269 * 3/2**(5/2)
-    zZnjj = +2
-    zI = -1
-    C0 = Cphi/(2*sqrt(np_abs(zZnjj*zI)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Znjj']*i2c['I'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1667,9 +1479,7 @@ def bC_Znjj_ClO4_PM73(T, P):
     b1 = 2.396 * 3/4
     b2 = 0
     Cphi = 0.02134 * 3/2**(5/2)
-    zZnjj = +2
-    zClO4 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zZnjj*zClO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Znjj']*i2c['ClO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1684,9 +1494,7 @@ def bC_Znjj_NO3_PM73(T, P):
     b1 = 2.255 * 3/4
     b2 = 0
     Cphi = -0.02955 * 3/2**(5/2)
-    zZnjj = +2
-    zNO3 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zZnjj*zNO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Znjj']*i2c['NO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1701,9 +1509,7 @@ def bC_Cdjj_NO3_PM73(T, P):
     b1 = 2.224 * 3/4
     b2 = 0
     Cphi = -0.04836 * 3/2**(5/2)
-    zCdjj = +2
-    zNO3 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zCdjj*zNO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Cdjj']*i2c['NO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1718,9 +1524,7 @@ def bC_Pbjj_ClO4_PM73(T, P):
     b1 = 2.296 * 3/4
     b2 = 0
     Cphi = -0.01667 * 3/2**(5/2)
-    zPbjj = +2
-    zClO4 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zPbjj*zClO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Pbjj']*i2c['ClO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1735,9 +1539,7 @@ def bC_Pbjj_NO3_PM73(T, P):
     b1 = 0.38 * 3/4
     b2 = 0
     Cphi = 0.01005 * 3/2**(5/2)
-    zPbjj = +2
-    zNO3 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zPbjj*zNO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Pbjj']*i2c['NO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1752,9 +1554,7 @@ def bC_UO2_Cl_PM73(T, P):
     b1 = 2.192 * 3/4
     b2 = 0
     Cphi = -0.06951 * 3/2**(5/2)
-    zUO2 = +2
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zUO2*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['UO2']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1769,9 +1569,7 @@ def bC_UO2_ClO4_PM73(T, P):
     b1 = 2.859 * 3/4
     b2 = 0
     Cphi = 0.04089 * 3/2**(5/2)
-    zUO2 = +2
-    zClO4 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zUO2*zClO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['UO2']*i2c['ClO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1786,9 +1584,7 @@ def bC_UO2_NO3_PM73(T, P):
     b1 = 2.151 * 3/4
     b2 = 0
     Cphi = -0.05948 * 3/2**(5/2)
-    zUO2 = +2
-    zNO3 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zUO2*zNO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['UO2']*i2c['NO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1803,9 +1599,7 @@ def bC_Li_SO4_PM73(T, P):
     b1 = 1.694 * 3/4
     b2 = 0
     Cphi = -0.00753 * 3/2**(5/2)
-    zLi = +1
-    zSO4 = -2
-    C0 = Cphi/(2*sqrt(np_abs(zLi*zSO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Li']*i2c['SO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1820,9 +1614,7 @@ def bC_Na_SO4_PM73(T, P):
     b1 = 1.484 * 3/4
     b2 = 0
     Cphi = 0.00938 * 3/2**(5/2)
-    zNa = +1
-    zSO4 = -2
-    C0 = Cphi/(2*sqrt(np_abs(zNa*zSO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['SO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1837,9 +1629,7 @@ def bC_Na_S2O3_PM73(T, P):
     b1 = 1.701 * 3/4
     b2 = 0
     Cphi = 0.00705 * 3/2**(5/2)
-    zNa = +1
-    zS2O3 = -2
-    C0 = Cphi/(2*sqrt(np_abs(zNa*zS2O3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['S2O3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1854,9 +1644,7 @@ def bC_Na_CrO4_PM73(T, P):
     b1 = 1.826 * 3/4
     b2 = 0
     Cphi = -0.00407 * 3/2**(5/2)
-    zNa = +1
-    zCrO4 = -2
-    C0 = Cphi/(2*sqrt(np_abs(zNa*zCrO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['CrO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1871,9 +1659,7 @@ def bC_Na_CO3_PM73(T, P):
     b1 = 1.128 * 3/4
     b2 = 0
     Cphi = -0.09057 * 3/2**(5/2)
-    zNa = +1
-    zCO3 = -2
-    C0 = Cphi/(2*sqrt(np_abs(zNa*zCO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['CO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1888,9 +1674,7 @@ def bC_Na_HPO4_PM73(T, P):
     b1 = 1.954 * 3/4
     b2 = 0
     Cphi = 0.0554 * 3/2**(5/2)
-    zNa = +1
-    zHPO4 = -2
-    C0 = Cphi/(2*sqrt(np_abs(zNa*zHPO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['HPO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1905,9 +1689,7 @@ def bC_Na_HAsO4_PM73(T, P):
     b1 = 2.173 * 3/4
     b2 = 0
     Cphi = 0.0034 * 3/2**(5/2)
-    zNa = +1
-    zHAsO4 = -2
-    C0 = Cphi/(2*sqrt(np_abs(zNa*zHAsO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['HAsO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1922,9 +1704,7 @@ def bC_K_SO4_PM73(T, P):
     b1 = 1.039 * 3/4
     b2 = 0
     Cphi = 0.0 * 3/2**(5/2)
-    zK = +1
-    zSO4 = -2
-    C0 = Cphi/(2*sqrt(np_abs(zK*zSO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['SO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1939,9 +1719,7 @@ def bC_K_CrO4_PM73(T, P):
     b1 = 1.652 * 3/4
     b2 = 0
     Cphi = -0.00147 * 3/2**(5/2)
-    zK = +1
-    zCrO4 = -2
-    C0 = Cphi/(2*sqrt(np_abs(zK*zCrO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['CrO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1956,9 +1734,7 @@ def bC_K_PtCN4_PM73(T, P):
     b1 = 3.164 * 3/4
     b2 = 0
     Cphi = 0.0247 * 3/2**(5/2)
-    zK = +1
-    zPtCN4 = -2
-    C0 = Cphi/(2*sqrt(np_abs(zK*zPtCN4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['PtCN4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1973,9 +1749,7 @@ def bC_K_HPO4_PM73(T, P):
     b1 = 1.699 * 3/4
     b2 = 0
     Cphi = 0.0309 * 3/2**(5/2)
-    zK = +1
-    zHPO4 = -2
-    C0 = Cphi/(2*sqrt(np_abs(zK*zHPO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['HPO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -1990,9 +1764,7 @@ def bC_K_HAsO4_PM73(T, P):
     b1 = 2.198 * 3/4
     b2 = 0
     Cphi = -0.0336 * 3/2**(5/2)
-    zK = +1
-    zHAsO4 = -2
-    C0 = Cphi/(2*sqrt(np_abs(zK*zHAsO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['HAsO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2007,9 +1779,7 @@ def bC_Rb_SO4_PM73(T, P):
     b1 = 1.481 * 3/4
     b2 = 0
     Cphi = -0.00019 * 3/2**(5/2)
-    zRb = +1
-    zSO4 = -2
-    C0 = Cphi/(2*sqrt(np_abs(zRb*zSO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Rb']*i2c['SO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2024,9 +1794,7 @@ def bC_Cs_SO4_PM73(T, P):
     b1 = 1.481 * 3/4
     b2 = 0
     Cphi = -0.01131 * 3/2**(5/2)
-    zCs = +1
-    zSO4 = -2
-    C0 = Cphi/(2*sqrt(np_abs(zCs*zSO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Cs']*i2c['SO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2041,9 +1809,7 @@ def bC_NH4_SO4_PM73(T, P):
     b1 = 0.878 * 3/4
     b2 = 0
     Cphi = -0.00219 * 3/2**(5/2)
-    zNH4 = +1
-    zSO4 = -2
-    C0 = Cphi/(2*sqrt(np_abs(zNH4*zSO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['NH4']*i2c['SO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2058,9 +1824,7 @@ def bC_Aljjj_Cl_PM73(T, P):
     b1 = 8.767 * 2/3
     b2 = 0
     Cphi = 0.0071 * 2/3**(3/2)
-    zAljjj = +3
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zAljjj*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Aljjj']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2068,16 +1832,14 @@ def bC_Aljjj_Cl_PM73(T, P):
     valid = T == 298.15
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
-def bC_Sr_Cl_PM73(T, P):
-    """"c-a: strontium chloride [PM73]."""
+def bC_Srjjj_Cl_PM73(T, P):
+    """"c-a: strontium(III) chloride [PM73]."""
     # Coefficients from PM73 Table VIII
     b0 = 1.05 * 2/3
     b1 = 7.978 * 2/3
     b2 = 0
     Cphi = -0.084 * 2/3**(3/2)
-    zSr = +3
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zSr*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Srjjj']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2092,9 +1854,7 @@ def bC_Y_Cl_PM73(T, P):
     b1 = 8.166 * 2/3
     b2 = 0
     Cphi = -0.0587 * 2/3**(3/2)
-    zY = +3
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zY*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Y']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2109,9 +1869,7 @@ def bC_La_Cl_PM73(T, P):
     b1 = 8.231 * 2/3
     b2 = 0
     Cphi = -0.0831 * 2/3**(3/2)
-    zLa = +3
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zLa*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['La']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2126,9 +1884,7 @@ def bC_Ce_Cl_PM73(T, P):
     b1 = 8.227 * 2/3
     b2 = 0
     Cphi = -0.0809 * 2/3**(3/2)
-    zCe = +3
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zCe*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Ce']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2143,9 +1899,7 @@ def bC_Pr_Cl_PM73(T, P):
     b1 = 8.181 * 2/3
     b2 = 0
     Cphi = -0.0727 * 2/3**(3/2)
-    zPr = +3
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zPr*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Pr']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2160,9 +1914,7 @@ def bC_Nd_Cl_PM73(T, P):
     b1 = 8.104 * 2/3
     b2 = 0
     Cphi = -0.0737 * 2/3**(3/2)
-    zNd = +3
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zNd*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Nd']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2177,9 +1929,7 @@ def bC_Sm_Cl_PM73(T, P):
     b1 = 8.273 * 2/3
     b2 = 0
     Cphi = -0.0728 * 2/3**(3/2)
-    zSm = +3
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zSm*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Sm']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2194,9 +1944,7 @@ def bC_Eu_Cl_PM73(T, P):
     b1 = 8.385 * 2/3
     b2 = 0
     Cphi = -0.0687 * 2/3**(3/2)
-    zEu = +3
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zEu*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Eu']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2211,9 +1959,7 @@ def bC_Cr_Cl_PM73(T, P):
     b1 = 7.883 * 2/3
     b2 = 0
     Cphi = -0.1172 * 2/3**(3/2)
-    zCr = +3
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zCr*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Cr']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2228,9 +1974,7 @@ def bC_Cr_NO3_PM73(T, P):
     b1 = 7.777 * 2/3
     b2 = 0
     Cphi = -0.1533 * 2/3**(3/2)
-    zCr = +3
-    zNO3 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zCr*zNO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Cr']*i2c['NO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2245,9 +1989,7 @@ def bC_Ga_ClO4_PM73(T, P):
     b1 = 9.794 * 2/3
     b2 = 0
     Cphi = 0.0904 * 2/3**(3/2)
-    zGa = +3
-    zClO4 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zGa*zClO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Ga']*i2c['ClO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2262,9 +2004,7 @@ def bC_In_Cl_PM73(T, P):
     b1 = -3.85 * 2/3
     b2 = 0
     Cphi = 0.0 * 2/3**(3/2)
-    zIn = +3
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zIn*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['In']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2279,9 +2019,7 @@ def bC_Na_PO4_PM73(T, P):
     b1 = 5.777 * 2/3
     b2 = 0
     Cphi = -0.1339 * 2/3**(3/2)
-    zNa = +1
-    zPO4 = -3
-    C0 = Cphi/(2*sqrt(np_abs(zNa*zPO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['PO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2296,9 +2034,7 @@ def bC_Na_AsO4_PM73(T, P):
     b1 = 5.895 * 2/3
     b2 = 0
     Cphi = -0.124 * 2/3**(3/2)
-    zNa = +1
-    zAsO4 = -3
-    C0 = Cphi/(2*sqrt(np_abs(zNa*zAsO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['AsO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2313,9 +2049,7 @@ def bC_K_PO4_PM73(T, P):
     b1 = 5.958 * 2/3
     b2 = 0
     Cphi = -0.2255 * 2/3**(3/2)
-    zK = +1
-    zPO4 = -3
-    C0 = Cphi/(2*sqrt(np_abs(zK*zPO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['PO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2330,9 +2064,7 @@ def bC_K_P3O9_PM73(T, P):
     b1 = 8.349 * 2/3
     b2 = 0
     Cphi = -0.0886 * 2/3**(3/2)
-    zK = +1
-    zP3O9 = -3
-    C0 = Cphi/(2*sqrt(np_abs(zK*zP3O9)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['P3O9'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2347,9 +2079,7 @@ def bC_K_AsO4_PM73(T, P):
     b1 = 6.511 * 2/3
     b2 = 0
     Cphi = -0.3376 * 2/3**(3/2)
-    zK = +1
-    zAsO4 = -3
-    C0 = Cphi/(2*sqrt(np_abs(zK*zAsO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['AsO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2357,16 +2087,14 @@ def bC_K_AsO4_PM73(T, P):
     valid = T == 298.15
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
-def bC_K_FeCN6_PM73(T, P):
+def bC_K_FejjjCN6_PM73(T, P):
     """"c-a: potassium ferricyanide [PM73]."""
     # Coefficients from PM73 Table VIII
     b0 = 0.5035 * 2/3
     b1 = 7.121 * 2/3
     b2 = 0
     Cphi = -0.1176 * 2/3**(3/2)
-    zK = +1
-    zFeCN6 = -3
-    C0 = Cphi/(2*sqrt(np_abs(zK*zFeCN6)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['FejjjCN6'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2381,9 +2109,7 @@ def bC_K_CoCN6_PM73(T, P):
     b1 = 5.815 * 2/3
     b2 = 0
     Cphi = -0.1603 * 2/3**(3/2)
-    zK = +1
-    zCoCN6 = -3
-    C0 = Cphi/(2*sqrt(np_abs(zK*zCoCN6)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['CoCN6'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2398,9 +2124,7 @@ def bC_Coen3_Cl_PM73(T, P):
     b1 = 3.563 * 2/3
     b2 = 0
     Cphi = -0.0916 * 2/3**(3/2)
-    zCoen3 = +1
-    zCl = -3
-    C0 = Cphi/(2*sqrt(np_abs(zCoen3*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Coen3']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2415,9 +2139,7 @@ def bC_Coen3_NO3_PM73(T, P):
     b1 = 3.935 * 2/3
     b2 = 0
     Cphi = 0.0 * 2/3**(3/2)
-    zCoen3 = +1
-    zNO3 = -3
-    C0 = Cphi/(2*sqrt(np_abs(zCoen3*zNO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Coen3']*i2c['NO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2432,9 +2154,7 @@ def bC_Coen3_ClO4_PM73(T, P):
     b1 = 5.395 * 2/3
     b2 = 0
     Cphi = 0.0 * 2/3**(3/2)
-    zCoen3 = +1
-    zClO4 = -3
-    C0 = Cphi/(2*sqrt(np_abs(zCoen3*zClO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Coen3']*i2c['ClO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2449,9 +2169,7 @@ def bC_Copn3_ClO4_PM73(T, P):
     b1 = 3.976 * 2/3
     b2 = 0
     Cphi = 0.0 * 2/3**(3/2)
-    zCopn3 = +1
-    zClO4 = -3
-    C0 = Cphi/(2*sqrt(np_abs(zCopn3*zClO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Copn3']*i2c['ClO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2466,9 +2184,7 @@ def bC_Th_Cl_PM73(T, P):
     b1 = 21.33 * 2/3
     b2 = 0
     Cphi = -0.3309 * 2/3**(3/2)
-    zTh = +4
-    zCl = -1
-    C0 = Cphi/(2*sqrt(np_abs(zTh*zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Th']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2483,9 +2199,7 @@ def bC_Th_NO3_PM73(T, P):
     b1 = 18.22 * 2/3
     b2 = 0
     Cphi = -0.5906 * 2/3**(3/2)
-    zTh = +4
-    zNO3 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zTh*zNO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Th']*i2c['NO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2500,9 +2214,7 @@ def bC_Na_P2O7_PM73(T, P):
     b1 = 17.16 * 5/8
     b2 = 0
     Cphi = 0.0 * 5/16
-    zNa = +1
-    zP2O7 = -4
-    C0 = Cphi/(2*sqrt(np_abs(zNa*zP2O7)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['P2O7'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2517,9 +2229,7 @@ def bC_K_P2O7_PM73(T, P):
     b1 = 17.88 * 5/8
     b2 = 0
     Cphi = -0.2418 * 5/16
-    zK = +1
-    zP2O7 = -4
-    C0 = Cphi/(2*sqrt(np_abs(zK*zP2O7)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['P2O7'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2527,16 +2237,14 @@ def bC_K_P2O7_PM73(T, P):
     valid = T == 298.15
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
-def bC_K_FeCN6_PM73(T, P):
-    """"c-a: potassium ferricyanide [PM73]."""
+def bC_K_FejjCN6_PM73(T, P):
+    """"c-a: potassium ferrocyanide [PM73]."""
     # Coefficients from PM73 Table IX
     b0 = 1.021 * 5/8
     b1 = 16.23 * 5/8
     b2 = 0
     Cphi = -0.5579 * 5/16
-    zK = +1
-    zFeCN6 = -4
-    C0 = Cphi/(2*sqrt(np_abs(zK*zFeCN6)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['FejjCN6'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2551,9 +2259,7 @@ def bC_K_MoCN8_PM73(T, P):
     b1 = 18.53 * 5/8
     b2 = 0
     Cphi = -0.3499 * 5/16
-    zK = +1
-    zMoCN8 = -4
-    C0 = Cphi/(2*sqrt(np_abs(zK*zMoCN8)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['MoCN8'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2568,9 +2274,7 @@ def bC_K_WCN8_PM73(T, P):
     b1 = 18.49 * 5/8
     b2 = 0
     Cphi = -0.4937 * 5/16
-    zK = +1
-    zWCN8 = -4
-    C0 = Cphi/(2*sqrt(np_abs(zK*zWCN8)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['WCN8'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2585,9 +2289,7 @@ def bC_MeN_MoCN8_PM73(T, P):
     b1 = 15.91 * 5/8
     b2 = 0
     Cphi = -0.333 * 5/16
-    zMeN = +1
-    zMoCN8 = -4
-    C0 = Cphi/(2*sqrt(np_abs(zMeN*zMoCN8)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['MeN']*i2c['MoCN8'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2602,9 +2304,7 @@ def bC_Na_P3O10_PM73(T, P):
     b1 = 36.1 * 3/5
     b2 = 0
     Cphi = -0.163 * 3/5**(3/2)
-    zNa = +1
-    zP3O10 = -5
-    C0 = Cphi/(2*sqrt(np_abs(zNa*zP3O10)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['P3O10'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2619,9 +2319,7 @@ def bC_K_P3O10_PM73(T, P):
     b1 = 39.64 * 3/5
     b2 = 0
     Cphi = -0.1055 * 3/5**(3/2)
-    zK = +1
-    zP3O10 = -5
-    C0 = Cphi/(2*sqrt(np_abs(zK*zP3O10)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['P3O10'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2630,109 +2328,682 @@ def bC_K_P3O10_PM73(T, P):
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Silvester and Pitzer (1978) ~~~~~
+# Auto-generated functions
 # General procedure:
 #  - Inherit 298.15 K value from PM73;
 #  - Add temperature derivative correction from SP78.
-SP78_Tr = 298.15
-
-def bC_Sr_Br_SP78(T, P):
-    """c-a: strontium bromide [SP78]."""
-    # SP78 cite Lange & Streeck (1930) Z Phys Chem Abt A 152
-    b0r, b1r, b2, C0, C1, alph1, alph2, omega, _ = bC_Sr_Br_PM73(T, P)
-    b0 = b0r + (-0.437e-3 * 3/4) * (T - SP78_Tr)
-    b1 = b1r + (8.71e-3 * 3/4) * (T - SP78_Tr)
-    # Validity range declared by MP98
-    valid = logical_and(T >= 283.15,T <= 313.15)
+def bC_H_Cl_SP78(T, P):
+    """"c-a: hydrogen chloride [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_H_Cl_PM73(T, P)
+    b0 = b0 + (T - 298.15)*-3.081e-4
+    b1 = b1 + (T - 298.15)*1.419e-4
+    C0 = (C0 + (T - 298.15)*6.213e-5 /
+        2*sqrt(np_abs(i2c['H']*i2c['Cl'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
-def bC_Sr_Cl_SP78(T, P):
-    """c-a: strontium chloride [SP78]."""
-    # SP78 cite Lange & Streeck (1930) Z Phys Chem Abt A 152
-    b0r, b1r, b2, C0, C1, alph1, alph2, omega, _ = bC_Sr_Br_PM73(T, P)
-    b0 = b0r + (0.956e-3 * 3/4) * (T - SP78_Tr)
-    b1 = b1r + (3.79e-3 * 3/4) * (T - SP78_Tr)
-    # Validity range declared by MP98
-    valid = logical_and(T >= 283.15,T <= 313.15)
+def bC_H_Br_SP78(T, P):
+    """"c-a: hydrogen bromide [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_H_Br_PM73(T, P)
+    b0 = b0 + (T - 298.15)*-2.049e-4
+    b1 = b1 + (T - 298.15)*4.467e-4
+    C0 = (C0 + (T - 298.15)*-5.685e-5 /
+        2*sqrt(np_abs(i2c['H']*i2c['Br'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_H_I_SP78(T, P):
+    """"c-a: hydrogen iodide [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_H_I_PM73(T, P)
+    b0 = b0 + (T - 298.15)*-0.23e-4
+    b1 = b1 + (T - 298.15)*8.86e-4
+    C0 = (C0 + (T - 298.15)*-7.32e-5 /
+        2*sqrt(np_abs(i2c['H']*i2c['I'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_H_ClO4_SP78(T, P):
+    """"c-a: hydrogen perchlorate [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_H_ClO4_PM73(T, P)
+    b0 = b0 + (T - 298.15)*4.905e-4
+    b1 = b1 + (T - 298.15)*19.31e-4
+    C0 = (C0 + (T - 298.15)*-11.77e-5 /
+        2*sqrt(np_abs(i2c['H']*i2c['ClO4'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Li_Cl_SP78(T, P):
+    """"c-a: lithium chloride [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Li_Cl_PM73(T, P)
+    b0 = b0 + (T - 298.15)*-1.685e-4
+    b1 = b1 + (T - 298.15)*5.366e-4
+    C0 = (C0 + (T - 298.15)*-4.52e-5 /
+        2*sqrt(np_abs(i2c['Li']*i2c['Cl'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Li_Br_SP78(T, P):
+    """"c-a: lithium bromide [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Li_Br_PM73(T, P)
+    b0 = b0 + (T - 298.15)*-1.819e-4
+    b1 = b1 + (T - 298.15)*6.636e-4
+    C0 = (C0 + (T - 298.15)*-2.813e-5 /
+        2*sqrt(np_abs(i2c['Li']*i2c['Br'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Li_ClO4_SP78(T, P):
+    """"c-a: lithium perchlorate [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Li_ClO4_PM73(T, P)
+    b0 = b0 + (T - 298.15)*0.386e-4
+    b1 = b1 + (T - 298.15)*7.009e-4
+    C0 = (C0 + (T - 298.15)*-7.712e-5 /
+        2*sqrt(np_abs(i2c['Li']*i2c['ClO4'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_F_SP78(T, P):
+    """"c-a: sodium fluoride [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Na_F_PM73(T, P)
+    b0 = b0 + (T - 298.15)*5.361e-4
+    b1 = b1 + (T - 298.15)*8.7e-4
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_Cl_SP78(T, P):
+    """"c-a: sodium chloride [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Na_Cl_PM73(T, P)
+    b0 = b0 + (T - 298.15)*7.159e-4
+    b1 = b1 + (T - 298.15)*7.005e-4
+    C0 = (C0 + (T - 298.15)*-10.54e-5 /
+        2*sqrt(np_abs(i2c['Na']*i2c['Cl'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_Br_SP78(T, P):
+    """"c-a: sodium bromide [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Na_Br_PM73(T, P)
+    b0 = b0 + (T - 298.15)*7.692e-4
+    b1 = b1 + (T - 298.15)*10.79e-4
+    C0 = (C0 + (T - 298.15)*-9.3e-5 /
+        2*sqrt(np_abs(i2c['Na']*i2c['Br'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_I_SP78(T, P):
+    """"c-a: sodium iodide [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Na_I_PM73(T, P)
+    b0 = b0 + (T - 298.15)*8.355e-4
+    b1 = b1 + (T - 298.15)*8.28e-4
+    C0 = (C0 + (T - 298.15)*-8.35e-5 /
+        2*sqrt(np_abs(i2c['Na']*i2c['I'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_OH_SP78(T, P):
+    """"c-a: sodium hydroxide [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Na_OH_PM73(T, P)
+    b0 = b0 + (T - 298.15)*7.0e-4
+    b1 = b1 + (T - 298.15)*1.34e-4
+    C0 = (C0 + (T - 298.15)*-18.94e-5 /
+        2*sqrt(np_abs(i2c['Na']*i2c['OH'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_ClO3_SP78(T, P):
+    """"c-a: sodium chlorate [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Na_ClO3_PM73(T, P)
+    b0 = b0 + (T - 298.15)*10.35e-4
+    b1 = b1 + (T - 298.15)*19.07e-4
+    C0 = (C0 + (T - 298.15)*-9.29e-5 /
+        2*sqrt(np_abs(i2c['Na']*i2c['ClO3'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_ClO4_SP78(T, P):
+    """"c-a: sodium perchlorate [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Na_ClO4_PM73(T, P)
+    b0 = b0 + (T - 298.15)*12.96e-4
+    b1 = b1 + (T - 298.15)*22.97e-4
+    C0 = (C0 + (T - 298.15)*-16.23e-5 /
+        2*sqrt(np_abs(i2c['Na']*i2c['ClO4'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_BrO3_SP78(T, P):
+    """"c-a: sodium bromate [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Na_BrO3_PM73(T, P)
+    b0 = b0 + (T - 298.15)*5.59e-4
+    b1 = b1 + (T - 298.15)*34.37e-4
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+# bC_Na_IO3_SP78: no corresponding PM73 function
+
+def bC_Na_SCN_SP78(T, P):
+    """"c-a: sodium thiocyanate [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Na_SCN_PM73(T, P)
+    b0 = b0 + (T - 298.15)*7.8e-4
+    b1 = b1 + (T - 298.15)*20.0e-4
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_NO3_SP78(T, P):
+    """"c-a: sodium nitrate [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Na_NO3_PM73(T, P)
+    b0 = b0 + (T - 298.15)*12.66e-4
+    b1 = b1 + (T - 298.15)*20.6e-4
+    C0 = (C0 + (T - 298.15)*-23.16e-5 /
+        2*sqrt(np_abs(i2c['Na']*i2c['NO3'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_F_SP78(T, P):
+    """"c-a: potassium fluoride [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_K_F_PM73(T, P)
+    b0 = b0 + (T - 298.15)*2.14e-4
+    b1 = b1 + (T - 298.15)*5.44e-4
+    C0 = (C0 + (T - 298.15)*-5.95e-5 /
+        2*sqrt(np_abs(i2c['K']*i2c['F'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_Cl_SP78(T, P):
+    """"c-a: potassium chloride [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_K_Cl_PM73(T, P)
+    b0 = b0 + (T - 298.15)*5.794e-4
+    b1 = b1 + (T - 298.15)*10.71e-4
+    C0 = (C0 + (T - 298.15)*-5.095e-5 /
+        2*sqrt(np_abs(i2c['K']*i2c['Cl'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_Br_SP78(T, P):
+    """"c-a: potassium bromide [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_K_Br_PM73(T, P)
+    b0 = b0 + (T - 298.15)*7.39e-4
+    b1 = b1 + (T - 298.15)*17.4e-4
+    C0 = (C0 + (T - 298.15)*-7.004e-5 /
+        2*sqrt(np_abs(i2c['K']*i2c['Br'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_I_SP78(T, P):
+    """"c-a: potassium iodide [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_K_I_PM73(T, P)
+    b0 = b0 + (T - 298.15)*9.914e-4
+    b1 = b1 + (T - 298.15)*11.86e-4
+    C0 = (C0 + (T - 298.15)*-9.44e-5 /
+        2*sqrt(np_abs(i2c['K']*i2c['I'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_ClO3_SP78(T, P):
+    """"c-a: potassium chlorate [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_K_ClO3_PM73(T, P)
+    b0 = b0 + (T - 298.15)*19.87e-4
+    b1 = b1 + (T - 298.15)*31.8e-4
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+# bC_K_ClO4_SP78: no corresponding PM73 function
+
+def bC_K_SCN_SP78(T, P):
+    """"c-a: potassium thiocyanate [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_K_SCN_PM73(T, P)
+    b0 = b0 + (T - 298.15)*6.87e-4
+    b1 = b1 + (T - 298.15)*37.0e-4
+    C0 = (C0 + (T - 298.15)*0.43e-5 /
+        2*sqrt(np_abs(i2c['K']*i2c['SCN'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_NO3_SP78(T, P):
+    """"c-a: potassium nitrate [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_K_NO3_PM73(T, P)
+    b0 = b0 + (T - 298.15)*2.06e-4
+    b1 = b1 + (T - 298.15)*64.5e-4
+    C0 = (C0 + (T - 298.15)*39.7e-5 /
+        2*sqrt(np_abs(i2c['K']*i2c['NO3'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 def bC_K_H2PO4_SP78(T, P):
-    """c-a: potassium dihydrogen-phosphate [SP78]."""
-    b0r, b1r, b2, C0r, C1, alph1, alph2, omega, _ = bC_K_H2PO4_PM73(T, P)
-    b0 = b0r + (6.045e-4) * (T - SP78_Tr)
-    b1 = b1r + (28.6e-4) * (T - SP78_Tr)
-    zK = +1
-    zH2PO4 = -1
-    Cphi = C0r * (2 * sqrt(np_abs(zK * zH2PO4))) - 10.11e-5*(T - SP78_Tr)
-    C0 = Cphi / (2 * sqrt(np_abs(zK * zH2PO4)))
-    # Validity range declared by MP98
-    valid = logical_and(T >= 283.15,T <= 313.15)
+    """"c-a: potassium dihydrogen-phosphate [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_K_H2PO4_PM73(T, P)
+    b0 = b0 + (T - 298.15)*6.045e-4
+    b1 = b1 + (T - 298.15)*28.6e-4
+    C0 = (C0 + (T - 298.15)*-10.11e-5 /
+        2*sqrt(np_abs(i2c['K']*i2c['H2PO4'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
-def bC_K_SCN_SP78(T, P):
-    """c-a: potassium thiocyanate [SP78]."""
-    b0r, b1r, b2, C0r, C1, alph1, alph2, omega, _ = bC_K_SCN_PM73(T, P)
-    b0 = b0r + 6.87e-4*(T - SP78_Tr)
-    b1 = b1r + 37e-4*(T - SP78_Tr)
-    zK = +1
-    zSCN = -1
-    Cphi = C0r * (2 * sqrt(np_abs(zK * zSCN))) + 0.43e-5*(T - SP78_Tr)
-    C0 = Cphi / (2 * sqrt(np_abs(zK * zSCN)))
-    # Validity range declared by MP98
-    valid = logical_and(T >= 283.15,T <= 313.15)
+def bC_Rb_F_SP78(T, P):
+    """"c-a: rubidium fluoride [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Rb_F_PM73(T, P)
+    b0 = b0 + (T - 298.15)*-0.76e-4
+    b1 = b1 + (T - 298.15)*14.7e-4
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
-def bC_Na_SCN_SP78(T, P):
-    """c-a: sodium thiocyanate [SP78]."""
-    b0r, b1r, b2, C0, C1, alph1, alph2, omega, _ = bC_Na_SCN_PM73(T, P)
-    b0 = b0r + 0.00078*(T - SP78_Tr)
-    b1 = b1r + 0.002*(T - SP78_Tr)
-    # Validity range declared by MP98
-    valid = logical_and(T >= 283.15,T <= 313.15)
+def bC_Rb_Cl_SP78(T, P):
+    """"c-a: rubidium chloride [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Rb_Cl_PM73(T, P)
+    b0 = b0 + (T - 298.15)*5.522e-4
+    b1 = b1 + (T - 298.15)*15.06e-4
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Rb_Br_SP78(T, P):
+    """"c-a: rubidium bromide [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Rb_Br_PM73(T, P)
+    b0 = b0 + (T - 298.15)*6.78e-4
+    b1 = b1 + (T - 298.15)*20.35e-4
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Rb_I_SP78(T, P):
+    """"c-a: rubidium iodide [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Rb_I_PM73(T, P)
+    b0 = b0 + (T - 298.15)*8.578e-4
+    b1 = b1 + (T - 298.15)*23.83e-4
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Cs_F_SP78(T, P):
+    """"c-a: caesium fluoride [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Cs_F_PM73(T, P)
+    b0 = b0 + (T - 298.15)*0.95e-4
+    b1 = b1 + (T - 298.15)*5.97e-4
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Cs_Cl_SP78(T, P):
+    """"c-a: caesium chloride [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Cs_Cl_PM73(T, P)
+    b0 = b0 + (T - 298.15)*8.28e-4
+    b1 = b1 + (T - 298.15)*15.0e-4
+    C0 = (C0 + (T - 298.15)*-12.25e-5 /
+        2*sqrt(np_abs(i2c['Cs']*i2c['Cl'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Cs_Br_SP78(T, P):
+    """"c-a: caesium bromide [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Cs_Br_PM73(T, P)
+    b0 = b0 + (T - 298.15)*7.8e-4
+    b1 = b1 + (T - 298.15)*28.44e-4
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Cs_I_SP78(T, P):
+    """"c-a: caesium iodide [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Cs_I_PM73(T, P)
+    b0 = b0 + (T - 298.15)*9.75e-4
+    b1 = b1 + (T - 298.15)*34.77e-4
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_NH4_Cl_SP78(T, P):
+    """"c-a: ammonium chloride [SP78]."""
+    # Coefficients from SP78 Table I
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_NH4_Cl_PM73(T, P)
+    b0 = b0 + (T - 298.15)*0.779e-4
+    b1 = b1 + (T - 298.15)*12.58e-4
+    C0 = (C0 + (T - 298.15)*2.1e-5 /
+        2*sqrt(np_abs(i2c['NH4']*i2c['Cl'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+# bC_NH4_H2PO4_SP78: no corresponding PM73 function
+# bC_Me4N_F_SP78: no corresponding PM73 function
+# bC_Et4N_F_SP78: no corresponding PM73 function
+# bC_Pr4N_F_SP78: no corresponding PM73 function
+# bC_Bu4N_F_SP78: no corresponding PM73 function
+# bC_MeH3N_Cl_SP78: no corresponding PM73 function
+# bC_Me2H2N_Cl_SP78: no corresponding PM73 function
+# bC_Me3HN_Cl_SP78: no corresponding PM73 function
+# bC_Me4N_Cl_SP78: no corresponding PM73 function
+# bC_Et4N_Cl_SP78: no corresponding PM73 function
+# bC_Pr4N_Cl_SP78: no corresponding PM73 function
+# bC_Bu4N_Cl_SP78: no corresponding PM73 function
+# bC_Me4N_Br_SP78: no corresponding PM73 function
+# bC_Et4N_Br_SP78: no corresponding PM73 function
+# bC_Pr4N_Br_SP78: no corresponding PM73 function
+# bC_Bu4N_Br_SP78: no corresponding PM73 function
+# bC_Me4N_I_SP78: no corresponding PM73 function
+# bC_Et4N_I_SP78: no corresponding PM73 function
+# bC_Pr4N_I_SP78: no corresponding PM73 function
+
+def bC_Mg_Cl_SP78(T, P):
+    """"c-a: magnesium chloride [SP78]."""
+    # Coefficients from SP78 Table II
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Mg_Cl_PM73(T, P)
+    b0 = b0 + (T - 298.15)*-0.259e-3 * 3/4
+    b1 = b1 + (T - 298.15)*3.7e-3 * 3/4
+    C0 = (C0 + (T - 298.15)*-3.11e-4 * 3/2**(5/2) /
+        2*sqrt(np_abs(i2c['Mg']*i2c['Cl'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 def bC_Mg_Br_SP78(T, P):
-    """c-a: magnesium bromide [SP78]."""
-    b0r, b1r, b2, C0, C1, alph1, alph2, omega, _ = bC_Mg_Br_PM73(T, P)
-    b0 = b0r + (T - SP78_Tr)*-0.075e-3*3/4
-    b1 = b1r + (T - SP78_Tr)*5.15e-3*3/4
-    # Validity range declared by MP98
-    valid = logical_and(T >= 273.15,T <= 323.15)
+    """"c-a: magnesium bromide [SP78]."""
+    # Coefficients from SP78 Table II
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Mg_Br_PM73(T, P)
+    b0 = b0 + (T - 298.15)*-0.075e-3 * 3/4
+    b1 = b1 + (T - 298.15)*5.15e-3 * 3/4
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 def bC_Mg_ClO4_SP78(T, P):
-    """c-a: magnesium perchlorate [SP78]."""
-    b0r, b1r, b2, C0r, C1, alph1, alph2, omega, _ = bC_Mg_ClO4_PM73(T, P)
-    b0 = b0r + (T - SP78_Tr)*0.697e-3*3/4
-    b1 = b1r + (T - SP78_Tr)*6e-3*3/4
-    zMg = +2
-    zClO4 = -1
-    Cphi = C0r*(2*sqrt(np_abs(zMg*zClO4))) + (T - SP78_Tr)*-6.65e-4*3/2**(5/2)
-    C0 = Cphi/(2*sqrt(np_abs(zMg*zClO4)))
-    # Validity range declared by MP98
-    valid = logical_and(T >= 283.15,T <= 313.15)
+    """"c-a: magnesium perchlorate [SP78]."""
+    # Coefficients from SP78 Table II
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Mg_ClO4_PM73(T, P)
+    b0 = b0 + (T - 298.15)*0.697e-3 * 3/4
+    b1 = b1 + (T - 298.15)*6.0e-3 * 3/4
+    C0 = (C0 + (T - 298.15)*-6.65e-4 * 3/2**(5/2) /
+        2*sqrt(np_abs(i2c['Mg']*i2c['ClO4'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Mg_NO3_SP78(T, P):
+    """"c-a: magnesium nitrate [SP78]."""
+    # Coefficients from SP78 Table II
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Mg_NO3_PM73(T, P)
+    b0 = b0 + (T - 298.15)*0.687e-3 * 3/4
+    b1 = b1 + (T - 298.15)*5.99e-3 * 3/4
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Ca_Cl_SP78(T, P):
+    """"c-a: calcium chloride [SP78]."""
+    # Coefficients from SP78 Table II
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Ca_Cl_PM73(T, P)
+    b0 = b0 + (T - 298.15)*-0.23e-3 * 3/4
+    b1 = b1 + (T - 298.15)*5.2e-3 * 3/4
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 def bC_Ca_Br_SP78(T, P):
-    """c-a: calcium bromide [SP78]."""
-    b0r, b1r, b2, C0, C1, alph1, alph2, omega, _ = bC_Mg_Br_PM73(T, P)
-    b0 = b0r + (T - SP78_Tr)*-0.697e-3*3/4
-    b1 = b1r + (T - SP78_Tr)*8.05e-3*3/4
-    # Validity range declared by MP98
-    valid = logical_and(T >= 283.15,T <= 313.15)
+    """"c-a: calcium bromide [SP78]."""
+    # Coefficients from SP78 Table II
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Ca_Br_PM73(T, P)
+    b0 = b0 + (T - 298.15)*-0.697e-3 * 3/4
+    b1 = b1 + (T - 298.15)*8.05e-3 * 3/4
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Ca_NO3_SP78(T, P):
+    """"c-a: calcium nitrate [SP78]."""
+    # Coefficients from SP78 Table II
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Ca_NO3_PM73(T, P)
+    b0 = b0 + (T - 298.15)*0.706e-3 * 3/4
+    b1 = b1 + (T - 298.15)*12.25e-3 * 3/4
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 def bC_Ca_ClO4_SP78(T, P):
-    """c-a: calcium perchlorate [SP78]."""
-    b0r, b1r, b2, C0r, C1, alph1, alph2, omega, _ = bC_Ca_ClO4_PM73(T, P)
-    b0 = b0r + (T - SP78_Tr)*1.106e-3*3/4
-    b1 = b1r + (T - SP78_Tr)*6.77e-3*3/4
-    zCa = +2
-    zClO4 = -1
-    Cphi = C0r*(2*sqrt(np_abs(zCa*zClO4))) + (T - SP78_Tr)*-5.83e-4*3/2**(5/2)
-    C0 = Cphi/(2*sqrt(np_abs(zCa*zClO4)))
-    # Validity range declared by MP98
-    valid = logical_and(T >= 283.15,T <= 313.15)
+    """"c-a: calcium perchlorate [SP78]."""
+    # Coefficients from SP78 Table II
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Ca_ClO4_PM73(T, P)
+    b0 = b0 + (T - 298.15)*1.106e-3 * 3/4
+    b1 = b1 + (T - 298.15)*6.77e-3 * 3/4
+    C0 = (C0 + (T - 298.15)*-5.83e-4 * 3/2**(5/2) /
+        2*sqrt(np_abs(i2c['Ca']*i2c['ClO4'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Sr_Cl_SP78(T, P):
+    """"c-a: strontium chloride [SP78]."""
+    # Coefficients from SP78 Table II
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Sr_Cl_PM73(T, P)
+    b0 = b0 + (T - 298.15)*0.956e-3 * 3/4
+    b1 = b1 + (T - 298.15)*3.79e-3 * 3/4
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Sr_Br_SP78(T, P):
+    """"c-a: strontium bromide [SP78]."""
+    # Coefficients from SP78 Table II
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Sr_Br_PM73(T, P)
+    b0 = b0 + (T - 298.15)*-0.437e-3 * 3/4
+    b1 = b1 + (T - 298.15)*8.71e-3 * 3/4
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Sr_NO3_SP78(T, P):
+    """"c-a: strontium nitrate [SP78]."""
+    # Coefficients from SP78 Table II
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Sr_NO3_PM73(T, P)
+    b0 = b0 + (T - 298.15)*0.236e-3 * 3/4
+    b1 = b1 + (T - 298.15)*16.63e-3 * 3/4
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Sr_ClO4_SP78(T, P):
+    """"c-a: strontium perchlorate [SP78]."""
+    # Coefficients from SP78 Table II
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Sr_ClO4_PM73(T, P)
+    b0 = b0 + (T - 298.15)*1.524e-3 * 3/4
+    b1 = b1 + (T - 298.15)*7.19e-3 * 3/4
+    C0 = (C0 + (T - 298.15)*-5.86e-4 * 3/2**(5/2) /
+        2*sqrt(np_abs(i2c['Sr']*i2c['ClO4'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Ba_Cl_SP78(T, P):
+    """"c-a: barium chloride [SP78]."""
+    # Coefficients from SP78 Table II
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Ba_Cl_PM73(T, P)
+    b0 = b0 + (T - 298.15)*0.854e-3 * 3/4
+    b1 = b1 + (T - 298.15)*4.31e-3 * 3/4
+    C0 = (C0 + (T - 298.15)*-2.9e-4 * 3/2**(5/2) /
+        2*sqrt(np_abs(i2c['Ba']*i2c['Cl'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Ba_Br_SP78(T, P):
+    """"c-a: barium bromide [SP78]."""
+    # Coefficients from SP78 Table II
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Ba_Br_PM73(T, P)
+    b0 = b0 + (T - 298.15)*-0.451e-3 * 3/4
+    b1 = b1 + (T - 298.15)*9.04e-3 * 3/4
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Ba_NO3_SP78(T, P):
+    """"c-a: barium nitrate [SP78]."""
+    # Coefficients from SP78 Table II
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Ba_NO3_PM73(T, P)
+    b0 = b0 + (T - 298.15)*-3.88e-3 * 3/4
+    b1 = b1 + (T - 298.15)*38.8e-3 * 3/4
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+# bC_Mnjj_ClO4_SP78: no corresponding PM73 function
+# bC_Cojj_ClO4_SP78: no corresponding PM73 function
+# bC_Nijj_ClO4_SP78: no corresponding PM73 function
+
+def bC_Cujj_Cl_SP78(T, P):
+    """"c-a: copper(II) chloride [SP78]."""
+    # Coefficients from SP78 Table II
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Cujj_Cl_PM73(T, P)
+    b0 = b0 + (T - 298.15)*-3.62e-3 * 3/4
+    b1 = b1 + (T - 298.15)*11.3e-3 * 3/4
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Znjj_ClO4_SP78(T, P):
+    """"c-a: zinc(II) perchlorate [SP78]."""
+    # Coefficients from SP78 Table II
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Znjj_ClO4_PM73(T, P)
+    b0 = b0 + (T - 298.15)*0.795e-3 * 3/4
+    b1 = b1 + (T - 298.15)*6.79e-3 * 3/4
+    C0 = (C0 + (T - 298.15)*-7.27e-4 * 3/2**(5/2) /
+        2*sqrt(np_abs(i2c['Znjj']*i2c['ClO4'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Li_SO4_SP78(T, P):
+    """"c-a: lithium sulfate [SP78]."""
+    # Coefficients from SP78 Table II
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Li_SO4_PM73(T, P)
+    b0 = b0 + (T - 298.15)*0.674e-3 * 3/4
+    b1 = b1 + (T - 298.15)*1.88e-3 * 3/4
+    C0 = (C0 + (T - 298.15)*-4.4e-4 * 3/2**(5/2) /
+        2*sqrt(np_abs(i2c['Li']*i2c['SO4'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_SO4_SP78(T, P):
+    """"c-a: sodium sulfate [SP78]."""
+    # Coefficients from SP78 Table II
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Na_SO4_PM73(T, P)
+    b0 = b0 + (T - 298.15)*3.156e-3 * 3/4
+    b1 = b1 + (T - 298.15)*7.51e-3 * 3/4
+    C0 = (C0 + (T - 298.15)*-9.2e-4 * 3/2**(5/2) /
+        2*sqrt(np_abs(i2c['Na']*i2c['SO4'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_SO4_SP78(T, P):
+    """"c-a: potassium sulfate [SP78]."""
+    # Coefficients from SP78 Table II
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_K_SO4_PM73(T, P)
+    b0 = b0 + (T - 298.15)*1.92e-3 * 3/4
+    b1 = b1 + (T - 298.15)*8.93e-3 * 3/4
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Rb_SO4_SP78(T, P):
+    """"c-a: rubidium sulfate [SP78]."""
+    # Coefficients from SP78 Table II
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Rb_SO4_PM73(T, P)
+    b0 = b0 + (T - 298.15)*1.25e-3 * 3/4
+    b1 = b1 + (T - 298.15)*11.52e-3 * 3/4
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Cs_SO4_SP78(T, P):
+    """"c-a: caesium sulfate [SP78]."""
+    # Coefficients from SP78 Table II
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Cs_SO4_PM73(T, P)
+    b0 = b0 + (T - 298.15)*-1.19e-3 * 3/4
+    b1 = b1 + (T - 298.15)*19.31e-3 * 3/4
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_La_Cl_SP78(T, P):
+    """"c-a: lanthanum chloride [SP78]."""
+    # Coefficients from SP78 Table III
+    b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_La_Cl_PM73(T, P)
+    b0 = b0 + (T - 298.15)*0.253e-3
+    b1 = b1 + (T - 298.15)*0.798e-2
+    C0 = (C0 + (T - 298.15)*-0.371e-3 /
+        2*sqrt(np_abs(i2c['La']*i2c['Cl'])))
+    # Validity range follows typical values assigned by MP98
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+# bC_La_ClO4_SP78: no corresponding PM73 function
+# bC_La_NO3_SP78: no corresponding PM73 function
+# bC_Na_FejjjCN6_SP78: no corresponding PM73 function
+# bC_K_FejjjCN6_SP78: no corresponding PM73 function
+# bC_K_FejjCN6_SP78: no corresponding PM73 function
+# bC_Mg_SO4_SP78: no corresponding PM73 function
+# bC_Ca_SO4_SP78: no corresponding PM73 function
+# bC_Cujj_SO4_SP78: no corresponding PM73 function
+# bC_Znjj_SO4_SP78: no corresponding PM73 function
+# bC_Cdjj_SO4_SP78: no corresponding PM73 function
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Roy et al. (1980) ~~~~~
 def theta_H_Mg_RGB80(T, P):
@@ -2751,9 +3022,7 @@ def bC_Mg_SO4_RM81i(T, P):
     b1 = 3.3646
     b2 = -32.743
     Cphi = 0.02797
-    zMg  = +2
-    zSO4 = -2
-    C0 = Cphi / (2 * sqrt(np_abs(zMg * zSO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Mg']*i2c['SO4'])))
     C1 = 0
     alph1 = 1.4
     alph2 = 12
@@ -2783,9 +3052,7 @@ def bC_Na_CO3_PP82(T, P):
     ]))
     b2 = 0
     Cphi = 0.0052
-    zNa = +1
-    zCO3 = -2
-    C0 = Cphi / (2 * sqrt(np_abs(zNa * zCO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['CO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2849,9 +3116,7 @@ def bC_Mg_Cl_dLP83(T, P):
     b1 = 2.60169e-5*T**2 - 1.09438e-2*T + 2.60135
     b2 = 0
     Cphi = 3.01823e-7 * T**2 - 2.89125e-4 * T + 6.57867e-2
-    zMg = +2
-    zCl = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zMg * zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Mg']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2896,9 +3161,7 @@ def bC_Cs_Cl_HM83(T, P):
          9.840e-7,
          0,
     ]))
-    zCs = +1
-    zCl = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zCs * zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Cs']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2932,9 +3195,7 @@ def bC_K_Cl_HM83(T, P):
          4.9567e-7,
          0,
     ]))
-    zK = +1
-    zCl = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zK * zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -2964,9 +3225,7 @@ def bC_Li_Cl_HM83(T, P):
         -3.71e-9,
          0,
     ]))
-    zLi = +1
-    zCl = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zLi * zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Li']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3000,9 +3259,7 @@ def bC_Na_Cl_HMW84(T, P):
     b1 = 0.2644
     b2 = 0.0
     Cphi = 0.00127
-    zNa = 1
-    zCl = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zNa * zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3016,9 +3273,7 @@ def bC_Na_SO4_HMW84(T, P):
     b1 = 1.113
     b2 = 0.0
     Cphi = 0.00497
-    zNa = 1
-    zSO4 = -2
-    C0 = Cphi / (2 * sqrt(np_abs(zNa * zSO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['SO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3032,9 +3287,7 @@ def bC_Na_HSO4_HMW84(T, P):
     b1 = 0.398
     b2 = 0.0
     Cphi = 0.0
-    zNa = 1
-    zHSO4 = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zNa * zHSO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['HSO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3048,9 +3301,7 @@ def bC_Na_OH_HMW84(T, P):
     b1 = 0.253
     b2 = 0.0
     Cphi = 0.0044
-    zNa = 1
-    zOH = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zNa * zOH)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['OH'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3064,9 +3315,7 @@ def bC_Na_HCO3_HMW84(T, P):
     b1 = 0.0411
     b2 = 0.0
     Cphi = 0.0
-    zNa = 1
-    zHCO3 = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zNa * zHCO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['HCO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3080,9 +3329,7 @@ def bC_Na_CO3_HMW84(T, P):
     b1 = 1.389
     b2 = 0.0
     Cphi = 0.0044
-    zNa = 1
-    zCO3 = -2
-    C0 = Cphi / (2 * sqrt(np_abs(zNa * zCO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['CO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3096,9 +3343,7 @@ def bC_K_Cl_HMW84(T, P):
     b1 = 0.2122
     b2 = 0.0
     Cphi = -0.00084
-    zK = 1
-    zCl = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zK * zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3112,9 +3357,7 @@ def bC_K_SO4_HMW84(T, P):
     b1 = 0.7793
     b2 = 0.0
     Cphi = 0.0
-    zK = 1
-    zSO4 = -2
-    C0 = Cphi / (2 * sqrt(np_abs(zK * zSO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['SO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3128,9 +3371,7 @@ def bC_K_HSO4_HMW84(T, P):
     b1 = 0.1735
     b2 = 0.0
     Cphi = 0.0
-    zK = 1
-    zHSO4 = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zK * zHSO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['HSO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3144,9 +3385,7 @@ def bC_K_OH_HMW84(T, P):
     b1 = 0.32
     b2 = 0.0
     Cphi = 0.0041
-    zK = 1
-    zOH = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zK * zOH)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['OH'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3160,9 +3399,7 @@ def bC_K_HCO3_HMW84(T, P):
     b1 = -0.013
     b2 = 0.0
     Cphi = -0.008
-    zK = 1
-    zHCO3 = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zK * zHCO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['HCO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3176,9 +3413,7 @@ def bC_K_CO3_HMW84(T, P):
     b1 = 1.43
     b2 = 0.0
     Cphi = -0.0015
-    zK = 1
-    zCO3 = -2
-    C0 = Cphi / (2 * sqrt(np_abs(zK * zCO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['CO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3192,9 +3427,7 @@ def bC_Ca_Cl_HMW84(T, P):
     b1 = 1.614
     b2 = 0.0
     Cphi = -0.00034
-    zCa = 2
-    zCl = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zCa * zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Ca']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3208,9 +3441,7 @@ def bC_Ca_SO4_HMW84(T, P):
     b1 = 3.1973
     b2 = -54.24
     Cphi = 0.0
-    zCa = 2
-    zSO4 = -2
-    C0 = Cphi / (2 * sqrt(np_abs(zCa * zSO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Ca']*i2c['SO4'])))
     C1 = 0
     alph1 = 1.4
     alph2 = 12
@@ -3224,9 +3455,7 @@ def bC_Ca_HSO4_HMW84(T, P):
     b1 = 2.53
     b2 = 0.0
     Cphi = 0.0
-    zCa = 2
-    zHSO4 = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zCa * zHSO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Ca']*i2c['HSO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3240,9 +3469,7 @@ def bC_Ca_OH_HMW84(T, P):
     b1 = -0.2303
     b2 = -5.72
     Cphi = 0.0
-    zCa = 2
-    zOH = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zCa * zOH)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Ca']*i2c['OH'])))
     C1 = 0
     alph1 = 1.4
     alph2 = 12
@@ -3256,9 +3483,7 @@ def bC_Ca_HCO3_HMW84(T, P):
     b1 = 2.977
     b2 = 0.0
     Cphi = 0.0
-    zCa = 2
-    zHCO3 = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zCa * zHCO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Ca']*i2c['HCO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3272,9 +3497,7 @@ def bC_Ca_CO3_HMW84(T, P):
     b1 = 0.0
     b2 = 0.0
     Cphi = 0.0
-    zCa = 2
-    zCO3 = -2
-    C0 = Cphi / (2 * sqrt(np_abs(zCa * zCO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Ca']*i2c['CO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3288,9 +3511,7 @@ def bC_Mg_Cl_HMW84(T, P):
     b1 = 1.6815
     b2 = 0.0
     Cphi = 0.00519
-    zMg = 2
-    zCl = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zMg * zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Mg']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3304,9 +3525,7 @@ def bC_Mg_SO4_HMW84(T, P):
     b1 = 3.343
     b2 = -37.23
     Cphi = 0.025
-    zMg = 2
-    zSO4 = -2
-    C0 = Cphi / (2 * sqrt(np_abs(zMg * zSO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Mg']*i2c['SO4'])))
     C1 = 0
     alph1 = 1.4
     alph2 = 12
@@ -3320,9 +3539,7 @@ def bC_Mg_HSO4_HMW84(T, P):
     b1 = 1.729
     b2 = 0.0
     Cphi = 0.0
-    zMg = 2
-    zHSO4 = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zMg * zHSO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Mg']*i2c['HSO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3336,9 +3553,7 @@ def bC_Mg_OH_HMW84(T, P):
     b1 = 0.0
     b2 = 0.0
     Cphi = 0.0
-    zMg = 2
-    zOH = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zMg * zOH)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Mg']*i2c['OH'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3352,9 +3567,7 @@ def bC_Mg_HCO3_HMW84(T, P):
     b1 = 0.6072
     b2 = 0.0
     Cphi = 0.0
-    zMg = 2
-    zHCO3 = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zMg * zHCO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Mg']*i2c['HCO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3368,9 +3581,7 @@ def bC_Mg_CO3_HMW84(T, P):
     b1 = 0.0
     b2 = 0.0
     Cphi = 0.0
-    zMg = 2
-    zCO3 = -2
-    C0 = Cphi / (2 * sqrt(np_abs(zMg * zCO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Mg']*i2c['CO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3384,9 +3595,7 @@ def bC_MgOH_Cl_HMW84(T, P):
     b1 = 1.658
     b2 = 0.0
     Cphi = 0.0
-    zMgOH = 1
-    zCl = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zMgOH * zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['MgOH']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3400,9 +3609,7 @@ def bC_MgOH_SO4_HMW84(T, P):
     b1 = 0.0
     b2 = 0.0
     Cphi = 0.0
-    zMgOH = 1
-    zSO4 = -2
-    C0 = Cphi / (2 * sqrt(np_abs(zMgOH * zSO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['MgOH']*i2c['SO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3416,9 +3623,7 @@ def bC_MgOH_HSO4_HMW84(T, P):
     b1 = 0.0
     b2 = 0.0
     Cphi = 0.0
-    zMgOH = 1
-    zHSO4 = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zMgOH * zHSO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['MgOH']*i2c['HSO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3432,9 +3637,7 @@ def bC_MgOH_OH_HMW84(T, P):
     b1 = 0.0
     b2 = 0.0
     Cphi = 0.0
-    zMgOH = 1
-    zOH = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zMgOH * zOH)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['MgOH']*i2c['OH'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3448,9 +3651,7 @@ def bC_MgOH_HCO3_HMW84(T, P):
     b1 = 0.0
     b2 = 0.0
     Cphi = 0.0
-    zMgOH = 1
-    zHCO3 = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zMgOH * zHCO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['MgOH']*i2c['HCO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3464,9 +3665,7 @@ def bC_MgOH_CO3_HMW84(T, P):
     b1 = 0.0
     b2 = 0.0
     Cphi = 0.0
-    zMgOH = 1
-    zCO3 = -2
-    C0 = Cphi / (2 * sqrt(np_abs(zMgOH * zCO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['MgOH']*i2c['CO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3480,9 +3679,7 @@ def bC_H_Cl_HMW84(T, P):
     b1 = 0.2945
     b2 = 0.0
     Cphi = 0.0008
-    zH = 1
-    zCl = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zH * zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3496,9 +3693,7 @@ def bC_H_SO4_HMW84(T, P):
     b1 = 0.0
     b2 = 0.0
     Cphi = 0.0438
-    zH = 1
-    zSO4 = -2
-    C0 = Cphi / (2 * sqrt(np_abs(zH * zSO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['SO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3512,9 +3707,7 @@ def bC_H_HSO4_HMW84(T, P):
     b1 = 0.5556
     b2 = 0.0
     Cphi = 0.0
-    zH = 1
-    zHSO4 = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zH * zHSO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['HSO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3528,9 +3721,7 @@ def bC_H_OH_HMW84(T, P):
     b1 = 0.0
     b2 = 0.0
     Cphi = 0.0
-    zH = 1
-    zOH = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zH * zOH)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['OH'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3544,9 +3735,7 @@ def bC_H_HCO3_HMW84(T, P):
     b1 = 0.0
     b2 = 0.0
     Cphi = 0.0
-    zH = 1
-    zHCO3 = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zH * zHCO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['HCO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -3560,9 +3749,7 @@ def bC_H_CO3_HMW84(T, P):
     b1 = 0.0
     b2 = 0.0
     Cphi = 0.0
-    zH = 1
-    zCO3 = -2
-    C0 = Cphi / (2 * sqrt(np_abs(zH * zCO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['CO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4989,9 +5176,7 @@ def bC_K_SO4_HM86(T, P):
         -1.81e-4,
          0, 0, 0,
     ]))
-    zK = +1
-    zSO4 = -2
-    C0 = Cphi / (2 * sqrt(np_abs(zK * zSO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['SO4'])))
     C1 = 0
     alph1 = 1.4
     alph2 = -9
@@ -5029,9 +5214,7 @@ def bC_Na_SO4_HM86(T, P):
          0,
         -24.950,
     ]))
-    zNa = +1
-    zSO4 = -2
-    C0 = Cphi / (2 * sqrt(np_abs(zNa * zSO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['SO4'])))
     C1 = 0
     alph1 = 1.4
     alph2 = -9
@@ -5102,9 +5285,7 @@ def bC_Na_OH_PP87i(T, P):
         -8.1156286e-02,
          0,
     ])
-    zNa = +1
-    zOH = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zNa * zOH)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['OH'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -5116,9 +5297,7 @@ def bC_Mg_Cl_PP87i(T, P):
     """c-a: magnesium chloride [PP87i]."""
     b0, b1, b2, _, C1, alph1, alph2, omega, _ = bC_Mg_Cl_dLP83(T, P)
     Cphi = 2.41831e-7 * T**2 - 2.49949e-4 * T + 5.95320e-2
-    zMg = +2
-    zCl = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zMg * zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Mg']*i2c['Cl'])))
     valid = logical_and(T >= 298.15, T <= 473.15)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -5162,9 +5341,7 @@ def bC_K_Cl_SRRJ87(T, P):
         -0.639,
          0.613,
     ]))
-    zK = +1
-    zCl = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zK * zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -5191,9 +5368,7 @@ def bC_Na_Cl_SRRJ87(T, P):
         -1.20,
          1.15,
     ]))
-    zNa = +1
-    zCl = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zNa * zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -5220,9 +5395,7 @@ def bC_K_BOH4_SRRJ87(T, P):
         -9.56,
          0,
     ]))
-    zK = +1
-    zCl = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zK * zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -5249,9 +5422,7 @@ def bC_Na_BOH4_SRRJ87(T, P):
         -15.7,
          0,
     ]))
-    zNa = +1
-    zCl = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zNa * zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -5342,9 +5513,7 @@ def bC_Na_HS_HPM88(T, P):
     b1 = 0
     b2 = 0
     Cphi = -1.27e-2
-    zNa = +1
-    zHS = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zNa * zHS)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['HS'])))
     C1 = 0
     alph1 = -9
     alph2 = -9
@@ -5358,9 +5527,7 @@ def bC_K_HS_HPM88(T, P):
     b1 = 0
     b2 = 0
     Cphi = -1.94e-1
-    zK = +1
-    zHS = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zK * zHS)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['HS'])))
     C1 = 0
     alph1 = -9
     alph2 = -9
@@ -5442,9 +5609,7 @@ def bC_Ca_Cl_M88(T, P):
     b1 = b1_Ca_Cl_M88(T, P)
     b2 = 0
     Cphi = Cphi_Ca_Cl_M88(T, P)
-    zCa = +2
-    zCl = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zCa * zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Ca']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -5499,9 +5664,7 @@ def bC_Na_Cl_M88(T, P):
          6.83040995e-2,
          2.93922611e-1,
     ]))
-    zNa = +1
-    zCl = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zNa * zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -5541,9 +5704,7 @@ def bC_Na_SO4_M88(T, P):
         -2.42272049e00,
          0,
     ]))
-    zNa = +1
-    zSO4 = -2
-    C0 = Cphi / (2 * sqrt(np_abs(zNa * zSO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['SO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -5609,9 +5770,7 @@ def bC_Ca_Cl_GM89(T, P):
     """c-a: calcium chloride [GM89]."""
     b0, b1, b2, _, C1, alph1, alph2, omega, valid = bC_Ca_Cl_M88(T, P)
     Cphi = Cphi_Ca_Cl_GM89(T, P)
-    zCa = +2
-    zCl = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zCa * zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Ca']*i2c['Cl'])))
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 def bC_K_Cl_GM89(T, P):
@@ -5643,9 +5802,7 @@ def bC_K_Cl_GM89(T, P):
          4.95713573e-7,
          0, 0,
     ]))
-    zK = +1
-    zCl = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zK * zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -5670,9 +5827,7 @@ def bC_K_SO4_GM89(T, P):
     ]))
     b2 = 0
     Cphi = -0.0188
-    zK = +1
-    zSO4 = -2
-    C0 = Cphi / (2 * sqrt(np_abs(zK * zSO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['SO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -5754,9 +5909,7 @@ def bC_Na_SO3_MHJZ89(T, P):
     b1 = -19.4549 + 6153.78/T # Eq. (37)
     b2 = 0
     Cphi = -1.2355 + 367.07/T # Eq. (38)
-    zNa = +1
-    zSO3 = -2
-    C0 = Cphi/(2*sqrt(np_abs(zNa*zSO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['SO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -5770,9 +5923,7 @@ def bC_Na_HSO3_MHJZ89(T, P):
     b1 = -13.146 + 4014.80/T # Eq. (30)
     b2 = 0
     Cphi = 0.9565 + 277.85/T # Eq. (31), note difference from MP98 Table A3
-    zNa = +1
-    zHSO3 = -1
-    C0 = Cphi/(2*sqrt(np_abs(zNa*zHSO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['HSO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -5930,9 +6081,7 @@ def bC_H_Cl_CMR93(T, P):
          45.52154,
          0, 0, 0, 0, 0,
     ]))
-    zH = +1
-    zCl = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zH * zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -5990,9 +6139,7 @@ def bC_Na_SO4_HPR93(T, P):
         4.5879201,
         0.019471746,
     ]))
-    zNa = +1
-    zSO4 = -2
-    C0 = Cphi / (2 * sqrt(np_abs(zNa * zSO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['SO4'])))
     C1 = 0
     alph1 = 1.7
     alph2 = -9
@@ -6007,9 +6154,7 @@ def bC_Na_HSO4_HPR93(T, P):
     b1 = 0.3826401
     b2 = 0
     Cphi = -0.0039056
-    zNa = +1
-    zHSO4 = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zNa * zHSO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['HSO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6133,9 +6278,7 @@ def bC_Na_I_MP98(T, P):
          0,
         -0.835,
     ]))
-    zNa = +1
-    zI = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zNa * zI)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['I'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6161,9 +6304,7 @@ def bC_Na_Br_MP98(T, P):
          0.16405,
         -0.93,
     ]))
-    zNa = +1
-    zBr = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zNa * zBr)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['Br'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6210,9 +6351,7 @@ def bC_K_Br_MP98(T, P):
          0.216,
         -0.7004,
     ]))
-    zK = +1
-    zBr = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zK * zBr)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['Br'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6238,9 +6377,7 @@ def bC_K_F_MP98(T, P):
         0,
         0.595,
     ]))
-    zK = +1
-    zF = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zK * zF)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['F'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6266,9 +6403,7 @@ def bC_K_OH_MP98(T, P):
          0.0638,
         -0.944,
     ])) # copy of KI
-    zK = +1
-    zOH = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zK * zOH)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['OH'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6295,9 +6430,7 @@ def bC_K_I_MP98(T, P):
          0,
         -0.944,
     ]))
-    zK = +1
-    zI = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zK * zI)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['I'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6323,9 +6456,7 @@ def bC_Na_ClO3_MP98(T, P):
          0.222,
          9.29,
     ]))
-    zNa = +1
-    zClO3 = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zNa * zClO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['ClO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6351,9 +6482,7 @@ def bC_K_ClO3_MP98(T, P):
         -19.1,
          0,
     ]))
-    zK = +1
-    zClO3 = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zK * zClO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['ClO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6379,9 +6508,7 @@ def bC_Na_ClO4_MP98(T, P):
          0.0562,
         -1.623,
     ]))
-    zNa = +1
-    zClO4 = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zNa * zClO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['ClO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6407,9 +6534,7 @@ def bC_Na_BrO3_MP98(T, P):
         2.5,
         0,
     ]))
-    zNa = +1
-    zBrO3 = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zNa * zBrO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['BrO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6435,9 +6560,7 @@ def bC_K_BrO3_MP98(T, P):
         -26.6,
          0,
     ]))
-    zK = +1
-    zBrO3 = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zK * zBrO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['BrO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6463,9 +6586,7 @@ def bC_Na_NO3_MP98(T, P):
          0.594,
         -2.316,
     ]))
-    zNa = +1
-    zNO3 = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zNa * zNO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['NO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6491,9 +6612,7 @@ def bC_K_NO3_MP98(T, P):
         0,
         3.97,
     ]))
-    zK = +1
-    zNO3 = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zK * zNO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['NO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6518,9 +6637,7 @@ def bC_Mg_NO3_MP98(T, P):
         -0.020625,
          0, 0,
     ]))
-    zMg = +2
-    zNO3 = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zMg * zNO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Mg']*i2c['NO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6546,9 +6663,7 @@ def bC_Ca_NO3_MP98(T, P):
         -15.435,
          0,
     ]))
-    zCa = +2
-    zNO3 = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zCa * zNO3)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Ca']*i2c['NO3'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6574,9 +6689,7 @@ def bC_H_Br_MP98(T, P):
          0.01272,
         -0.5685,
     ]))
-    zH = +1
-    zBr = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zH * zBr)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['Br'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6601,9 +6714,7 @@ def bC_Sr_Cl_MP98(T, P):
         -0.0013,
          0, 0,
     ]))
-    zSr = +2
-    zCl = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zSr * zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Sr']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6629,9 +6740,7 @@ def bC_NH4_Cl_MP98(T, P):
          0.0578,
          0.21,
     ]))
-    zNH4 = +1
-    zCl = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zNH4 * zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['NH4']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6657,9 +6766,7 @@ def bC_NH4_Br_MP98(T, P):
          0,
          0.21,
     ]))
-    zNH4 = +1
-    zBr = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zNH4 * zBr)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['NH4']*i2c['Br'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6684,9 +6791,7 @@ def bC_NH4_F_MP98(T, P):
         -0.0043,
          0, 0,
     ]))
-    zNH4 = +1
-    zF = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zNH4 * zF)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['NH4']*i2c['F'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6716,9 +6821,7 @@ def bC_Na_HSO4_MP98(T, P):
     ]))
     b2 = 0
     Cphi = 0.003905
-    zNa = +1
-    zHSO4 = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zNa * zHSO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['HSO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6944,9 +7047,7 @@ def bC_Na_Cl_GT17simopt(T, P):
     b1 = 0.26768
     b2 = 0
     Cphi = 0.001628
-    zNa = +1
-    zCl = -1
-    C0 = Cphi / (2 * sqrt(np_abs(zNa * zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6960,9 +7061,7 @@ def bC_trisH_Cl_GT17simopt(T, P):
     b1 = 0.16024
     b2 = 0
     Cphi = -0.00132
-    ztrisH = +1
-    zCl = -1
-    C0 = Cphi / (2 * sqrt(np_abs(ztrisH * zCl)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['trisH']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6976,9 +7075,7 @@ def bC_trisH_SO4_GT17simopt(T, P):
     b1 = 0.52936
     b2 = 0
     Cphi = -0.004957
-    ztrisH = +1
-    zSO4   = -2
-    C0 = Cphi / (2 * sqrt(np_abs(ztrisH * zSO4)))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['trisH']*i2c['SO4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
