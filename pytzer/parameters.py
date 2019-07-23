@@ -7175,6 +7175,153 @@ def psi_H_Na_Cl_CMR93(T, P):
     valid = logical_and(T >= 273.15, T <= 523.15)
     return psi, valid
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ He & Morse (1993) ~~~~~
+# Note that HM93 also contains beta/C equations for Na, K, Mg and Ca
+# interactions with HCO3 and CO3 (not yet coded here)
+def HM93_eq(T, a):
+    """HM93 parameter equation from p. 3548."""
+    return a[0] + a[1]*T + a[2]*T**2 + a[3]/T + a[4]*log(T)
+
+def lambd_CO2_H_HM93(T, P):
+    """n-c: carbon-dioxide hydrogen [HM93]."""
+    lambd = 0
+    valid = logical_and(T >= 273.15, T <= 363.15)
+    return lambd, valid
+
+def lambd_CO2_Na_HM93(T, P):
+    """n-c: carbon-dioxide sodium [HM93]."""
+    lambd = HM93_eq(T, [
+        -5496.38465,
+        -3.326566,
+        0.0017532,
+        109399.341,
+        1047.021567,
+    ])
+    valid = logical_and(T >= 273.15, T <= 363.15)
+    return lambd, valid
+
+def lambd_CO2_K_HM93(T, P):
+    """n-c: carbon-dioxide potassium [HM93]."""
+    lambd = HM93_eq(T, [
+        2856.528099,
+        1.7670079,
+        -0.0009487,
+        -55954.1929,
+        -546.074467,
+    ])
+    valid = logical_and(T >= 273.15, T <= 363.15)
+    return lambd, valid
+
+def lambd_CO2_Ca_HM93(T, P):
+    """n-c: carbon-dioxide calcium [HM93]."""
+    lambd = HM93_eq(T, [
+        -12774.6472,
+        -8.101555,
+        0.00442472,
+        245541.5435,
+        2452.509720,
+    ])
+    valid = logical_and(T >= 273.15, T <= 363.15)
+    return lambd, valid
+
+def lambd_CO2_Mg_HM93(T, P):
+    """n-c: carbon-dioxide magnesium [HM93]."""
+    lambd = HM93_eq(T, [
+        -479.362533,
+        -0.541843,
+        0.00038812,
+        3589.474052,
+        104.3452732,
+    ])
+    valid = logical_and(T >= 273.15, T <= 363.15)
+    return lambd, valid
+
+def lambd_CO2_Cl_HM93(T, P):
+    """n-a: carbon-dioxide chloride [HM93]."""
+    lambd = HM93_eq(T, [
+        1659.944942,
+        0.9964326,
+        -0.00052122,
+        -33159.6177,
+        -315.827883
+    ])
+    valid = logical_and(T >= 273.15, T <= 363.15)
+    return lambd, valid
+
+def lambd_CO2_SO4_HM93(T, P):
+    """n-a: carbon-dioxide sulfate [HM93]."""
+    lambd = HM93_eq(T, [
+        2274.656591,
+        1.8270948,
+        -0.00114272,
+        -33927.7625,
+        -457.015738,
+    ])
+    valid = logical_and(T >= 273.15, T <= 363.15)
+    return lambd, valid
+
+def zeta_CO2_H_Cl_HM93(T, P):
+    """n-c-a: carbon-dioxide hydrogen chloride [HM93]."""
+    zeta = HM93_eq(T, [
+        -804.121738, -0.470474, 0.000240526, 16334.38917, 152.3838752])
+    valid = logical_and(T >= 273.15, T <= 363.15)
+    return zeta, valid
+
+def zeta_CO2_Na_Cl_HM93(T, P):
+    """n-c-a: carbon-dioxide sodium chloride [HM93]."""
+    zeta = HM93_eq(T, [
+        -379.459185, -0.258005, 0.000147823, 6879.030871, 73.74511574])
+    valid = logical_and(T >= 273.15, T <= 363.15)
+    return zeta, valid
+
+def zeta_CO2_K_Cl_HM93(T, P):
+    """n-c-a: carbon-dioxide potassium chloride [HM93]."""
+    zeta = HM93_eq(T, [
+        -379.686097, -0.257891, 0.000147333, 6853.264129, 73.79977116])
+    valid = logical_and(T >= 273.15, T <= 363.15)
+    return zeta, valid
+
+def zeta_CO2_Ca_Cl_HM93(T, P):
+    """n-c-a: carbon-dioxide calcium chloride [HM93]."""
+    zeta = HM93_eq(T, [
+        -166.065290, -0.018002, -2.47349e-5, 5256.844332, 27.377452415])
+    valid = logical_and(T >= 273.15, T <= 363.15)
+    return zeta, valid
+
+def zeta_CO2_Mg_Cl_HM93(T, P):
+    """n-c-a: carbon-dioxide magnesium chloride [HM93]."""
+    zeta = HM93_eq(T, [
+        -1342.60256, -0.772286, 0.000391603, 27726.80974, 253.62319406])
+    valid = logical_and(T >= 273.15, T <= 363.15)
+    return zeta, valid
+
+def zeta_CO2_H_SO4_HM93(T, P):
+    """n-c-a: carbon-dioxide hydrogen sulfate [HM93]."""
+    zeta = 0
+    valid = logical_and(T >= 273.15, T <= 363.15)
+    return zeta, valid
+
+def zeta_CO2_Na_SO4_HM93(T, P):
+    """n-c-a: carbon-dioxide sodium sulfate [HM93]."""
+    zeta = HM93_eq(T, [
+        67030.02482, 37.930519, -0.01894730, -1399082.37, -12630.27457])
+    valid = logical_and(T >= 273.15, T <= 363.15)
+    return zeta, valid
+
+def zeta_CO2_K_SO4_HM93(T, P):
+    """n-c-a: carbon-dioxide potassium sulfate [HM93]."""
+    zeta = HM93_eq(T, [
+        -2907.03326, -2.860763, 0.001951086, 30756.86749, 611.37560512])
+    valid = logical_and(T >= 273.15, T <= 363.15)
+    return zeta, valid
+
+def zeta_CO2_Mg_SO4_HM93(T, P):
+    """n-c-a: carbon-dioxide magnesium sulfate [HM93]."""
+    zeta = HM93_eq(T, [
+        -7374.24392, -4.608331, 0.002489207, 143162.6076, 1412.302898])
+    valid = logical_and(T >= 273.15, T <= 363.15)
+    return zeta, valid
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Hovey et al. (1993) ~~~~~
 def HPR93_eq36(T, a):
     """HPR93 equation 36."""

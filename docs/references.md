@@ -43,6 +43,9 @@ In alphanumerical order of the source codes:
 <td id="HM83"><code>HM83</code></td>
 <td>Holmes, H. F., and Mesmer, R. E. (1983). Thermodynamic properties of aqueous solutions of the alkali metal chlorides to 250 °C. <i>J. Phys. Chem.</i> 87, 1242–1255. <a href="https://doi.org/10.1021/j100230a030">doi:10.1021/j100230a030</a>.</td></tr><tr>
 
+<td id="HM93"><code>HM93</code></td>
+<td>He, S., and Morse, J. W. (1983). The carbonic acid system and calcite solubility in aqueous Na-K-Ca-Mg-Cl-SO<sub>4</sub> solutions from 0 to 90°C. <i>Geochim. Cosmochim. Acta</i> 57(15), 3533–3554. <a href="https://doi.org/10.1016/0016-7037(93)90137-L">doi:10.1016/0016-7037(93)90137-L</a>.</td></tr><tr>
+
 <td id="HMW84"><code>HMW84</code></td>
 <td>Harvie, C. E., Møller, N., and Weare, J. H. (1984). The prediction of mineral solubilities in natural waters: The Na-K-Mg-Ca-H-Cl-SO<sub>4</sub>-OH-HCO<sub>3</sub>-CO<sub>3</sub>-CO<sub>2</sub>-H<sub>2</sub>O system to high ionic strengths at 25°C. <i>Geochim. Cosmochim. Acta</i> 48, 723–751. <a href="https://doi.org/10.1016/0016-7037(84)90098-X">doi:10.1016/0016-7037(84)90098-X</a>.</td></tr><tr>
 
