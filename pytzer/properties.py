@@ -32,6 +32,7 @@ _ion2charge = {
     'UO2': +2,
     'Znjj': +2,
     # Anions
+    'acetate': -1,
     'BOH4': -1,
     'Br': -1,
     'Cl': -1,

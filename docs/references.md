@@ -100,6 +100,9 @@ In alphanumerical order of the source codes:
 <td id="RM81i"><code>RM81i</code></td>
 <td>Rard, J. A., and Miller, D. G. (1981). Isopiestic Determination of the Osmotic Coefficients of Aqueous Na<sub>2</sub>SO<sub>4</sub>, MgSO<sub>4</sub>, and Na<sub>2</sub>SO<sub>4</sub>-MgSO<sub>4</sub> at 25 °C. <i>J. Chem. Eng. Data</i> 26, 33–38. <a href="https://doi.org/10.1021/je00023a013">doi:10.1021/je00023a013</a>.</td></tr><tr>
 
+<td id="RZM91"><code>RZM91</code></td>
+<td>Roy, R. N., Zhang, J.-Z., and Millero, F. J. (1991). The ionization of sulfurous acid in Na−Mg−Cl solutions at 25°C. <i>J. Solution Chem.</i> 20(4), 361–373. <a href="https://doi.org/10.1007/BF00650763">doi:10.1007/BF00650763</a>.</td></tr><tr>
+
 <td id="SRG87"><code>SRG87</code></td>
 <td>Simonson, J. M., Roy, R. N., and Gibbons, J. J. (1987). Thermodynamics of Aqueous Mixed Potassium Carbonate, Bicarbonate, and Chloride Solutions to 368 K. <i>J. Chem. Eng. Data</i> 32(1), 41–45. <a href="https://doi.org/10.1021/je00047a011">doi:10.1021/je00047a011</a>.</td></tr><tr>
 
@@ -108,6 +111,9 @@ In alphanumerical order of the source codes:
 
 <td id="SRRJ87"><code>SRRJ87</code></td>
 <td>Simonson, J. M., Roy, R. N., Roy, L. N., and Johnson, D. A. (1987). The thermodynamics of aqueous borate solutions I. Mixtures of boric acid with sodium or potassium borate and chloride. <i>J. Solution Chem.</i> 16, 791–803. <a href="https://doi.org/10.1007/BF00650749">doi:10.1007/BF00650749</a>.</td></tr><tr>
+
+<td id="TM82"><code>TM82</code></td>
+<td>Thurmond, V., and Millero, F. J. (1982). Ionization of carbonic acid in sodium chloride solutions at 25°C. <i>J. Solution Chem.</i> 11(7), 447–456. <a href="https://doi.org/10.1007/BF00647107">doi:10.1007/BF00647107</a>.</td></tr><tr>
 
 <td id="WM13"><code>WM13</code></td>
 <td>Waters, J. F., and Millero, F. J. (2013). The free proton concentration scale for seawater pH. <i>Mar. Chem.</i> 149, 8–22. <a href="https://doi.org/10.1016/j.marchem.2012.11.003">doi:10.1016/j.marchem.2012.11.003</a>.</td></tr><tr>

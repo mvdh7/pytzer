@@ -46,7 +46,7 @@ bC = {
     'Sr-Cl': prm.bC_Sr_Cl_SP78, # not in table but in text §4.6
     'Sr-NO3': prm.bC_Sr_NO3_SP78,
     'Sr-ClO4': prm.bC_Sr_ClO4_SP78,
-#    'Sr-HSO3': prm.bC_Sr_HSO3_SP78,
+#    'Sr-HSO3': prm.bC_Sr_HSO3_MP98, # interaction also appears in Table A8?!
     'Sr-BOH4': prm.bC_Sr_BOH4_MP98,
 # Table A7
     'Na-I': prm.bC_Na_I_MP98,
@@ -80,20 +80,20 @@ bC = {
     'K-H2AsO4': prm.bC_K_H2AsO4_PM73,
     'Na-HAsO4': prm.bC_Na_HAsO4_PM73,
     'Na-AsO4': prm.bC_Na_AsO4_PM73,
-#    'Na-acetate': prm.bC_Na_acetate_PM73,
+    'Na-acetate': prm.bC_Na_acetate_PM73,
     'K-HSO4': prm.bC_K_HSO4_HMW84,
     'K-NO2': prm.bC_K_NO2_PM73,
     'K-HPO4': prm.bC_K_HPO4_PM73,
     'K-PO4': prm.bC_K_PO4_PM73,
     'K-HAsO4': prm.bC_K_HAsO4_PM73,
     'K-AsO4': prm.bC_K_AsO4_PM73, # not in table, but presumably should be?
-#    'K-acetate': prm.bC_K_acetate_PM73,
+    'K-acetate': prm.bC_K_acetate_PM73,
     'Mg-HSO4': prm.bC_Mg_HSO4_HMW84,
-#    'Mg-HCO3': prm.bC_Mg_HCO3_TM82,
+    'Mg-HCO3': prm.bC_Mg_HCO3_MP98,
     'Mg-HS': prm.bC_Mg_HS_HPM88,
     'Mg-I': prm.bC_Mg_I_PM73,
-#    'Mg-HSO3': prm.bC_Mg_HSO3_HPM88,
-#    'Mg-SO3': prm.bC_Mg_SO3_HPM88,
+    'Mg-HSO3': prm.bC_Mg_HSO3_RZM91,
+    'Mg-SO3': prm.bC_Mg_SO3_RZM91,
     'Ca-HSO4': prm.bC_Ca_HSO4_HMW84,
     'Ca-HCO3': prm.bC_Ca_HCO3_HMW84,
     'Ca-HSO3': prm.bC_Ca_HSO3_MP98,
@@ -108,7 +108,7 @@ bC = {
     'MgOH-Cl': prm.bC_MgOH_Cl_HMW84,
 # Table A9
     'H-Cl': prm.bC_H_Cl_CMR93,
-#    'H-SO4': prm.bC_H_SO4_Pierrot,
+    'H-SO4': prm.bC_H_SO4_MP98, # cited paper not published
 } # end of bC dict
 theta = {
 # Table A10
@@ -126,8 +126,8 @@ theta = {
     'Cl-CO3': prm.theta_Cl_CO3_PP82,
     'Cl-HCO3': prm.theta_Cl_HCO3_PP82,
     'BOH4-Cl': prm.theta_BOH4_Cl_MP98,
-   'CO3-HCO3': prm.theta_CO3_HCO3_MP98,
-#    'HSO4-SO4',
+    'CO3-HCO3': prm.theta_CO3_HCO3_MP98,
+    'HSO4-SO4': prm.theta_HSO4_SO4_MP98, # cited paper not published
     'Cl-OH': prm.theta_Cl_OH_MP98,
 # Table A11
 #    'Na-Sr',
@@ -171,7 +171,7 @@ psi = {
 #    'H-Sr-Cl',
     'H-Mg-Cl': prm.psi_H_Mg_Cl_RGB80, # doesn't include MP98 temperature term
 #    'Ca-H-Cl',
-#    'Na-HSO4-SO4',
+    'Na-HSO4-SO4': prm.psi_Na_HSO4_SO4_MP98, # cited paper not published
     'Na-CO3-HCO3': prm.psi_Na_CO3_HCO3_MP98,
     'K-CO3-HCO3': prm.psi_K_CO3_HCO3_MP98,
 # Table A11

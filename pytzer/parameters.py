@@ -2327,6 +2327,37 @@ def bC_K_P3O10_PM73(T, P):
     valid = T == 298.15
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
+# Manual additions - not from funcgen!
+def bC_Na_acetate_PM73(T, P):
+    """c-a: sodium acetate [PM73]."""
+    # Coefficients from PM73 Table II
+    b0 = 0.1426
+    b1 = 0.3237
+    b2 = 0
+    Cphi = -0.00629
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['acetate'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_acetate_PM73(T, P):
+    """c-a: potassium acetate [PM73]."""
+    # Coefficients from PM73 Table II
+    b0 = 0.1587
+    b1 = 0.3251
+    b2 = 0
+    Cphi = -0.00660
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['acetate'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Pitzer and Kim (1974) ~~~~~
 def theta_Mg_Na_PK74(T, P):
     """c-c': magnesium sodium [PK74]."""
@@ -6911,6 +6942,40 @@ def psi_Na_Cl_SO3_MHJZ89(T, P):
     valid = logical_and(T >= 273.15, T <= 323.15)
     return psi, valid
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Roy et al. (1991) ~~~~~
+def bC_Mg_HSO3_RZM91(T, P):
+    """c-a: magnesium bisulfite [RZM91]."""
+    b0 = 0.35
+    b1 = 1.22
+    b2 = 0
+    Cphi = -0.072
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Mg']*i2c['HSO3'])))
+    C1 = 0
+    alph1 = 2.0
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Mg_SO3_RZM91(T, P):
+    """c-a: magnesium sulfite [RZM91]."""
+    b0 = -2.8
+    b1 = 12.9
+    b2 = -201
+    C0 = 0
+    C1 = 0
+    alph1 = 1.4
+    alph2 = 12
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def lambd_SO2_Mg_RZM91(T, P):
+    """n-c: sulfur-dioxide magnesium [RZM91]."""
+    lambd = 0.085
+    valid = T == 298.15
+    return lambd, valid
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Archer (1992) ~~~~~
 def A92ii_eq36(T, P, a):
     """A92ii equation 36, with pressure in MPa."""
@@ -7930,6 +7995,76 @@ def theta_BOH4_Cl_MP98(T, P):
     theta = -0.0323 + (T - 298.15)*-0.42333e-4 + (T - 298.15)**2*-21.926e-6
     valid = logical_and(T >= 273.15, T <= 318.15)
     return theta, valid
+
+def bC_Mg_HCO3_MP98(T, P):
+    """c-a: magnesium bicarbonate [MP98]."""
+    # MP98 say "re-determined from TM82."
+    b0 = 0.03
+    b1 = 0.8
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def MP98_eqTableA9_2(T, a):
+    """MP98 equation (2) from Table A9."""
+    return a[0] + (T - 328.15)*1e-3*(a[1]
+        + (T - 328.15)*(a[2]/2 + (T - 328.15)*a[3]/6))
+
+def bC_H_SO4_MP98(T, P):
+    """c-a: hydrogen sulfate [MP98]."""
+    # MP98 cite Pierrot et al. (1998, submitted), but that doesn't appear to
+    # have been published, so these values are directly from MP98 Table A9.
+    b0 = MP98_eqTableA9_2(T, [
+        0.065,
+        0.134945,
+        0.022374,
+        7.2e-5,
+    ])
+    b1 = MP98_eqTableA9_2(T, [
+        -15.009,
+        -2.405945,
+        0.335839,
+        -0.004379,
+    ])
+    b2 = 0
+    C0 = MP98_eqTableA9_2(T, [
+        0.008073,
+        -0.113106,
+        -0.003553,
+        3.57e-5,
+    ])
+    C1 = MP98_eqTableA9_2(T, [
+        -0.050799,
+        3.472545,
+        -0.311463,
+        0.004037,
+    ])
+    alph1 = 2
+    alph2 = -9
+    omega = 2.5
+    valid = logical_and(T >= 273.15, T <= 523.15)
+    return psi, valid
+
+def theta_HSO4_SO4_MP98(T, P):
+    """a-a': bisulfate sulfate [MP98]."""
+    # MP98 cite Pierrot et al. (1998, submitted), but that doesn't appear to
+    # have been published, so these values are directly from MP98.
+    theta = 0
+    valid = logical_and(T >= 273.15, T <= 473.15)
+    return theta, valid
+
+def psi_Na_HSO4_SO4_MP98(T, P):
+    """c-a-a': sodium bisulfate sulfate [MP98]."""
+    # MP98 cite Pierrot et al. (1998, submitted), but that doesn't appear to
+    # have been published, so these values are directly from MP98.
+    psi = 0
+    valid = logical_and(T >= 273.15, T <= 473.15)
+    return psi, valid
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Archer (1999) ~~~~~
 def A99_eq22(T, a):
