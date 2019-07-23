@@ -5876,13 +5876,13 @@ def lambd_BOH3_K_FW86(T, P):
     valid = T == 298.15
     return lambd, valid
 
-def zeta_BOH3_H_Cl(T, P):
+def zeta_BOH3_H_Cl_FW86(T, P):
     """n-c-a: boric-acid hydrogen chloride [FW86]."""
     zeta = -0.0102
     valid = T == 298.15
     return zeta, valid
 
-def zeta_BOH3_Na_SO4(T, P):
+def zeta_BOH3_Na_SO4_FW86(T, P):
     """n-c-a: boric-acid sodium sulfate [FW86]."""
     zeta = 0.046
     valid = T == 298.15
