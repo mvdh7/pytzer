@@ -19,6 +19,9 @@ In alphanumerical order of the source codes:
 <td id="AW90"><code>AW90</code></td>
 <td>Archer, D. G., and Wang, P. (1990). The Dielectric Constant of Water and Debye‐Hückel Limiting Law Slopes. <i>J. Phys. Chem. Ref. Data</i> 19, 371–411. <a href="https://doi.org/10.1063/1.555853">doi:10.1063/1.555853</a>.</td></tr><tr>
 
+<td id="AW90"><code>AW90</code></td>
+<td>Clegg, S. L., and Brimblecombe, P. (1989). Solubility of Ammonia in Pure Aqueous and Multicomponent Solutions. <i>J. Phys. Chem.</i> 93(20), 7237-7248. <a href="https://doi.org/10.1021/j100357a041">doi:10.1021/j100357a041</a>.</td></tr><tr>
+
 <td id="CMR93"><code>CMR93</code></td>
 <td>Campbell, D. M., Millero, F. J., Roy, R., Roy, L., Lawson, M., Vogel, K. M., et al. (1993). The standard potential for the hydrogen-silver, silver chloride electrode in synthetic seawater. <i>Mar. Chem.</i> 44, 221–233. <a href="https://doi.org/10.1016/0304-4203(93)90204-2">doi:10.1016/0304-4203(93)90204-2</a>.</td></tr><tr>
 

@@ -6693,7 +6693,10 @@ def psi_Na_Cl_SO4_M88(T, P):
     valid = logical_and(T >= 298.15, T <= 423.15)
     return psi, valid
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Greenberg and Møller (1989) ~~~~~
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Clegg & Brimblecombe (1989) ~~~~~
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Greenberg & Møller (1989) ~~~~~
 def GM89_eq3(T, a):
     """GM89 equation 3."""
     return M88_eq13(T, a)
