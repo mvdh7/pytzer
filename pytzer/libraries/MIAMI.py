@@ -116,7 +116,7 @@ theta = {
     'H-Na': prm.theta_H_Na_CMR93,
     'H-K': prm.theta_H_K_CMR93,
     'H-Mg': prm.theta_H_Mg_RGB80, # doesn't include temperature term from MP98
-    'Ca-H': prm.theta_Ca_H_RGO82, # doesn't include temperature term from MP98
+    'Ca-H': prm.theta_Ca_H_RGO81, # doesn't include temperature term from MP98
     'K-Na': prm.theta_K_Na_GM89,
     'Mg-Na': prm.theta_Mg_Na_PP87ii,
     'Ca-Na': prm.theta_Ca_Na_M88,
@@ -163,20 +163,20 @@ psi = {
     'Na-Cl-SO4': prm.psi_Na_Cl_SO4_M88,
     'K-Cl-SO4': prm.psi_K_Cl_SO4_GM89,
     'Ca-Cl-SO4': prm.psi_Ca_Cl_SO4_M88,
-#    'Na-Cl-CO3',
-#    'Na-Cl-HCO3',
+    'Na-Cl-CO3': prm.psi_Na_Cl_CO3_TM82,
+    'Na-Cl-HCO3': prm.psi_Na_Cl_HCO3_PP82, # MP98 incorrect citation
     'Na-BOH4-Cl': prm.psi_Na_BOH4_Cl_MP98,
     'Mg-BOH4-Cl': prm.psi_Mg_BOH4_Cl_MP98,
     'Ca-BOH4-Cl': prm.psi_Ca_BOH4_Cl_MP98,
-#    'H-Sr-Cl',
+    'H-Sr-Cl': prm.psi_H_Sr_Cl_MP98, # cites M85 book but can't find it there
     'H-Mg-Cl': prm.psi_H_Mg_Cl_RGB80, # doesn't include MP98 temperature term
-#    'Ca-H-Cl',
+    'Ca-H-Cl': prm.psi_Ca_H_Cl_RGO81, # doesn't include MP98 temperature term
     'Na-HSO4-SO4': prm.psi_Na_HSO4_SO4_MP98, # cited paper not published
     'Na-CO3-HCO3': prm.psi_Na_CO3_HCO3_MP98,
     'K-CO3-HCO3': prm.psi_K_CO3_HCO3_MP98,
 # Table A11
-#    'Na-Sr-Cl': prm.psi_Na_Sr_Cl_PK74,
-#    'K-Sr-Cl',
+    'Na-Sr-Cl': prm.psi_Na_Sr_Cl_MP98, # couldn't find in PK74 as cited
+    'K-Sr-Cl': prm.psi_K_Sr_Cl_MP98,
     'K-Na-Br': prm.psi_K_Na_Br_PK74,
     'Mg-Na-SO4': prm.psi_Mg_Na_SO4_HMW84,
     'K-Mg-SO4': prm.psi_K_Mg_SO4_HMW84,
@@ -187,8 +187,8 @@ psi = {
     'H-Na-Br': prm.psi_H_Na_Br_PK74,
     'H-K-Cl': prm.psi_H_K_Cl_HMW84,
     'H-K-SO4': prm.psi_H_K_SO4_HMW84,
-#    'H-K-Br': prm.psi_H_K_Br_HMW84, # no function in HMW84 (no Br!)
-#    'H-Mg-Br': prm.psi_H_Mg_Br_PK74,
+    'H-K-Br': prm.psi_H_K_Br_MP98, # no function in HMW84 (no Br!)
+    'H-Mg-Br': prm.psi_H_Mg_Br_MP98, # couldn't find in PK74 as cited
     'Mg-MgOH-Cl': prm.psi_Mg_MgOH_Cl_HMW84,
     'Mg-Cl-SO4': prm.psi_Mg_Cl_SO4_HMW84,
     'Mg-Cl-HCO3': prm.psi_Mg_Cl_HCO3_HMW84,
@@ -209,7 +209,7 @@ psi = {
     'Na-Cl-NO3': prm.psi_Na_Cl_NO3_PK74,
     'K-Cl-NO3': prm.psi_K_Cl_NO3_PK74,
     'Na-Cl-H2PO4': prm.psi_Na_Cl_H2PO4_HFM89,
-#    'K-Cl-H2PO4',
+    'K-Cl-H2PO4': prm.psi_K_Cl_H2PO4_MP98, # can't find cited PS76 paper
     'Na-Cl-HPO4': prm.psi_Na_Cl_HPO4_HFM89,
     'Na-Cl-PO4': prm.psi_Na_Cl_PO4_HFM89,
     'Na-Cl-H2AsO4': prm.psi_Na_Cl_H2AsO4_M83,

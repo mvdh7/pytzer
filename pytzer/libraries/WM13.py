@@ -38,7 +38,7 @@ bC['MgOH-Cl'] = prm.bC_MgOH_Cl_HMW84
 # Table A7: cation-cation interactions
 theta['H-Na'] = prm.theta_H_Na_CMR93
 theta['H-Mg'] = prm.theta_H_Mg_RGB80
-theta['Ca-H'] = prm.theta_Ca_H_RGO82 # WM13 citation error
+theta['Ca-H'] = prm.theta_Ca_H_RGO81 # WM13 citation error
 theta['H-K'] = prm.theta_H_K_CMR93
 theta['Mg-Na'] = prm.theta_Mg_Na_HMW84
 theta['Ca-Na'] = prm.theta_Ca_Na_HMW84

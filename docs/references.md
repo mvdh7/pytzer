@@ -91,8 +91,8 @@ In alphanumerical order of the source codes:
 <td id="RGB80"><code>RGB80</code></td>
 <td>Roy, R. N., Gibbons, J. J., Bliss, D. P., Casebolt, R. G., and Baker, B. K. (1980). Activity coefficients for ternary systems: VI. The system HCl + MgCl<sub>2</sub> + H<sub>2</sub>O at different temperatures; application of Pitzer's equations. <i>J. Solution Chem.</i> 9, 911–930. <a href="https://doi.org/10.1039/F19827801405">doi:10.1039/F19827801405</a>.</td></tr><tr>
 
-<td id="RGO82"><code>RGO82</code></td>
-<td>Roy, R. N., Gibbons, J. J., Ovens, L. K., Bliss, G. A., and Hartley, J. J. (1982). Activity coefficients for the system HCl + CaCl<sub>2</sub> + H<sub>2</sub>O at various temperatures. Applications of Pitzer's equations. <i>J. Chem. Soc., Faraday Trans. 1</i> 78, 1405–1422. <a href="https://doi.org/10.1039/F19827801405">doi:10.1039/F19827801405</a>.</td></tr><tr>
+<td id="RGO81"><code>RGO81</code></td>
+<td>Roy, R. N., Gibbons, J. J., Ovens, L. K., Bliss, G. A., and Hartley, J. J. (1981). Activity coefficients for the system HCl + CaCl<sub>2</sub> + H<sub>2</sub>O at various temperatures. Applications of Pitzer's equations. <i>J. Chem. Soc., Faraday Trans. 1</i> 78, 1405–1422. <a href="https://doi.org/10.1039/F19827801405">doi:10.1039/F19827801405</a>.</td></tr><tr>
 
 <td id="RGRG86"><code>RGRG86</code></td>
 <td>Roy, R. N., Gibbons, J. J., Roy, L. N., and Greene, M. A. (1986). Thermodynamics of the unsymmetrical mixed electrolyte HCl-SrCl<sub>2</sub>. Applications of Pitzer's equations. <i>J. Phys. Chem.</i> 90(23), 6242–6247. <a href="https://doi.org/10.1021/j100281a035">doi:10.1021/j100281a035</a>.</td></tr><tr>

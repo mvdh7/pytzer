@@ -3640,14 +3640,27 @@ def psi_Na_Cl_HCO3_PP82(T, P):
     valid = T == 298.15
     return psi, valid
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Roy et al. (1982) ~~~~~
-def theta_Ca_H_RGO82(T, P):
-    """c-c': calcium hydrogen [RGB80]."""
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Roy et al. (1981) ~~~~~
+def theta_Ca_H_RGO81(T, P):
+    """c-c': calcium hydrogen [RGO81]."""
     theta = 0.0612
     valid = T == 298.15
     return theta, valid
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ de Lima and Pitzer (1983) ~~~~~
+def psi_Ca_H_Cl_RGO81(T, P):
+    """c-c': calcium hydrogen chloride [RGO81]."""
+    theta = 0.0008
+    valid = T == 298.15
+    return theta, valid
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Thurmond & Millero (1982) ~~~~~
+def psi_Na_Cl_CO3_TM82(T, P):
+    """c-a-a': sodium chloride carbonate [TM82]."""
+    psi = 0.016
+    valid = T == 298.15
+    return psi, valid
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ de Lima & Pitzer (1983) ~~~~~
 def bC_Mg_Cl_dLP83(T, P):
     """c-a: magnesium chloride [dLP83]."""
     # dLP83 Eq. (11)
@@ -8094,6 +8107,45 @@ def theta_K_Sr_MP98(T, P):
     theta = 0.01
     valid = T == 298.15
     return theta, valid
+
+def psi_H_Sr_Cl_MP98(T, P):
+    """c-c'-a: hydrogen strontium chloride [MP98]."""
+    # MP98 cite M85 book but can't find it there so this is from MP98 Table A10
+    psi = 0.0054 - 2.1e-4*(T - 298.15)
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return psi, valid
+
+def psi_Na_Sr_Cl_MP98(T, P):
+    """c-c'-a: sodium strontium chloride [MP98]."""
+    # MP98 cite PK74 but I can't find this value in there
+    psi = -0.015
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_Sr_Cl_MP98(T, P):
+    """c-c'-a: potassium strontium chloride [MP98]."""
+    return psi_Na_Sr_Cl_MP98(T, P)
+
+def psi_H_K_Br_MP98(T, P):
+    """c-c'-a: hydrogen potassium bromide [MP98]."""
+    # MP98 cite HMW84 but I can't find this value in there
+    psi = -0.021
+    valid = T == 298.15
+    return psi, valid
+
+def psi_H_Mg_Br_MP98(T, P):
+    """c-c'-a: hydrogen magnesium bromide [MP98]."""
+    # MP98 cite PK74 but I can't find this value in there
+    psi = -0.005
+    valid = T == 298.15
+    return psi, valid
+
+def psi_K_Cl_H2PO4_MP98(T, P):
+    """c-a-a': potassium chloride dihydrogen-phosphate [MP98]."""
+    # MP98 cite Pitzer & Silvester (1976) but I can't find that paper
+    psi = -0.0105
+    valid = T == 298.15
+    return psi, valid
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Archer (1999) ~~~~~
 def A99_eq22(T, a):
