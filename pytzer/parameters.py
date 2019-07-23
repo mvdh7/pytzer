@@ -3774,46 +3774,60 @@ def bC_Li_Cl_HM83(T, P):
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Millero (1983) ~~~~~
 def theta_Cl_H2AsO4_M83(T, P):
-    """c-c': chloride dihydrogen-arsenate [M83]."""
+    """a-a': chloride dihydrogen-arsenate [M83]."""
     # NOTE: this coefficient is for use only WITHOUT unsymmetrical mixing!
     theta = 0.228
     valid = T == 298.15
     return theta, valid
 
 def theta_Cl_HAsO4_M83(T, P):
-    """c-c': chloride hydrogen-arsenate [M83]."""
+    """a-a': chloride hydrogen-arsenate [M83]."""
     # NOTE: this coefficient is for use only WITHOUT unsymmetrical mixing!
     theta = 0.122
     valid = T == 298.15
     return theta, valid
 
 def theta_AsO4_Cl_M83(T, P):
-    """c-c': arsenate chloride [M83]."""
+    """a-a': arsenate chloride [M83]."""
     # NOTE: this coefficient is for use only WITHOUT unsymmetrical mixing!
     theta = 0.060
     valid = T == 298.15
     return theta, valid
 
+def theta_acetate_Cl_M83(T, P):
+    """a-a': acetate chloride [M83]."""
+    # NOTE: this coefficient is for use only WITHOUT unsymmetrical mixing!
+    theta = -0.017
+    valid = T == 298.15
+    return theta, valid
+
 def psi_Na_Cl_H2AsO4_M83(T, P):
-    """c-c'-a: sodium chloride dihydrogen-arsenate [M83]."""
+    """c-a-a': sodium chloride dihydrogen-arsenate [M83]."""
     # NOTE: this coefficient is for use only WITHOUT unsymmetrical mixing!
     psi = 0
     valid = T == 298.15
     return psi, valid
 
 def psi_Na_Cl_HAsO4_M83(T, P):
-    """c-c'-a: sodium chloride hydrogen-arsenate [M83]."""
+    """c-a-a': sodium chloride hydrogen-arsenate [M83]."""
     # NOTE: this coefficient is for use only WITHOUT unsymmetrical mixing!
     psi = 0
     valid = T == 298.15
     return psi, valid
 
 def psi_Na_AsO4_Cl_M83(T, P):
-    """c-c'-a: sodium arsenate chloride [M83]."""
+    """c-a-a': sodium arsenate chloride [M83]."""
     # NOTE: this coefficient is for use only WITHOUT unsymmetrical mixing!
     psi = 0
     valid = T == 298.15
     return psi, valid
+
+def theta_Na_acetate_Cl_M83(T, P):
+    """c-a-a': sodium acetate chloride [M83]."""
+    # NOTE: this coefficient is for use only WITHOUT unsymmetrical mixing!
+    theta = 0
+    valid = T == 298.15
+    return theta, valid
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Roy et al. (1983) ~~~~~
 def bC_K_HCO3_RGWW83(T, P):
@@ -8065,6 +8079,21 @@ def psi_Na_HSO4_SO4_MP98(T, P):
     psi = 0
     valid = logical_and(T >= 273.15, T <= 473.15)
     return psi, valid
+
+def theta_Na_Sr_MP98(T, P):
+    """c-c': sodium strontium [MP98]."""
+    # MP98 cite PK74 but I can't find this value in there
+    theta = 0.07
+    valid = T == 298.15
+    return theta, valid
+
+def theta_K_Sr_MP98(T, P):
+    """c-c': potassium strontium [MP98]."""
+    # MP98 say this is set equal to the sodium value (i.e. theta_Na_Sr_MP98?)
+    # but then state a different number...
+    theta = 0.01
+    valid = T == 298.15
+    return theta, valid
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Archer (1999) ~~~~~
 def A99_eq22(T, a):

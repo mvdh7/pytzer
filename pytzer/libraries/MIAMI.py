@@ -130,25 +130,25 @@ theta = {
     'HSO4-SO4': prm.theta_HSO4_SO4_MP98, # cited paper not published
     'Cl-OH': prm.theta_Cl_OH_MP98,
 # Table A11
-#    'Na-Sr',
-#    'K-Sr',
+    'Na-Sr': prm.theta_Na_Sr_MP98, # unclear where MP98 got this from
+    'K-Sr': prm.theta_K_Sr_MP98, # unclear where MP98 got this from
     'Ca-Mg': prm.theta_Ca_Mg_HMW84,
     'Cl-F': prm.theta_Cl_F_MP98,
     'CO3-SO4': prm.theta_CO3_SO4_HMW84,
     'HCO3-SO4': prm.theta_HCO3_SO4_HMW84,
     'BOH4-SO4': prm.theta_BOH4_SO4_FW86,
     'Cl-HSO4': prm.theta_Cl_HSO4_HMW84,
-#    'OH-SO4',
+    'OH-SO4': prm.theta_OH_SO4_HMW84, # MP98 incorrect citation
     'Br-OH': prm.theta_Br_OH_PK74,
     'Cl-NO3': prm.theta_Cl_NO3_PK74,
     'Cl-H2PO4': prm.theta_Cl_H2PO4_HFM89,
     'Cl-HPO4': prm.theta_Cl_HPO4_HFM89,
     'Cl-PO4': prm.theta_Cl_PO4_HFM89,
-    'Cl-H2AsO4': prm.theta_Cl_H2AsO4_M83, # shouldn't have unsymmetrical term!
-    'Cl-HAsO4': prm.theta_Cl_HAsO4_M83, # shouldn't have unsymmetrical term!
-    'AsO4-Cl': prm.theta_AsO4_Cl_M83, # shouldn't have unsymmetrical term!
+    'Cl-H2AsO4': prm.theta_Cl_H2AsO4_M83, # shouldn't have unsymmetrical term
+    'Cl-HAsO4': prm.theta_Cl_HAsO4_M83, # shouldn't have unsymmetrical term
+    'AsO4-Cl': prm.theta_AsO4_Cl_M83, # shouldn't have unsymmetrical term
     'Cl-SO3': prm.theta_Cl_SO3_MHJZ89,
-#    'acetate-Cl',
+    'acetate-Cl': prm.theta_acetate_Cl_M83, # shouldn't have unsymmetrical term
 } # end of theta dict
 psi = {
 # Table A10
