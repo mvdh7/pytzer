@@ -8993,10 +8993,10 @@ def bC_K_Cl_ZD17(T, P):
 def theta_Ca_H_MarChemSpec(T, P):
     """c-c': calcium hydrogen [MarChemSpec]."""
     # 1. WM13 cite the wrong reference for this (they say RXX80)
-    # 2. The equation given by WM13 doesn't match RGO82
-    # 3. RGO82 give a 25degC value but no temperature parameter
-    # So MarChemSpec uses RGO82's 25degC value plus the WM13 temperature cxn
-    thetar = theta_Ca_H_RGO82(T, P)[0]
+    # 2. The equation given by WM13 doesn't match RGO81
+    # 3. RGO81 give a 25degC value but no temperature parameter
+    # So MarChemSpec uses RGO81's 25degC value plus the WM13 temperature cxn
+    thetar = theta_Ca_H_RGO81(T, P)[0]
     theta = thetar + 3.275e-4*(T - 298.15)
     valid = logical_and(T >= 273.15, T <= 323.15)
     return theta, valid
