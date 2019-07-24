@@ -150,6 +150,47 @@ _ele2ions = {
     't_trisH': array(['trisH', 'tris']),
 }
 
+_ele2ions2 = {
+    'NaOH': [array(['Na', 'OH']), float_([1, 1])],
+    'K2CO3': [array(['K', 'CO3']), float_([2, 1])],
+    'Zn(NO3)2': [array(['Znjj', 'NO3']), float_([1,2])],
+    'H2SO4': [array(['H', 'SO4']), float_([2, 1])],
+    'Li2SO4': [array(['Li', 'SO4']), float_([2, 1])],
+    'Na2SO4': [array(['Na', 'SO4']), float_([2, 1])],
+    'MgSO4': [array(['Mg', 'SO4']), float_([1, 1])],
+    'K2SO4': [array(['K', 'SO4']), float_([2, 1])],
+    'CuSO4': [array(['Cujj', 'SO4']), float_([1, 1])],
+    'Na2S2O3': [array(['Na', 'S2O3']), float_([2, 1])],
+    'Mg(NO3)2': [array(['Mg', 'NO3']), float_([1, 2])],
+    'Sr(NO3)2': [array(['Sr', 'NO3']), float_([1, 2])],
+    'Ba(NO3)2': [array(['Ba', 'NO3']), float_([1, 2])],
+    'Co(NO3)2': [array(['Cojj', 'NO3']), float_([1, 2])],
+    'Cu(NO3)2': [array(['Cujj', 'NO3']), float_([1, 2])],
+    'Cd(NO3)2': [array(['Cdjj', 'NO3']), float_([1, 2])],
+    'UO2(NO3)2': [array(['UO2', 'NO3']), float_([1, 2])],
+    'NaF': [array(['Na', 'F']), float_([1, 1])],
+    'KF': [array(['K', 'F']), float_([1, 1])],
+    'LiCl': [array(['Li', 'Cl']), float_([1, 1])],
+    'NaCl': [array(['Na', 'Cl']), float_([1, 1])],
+    'MgCl2': [array(['Mg', 'Cl']), float_([1, 2])],
+    'KCl': [array(['K', 'Cl']), float_([1, 1])],
+    'CaCl2': [array(['Ca', 'Cl']), float_([1, 2])],
+    'CuCl2': [array(['Cujj', 'Cl']), float_([1, 2])],
+    'SrCl2': [array(['Sr', 'Cl']), float_([1, 2])],
+    'RbCl': [array(['Rb', 'Cl']), float_([1, 1])],
+    'CsCl': [array(['Cs', 'Cl']), float_([1, 1])],
+    'LaCl3': [array(['La', 'Cl']), float_([1, 3])],
+    'Mg(ClO4)2': [array(['Mg', 'ClO4']), float_([1, 2])],
+    'Zn(ClO4)2': [array(['Znjj', 'ClO4']), float_([1, 2])],
+    'LiI': [array(['Li', 'I']), float_([1, 1])],
+    'tris': [array(['tris']), float_([1])],
+    '(trisH)2SO4': [array(['trisH', 'SO4']), float_([2, 1])],
+    'trisHCl': [array(['trisH', 'Cl']), float_([1, 1])],
+    'glycerol': [array(['glycerol']), float_([1])],
+    'sucrose': [array(['sucrose']), float_([1])],
+    'urea': [array(['urea']), float_([1])],
+}
+
 def charges(ions):
     """Find the charges on each of a list of ions."""
     zs = vstack([float_(_ion2charge[ion]) for ion in ions])
