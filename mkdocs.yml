@@ -27,6 +27,7 @@ nav:
     - .teos10 - TEOS-10 properties: modules/teos10.md
     - .matrix - matrix model: modules/matrix.md
     - .dissociation - thermodynamic equilibrium constants: modules/dissociation.md
+    - .potentials - standard chemical potentials: module/potentials.md
     - .meta - package metadata: modules/meta.md
   - References: references.md
   - Version history: version-history.md

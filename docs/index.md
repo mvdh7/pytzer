@@ -39,6 +39,7 @@ The remaining modules will only be of interest to more advanced users:
   * `.teos10` - calculates properties of pure water;
   * `.matrix` - implements an alternative matrix-based Pitzer model, used to solve equilibria;
   * `.dissociation` - evaluates thermodynamic equilibrium constants;
+  * `.potentials` - evaluates standard chemical potentials;
   * `.meta` - stores metadata about the Pytzer package.
 
 ## Citation
