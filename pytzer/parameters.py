@@ -2905,6 +2905,50 @@ def psi_K_Cl_H2PO4_PS76(T, P):
     valid = T == 298.15
     return psi, valid
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Mackaskill et al. (1978) ~~~~~
+def bC_Sr_Cl_MWRB78(T, P):
+    """c-a: strontium chloride [MWRB78]."""
+    # Valid up to ionic strength of 6, different set provided for up to 9
+    # This set should be 'better' for values under 6
+    b0 = 0.28994
+    b1 = 1.5795
+    b2 = 0
+    Cphi = -0.003755
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Sr']*i2c['Cl'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Sr_Cl_MWRB78hi(T, P):
+    """c-a: strontium chloride [MWRB78]."""
+    # Valid up to ionic strength of 9, different set provided for up to 6
+    b0 = 0.27948
+    b1 = 1.6745
+    b2 = 0
+    Cphi = 0.0003532
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Sr']*i2c['Cl'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def theta_Na_Sr_MWRB78(T, P):
+    """c-c': sodium strontium [MWRB78]."""
+    theta = -0.0076
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Na_Sr_Cl_MWRB78(T, P):
+    """c-c'-a: sodium strontium chloride [MWRB78]."""
+    psi = -0.0052
+    valid = T == 298.15
+    return psi, valid
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Silvester and Pitzer (1978) ~~~~~
 # Auto-generated functions
 # General procedure:

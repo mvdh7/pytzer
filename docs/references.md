@@ -73,6 +73,9 @@ In alphanumerical order of the source codes:
 <td id="MP98"><code>MP98</code></td>
 <td>Millero, F. J., and Pierrot, D. (1998). A Chemical Equilibrium Model for Natural Waters. <i>Aquat. Geochem.</i> 4, 153–199. <a href="https://doi.org/10.1023/A:1009656023546">doi:10.1023/A:1009656023546</a>.</td></tr><tr>
 
+<td id="MWRB78"><code>MWRB78</code></td>
+<td>Macaskill, J. B., White, D. R., Robinson, R. A., and Bates, R. G. (1978). Isopiestic measurements on aqueous mixtures of sodium chloride and strontium chloride. <i>J. Solution Chem.</i> 7(5), 339–347. <a href="https://doi.org/10.1007/BF00662894">doi:10.1007/BF00662894</a>.</td></tr><tr>
+
 <td id="P75"><code>P75</code></td>
 <td>Pitzer, K. S. (1975). Thermodynamics of electrolytes. V. effects of higher-order electrostatic terms. <i>J. Solution Chem.</i> 4, 249–265. <a href="https://doi.org/10.1007/BF00646562">doi:10.1007/BF00646562</a>.</td></tr><tr>
 
