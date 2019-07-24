@@ -228,11 +228,11 @@ lambd = { # all from Table A12
     'BOH3-K': prm.lambd_BOH3_K_FW86,
     'BOH3-Cl': prm.lambd_BOH3_Cl_FW86,
     'BOH3-SO4': prm.lambd_BOH3_SO4_FW86,
-#    'NH3-Na': prm.lambd_NH3_Na_CB89,
-#    'NH3-K': prm.lambd_NH3_K_CB89,
-#    'NH3-Mg': prm.lambd_NH3_Mg_CB89,
-#    'NH3-Ca': prm.lambd_NH3_Ca_CB89,
-#    'NH3-Sr': prm.lambd_NH3_Sr_CB89,
+    'NH3-Na': prm.lambd_NH3_Na_CB89,
+    'NH3-K': prm.lambd_NH3_K_CB89, # also includes CB89 temperature term
+    'NH3-Mg': prm.lambd_NH3_Mg_CB89,
+    'NH3-Ca': prm.lambd_NH3_Ca_CB89,
+    'NH3-Sr': prm.lambd_NH3_Sr_CB89,
 #    'H3PO4-H': prm.lambd_H3PO4_H_SP76,
 #    'H3PO4-K': prm.lambd_H3PO4_K_SP76,
 #    'SO2-Cl': prm.lambd_SO2_Cl_Millero89,
@@ -252,6 +252,6 @@ zeta = { # all from Table A12
     'CO2-Mg-SO4': prm.zeta_CO2_Mg_SO4_HM93,
     'BOH3-Na-SO4': prm.zeta_BOH3_Na_SO4_FW86,
 #    'BOH3-H-Cl': prm.zeta_BOH3_H_Cl_FW86, # not included by MP98 - why?
-#    'NH3-Ca-Cl': prm.zeta_NH3_Ca_Cl_CB89,
+    'NH3-Ca-Cl': prm.zeta_NH3_Ca_Cl_CB89,
 #    'H3PO4-Na-Cl': prm.zeta_H3PO4_Na_Cl_SP76,
 } # end of zeta dict

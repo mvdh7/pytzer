@@ -6694,7 +6694,215 @@ def psi_Na_Cl_SO4_M88(T, P):
     return psi, valid
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Clegg & Brimblecombe (1989) ~~~~~
+def lambd_NH3_NH3_CB89(T, P):
+    """n-n: ammonia ammonia [CB89]."""
+    lambd = 0.033161 - 21.12816/T + 4665.1461/T**2
+    valid = logical_and(T >= 273.15, T <= 313.15)
+    return lambd, valid
 
+def lambd_NH3_Mg_CB89(T, P):
+    """n-c: ammonia magnesium [CB89]."""
+    lambd = -0.21
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_NH3_Ca_CB89(T, P):
+    """n-c: ammonia calcium [CB89]."""
+    lambd = -0.081
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_NH3_Sr_CB89(T, P):
+    """n-c: ammonia strontium [CB89]."""
+    lambd = -0.041
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_NH3_Ba_CB89(T, P):
+    """n-c: ammonia barium [CB89]."""
+    lambd = -0.021
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_NH3_Li_CB89(T, P):
+    """n-c: ammonia lithium [CB89]."""
+    lambd = -0.038
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_NH3_Na_CB89(T, P):
+    """n-c: ammonia sodium [CB89]."""
+    lambd = 0.0175
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_NH3_K_CB89(T, P):
+    """n-c: ammonia potassium [CB89]."""
+    lambd = 0.0454 + (T - 298.15)*-0.000141
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_NH3_NH4_CB89(T, P):
+    """n-c: ammonia ammonium [CB89]."""
+    lambd = 0
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_NH3_F_CB89(T, P):
+    """n-a: ammonia fluoride [CB89]."""
+    lambd = 0.091
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_NH3_Cl_CB89(T, P):
+    """n-a: ammonia chloride [CB89]."""
+    lambd = 0
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_NH3_Br_CB89(T, P):
+    """n-a: ammonia bromide [CB89]."""
+    lambd = -0.022
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_NH3_I_CB89(T, P):
+    """n-a: ammonia iodide [CB89]."""
+    lambd = -0.051
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_NH3_OH_CB89(T, P):
+    """n-a: ammonia hydroxide [CB89]."""
+    lambd = 0.103
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_NH3_ClO3_CB89(T, P):
+    """n-a: ammonia chlorate [CB89]."""
+    lambd = -0.004
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_NH3_ClO4_CB89(T, P):
+    """n-a: ammonia perchlorate [CB89]."""
+    lambd = -0.056
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_NH3_NO2_CB89(T, P):
+    """n-a: ammonia nitrite [CB89]."""
+    lambd = -0.003
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_NH3_NO3_CB89(T, P):
+    """n-a: ammonia nitrate [CB89]."""
+    lambd = -0.01
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_NH3_SCN_CB89(T, P):
+    """n-a: ammonia thiocyanide [CB89]."""
+    lambd = -0.017
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_NH3_S_CB89(T, P):
+    """n-a: ammonia sulfide [CB89]."""
+    lambd = 0.174
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_NH3_SO3_CB89(T, P):
+    """n-a: ammonia sulfite [CB89]."""
+    lambd = 0.158
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_NH3_SO4_CB89(T, P):
+    """n-a: ammonia sulfate [CB89]."""
+    lambd = 0.140
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_NH3_CO3_CB89(T, P):
+    """n-a: ammonia carbonate [CB89]."""
+    lambd = 0.180
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_NH3_HCOO_CB89(T, P):
+    """n-a: ammonia methanoate [CB89]."""
+    lambd = 0.048
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_NH3_CH3COO_CB89(T, P):
+    """n-a: ammonia ethanoate [CB89]."""
+    lambd = 0.036
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_NH3_COO2_CB89(T, P):
+    """n-a: ammonia oxalate [CB89]."""
+    lambd = 0.012
+    valid = T == 298.15
+    return lambd, valid
+
+def mun2i_NH3_NH3_Na_CB89(T, P):
+    """n-n-c: ammonia ammonia sodium [CB89]."""
+    mun2i = -0.000311
+    valid = T == 298.15
+    return mun2i, valid
+
+def mun2i_NH3_NH3_K_CB89(T, P):
+    """n-n-c: ammonia ammonia potassium [CB89]."""
+    mun2i = -0.000321
+    valid = T == 298.15
+    return mun2i, valid
+
+def mun2i_NH3_NH3_NH4_CB89(T, P):
+    """n-n-c: ammonia ammonia ammonium [CB89]."""
+    mun2i = -0.00075
+    valid = T == 298.15
+    return mun2i, valid
+
+def mun2i_NH3_NH3_Cl_CB89(T, P):
+    """n-n-a: ammonia ammonia chloride [CB89]."""
+    mun2i = 0
+    valid = T == 298.15
+    return mun2i, valid
+
+def mun2i_NH3_NH3_NO3_CB89(T, P):
+    """n-n-a: ammonia ammonia nitrate [CB89]."""
+    mun2i = -0.000437
+    valid = T == 298.15
+    return mun2i, valid
+
+def mun2i_NH3_NH3_CO3_CB89(T, P):
+    """n-n-a: ammonia ammonia carbonate [CB89]."""
+    mun2i = 0.000625
+    valid = T == 298.15
+    return mun2i, valid
+
+def zeta_NH3_Ca_Cl_CB89(T, P):
+    """n-c-a: ammonia calcium chloride [CB89]."""
+    zeta = -0.00134
+    valid = T == 298.15
+    return zeta, valid
+
+def zeta_NH3_K_OH_CB89(T, P):
+    """n-c-a: ammonia potassium hydroxide [CB89]."""
+    zeta = 0.00385
+    valid = T == 298.15
+    return zeta, valid
+
+def munii_NH3_NH4_SO4_CB89(T, P):
+    """n-a-a': ammonia ammonium sulfate [CB89]."""
+    munii = -0.00153
+    valid = T == 298.15
+    return munii, valid
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Greenberg & Møller (1989) ~~~~~
 def GM89_eq3(T, a):
