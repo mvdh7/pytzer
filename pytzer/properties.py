@@ -1,13 +1,17 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
-"""Define ionic properties."""
+"""Define solute properties."""
 from autograd.numpy import array, concatenate, float_, unique, vstack
 
 # Define dict of charges.
 # Order: neutrals, cations, then anions, and alphabetical within each group.
 _ion2charge = {
     # Neutrals
+    'BOH3': 0,
+    'H3PO4': 0,
     'glycerol': 0,
+    'NH3': 0,
+    'SO2': 0,
     'sucrose': 0,
     'tris': 0,
     'urea': 0,
@@ -18,6 +22,8 @@ _ion2charge = {
     'Cojj': +2,
     'Cs': +1,
     'Cujj': +2,
+    'Fejj': +2,
+    'Fejjj': +3,
     'H': +1,
     'K': +1,
     'La': +3,
@@ -39,11 +45,14 @@ _ion2charge = {
     'ClO4': -1,
     'CO3': -2,
     'F': -1,
+    'H2PO4': -1,
     'HCO3': -1,
+    'HPO4': -2,
     'HSO4': -1,
     'I': -1,
     'NO3': -1,
     'OH': -1,
+    'PO4': -3,
     'S2O3': -2,
     'SO4': -2,
 }
