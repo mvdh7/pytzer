@@ -45,7 +45,7 @@ for r in range(len(isonew.index)):
 #%% Get all data for a particular electrolyte
 
 # Choose electrolyte to examine
-testele = 'MgSO4'
+testele = 'NaCl'
 
 # Extract subset of isodict
 testdict = {irow: isodict[irow] for irow in isodict.keys()
@@ -123,8 +123,8 @@ L = np.logical_not(np.logical_or.reduce((
     t_elemix == 'CaCl2',
 )))
 L = np.logical_or.reduce((
-    t_elemix == 'NaCl-SrCl2',
-    t_elemix == 'SrCl2-KCl',
+    t_elemix == 'MgCl2',
+    t_elemix == 'NaCl-MgCl2',
 ))
 #L = np.logical_and(
 #    np.logical_or.reduce((
