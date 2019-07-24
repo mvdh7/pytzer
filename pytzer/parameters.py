@@ -7229,6 +7229,20 @@ def psi_Na_Cl_SO3_MHJZ89(T, P):
     valid = logical_and(T >= 273.15, T <= 323.15)
     return psi, valid
 
+def lambd_SO2_Na_MHJZ89(T, P):
+    """n-c: sulfur-dioxide sodium [MHJZ89]."""
+    # RZM93 and MP98 both cite MHJZ89 but can't find this value therein
+    lambd = 0.0283
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_SO2_Cl_MHJZ89(T, P):
+    """n-a: sulfur-dioxide chloride [MHJZ89]."""
+    # RZM93 and MP98 both cite MHJZ89 but can't find this value therein
+    lambd = 0
+    valid = T == 298.15
+    return lambd, valid
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Roy et al. (1991) ~~~~~
 def bC_Mg_HSO3_RZM91(T, P):
     """c-a: magnesium bisulfite [RZM91]."""
