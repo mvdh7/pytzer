@@ -77,8 +77,8 @@ def Gex_nRT(mols, allmxs):
             anis @ etheta(Aosm, I, zanis) @ transpose(anis) +
             catscats @ psimxcca @ transpose(anis) +
             anisanis @ psimxcaa @ transpose(cats) +
-            neus @ zetamx @ transpose(catsanis) + neus**3 @ mumx)[0]
-    return Gex_nRT
+            neus @ zetamx @ transpose(catsanis) + neus**3 @ mumx)
+    return Gex_nRT[0]
 
 def ln_acfs(mols, allmxs):
     """Natural logarithms of the activity coefficients of all solutes."""
