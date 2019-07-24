@@ -233,13 +233,13 @@ lambd = { # all from Table A12
     'NH3-Mg': prm.lambd_NH3_Mg_CB89,
     'NH3-Ca': prm.lambd_NH3_Ca_CB89,
     'NH3-Sr': prm.lambd_NH3_Sr_CB89,
-#    'H3PO4-H': prm.lambd_H3PO4_H_SP76,
-#    'H3PO4-K': prm.lambd_H3PO4_K_SP76,
+    'H3PO4-H': prm.lambd_H3PO4_H_PS76,
+    'H3PO4-K': prm.lambd_H3PO4_K_PS76,
 #    'SO2-Cl': prm.lambd_SO2_Cl_Millero89,
 #    'SO2-Na': prm.lambd_SO2_Na_Millero89,
     'SO2-Mg': prm.lambd_SO2_Mg_RZM91,
-#    'HF-Cl': prm.lambd_HF_Cl_MP98,
-#    'HF-Na': prm.lambd_HF_Na_MP98,
+    'HF-Cl': prm.lambd_HF_Cl_MP98,
+    'HF-Na': prm.lambd_HF_Na_MP98,
 } # end of lambd dict
 zeta = { # all from Table A12
     'CO2-H-Cl': prm.zeta_CO2_H_Cl_HM93,
@@ -251,7 +251,6 @@ zeta = { # all from Table A12
     'CO2-K-SO4': prm.zeta_CO2_K_SO4_HM93,
     'CO2-Mg-SO4': prm.zeta_CO2_Mg_SO4_HM93,
     'BOH3-Na-SO4': prm.zeta_BOH3_Na_SO4_FW86,
-#    'BOH3-H-Cl': prm.zeta_BOH3_H_Cl_FW86, # not included by MP98 - why?
     'NH3-Ca-Cl': prm.zeta_NH3_Ca_Cl_CB89,
-#    'H3PO4-Na-Cl': prm.zeta_H3PO4_Na_Cl_SP76,
+    'H3PO4-Na-Cl': prm.zeta_H3PO4_Na_Cl_MP98, # PS76 don't have this term...
 } # end of zeta dict

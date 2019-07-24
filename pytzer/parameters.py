@@ -2857,6 +2857,55 @@ def psi_Li_Cl_NO3_PK74(T, P):
     valid = T == 298.15
     return psi, valid
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Pitzer and Silvester (1976) ~~~~~
+def lambd_H3PO4_H3PO4_PS76(T, P):
+    """n-n: phosphoric-acid phosphoric-acid [PS76]."""
+    lambd = 0.05031
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_H3PO4_H2PO4_PS76(T, P):
+    """n-a: phosphoric-acid dihydrogen-phosphate [PS76]."""
+    lambd = -0.400
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_H3PO4_K_PS76(T, P):
+    """n-c: phosphoric-acid potassium [PS76]."""
+    lambd = -0.070
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_H3PO4_H_PS76(T, P):
+    """n-c: phosphoric-acid hydrogen [PS76]."""
+    lambd = 0.290
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_H3PO4_Cl_PS76(T, P):
+    """n-a: phosphoric-acid chloride [PS76]."""
+    lambd = 0
+    valid = T == 298.15
+    return lambd, valid
+
+def mu_H3PO4_H3PO4_H3PO4_PS76(T, P):
+    """n-n-n: phosphoric-acid phosphoric-acid phosphoric-acid [PS76]."""
+    mu = 0.01095
+    valid = T == 298.15
+    return mu, valid
+
+def theta_Cl_H2PO4_PS76(T, P):
+    """a-a': chloride dihydrogen-phosphate [PS76]."""
+    theta = 0.10
+    valid = T == 298.15
+    return theta, valid
+
+def psi_K_Cl_H2PO4_PS76(T, P):
+    """c-a-a': potassium chloride dihydrogen-phosphate [PS76]."""
+    psi = -0.0105
+    valid = T == 298.15
+    return psi, valid
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Silvester and Pitzer (1978) ~~~~~
 # Auto-generated functions
 # General procedure:
@@ -8504,6 +8553,27 @@ def psi_K_Cl_H2PO4_MP98(T, P):
     psi = -0.0105
     valid = T == 298.15
     return psi, valid
+
+def lambd_HF_Cl_MP98(T, P):
+    """n-a: hydrogen-fluoride chloride [MP98]."""
+    # MP98 Table A12 says this is derived "from CB88 data"
+    lambd = 0
+    valid = T == 298.15
+    return lambd, valid
+
+def lambd_HF_Na_MP98(T, P):
+    """n-c: hydrogen-fluoride sodium [MP98]."""
+    # MP98 Table A12 says this is derived "from CB88 data"
+    lambd = 0.011
+    valid = T == 298.15
+    return lambd, valid
+
+def zeta_H3PO4_Na_Cl_MP98(T, P):
+    """phosphoric-acid sodium chloride [MP98]."""
+    # MP98 say this comes from PS76 but there's no sodium in there
+    zeta = 0
+    valid = T == 298.15
+    return zeta, valid
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Archer (1999) ~~~~~
 def A99_eq22(T, a):

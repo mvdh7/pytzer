@@ -91,6 +91,9 @@ In alphanumerical order of the source codes:
 <td id="PP86ii"><code>PP86ii</code></td>
 <td>Phutela, R. C., and Pitzer, K. S. (1986). Heat capacity and other thermodynamic properties of aqueous magnesium sulfate to 473 K. <i>J. Phys. Chem.</i> 90, 895–901. <a href="https://doi.org/10.1021/j100277a037">doi:10.1021/j100277a037</a>.</td></tr><tr>
 
+<td id="PS76"><code>PS76</code></td>
+<td>Pitzer, K. S., and Silvester, L. F. (1976). Thermodynamics of electrolytes. VI. Weak electrolytes including H<sub>3</sub>PO<sub>4</sub>. <i>J. Solution Chem.</i> 5(4), 269–278. <a href="https://doi.org/10.1007/BF00645465">doi:10.1007/BF00645465</a>.</td></tr><tr>
+
 <td id="RC99"><code>RC99</code></td>
 <td>Rard, J. A., and Clegg, S. L. (1999). Isopiestic determination of the osmotic and activity coefficients of {<i>z</i>H<sub>2</sub>SO<sub>4</sub>+ (1−<i>z</i>)MgSO<sub>4</sub>}(aq) at <i>T</i> = 298.15 K. II. Results for <i>z</i> = (0.43040, 0.28758, and 0.14399) and analysis with Pitzer's model. <i>J. Chem. Thermodyn.</i> 31, 399–429. <a href="https://doi.org/10.1006/jcht.1998.0461">doi:10.1006/jcht.1998.0461</a>.</td></tr><tr>
 
