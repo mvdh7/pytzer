@@ -6334,7 +6334,7 @@ def bC_K_Cl_SRRJ87(T, P):
         -0.790,
         -0.639,
          0.613,
-    ]))
+    ]))*1e-3 # *1e-3 presumably?
     C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
@@ -6361,7 +6361,7 @@ def bC_Na_Cl_SRRJ87(T, P):
          1.40,
         -1.20,
          1.15,
-    ]))
+    ]))*1e-3 # *1e-3 presumably?
     C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
@@ -6388,7 +6388,7 @@ def bC_K_BOH4_SRRJ87(T, P):
         -56.43,
         -9.56,
          0,
-    ]))
+    ]))*1e-3 # *1e-3 presumably?
     C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
@@ -6415,7 +6415,7 @@ def bC_Na_BOH4_SRRJ87(T, P):
          14.98,
         -15.7,
          0,
-    ]))
+    ]))*1e-3 # *1e-3 presumably?
     C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['Cl'])))
     C1 = 0
     alph1 = 2
@@ -8496,7 +8496,7 @@ def bC_H_SO4_MP98(T, P):
     alph2 = -9
     omega = 2.5
     valid = logical_and(T >= 273.15, T <= 523.15)
-    return psi, valid
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 def theta_HSO4_SO4_MP98(T, P):
     """a-a': bisulfate sulfate [MP98]."""
