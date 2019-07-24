@@ -19,7 +19,8 @@ Version 0.4 remains in beta testing. The main change from version 0.3 is includi
   * Parameter libraries can now be stored in separate script files.
   * Added complete [HMW84](../references/#HMW84) parameter library;
   * Added all interaction coefficients to [MIAMI](../references/#MP98) parameter library - but its calculation results have not yet been tested;
-  * Fixed multiplier error for `Cphi` values in `PM73_TableVI` in **tables** module.
+  * Fixed multiplier error for `Cphi` values in `PM73_TableVI` in **tables** module;
+  * Added presumably missing `*1e-3` multiplier to `Cphi` values in all SRRJ87 binary interaction functions.
 
 # 0.3 (beta)
 

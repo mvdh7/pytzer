@@ -263,8 +263,7 @@ def bC_Na_F_PM73(T, P):
     b0 = 0.0215
     b1 = 0.2107
     b2 = 0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['F'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
