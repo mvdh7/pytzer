@@ -83,7 +83,7 @@ In alphanumerical order of the source codes:
 <td>Pitzer, K. S. (1991). “Ion Interaction Approach: Theory and Data Correlation,” in <i>Activity Coefficients in Electrolyte Solutions, 2nd Edition</i>, ed. K. S. Pitzer (CRC Press, Florida, USA), 75–153.</td></tr><tr>
 
 <td id="PMR97"><code>PMR97</code></td>
-<td>Pierrot, D., Millero, F. J., Roy, L. N., Roy, R. N., Doneski, A., and Niederschmidt, J. (1997). The activity coefficiencts of HCl in HCl−Na<sub>2</sub>SO<sub>4</sub> solutions from 0 to 50°C and ionic strengths up to 6 molal. <i>J. Solution Chem.</i> 26(1), 31–45. <a href="https://doi.org/10.1007/BF02439442">doi:10.1007/BF02439442</a>.</td></tr><tr>
+<td>Pierrot, D., Millero, F. J., Roy, L. N., Roy, R. N., Doneski, A., and Niederschmidt, J. (1997). The activity coefficients of HCl in HCl−Na<sub>2</sub>SO<sub>4</sub> solutions from 0 to 50°C and ionic strengths up to 6 molal. <i>J. Solution Chem.</i> 26(1), 31–45. <a href="https://doi.org/10.1007/BF02439442">doi:10.1007/BF02439442</a>.</td></tr><tr>
 
 <td id="PP82"><code>PP82</code></td>
 <td>Peiper, J. C., and Pitzer, K. S. (1982). Thermodynamics of aqueous carbonate solutions including mixtures of sodium carbonate, bicarbonate, and chloride. <i>J. Chem. Thermodyn.</i> 14, 613–638. <a href="https://doi.org/10.1016/0021-9614(82)90078-7">doi:10.1016/0021-9614(82)90078-7</a>.</td></tr><tr>
