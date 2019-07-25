@@ -22,6 +22,7 @@ from . import (
     io,
     libraries,
     matrix,
+    measure,
     meta,
     model,
     parameters,
@@ -40,6 +41,7 @@ __all__ = [
     'io',
     'libraries',
     'matrix',
+    'measure',
     'meta',
     'model',
     'parameters',
@@ -109,7 +111,7 @@ def blackbox_equilibrate(filename, prmlib=libraries.Seawater, savefile=True):
     prmlib = deepcopy(prmlib)
     prmlib.add_zeros(allions) # just in case
     # Solve for equilibria
-    eqstate_guess = [30.0, 0.0, 0.0, 0.0]
+    eqstate_guess = [0.0, 0.0, 0.0, 30.0]
     allmols, allions, eqstates = equilibrate.solveloop(eqstate_guess, tots,
         fixmols, eles, fixions, tempK, pres, prmlib=prmlib)
     # Separate out zero ionic strengths

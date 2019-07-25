@@ -1,49 +1,20 @@
-#from autograd import numpy as np
+from copy import deepcopy
 import pytzer as pz
+import numpy as np
 
-allmols, allions, tempK, pres, prmlib, Gex_nRT, osm, aw, acfs, eqstates \
-    = pz.blackbox_equilibrate('testfiles/trisASWequilibrium.csv')
+#allmols, allions, tempK, pres, prmlib, Gex_nRT, osm, aw, acfs, eqstates \
+#    = pz.blackbox_equilibrate('testfiles/CRP94 Table 8.csv')
 
-#tots, fixmols, eles, fixions, tempK, pres = pz.io.gettots(
-#    'testfiles/trisASWequilibrium.csv')
-#fixcharges = np.transpose(pz.properties.charges(fixions)[0])
-#
-#L = 5
-#Ltots = tots[:, L]
-#Lfixmols = fixmols[:, L]
-#LtempK = np.array([tempK[L]])
-#Lpres = np.array([pres[L]])
-#eqstate_Julia = [
-#    29.978530891580323,
-#    -16.505227391910964,
-#    9.55561822596657,
-#    0.0003713411227473853,
-#]
-#varmolin = pz.equilibrate._varmols(eqstate_Julia, Ltots, Lfixmols, eles,
-#    fixions, fixcharges)
-#
-#allions = pz.properties.getallions(eles, fixions)
-#allmxs = pz.matrix.assemble(allions, LtempK, Lpres,
-#    prmlib=pz.libraries.MarChemSpec)
-#lnkHSO4 = pz.dissociation.HSO4_CRP94(LtempK, Lpres)
-#lnkH2O = pz.dissociation.H2O_MF(LtempK, Lpres)
-#lnkMg = pz.dissociation.Mg_CW91(LtempK, Lpres)
-#lnktrisH = pz.dissociation.trisH_BH64(LtempK, Lpres)
-#
-#Gcomp = pz.equilibrate._GibbsComponents(eqstate_Julia, Ltots, Lfixmols, eles,
-#    allions, fixions, fixcharges, allmxs, lnkHSO4, lnkH2O, lnkMg, lnktrisH)
-#Gtot = pz.equilibrate._Gibbs(eqstate_Julia, Ltots, Lfixmols, eles, allions,
-#    fixions, fixcharges, allmxs, lnkHSO4, lnkH2O, lnkMg, lnktrisH)
-#
-#varmolout = pz.equilibrate._varmols(eqstate_Julia, Ltots, Lfixmols, eles,
-#    fixions, fixcharges)
-#pHF = -np.log10(varmolout[0])
-#
-#eqstate_guess = [30, 0, 0, 0]
-##fullsolve = pz.equilibrate.solve(eqstate_guess, Ltots, Lfixmols, eles, fixions,
-##    allions, allmxs, lnkHSO4, lnkH2O, lnkMg, lnktrisH)
-##quicksolve = pz.equilibrate.solvequick(eqstate_guess, Ltots, Lfixmols, eles,
-##    fixions, allions, allmxs, lnkHSO4, lnkH2O, lnkMg, lnktrisH)
-##allmols, allions, eqstates = pz.equilibrate.solveloop(eqstate_guess, tots,
-##    fixmols, eles, fixions, tempK, pres,)
+filename = 'testfiles/CRP94 Table 8.csv'
+# Import test dataset
+tots, fixmols, eles, fixions, tempK, pres = pz.io.gettots(filename)
+allions = pz.properties.getallions(eles, fixions)
+prmlib = deepcopy(pz.libraries.CRP94)
+prmlib.add_zeros(allions) # just in case
+# Solve for equilibria
+eqstate_guess = [0.0]
+allmols, allions, eqstates = pz.equilibrate.solveloop(eqstate_guess, tots,
+    fixmols, eles, fixions, tempK, pres, prmlib=prmlib)
 
+#%%
+alpha = np.round(allmols[1]/tots[0], decimals=5)

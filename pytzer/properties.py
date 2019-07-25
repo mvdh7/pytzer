@@ -1,7 +1,7 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 """Define solute properties."""
-from autograd.numpy import array, concatenate, float_, unique, vstack
+from autograd.numpy import concatenate, float_, unique, vstack
 
 # Define dict of charges.
 # Order: neutrals, cations, then anions, and alphabetical within each group.
@@ -75,6 +75,7 @@ _ion2name = {
     'ClO3': 'chlorate',
     'ClO4': 'perchlorate',
     'CoCN6': 'Co(CN)6',
+    'Co(CN)6': 'Co(CN)6',
     'Coen3': 'tris(ethylenediamine)cobalt(III)',
     'Cojj': 'cobalt(II)',
     'Copn3': 'Copn3',
@@ -87,7 +88,9 @@ _ion2name = {
     'F': 'fluoride',
     'Fejj': 'iron(II)',
     'FejjCN6': 'ferrocyanide',
+    'Fejj(CN)6': 'ferrocyanide',
     'FejjjCN6': 'ferricyanide',
+    'Fejjj(CN)6': 'ferricyanide',
     'Ga': 'gallium',
     'H': 'hydrogen',
     'H2AsO4': 'dihydrogen-arsenate',
@@ -111,6 +114,7 @@ _ion2name = {
     'MgOH': 'magnesium-hydroxide',
     'Mnjj': 'manganese(II)',
     'MoCN8': 'Mo(CN)8',
+    'Mo(CN)8': 'Mo(CN)8',
     'NH4': 'ammonium',
     'NO2': 'nitrite',
     'NO3': 'nitrate',
@@ -127,6 +131,7 @@ _ion2name = {
     'Pr': 'praeseodymium',
     'Pr4N': 'tetrapropylammonium',
     'PtCN4': 'platinocyanide',
+    'Pt(CN)4': 'platinocyanide',
     'PtF6': 'platinum-hexafluoride',
     'Rb': 'rubidium',
     'S2O3': 'thiosulfate',
@@ -139,70 +144,87 @@ _ion2name = {
     'Tl': 'thallium',
     'UO2': 'uranium-dioxide',
     'WCN8': 'W(CN)8',
+    'W(CN)8': 'W(CN)8',
     'Y': 'yttrium',
     'Znjj': 'zinc(II)',
 }
 
-# Define electrolyte to ions conversion dict
+# Define general electrolyte to ions conversion dict
 _ele2ions = {
-    't_HSO4': array(['HSO4', 'SO4']),
-    't_Mg': array(['Mg', 'MgOH']),
-    't_trisH': array(['trisH', 'tris']),
+    'Ba(NO3)2': (('Ba', 'NO3'), (1, 2)),
+    'CaCl2': (('Ca', 'Cl'), (1, 2)),
+    'Cd(NO3)2': (('Cdjj', 'NO3'), (1, 2)),
+    'Co(NO3)2': (('Cojj', 'NO3'), (1, 2)),
+    'CsCl': (('Cs', 'Cl'), (1, 1)),
+    'CuCl2': (('Cujj', 'Cl'), (1, 2)),
+    'Cu(NO3)2': (('Cujj', 'NO3'), (1, 2)),
+    'CuSO4': (('Cujj', 'SO4'), (1, 1)),
+    'glycerol': (('glycerol',), (1,)),
+    'H2SO4': (('H', 'HSO4', 'SO4'), (1.5, 0.5, 0.5)),
+    'K2CO3': (('K', 'CO3'), (2, 1)),
+    'K2SO4': (('K', 'SO4'), (2, 1)),
+    'KCl': (('K', 'Cl'), (1, 1)),
+    'KF': (('K', 'F'), (1, 1)),
+    'LaCl3': (('La', 'Cl'), (1, 3)),
+    'Li2SO4': (('Li', 'SO4'), (2, 1)),
+    'LiCl': (('Li', 'Cl'), (1, 1)),
+    'LiI': (('Li', 'I'), (1, 1)),
+    'MgCl2': (('Mg', 'Cl'), (1, 2)),
+    'Mg(ClO4)2': (('Mg', 'ClO4'), (1, 2)),
+    'Mg(NO3)2': (('Mg', 'NO3'), (1, 2)),
+    'MgSO4': (('Mg', 'SO4'), (1, 1)),
+    'Na2S2O3': (('Na', 'S2O3'), (2, 1)),
+    'Na2SO4': (('Na', 'SO4'), (2, 1)),
+    'NaCl': (('Na', 'Cl'), (1, 1)),
+    'NaF': (('Na', 'F'), (1, 1)),
+    'NaOH': (('Na', 'OH'), (1, 1)),
+    'RbCl': (('Rb', 'Cl'), (1, 1)),
+    'SrCl2': (('Sr', 'Cl'), (1, 2)),
+    'Sr(NO3)2': (('Sr', 'NO3'), (1, 2)),
+    'sucrose': (('sucrose',), (1,)),
+    'tris': (('tris',), (1,)),
+    '(trisH)2SO4': (('trisH', 'SO4'), (2, 1)),
+    'trisHCl': (('trisH', 'Cl'), (1, 1)),
+    'UO2(NO3)2': (('UO2', 'NO3'), (1, 2)),
+    'urea': (('urea',), (1,)),
+    'Zn(ClO4)2': (('Znjj', 'ClO4'), (1, 2)),
+    'Zn(NO3)2': (('Znjj', 'NO3'), (1, 2)),
 }
 
-_ele2ions2 = {
-    'NaOH': [array(['Na', 'OH']), float_([1, 1])],
-    'K2CO3': [array(['K', 'CO3']), float_([2, 1])],
-    'Zn(NO3)2': [array(['Znjj', 'NO3']), float_([1,2])],
-    'H2SO4': [array(['H', 'SO4']), float_([2, 1])],
-    'Li2SO4': [array(['Li', 'SO4']), float_([2, 1])],
-    'Na2SO4': [array(['Na', 'SO4']), float_([2, 1])],
-    'MgSO4': [array(['Mg', 'SO4']), float_([1, 1])],
-    'K2SO4': [array(['K', 'SO4']), float_([2, 1])],
-    'CuSO4': [array(['Cujj', 'SO4']), float_([1, 1])],
-    'Na2S2O3': [array(['Na', 'S2O3']), float_([2, 1])],
-    'Mg(NO3)2': [array(['Mg', 'NO3']), float_([1, 2])],
-    'Sr(NO3)2': [array(['Sr', 'NO3']), float_([1, 2])],
-    'Ba(NO3)2': [array(['Ba', 'NO3']), float_([1, 2])],
-    'Co(NO3)2': [array(['Cojj', 'NO3']), float_([1, 2])],
-    'Cu(NO3)2': [array(['Cujj', 'NO3']), float_([1, 2])],
-    'Cd(NO3)2': [array(['Cdjj', 'NO3']), float_([1, 2])],
-    'UO2(NO3)2': [array(['UO2', 'NO3']), float_([1, 2])],
-    'NaF': [array(['Na', 'F']), float_([1, 1])],
-    'KF': [array(['K', 'F']), float_([1, 1])],
-    'LiCl': [array(['Li', 'Cl']), float_([1, 1])],
-    'NaCl': [array(['Na', 'Cl']), float_([1, 1])],
-    'MgCl2': [array(['Mg', 'Cl']), float_([1, 2])],
-    'KCl': [array(['K', 'Cl']), float_([1, 1])],
-    'CaCl2': [array(['Ca', 'Cl']), float_([1, 2])],
-    'CuCl2': [array(['Cujj', 'Cl']), float_([1, 2])],
-    'SrCl2': [array(['Sr', 'Cl']), float_([1, 2])],
-    'RbCl': [array(['Rb', 'Cl']), float_([1, 1])],
-    'CsCl': [array(['Cs', 'Cl']), float_([1, 1])],
-    'LaCl3': [array(['La', 'Cl']), float_([1, 3])],
-    'Mg(ClO4)2': [array(['Mg', 'ClO4']), float_([1, 2])],
-    'Zn(ClO4)2': [array(['Znjj', 'ClO4']), float_([1, 2])],
-    'LiI': [array(['Li', 'I']), float_([1, 1])],
-    'tris': [array(['tris']), float_([1])],
-    '(trisH)2SO4': [array(['trisH', 'SO4']), float_([2, 1])],
-    'trisHCl': [array(['trisH', 'Cl']), float_([1, 1])],
-    'glycerol': [array(['glycerol']), float_([1])],
-    'sucrose': [array(['sucrose']), float_([1])],
-    'urea': [array(['urea']), float_([1])],
+# Define electrolyte to ions conversion dict for equilibria
+_eq2ions = {
+    't_HSO4': ('HSO4', 'SO4'),
+    't_Mg': ('Mg', 'MgOH'),
+    't_trisH': ('trisH', 'tris'),
 }
 
 def charges(ions):
     """Find the charges on each of a list of ions."""
-    zs = vstack([float_(_ion2charge[ion]) for ion in ions])
-    cations  = [ion for ion in ions if _ion2charge[ion] > 0]
-    anions   = [ion for ion in ions if _ion2charge[ion] < 0]
-    neutrals = [ion for ion in ions if _ion2charge[ion] == 0]
+    if len(ions) == 0:
+        zs = float_([])
+        cations = []
+        anions = []
+        neutrals = []
+    else:
+        zs = vstack([float_(_ion2charge[ion]) for ion in ions])
+        cations = [ion for ion in ions if _ion2charge[ion] > 0]
+        anions = [ion for ion in ions if _ion2charge[ion] < 0]
+        neutrals = [ion for ion in ions if _ion2charge[ion] == 0]
     return zs, cations, anions, neutrals
 
 def getallions(eles, fixions):
-    """Get all ions given list of electrolytes."""
-    return unique(concatenate([
+    """Get all ions given list of electrolytes for equilibria."""
+    allions = concatenate([
         fixions,
-        concatenate([_ele2ions[ele] for ele in eles]),
+        concatenate([_eq2ions[ele] for ele in eles]),
         ['H', 'OH'],
-    ]))
+    ])
+    if len(unique(allions)) < len(allions):
+        allions = list(allions)
+        allions.reverse()
+        seen = set()
+        seen_add = seen.add
+        allions = [ion for ion in allions
+            if not (ion in seen or seen_add(ion))]
+        allions.reverse()
+    return allions

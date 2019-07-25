@@ -11,13 +11,27 @@ from . import (
     HMW84,
     M88,
     MarChemSpec,
-    MarChemSpec05,    
+    MarChemSpec05,
     MarChemSpec25,
     MIAMI,
     Seawater,
     WM13,
     WM13_MarChemSpec25,
 )
+
+__all__ = [
+    'CRP94',
+    'GM89',
+    'HMW84',
+    'M88',
+    'MarChemSpec',
+    'MarChemSpec05',
+    'MarChemSpec25',
+    'MIAMI',
+    'Seawater',
+    'WM13',
+    'WM13_MarChemSpec25',
+]
 
 MarChemSpecSolutes = array(['H', 'Na', 'Mg', 'Ca', 'K', 'MgOH', 'trisH',
     'Cl', 'SO4', 'HSO4', 'OH', 'tris'])
