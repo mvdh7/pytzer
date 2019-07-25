@@ -109,6 +109,9 @@ bC = {
 # Table A9
     'H-Cl': prm.bC_H_Cl_CMR93,
     'H-SO4': prm.bC_H_SO4_MP98, # cited paper not published
+    'H-HSO4': prm.bC_H_HSO4_MP98, # cited paper not published, & no equation
+                                  # provided, but this interaction is too
+                                  # critical to skip?
 } # end of bC dict
 theta = {
 # Table A10

@@ -8509,31 +8509,68 @@ def MP98_eqTableA9_2(T, a):
 def bC_H_SO4_MP98(T, P):
     """c-a: hydrogen sulfate [MP98]."""
     # MP98 cite Pierrot et al. (1998, submitted), but that doesn't appear to
-    # have been published, so these values are directly from MP98 Table A9.
+    # have been published, so these values are directly from MP98 Table A9
+    # (with noted typo corrections).
     b0 = MP98_eqTableA9_2(T, [
-        0.065,
+        0.0065, # typo in MP98 table (vs 2016 VB model)
         0.134945,
         0.022374,
         7.2e-5,
     ])
     b1 = MP98_eqTableA9_2(T, [
-        -15.009,
+        -0.15009, # typo in MP98 table (vs 2016 VB model)
         -2.405945,
-        0.335839,
+         0.335839,
         -0.004379,
     ])
     b2 = 0
     C0 = MP98_eqTableA9_2(T, [
-        0.008073,
+         0.008073,
         -0.113106,
         -0.003553,
-        3.57e-5,
+         3.57e-5,
     ])
     C1 = MP98_eqTableA9_2(T, [
         -0.050799,
         3.472545,
         -0.311463,
         0.004037,
+    ])
+    alph1 = 2
+    alph2 = -9
+    omega = 2.5
+    valid = logical_and(T >= 273.15, T <= 523.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_H_HSO4_MP98(T, P):
+    """c-a: hydrogen bisulfate [MP98]."""
+    # MP98 cite Pierrot et al. (1998, submitted), but that doesn't appear to
+    # have been published, so these values are directly from the MP98 VB model.
+    # HOWEVER, this interaction is mysteriously commented out in that model...
+    b0 = MP98_eqTableA9_2(T, [
+        0.239786,
+        -1.209539,
+        -0.004345,
+        0.000185,
+    ])
+    b1 = MP98_eqTableA9_2(T, [
+        0.352843,
+        0.087537,
+        0.038379,
+        -0.000744,
+    ])
+    b2 = 0
+    C0 = MP98_eqTableA9_2(T, [
+        -0.003234,
+        0.045792,
+        0.000793,
+        -0.0000222,
+    ])
+    C1 = MP98_eqTableA9_2(T, [
+        -0.098973,
+        3.127618,
+        -0.020184,
+        -0.000316,
     ])
     alph1 = 2
     alph2 = -9
