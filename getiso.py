@@ -1,14 +1,14 @@
 from copy import deepcopy
 from pandas import read_excel
-from numpy import (append, array, concatenate, float_, logical_not, mean,
-    ones_like, pi, size, sqrt, std, unique, vstack)
+from numpy import (append, array, concatenate, float_, unique, vstack)
 #from numpy import abs as np_abs
 #from numpy import max as np_max
 from numpy import sum as np_sum
 import pytzer as pz
 #from scipy.special import factorial
 import numpy as np
-prmlib = deepcopy(pz.libraries.Seawater)
+prmlib = deepcopy(pz.libraries.MIAMI)
+prmlib.lnk['HSO4'] = pz.dissociation.HSO4_CRP94
 
 # Read in isopiestic data
 e2i = pz.properties._ele2ions
@@ -27,6 +27,7 @@ for r in range(len(isonew.index)):
             irc_ions = concatenate([e2i[cele][0] for cele in celes])
             irc_mols = concatenate([np.array(e2i[cele][1])*irc['tots'][c]
                 for c, cele in enumerate(celes)])
+            # Get unique ions without disturbing order
             seen = set()
             seen_add = seen.add
             irc['ions'] = [ion for ion in irc_ions
@@ -37,7 +38,7 @@ for r in range(len(isonew.index)):
             irc['pres'] = float_([isonew.pres[r]])
 
 #%% Get all data for a particular electrolyte
-testele = 'NaCl'
+testele = 'KCl'
 testdict = {irow: isodict[irow] for irow in isodict.keys()
     if testele in isodict[irow].keys()}
 testions = unique(concatenate([testdict[irow][icell]['ions']
@@ -49,7 +50,8 @@ prmlib.add_zeros(prmlib.ions)
 from time import time
 go = time()
 for i, irow in enumerate(testdict.keys()):
-    print('Solving {} of {}...'.format(i, len(testdict.keys())))
+    if (i+1)%20 == 0:
+        print('Solving {} of {}...'.format(i+1, len(testdict.keys())))
     for icell in testdict[irow].keys():
         trc = testdict[irow][icell]
         # Calculate ionic strengths
@@ -112,52 +114,21 @@ t_eleaw = vstack([testdict[irow][icell]['aw']
 #%% Plot results
 from matplotlib import pyplot as plt
 
-fig, ax = plt.subplots(1, 1)
-#L = np.logical_not(np.logical_or.reduce((
-#    t_elemix == 'sucrose',
-#    t_elemix == 'glycerol',
-#    t_elemix == 'urea',
-#    t_elemix == '(trisH)2SO4',
-#    t_elemix == 'CsCl',
-#    t_elemix == 'CuCl2',
-#    t_elemix == 'CuSO4',
-#    t_elemix == 'CuSO4-CuCl2',
-##    t_elemix == 'H2SO4',
-##    t_elemix == 'K2CO3',
-##    t_elemix == 'LiCl',
-##    t_elemix == 'MgCl2-CsCl',
-##    t_elemix == 'Na2SO4-CuCl2',
-##    t_elemix == 'Na2SO4-CuSO4',
-##    t_elemix == 'NaCl-CuCl2',
-##    t_elemix == 'NaCl-CuSO4',
-##    t_elemix == 'trisHCl',
-#    t_elemix == 'CaCl2',
-#)))
-#L = np.logical_or.reduce((
-#    t_elemix == 'MgCl2',
-#    t_elemix == 'NaCl-MgCl2',
-#))
-L = t_elemix == 'H2SO4'
-#L = np.logical_and(
-#    np.logical_or.reduce((
-#        t_elemix == 'KCl',
-#        t_elemix == 'CaCl2',
-#        t_elemix == 'MgCl2',
-#        t_elemix == 'MgCl2-KCl-NaCl',
-#        t_elemix == 'NaCl-KCl',
-#    )),
-#    t_tempK.ravel() == 298.15,
-#)
-#ax.scatter(t_testIstr, t_delaw)
-
+fig, ax = plt.subplots(2, 1)
+L = t_elemix != 'sabf'
+H = t_elemix == 'H2SO4'
 sim_mNaCl = np.arange(0.01, 2.5, 0.01)**2
 sim_mols = np.array([sim_mNaCl, sim_mNaCl])
-sim_ions = np.array(['Na', 'Cl'])
+sim_ions = np.array(['K', 'Cl'])
 sim_aw = pz.model.aw(sim_mols, sim_ions, np.full_like(sim_mNaCl, 323.15),
     np.full_like(sim_mNaCl, 10.1325), prmlib=prmlib, Izero=False)
+ax[0].plot(sim_mNaCl, sim_aw, c='k')
+ax[0].scatter(t_testIstr[L], t_eleaw[L])
+ax[0].scatter(t_testIstr[H], t_eleaw[H], c='r')
+ax[1].plot(sim_mNaCl, 0*sim_mNaCl, c='k')
+ax[1].scatter(t_testIstr[L], t_delaw[L])
+ax[1].scatter(t_testIstr[H], t_delaw[H], c='r')
 
-ax.plot(sim_mNaCl, sim_aw)
-ax.scatter(t_testIstr[L], t_eleaw[L])
 
 #from scipy.io import savemat
 #savemat('testfiles/isonew_' + testele + '.mat',
