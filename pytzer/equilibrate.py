@@ -106,7 +106,7 @@ def _GibbsComponents(eqstate, tots1, fixmols1, eles, allions, fixions,
     allmols = deepcopy(fixmols1)
     # The order in which molality values are added to allmols within each
     # equilibrium in the following statements MUST comply with the order in
-    # which the corresponding ions are added to allions in the function
+    # which the corresponding ions were added to allions by the function
     # pytzer.properties.getallions, which is defined by their order in the
     # entries of the pytzer.properties._eq2ions dict.
     for e, ele in enumerate(eles):

@@ -8,19 +8,10 @@ from numpy import sum as np_sum
 import pytzer as pz
 #from scipy.special import factorial
 import numpy as np
-
-cf = deepcopy(pz.libraries.Seawater)
-#cf.ions = concatenate([cf.ions, array(['Li','I','Rb','Cs'])])
-#cf.add_zeros(cf.ions)
-#cf.bC['Na-Cl'] = pz.coeffs.bC_Na_Cl_A92ii
-#cf.bC['K-Cl' ] = pz.coeffs.bC_K_Cl_A99
-#cf.bC['Li-Cl'] = pz.coeffs.bC_Li_Cl_HM83
-#cf.bC['Cs-Cl'] = pz.coeffs.bC_Cs_Cl_HM83
-
-# Define stoichiometries
-e2i = pz.properties._ele2ions2
+prmlib = deepcopy(pz.libraries.Seawater)
 
 # Read in isopiestic data
+e2i = pz.properties._ele2ions
 filename = '../pytzer-support/datasets/isonew.xlsx'
 isonew = read_excel(filename, skiprows=2)
 isobase = isonew[['src', 'tempK', 'pres']]
@@ -34,45 +25,65 @@ for r in range(len(isonew.index)):
             celes = icell.split('-')
             irc['tots'] = irow[i-len(celes):i].values.astype('float64')
             irc_ions = concatenate([e2i[cele][0] for cele in celes])
-            irc_mols = concatenate([e2i[cele][1] * irc['tots'][c]
+            irc_mols = concatenate([np.array(e2i[cele][1])*irc['tots'][c]
                 for c, cele in enumerate(celes)])
-            irc['ions'] = unique(irc_ions)
+            seen = set()
+            seen_add = seen.add
+            irc['ions'] = [ion for ion in irc_ions
+                if not (ion in seen or seen_add(ion))]
             irc['mols'] = vstack([np_sum(irc_mols[irc_ions == ion])
                 for ion in irc['ions']])
             irc['tempK'] = float_([isonew.tempK[r]])
             irc['pres'] = float_([isonew.pres[r]])
 
 #%% Get all data for a particular electrolyte
-
-# Choose electrolyte to examine
 testele = 'NaCl'
-
-# Extract subset of isodict
 testdict = {irow: isodict[irow] for irow in isodict.keys()
     if testele in isodict[irow].keys()}
-
-# Fill out cfdict with zeros if necessary
 testions = unique(concatenate([testdict[irow][icell]['ions']
     for irow  in testdict.keys() for icell in testdict[irow].keys()]))
-cf.ions = unique(append(cf.ions,testions))
-cf.add_zeros(cf.ions)
+prmlib.ions = unique(append(prmlib.ions,testions))
+prmlib.add_zeros(prmlib.ions)
 
 # Calculate activities and difference from test ele
-for irow in testdict.keys():
+from time import time
+go = time()
+for i, irow in enumerate(testdict.keys()):
+    print('Solving {} of {}...'.format(i, len(testdict.keys())))
     for icell in testdict[irow].keys():
         trc = testdict[irow][icell]
         # Calculate ionic strengths
         trc['zs'] = pz.properties.charges(trc['ions'])[0]
         trc['Istr'] = pz.model.Istr(trc['mols'], trc['zs'])
-        # Calculate water activities
+        # Solve equilibria
+        if icell == 'H2SO4':
+            allions = np.array(trc['ions'])
+            allmxs = pz.matrix.assemble(allions, trc['tempK'], trc['pres'],
+                prmlib=prmlib)
+            lnks = [prmlib.lnk['HSO4'](trc['tempK'], trc['pres'])]
+            eqstate_guess = [0.0]
+            tots1 = trc['tots']
+            fixmols1 = np.array([])
+            eles = np.array(['t_HSO4'])
+            fixions = np.array([])
+            eqstate = pz.equilibrate.solve(eqstate_guess, tots1, fixmols1,
+                eles, allions, fixions, allmxs, lnks, ideal=False)['x']
+            trc['mols'] = np.vstack(pz.equilibrate.eqstate2mols(eqstate, tots1,
+                fixmols1, eles, fixions)[0])
+            trc['aw'] = pz.matrix.aw(np.transpose(trc['mols']), allmxs)
+#            eqstate = pz.equilibrate.solvequick(eqstate_guess, trc['tots'],
+#                [], ['t_HSO4'], trc['ions'], [], allmxs, lnks)['x']
+#            trc['mols'] = np.transpose(pz.equilibrate.eqstate2mols(eqstate,
+#                trc['tots'], [], ['t_HSO4'], []))
+        # Calculate other water activities
         trc['aw'] = pz.model.aw(trc['mols'], trc['ions'], trc['tempK'],
-            trc['pres'], prmlib=cf, Izero=trc['Istr'] == 0)
+            trc['pres'], prmlib=prmlib, Izero=trc['Istr'] == 0)
 for irow in testdict.keys():
     for icell in testdict[irow].keys():
         if icell != testele:
             trc = testdict[irow][icell]
             trc['del_aw'] = trc['aw'] - testdict[irow][testele]['aw']
-
+print(time() - go)
 
 #%% Get arrays for plotting
 t_dictrow = vstack([irow for irow  in testdict.keys()
@@ -102,30 +113,31 @@ t_eleaw = vstack([testdict[irow][icell]['aw']
 from matplotlib import pyplot as plt
 
 fig, ax = plt.subplots(1, 1)
-L = np.logical_not(np.logical_or.reduce((
-    t_elemix == 'sucrose',
-    t_elemix == 'glycerol',
-    t_elemix == 'urea',
-    t_elemix == '(trisH)2SO4',
-    t_elemix == 'CsCl',
-    t_elemix == 'CuCl2',
-    t_elemix == 'CuSO4',
-    t_elemix == 'CuSO4-CuCl2',
-    t_elemix == 'H2SO4',
-    t_elemix == 'K2CO3',
-    t_elemix == 'LiCl',
-    t_elemix == 'MgCl2-CsCl',
-    t_elemix == 'Na2SO4-CuCl2',
-    t_elemix == 'Na2SO4-CuSO4',
-    t_elemix == 'NaCl-CuCl2',
-    t_elemix == 'NaCl-CuSO4',
-    t_elemix == 'trisHCl',
-    t_elemix == 'CaCl2',
-)))
-L = np.logical_or.reduce((
-    t_elemix == 'MgCl2',
-    t_elemix == 'NaCl-MgCl2',
-))
+#L = np.logical_not(np.logical_or.reduce((
+#    t_elemix == 'sucrose',
+#    t_elemix == 'glycerol',
+#    t_elemix == 'urea',
+#    t_elemix == '(trisH)2SO4',
+#    t_elemix == 'CsCl',
+#    t_elemix == 'CuCl2',
+#    t_elemix == 'CuSO4',
+#    t_elemix == 'CuSO4-CuCl2',
+##    t_elemix == 'H2SO4',
+##    t_elemix == 'K2CO3',
+##    t_elemix == 'LiCl',
+##    t_elemix == 'MgCl2-CsCl',
+##    t_elemix == 'Na2SO4-CuCl2',
+##    t_elemix == 'Na2SO4-CuSO4',
+##    t_elemix == 'NaCl-CuCl2',
+##    t_elemix == 'NaCl-CuSO4',
+##    t_elemix == 'trisHCl',
+#    t_elemix == 'CaCl2',
+#)))
+#L = np.logical_or.reduce((
+#    t_elemix == 'MgCl2',
+#    t_elemix == 'NaCl-MgCl2',
+#))
+L = t_elemix == 'H2SO4'
 #L = np.logical_and(
 #    np.logical_or.reduce((
 #        t_elemix == 'KCl',
@@ -142,7 +154,7 @@ sim_mNaCl = np.arange(0.01, 2.5, 0.01)**2
 sim_mols = np.array([sim_mNaCl, sim_mNaCl])
 sim_ions = np.array(['Na', 'Cl'])
 sim_aw = pz.model.aw(sim_mols, sim_ions, np.full_like(sim_mNaCl, 323.15),
-    np.full_like(sim_mNaCl, 10.1325), prmlib=cf, Izero=False)
+    np.full_like(sim_mNaCl, 10.1325), prmlib=prmlib, Izero=False)
 
 ax.plot(sim_mNaCl, sim_aw)
 ax.scatter(t_testIstr[L], t_eleaw[L])
@@ -156,7 +168,7 @@ ax.scatter(t_testIstr[L], t_eleaw[L])
 #         'delaw'  : t_delaw  })
 
 #%%
-#            irc['osm'] = pz.model.osm(irc['mols'],irc['ions'],irc['T'],cf)
+#            irc['osm'] = pz.model.osm(irc['mols'],irc['ions'],irc['T'],prmlib)
 #
 #            irc['aw'] = pz.model.osm2aw(irc['mols'],irc['osm'])
 #

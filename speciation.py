@@ -18,3 +18,8 @@ allmols, allions, eqstates = pz.equilibrate.solveloop(eqstate_guess, tots,
 
 #%%
 alpha = np.round(allmols[1]/tots[0], decimals=5)
+
+#%%
+tots1 = array([4.3748])
+fixmols1 = array([], dtype=float64)
+eqstate_guess =[0.0]

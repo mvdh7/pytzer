@@ -180,23 +180,23 @@ def acfs(mols, ions, tempK, pres, prmlib=Seawater, Izero=False):
 
 def ln_acf2ln_acf_MX(ln_acfM, ln_acfX, nM, nX):
     """Calculate the mean activity coefficient for an electrolyte."""
-    return (nM * ln_acfM + nX * ln_acfX) / (nM + nX)
+    return (nM*ln_acfM + nX*ln_acfX)/(nM + nX)
 
 # Osmotic coefficient
 def osm(mols, ions, tempK, pres, prmlib=Seawater, Izero=False):
     """Calculate the osmotic coefficient."""
     ww = full_like(tempK, 1.0)
     return (1 - egrad(lambda ww:
-        ww * Gex_nRT(mols/ww, ions, tempK, pres, prmlib, Izero))(ww)
-        / np_sum(mols, axis=0))
+        ww*Gex_nRT(mols/ww, ions, tempK, pres, prmlib, Izero))(ww)
+            /np_sum(mols, axis=0))
 
 # Water activity
 def lnaw(mols, ions, tempK, pres, prmlib=Seawater, Izero=False):
     """Calculate the natural log of the water activity."""
     ww = full_like(tempK, 1.0)
     return (egrad(lambda ww:
-        ww * Gex_nRT(mols/ww, ions, tempK, pres, prmlib, Izero))(ww)
-        - np_sum(mols, axis=0)) * Mw
+        ww*Gex_nRT(mols/ww, ions, tempK, pres, prmlib, Izero))(ww)
+        - np_sum(mols, axis=0))*Mw
 
 def aw(mols, ions, tempK, pres, prmlib=Seawater, Izero=False):
     """Calculate the water activity."""
@@ -205,8 +205,8 @@ def aw(mols, ions, tempK, pres, prmlib=Seawater, Izero=False):
 # Conversions
 def osm2aw(mols, osm):
     """Convert osmotic coefficient to water activity."""
-    return exp(-osm * Mw * np_sum(mols, axis=0))
+    return exp(-osm*Mw*np_sum(mols, axis=0))
 
 def aw2osm(mols, aw):
     """Convert water activity to osmotic coefficient."""
-    return -log(aw) / (Mw * np_sum(mols, axis=0))
+    return -log(aw)/(Mw*np_sum(mols, axis=0))
