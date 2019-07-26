@@ -8751,6 +8751,45 @@ def psi_Mg_HSO4_SO4_RC99(T, P):
     valid = T == 298.15
     return psi, valid
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Miladinović et al. (2008) ~~~~~
+def bC_Mg_Cl_MNTR08(T, P):
+    """c-a: magnesium chloride [MNTR08]."""
+    b0 = 0.68723
+    b1 = 1.56760
+    b2 = 0
+    C0 = -0.0007594
+    C1 = -0.35497
+    alph1 = 3.0
+    alph2 = -9
+    omega = 1.0
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Mg_SO4_MNTR08(T, P):
+    """c-a: magnesium sulfate [MNTR08]."""
+    b0 = -0.03089
+    b1 = 3.7687
+    b2 = -37.3659
+    C0 = 0.016406
+    C1 = 0.34549
+    alph1 = 1.4
+    alph2 = 12.0
+    omega = 1.0
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def theta_Cl_SO4_MNTR08(T, ):
+    """a-a': chloride sulfate [MNTR08]."""
+    theta = -0.07122
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Mg_Cl_SO4_MNTR08(T, ):
+    """c-a-a': magnesium chloride sulfate [MNTR08]."""
+    psi = -0.038505
+    valid = T == 298.15
+    return psi, valid
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Waters and Millero (2013) ~~~~~
 # Some are functions that WM13 declared came from another source, but I
 #  couldn't find them there, so copied directly from WM13 instead.

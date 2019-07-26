@@ -70,6 +70,9 @@ In alphanumerical order of the source codes:
 <td id="MHJZ89"><code>MHJZ89</code></td>
 <td>Millero, F. J., Hershey, J. B., Johnson, G., and Zhang, J.-Z. (1989). The solubility of SO<sub>2</sub> and the dissociation of H<sub>2</sub>SO<sub>3</sub> in NaCl solutions.  <i>J. Atmos. Chem.</i> 8(4), 377–389. <a href="https://doi.org/10.1007/BF00052711">doi:10.1007/BF00052711</a>.</td></tr><tr>
 
+<td id="MNTR08"><code>MNTR08</code></td>
+<td>Miladinović, J., Ninković, R., Todorović, M., and Rard, J. A. (2008). Isopiestic Investigation of the Osmotic and Activity Coefficients of {<i>y</i>MgCl<sub>2</sub> + (1 − <i>y</i>)MgSO<sub>4</sub>}(aq) and the Osmotic Coefficients of Na<sub>2</sub>SO<sub>4</sub>·MgSO<sub>4</sub>(aq) at 298.15 K. <i>J. Solution Chem.</i> 37(3), 307–329. <a href="https://doi.org/10.1007/s10953-007-9238-y">doi:10.1007/s10953-007-9238-y</a>.</td></tr><tr>
+
 <td id="MP98"><code>MP98</code></td>
 <td>Millero, F. J., and Pierrot, D. (1998). A Chemical Equilibrium Model for Natural Waters. <i>Aquat. Geochem.</i> 4, 153–199. <a href="https://doi.org/10.1023/A:1009656023546">doi:10.1023/A:1009656023546</a>.</td></tr><tr>
 
