@@ -1,17 +1,19 @@
 # Matrix model
 
+*The casual user has no need to explicitly call this module.*
+
 `.matrix` encodes an alternative formulation of the Pitzer model, using matrix mathematics instead of loops to cycle through the different combinations of solutes.
 
-This version of the code runs much faster than the equivalent `.model` functions for a single solution. It therefore more suitable for using in the equilibration solver. However, if some property is being evaluated for many different solutions without the need for equilibrium calculations, then the functions in `.model` will probably run faster.
+This version of the code runs much faster than the equivalent `.model` functions for a single solution. It therefore more suitable for using in the equilibration solver in `.equilibrate`. However, if some property is being evaluated for many different solutions without the need for equilibrium calculations, then the functions in `.model` will probably run faster.
 
 ## `.assemble` - prepare for matrix calculation
 
-Generates coefficient matrices needed for the Pitzer model functions in this module.
+Generates parameter matrices needed for the Pitzer model functions in this module.
 
 **Syntax:**
 
 ```python
-allmxs = pz.matrix.assemble(ions, tempK, pres, cflib=Seawater)
+allmxs = pz.matrix.assemble(ions, tempK, pres, prmlib=Seawater)
 ```
 
 **Inputs:**
@@ -19,7 +21,7 @@ allmxs = pz.matrix.assemble(ions, tempK, pres, cflib=Seawater)
   * `ions` - list of ions, as described in the [import/export documentation](../io/#getmols-import-csv-dataset);
   * `tempK` - a single temperature in K;
   * `pres` - a single pressure in dbar;
-  * `cflib` - a coefficient library (optional, defaults to **Seawater**).
+  * `prmlib` - a parameter library (optional, defaults to **Seawater**).
 
 **Outputs:**
 
@@ -40,4 +42,4 @@ All other functions in this module will be the matrix equivalents of the functio
 var = pz.matrix.var(mols, allmxs)
 ```
 
-The input `allmxs` is generated using `pz.matrix.assemble` (see above).
+The input `allmxs` is generated using `.assemble` (see above).

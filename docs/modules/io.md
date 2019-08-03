@@ -9,7 +9,14 @@ MathJax.Hub.Config({TeX: {extensions: ["[mhchem]/mhchem.js"]}});
 
 `.io` contains functions to import user data ready for use with Pytzer, and export the results of your calculations.
 
-<hr />
+There are two import functions. Which one should you use?
+
+  * Do you know the exact concentration of every individual component of your solution already? If yes, import with `getmols`.
+  * Do you have some 'total' concentrations, and you want Pytzer to solve the chemical speciation for you? If yes, import with `gettots`, and then use the [equilibrate](../equilibrate) functions to calculate the concentration of every solute at equilibrium.
+
+Once you have completed the appropriate step above, you can then use the [model](../model) functions to calculate the solution's properties.
+
+---
 
 ## `.getmols` - import CSV dataset
 
@@ -18,7 +25,7 @@ Imports a table of temperature, pressure and molality data, formatted ready for 
 **Syntax:**
 
 ```python
->>> mols, ions, tempK, pres = pz.io.getmols(filename, delimiter=',', skip_top=0)
+mols, ions, tempK, pres = pz.io.getmols(filename, delimiter=',', skip_top=0)
 ```
 
 **Inputs:**
@@ -56,6 +63,8 @@ tempK , pres   , Na  , K   , Cl  , SO4
 298.15, 10.1325, 4.00,     ,     , 2.00
 ```
 
+As another example, you could take a look at [pytzerQuickStart.csv](https://raw.githubusercontent.com/mvdh7/pytzer/master/testfiles/pytzerQuickStart.csv).
+
 Note: oceanographers typically record pressure within the ocean as only due to the water, so at the sea surface the pressure would be 0 dbar. However, the atmospheric pressure (1 atm = 10.1325 dbar) should also be taken into account for calculations within Pytzer.
 
 **Outputs:**
@@ -65,7 +74,7 @@ Note: oceanographers typically record pressure within the ocean as only due to t
   * `tempK` - solution temperature in K. Each value corresponds to the matching column in `mols`;
   * `pres` - solution pressure in dbar. Each value corresponds to the matching column in `mols`.
 
-<hr />
+---
 
 ## `.gettots` - import CSV dataset
 
@@ -94,7 +103,9 @@ The file should be in comma-separated variable (CSV) format, and its contents fo
   * `tempK` - solution temperature in K. Each value corresponds to the matching column in `mols`;
   * `pres` - solution pressure in dbar. Each value corresponds to the matching column in `mols`.
 
-<hr />
+As an example, you could take a look at [trisASWequilibrium.csv](https://raw.githubusercontent.com/mvdh7/pytzer/master/testfiles/trisASWequilibrium.csv).
+
+---
 
 ## `.saveall` - save to CSV
 

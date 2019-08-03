@@ -7,13 +7,13 @@ from autograd.numpy import any as np_any
 from autograd.numpy import sum as np_sum
 from autograd import elementwise_grad as egrad
 from .constants import b, Mw
-from .cflibs import Seawater
+from .libraries import Seawater
 from . import properties
 
 # Debye-Hueckel slope
-def fG(tempK, pres, I, cflib): # from CRP94 Eq. (AI1)
+def fG(tempK, pres, I, prmlib): # from CRP94 Eq. (AI1)
     """Calculate the Debye-Hueckel component of the excess Gibbs energy."""
-    return -4 * cflib.dh['Aosm'](tempK, pres)[0] * I * log(1 + b*sqrt(I)) / b
+    return -4 * prmlib.dh['Aosm'](tempK, pres)[0] * I * log(1 + b*sqrt(I)) / b
 
 # Pitzer model subfunctions
 def g(x):
@@ -33,17 +33,17 @@ def CT(I, C0, C1, omega):
     return C0 + 4*C1*h(omega*sqrt(I))
 
 # Unsymmetrical mixing terms
-def xij(tempK, pres, I, z0, z1, cflib):
+def xij(tempK, pres, I, z0, z1, prmlib):
     """xij function for unsymmetrical mixing."""
-    return 6 * z0*z1 * cflib.dh['Aosm'](tempK, pres)[0] * sqrt(I)
+    return 6 * z0*z1 * prmlib.dh['Aosm'](tempK, pres)[0] * sqrt(I)
 
-def etheta(tempK, pres, I, z0, z1, cflib):
+def etheta(tempK, pres, I, z0, z1, prmlib):
     """etheta function for unsymmetrical mixing."""
-    x00 = xij(tempK, pres, I, z0, z0, cflib)
-    x01 = xij(tempK, pres, I, z0, z1, cflib)
-    x11 = xij(tempK, pres, I, z1, z1, cflib)
-    etheta = z0*z1 * (cflib.jfunc(x01)
-        - 0.5 * (cflib.jfunc(x00) + cflib.jfunc(x11))) / (4 * I)
+    x00 = xij(tempK, pres, I, z0, z0, prmlib)
+    x01 = xij(tempK, pres, I, z0, z1, prmlib)
+    x11 = xij(tempK, pres, I, z1, z1, prmlib)
+    etheta = z0*z1 * (prmlib.jfunc(x01)
+        - 0.5 * (prmlib.jfunc(x00) + prmlib.jfunc(x11))) / (4 * I)
     return etheta
 
 # Ionic strength
@@ -56,7 +56,7 @@ def Zstr(mols, zs):
     return np_sum(mols * np_abs(zs), axis=0)
 
 # Excess Gibbs energy
-def Gex_nRT(mols, ions, tempK, pres, cflib=Seawater, Izero=False):
+def Gex_nRT(mols, ions, tempK, pres, prmlib=Seawater, Izero=False):
     """Calculate the excess Gibbs energy of a solution."""
     # Note that oceanographers record ocean pressure as only due to the water,
     # so at the sea surface pressure = 0 dbar, but the atmospheric pressure
@@ -87,14 +87,14 @@ def Gex_nRT(mols, ions, tempK, pres, cflib=Seawater, Izero=False):
         zCs = vstack(zs[zs > 0])
         zAs = vstack(zs[zs < 0])
         # Begin with Debye-Hueckel component
-        Gex_nRT = Gex_nRT + fG(tempK, pres, I, cflib)
+        Gex_nRT = Gex_nRT + fG(tempK, pres, I, prmlib)
         # Loop through cations
         for CX, cationx in enumerate(cations):
             # Add c-a interactions
             for A, anion in enumerate(anions):
                 iset = '-'.join((cationx, anion))
                 b0, b1, b2, C0, C1, alph1, alph2, omega, _ = \
-                    cflib.bC[iset](tempK, pres)
+                    prmlib.bC[iset](tempK, pres)
                 Gex_nRT = (Gex_nRT + cats[CX]*anis[A] *
                     (2*B(I, b0, b1, b2, alph1, alph2) +
                         Z*CT(I, C0, C1, omega)))
@@ -105,16 +105,16 @@ def Gex_nRT(mols, ions, tempK, pres, cflib=Seawater, Izero=False):
                 iset.sort()
                 iset= '-'.join(iset)
                 Gex_nRT = (Gex_nRT + cats[CX]*cats[CY] *
-                    2*cflib.theta[iset](tempK, pres)[0])
+                    2*prmlib.theta[iset](tempK, pres)[0])
                 # Unsymmetrical mixing terms
                 if zCs[CX] != zCs[CY]:
                     Gex_nRT = (Gex_nRT + cats[CX]*cats[CY] *
-                        2*etheta(tempK, pres, I, zCs[CX], zCs[CY], cflib))
+                        2*etheta(tempK, pres, I, zCs[CX], zCs[CY], prmlib))
                 # Add c-c'-a interactions
                 for A, anion in enumerate(anions):
                     itri = '-'.join((iset, anion))
                     Gex_nRT = (Gex_nRT + cats[CX]*cats[CY]*anis[A] *
-                        cflib.psi[itri](tempK, pres)[0])
+                        prmlib.psi[itri](tempK, pres)[0])
         # Loop through anions
         for AX, anionx in enumerate(anions):
             # Add a-a' interactions
@@ -124,33 +124,33 @@ def Gex_nRT(mols, ions, tempK, pres, cflib=Seawater, Izero=False):
                 iset.sort()
                 iset = '-'.join(iset)
                 Gex_nRT = (Gex_nRT + anis[AX]*anis[AY] *
-                    2*cflib.theta[iset](tempK, pres)[0])
+                    2*prmlib.theta[iset](tempK, pres)[0])
                 # Unsymmetrical mixing terms
                 if zAs[AX] != zAs[AY]:
                     Gex_nRT = (Gex_nRT + anis[AX]*anis[AY] *
-                        2*etheta(tempK, pres, I, zAs[AX], zAs[AY], cflib))
+                        2*etheta(tempK, pres, I, zAs[AX], zAs[AY], prmlib))
                 # Add c-a-a' interactions
                 for C, cation in enumerate(cations):
                     itri = '-'.join((cation, iset))
                     Gex_nRT = (Gex_nRT + anis[AX]*anis[AY]*cats[C] *
-                        cflib.psi[itri](tempK, pres)[0])
+                        prmlib.psi[itri](tempK, pres)[0])
     # Add neutral interactions
     for NX, neutralx in enumerate(neutrals):
         # Add n-c interactions
         for C, cation in enumerate(cations):
             inc = '-'.join((neutralx, cation))
             Gex_nRT = (Gex_nRT + neus[NX]*cats[C] *
-                2*cflib.lambd[inc](tempK, pres)[0])
+                2*prmlib.lambd[inc](tempK, pres)[0])
             # Add n-c-a interactions
             for A, anion in enumerate(anions):
                 inca = '-'.join((inc, anion))
                 Gex_nRT = (Gex_nRT + neus[NX]*cats[C]*anis[A] *
-                    cflib.zeta[inca](tempK, pres)[0])
+                    prmlib.zeta[inca](tempK, pres)[0])
         # Add n-a interactions
         for A, anion in enumerate(anions):
             ina = '-'.join((neutralx, anion))
             Gex_nRT = (Gex_nRT + neus[NX]*anis[A] *
-                2*cflib.lambd[ina](tempK, pres)[0])
+                2*prmlib.lambd[ina](tempK, pres)[0])
         # n-n' excluding n-n
         for xNY, neutraly in enumerate(neutrals[NX+1:]):
             NY = xNY + NX + 1
@@ -158,56 +158,55 @@ def Gex_nRT(mols, ions, tempK, pres, cflib=Seawater, Izero=False):
             inn.sort()
             inn = '-'.join(inn)
             Gex_nRT = (Gex_nRT + neus[NX]*neus[NY] *
-                2*cflib.lambd[inn](tempK, pres)[0])
+                2*prmlib.lambd[inn](tempK, pres)[0])
         # n-n
         inn = '-'.join((neutralx, neutralx))
-        Gex_nRT = Gex_nRT + neus[NX]**2 * cflib.lambd[inn](tempK, pres)[0]
+        Gex_nRT = Gex_nRT + neus[NX]**2 * prmlib.lambd[inn](tempK, pres)[0]
         # n-n-n
         innn = '-'.join((neutralx,neutralx,neutralx))
-        Gex_nRT = Gex_nRT + neus[NX]**3 * cflib.mu[innn](tempK, pres)[0]
+        Gex_nRT = Gex_nRT + neus[NX]**3 * prmlib.mu[innn](tempK, pres)[0]
     return Gex_nRT
 
-
 # Solute activity coefficients
-def ln_acfs(mols, ions, tempK, pres, cflib=Seawater, Izero=False):
+def ln_acfs(mols, ions, tempK, pres, prmlib=Seawater, Izero=False):
     """Calculate the natural logarithms of the activity coefficients
     of all solutes.
     """
-    return egrad(Gex_nRT)(mols, ions, tempK, pres, cflib, Izero)
+    return egrad(Gex_nRT)(mols, ions, tempK, pres, prmlib, Izero)
 
-def acfs(mols, ions, tempK, pres, cflib=Seawater, Izero=False):
+def acfs(mols, ions, tempK, pres, prmlib=Seawater, Izero=False):
     """Calculate the activity coefficients of all solutes."""
-    return exp(ln_acfs(mols, ions, tempK, pres, cflib, Izero))
+    return exp(ln_acfs(mols, ions, tempK, pres, prmlib, Izero))
 
 def ln_acf2ln_acf_MX(ln_acfM, ln_acfX, nM, nX):
     """Calculate the mean activity coefficient for an electrolyte."""
-    return (nM * ln_acfM + nX * ln_acfX) / (nM + nX)
+    return (nM*ln_acfM + nX*ln_acfX)/(nM + nX)
 
 # Osmotic coefficient
-def osm(mols, ions, tempK, pres, cflib=Seawater, Izero=False):
+def osm(mols, ions, tempK, pres, prmlib=Seawater, Izero=False):
     """Calculate the osmotic coefficient."""
     ww = full_like(tempK, 1.0)
     return (1 - egrad(lambda ww:
-        ww * Gex_nRT(mols/ww, ions, tempK, pres, cflib, Izero))(ww)
-        / np_sum(mols, axis=0))
+        ww*Gex_nRT(mols/ww, ions, tempK, pres, prmlib, Izero))(ww)
+            /np_sum(mols, axis=0))
 
 # Water activity
-def lnaw(mols, ions, tempK, pres, cflib=Seawater, Izero=False):
+def lnaw(mols, ions, tempK, pres, prmlib=Seawater, Izero=False):
     """Calculate the natural log of the water activity."""
     ww = full_like(tempK, 1.0)
     return (egrad(lambda ww:
-        ww * Gex_nRT(mols/ww, ions, tempK, pres, cflib, Izero))(ww)
-        - np_sum(mols, axis=0)) * Mw
+        ww*Gex_nRT(mols/ww, ions, tempK, pres, prmlib, Izero))(ww)
+        - np_sum(mols, axis=0))*Mw
 
-def aw(mols, ions, tempK, pres, cflib=Seawater, Izero=False):
+def aw(mols, ions, tempK, pres, prmlib=Seawater, Izero=False):
     """Calculate the water activity."""
-    return exp(lnaw(mols, ions, tempK, pres, cflib, Izero))
+    return exp(lnaw(mols, ions, tempK, pres, prmlib, Izero))
 
 # Conversions
 def osm2aw(mols, osm):
     """Convert osmotic coefficient to water activity."""
-    return exp(-osm * Mw * np_sum(mols, axis=0))
+    return exp(-osm*Mw*np_sum(mols, axis=0))
 
 def aw2osm(mols, aw):
     """Convert water activity to osmotic coefficient."""
-    return -log(aw) / (Mw * np_sum(mols, axis=0))
+    return -log(aw)/(Mw*np_sum(mols, axis=0))

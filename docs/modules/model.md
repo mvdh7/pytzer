@@ -11,19 +11,19 @@ MathJax.Hub.Config({TeX: {extensions: ["[mhchem]/mhchem.js"]}});
 
 ## Function inputs
 
-Many of these functions have a common set of inputs: `mols`, `ions`, `tempK`, `pres`, `cflib` and `Izero`. The first four of these can be generated from an input CSV file; their formats are described in the [import/export documentation](../io/#getmols-import-csv-dataset). Throughout Pytzer, when we refer to `ions` we include any neutral species in the solution.
+Many of these functions have a common set of inputs: `mols`, `ions`, `tempK`, `pres`, `prmlib` and `Izero`. The first four of these can be generated from an input CSV file; their formats are described in the [import/export documentation](../io/#getmols-import-csv-dataset). Throughout Pytzer, when we refer to `ions` we include any neutral species in the solution.
 
-The next input `cflib` is a [coefficient library](../cflibs), which defines the set of interaction coefficients to use in the model. The [Seawater](../cflibs#Seawater) library is used by default.
+The next input `prmlib` is a [coefficient library](../libraries), which defines the set of interaction parameters to use in the model. The [Seawater](../libraries#Seawater) library is used by default.
 
 `Izero` is another optional input. The default value of `False` executes a full Pitzer model. If `Izero` is instead changed to `True`, then only neutral interactions are evaluated: this is the setting to use for solutions with zero ionic strength. If you try to pass a zero-ionic-strength solution through the full model, a `nan` is returned along with lots of divide-by-zero warnings. You must split up your own input data and run the function twice, if you have both types of solution. The [black box function](../../quick-start/#running-pytzer-as-a-black-box) handles this split automatically.
 
 All of the usage examples below assume that you have first imported Pytzer as `pz`:
 
 ```python
->>> import pytzer as pz
+import pytzer as pz
 ```
 
-<hr />
+---
 
 ## Excess Gibbs energy
 
@@ -36,13 +36,13 @@ $$+ \sum_n \sum_c \sum_a m_n m_c m_a \zeta_{nca} + \sum_n m_n^3 \mu_{nnn} $$
 
 On the left hand side, we have the excess Gibbs energy ($G_{ex}$) divided by the universal gas constant ($R$ in J·mol·K<sup>−1</sup>, defined in [the 'constants' module](../constants)), temperature ($T$ in K), and mass of pure water ($w_w$ in kg, set to unity).
 
-The first term on the right ($f_G$) is the Debye-Hückel approximation, a function of ionic strength evaluated by the function `fG` ([see below](#fg)). It includes the Debye-Hückel limiting slope $A_\phi$, which is evaluated using an [interaction coefficient function](../coefficients).
+The first term on the right ($f_G$) is the Debye-Hückel approximation, a function of ionic strength evaluated by the function `fG` ([see below](#fg)). It includes the Debye-Hückel limiting slope $A_\phi$, which is evaluated using an [interaction parameter function](../parameters).
 
 The Pitzer model then adds a series of corrections to this approximation for each dissolved cation ($c$), anion ($a$) and neutral component ($n$). In the equation above, $i$ refers to any ion and $j$ refers to an ion of the opposite sign charge. The term $i'$ refers to a different ion from $i$, but with the same sign charge. Similarly, $n'$ refers to a different neutral component from $n$.
 
 The $m_x$ terms indicate the molality of component $x$, in mol·kg<sup>−1</sup>.
 
-The $B_{ca}$ and $C_{ca}^T$ terms account for cation-anion interactions, and are evaluated by the functions `B` and `CT` ([see below](#b)). $B_{ca}$ depends on the empirical coefficients $\beta_0$, $\beta_1$, $\beta_2$, $\alpha_1$ and $\alpha_2$, and $C_{ca}^{T}$ on $C_0$, $C_1$ and $\omega$. $Z$ is defined by [P91](../../references/#P91), Eq. (66):
+The $B_{ca}$ and $C_{ca}^T$ terms account for cation-anion interactions, and are evaluated by the functions `B` and `CT` ([see below](#b)). $B_{ca}$ depends on the empirical parameters $\beta_0$, $\beta_1$, $\beta_2$, $\alpha_1$ and $\alpha_2$, and $C_{ca}^{T}$ on $C_0$, $C_1$ and $\omega$. $Z$ is defined by [P91](../../references/#P91), Eq. (66):
 
 $$Z = \sum_i m_i |z_i|$$
 
@@ -54,7 +54,7 @@ $$\Theta_{ii'} = \theta_{ii'} + ^E\theta_{ii'}$$
 
 where the $^E\theta_{ii'}$ term is a function of ionic strength, evaluated by `etheta` ([see below](#etheta)).
 
-Finally, the "Greek letter terms" ($\beta_0$, $\beta_1$, $\beta_2$, $\alpha_1$, $\alpha_2$, $C_0$, $C_1$, $\omega$, $\theta_{ii'}$, $\psi_{ii'j}$, $\lambda_{nx}$, $\zeta_{nca}$ and $\mu_{nnn}$) are empirical coefficients, different for each combination of ions and neutral species, functions of temperature and sometimes pressure.
+Finally, the "Greek letter terms" ($\beta_0$, $\beta_1$, $\beta_2$, $\alpha_1$, $\alpha_2$, $C_0$, $C_1$, $\omega$, $\theta_{ii'}$, $\psi_{ii'j}$, $\lambda_{nx}$, $\zeta_{nca}$ and $\mu_{nnn}$) are empirical parameters, different for each combination of ions and neutral species, functions of temperature and sometimes pressure.
 
 In Pytzer, the excess Gibbs energy is the only physicochemical equation that is actually explicitly written out. All other properties are determined by taking the appropriate differential of the excess Gibbs energy. These differentials are determined automatically by [Autograd](https://github.com/HIPS/autograd).
 
@@ -65,10 +65,11 @@ Evaluates $G_{ex}/w_wRT$, as defined above.
 **Syntax:**
 
 ```python
->>> Gex_nRT = pz.model.Gex_nRT(mols, ions, tempK, pres, cflib=pz.cflibs.Seawater, Izero=False)
+Gex_nRT = pz.model.Gex_nRT(mols, ions, tempK, pres,
+    prmlib=pz.libraries.Seawater, Izero=False)
 ```
 
-<hr />
+---
 
 ## Activity and osmotic coefficients
 
@@ -99,8 +100,10 @@ Returns a matrix of activity coefficients ($\gamma_x$, `acfs`) or their natural 
 **Syntax:**
 
 ```python
->>> ln_acfs = pz.model.ln_acfs(mols, ions, tempK, pres, cflib=pz.cflibs.Seawater, Izero=False)
->>> acfs = pz.model.acfs(mols, ions, tempK, pres, cflib=pz.cflibs.Seawater, Izero=False)
+ln_acfs = pz.model.ln_acfs(mols, ions, tempK, pres,
+    prmlib=pz.libraries.Seawater, Izero=False)
+acfs = pz.model.acfs(mols, ions, tempK, pres,
+    prmlib=pz.libraries.Seawater, Izero=False)
 ```
 
 <br />
@@ -112,7 +115,7 @@ Combines the natural logarithms of the activity coefficients of a cation ($\ln \
 **Syntax:**
 
 ```python
->>> ln_acf_MX = pz.model.ln_acf2ln_acf_MX(ln_acfM, ln_acfX, nM, nX)
+ln_acf_MX = pz.model.ln_acf2ln_acf_MX(ln_acfM, ln_acfX, nM, nX)
 ```
 
 <br />
@@ -124,7 +127,8 @@ Calculates the osmotic coefficient ($\phi$) for each input solution composition.
 **Syntax:**
 
 ```python
->>> osm = pz.model.osm(mols, ions, tempK, pres, cflib=pz.cflibs.Seawater, Izero=False)
+osm = pz.model.osm(mols, ions, tempK, pres,
+    prmlib=pz.libraries.Seawater, Izero=False)
 ```
 
 <br />
@@ -136,8 +140,10 @@ Calculates the water activity ($a_w$) or its natural logarithm for each input so
 **Syntax:**
 
 ```python
->>> lnaw = pz.model.lnaw(mols, ions, tempK, pres, cflib=pz.cflibs.Seawater, Izero=False)
->>> aw = pz.model.aw(mols, ions, tempK, pres, cflib=pz.cflibs.Seawater, Izero=False)
+lnaw = pz.model.lnaw(mols, ions, tempK, pres,
+    prmlib=pz.libraries.Seawater, Izero=False)
+aw = pz.model.aw(mols, ions, tempK, pres,
+    prmlib=pz.libraries.Seawater, Izero=False)
 ```
 
 <br />
@@ -149,7 +155,7 @@ Converts an osmotic coefficient ($\phi$, `osm`) into a water activity ($a_w$, `a
 **Syntax:**
 
 ```python
->>> aw = pz.model.osm2aw(mols, osm)
+aw = pz.model.osm2aw(mols, osm)
 ```
 
 <br />
@@ -161,10 +167,10 @@ Converts a water activity ($a_w$, `aw`) into an osmotic coefficient ($\phi$, `os
 **Syntax:**
 
 ```python
->>> osm = pz.model.aw2osm(mols, aw)
+osm = pz.model.aw2osm(mols, aw)
 ```
 
-<hr />
+---
 
 ## Pitzer model subfunctions
 
@@ -179,7 +185,7 @@ $$I = \frac{1}{2} \sum_i m_i z_i^2$$
 **Syntax:**
 
 ```python
->>> I = pz.model.Istr(mols, zs)
+I = pz.model.Istr(mols, zs)
 ```
 
 Input `zs` is a list of the charge on each ion, which can be generated from `ions` using the [solute properties functions](../properties).
@@ -197,7 +203,7 @@ where $b$, here and hereafter, is equal to 1.2 (mol·K<sup>−1</sup>)<sup>1/2</
 **Syntax:**
 
 ```python
->>> fG = pz.model.fG(tempK, pres, I, cflib)
+fG = pz.model.fG(tempK, pres, I, prmlib)
 ```
 <br />
 
@@ -210,7 +216,7 @@ $$g = 2[1 - (1 + x) \exp(-x)] / x^2$$
 **Syntax:**
 
 ```python
->>> g = pz.model.g(x)
+g = pz.model.g(x)
 ```
 
 <br />
@@ -224,7 +230,7 @@ $$h = \\{ 6 - [6 + x (6 + 3x + x^2)] \exp(-x) \\} / x^4$$
 **Syntax:**
 
 ```python
->>> h = pz.model.h(x)
+h = pz.model.h(x)
 ```
 
 <br />
@@ -235,12 +241,12 @@ The function $B_{ca}$, following [P91](../../references/#P91), Eq. (49):
 
 $$B_{ca} = \beta_0 + \beta_1 g(\alpha_1 \sqrt{I}) + \beta_2 g(\alpha_2 \sqrt{I})$$
 
-where $\beta_0$, $\beta_1$, $\beta_2$, $\alpha_1$ and $\alpha_2$ take different values for each $ca$ combination, as defined by the functions in **pytzer.coefficients**.
+where $\beta_0$, $\beta_1$, $\beta_2$, $\alpha_1$ and $\alpha_2$ take different values for each $ca$ combination, as defined by the functions in **pytzer.parameters**.
 
 **Syntax:**
 
 ```python
->>> B = pz.model.B(I, b0, b1, b2, alph1, alph2)
+B = pz.model.B(I, b0, b1, b2, alph1, alph2)
 ```
 
 <br />
@@ -251,12 +257,12 @@ The function $C_{ca}^T$, following [CRP94](../../references/#CRP94) Eq. (AI10):
 
 $$C_{ca}^T = C_0 + 4 C_1 h(\omega \sqrt{I})$$
 
-where $C_0$, $C_1$ and $\omega$ take different values for each $ca$ combination, as defined by the functions in **pytzer.coefficients**.
+where $C_0$, $C_1$ and $\omega$ take different values for each $ca$ combination, as defined by the functions in **pytzer.parameters**.
 
 **Syntax:**
 
 ```python
->>> CT = pz.model.CT(I, C0, C1, omega)
+CT = pz.model.CT(I, C0, C1, omega)
 ```
 
 <br />
@@ -270,7 +276,7 @@ $$x_{ii'} = 6 z_i z_{i'} A_\phi \sqrt{I}$$
 **Syntax:**
 
 ```python
->>> xij = pz.model.xij(tempK, I, z0, z1, cflib)
+xij = pz.model.xij(tempK, I, z0, z1, prmlib)
 ```
 
 where `z0` and `z1` are the charges on ions $i$ and $i'$ respectively (i.e. $z_i$ and $z_{i'}$).
@@ -286,7 +292,7 @@ $$^E\theta_{ii'} = \frac{z_i z_i'}{4 I} \Bigl[J(x_{ii'}) - \frac{1}{2} J(x_{ii})
 **Syntax:**
 
 ```python
->>> etheta = pz.model.etheta(tempK, I, z0, z1, cflib)
+etheta = pz.model.etheta(tempK, I, z0, z1, prmlib)
 ```
 
 This is only evaluated when $z_i \neq z_{i'}$. Otherwise, it is equal to zero.

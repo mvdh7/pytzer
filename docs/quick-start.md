@@ -35,9 +35,11 @@ The second line above is strongly recommended, but optional. It upgrades [Autogr
 
 ## Running Pytzer as a "black box"
 
+### Without equilibration
+
 You can just provide Pytzer with a CSV file of temperature, pressures and molality values, and have it return the corresponding activity coefficients in a new CSV file, only having to write the bare minimum in Python, as follows.
 
-[1] Create an input CSV file as described in the [import/export documentation](../modules/io/#pytzeriogetmols) - or just save and use the example file [pytzerQuickStart.csv](https://raw.githubusercontent.com/mvdh7/pytzer/master/testfiles/pytzerQuickStart.csv).
+[1] Create an input CSV file as described for `getmols` in the [import/export documentation](../modules/io/#getmols-import-csv-dataset) - or just save and use the example file [pytzerQuickStart.csv](https://raw.githubusercontent.com/mvdh7/pytzer/master/testfiles/pytzerQuickStart.csv).
 
 [2] Open an Anaconda prompt window (Windows) or the Terminal (Mac/Linux) and activate the `pytzer` environment (i.e. [installation](#installation-with-anacondaminiconda) step [4]).
 
@@ -47,7 +49,7 @@ You can just provide Pytzer with a CSV file of temperature, pressures and molali
 
     python
 
-[5] Import Pytzer (as `pz`, by convention) and then run its "black box" function on your input file:
+[5] Import Pytzer (as `pz` by convention) and then run its "black-box" function on your input file:
 
 ```python
 >>> import pytzer as pz
@@ -57,6 +59,16 @@ You can just provide Pytzer with a CSV file of temperature, pressures and molali
 Once the calculations are complete, a new CSV file will appear, in the same folder as the input file, with the same name as the input file but with `_py` appended. It contains the input temperature and molality values, followed by the osmotic coefficient (column header: `osm`), water activity (`aw`), and then the activity coefficient of each solute (with column headers e.g. `gNa` for the $\gamma(\ce{Na+})$ activity coefficient).
 
 The black box function is currently set up to use the Seawater [coefficient library](../modules/cflibs). This is based on the model of Waters and Millero [[WM13](../references/#WM13)], with [a few modifications](../modules/cflibs/#Seawater). It is still under development, so the results will probably change as Pytzer is updated. The Seawater coefficient library contains coefficients for the components: $\ce{Na+}$, $\ce{K+}$, $\ce{Ca^2+}$, $\ce{Mg^2+}$, $\ce{MgOH+}$, $\ce{H+}$, $\ce{OH-}$, $\ce{Cl-}$, $\ce{HSO4-}$, $\ce{SO4^2-}$, $\ce{tris}$, and $\ce{trisH+}$. If you have any other solutes in your input file, Pytzer should still work (as long the charges on those solutes are defined in [properties.charges](../modules/properties/#charges-solute-charges)), but all interaction coefficients involving those solutes will be set to zero.
+
+### With equilibration
+
+There is a separate black-box function that works in a similar way, but also includes solving for equilibrium:
+
+```python
+>>> pz.blackbox_equilibrate('trisASWequilibrium.csv')
+```
+
+This function requires the input file to be formatted as described for the `gettots` import function ([see documentation here](../modules/io/#gettots-import-csv-dataset)).
 
 <hr />
 

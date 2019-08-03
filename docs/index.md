@@ -1,6 +1,6 @@
 <!--<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>-->
 
-# Pytzer v0.3.1
+# Pytzer v0.4.0
 
 **Pytzer** is a Python 3.6+ implementation of the Pitzer model for chemical activities in aqueous solutions [[P91](references/#P91)].
 
@@ -17,22 +17,34 @@ See the [quick-start guide](quick-start) for more detailed instructions and exam
 
 ## Development status
 
-Pytzer is in beta. Tests of the accuracy of its coefficients and equations are underway, so results may change. API may change and functions may be added or removed. Use at your own peril!
+Pytzer is in beta. Tests of the accuracy of its parameters and equations are underway, so results may change. Its API may change, and modules and functions may be added, removed and renamed. Use at your own peril!
 
 ## Modules
 
+Most users will only need to make use of a few of Pytzer's modules:
+
   * `.io` - imports and exports data;
-  * `.model` - implements the Pitzer model;
-  * `.cflibs` - defines combinations of model coefficients (i.e. *coefficient libraries*) to use in the model;
-  * `.coefficients` - defines interaction coefficients as functions of temperature and pressure;
-  * `.tables` - stores tables of model coefficient values;
+  * `.model` - implements the Pitzer model without chemical speciation;
+  * `.equilibrate` - solves for equilibrium.
+
+The remaining modules will only be of interest to more advanced users:
+
+  * `.libraries` - defines combinations of model parameters (i.e. *parameter libraries*) for the model;
+  * `.parameters` - defines interaction parameters as functions of temperature and pressure;
+  * `.tables` - stores tables of model parameter values;
   * `.debyehueckel` - defines functions for Debye-Hückel limiting slopes;
-  * `.jfuncs` - defines unsymmetrical mixing functions;
-  * `.properties` - defines universal solute properties;
+  * `.unsymmetrical` - defines unsymmetrical mixing functions;
+  * `.properties` - defines solute properties (e.g. ionic charges, ions in each electrolyte);
   * `.constants` - defines physicochemical constants;
   * `.teos10` - calculates properties of pure water;
-  * `.matrix` - implements an alternative matrix-based Pitzer model;
+  * `.matrix` - implements an alternative matrix-based Pitzer model, used to solve equilibria;
+  * `.dissociation` - evaluates thermodynamic equilibrium constants;
+  * `.potentials` - evaluates standard chemical potentials;
   * `.meta` - stores metadata about the Pytzer package.
+
+## Citation
+
+A manuscript describing Pytzer is in preparation for publication. Please check back here or [get in touch](https://mvdh.xyz/contact) to find out how to cite Pytzer in your work.
 
 ## Acknowledgements
 
