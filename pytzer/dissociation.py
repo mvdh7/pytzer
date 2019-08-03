@@ -37,6 +37,11 @@ def rhow_K75(tempK, pres):
         - 46.170461e-9*tempC**3 + 105.56302e-12*tempC**4
         - 280.54253e-15*tempC**5) / (1 + 16.879850e-3*tempC)
 
+def H2O_M79(tempK, pres):
+    """ Water dissociation following M79."""
+    # MP98 says this is HO58 refitted by M79
+    return 148.9802 - 13847.26/tempK - 23.6521*log(tempK)
+
 def H2O_M88(tempK, pres):
     """Water dissociation following M88."""
     return (1.04031130e+3 + 4.86092851e-1*tempK - 3.26224352e+4/tempK
@@ -47,7 +52,7 @@ def H2O_MF(tempK, pres):
     """Marshall and Frank, J. Phys. Chem. Ref. Data 10, 295-304."""
     # Matches Clegg's model [2019-07-02]
     log10kH2O = (-4.098 - 3.2452e3/tempK + 2.2362e5/tempK**2 - 3.984e7/tempK**3
-        + (1.3957e1 - 1.2623e3/tempK + 8.5641e5/tempK**2) 
+        + (1.3957e1 - 1.2623e3/tempK + 8.5641e5/tempK**2)
         * log10(rhow_K75(tempK, pres)))
     lnkH2O = log10kH2O*log(10)
     return lnkH2O

@@ -61,6 +61,9 @@ In alphanumerical order of the source codes:
 <td id="HPR93"><code>HPR93</code></td>
 <td>Hovey, J. K., Pitzer, K. S., and Rard, J. A. (1993). Thermodynamics of Na<sub>2</sub>SO<sub>4</sub>(aq) at temperatures <i>T</i> from 273 K to 373 K and of {(1-<i>y</i>)H<sub>2</sub>SO<sub>4</sub>+<i>y</i>Na<sub>2</sub>SO<sub>4</sub>}(aq) at <i>T</i> = 298.15 K.  <a href="https://doi.org/10.1006/jcht.1993.1016">doi:10.1006/jcht.1993.1016</a>.</td></tr><tr>
 
+<td id="M79"><code>M79</code></td>
+<td>Millero, F. J. (1979). The thermodynamics of the carbonate system in seawater. <i>Geochim. Cosmochim. Acta</i> 43(10), 1651–1661. <a href="https://doi.org/10.1016/0016-7037(79)90184-4">doi:10.1016/0016-7037(79)90184-4</a>.</td></tr><tr>
+
 <td id="M83"><code>M83</code></td>
 <td>Millero, F. J. (1983). The estimation of the <i>pK</i>\*<sub>HA</sub> of acids in seawater using the Pitzer equations. <i>Geochim. Cosmochim. Acta</i> 47(12), 2121–2129. <a href="https://doi.org/10.1016/0016-7037(83)90037-6">doi:10.1016/0016-7037(83)90037-6</a>.</td></tr><tr>
 
