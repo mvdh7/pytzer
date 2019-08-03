@@ -2,14 +2,19 @@
 
 Version 0.4 remains in beta testing. The main change from version 0.3 is including solvers to determine the equilibrium composition of aqueous solutions.
 
+## 0.4.1
+
 **Release date:** forthcoming
 
+  * Module **potentials** added with functions to evaluate standard chemical potentials.
+
 ## 0.4.0
+
+**Release date:** 2019-08-03
 
   * Module **dissociation** added with functions to evaluate thermodynamic dissociation constants;
   * Module **equilibrate** added with an equilibrium solver and associated functions;
   * Added **blackbox_equilibrate** function to demonstrate equilibration procedure;
-  * Module **potentials** added with functions to evaluate standard chemical potentials;
   * Fixed indexing error in **matrix.assemble** for the *zeta* coefficient matrix;
   * Module **jfuncs** renamed as **unsymmetrical**;
   * As a general terminology change, the Pitzer model interaction *coefficients* are now instead referred to as *parameters*, for better consistency with the published literature. As a consequence:

@@ -6,6 +6,8 @@ The main solver function is `solve`, but the `solvequick` and `solveloop` varian
 
 The equilibrium state is defined in code by the `eqstate`. This is a series of numbers that quantifies the balance of each equilibrium in the solution. It contains either  one more entry than `eles`, or the same number of entries as `eles`. These entries are in the same order as the corresponding thermodynamic equilibrium constants in the input variable `lnks`, as follows. The entries that have a corresponding value in `eles` are for the equilibrium that that `ele` undergoes. The 'extra' entry, if present, is for the water equilibrium (dissociation into hydroxide ions and protons). The `eqstate` can be converted into molalities using the function `.eqstate2mols` (see below).
 
+The available equilibria are described in the [dissociation](../dissociation) module.
+
 ---
 
 ## `.solve` - solve a single equilibrium
