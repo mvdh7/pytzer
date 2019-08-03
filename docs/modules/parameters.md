@@ -23,7 +23,7 @@ There are six different types of parameter functions, each representing a differ
 
   6. `mu_`, for interactions between three neutral solutes of the same type ($\mu$).
 
-There is not yet a full list of all the functions available. A number of them are not used by any ready-made parameter library.
+There is not yet a full list of all the functions available, but they can be investigated with the [meta](../meta) module tools. A number of them are not used by any ready-made parameter library.
 
 ## Philosophy
 

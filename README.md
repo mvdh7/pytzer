@@ -6,10 +6,8 @@ Pitzer model for chemical activities in aqueous solutions. Undergoing beta testi
 
 **Installation:**
 
-```shell
-pip install pytzer
-pip install git+https://github.com/mvdh7/autograd#egg=autograd --upgrade --no-cache-dir
-```
+    pip install pytzer
+    pip install git+https://github.com/mvdh7/autograd#egg=autograd --upgrade --no-cache-dir
 
 The second line above is strongly recommended, but optional. It upgrades [Autograd](https://github.com/HIPS/autograd) to the latest version that has been tested with Pytzer, which eliminates some deprecation warnings that may appear when using the relatively old Autograd version available from PyPI. You could also switch `mvdh7` in the URL to `HIPS` to get the very latest Autograd straight from the horse's mouth.
 
