@@ -2,12 +2,6 @@
 
 Version 0.4 remains in beta testing. The main change from version 0.3 is including solvers to determine the equilibrium composition of aqueous solutions.
 
-## 0.4.1
-
-**Release date:** forthcoming
-
-  * Module **potentials** added with functions to evaluate standard chemical potentials.
-
 ## 0.4.0
 
 **Release date:** 2019-08-03
