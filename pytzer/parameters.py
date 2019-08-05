@@ -3665,7 +3665,7 @@ def bC_Mg_SO4_RM81i(T, P):
 def PP82_eqMPH(T,q):
     """PP82 equation derived by MP Humphreys."""
     Tr = 298.15
-    return q[0] + q[1] * (T - Tr) + q[2] * (T - Tr)**2 / 2
+    return q[0] + q[1]*(T - Tr) + q[2]*(T - Tr)**2/2
 
 def bC_Na_CO3_PP82(T, P):
     """c-a: sodium carbonate [PP82]."""
@@ -3720,8 +3720,8 @@ def theta_Cl_HCO3_PP82(T, P):
     valid = T == 298.15
     return theta, valid
 
-def theta_Cl_CO3_PP82(T, P):
-    """a-a': chloride carbonate [PP82]."""
+def theta_CO3_Cl_PP82(T, P):
+    """a-a': carbonate chloride [PP82]."""
     theta = -0.053
     valid = T == 298.15
     return theta, valid
@@ -3746,8 +3746,8 @@ def psi_Ca_H_Cl_RGO81(T, P):
     return theta, valid
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Thurmond & Millero (1982) ~~~~~
-def psi_Na_Cl_CO3_TM82(T, P):
-    """c-a-a': sodium chloride carbonate [TM82]."""
+def psi_Na_CO3_Cl_TM82(T, P):
+    """c-a-a': sodium carbonate chloride [TM82]."""
     psi = 0.016
     valid = T == 298.15
     return psi, valid
@@ -7469,14 +7469,14 @@ def bC_H_Cl_CMR93(T, P):
 def theta_H_K_CMR93(T, P):
     """c-c': hydrogen potassium [CMR93]."""
     # assuming CMR93's lowercase t means temperature in degC
-    theta = 0.005 -0.0002275 * (T - Tzero)
+    theta = 0.005 - 0.0002275*(T - Tzero)
     valid = logical_and(T >= 273.15, T <= 328.15)
     return theta, valid
 
 def theta_H_Na_CMR93(T, P):
     """c-c': hydrogen sodium [CMR93]."""
     # assuming CMR93's lowercase t means temperature in degC
-    theta = 0.0342 -0.000209 * (T - Tzero)
+    theta = 0.0342 - 0.000209*(T - Tzero)
     valid = logical_and(T >= 273.15, T <= 328.15)
     return theta, valid
 
@@ -7813,7 +7813,7 @@ def MP98_eq15(T, q):
     # q[1] = PJ  * 1e5
     # q[2] = PRL * 1e4
     Tr = 298.15
-    return (q[0] + q[1]*1e-5 * (Tr**3/3 - Tr**2 * q[2]*1e-4)*(1/T - 1/Tr)
+    return (q[0] + q[1]*1e-5*(Tr**3/3 - Tr**2*q[2]*1e-4)*(1/T - 1/Tr)
         + q[1]*1e-5*(T**2 - Tr**2)/6)
 
 def bC_Na_I_MP98(T, P):
@@ -7857,7 +7857,7 @@ def bC_Na_Br_MP98(T, P):
     b2 = 0
     Cphi = MP98_eq15(T, float_([
          0.00116,
-         0.16405,
+         0.058*2**1.5, # more accurate following PM16 model
         -0.93,
     ]))
     C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['Br'])))
@@ -7871,16 +7871,20 @@ def bC_Na_Br_MP98(T, P):
 def bC_Na_F_MP98(T, P):
     """c-a: sodium fluoride [MP98]."""
     b0 = MP98_eq15(T, float_([
-         0.215,
+         0.0215, # typo in MP98 Table A7 vs PM16 code
         -2.37,
-         5.361e-4,
+         5.361, # *1e-4 in MP98 Table A7 presumably a typo vs PM16 code
     ]))
     b1 = MP98_eq15(T, float_([
         0.2107,
         0,
-        8.7e-4,
+        8.7, # *1e-4 in MP98 Table A7 presumably a typo vs PM16 code
     ]))
     b2 = 0
+    Cphi = MP98_eq15(T, float_([
+        0, 0,
+        -0.93, # 0 in MP98 Table A7 presumably a typo vs PM16 code
+    ]))
     C0 = 0
     C1 = 0
     alph1 = 2
@@ -7946,19 +7950,19 @@ def bC_K_OH_MP98(T, P):
     b0 = MP98_eq15(T, float_([
          0.1298,
         -0.946,
-         9.914,
-    ])) # copy of KI
+         9.914, # copy of KI
+    ]))
     b1 = MP98_eq15(T, float_([
          0.32,
         -2.59,
-         11.86,
-    ])) # copy of KI
+         11.86, # copy of KI
+    ]))
     b2 = 0
     Cphi = MP98_eq15(T, float_([
-        -0.0041,
+         0.0041,
          0.0638,
-        -0.944,
-    ])) # copy of KI
+        -0.944, # copy of KI
+    ]))
     C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['OH'])))
     C1 = 0
     alph1 = 2
@@ -8258,12 +8262,12 @@ def bC_Sr_Cl_MP98(T, P):
     b0 = MP98_eq15(T, float_([
          0.28575,
         -0.18367,
-         7.1,
+         9.56*3/4, # from Pierrot_2018_Interaction_Model.xlsm
     ]))
     b1 = MP98_eq15(T, float_([
         1.66725,
         0,
-        28.425,
+        37.9*3/4,
     ]))
     b2 = 0
     Cphi = MP98_eq15(T, float_([
@@ -8376,7 +8380,7 @@ def bC_Na_HSO4_MP98(T, P):
          0,
     ]))
     b2 = 0
-    Cphi = 0.003905
+    Cphi = -0.003905 # from PM16 code this should be negative (MP98 typo)
     C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['HSO4'])))
     C1 = 0
     alph1 = 2
@@ -8486,6 +8490,24 @@ def theta_BOH4_Cl_MP98(T, P):
     theta = -0.0323 + (T - 298.15)*-0.42333e-4 + (T - 298.15)**2*-21.926e-6
     valid = logical_and(T >= 273.15, T <= 318.15)
     return theta, valid
+
+def theta_BOH4_Cl_MP98typo(T, P):
+    """a-a': borate chloride [MP98typo]."""
+    # This replicates a typo in the Pierrot_2018_Interaction_Model.xlsm code
+    #   (298.25 instead of 298.15 in the T**2 term).
+    # For proper modelling, should use theta_BOH4_Cl_MP98 instead.
+    theta = -0.0323 + (T - 298.15)*-0.42333e-4 + (T - 298.25)**2*-21.926e-6
+    valid = logical_and(T >= 273.15, T <= 318.15)
+    return theta, valid
+
+def psi_Ca_K_Cl_MP98typo(T, P):
+    """c-c'-a: calcium potassium chloride [MP98typo]."""
+    # This replicates a typo in the Pierrot_2018_Interaction_Model.xlsm code
+    #   (in the first term).
+    # For proper modelling, should use psi_Ca_K_Cl_GM89 instead.
+    psi = 0.047627877 - 27.0770507/T
+    valid = logical_and(T >= 273.15, T <= 523.15)
+    return psi, valid
 
 def bC_Mg_HCO3_MP98(T, P):
     """c-a: magnesium bicarbonate [MP98]."""
@@ -8604,8 +8626,9 @@ def theta_Na_Sr_MP98(T, P):
 def theta_K_Sr_MP98(T, P):
     """c-c': potassium strontium [MP98]."""
     # MP98 say this is set equal to the sodium value (i.e. theta_Na_Sr_MP98?)
-    # but then state a different number...
-    theta = 0.01
+    # but then state a different number (0.01)... 0.07 is used in the program
+    # Pierrot_2018_Interaction_Model.xlsm
+    theta = 0.07
     valid = T == 298.15
     return theta, valid
 
@@ -8669,16 +8692,145 @@ def zeta_H3PO4_Na_Cl_MP98(T, P):
     valid = T == 298.15
     return zeta, valid
 
+def theta_H_K_MP98(T, P):
+    """c-c': hydrogen potassium [MP98]."""
+    # Direct from Pierrot_2018_Interaction_Model.xlsm, conflicts with CMR93
+    theta = 0.005 - 0.0002275*(T - 298.15)
+    valid = logical_and(T >= 273.15, T <= 328.15)
+    return theta, valid
+
+def theta_H_Na_MP98(T, P):
+    """c-c': hydrogen sodium [MP98]."""
+    # Direct from Pierrot_2018_Interaction_Model.xlsm, conflicts with CMR93
+    theta = 0.03416 - 0.000209*(T - Tzero)
+    valid = logical_and(T >= 273.15, T <= 328.15)
+    return theta, valid
+
+def bC_K_CO3_MP98(T, P):
+    """c-a: potassium carbonate [MP98]."""
+    # Direct from Pierrot_2018_Interaction_Model.xlsm, conflicts with SRG87
+    b0 = 0.1288 + 1.1e-3*(T - 298.15) - 5.1e-6*(T - 298.15)**2
+    b1 = 1.433 + 4.36e-3*(T - 298.15) + 2.07e-5*(T - 298.15)**2
+    b2 = 0
+    Cphi = 0.0005 # not in SRG87!
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['CO3'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 278.15, T <= 368.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def theta_H_Mg_MP98(T, P):
+    """c-c': hydrogen magnesium [MP98]."""
+    # RGB80 has no temperature term, as declared by MP98
+    theta = 0.0620 + 0.0003275*(T - 298.15)
+    valid = T == 298.15
+    return theta, valid
+
+def psi_H_Mg_Cl_MP98(T, P):
+    """c-c': hydrogen magnesium chloride [MP98]."""
+    # RGB80 has no temperature term, as declared by MP98
+    theta = 0.001 - 0.0007325*(T - 298.15)
+    valid = T == 298.15
+    return theta, valid
+
+def theta_Ca_H_MP98(T, P):
+    """c-c': calcium hydrogen [MP98]."""
+    # MP98 have really messed this one up? (see notes on theta_Ca_H_RGO81)
+    theta = 0.0612 + 0.0003275*(T - 298.15)
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Ca_H_Cl_MP98(T, P):
+    """c-c': calcium hydrogen chloride [MP98]."""
+    # RGO81 has no temperature term, as declared by MP98
+    theta = 0.0008 - 0.000725*(T - 298.15)
+    valid = T == 298.15
+    return theta, valid
+
+def psi_K_Cl_SO4_MP98(T, P):
+    """c-a-a': potassium chloride sulfate [MP98]."""
+    # MP98 say this is GM89 but don't use full precision for the first
+    #   constant in the PM program
+    psi = GM89_eq3(T, float_([
+        -2.12481e-1,
+         2.84698333e-4,
+         3.75619614e+1,
+         0, 0, 0, 0, 0,
+    ]))
+    valid = logical_and(T >= 273.15, T <= 523.15)
+    return psi, valid
+
+def bC_Na_CO3_MP98(T, P):
+    """c-a: sodium carbonate [MP98]."""
+    # I have no idea where MP98 got their T**2 terms from
+    b0 = 0.0362 + 0.00179*(T - 298.15) + 1.694e-21*(T - 298.15)**2
+    b1 = 1.51 + 0.00205*(T - 298.15) + 1.626E-19*(T - 298.15)**2
+    b2 = 0
+    Cphi = 0.0052
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['CO3'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_HCO3_MP98(T, P):
+    """c-a: sodium bicarbonate [MP98]."""
+    # I have no idea where MP98 got their T**2 terms from
+    b0 = 0.028 + 0.001*(T - 298.15) + 5.082001e-21*(T - 298.15)**2
+    b1 = 0.044 + 0.0011*(T - 298.15) - 3.88e-21*(T - 298.15)**2
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_HSO4_MP98(T, P):
+    """c-a: potassium bisulfate [MP98]."""
+    # MP98 cite Pierrot & Millero (1997) in the PM16 code for this
+    b0 = -1.8949 - 0.00059751*(T - 298.15)
+    b1 = 5.0284 - 0.0284 * (T - 298.15)
+    b2 = 0.0
+    Cphi = 0.9246 + 0.0039751 * (T - 298.15)
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['HSO4'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Mg_HSO4_MP98(T, P):
+    """c-a: magnesium bisulfate [MP98]."""
+    # MP98 cite Pierrot & Millero (1997) in the PM16 code for this
+    b0 = -0.61656 - 0.00075174*(T - 298.15)
+    b1 = 7.716066 - 0.0164302*(T - 298.15)
+    b2 = 0.0
+    Cphi = 0.43026 + 0.00199601*(T - 298.15)
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Mg']*i2c['HSO4'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Archer (1999) ~~~~~
 def A99_eq22(T, a):
     """A99 equation 22."""
     Tref  = 298.15
-    return   a[0] \
-           + a[1] * (T - Tref)    * 1e-2 \
-           + a[2] * (T - Tref)**2 * 1e-5 \
-           + a[3] * 1e2 / (T - 225) \
-           + a[4] * 1e3 /  T \
-           + a[5] * 1e6 / (T - 225)**3
+    return  (a[0]
+           + a[1] * (T - Tref)    * 1e-2
+           + a[2] * (T - Tref)**2 * 1e-5
+           + a[3] * 1e2 / (T - 225)
+           + a[4] * 1e3 /  T
+           + a[5] * 1e6 / (T - 225)**3)
 
 def bC_K_Cl_A99(T, P):
     """c-a: potassium chloride [A99]."""

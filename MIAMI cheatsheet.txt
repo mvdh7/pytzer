@@ -1,0 +1,16 @@
+cations
+1 Sr
+2 Na
+3 K
+4 Mg
+5 Ca
+mjCaMax+1 H
+
+anions
+1 Cl
+2 SO4
+3 CO3
+4 HCO3
+5 Br
+6 F
+7 BOH4

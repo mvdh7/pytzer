@@ -6,7 +6,19 @@ Version 0.4 remains in beta testing. The main change from version 0.3 is includi
 
 **Release date:** forthcoming
 
-  * Module **potentials** added with functions to evaluate standard chemical potentials.
+  * Module **potentials** added with functions to evaluate standard chemical potentials;
+  * Updated functions and parameter libraries noting that `['Cl', 'CO3']` gets sorted to `['CO3', 'Cl']`;
+  * Testing MIAMI parameter library against PM16's model:
+    * Adjusted numerical values to fix errors in some parameter functions:
+      * `bC_K_OH_MP98`;
+      * `bC_Na_Br_MP98`;
+      * `bC_Na_F_MP98`;
+      * `bC_Na_HSO4_MP98`;
+      * `bC_Sr_Cl_MP98`;
+      * `theta_K_Sr_MP98`;
+    * Added new MP98 functions until numerical conflicts can be resolved:
+      * `bC_K_CO3_MP98` should follow SRG87;
+      * `theta_H_K_MP98` and `theta_H_Na_MP98` should follow CMR93.
 
 ## 0.4.0
 
