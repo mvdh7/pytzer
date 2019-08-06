@@ -22,7 +22,7 @@ bC = {
     'Na-HCO3': prm.bC_Na_HCO3_MP98,
     'Na-SO4': prm.bC_Na_SO4_HPR93,
     'Na-CO3': prm.bC_Na_CO3_MP98,
-    'Na-BOH4': prm.bC_Na_BOH4_SRRJ87,
+    'Na-BOH4': prm.bC_Na_BOH4_MP98, # should be SRRJ87, but conflicts with MP98
     'Na-HS': prm.bC_Na_HS_HPM88,
     'Na-SCN': prm.bC_Na_SCN_SP78,
     'Na-SO3': prm.bC_Na_SO3_MHJZ89,
@@ -30,7 +30,7 @@ bC = {
 # Table A4
     'K-HCO3': prm.bC_K_HCO3_RGWW83,
     'K-CO3': prm.bC_K_CO3_MP98, # should be SRG87, but conflicts with MP98
-    'K-BOH4': prm.bC_K_BOH4_SRRJ87,
+    'K-BOH4': prm.bC_K_BOH4_MP98, # should be SRRJ87, but conflicts with MP98
     'K-HS': prm.bC_K_HS_HPM88,
     'K-H2PO4': prm.bC_K_H2PO4_SP78,
     'K-SCN': prm.bC_K_SCN_SP78,
@@ -68,7 +68,7 @@ bC = {
     'H-Br': prm.bC_H_Br_MP98,
     'Sr-Cl': prm.bC_Sr_Cl_MP98,
     'NH4-Cl': prm.bC_NH4_Cl_MP98,
-    'NH4-Br': prm.bC_NH4_Br_MP98,
+    'NH4-Br': prm.bC_NH4_Br_MP98typo,
     'NH4-F': prm.bC_NH4_F_MP98,
 # Table A8
     'Sr-I': prm.bC_Sr_I_PM73,

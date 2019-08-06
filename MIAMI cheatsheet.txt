@@ -14,3 +14,5 @@ anions
 5 Br
 6 F
 7 BOH4
+mjAnMax+1 HSO4
+mjAnMax+3 OH

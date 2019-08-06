@@ -3987,8 +3987,7 @@ def bC_Na_HSO4_HMW84(T, P):
     b0 = 0.0454
     b1 = 0.398
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['HSO4'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4015,8 +4014,7 @@ def bC_Na_HCO3_HMW84(T, P):
     b0 = 0.0277
     b1 = 0.0411
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['HCO3'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4057,8 +4055,7 @@ def bC_K_SO4_HMW84(T, P):
     b0 = 0.04995
     b1 = 0.7793
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['SO4'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4071,8 +4068,7 @@ def bC_K_HSO4_HMW84(T, P):
     b0 = -0.0003
     b1 = 0.1735
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['HSO4'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4141,8 +4137,7 @@ def bC_Ca_SO4_HMW84(T, P):
     b0 = 0.2
     b1 = 3.1973
     b2 = -54.24
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['Ca']*i2c['SO4'])))
+    C0 = 0
     C1 = 0
     alph1 = 1.4
     alph2 = 12
@@ -4155,8 +4150,7 @@ def bC_Ca_HSO4_HMW84(T, P):
     b0 = 0.2145
     b1 = 2.53
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['Ca']*i2c['HSO4'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4169,10 +4163,9 @@ def bC_Ca_OH_HMW84(T, P):
     b0 = -0.1747
     b1 = -0.2303
     b2 = -5.72
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['Ca']*i2c['OH'])))
+    C0 = 0
     C1 = 0
-    alph1 = 1.4
+    alph1 = 2
     alph2 = 12
     omega = -9
     valid = T == 298.15
@@ -4183,8 +4176,7 @@ def bC_Ca_HCO3_HMW84(T, P):
     b0 = 0.4
     b1 = 2.977
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['Ca']*i2c['HCO3'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4197,10 +4189,9 @@ def bC_Ca_CO3_HMW84(T, P):
     b0 = 0.0
     b1 = 0.0
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['Ca']*i2c['CO3'])))
+    C0 = 0
     C1 = 0
-    alph1 = 2
+    alph1 = 1.4
     alph2 = -9
     omega = -9
     valid = T == 298.15
@@ -4239,8 +4230,7 @@ def bC_Mg_HSO4_HMW84(T, P):
     b0 = 0.4746
     b1 = 1.729
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['Mg']*i2c['HSO4'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4253,8 +4243,7 @@ def bC_Mg_OH_HMW84(T, P):
     b0 = 0.0
     b1 = 0.0
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['Mg']*i2c['OH'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4267,8 +4256,7 @@ def bC_Mg_HCO3_HMW84(T, P):
     b0 = 0.329
     b1 = 0.6072
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['Mg']*i2c['HCO3'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4281,10 +4269,9 @@ def bC_Mg_CO3_HMW84(T, P):
     b0 = 0.0
     b1 = 0.0
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['Mg']*i2c['CO3'])))
+    C0 = 0
     C1 = 0
-    alph1 = 2
+    alph1 = 1.4
     alph2 = -9
     omega = -9
     valid = T == 298.15
@@ -4295,8 +4282,7 @@ def bC_MgOH_Cl_HMW84(T, P):
     b0 = -0.1
     b1 = 1.658
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['MgOH']*i2c['Cl'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4309,8 +4295,7 @@ def bC_MgOH_SO4_HMW84(T, P):
     b0 = 0.0
     b1 = 0.0
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['MgOH']*i2c['SO4'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4323,8 +4308,7 @@ def bC_MgOH_HSO4_HMW84(T, P):
     b0 = 0.0
     b1 = 0.0
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['MgOH']*i2c['HSO4'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4337,8 +4321,7 @@ def bC_MgOH_OH_HMW84(T, P):
     b0 = 0.0
     b1 = 0.0
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['MgOH']*i2c['OH'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4351,8 +4334,7 @@ def bC_MgOH_HCO3_HMW84(T, P):
     b0 = 0.0
     b1 = 0.0
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['MgOH']*i2c['HCO3'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4365,8 +4347,7 @@ def bC_MgOH_CO3_HMW84(T, P):
     b0 = 0.0
     b1 = 0.0
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['MgOH']*i2c['CO3'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4407,8 +4388,7 @@ def bC_H_HSO4_HMW84(T, P):
     b0 = 0.2065
     b1 = 0.5556
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['HSO4'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4421,8 +4401,7 @@ def bC_H_OH_HMW84(T, P):
     b0 = 0.0
     b1 = 0.0
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['OH'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4435,8 +4414,7 @@ def bC_H_HCO3_HMW84(T, P):
     b0 = 0.0
     b1 = 0.0
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['HCO3'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4449,8 +4427,7 @@ def bC_H_CO3_HMW84(T, P):
     b0 = 0.0
     b1 = 0.0
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['CO3'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6416,23 +6393,23 @@ def bC_Na_Cl_SRRJ87(T, P):
 def bC_K_BOH4_SRRJ87(T, P):
     """c-a: potassium borate [SRRJ87]."""
     # Parameters from SRRJ87 Table III
-    b0 = SRRJ87_eq7(T, float_([
+    b0 = SRRJ87_eq7(T, [
         0.1469,
         2.881,
         0,
-    ]))
-    b1 = SRRJ87_eq7(T, float_([
+    ])
+    b1 = SRRJ87_eq7(T, [
         -0.0989,
         -6.876,
          0,
-    ]))
+    ])
     b2 = 0
-    Cphi = SRRJ87_eq7(T, float_([
+    Cphi = SRRJ87_eq7(T, [
         -56.43,
         -9.56,
          0,
-    ]))*1e-3 # *1e-3 presumably?
-    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['Cl'])))
+    ])*1e-3 # *1e-3 presumably?
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['BOH4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6459,7 +6436,7 @@ def bC_Na_BOH4_SRRJ87(T, P):
         -15.7,
          0,
     ]))*1e-3 # *1e-3 presumably?
-    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['Cl'])))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['BOH4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6490,26 +6467,25 @@ def psi_Na_BOH4_Cl_SRRJ87(T, P):
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Simonson et al. (1987b) ~~~~~
 def SRM87_eqTableIII(T, abc):
     """SRM87 equation from Table III."""
-    return abc[0] \
-         + abc[1] * 1e-3 * (T - 298.15) \
-         + abc[2] * 1e-3 * (T -303.15)**2
+    return abc[0] + abc[1]*1e-3*(T - 298.15) + abc[2]*1e-3*(T - 303.15)**2
 
 def bC_Mg_BOH4_SRM87(T, P):
     """c-a: magnesium borate [SRM87]."""
-    b0 = SRM87_eqTableIII(T, float_([
+    b0 = SRM87_eqTableIII(T, [
         -0.6230,
          6.496,
          0,
-    ]))
-    b1 = SRM87_eqTableIII(T, float_([
+    ])
+    b1 = SRM87_eqTableIII(T, [
          0.2515,
         -17.13,
          0,
-    ]))
-    b2 = SRM87_eqTableIII(T, float_([
+    ])
+    b2 = SRM87_eqTableIII(T, [
         -11.47,
          0,
-        -3.240]))
+        -3.240,
+    ])
     C0 = 0
     C1 = 0
     alph1 = 2
@@ -6520,21 +6496,21 @@ def bC_Mg_BOH4_SRM87(T, P):
 
 def bC_Ca_BOH4_SRM87(T, P):
     """c-a: calcium borate [SRM87]."""
-    b0 = SRM87_eqTableIII(T, float_([
+    b0 = SRM87_eqTableIII(T, [
         -0.4462,
          5.393,
          0,
-    ]))
-    b1 = SRM87_eqTableIII(T, float_([
+    ])
+    b1 = SRM87_eqTableIII(T, [
         -0.8680,
         -18.20,
          0,
-    ]))
-    b2 = SRM87_eqTableIII(T, float_([
+    ])
+    b2 = SRM87_eqTableIII(T, [
         -15.88,
          0,
         -2.858,
-    ]))
+    ])
     C0 = 0
     C1 = 0
     alph1 = 2
@@ -7809,12 +7785,14 @@ def psi_H_Na_HSO4_PMR97(T, P):
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Millero and Pierrot (1998) ~~~~~
 def MP98_eq15(T, q):
-    # q[0] = PR
-    # q[1] = PJ  * 1e5
-    # q[2] = PRL * 1e4
+    # Note typo in location of first BJ w.r.t. brackets in MP98 vs PM16 model
+    # Here we use the PM16 model equation
     Tr = 298.15
-    return (q[0] + q[1]*1e-5*(Tr**3/3 - Tr**2*q[2]*1e-4)*(1/T - 1/Tr)
-        + q[1]*1e-5*(T**2 - Tr**2)/6)
+    BR = q[0]
+    BJ = q[1]*1e-5
+    BLR = q[2]*1e-4
+    return (BR + (BJ*(298.15**3/3) - 298.15**2*BLR)*(1/T - 1/298.15) +
+        (BJ/6)*(T**2 - 298.15**2))
 
 def bC_Na_I_MP98(T, P):
     """c-a: sodium iodide [MP98]."""
@@ -7870,22 +7848,22 @@ def bC_Na_Br_MP98(T, P):
 
 def bC_Na_F_MP98(T, P):
     """c-a: sodium fluoride [MP98]."""
-    b0 = MP98_eq15(T, float_([
+    b0 = MP98_eq15(T, [
          0.0215, # typo in MP98 Table A7 vs PM16 code
         -2.37,
          5.361, # *1e-4 in MP98 Table A7 presumably a typo vs PM16 code
-    ]))
-    b1 = MP98_eq15(T, float_([
+    ])
+    b1 = MP98_eq15(T, [
         0.2107,
         0,
         8.7, # *1e-4 in MP98 Table A7 presumably a typo vs PM16 code
-    ]))
+    ])
     b2 = 0
-    Cphi = MP98_eq15(T, float_([
+    Cphi = MP98_eq15(T, [
         0, 0,
         -0.93, # 0 in MP98 Table A7 presumably a typo vs PM16 code
-    ]))
-    C0 = 0
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['F'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -7935,7 +7913,7 @@ def bC_K_F_MP98(T, P):
     Cphi = MP98_eq15(T, float_([
         0.00093,
         0,
-        0.595,
+       -0.595, # typo in MP98 table vs PM16 model (latter has -, former +)
     ]))
     C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['F'])))
     C1 = 0
@@ -8334,6 +8312,33 @@ def bC_NH4_Br_MP98(T, P):
     valid = logical_and(T >= 273.15, T <= 323.15)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
+def bC_NH4_Br_MP98typo(T, P):
+    """c-a: ammonium bromide [MP98typo]."""
+    # PM16 model is missing 1e-5 multiplier on final Cphi term
+    b0 = MP98_eq15(T, float_([
+         0.0624,
+        -0.597,
+         0.779,
+    ]))
+    b1 = MP98_eq15(T, float_([
+        0.1947,
+        0,
+        12.58,
+    ]))
+    b2 = 0
+    Cphi = MP98_eq15(T, float_([
+        -0.00436,
+         0,
+         0.21*1e5,
+    ]))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['NH4']*i2c['Br'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
 def bC_NH4_F_MP98(T, P):
     """c-a: ammonium fluoride [MP98]."""
     b0 = MP98_eq15(T, float_([
@@ -8370,7 +8375,7 @@ def bC_Na_HSO4_MP98(T, P):
     #  but their equations look quite different, and there is no Cphi there.
     # This equation is therefore directly from MP98.
     b0 = MP98_eqTableA3(T, float_([
-         0.544,
+         0.0544, # MP98 typo vs PM16 model
         -1.8478e-3,
          5.3937e-5,
     ]))
@@ -8380,7 +8385,7 @@ def bC_Na_HSO4_MP98(T, P):
          0,
     ]))
     b2 = 0
-    Cphi = -0.003905 # from PM16 code this should be negative (MP98 typo)
+    Cphi = -0.0039056 # from PM16 code this should be negative (MP98 typo)
     C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['HSO4'])))
     C1 = 0
     alph1 = 2
@@ -8795,9 +8800,9 @@ def bC_K_HSO4_MP98(T, P):
     """c-a: potassium bisulfate [MP98]."""
     # MP98 cite Pierrot & Millero (1997) in the PM16 code for this
     b0 = -1.8949 - 0.00059751*(T - 298.15)
-    b1 = 5.0284 - 0.0284 * (T - 298.15)
+    b1 = 5.0284 - 0.0284*(T - 298.15)
     b2 = 0.0
-    Cphi = 0.9246 + 0.0039751 * (T - 298.15)
+    Cphi = 0.9246 + 0.0039751*(T - 298.15)
     C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['HSO4'])))
     C1 = 0
     alph1 = 2
@@ -8821,6 +8826,60 @@ def bC_Mg_HSO4_MP98(T, P):
     valid = T == 298.15
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
+def bC_K_BOH4_MP98(T, P):
+    """c-a: potassium borate [MP98]."""
+    # MP98 say this is SRRJ87 but then use different coefficients for Cphi
+    b0 = SRRJ87_eq7(T, [
+        0.1469,
+        2.881,
+        0,
+    ])
+    b1 = SRRJ87_eq7(T, [
+        -0.0989,
+        -6.876,
+         0,
+    ])
+    b2 = 0
+    Cphi = SRRJ87_eq7(T, [
+        -56.43e-3,
+        -0.956,
+         0,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['BOH4'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 278.15, T <= 328.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_BOH4_MP98(T, P):
+    """c-a: sodium borate [MP98]."""
+    # MP98 say this is SRRJ87 but then use different coefficients for Cphi
+    b0 = SRRJ87_eq7(T, [
+        -0.0510,
+         5.264,
+         0,
+    ])
+    b1 = SRRJ87_eq7(T, [
+         0.0961,
+        -10.68,
+         0,
+    ])
+    b2 = 0
+    Cphi = SRRJ87_eq7(T, [
+         14.98e-3,
+        -1.57,
+         0,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['BOH4'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 278.15, T <= 328.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Archer (1999) ~~~~~
 def A99_eq22(T, a):
     """A99 equation 22."""
@@ -8835,31 +8894,31 @@ def A99_eq22(T, a):
 def bC_K_Cl_A99(T, P):
     """c-a: potassium chloride [A99]."""
     # KCl T parameters from A99 Table 4
-    b0 = A99_eq22(T, float_([
+    b0 = A99_eq22(T, [
          0.413229483398493,
         -0.0870121476114027,
          0.101413736179231,
         -0.0199822538522801,
         -0.0998120581680816,
          0,
-    ]))
-    b1 = A99_eq22(T, float_([
+    ])
+    b1 = A99_eq22(T, [
          0.206691413598171,
          0.102544606022162,
          0,
          0,
          0,
         -0.00188349608000903,
-    ]))
+    ])
     b2 = 0
-    C0 = A99_eq22(T, float_([
+    C0 = A99_eq22(T, [
         -0.00133515934994478,
          0,
          0,
          0.00234117693834228,
         -0.00075896583546707,
          0,
-    ]))
+    ])
     C1 = 0
     alph1 = 2
     alph2 = -9

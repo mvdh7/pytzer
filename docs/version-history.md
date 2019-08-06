@@ -8,6 +8,7 @@ Version 0.4 remains in beta testing. The main change from version 0.3 is includi
 
   * Module **potentials** added with functions to evaluate standard chemical potentials;
   * Updated functions and parameter libraries noting that `['Cl', 'CO3']` gets sorted to `['CO3', 'Cl']`;
+  * Fixed incorrect `alph1` values for all HMW 1:(>1) electrolytes;
   * Testing MIAMI parameter library against PM16's model:
     * Adjusted numerical values to fix errors in some parameter functions:
       * `bC_K_OH_MP98`;

@@ -9,6 +9,7 @@ _ion2charge = {
     # Neutrals
     'BOH3': 0,
     'CO2': 0,
+    'H2S': 0,
     'H3PO4': 0,
     'HF': 0,
     'glycerol': 0,
