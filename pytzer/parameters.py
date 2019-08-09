@@ -9365,12 +9365,521 @@ def mu_tris_tris_tris_MarChemSpec25(T, P):
     return mu, valid
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ JESS ~~~~~
-# Parameters obtained from http://jess.murdoch.edu.au/vewbel.shtml
+# Ref. JESS = parameters obtained from http://jess.murdoch.edu.au/vewbel.shtml
 def JESS_eq(T, P, j):
     Tr = 298.15
-    # pressure multiplier obtained by trial and error
-    # temperature multipliers and terms very uncertain
-    return j[0] + j[1]/T + j[2]*log(T/Tr) + j[3]*P*0.0001
+    Pr = 10
+    return j[0] + j[1]*(1/T - 1/Tr)*1e3 + j[2]*log(T/Tr) + j[3]*(P - Pr)*0.0001
+
+def bC_H_Br_JESS(T, P):
+    """c-a: hydrogen bromide [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.210904,
+        -0.0111577,
+        -0.0965749,
+        -0.00485161,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.324833,
+        -0.141250,
+        -0.287944,
+        -0.0209720,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        0.00113432,
+        -0.0110028,
+        -0.0542243,
+        0.000704627,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['Br'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_H_Cl_JESS(T, P):
+    """c-a: hydrogen chloride [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.178627,
+        0.209336,
+        0.580887,
+        0.000743741,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.288278,
+        -0.757685,
+        -2.38033,
+        -0.00662854,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        0.000259560,
+        -0.0628809,
+        -0.219810,
+        1.46066E-5,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['Cl'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_H_ClO4_JESS(T, P):
+    """c-a: hydrogen perchlorate [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.177990,
+        -0.126144,
+        -0.278470,
+        -0.000346259,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.282791,
+        -0.469348,
+        -0.990997,
+        -0.0550796,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        0.00754498,
+        0.0103387,
+        0.000000,
+        -0.00157682,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['ClO4'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_H_I_JESS(T, P):
+    """c-a: hydrogen iodide [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.231988,
+        -0.138301,
+        -0.470802,
+        -0.0212351,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.419989,
+        -0.344954,
+        -0.859537,
+        0.0477403,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        0.00286688,
+        0.00703988,
+        0.000000,
+        0.00346557,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['I'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_H_NO3_JESS(T, P):
+    """c-a: hydrogen nitrate [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.116523,
+        -0.0848453,
+        -0.216476,
+        -0.0109287,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.351089,
+        -0.830710,
+        -2.43129,
+        0.0206574,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        -0.00531372,
+        -0.0289539,
+        -0.123911,
+        0.00299856,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['NO3'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_Br_JESS(T, P):
+    """c-a: potassium bromide [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.0547434,
+        -0.420409,
+        -1.13677,
+        0.00766319,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.238709,
+        -0.160445,
+        -0.235802,
+        0.0172136,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        -0.00145317,
+        0.0658735,
+        0.185412,
+        -0.000339080,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['Br'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_Cl_JESS(T, P):
+    """c-a: potassium chloride [JESS]."""
+    # Coefficients obtained online [2019-08-08]
+    b0 = JESS_eq(T, P, [
+        0.0478024,
+        -0.359514,
+        -1.00809,
+        0.0104416,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.220310,
+        -0.158289,
+        -0.228114,
+        0.0198966,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        -0.000751880,
+        0.0516663,
+        0.149612,
+        -0.000853398,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['Cl'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_I_JESS(T, P):
+    """c-a: potassium iodide [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.0706420,
+        -0.176246,
+        -0.291178,
+        0.0103160,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.279022,
+        -1.11921,
+        -3.31506,
+        -0.0125590,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        -0.00335865,
+        0.000000,
+        -0.0301254,
+        -0.00160355,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['I'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_NO3_JESS(T, P):
+    """c-a: potassium nitrate [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        -0.0763632,
+        -0.582629,
+        -1.49134,
+        -0.000422651,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.0435708,
+        -1.90996,
+        -4.95256,
+        0.0795007,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        0.00526553,
+        0.101479,
+        0.274296,
+        0.00254839,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['NO3'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_OH_JESS(T, P):
+    """c-a: potassium hydroxide [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.153478,
+        -0.519124,
+        -1.69587,
+        0.0274921,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.184252,
+        0.107673,
+        0.539154,
+        0.000813086,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        -0.000479227,
+        0.0899943,
+        0.295729,
+        -0.00264638,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['OH'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Li_Br_JESS(T, P):
+    """c-a: lithium bromide [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.173865,
+        0.174090,
+        0.523963,
+        0.00576938,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.287573,
+        -0.908258,
+        -2.72816,
+        -0.0110614,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        0.00505045,
+        -0.0474007,
+        -0.165446,
+        -0.00114107,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Li']*i2c['Br'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Li_Cl_JESS(T, P):
+    """c-a: lithium chloride [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.148491,
+        0.0993795,
+        0.288338,
+        0.00616159,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.305863,
+        -0.534953,
+        -1.57812,
+        0.00327985,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        0.00363693,
+        -0.0309516,
+        -0.118649,
+        -0.000747312,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Li']*i2c['Cl'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Li_ClO4_JESS(T, P):
+    """c-a: lithium perchlorate [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.194332,
+        0.0519232,
+        0.179439,
+        -0.000735779,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.435514,
+        -0.694923,
+        -2.09437,
+        0.00524685,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        0.00160986,
+        -0.0229881,
+        -0.0977900,
+        0.000703517,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Li']*i2c['ClO4'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Li_I_JESS(T, P):
+    """c-a: lithium iodide [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.176338,
+        0.000000,
+        -0.129076,
+        -0.00291167,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.523319,
+        0.0858259,
+        0.810061,
+        -0.000530723,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        0.0109604,
+        -0.0457470,
+        -0.125706,
+        0.000223867,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Li']*i2c['I'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Li_NO3_JESS(T, P):
+    """c-a: lithium nitrate [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.140963,
+        -0.285745,
+        -0.959602,
+        -0.00269645,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.286879,
+        0.763311,
+        2.87993,
+        0.0225144,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        -0.00543304,
+        0.00233974,
+        0.000000,
+        0.000892616,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Li']*i2c['NO3'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Li_OH_JESS(T, P):
+    """c-a: lithium hydroxide [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.0544861,
+        -0.245358,
+        -0.865967,
+        0.00588145,
+    ])
+    b1 = JESS_eq(T, P, [
+        -0.139320,
+        -0.725360,
+        -2.44668,
+        0.0583334,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        -0.00433424,
+        0.0208725,
+        0.0579693,
+        0.00152371,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Li']*i2c['OH'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_Br_JESS(T, P):
+    """c-a: sodium bromide [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.0987329,
+        -0.428710,
+        -1.19150,
+        0.00937076,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.285551,
+        -0.452514,
+        -1.24784,
+        0.000698698,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        0.000736067,
+        0.0467849,
+        0.124757,
+        -0.00113162,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['Br'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 def bC_Na_Cl_JESS(T, P):
     """c-a: sodium chloride [JESS]."""
@@ -9402,29 +9911,119 @@ def bC_Na_Cl_JESS(T, P):
     valid = T == 298.15 # unknown validity
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
-def bC_K_Cl_JESS(T, P):
-    """c-a: potassium chloride [JESS]."""
-    # Coefficients obtained online [2019-08-08]
+def bC_Na_ClO4_JESS(T, P):
+    """c-a: sodium perchlorate [JESS]."""
+    # Coefficients obtained online [2019-08-09]
     b0 = JESS_eq(T, P, [
-        0.0478024,
-        -0.359514,
-        -1.00809,
-        0.0104416,
+        0.0557192,
+        -0.519285,
+        -1.35911,
+        0.00925914,
     ])
     b1 = JESS_eq(T, P, [
-        0.220310,
-        -0.158289,
-        -0.228114,
-        0.0198966,
+        0.280349,
+        -1.02206,
+        -2.73189,
+        0.0158837,
     ])
     b2 = 0
     Cphi = JESS_eq(T, P, [
-        -0.000751880,
-        0.0516663,
-        0.149612,
-        -0.000853398,
+        -0.00126494,
+        0.0944381,
+        0.269364,
+        -0.000962511,
     ])
-    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['Cl'])))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['ClO4'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_I_JESS(T, P):
+    """c-a: sodium iodide [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.124139,
+        -0.149852,
+        -0.225275,
+        0.00691965,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.317353,
+        -1.47625,
+        -4.67803,
+        -0.0109580,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        0.000609691,
+        -0.0485681,
+        -0.197132,
+        -0.000968575,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['I'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_NO3_JESS(T, P):
+    """c-a: sodium nitrate [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.00500042,
+        -0.708908,
+        -1.99654,
+        0.00501474,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.200360,
+        -0.879277,
+        -2.23652,
+        0.0625764,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        -0.000347888,
+        0.153367,
+        0.461828,
+        0.000540176,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['NO3'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_OH_JESS(T, P):
+    """c-a: sodium hydroxide [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.0857078,
+        -0.618667,
+        -1.90371,
+        0.0278606,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.276706,
+        -0.443782,
+        -1.30232,
+        0.0242386,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        0.00418666,
+        0.0982562,
+        0.285252,
+        -0.00224765,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['OH'])))
     C1 = 0
     alph1 = 2
     alph2 = -9

@@ -1,17 +1,10 @@
-from copy import deepcopy
-import numpy as np
+from matplotlib import pyplot as plt
 import pytzer as pz
 
-itype = 'bC'
-ions = np.array(['Sr', 'Cl'])
-tempK = 298.15
-pres = 10.1325
-prmfuncs = pz.meta.getprmfuncs()
-ifuncs = pz.meta.getifuncs(prmfuncs, itype, ions)
-ivals = pz.meta.evalifuncs(ifuncs, tempK, pres)
-mols = np.array([[3.0], [3.0]])
-prmlib = deepcopy(pz.libraries.MIAMI)
-prmlib.bC['Na-Cl'] = pz.parameters.bC_Na_Cl_JESS
-prmlib.bC['K-Cl'] = pz.parameters.bC_K_Cl_JESS
-aw = pz.model.aw(mols, ions, tempK, pres, prmlib=prmlib)
-osms = pz.meta.plotifuncs(prmfuncs, itype, ions, tempK, pres, prmlib)
+ele = 'NaCl'
+varout = 'osm'
+
+fig, ax = plt.subplots(1, 3)
+pz.plot.bC_tempK(ax[0], 0.7, ele, 273.15, 323.15, 10.10325, varout=varout)
+pz.plot.bC_pres(ax[1], 0.7, ele, 298.15, 0., 6000., varout=varout)
+pz.plot.bC_tot(ax[2], 1e-10, 6.25, ele, 298.15, 0., varout=varout)
