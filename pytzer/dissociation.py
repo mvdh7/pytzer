@@ -67,3 +67,14 @@ def Mg_CW91(tempK, pres):
     log10kMg = 3.87 - 501.5/tempK
     lnkMg = log10kMg*log(10)
     return lnkMg
+
+def MP98_eq23(tempK, A, B, C, D):
+    return A + B/tempK + C*log(tempK) + D*tempK
+
+def H2CO3_MP98(tempK, pres):
+    """H2CO3 dissociation [MP98 following M79]."""
+    return MP98_eq23(tempK, 290.9097, -14554.21, -45.0575, 0)
+
+def HCO3_MP98(tempK, pres):
+    """HCO3 dissociation [MP98 following M79]."""
+    return MP98_eq23(tempK, 207.6548, -11843.79, -33.6485, 0)

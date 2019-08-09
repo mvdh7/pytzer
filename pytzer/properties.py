@@ -223,6 +223,7 @@ _ele2ions = {
 
 # Define electrolyte to ions conversion dict for equilibria
 _eq2ions = {
+    't_H2CO3': ('CO2', 'HCO3', 'CO3'),
     't_HSO4': ('HSO4', 'SO4'),
     't_Mg': ('Mg', 'MgOH'),
     't_trisH': ('trisH', 'tris'),
