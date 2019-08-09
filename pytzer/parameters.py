@@ -6488,8 +6488,8 @@ def bC_Mg_BOH4_SRM87(T, P):
     ])
     C0 = 0
     C1 = 0
-    alph1 = 2
-    alph2 = -9
+    alph1 = 1.4
+    alph2 = 6
     omega = -9
     valid = logical_and(T >= 278.15, T <= 528.15)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
@@ -6513,8 +6513,8 @@ def bC_Ca_BOH4_SRM87(T, P):
     ])
     C0 = 0
     C1 = 0
-    alph1 = 2
-    alph2 = -9
+    alph1 = 1.4
+    alph2 = 6
     omega = -9
     valid = logical_and(T >= 278.15, T <= 528.15)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid

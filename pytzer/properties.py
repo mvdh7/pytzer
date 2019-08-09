@@ -179,6 +179,7 @@ _ele2ions = {
     'HClO4': (('H', 'ClO4'), (1, 1)),
     'HI': (('H', 'I'), (1, 1)),
     'HNO3': (('H', 'NO3'), (1, 1)),
+    'KB(OH)4': (('K', 'BOH4'), (1, 1)),
     'K2CO3': (('K', 'CO3'), (2, 1)),
     'K2SO4': (('K', 'SO4'), (2, 1)),
     'KBr': (('K', 'Br'), (1, 1)),
@@ -201,6 +202,7 @@ _ele2ions = {
     'MgSO4': (('Mg', 'SO4'), (1, 1)),
     'Na2S2O3': (('Na', 'S2O3'), (2, 1)),
     'Na2SO4': (('Na', 'SO4'), (2, 1)),
+    'NaB(OH)4': (('Na', 'BOH4'), (1, 1)),
     'NaBr': (('Na', 'Br'), (1, 1)),
     'NaCl': (('Na', 'Cl'), (1, 1)),
     'NaClO4': (('Na', 'ClO4'), (1, 1)),
@@ -227,6 +229,7 @@ _eq2ions = {
     't_HSO4': ('HSO4', 'SO4'),
     't_Mg': ('Mg', 'MgOH'),
     't_trisH': ('trisH', 'tris'),
+    't_BOH3': ('BOH3', 'BOH4'),
 }
 
 def charges(ions):
@@ -245,11 +248,14 @@ def charges(ions):
 
 def getallions(eles, fixions):
     """Get all ions given list of electrolytes for equilibria."""
-    allions = concatenate([
-        fixions,
-        concatenate([_eq2ions[ele] for ele in eles]),
-        ['H', 'OH'],
-    ])
+    if len(eles) == 0:
+        allions = concatenate([fixions, ['H', 'OH']])
+    else:
+        allions = concatenate([
+            fixions,
+            concatenate([_eq2ions[ele] for ele in eles]),
+            ['H', 'OH'],
+        ])
     if len(unique(allions)) < len(allions):
         allions = list(allions)
         allions.reverse()

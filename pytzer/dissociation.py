@@ -68,6 +68,12 @@ def Mg_CW91(tempK, pres):
     lnkMg = log10kMg*log(10)
     return lnkMg
 
+def Mg_MP98(tempK, pres):
+    """MgOH+ formation following MP98."""
+    log10kMg = 3.87 - 501.6/tempK
+    lnkMg = log10kMg*log(10)
+    return lnkMg
+
 def MP98_eq23(tempK, A, B, C, D):
     return A + B/tempK + C*log(tempK) + D*tempK
 
@@ -78,3 +84,7 @@ def H2CO3_MP98(tempK, pres):
 def HCO3_MP98(tempK, pres):
     """HCO3 dissociation [MP98 following M79]."""
     return MP98_eq23(tempK, 207.6548, -11843.79, -33.6485, 0)
+
+def BOH3_M79(tempK, pres):
+    """Boric acid dissociation [MP98 following M79]."""
+    return MP98_eq23(tempK, 148.0248, -8966.901, -24.4344, 0)

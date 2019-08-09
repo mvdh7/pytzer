@@ -1,7 +1,7 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 from .. import parameters as prm
-from .. import debyehueckel, unsymmetrical
+from .. import debyehueckel, dissociation, unsymmetrical
 name = 'MIAMI'
 dh = {'Aosm': debyehueckel.Aosm_M88}
 jfunc = unsymmetrical.Harvie
@@ -261,3 +261,11 @@ zeta = { # all from Table A12
     'NH3-Ca-Cl': prm.zeta_NH3_Ca_Cl_CB89,
     'H3PO4-Na-Cl': prm.zeta_H3PO4_Na_Cl_MP98, # PS76 don't have this term...
 } # end of zeta dict
+lnk = {
+    'BOH3': dissociation.BOH3_M79,
+    'Mg': dissociation.Mg_MP98,
+    'H2O': dissociation.H2O_M79,
+    'HSO4': dissociation.HSO4_CRP94,
+    'H2CO3': dissociation.H2CO3_MP98,
+    'HCO3': dissociation.HCO3_MP98,
+} # end of lnks dict
