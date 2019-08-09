@@ -2,7 +2,7 @@ from autograd import numpy as np
 from matplotlib import pyplot as plt
 import pytzer as pz
 
-ifuncs = pz.meta.getifuncs('bC', ['Ca', 'BOH4'])
+ifuncs = pz.meta.getifuncs('bC', ['Mg', 'HCO3'])
 ivals = pz.meta.evalifuncs(ifuncs, 298.15, 10.10325)
 
 ##%% Beta and C coefficients

@@ -1,7 +1,11 @@
-from copy import deepcopy
+#from copy import deepcopy
+from sys import path
+if '../calkulate' not in path:
+    path.append('../calkulate')
+import calkulate as calk
 import pytzer as pz
 import numpy as np
-from scipy.optimize import minimize
+#from scipy.optimize import minimize
 
 #mols, ions, tempK, pres, prmlib, Gex_nRT, osm, aw, acfs = \
 #    pz.blackbox('testfiles/MilleroStandardEquilibrated.csv')
@@ -9,9 +13,32 @@ from scipy.optimize import minimize
 filename = 'testfiles/MilleroStandard.csv'
 #filename = 'testfiles/trisASWequilibrium.csv'
 allmols, allions, tempK, pres, prmlib, Gex_nRT, osm, aw, acfs, eqstates \
-    = pz.blackbox_equilibrate(filename, prmlib=pz.libraries.MIAMI)
+    = pz.blackbox_equilibrate(filename, prmlib=pz.libraries.Seawater)
 pH = -np.log10(allmols[allions == 'H']).ravel()
 
+#%% Calculate stoichiometric K*s & compare
+mH = allmols[allions == 'H'][0][0]
+mHSO4 = allmols[allions == 'HSO4'][0][0]
+mSO4 = allmols[allions == 'SO4'][0][0]
+mHT = mH + mHSO4
+mOH = allmols[allions == 'OH'][0][0]
+mHCO3 = allmols[allions == 'HCO3'][0][0]
+mCO3 = allmols[allions == 'CO3'][0][0]
+mCO2 = allmols[allions == 'CO2'][0][0]
+mBOH4 = allmols[allions == 'BOH4'][0][0]
+mBOH3 = allmols[allions == 'BOH3'][0][0]
+pKstarH2O_pz = -np.log10(mHT*mOH)
+pKstarH2O = -np.log10(calk.dissociation.kH2O_T_DSC07(298.15, 35))
+pKstarH2CO3_pz = -np.log10(mHCO3*mHT/mCO2)
+pKstarH2CO3 = -np.log10(calk.dissociation.ksH2CO3_T_LDK00(298.15, 35)[0])
+pKstarHCO3_pz = -np.log10(mCO3*mHT/mHCO3)
+pKstarHCO3 = -np.log10(calk.dissociation.ksH2CO3_T_LDK00(298.15, 35)[1])
+pKstarBOH3_pz = -np.log10(mBOH4*mHT/mBOH3)
+pKstarBOH3 = -np.log10(calk.dissociation.kBOH3_T_D90a(298.15, 35))
+pKstarHSO4_pz = -np.log10(mSO4*mH/mHSO4)
+pKstarHSO4 = -np.log10(calk.dissociation.kHSO4_F_D90b(298.15, 35))
+
+#%%
 #tots, fixmols, eles, fixions, tempK, pres = pz.io.gettots(filename)
 #allions = pz.properties.getallions(eles, fixions)
 #prmlib = deepcopy(pz.libraries.MIAMI)
