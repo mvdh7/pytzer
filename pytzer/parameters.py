@@ -9363,3 +9363,101 @@ def mu_tris_tris_tris_MarChemSpec25(T, P):
     mu = 0.0009529
     valid = T == 298.15
     return mu, valid
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ JESS ~~~~~
+# Parameters obtained from http://jess.murdoch.edu.au/vewbel.shtml
+def JESS_eq(T, P, j):
+    Tr = 298.15
+    # pressure multiplier obtained by trial and error
+    # temperature multipliers and terms very uncertain
+    return j[0] + j[1]/T + j[2]*log(T/Tr) + j[3]*P*0.0001
+
+def bC_Na_Cl_JESS(T, P):
+    """c-a: sodium chloride [JESS]."""
+    # Coefficients obtained online [2019-08-08]
+    b0 = JESS_eq(T, P, [
+        0.0779802,
+        -0.429500,
+        -1.21510,
+        0.0108697,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.269983,
+        -0.379473,
+        -1.03405,
+        0.00877337,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        0.000918109,
+        0.0518882,
+        0.139812,
+        -0.000952450,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['Cl'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_Cl_JESS(T, P):
+    """c-a: potassium chloride [JESS]."""
+    # Coefficients obtained online [2019-08-08]
+    b0 = JESS_eq(T, P, [
+        0.0478024,
+        -0.359514,
+        -1.00809,
+        0.0104416,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.220310,
+        -0.158289,
+        -0.228114,
+        0.0198966,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        -0.000751880,
+        0.0516663,
+        0.149612,
+        -0.000853398,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['Cl'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+# def bC___JESS(T, P):
+#     """c-a:  [JESS]."""
+#     # Coefficients obtained online [2019-08-08]
+#     b0 = JESS_eq(T, P, [
+#         ,
+#         ,
+#         ,
+#         ,
+#     ])
+#     b1 = JESS_eq(T, P, [
+#         ,
+#         ,
+#         ,
+#         ,
+#     ])
+#     b2 = 0
+#     Cphi = JESS_eq(T, P, [
+#         ,
+#         ,
+#         ,
+#         ,
+#     ])
+#     C0 = Cphi/(2*sqrt(np_abs(i2c['']*i2c[''])))
+#     C1 = 0
+#     alph1 = 2
+#     alph2 = -9
+#     omega = -9
+#     valid = T == 298.15 # unknown validity
+#     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid

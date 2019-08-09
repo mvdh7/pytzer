@@ -38,7 +38,7 @@ for r in range(len(isonew.index)):
             irc['pres'] = float_([isonew.pres[r]])
 
 #%% Get all data for a particular electrolyte
-testele = 'KCl'
+testele = 'NaCl'
 testdict = {irow: isodict[irow] for irow in isodict.keys()
     if testele in isodict[irow].keys()}
 testions = unique(concatenate([testdict[irow][icell]['ions']
