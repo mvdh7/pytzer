@@ -5,9 +5,17 @@ from .. import debyehueckel, dissociation
 # Start from MIAMI plus MarChemSpec equilibria and mu
 from . import MarChemSpec, MIAMI
 name = 'Seawater'
-dh = {'Aosm': debyehueckel.Aosm_AW90}
+# Copy MIAMI/MarChemSpec:
 jfunc = MIAMI.jfunc
 bC = MIAMI.bC
+theta = MIAMI.theta
+psi = MIAMI.psi
+lambd = MIAMI.lambd
+zeta = MIAMI.zeta
+mu = MarChemSpec.mu
+lnk = MIAMI.lnk
+# Overwrite MIAMI/MarChemSpec:
+dh = {'Aosm': debyehueckel.Aosm_AW90}
 bC['Na-Cl'] = prm.bC_Na_Cl_A92ii
 bC['K-Cl'] = prm.bC_K_Cl_ZD17
 bC['Na-HCO3'] = prm.bC_Na_HCO3_HM93
@@ -24,9 +32,4 @@ bC['K-Br'] = prm.bC_K_Br_JESS
 bC['K-Cl'] = prm.bC_K_Cl_JESS
 bC['K-OH'] = prm.bC_K_OH_JESS
 bC['Na-Br'] = prm.bC_Na_Br_JESS
-theta = MIAMI.theta
-psi = MIAMI.psi
-lambd = MIAMI.lambd
-zeta = MIAMI.zeta
-mu = MarChemSpec.mu
-lnk = MIAMI.lnk
+# Extend MIAMI/MarChemSpec:
