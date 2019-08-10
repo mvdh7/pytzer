@@ -61,7 +61,7 @@ In alphanumerical order of the source codes:
 <td id="HPR93"><code>HPR93</code></td>
 <td>Hovey, J. K., Pitzer, K. S., and Rard, J. A. (1993). Thermodynamics of Na<sub>2</sub>SO<sub>4</sub>(aq) at temperatures <i>T</i> from 273 K to 373 K and of {(1-<i>y</i>)H<sub>2</sub>SO<sub>4</sub>+<i>y</i>Na<sub>2</sub>SO<sub>4</sub>}(aq) at <i>T</i> = 298.15 K. <i>J. Chem. Thermodyn.</i> 25(1), 173–192. <a href="https://doi.org/10.1006/jcht.1993.1016">doi:10.1006/jcht.1993.1016</a>.</td></tr><tr>
 
-<td id="JESS"<code>JESS</code></td>
+<td id="JESS"><code>JESS</code></td>
 <td>May, P. M. (2015). JESS at thirty: Strengths, weaknesses and future needs in the modelling of chemical speciation. <i>Appl. Geochem.</i> 55, 3–16. <a href="https://doi.org/10.1016/j.apgeochem.2014.11.023">doi:10.1016/j.apgeochem.2014.11.023</a>.</td></tr><tr>
 
 <td id="M79"><code>M79</code></td>
