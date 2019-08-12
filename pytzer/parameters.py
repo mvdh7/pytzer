@@ -4,8 +4,6 @@
 from autograd.numpy import array, float_, log, logical_and, sqrt
 from autograd.numpy import abs as np_abs
 from .constants import Tzero
-from .tables import (P91_Ch3_T12, P91_Ch3_T13_I, P91_Ch3_T13_II,
-    PM73_TableI, PM73_TableVI, PM73_TableVIII, PM73_TableIX)
 from . import properties
 from .properties import _ion2charge as i2c
 # Note that variable T in this module is equivalent to tempK elsewhere (in K),
@@ -55,28 +53,6 @@ def mu_none(T, P):
     return mu, valid
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Pitzer & Margoya (1973) ~~~~~
-def bC_PM73(T, iset):
-    # Experimental function - not production-ready
-    zM, zX = properties.charges(array(iset.split('-')))[0]
-    PM73_Tables = {
-        -1: PM73_TableI,
-        -2: PM73_TableVI,
-        -3: PM73_TableVIII,
-        -4: PM73_TableIX,
-        -5: PM73_TableIX,
-    }
-    b0 = PM73_Tables[zM*zX][iset]['b0']
-    b1 = PM73_Tables[zM*zX][iset]['b1']
-    b2 = 0
-    Cphi = PM73_Tables[zM*zX][iset]['Cphi']
-    C0 = Cphi/(2*sqrt(np_abs(i2c['M']*i2c['X'])))
-    C1 = 0
-    alph1 = 2
-    alph2 = -9
-    omega = -9
-    valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
 def bC_H_Cl_PM73(T, P):
     """"c-a: hydrogen chloride [PM73]."""
     # Coefficients from PM73 Table I
@@ -5990,10 +5966,10 @@ PP86ii_Tr = 298.15
 def PP86ii_eq28(T, q):
     """PP86ii equation 28."""
     Tr = PP86ii_Tr
-    return ((T**2 - Tr**2) * q[0] / 2 \
-          + (T**3 - Tr**3) * q[1] / 3 \
-          + (T**4 - Tr**4) * q[2] / 4 \
-          + (T**5 - Tr**5) * q[3] / 5 \
+    return ((T**2 - Tr**2) * q[0] / 2
+          + (T**3 - Tr**3) * q[1] / 3
+          + (T**4 - Tr**4) * q[2] / 4
+          + (T**5 - Tr**5) * q[3] / 5
           +         Tr**2  * q[4]) / T**2
 
 def PP86ii_eq29(T, q):
@@ -6010,12 +5986,12 @@ def PP86ii_eq29(T, q):
     t = T / Tr
     # Original fourth line was:
     #  + q[3] * (T**4/20 + Tr**5/(5*T) - Tr**4/4)
-    return q[0] * (T   / 2 + Tr**2/(2*T) - Tr     ) \
-         + q[1] * (T**2/ 6 + Tr**3/(3*T) - Tr**2/2) \
-         + q[2] * (T**3/12 + Tr**4/(4*T) - Tr**3/3) \
-         + q[3] * (t**5 + 4 - 5*t) * Tr**5 / (20 * T) \
-         + q[4] * (Tr - Tr**2/T) \
-         + q[5]
+    return (q[0] * (T   / 2 + Tr**2/(2*T) - Tr)
+          + q[1] * (T**2/ 6 + Tr**3/(3*T) - Tr**2/2)
+          + q[2] * (T**3/12 + Tr**4/(4*T) - Tr**3/3)
+          + q[3] * (t**5 + 4 - 5*t) * Tr**5 / (20 * T)
+          + q[4] * (Tr - Tr**2/T) \
+          + q[5])
 
 def bC_Mg_SO4_PP86ii(T, P):
     """c-a: magnesium sulfate [PP86ii]."""
@@ -6061,13 +6037,13 @@ def HM86_eq8(T, a):
     """HM86 equation 8."""
     TR = 298.15
     # Typo in a[5] term in HM86 has been corrected here
-    return a[0] \
-         + a[1] * (TR - TR**2/T) \
-         + a[2] * (T**2 + 2*TR**3/T -3*TR**2) \
-         + a[3] * (T + TR**2/T - 2*TR) \
-         + a[4] * (log(T/TR) + TR/T - 1) \
-         + a[5] * (1/(T - 263) + (263*T - TR**2) / (T*(TR - 263)**2)) \
-         + a[6] * (1/(680 - T) + (TR**2 - 680*T) / (T*(680 - TR)**2))
+    return (a[0]
+          + a[1] * (TR - TR**2/T)
+          + a[2] * (T**2 + 2*TR**3/T -3*TR**2)
+          + a[3] * (T + TR**2/T - 2*TR)
+          + a[4] * (log(T/TR) + TR/T - 1)
+          + a[5] * (1/(T - 263) + (263*T - TR**2) / (T*(TR - 263)**2))
+          + a[6] * (1/(680 - T) + (TR**2 - 680*T) / (T*(680 - TR)**2)))
 
 def bC_K_SO4_HM86(T, P):
     """c-a: potassium sulfate [HM86]."""
@@ -9150,8 +9126,8 @@ def bC_Ca_SO4_WM13(T, P):
     b0, b1, b2, C0, C1, alph1, alph2, omega, valid = bC_Ca_SO4_HMW84(T, P)
     # WM13 use temperature derivatives from P91
     # The b0 temperature correction in P91 is zero
-    b1 = b1 + (T - TR) * P91_Ch3_T13_II['Ca-SO4']['b1']
-    b2 = b2 + (T - TR) * P91_Ch3_T13_II['Ca-SO4']['b2']
+    b1 = b1 + (T - TR)*5.460e-2
+    b2 = b2 + (T - TR)*-5.16e-1
     # The C0 temperature correction in P91 is zero
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -9160,9 +9136,9 @@ def bC_Ca_HSO4_WM13(T, P):
     TR = 298.15
     b0, b1, b2, C0, C1, alph1, alph2, omega, valid = bC_Ca_HSO4_HMW84(T, P)
     # WM13 use temperature derivatives for Ca-ClO4 from P91, but with typos
-    b0 = b0 + (T - TR) * P91_Ch3_T13_I['Ca-ClO4']['b0']
-    b1 = b1 + (T - TR) * P91_Ch3_T13_I['Ca-ClO4']['b1']
-    C0 = C0 + (T - TR) * P91_Ch3_T13_I['Ca-ClO4']['C0']
+    b0 = b0 + (T - TR)*0.830e-3
+    b1 = b1 + (T - TR)*5.08e-3
+    C0 = C0 + (T - TR)*-1.090e-4
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 def bC_K_HSO4_WM13(T, P):
@@ -9170,8 +9146,8 @@ def bC_K_HSO4_WM13(T, P):
     TR = 298.15
     b0, b1, b2, C0, C1, alph1, alph2, omega, valid = bC_K_HSO4_HMW84(T, P)
     # WM13 use temperature derivatives for K-ClO4 from P91
-    b0 = b0 + (T - TR) * P91_Ch3_T12['K-ClO4']['b0']
-    b1 = b1 + (T - TR) * P91_Ch3_T12['K-ClO4']['b1']
+    b0 = b0 + (T - TR)*0.600e-4
+    b1 = b1 + (T - TR)*100.700e-4
     # The Cphi temperature correction in P91 is zero
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 

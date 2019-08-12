@@ -7,6 +7,7 @@ Version 0.4 remains in beta testing. The main change from version 0.3 is includi
 **Release date:** forthcoming
 
   * Module **potentials** added with functions to evaluate standard chemical potentials;
+  * Module **tables** eliminated;
   * Updated functions and parameter libraries noting that `['Cl', 'CO3']` gets sorted to `['CO3', 'Cl']`;
   * Added carbonic acid and boric acid equilibrium solving;
   * Fixed incorrect `alph1` values for all HMW 1:(>1) electrolytes;

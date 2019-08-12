@@ -29,7 +29,6 @@ from . import (
     plot,
     potentials,
     properties,
-    tables,
     teos10,
     unsymmetrical,
 )
@@ -49,7 +48,6 @@ __all__ = [
     'plot',
     'potentials',
     'properties',
-    'tables',
     'teos10',
     'unsymmetrical',
 ]
