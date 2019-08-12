@@ -57,18 +57,18 @@ def H2O_MF(tempK, pres):
     lnkH2O = log10kH2O*log(10)
     return lnkH2O
 
-def Mg_CW91_ln(tempK, pres):
+def MgOH_CW91_ln(tempK, pres):
     """MgOH+ formation following CW91 Eq. (244) [p392]."""
     return 8.9108 - 1155/tempK
 
-def Mg_CW91(tempK, pres):
+def MgOH_CW91(tempK, pres):
     """MgOH+ formation following CW91 in log10 and then converted."""
     # Matches Clegg's model [2019-07-02]
     log10kMg = 3.87 - 501.5/tempK
     lnkMg = log10kMg*log(10)
     return lnkMg
 
-def Mg_MP98(tempK, pres):
+def MgOH_MP98(tempK, pres):
     """MgOH+ formation following MP98."""
     log10kMg = 3.87 - 501.6/tempK
     lnkMg = log10kMg*log(10)

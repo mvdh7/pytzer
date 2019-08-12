@@ -28,11 +28,9 @@ def _varmols(eqstate, tots1, fixmols1, eles, fixions, fixcharges):
                     aHSO4 = _sig01(eqstate[q])
                     mHSO4 = tHSO4*aHSO4
                     mSO4 = tHSO4 - mHSO4
-                    zbHSO4 = -mHSO4 - 2*mSO4
                 else:
                     mHSO4 = 0.0
                     mSO4 = 0.0
-                    zbHSO4 = 0.0
                 q += 1
             elif ele == 't_Mg':
                 tMg = tots1[e]
@@ -40,11 +38,9 @@ def _varmols(eqstate, tots1, fixmols1, eles, fixions, fixcharges):
                     aMgOH = _sig01(eqstate[q])
                     mMg = tMg*aMgOH
                     mMgOH = tMg - mMg
-                    zbMg = 2*mMg + mMgOH
                 else:
                     mMg = 0.0
                     mMgOH = 0.0
-                    zbMg = 0.0
                 q += 1
             elif ele == 't_trisH':
                 ttrisH = tots1[e]
@@ -52,11 +48,9 @@ def _varmols(eqstate, tots1, fixmols1, eles, fixions, fixcharges):
                     atrisH = _sig01(eqstate[q])
                     mtrisH = ttrisH*atrisH
                     mtris = ttrisH - mtrisH
-                    zbtrisH = mtrisH
                 else:
                     mtrisH = 0.0
                     mtris = 0.0
-                    zbtrisH = 0.0
                 q += 1
             elif ele == 't_H2CO3':
                 tH2CO3 = tots1[e]
@@ -66,12 +60,10 @@ def _varmols(eqstate, tots1, fixmols1, eles, fixions, fixcharges):
                     mCO2 = tH2CO3*aH2CO3
                     mHCO3 = (tH2CO3 - mCO2)*aHCO3
                     mCO3 = tH2CO3 - mCO2 - mHCO3
-                    zbH2CO3 = -(mHCO3 + 2*mCO3)
                 else:
                     mCO2 = 0.0
                     mHCO3 = 0.0
                     mCO3 = 0.0
-                    zbH2CO3 = 0.0
                 q += 2
             elif ele == 't_BOH3':
                 tBOH3 = tots1[e]
@@ -79,50 +71,43 @@ def _varmols(eqstate, tots1, fixmols1, eles, fixions, fixcharges):
                     aBOH3 = _sig01(eqstate[q])
                     mBOH3 = tBOH3*aBOH3
                     mBOH4 = tBOH3 - mBOH3
-                    zbBOH3 = -mBOH4
                 else:
                     mBOH3 = 0.0
                     mBOH4 = 0.0
-                    zbBOH3 = 0.0
                 q += 1
         if 't_HSO4' not in eles:
             mHSO4 = 0.0
             mSO4 = 0.0
-            zbHSO4 = 0.0
         if 't_Mg' not in eles:
             mMg = 0.0
             mMgOH = 0.0
-            zbMg = 0.0
         if 't_trisH' not in eles:
             mtrisH = 0.0
             mtris = 0.0
-            zbtrisH = 0.0
         if 't_H2CO3' not in eles:
             mCO2 = 0.0
             mHCO3 = 0.0
             mCO3 = 0.0
-            zbH2CO3 = 0.0
         if 't_BOH3' not in eles:
             mBOH3 = 0.0
             mBOH4 = 0.0
-            zbBOH3 = 0.0
     else:
         mHSO4 = 0.0
         mSO4 = 0.0
-        zbHSO4 = 0.0
         mMg = 0.0
         mMgOH = 0.0
-        zbMg = 0.0
         mtrisH = 0.0
         mtris = 0.0
-        zbtrisH = 0.0
         mCO2 = 0.0
         mHCO3 = 0.0
         mCO3 = 0.0
-        zbH2CO3 = 0.0
         mBOH3 = 0.0
         mBOH4 = 0.0
-        zbBOH3 = 0.0
+    zbHSO4 = -mHSO4 - 2*mSO4
+    zbMg = 2*mMg + mMgOH
+    zbtrisH = mtrisH
+    zbH2CO3 = -(mHCO3 + 2*mCO3)
+    zbBOH3 = -mBOH4
     if len(fixcharges) == 0:
         zbfixed = 0.0
     else:
@@ -329,7 +314,7 @@ def _oosetup(eqstate_guess, tots, eles, fixions, tempK, pres, prmlib):
             lnks[q] = prmlib.lnk['HSO4'](tempK, pres)
             q += 1
         elif ele == 't_Mg':
-            lnks[q] = prmlib.lnk['Mg'](tempK, pres)
+            lnks[q] = prmlib.lnk['MgOH'](tempK, pres)
             q += 1
         elif ele == 't_trisH':
             lnks[q] = prmlib.lnk['trisH'](tempK, pres)

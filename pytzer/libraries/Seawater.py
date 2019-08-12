@@ -1,7 +1,7 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 from .. import parameters as prm
-from .. import debyehueckel, dissociation
+from .. import debyehueckel#, dissociation
 # Start from MIAMI plus MarChemSpec equilibria and mu
 from . import MarChemSpec, MIAMI
 name = 'Seawater'
