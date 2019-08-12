@@ -16,7 +16,111 @@ def _sig01(x):
     else:
         return 1/(1 + exp(-x))
 
-def _varmols(eqstate, tots1, fixmols1, eles, fixions, fixcharges):
+def _varmols(eqstate, tots1, fixmols1, eles, equilibria, fixions, fixcharges):
+    """Calculate variable molalities from solver targets."""
+    # Get total concentrations
+    for e, ele in enumerate(eles):
+        if ele == 't_Mg':
+            tMg = tots1[e]
+        elif ele == 't_HSO4':
+            tHSO4 = tots1[e]
+        elif ele == 't_trisH':
+            ttrisH = tots1[e]
+        elif ele == 't_H2CO3':
+            tH2CO3 = tots1[e]
+        elif ele == 't_BOH3':
+            tBOH3 = tots1[e]
+    # Loop manually through equilibria
+    eqindex = equilibria.index
+    if len(eles) > 0:
+        # Magnesium non-parasites
+        if 't_Mg' in eles:
+            if 'MgOH' in equilibria:
+                q = eqindex('MgOH')
+                aMgOH = _sig01(eqstate[q])
+                mMgOH = tMg*aMgOH
+            else:
+                mMgOH = 0
+            mMg = tMg - mMgOH
+        else:
+            mMgOH = 0
+            mMg = 0
+        # Bisulfate series
+        if 't_HSO4' in eles:
+            q = eqindex('HSO4')
+            aHSO4 = _sig01(eqstate[q])
+            mHSO4 = tHSO4*aHSO4
+            mSO4 = tHSO4 - mHSO4
+        else:
+            mHSO4 = 0
+            mSO4 = 0
+        # TrisH+ series
+        if 't_trisH' in eles:
+            q = eqindex('trisH')
+            atrisH = _sig01(eqstate[q])
+            mtrisH = ttrisH*atrisH
+            mtris = ttrisH - mtrisH
+        else:
+            mtrisH = 0
+            mtris = 0
+        # Carbonic acid series
+        if 't_H2CO3' in eles:
+            q = eqindex('H2CO3')
+            aH2CO3 = _sig01(eqstate[q])
+            q = eqindex('HCO3')
+            aHCO3 = _sig01(eqstate[q])
+            mCO2 = tH2CO3*aH2CO3
+            mHCO3 = (tH2CO3 - mCO2)*aHCO3
+            mCO3 = tH2CO3 - mCO2 - mHCO3
+            # Metal-carbonate parasites
+            if 't_Mg' in eles:
+                if 'MgCO3' in equilibria:
+                    q = eqindex('MgCO3')
+                    aMgCO3 = _sig01(eqstate[q])
+                    if mMg > mHCO3:
+                        mMgCO3 = aMgCO3*mHCO3
+                    else:
+                        mMgCO3 = aMgCO3*mMg
+                    mCO3 = mCO3 - mMgCO3
+                    mMg = mMg - mMgCO3
+                else:
+                    mMgCO3 = 0
+        else:
+            mCO2 = 0
+            mHCO3 = 0
+            mCO3 = 0
+            mMgCO3 = 0
+        # Boric acid series
+        if 't_BOH3' in eles:
+            q = eqindex('BOH3')
+            aBOH3 = _sig01(eqstate[q])
+            mBOH3 = tBOH3*aBOH3
+            mBOH4 = tBOH3 - mBOH3
+        else:
+            mBOH3 = 0
+            mBOH4 = 0
+    # Charge balances
+    zbHSO4 = -mHSO4 - 2*mSO4
+    zbMg = 2*mMg + mMgOH
+    zbtrisH = mtrisH
+    zbH2CO3 = -(mHCO3 + 2*mCO3)
+    zbBOH3 = -mBOH4
+    if len(fixcharges) == 0:
+        zbfixed = 0
+    else:
+        zbfixed = np_sum(fixmols1*fixcharges)
+    zbalance = zbfixed + zbHSO4 + zbMg + zbtrisH + zbH2CO3 + zbBOH3
+    if 'H2O' in equilibria:
+        q = eqindex('H2O')
+        dissociatedH2O = exp(-eqstate[q])
+    else:
+        dissociatedH2O = 0
+    mOH = (zbalance + sqrt(zbalance**2 + dissociatedH2O))/2
+    mH = mOH - zbalance
+    return (mH, mOH, mHSO4, mSO4, mMg, mMgOH, mtris, mtrisH, mCO2, mHCO3, mCO3,
+        mMgCO3, mBOH3, mBOH4)
+
+def _varmols_original(eqstate, tots1, fixmols1, eles, fixions, fixcharges):
     """Calculate variable molalities from solver targets."""
     # Seems long-winded, but it's necessary for Autograd
     q = 0
@@ -133,10 +237,10 @@ def _GibbsHSO4(mH, lnacfH, mSO4, lnacfSO4, mHSO4, lnacfHSO4, lnkHSO4):
     return (lnacfH + log(mH) + lnacfSO4 + log(mSO4) - lnacfHSO4 - log(mHSO4)
         - lnkHSO4)
 
-def _GibbsMg(mMg, lnacfMg, mMgOH, lnacfMgOH, mOH, lnacfOH, lnkMg):
+def _GibbsMgOH(mMg, lnacfMg, mMgOH, lnacfMgOH, mOH, lnacfOH, lnkMgOH):
     """Evaluate the Gibbs energy for the magnesium-MgOH+ equilibrium."""
     return (lnacfMg + log(mMg) + lnacfOH + log(mOH) - lnacfMgOH - log(mMgOH)
-        + lnkMg)
+        + lnkMgOH)
 
 def _GibbstrisH(mH, lnacfH, mtris, lnacftris, mtrisH, lnacftrisH, lnktrisH):
     """Evaluate the Gibbs energy for the tris-trisH+ equilibrium."""
@@ -159,11 +263,13 @@ def _GibbsBOH3(lnaw, lnacfBOH4, mBOH4, lnacfBOH3, mBOH3, lnacfH, mH, lnkBOH3):
         log(mBOH3) - lnaw - lnkBOH3)
 
 def _GibbsComponents(eqstate, tots1, fixmols1, eles, allions, fixions,
-        fixcharges, allmxs, lnks, ideal=False):
+        fixcharges, allmxs, lnks, equilibria, ideal=False):
     """Evaluate the Gibbs energy for each component equilibrium."""
-    (mH, mOH, mHSO4, mSO4, mMg, mMgOH, mtris, mtrisH, mCO2, mHCO3, mCO3, mBOH3,
-        mBOH4) = _varmols(eqstate, tots1, fixmols1, eles, fixions, fixcharges)
+    (mH, mOH, mHSO4, mSO4, mMg, mMgOH, mtris, mtrisH, mCO2, mHCO3, mCO3,
+        mMgCO3, mBOH3, mBOH4) = _varmols(eqstate, tots1, fixmols1, eles,
+        equilibria, fixions, fixcharges)
     allmols = deepcopy(fixmols1)
+#    equilibria = allmxs[-1]
     # The order in which molality values are added to allmols within each
     # equilibrium in the following statements MUST comply with the order in
     # which the corresponding ions were added to allions by the function
@@ -177,7 +283,7 @@ def _GibbsComponents(eqstate, tots1, fixmols1, eles, allions, fixions,
             q += 1
         elif ele == 't_Mg':
             allmols = [*allmols, mMg, mMgOH]
-            lnkMg = lnks[q]
+            lnkMgOH = lnks[q]
             q += 1
         elif ele == 't_trisH':
             allmols = [*allmols, mtrisH, mtris]
@@ -239,7 +345,8 @@ def _GibbsComponents(eqstate, tots1, fixmols1, eles, allions, fixions,
         else:
             gHSO4 = 0.0
         if tots1[eles == 't_Mg'] > 0:
-            gMg = _GibbsMg(mMg, lnacfMg, mMgOH, lnacfMgOH, mOH, lnacfOH, lnkMg)
+            gMg = _GibbsMgOH(mMg, lnacfMg, mMgOH, lnacfMgOH, mOH, lnacfOH,
+                lnkMgOH)
         else:
             gMg = 0.0
         if tots1[eles == 't_trisH'] > 0:
@@ -270,22 +377,22 @@ def _GibbsComponents(eqstate, tots1, fixmols1, eles, allions, fixions,
     return gH2O, gHSO4, gMg, gtrisH, gH2CO3, gHCO3, gBOH3
 
 def _Gibbs(eqstate, tots1, fixmols1, eles, allions, fixions, fixcharges,
-        allmxs, lnks1, ideal=False):
+        allmxs, lnks1, equilibria, ideal=False):
     """Evaluate the total Gibbs energy to be minimised for all equilibria."""
     gH2O, gHSO4, gMg, gtrisH, gH2CO3, gHCO3, gBOH3 = _GibbsComponents(eqstate,
         tots1, fixmols1, eles, allions, fixions, fixcharges, allmxs, lnks1,
-        ideal)
+        equilibria, ideal)
     return (gH2O**2 + gHSO4**2 + gMg**2 + gtrisH**2 + gH2CO3**2 + gHCO3**2 +
         gBOH3**2)
 
 _GibbsGrad = egrad(_Gibbs)
 
 def solve(eqstate_guess, tots1, fixmols1, eles, allions, fixions, allmxs,
-        lnks1, ideal=False):
+        lnks1, equilibria, ideal=False):
     """Solve for the solution's equilibrium state."""
     fixcharges = transpose(properties.charges(fixions)[0])
     Gargs = (tots1, fixmols1, eles, allions, fixions, fixcharges, allmxs,
-        lnks1, ideal)
+        lnks1, equilibria, ideal)
     eqstate = minimize(
         lambda eqstate: _Gibbs(eqstate, *Gargs),
         eqstate_guess,
@@ -295,18 +402,101 @@ def solve(eqstate_guess, tots1, fixmols1, eles, allions, fixions, allmxs,
     return eqstate
 
 def solvequick(eqstate_guess, tots1, fixmols1, eles, allions, fixions, allmxs,
-        lnks1):
+        lnks1, equilibria):
     """Solve ideal case first to speed up computation."""
-    Sargs = (tots1, fixmols1, eles, allions, fixions, allmxs, lnks1)
+    Sargs = (tots1, fixmols1, eles, allions, fixions, allmxs, lnks1,
+        equilibria)
     eqstate_ideal = solve(eqstate_guess, *Sargs, ideal=True)['x']
     eqstate = solve(eqstate_ideal, *Sargs, ideal=False)
     return eqstate
 
-def _oosetup(eqstate_guess, tots, eles, fixions, tempK, pres, prmlib):
-    """Prepare for solveloop and solvepool."""
-    eqstates = full((len(tempK), len(eqstate_guess)), 0.0)
-    allions = properties.getallions(eles, fixions)
-    allmols = full((len(tempK), len(allions)), 0.0)
+# Within _parasites, dict LHS is the lnks function, RHS is the ions to be added
+_parasites = {
+    't_Mg': {
+        'always': ('Mg',),
+        'MgOH': ('MgOH',),
+        'MgF': ('MgF',),
+        'MgCO3': ('MgCO3',),
+    },
+    't_Ca': {
+        'always': ('Ca',),
+        'CaCO3': ('CaCO3',),
+    },
+}
+# Within _serieses, all the ions are always added
+_serieses = {
+    't_H2CO3': {
+        'ions': ('CO2', 'HCO3', 'CO3',),
+        'lnks': ('H2CO3', 'HCO3',),
+    },
+    't_BOH3': {
+        'ions': ('BOH3', 'BOH4',),
+        'lnks': ('BOH3',),
+    },
+    't_HSO4': {
+        'ions': ('HSO4', 'SO4',),
+        'lnks': ('HSO4',),
+    },
+    't_trisH': {
+        'ions': ('trisH', 'tris',),
+        'lnks': ('trisH',),
+    },
+}
+
+def get_eqions(eles, prmlib):
+    """Get list of equilibrating ions."""
+    eqions = []
+    for ele in eles:
+        if ele in _parasites:
+            eqions.extend(_parasites[ele]['always'])
+            for parasite in _parasites[ele]:
+                if parasite in prmlib.lnk:
+                    eqions.extend(_parasites[ele][parasite])
+        elif ele in _serieses:
+            eqions.extend(_serieses[ele]['ions'])
+    eqions.extend(['H', 'OH'])
+    return eqions
+
+def get_equilibria(eles, tempK1, pres1, prmlib):
+    """Generate eqstate_guess and lists of ln(K) values and equilibria."""
+    q = 0
+    equilibria = []
+    lnks = []
+    for ele in eles:
+        if ele in _parasites:
+            for parasite in _parasites[ele]:
+                if parasite in prmlib.lnk:
+                    q += 1
+                    equilibria.append(parasite)
+                    lnks.append(prmlib.lnk[parasite](tempK1, pres1))
+    for ele in eles:
+        if ele in _serieses:
+            q += len(_serieses[ele]['lnks'])
+            for series in _serieses[ele]['lnks']:
+                equilibria.append(series)
+                lnks.append(prmlib.lnk[series](tempK1, pres1))
+    eqstate_guess = [0.0 for _ in range(q)]
+    if 'H2O' in prmlib.lnk:
+        equilibria.append('H2O')
+        lnks.append(prmlib.lnk['H2O'](tempK1, pres1))
+        eqstate_guess.append(30.0)
+    return eqstate_guess, lnks, equilibria
+
+def countlnks(eles, prmlib):
+    """Count the number of lnk values required and prepare eqstate_guess."""
+    q = 0
+    for ele in eles:
+        q += len(properties._eq2ions[ele]) - 1
+    eqstate_guess = [0.0 for _ in range(q)]
+    if 'H2O' in prmlib.lnk:
+        if q == 0:
+            eqstate_guess = [30.0]
+        else:
+            eqstate_guess.append(30.0)
+    return eqstate_guess
+
+def getlnks(eqstate_guess, eles, tempK, pres, prmlib):
+    """Get arrays of lnk values for solver functions."""
     lnks = full((len(eqstate_guess), len(tempK)), nan)
     q = 0
     for ele in eles:
@@ -328,13 +518,23 @@ def _oosetup(eqstate_guess, tots, eles, fixions, tempK, pres, prmlib):
             q += 1
     if len(eqstate_guess) == q+1:
         lnks[-1] = prmlib.lnk['H2O'](tempK, pres)
-    return eqstates, allmols, allions, lnks
+    return lnks
+
+def _oosetup(tots, eles, fixions, tempK, pres, prmlib):
+    """Prepare for solveloop and solvepool."""
+    eqstate_guess, _, equilibria = get_equilibria(eles, tempK[0], pres[0],
+        prmlib)
+    eqstates = full((len(tempK), len(eqstate_guess)), 0.0)
+    allions = properties.getallions(eles, fixions)
+    allmols = full((len(tempK), len(allions)), 0.0)
+    lnks = getlnks(eqstate_guess, eles, tempK, pres, prmlib)
+    return eqstates, allmols, allions, lnks, equilibria
 
 def solveloop(eqstate_guess, tots, fixmols, eles, fixions, tempK, pres,
         prmlib=libraries.Seawater):
     """Run solver through a loop of input data."""
-    eqstates, allmols, allions, lnks = _oosetup(eqstate_guess, tots, eles,
-        fixions, tempK, pres, prmlib)
+    eqstates, allmols, allions, lnks, equilibria = _oosetup(
+        tots, eles, fixions, tempK, pres, prmlib)
     for L in range(len(tempK)):
         print('Solving {} of {}...'.format(L+1, len(tempK)))
         allmxs = matrix.assemble(allions, array([tempK[L]]), array([pres[L]]),
@@ -349,22 +549,23 @@ def solveloop(eqstate_guess, tots, fixmols, eles, fixions, tempK, pres,
             fixmols1 = fixmols
         lnks1 = lnks[:, L]
         Largs = (eqstate_guess, tots1, fixmols1, eles, allions, fixions,
-            allmxs, lnks1)
+            allmxs, lnks1, equilibria)
         if L == 0:
             eqstates[L] = solvequick(*Largs)['x']
         else:
             eqstates[L] = solve(*Largs)['x']
         eqstate_guess = eqstates[L]
         allmols[L] = eqstate2mols(
-            eqstates[L], tots1, fixmols1, eles, fixions)[0]
+            eqstates[L], tots1, fixmols1, eles, fixions, equilibria)[0]
     print('Solving complete!')
     return transpose(allmols), allions, eqstates
 
-def eqstate2mols(eqstate, tots1, fixmols1, eles, fixions):
+def eqstate2mols(eqstate, tots1, fixmols1, eles, fixions, equilibria):
     """Convert eqstate solution to arrays required for Pytzer functions."""
     fixcharges = transpose(properties.charges(fixions)[0])
-    (mH, mOH, mHSO4, mSO4, mMg, mMgOH, mtris, mtrisH, mCO2, mHCO3, mCO3, mBOH3,
-        mBOH4) = _varmols(eqstate, tots1, fixmols1, eles, fixions, fixcharges)
+    (mH, mOH, mHSO4, mSO4, mMg, mMgOH, mtris, mtrisH, mCO2, mHCO3, mCO3,
+        mMgCO3, mBOH3, mBOH4) = _varmols(eqstate, tots1, fixmols1, eles,
+        equilibria, fixions, fixcharges)
     allions = properties.getallions(eles, fixions)
     allmols = full_like(allions, 0.0, dtype='float64')
     for i, ion in enumerate(allions):
@@ -394,6 +595,8 @@ def eqstate2mols(eqstate, tots1, fixmols1, eles, fixions):
                 allmols[i] = mHCO3
             elif ion == 'CO3':
                 allmols[i] = mCO3
+            elif ion == 'MgCO3':
+                allmols[i] = mMgCO3
             elif ion == 'BOH3':
                 allmols[i] = mBOH3
             elif ion == 'BOH4':
