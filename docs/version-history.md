@@ -2,15 +2,21 @@
 
 Version 0.4 remains in beta testing. The main change from version 0.3 is including solvers to determine the equilibrium composition of aqueous solutions.
 
-## 0.4.1
+## 0.4.2
 
 **Release date:** forthcoming
 
-  * Module **potentials** added with functions to evaluate standard chemical potentials;
-  * Module **tables** eliminated;
-  * Updated functions and parameter libraries noting that `['Cl', 'CO3']` gets sorted to `['CO3', 'Cl']`;
+
+
+## 0.4.1
+
+**Release date:** 2019-08-13
+
   * Added carbonic acid and boric acid equilibrium solving;
+  * Eliminated module **tables**;
+  * Updated functions and parameter libraries noting that `['Cl', 'CO3']` gets sorted to `['CO3', 'Cl']`;
   * Fixed incorrect `alph1` values for all HMW 1:(>1) electrolytes;
+  * Added several new interaction parameter functions;
   * Testing MIAMI parameter library against PM16's model:
     * Adjusted numerical values to fix errors in some parameter functions:
       * `bC_Ca_BOH4_SRM87`;
