@@ -26,7 +26,6 @@ from . import (
     model,
     parameters,
     properties,
-    tables,
     teos10,
     unsymmetrical,
 )
@@ -43,7 +42,6 @@ __all__ = [
     'model',
     'parameters',
     'properties',
-    'tables',
     'teos10',
     'unsymmetrical',
 ]
@@ -54,7 +52,7 @@ from copy import deepcopy
 from numpy import full_like, nan
 from numpy import any as np_any
 
-def blackbox(filename, prmlib=libraries.Seawater, savefile=True):
+def blackbox(filename, prmlib=libraries.MIAMI, savefile=True):
     """Import a CSV file with molality data, calculate all activity
     coefficients, and save results to a new CSV file.
     """
@@ -97,7 +95,7 @@ def blackbox(filename, prmlib=libraries.Seawater, savefile=True):
     print('Finished!')
     return mols, ions, tempK, pres, prmlib, Gex_nRT, osm, aw, acfs
 
-def blackbox_equilibrate(filename, prmlib=libraries.Seawater, savefile=True):
+def blackbox_equilibrate(filename, prmlib=libraries.MIAMI, savefile=True):
     """Import a CSV file with molality data, solve for equilibrium speciation,
     calculate all activity coefficients, and save results to a new CSV file.
     """
@@ -107,7 +105,14 @@ def blackbox_equilibrate(filename, prmlib=libraries.Seawater, savefile=True):
     prmlib = deepcopy(prmlib)
     prmlib.add_zeros(allions) # just in case
     # Solve for equilibria
-    eqstate_guess = [0.0, 0.0, 0.0, 30.0]
+    q = 0
+    for ele in eles:
+        q += len(properties._eq2ions[ele]) - 1
+    eqstate_guess = [0.0 for _ in range(q)]
+    if q == 0:
+        eqstate_guess = [30.0,]
+    else:
+        eqstate_guess.append(30.0)
     allmols, allions, eqstates = equilibrate.solveloop(eqstate_guess, tots,
         fixmols, eles, fixions, tempK, pres, prmlib=prmlib)
     # Separate out zero ionic strengths

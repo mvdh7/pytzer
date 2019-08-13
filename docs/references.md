@@ -19,7 +19,7 @@ In alphanumerical order of the source codes:
 <td id="AW90"><code>AW90</code></td>
 <td>Archer, D. G., and Wang, P. (1990). The Dielectric Constant of Water and Debye‐Hückel Limiting Law Slopes. <i>J. Phys. Chem. Ref. Data</i> 19, 371–411. <a href="https://doi.org/10.1063/1.555853">doi:10.1063/1.555853</a>.</td></tr><tr>
 
-<td id="AW90"><code>AW90</code></td>
+<td id="CB89"><code>AW90</code></td>
 <td>Clegg, S. L., and Brimblecombe, P. (1989). Solubility of Ammonia in Pure Aqueous and Multicomponent Solutions. <i>J. Phys. Chem.</i> 93(20), 7237-7248. <a href="https://doi.org/10.1021/j100357a041">doi:10.1021/j100357a041</a>.</td></tr><tr>
 
 <td id="CMR93"><code>CMR93</code></td>
@@ -59,7 +59,10 @@ In alphanumerical order of the source codes:
 <td>Hershey, J. P., Plese, T., and Millero, F. J. (1988). The <i>pK</i><sub>1</sub><sup>* </sup> for the dissociation of H<sub>2</sub>S in various ionic media. <i>Geochim. Cosmochim. Acta</i> 52, 2047–2051. <a href="https://doi.org/10.1016/0016-7037(88)90183-4">doi:10.1016/0016-7037(88)90183-4</a>.</td></tr><tr>
 
 <td id="HPR93"><code>HPR93</code></td>
-<td>Hovey, J. K., Pitzer, K. S., and Rard, J. A. (1993). Thermodynamics of Na<sub>2</sub>SO<sub>4</sub>(aq) at temperatures <i>T</i> from 273 K to 373 K and of {(1-<i>y</i>)H<sub>2</sub>SO<sub>4</sub>+<i>y</i>Na<sub>2</sub>SO<sub>4</sub>}(aq) at <i>T</i> = 298.15 K.  <a href="https://doi.org/10.1006/jcht.1993.1016">doi:10.1006/jcht.1993.1016</a>.</td></tr><tr>
+<td>Hovey, J. K., Pitzer, K. S., and Rard, J. A. (1993). Thermodynamics of Na<sub>2</sub>SO<sub>4</sub>(aq) at temperatures <i>T</i> from 273 K to 373 K and of {(1-<i>y</i>)H<sub>2</sub>SO<sub>4</sub>+<i>y</i>Na<sub>2</sub>SO<sub>4</sub>}(aq) at <i>T</i> = 298.15 K. <i>J. Chem. Thermodyn.</i> 25(1), 173–192. <a href="https://doi.org/10.1006/jcht.1993.1016">doi:10.1006/jcht.1993.1016</a>.</td></tr><tr>
+
+<td id="JESS"><code>JESS</code></td>
+<td>May, P. M., Rowland, D., Hefter, G., and Königsbeger, E. (2011). A Generic and Updatable Pitzer Characterization of Aqueous Binary Electrolyte Solutions at 1 bar and 25 °C. <i>J. Chem. Eng. Data</i> 56(12), 5066–5077. <a href="https://doi.org/10.1021/je2009329">doi:10.1021/je2009329</a>.<br />See also: <a href="http://jess.murdoch.edu.au/vewbel.shtml">jess.murdoch.edu.au/vewbel.shtml</a></td></tr><tr>
 
 <td id="M79"><code>M79</code></td>
 <td>Millero, F. J. (1979). The thermodynamics of the carbonate system in seawater. <i>Geochim. Cosmochim. Acta</i> 43(10), 1651–1661. <a href="https://doi.org/10.1016/0016-7037(79)90184-4">doi:10.1016/0016-7037(79)90184-4</a>.</td></tr><tr>

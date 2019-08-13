@@ -1,7 +1,7 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 from .. import parameters as prm
-from .. import debyehueckel, unsymmetrical
+from .. import debyehueckel, dissociation, unsymmetrical
 name = 'MIAMI'
 dh = {'Aosm': debyehueckel.Aosm_M88}
 jfunc = unsymmetrical.Harvie
@@ -19,18 +19,18 @@ bC = {
     'Mg-SO4': prm.bC_Mg_SO4_PP86ii,
 # Table A3
     'Na-HSO4': prm.bC_Na_HSO4_MP98,
-    'Na-HCO3': prm.bC_Na_HCO3_PP82,
+    'Na-HCO3': prm.bC_Na_HCO3_MP98,
     'Na-SO4': prm.bC_Na_SO4_HPR93,
-    'Na-CO3': prm.bC_Na_CO3_PP82,
-    'Na-BOH4': prm.bC_Na_BOH4_SRRJ87,
+    'Na-CO3': prm.bC_Na_CO3_MP98,
+    'Na-BOH4': prm.bC_Na_BOH4_MP98, # Should be SRRJ87, conflicts with MP98.
     'Na-HS': prm.bC_Na_HS_HPM88,
     'Na-SCN': prm.bC_Na_SCN_SP78,
     'Na-SO3': prm.bC_Na_SO3_MHJZ89,
     'Na-HSO3': prm.bC_Na_HSO3_MHJZ89,
 # Table A4
     'K-HCO3': prm.bC_K_HCO3_RGWW83,
-    'K-CO3': prm.bC_K_CO3_SRG87,
-    'K-BOH4': prm.bC_K_BOH4_SRRJ87,
+    'K-CO3': prm.bC_K_CO3_MP98, # Should be SRG87, but conflicts with MP98.
+    'K-BOH4': prm.bC_K_BOH4_MP98, # Should be SRRJ87, but conflicts with MP98.
     'K-HS': prm.bC_K_HS_HPM88,
     'K-H2PO4': prm.bC_K_H2PO4_SP78,
     'K-SCN': prm.bC_K_SCN_SP78,
@@ -43,10 +43,10 @@ bC = {
     'Ca-ClO4': prm.bC_Ca_ClO4_SP78,
 # Table A6
     'Sr-Br': prm.bC_Sr_Br_SP78,
-    'Sr-Cl': prm.bC_Sr_Cl_SP78, # not in table but in text §4.6
+    'Sr-Cl': prm.bC_Sr_Cl_SP78, # Not in table but in text §4.6
     'Sr-NO3': prm.bC_Sr_NO3_SP78,
     'Sr-ClO4': prm.bC_Sr_ClO4_SP78,
-#    'Sr-HSO3': prm.bC_Sr_HSO3_MP98, # interaction also appears in Table A8?!
+#    'Sr-HSO3': prm.bC_Sr_HSO3_MP98, # Interaction also appears in Table A8?!
     'Sr-BOH4': prm.bC_Sr_BOH4_MP98,
 # Table A7
     'Na-I': prm.bC_Na_I_MP98,
@@ -68,7 +68,7 @@ bC = {
     'H-Br': prm.bC_H_Br_MP98,
     'Sr-Cl': prm.bC_Sr_Cl_MP98,
     'NH4-Cl': prm.bC_NH4_Cl_MP98,
-    'NH4-Br': prm.bC_NH4_Br_MP98,
+    'NH4-Br': prm.bC_NH4_Br_MP98typo,
     'NH4-F': prm.bC_NH4_F_MP98,
 # Table A8
     'Sr-I': prm.bC_Sr_I_PM73,
@@ -81,14 +81,14 @@ bC = {
     'Na-HAsO4': prm.bC_Na_HAsO4_PM73,
     'Na-AsO4': prm.bC_Na_AsO4_PM73,
     'Na-acetate': prm.bC_Na_acetate_PM73,
-    'K-HSO4': prm.bC_K_HSO4_HMW84,
+    'K-HSO4': prm.bC_K_HSO4_MP98, # MP98 mis-citation based on PM16 code.
     'K-NO2': prm.bC_K_NO2_PM73,
     'K-HPO4': prm.bC_K_HPO4_PM73,
     'K-PO4': prm.bC_K_PO4_PM73,
     'K-HAsO4': prm.bC_K_HAsO4_PM73,
-    'K-AsO4': prm.bC_K_AsO4_PM73, # not in table, but presumably should be?
+    'K-AsO4': prm.bC_K_AsO4_PM73, # Not in table, but presumably should be?
     'K-acetate': prm.bC_K_acetate_PM73,
-    'Mg-HSO4': prm.bC_Mg_HSO4_HMW84,
+    'Mg-HSO4': prm.bC_Mg_HSO4_MP98, # MP98 mis-citation based on PM16 code.
     'Mg-HCO3': prm.bC_Mg_HCO3_MP98,
     'Mg-HS': prm.bC_Mg_HS_HPM88,
     'Mg-I': prm.bC_Mg_I_PM73,
@@ -108,50 +108,52 @@ bC = {
     'MgOH-Cl': prm.bC_MgOH_Cl_HMW84,
 # Table A9
     'H-Cl': prm.bC_H_Cl_CMR93,
-    'H-SO4': prm.bC_H_SO4_MP98, # cited paper not published
-    'H-HSO4': prm.bC_H_HSO4_MP98, # cited paper not published, & no equation
+    'H-SO4': prm.bC_H_SO4_MP98, # Cited paper not published.
+    'H-HSO4': prm.bC_H_HSO4_MP98, # Cited paper not published, & no equation
                                   # provided, but this interaction is too
                                   # critical to skip?
+# Not in MP98 tables (I think!) but should be, based on PM code.
+    'Na-OH': prm.bC_Na_OH_PP87i,
 } # end of bC dict
 theta = {
 # Table A10
     'H-Sr': prm.theta_H_Sr_RGRG86,
-    'H-Na': prm.theta_H_Na_CMR93,
-    'H-K': prm.theta_H_K_CMR93,
-    'H-Mg': prm.theta_H_Mg_RGB80, # doesn't include temperature term from MP98
-    'Ca-H': prm.theta_Ca_H_RGO81, # doesn't include temperature term from MP98
+    'H-Na': prm.theta_H_Na_MP98, # Should be CMR93, but conflicts with MP98
+    'H-K': prm.theta_H_K_MP98, # Should be CMR93, but conflicts with MP98
+    'H-Mg': prm.theta_H_Mg_MP98, # Should be RGB80, but has not temp. term
+    'Ca-H': prm.theta_Ca_H_MP98, # Should be RGO81, see notes in parameters
     'K-Na': prm.theta_K_Na_GM89,
     'Mg-Na': prm.theta_Mg_Na_PP87ii,
     'Ca-Na': prm.theta_Ca_Na_M88,
     'K-Mg': prm.theta_K_Mg_PP87ii,
     'Ca-K': prm.theta_Ca_K_GM89,
     'Cl-SO4': prm.theta_Cl_SO4_M88,
-    'Cl-CO3': prm.theta_Cl_CO3_PP82,
+    'CO3-Cl': prm.theta_CO3_Cl_PP82,
     'Cl-HCO3': prm.theta_Cl_HCO3_PP82,
-    'BOH4-Cl': prm.theta_BOH4_Cl_MP98,
+    'BOH4-Cl': prm.theta_BOH4_Cl_MP98typo, # Typo in PM code replicated here
     'CO3-HCO3': prm.theta_CO3_HCO3_MP98,
-    'HSO4-SO4': prm.theta_HSO4_SO4_MP98, # cited paper not published
+    'HSO4-SO4': prm.theta_HSO4_SO4_MP98, # Cited paper not published
     'Cl-OH': prm.theta_Cl_OH_MP98,
 # Table A11
-    'Na-Sr': prm.theta_Na_Sr_MP98, # unclear where MP98 got this from
-    'K-Sr': prm.theta_K_Sr_MP98, # unclear where MP98 got this from
+    'Na-Sr': prm.theta_Na_Sr_MP98, # Unclear where MP98 got this from
+    'K-Sr': prm.theta_K_Sr_MP98, # Unclear where MP98 got this from
     'Ca-Mg': prm.theta_Ca_Mg_HMW84,
     'Cl-F': prm.theta_Cl_F_MP98,
     'CO3-SO4': prm.theta_CO3_SO4_HMW84,
     'HCO3-SO4': prm.theta_HCO3_SO4_HMW84,
     'BOH4-SO4': prm.theta_BOH4_SO4_FW86,
     'Cl-HSO4': prm.theta_Cl_HSO4_HMW84,
-    'OH-SO4': prm.theta_OH_SO4_HMW84, # MP98 incorrect citation
+    'OH-SO4': prm.theta_OH_SO4_HMW84, # MP98 incorrect citation.
     'Br-OH': prm.theta_Br_OH_PK74,
     'Cl-NO3': prm.theta_Cl_NO3_PK74,
     'Cl-H2PO4': prm.theta_Cl_H2PO4_HFM89,
     'Cl-HPO4': prm.theta_Cl_HPO4_HFM89,
     'Cl-PO4': prm.theta_Cl_PO4_HFM89,
-    'Cl-H2AsO4': prm.theta_Cl_H2AsO4_M83, # shouldn't have unsymmetrical term
-    'Cl-HAsO4': prm.theta_Cl_HAsO4_M83, # shouldn't have unsymmetrical term
-    'AsO4-Cl': prm.theta_AsO4_Cl_M83, # shouldn't have unsymmetrical term
+    'Cl-H2AsO4': prm.theta_Cl_H2AsO4_M83, # Shouldn't have unsymmetrical term.
+    'Cl-HAsO4': prm.theta_Cl_HAsO4_M83, # Shouldn't have unsymmetrical term.
+    'AsO4-Cl': prm.theta_AsO4_Cl_M83, # Shouldn't have unsymmetrical term.
     'Cl-SO3': prm.theta_Cl_SO3_MHJZ89,
-    'acetate-Cl': prm.theta_acetate_Cl_M83, # shouldn't have unsymmetrical term
+    'acetate-Cl': prm.theta_acetate_Cl_M83, # Shouldn't have unsymm. term.
 } # end of theta dict
 psi = {
 # Table A10
@@ -161,24 +163,26 @@ psi = {
     'Ca-Na-Cl': prm.psi_Ca_Na_Cl_M88,
     'Ca-Na-SO4': prm.psi_Ca_Na_SO4_M88,
     'K-Mg-Cl': prm.psi_K_Mg_Cl_PP87ii,
-    'Ca-K-Cl': prm.psi_Ca_K_Cl_GM89,
+    'Ca-K-Cl': prm.psi_Ca_K_Cl_MP98typo, # Typo in PM code replicated here.
     'Ca-K-SO4': prm.psi_Ca_K_SO4_GM89,
     'Na-Cl-SO4': prm.psi_Na_Cl_SO4_M88,
-    'K-Cl-SO4': prm.psi_K_Cl_SO4_GM89,
+    'K-Cl-SO4': prm.psi_K_Cl_SO4_MP98, # Should be GM89, conflicts with MP98.
     'Ca-Cl-SO4': prm.psi_Ca_Cl_SO4_M88,
-    'Na-Cl-CO3': prm.psi_Na_Cl_CO3_TM82,
-    'Na-Cl-HCO3': prm.psi_Na_Cl_HCO3_PP82, # MP98 incorrect citation
+    'Na-CO3-Cl': prm.psi_Na_CO3_Cl_TM82,
+    'Na-Cl-HCO3': prm.psi_Na_Cl_HCO3_PP82, # MP98 incorrect citation.
     'Na-BOH4-Cl': prm.psi_Na_BOH4_Cl_MP98,
     'Mg-BOH4-Cl': prm.psi_Mg_BOH4_Cl_MP98,
     'Ca-BOH4-Cl': prm.psi_Ca_BOH4_Cl_MP98,
-    'H-Sr-Cl': prm.psi_H_Sr_Cl_MP98, # cites M85 book but can't find it there
-    'H-Mg-Cl': prm.psi_H_Mg_Cl_RGB80, # doesn't include MP98 temperature term
-    'Ca-H-Cl': prm.psi_Ca_H_Cl_RGO81, # doesn't include MP98 temperature term
-    'Na-HSO4-SO4': prm.psi_Na_HSO4_SO4_MP98, # cited paper not published
+    'H-Sr-Cl': prm.psi_H_Sr_Cl_MP98, # Cites M85 book but can't find it there.
+    'H-Mg-Cl': prm.psi_H_Mg_Cl_MP98, # Should be RGB80, but that doesn't
+                                     # include MP98 temperature term.
+    'Ca-H-Cl': prm.psi_Ca_H_Cl_MP98, # Should be RGO81, but that doesn't
+                                     # include MP98 temperature term.
+    'Na-HSO4-SO4': prm.psi_Na_HSO4_SO4_MP98, # Cited paper not published.
     'Na-CO3-HCO3': prm.psi_Na_CO3_HCO3_MP98,
     'K-CO3-HCO3': prm.psi_K_CO3_HCO3_MP98,
 # Table A11
-    'Na-Sr-Cl': prm.psi_Na_Sr_Cl_MP98, # couldn't find in PK74 as cited
+    'Na-Sr-Cl': prm.psi_Na_Sr_Cl_MP98, # Couldn't find in PK74 as cited.
     'K-Sr-Cl': prm.psi_K_Sr_Cl_MP98,
     'K-Na-Br': prm.psi_K_Na_Br_PK74,
     'Mg-Na-SO4': prm.psi_Mg_Na_SO4_HMW84,
@@ -190,8 +194,8 @@ psi = {
     'H-Na-Br': prm.psi_H_Na_Br_PK74,
     'H-K-Cl': prm.psi_H_K_Cl_HMW84,
     'H-K-SO4': prm.psi_H_K_SO4_HMW84,
-    'H-K-Br': prm.psi_H_K_Br_MP98, # no function in HMW84 (no Br!)
-    'H-Mg-Br': prm.psi_H_Mg_Br_MP98, # couldn't find in PK74 as cited
+    'H-K-Br': prm.psi_H_K_Br_MP98, # No function in HMW84 (no Br!).
+    'H-Mg-Br': prm.psi_H_Mg_Br_MP98, # Couldn't find in PK74 as cited.
     'Mg-MgOH-Cl': prm.psi_Mg_MgOH_Cl_HMW84,
     'Mg-Cl-SO4': prm.psi_Mg_Cl_SO4_HMW84,
     'Mg-Cl-HCO3': prm.psi_Mg_Cl_HCO3_HMW84,
@@ -202,17 +206,17 @@ psi = {
     'Mg-HCO3-SO4': prm.psi_Mg_HCO3_SO4_HMW84,
     'Na-Cl-HSO4': prm.psi_Na_Cl_HSO4_HMW84,
     'K-HSO4-SO4': prm.psi_K_HSO4_SO4_HMW84,
-    'Na-Cl-OH': prm.psi_Na_Cl_OH_HMW84, # ref. presumably mislabelled by MP98
-    'K-Cl-OH': prm.psi_K_Cl_OH_HMW84, # ref. presumably mislabelled by MP98
-    'Ca-Cl-OH': prm.psi_Ca_Cl_OH_HMW84, # ref. presumably mislabelled by MP98
-    'Na-OH-SO4': prm.psi_Na_OH_SO4_HMW84, # ref. presumably mislabelled by MP98
-    'K-OH-SO4': prm.psi_K_OH_SO4_HMW84, # ref. presumably mislabelled by MP98
+    'Na-Cl-OH': prm.psi_Na_Cl_OH_HMW84, # Ref. presumably mislabelled by MP98.
+    'K-Cl-OH': prm.psi_K_Cl_OH_HMW84, # Ref. presumably mislabelled by MP98.
+    'Ca-Cl-OH': prm.psi_Ca_Cl_OH_HMW84, # Ref. presum. mislabelled by MP98.
+    'Na-OH-SO4': prm.psi_Na_OH_SO4_HMW84, # Ref. presumably mislabelled by MP98.
+    'K-OH-SO4': prm.psi_K_OH_SO4_HMW84, # Ref. presumably mislabelled by MP98.
     'Na-Br-OH': prm.psi_Na_Br_OH_PK74,
     'K-Br-OH': prm.psi_K_Br_OH_PK74,
     'Na-Cl-NO3': prm.psi_Na_Cl_NO3_PK74,
     'K-Cl-NO3': prm.psi_K_Cl_NO3_PK74,
     'Na-Cl-H2PO4': prm.psi_Na_Cl_H2PO4_HFM89,
-    'K-Cl-H2PO4': prm.psi_K_Cl_H2PO4_MP98, # can't find cited PS76 paper
+    'K-Cl-H2PO4': prm.psi_K_Cl_H2PO4_MP98, # Can't find cited PS76 paper.
     'Na-Cl-HPO4': prm.psi_Na_Cl_HPO4_HFM89,
     'Na-Cl-PO4': prm.psi_Na_Cl_PO4_HFM89,
     'Na-Cl-H2AsO4': prm.psi_Na_Cl_H2AsO4_M83,
@@ -232,7 +236,7 @@ lambd = { # all from Table A12
     'BOH3-Cl': prm.lambd_BOH3_Cl_FW86,
     'BOH3-SO4': prm.lambd_BOH3_SO4_FW86,
     'NH3-Na': prm.lambd_NH3_Na_CB89,
-    'NH3-K': prm.lambd_NH3_K_CB89, # also includes CB89 temperature term
+    'NH3-K': prm.lambd_NH3_K_CB89, # Also includes CB89 temperature term.
     'NH3-Mg': prm.lambd_NH3_Mg_CB89,
     'NH3-Ca': prm.lambd_NH3_Ca_CB89,
     'NH3-Sr': prm.lambd_NH3_Sr_CB89,
@@ -257,3 +261,11 @@ zeta = { # all from Table A12
     'NH3-Ca-Cl': prm.zeta_NH3_Ca_Cl_CB89,
     'H3PO4-Na-Cl': prm.zeta_H3PO4_Na_Cl_MP98, # PS76 don't have this term...
 } # end of zeta dict
+lnk = {
+    'BOH3': dissociation.BOH3_M79,
+    'MgOH': dissociation.MgOH_MP98,
+    'H2O': dissociation.H2O_M79,
+    'HSO4': dissociation.HSO4_CRP94,
+    'H2CO3': dissociation.H2CO3_MP98,
+    'HCO3': dissociation.HCO3_MP98,
+} # end of lnks dict

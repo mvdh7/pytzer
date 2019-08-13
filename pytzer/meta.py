@@ -2,7 +2,7 @@
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 """Define module metadata."""
 from . import parameters
-version = '0.4.0'
+version = '0.4.1'
 
 def getprmfuncs():
     """Generate dict containing all interaction parameter functions."""
@@ -15,8 +15,9 @@ def getprmfuncs():
         for functype in functypes}
     return prmfuncs
 
-def getifuncs(prmfuncs, itype, ions):
+def getifuncs(itype, ions):
     """Extract all interaction functions for a particular interaction."""
+    prmfuncs = getprmfuncs()
     ifuncs = {name: prmfuncs[itype][name] for name in prmfuncs[itype].keys()
         if name.startswith(((1+len(ions))*'{}_').format(itype, *ions))}
     return ifuncs

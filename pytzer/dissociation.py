@@ -57,13 +57,34 @@ def H2O_MF(tempK, pres):
     lnkH2O = log10kH2O*log(10)
     return lnkH2O
 
-def Mg_CW91_ln(tempK, pres):
+def MgOH_CW91_ln(tempK, pres):
     """MgOH+ formation following CW91 Eq. (244) [p392]."""
     return 8.9108 - 1155/tempK
 
-def Mg_CW91(tempK, pres):
+def MgOH_CW91(tempK, pres):
     """MgOH+ formation following CW91 in log10 and then converted."""
     # Matches Clegg's model [2019-07-02]
     log10kMg = 3.87 - 501.5/tempK
     lnkMg = log10kMg*log(10)
     return lnkMg
+
+def MgOH_MP98(tempK, pres):
+    """MgOH+ formation following MP98."""
+    log10kMg = 3.87 - 501.6/tempK
+    lnkMg = log10kMg*log(10)
+    return lnkMg
+
+def MP98_eq23(tempK, A, B, C, D):
+    return A + B/tempK + C*log(tempK) + D*tempK
+
+def H2CO3_MP98(tempK, pres):
+    """H2CO3 dissociation [MP98 following M79]."""
+    return MP98_eq23(tempK, 290.9097, -14554.21, -45.0575, 0)
+
+def HCO3_MP98(tempK, pres):
+    """HCO3 dissociation [MP98 following M79]."""
+    return MP98_eq23(tempK, 207.6548, -11843.79, -33.6485, 0)
+
+def BOH3_M79(tempK, pres):
+    """Boric acid dissociation [MP98 following M79]."""
+    return MP98_eq23(tempK, 148.0248, -8966.901, -24.4344, 0)

@@ -4,8 +4,6 @@
 from autograd.numpy import array, float_, log, logical_and, sqrt
 from autograd.numpy import abs as np_abs
 from .constants import Tzero
-from .tables import (P91_Ch3_T12, P91_Ch3_T13_I, P91_Ch3_T13_II,
-    PM73_TableI, PM73_TableVI, PM73_TableVIII, PM73_TableIX)
 from . import properties
 from .properties import _ion2charge as i2c
 # Note that variable T in this module is equivalent to tempK elsewhere (in K),
@@ -55,28 +53,6 @@ def mu_none(T, P):
     return mu, valid
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Pitzer & Margoya (1973) ~~~~~
-def bC_PM73(T, iset):
-    # Experimental function - not production-ready
-    zM, zX = properties.charges(array(iset.split('-')))[0]
-    PM73_Tables = {
-        -1: PM73_TableI,
-        -2: PM73_TableVI,
-        -3: PM73_TableVIII,
-        -4: PM73_TableIX,
-        -5: PM73_TableIX,
-    }
-    b0 = PM73_Tables[zM*zX][iset]['b0']
-    b1 = PM73_Tables[zM*zX][iset]['b1']
-    b2 = 0
-    Cphi = PM73_Tables[zM*zX][iset]['Cphi']
-    C0 = Cphi/(2*sqrt(np_abs(i2c['M']*i2c['X'])))
-    C1 = 0
-    alph1 = 2
-    alph2 = -9
-    omega = -9
-    valid = T == 298.15
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
 def bC_H_Cl_PM73(T, P):
     """"c-a: hydrogen chloride [PM73]."""
     # Coefficients from PM73 Table I
@@ -3665,7 +3641,7 @@ def bC_Mg_SO4_RM81i(T, P):
 def PP82_eqMPH(T,q):
     """PP82 equation derived by MP Humphreys."""
     Tr = 298.15
-    return q[0] + q[1] * (T - Tr) + q[2] * (T - Tr)**2 / 2
+    return q[0] + q[1]*(T - Tr) + q[2]*(T - Tr)**2/2
 
 def bC_Na_CO3_PP82(T, P):
     """c-a: sodium carbonate [PP82]."""
@@ -3720,8 +3696,8 @@ def theta_Cl_HCO3_PP82(T, P):
     valid = T == 298.15
     return theta, valid
 
-def theta_Cl_CO3_PP82(T, P):
-    """a-a': chloride carbonate [PP82]."""
+def theta_CO3_Cl_PP82(T, P):
+    """a-a': carbonate chloride [PP82]."""
     theta = -0.053
     valid = T == 298.15
     return theta, valid
@@ -3746,8 +3722,8 @@ def psi_Ca_H_Cl_RGO81(T, P):
     return theta, valid
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Thurmond & Millero (1982) ~~~~~
-def psi_Na_Cl_CO3_TM82(T, P):
-    """c-a-a': sodium chloride carbonate [TM82]."""
+def psi_Na_CO3_Cl_TM82(T, P):
+    """c-a-a': sodium carbonate chloride [TM82]."""
     psi = 0.016
     valid = T == 298.15
     return psi, valid
@@ -3987,8 +3963,7 @@ def bC_Na_HSO4_HMW84(T, P):
     b0 = 0.0454
     b1 = 0.398
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['HSO4'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4015,8 +3990,7 @@ def bC_Na_HCO3_HMW84(T, P):
     b0 = 0.0277
     b1 = 0.0411
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['HCO3'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4057,8 +4031,7 @@ def bC_K_SO4_HMW84(T, P):
     b0 = 0.04995
     b1 = 0.7793
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['SO4'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4071,8 +4044,7 @@ def bC_K_HSO4_HMW84(T, P):
     b0 = -0.0003
     b1 = 0.1735
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['HSO4'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4141,8 +4113,7 @@ def bC_Ca_SO4_HMW84(T, P):
     b0 = 0.2
     b1 = 3.1973
     b2 = -54.24
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['Ca']*i2c['SO4'])))
+    C0 = 0
     C1 = 0
     alph1 = 1.4
     alph2 = 12
@@ -4155,8 +4126,7 @@ def bC_Ca_HSO4_HMW84(T, P):
     b0 = 0.2145
     b1 = 2.53
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['Ca']*i2c['HSO4'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4169,10 +4139,9 @@ def bC_Ca_OH_HMW84(T, P):
     b0 = -0.1747
     b1 = -0.2303
     b2 = -5.72
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['Ca']*i2c['OH'])))
+    C0 = 0
     C1 = 0
-    alph1 = 1.4
+    alph1 = 2
     alph2 = 12
     omega = -9
     valid = T == 298.15
@@ -4183,8 +4152,7 @@ def bC_Ca_HCO3_HMW84(T, P):
     b0 = 0.4
     b1 = 2.977
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['Ca']*i2c['HCO3'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4197,10 +4165,9 @@ def bC_Ca_CO3_HMW84(T, P):
     b0 = 0.0
     b1 = 0.0
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['Ca']*i2c['CO3'])))
+    C0 = 0
     C1 = 0
-    alph1 = 2
+    alph1 = 1.4
     alph2 = -9
     omega = -9
     valid = T == 298.15
@@ -4239,8 +4206,7 @@ def bC_Mg_HSO4_HMW84(T, P):
     b0 = 0.4746
     b1 = 1.729
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['Mg']*i2c['HSO4'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4253,8 +4219,7 @@ def bC_Mg_OH_HMW84(T, P):
     b0 = 0.0
     b1 = 0.0
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['Mg']*i2c['OH'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4267,8 +4232,7 @@ def bC_Mg_HCO3_HMW84(T, P):
     b0 = 0.329
     b1 = 0.6072
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['Mg']*i2c['HCO3'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4281,10 +4245,9 @@ def bC_Mg_CO3_HMW84(T, P):
     b0 = 0.0
     b1 = 0.0
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['Mg']*i2c['CO3'])))
+    C0 = 0
     C1 = 0
-    alph1 = 2
+    alph1 = 1.4
     alph2 = -9
     omega = -9
     valid = T == 298.15
@@ -4295,8 +4258,7 @@ def bC_MgOH_Cl_HMW84(T, P):
     b0 = -0.1
     b1 = 1.658
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['MgOH']*i2c['Cl'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4309,8 +4271,7 @@ def bC_MgOH_SO4_HMW84(T, P):
     b0 = 0.0
     b1 = 0.0
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['MgOH']*i2c['SO4'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4323,8 +4284,7 @@ def bC_MgOH_HSO4_HMW84(T, P):
     b0 = 0.0
     b1 = 0.0
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['MgOH']*i2c['HSO4'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4337,8 +4297,7 @@ def bC_MgOH_OH_HMW84(T, P):
     b0 = 0.0
     b1 = 0.0
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['MgOH']*i2c['OH'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4351,8 +4310,7 @@ def bC_MgOH_HCO3_HMW84(T, P):
     b0 = 0.0
     b1 = 0.0
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['MgOH']*i2c['HCO3'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4365,8 +4323,7 @@ def bC_MgOH_CO3_HMW84(T, P):
     b0 = 0.0
     b1 = 0.0
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['MgOH']*i2c['CO3'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4407,8 +4364,7 @@ def bC_H_HSO4_HMW84(T, P):
     b0 = 0.2065
     b1 = 0.5556
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['HSO4'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4421,8 +4377,7 @@ def bC_H_OH_HMW84(T, P):
     b0 = 0.0
     b1 = 0.0
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['OH'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4435,8 +4390,7 @@ def bC_H_HCO3_HMW84(T, P):
     b0 = 0.0
     b1 = 0.0
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['HCO3'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -4449,8 +4403,7 @@ def bC_H_CO3_HMW84(T, P):
     b0 = 0.0
     b1 = 0.0
     b2 = 0.0
-    Cphi = 0.0
-    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['CO3'])))
+    C0 = 0
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -5766,6 +5719,33 @@ def lambd_CO2_HSO4_HMW84(T, P):
     valid = T == 298.15
     return lambd, valid
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Pitzer et al. (1985) ~~~~~
+def bC_Mg_HCO3_POS85(T, P):
+    """c-a: magnesium bicarbonate [POS85]."""
+    b0 = 0.033
+    b1 = 0.85
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Ca_HCO3_POS85(T, P):
+    """c-a: calcium bicarbonate [POS85]."""
+    b0 = 0.28
+    b1 = 0.3
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Felmy & Weare (1986) ~~~~~
 def bC_Na_BOH4_FW86(T, P):
     """c-a: sodium borate [FW86]."""
@@ -5986,10 +5966,10 @@ PP86ii_Tr = 298.15
 def PP86ii_eq28(T, q):
     """PP86ii equation 28."""
     Tr = PP86ii_Tr
-    return ((T**2 - Tr**2) * q[0] / 2 \
-          + (T**3 - Tr**3) * q[1] / 3 \
-          + (T**4 - Tr**4) * q[2] / 4 \
-          + (T**5 - Tr**5) * q[3] / 5 \
+    return ((T**2 - Tr**2) * q[0] / 2
+          + (T**3 - Tr**3) * q[1] / 3
+          + (T**4 - Tr**4) * q[2] / 4
+          + (T**5 - Tr**5) * q[3] / 5
           +         Tr**2  * q[4]) / T**2
 
 def PP86ii_eq29(T, q):
@@ -6006,12 +5986,12 @@ def PP86ii_eq29(T, q):
     t = T / Tr
     # Original fourth line was:
     #  + q[3] * (T**4/20 + Tr**5/(5*T) - Tr**4/4)
-    return q[0] * (T   / 2 + Tr**2/(2*T) - Tr     ) \
-         + q[1] * (T**2/ 6 + Tr**3/(3*T) - Tr**2/2) \
-         + q[2] * (T**3/12 + Tr**4/(4*T) - Tr**3/3) \
-         + q[3] * (t**5 + 4 - 5*t) * Tr**5 / (20 * T) \
-         + q[4] * (Tr - Tr**2/T) \
-         + q[5]
+    return (q[0] * (T   / 2 + Tr**2/(2*T) - Tr)
+          + q[1] * (T**2/ 6 + Tr**3/(3*T) - Tr**2/2)
+          + q[2] * (T**3/12 + Tr**4/(4*T) - Tr**3/3)
+          + q[3] * (t**5 + 4 - 5*t) * Tr**5 / (20 * T)
+          + q[4] * (Tr - Tr**2/T) \
+          + q[5])
 
 def bC_Mg_SO4_PP86ii(T, P):
     """c-a: magnesium sulfate [PP86ii]."""
@@ -6057,13 +6037,13 @@ def HM86_eq8(T, a):
     """HM86 equation 8."""
     TR = 298.15
     # Typo in a[5] term in HM86 has been corrected here
-    return a[0] \
-         + a[1] * (TR - TR**2/T) \
-         + a[2] * (T**2 + 2*TR**3/T -3*TR**2) \
-         + a[3] * (T + TR**2/T - 2*TR) \
-         + a[4] * (log(T/TR) + TR/T - 1) \
-         + a[5] * (1/(T - 263) + (263*T - TR**2) / (T*(TR - 263)**2)) \
-         + a[6] * (1/(680 - T) + (TR**2 - 680*T) / (T*(680 - TR)**2))
+    return (a[0]
+          + a[1] * (TR - TR**2/T)
+          + a[2] * (T**2 + 2*TR**3/T -3*TR**2)
+          + a[3] * (T + TR**2/T - 2*TR)
+          + a[4] * (log(T/TR) + TR/T - 1)
+          + a[5] * (1/(T - 263) + (263*T - TR**2) / (T*(TR - 263)**2))
+          + a[6] * (1/(680 - T) + (TR**2 - 680*T) / (T*(680 - TR)**2)))
 
 def bC_K_SO4_HM86(T, P):
     """c-a: potassium sulfate [HM86]."""
@@ -6416,23 +6396,23 @@ def bC_Na_Cl_SRRJ87(T, P):
 def bC_K_BOH4_SRRJ87(T, P):
     """c-a: potassium borate [SRRJ87]."""
     # Parameters from SRRJ87 Table III
-    b0 = SRRJ87_eq7(T, float_([
+    b0 = SRRJ87_eq7(T, [
         0.1469,
         2.881,
         0,
-    ]))
-    b1 = SRRJ87_eq7(T, float_([
+    ])
+    b1 = SRRJ87_eq7(T, [
         -0.0989,
         -6.876,
          0,
-    ]))
+    ])
     b2 = 0
-    Cphi = SRRJ87_eq7(T, float_([
+    Cphi = SRRJ87_eq7(T, [
         -56.43,
         -9.56,
          0,
-    ]))*1e-3 # *1e-3 presumably?
-    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['Cl'])))
+    ])*1e-3 # *1e-3 presumably?
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['BOH4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6459,7 +6439,7 @@ def bC_Na_BOH4_SRRJ87(T, P):
         -15.7,
          0,
     ]))*1e-3 # *1e-3 presumably?
-    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['Cl'])))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['BOH4'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -6490,55 +6470,54 @@ def psi_Na_BOH4_Cl_SRRJ87(T, P):
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Simonson et al. (1987b) ~~~~~
 def SRM87_eqTableIII(T, abc):
     """SRM87 equation from Table III."""
-    return abc[0] \
-         + abc[1] * 1e-3 * (T - 298.15) \
-         + abc[2] * 1e-3 * (T -303.15)**2
+    return abc[0] + abc[1]*1e-3*(T - 298.15) + abc[2]*1e-3*(T - 303.15)**2
 
 def bC_Mg_BOH4_SRM87(T, P):
     """c-a: magnesium borate [SRM87]."""
-    b0 = SRM87_eqTableIII(T, float_([
+    b0 = SRM87_eqTableIII(T, [
         -0.6230,
          6.496,
          0,
-    ]))
-    b1 = SRM87_eqTableIII(T, float_([
+    ])
+    b1 = SRM87_eqTableIII(T, [
          0.2515,
         -17.13,
          0,
-    ]))
-    b2 = SRM87_eqTableIII(T, float_([
+    ])
+    b2 = SRM87_eqTableIII(T, [
         -11.47,
          0,
-        -3.240]))
+        -3.240,
+    ])
     C0 = 0
     C1 = 0
-    alph1 = 2
-    alph2 = -9
+    alph1 = 1.4
+    alph2 = 6
     omega = -9
     valid = logical_and(T >= 278.15, T <= 528.15)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 def bC_Ca_BOH4_SRM87(T, P):
     """c-a: calcium borate [SRM87]."""
-    b0 = SRM87_eqTableIII(T, float_([
+    b0 = SRM87_eqTableIII(T, [
         -0.4462,
          5.393,
          0,
-    ]))
-    b1 = SRM87_eqTableIII(T, float_([
+    ])
+    b1 = SRM87_eqTableIII(T, [
         -0.8680,
         -18.20,
          0,
-    ]))
-    b2 = SRM87_eqTableIII(T, float_([
+    ])
+    b2 = SRM87_eqTableIII(T, [
         -15.88,
          0,
         -2.858,
-    ]))
+    ])
     C0 = 0
     C1 = 0
-    alph1 = 2
-    alph2 = -9
+    alph1 = 1.4
+    alph2 = 6
     omega = -9
     valid = logical_and(T >= 278.15, T <= 528.15)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
@@ -7469,14 +7448,14 @@ def bC_H_Cl_CMR93(T, P):
 def theta_H_K_CMR93(T, P):
     """c-c': hydrogen potassium [CMR93]."""
     # assuming CMR93's lowercase t means temperature in degC
-    theta = 0.005 -0.0002275 * (T - Tzero)
+    theta = 0.005 - 0.0002275*(T - Tzero)
     valid = logical_and(T >= 273.15, T <= 328.15)
     return theta, valid
 
 def theta_H_Na_CMR93(T, P):
     """c-c': hydrogen sodium [CMR93]."""
     # assuming CMR93's lowercase t means temperature in degC
-    theta = 0.0342 -0.000209 * (T - Tzero)
+    theta = 0.0342 - 0.000209*(T - Tzero)
     valid = logical_and(T >= 273.15, T <= 328.15)
     return theta, valid
 
@@ -7495,9 +7474,9 @@ def psi_H_Na_Cl_CMR93(T, P):
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ He & Morse (1993) ~~~~~
 # Note that HM93 also contains beta/C equations for Na, K, Mg and Ca
 # interactions with HCO3 and CO3 (not yet coded here)
-def HM93_eq(T, a):
+def HM93_eq(T, A, B, C, D, E):
     """HM93 parameter equation from p. 3548."""
-    return a[0] + a[1]*T + a[2]*T**2 + a[3]/T + a[4]*log(T)
+    return A + B*T + C*T**2 + D/T + E*log(T)
 
 def lambd_CO2_H_HM93(T, P):
     """n-c: carbon-dioxide hydrogen [HM93]."""
@@ -7507,108 +7486,108 @@ def lambd_CO2_H_HM93(T, P):
 
 def lambd_CO2_Na_HM93(T, P):
     """n-c: carbon-dioxide sodium [HM93]."""
-    lambd = HM93_eq(T, [
+    lambd = HM93_eq(T,
         -5496.38465,
         -3.326566,
         0.0017532,
         109399.341,
         1047.021567,
-    ])
+    )
     valid = logical_and(T >= 273.15, T <= 363.15)
     return lambd, valid
 
 def lambd_CO2_K_HM93(T, P):
     """n-c: carbon-dioxide potassium [HM93]."""
-    lambd = HM93_eq(T, [
+    lambd = HM93_eq(T,
         2856.528099,
         1.7670079,
         -0.0009487,
         -55954.1929,
         -546.074467,
-    ])
+    )
     valid = logical_and(T >= 273.15, T <= 363.15)
     return lambd, valid
 
 def lambd_CO2_Ca_HM93(T, P):
     """n-c: carbon-dioxide calcium [HM93]."""
-    lambd = HM93_eq(T, [
+    lambd = HM93_eq(T,
         -12774.6472,
         -8.101555,
         0.00442472,
         245541.5435,
         2452.509720,
-    ])
+    )
     valid = logical_and(T >= 273.15, T <= 363.15)
     return lambd, valid
 
 def lambd_CO2_Mg_HM93(T, P):
     """n-c: carbon-dioxide magnesium [HM93]."""
-    lambd = HM93_eq(T, [
+    lambd = HM93_eq(T,
         -479.362533,
         -0.541843,
         0.00038812,
         3589.474052,
         104.3452732,
-    ])
+    )
     valid = logical_and(T >= 273.15, T <= 363.15)
     return lambd, valid
 
 def lambd_CO2_Cl_HM93(T, P):
     """n-a: carbon-dioxide chloride [HM93]."""
-    lambd = HM93_eq(T, [
+    lambd = HM93_eq(T,
         1659.944942,
         0.9964326,
         -0.00052122,
         -33159.6177,
         -315.827883
-    ])
+    )
     valid = logical_and(T >= 273.15, T <= 363.15)
     return lambd, valid
 
 def lambd_CO2_SO4_HM93(T, P):
     """n-a: carbon-dioxide sulfate [HM93]."""
-    lambd = HM93_eq(T, [
+    lambd = HM93_eq(T,
         2274.656591,
         1.8270948,
         -0.00114272,
         -33927.7625,
         -457.015738,
-    ])
+    )
     valid = logical_and(T >= 273.15, T <= 363.15)
     return lambd, valid
 
 def zeta_CO2_H_Cl_HM93(T, P):
     """n-c-a: carbon-dioxide hydrogen chloride [HM93]."""
-    zeta = HM93_eq(T, [
-        -804.121738, -0.470474, 0.000240526, 16334.38917, 152.3838752])
+    zeta = HM93_eq(T,
+        -804.121738, -0.470474, 0.000240526, 16334.38917, 152.3838752)
     valid = logical_and(T >= 273.15, T <= 363.15)
     return zeta, valid
 
 def zeta_CO2_Na_Cl_HM93(T, P):
     """n-c-a: carbon-dioxide sodium chloride [HM93]."""
-    zeta = HM93_eq(T, [
-        -379.459185, -0.258005, 0.000147823, 6879.030871, 73.74511574])
+    zeta = HM93_eq(T,
+        -379.459185, -0.258005, 0.000147823, 6879.030871, 73.74511574)
     valid = logical_and(T >= 273.15, T <= 363.15)
     return zeta, valid
 
 def zeta_CO2_K_Cl_HM93(T, P):
     """n-c-a: carbon-dioxide potassium chloride [HM93]."""
-    zeta = HM93_eq(T, [
-        -379.686097, -0.257891, 0.000147333, 6853.264129, 73.79977116])
+    zeta = HM93_eq(T,
+        -379.686097, -0.257891, 0.000147333, 6853.264129, 73.79977116)
     valid = logical_and(T >= 273.15, T <= 363.15)
     return zeta, valid
 
 def zeta_CO2_Ca_Cl_HM93(T, P):
     """n-c-a: carbon-dioxide calcium chloride [HM93]."""
-    zeta = HM93_eq(T, [
-        -166.065290, -0.018002, -2.47349e-5, 5256.844332, 27.377452415])
+    zeta = HM93_eq(T,
+        -166.065290, -0.018002, -2.47349e-5, 5256.844332, 27.377452415)
     valid = logical_and(T >= 273.15, T <= 363.15)
     return zeta, valid
 
 def zeta_CO2_Mg_Cl_HM93(T, P):
     """n-c-a: carbon-dioxide magnesium chloride [HM93]."""
-    zeta = HM93_eq(T, [
-        -1342.60256, -0.772286, 0.000391603, 27726.80974, 253.62319406])
+    zeta = HM93_eq(T,
+        -1342.60256, -0.772286, 0.000391603, 27726.80974, 253.62319406)
     valid = logical_and(T >= 273.15, T <= 363.15)
     return zeta, valid
 
@@ -7620,24 +7599,132 @@ def zeta_CO2_H_SO4_HM93(T, P):
 
 def zeta_CO2_Na_SO4_HM93(T, P):
     """n-c-a: carbon-dioxide sodium sulfate [HM93]."""
-    zeta = HM93_eq(T, [
-        67030.02482, 37.930519, -0.01894730, -1399082.37, -12630.27457])
+    zeta = HM93_eq(T,
+        67030.02482, 37.930519, -0.01894730, -1399082.37, -12630.27457)
     valid = logical_and(T >= 273.15, T <= 363.15)
     return zeta, valid
 
 def zeta_CO2_K_SO4_HM93(T, P):
     """n-c-a: carbon-dioxide potassium sulfate [HM93]."""
-    zeta = HM93_eq(T, [
-        -2907.03326, -2.860763, 0.001951086, 30756.86749, 611.37560512])
+    zeta = HM93_eq(T,
+        -2907.03326, -2.860763, 0.001951086, 30756.86749, 611.37560512)
     valid = logical_and(T >= 273.15, T <= 363.15)
     return zeta, valid
 
 def zeta_CO2_Mg_SO4_HM93(T, P):
     """n-c-a: carbon-dioxide magnesium sulfate [HM93]."""
-    zeta = HM93_eq(T, [
-        -7374.24392, -4.608331, 0.002489207, 143162.6076, 1412.302898])
+    zeta = HM93_eq(T,
+        -7374.24392, -4.608331, 0.002489207, 143162.6076, 1412.302898)
     valid = logical_and(T >= 273.15, T <= 363.15)
     return zeta, valid
+
+def bC_Na_HCO3_HM93(T, P):
+    """c-a: sodium bicarbonate [HM93]."""
+    b0 = HM93_eq(T, -37.2624193, -0.01445932, 0, 682.885977, 6.8995857)
+    b1 = HM93_eq(T, -61.4635193, -0.02446734, 0, 1129.389146, 11.4108589)
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 363.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_HCO3_HM93(T, P):
+    """c-a: potassium bicarbonate [HM93]."""
+    b0 = HM93_eq(T, -0.3088232, 0.001, 0, -0.00069869, -4.701488e-6)
+    b1 = HM93_eq(T, -0.2802, 0.00109999, 0, 0.000936932, 6.15660566e-6)
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 363.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Mg_HCO3_HM93(T, P):
+    """c-a: magnesium bicarbonate [HM93]."""
+    b0 = HM93_eq(T, 13697.10, 8.250840, -0.00434, -273406.1716, -2607.115202)
+    b1 = HM93_eq(T, -157839.8351, -92.7779354, 0.0477642, 3203209.6948,
+        29927.151503)
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 363.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Ca_HCO3_HM93(T, P):
+    """c-a: calcium bicarbonate [HM93]."""
+    b0 = HM93_eq(T, 29576.53405, 18.447305, -0.009989, -576520.5185, -5661.1237)
+    b1 = HM93_eq(T, -1028.8510522, -0.3725876718, 8.9691e-5, 26492.240303,
+        183.13155672)
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 363.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_CO3_HM93(T, P):
+    """c-a: sodium carbonate [HM93]."""
+    b0 = HM93_eq(T, -60.5387702, -0.023301655, 0, 1108.3760518, 11.19855531)
+    b1 = HM93_eq(T, -237.5156616, -0.09989121, 0, 4412.511973, 44.5820703)
+    b2 = 0
+    Cphi = 0.0052
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['CO3'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 363.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_CO3_HM93(T, P):
+    """c-a: potassium carbonate [HM93]."""
+    b0 = HM93_eq(T, -0.1991649, 0.00110, 0, 1.8063362e-5, 0)
+    b1 = HM93_eq(T, 0.1330579, 0.00436, 0, 0.0011899, 0)
+    b2 = 0
+    Cphi = 0.0005
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['CO3'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 363.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Mg_CO3_HM93(T, P):
+    """c-a: magnesium carbonate [HM93]."""
+    b0 = 0
+    b1 = 0
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = -9
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 363.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Ca_CO3_HM93(T, P):
+    """c-a: calcium carbonate [HM93]."""
+    b0 = 0
+    b1 = 0
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = -9
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 363.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Hovey et al. (1993) ~~~~~
 def HPR93_eq36(T, a):
@@ -7809,12 +7896,14 @@ def psi_H_Na_HSO4_PMR97(T, P):
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Millero and Pierrot (1998) ~~~~~
 def MP98_eq15(T, q):
-    # q[0] = PR
-    # q[1] = PJ  * 1e5
-    # q[2] = PRL * 1e4
+    # Note typo in location of first BJ w.r.t. brackets in MP98 vs PM16 model
+    # Here we use the PM16 model equation
     Tr = 298.15
-    return (q[0] + q[1]*1e-5 * (Tr**3/3 - Tr**2 * q[2]*1e-4)*(1/T - 1/Tr)
-        + q[1]*1e-5*(T**2 - Tr**2)/6)
+    BR = q[0]
+    BJ = q[1]*1e-5
+    BLR = q[2]*1e-4
+    return (BR + (BJ*(298.15**3/3) - 298.15**2*BLR)*(1/T - 1/298.15) +
+        (BJ/6)*(T**2 - 298.15**2))
 
 def bC_Na_I_MP98(T, P):
     """c-a: sodium iodide [MP98]."""
@@ -7857,7 +7946,7 @@ def bC_Na_Br_MP98(T, P):
     b2 = 0
     Cphi = MP98_eq15(T, float_([
          0.00116,
-         0.16405,
+         0.058*2**1.5, # more accurate following PM16 model
         -0.93,
     ]))
     C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['Br'])))
@@ -7870,18 +7959,22 @@ def bC_Na_Br_MP98(T, P):
 
 def bC_Na_F_MP98(T, P):
     """c-a: sodium fluoride [MP98]."""
-    b0 = MP98_eq15(T, float_([
-         0.215,
+    b0 = MP98_eq15(T, [
+         0.0215, # typo in MP98 Table A7 vs PM16 code
         -2.37,
-         5.361e-4,
-    ]))
-    b1 = MP98_eq15(T, float_([
+         5.361, # *1e-4 in MP98 Table A7 presumably a typo vs PM16 code
+    ])
+    b1 = MP98_eq15(T, [
         0.2107,
         0,
-        8.7e-4,
-    ]))
+        8.7, # *1e-4 in MP98 Table A7 presumably a typo vs PM16 code
+    ])
     b2 = 0
-    C0 = 0
+    Cphi = MP98_eq15(T, [
+        0, 0,
+        -0.93, # 0 in MP98 Table A7 presumably a typo vs PM16 code
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['F'])))
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -7931,7 +8024,7 @@ def bC_K_F_MP98(T, P):
     Cphi = MP98_eq15(T, float_([
         0.00093,
         0,
-        0.595,
+       -0.595, # typo in MP98 table vs PM16 model (latter has -, former +)
     ]))
     C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['F'])))
     C1 = 0
@@ -7946,19 +8039,19 @@ def bC_K_OH_MP98(T, P):
     b0 = MP98_eq15(T, float_([
          0.1298,
         -0.946,
-         9.914,
-    ])) # copy of KI
+         9.914, # copy of KI
+    ]))
     b1 = MP98_eq15(T, float_([
          0.32,
         -2.59,
-         11.86,
-    ])) # copy of KI
+         11.86, # copy of KI
+    ]))
     b2 = 0
     Cphi = MP98_eq15(T, float_([
-        -0.0041,
+         0.0041,
          0.0638,
-        -0.944,
-    ])) # copy of KI
+        -0.944, # copy of KI
+    ]))
     C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['OH'])))
     C1 = 0
     alph1 = 2
@@ -8258,12 +8351,12 @@ def bC_Sr_Cl_MP98(T, P):
     b0 = MP98_eq15(T, float_([
          0.28575,
         -0.18367,
-         7.1,
+         9.56*3/4, # from Pierrot_2018_Interaction_Model.xlsm
     ]))
     b1 = MP98_eq15(T, float_([
         1.66725,
         0,
-        28.425,
+        37.9*3/4,
     ]))
     b2 = 0
     Cphi = MP98_eq15(T, float_([
@@ -8330,6 +8423,33 @@ def bC_NH4_Br_MP98(T, P):
     valid = logical_and(T >= 273.15, T <= 323.15)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
+def bC_NH4_Br_MP98typo(T, P):
+    """c-a: ammonium bromide [MP98typo]."""
+    # PM16 model is missing 1e-5 multiplier on final Cphi term
+    b0 = MP98_eq15(T, float_([
+         0.0624,
+        -0.597,
+         0.779,
+    ]))
+    b1 = MP98_eq15(T, float_([
+        0.1947,
+        0,
+        12.58,
+    ]))
+    b2 = 0
+    Cphi = MP98_eq15(T, float_([
+        -0.00436,
+         0,
+         0.21*1e5,
+    ]))
+    C0 = Cphi/(2*sqrt(np_abs(i2c['NH4']*i2c['Br'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
 def bC_NH4_F_MP98(T, P):
     """c-a: ammonium fluoride [MP98]."""
     b0 = MP98_eq15(T, float_([
@@ -8366,7 +8486,7 @@ def bC_Na_HSO4_MP98(T, P):
     #  but their equations look quite different, and there is no Cphi there.
     # This equation is therefore directly from MP98.
     b0 = MP98_eqTableA3(T, float_([
-         0.544,
+         0.0544, # MP98 typo vs PM16 model
         -1.8478e-3,
          5.3937e-5,
     ]))
@@ -8376,7 +8496,7 @@ def bC_Na_HSO4_MP98(T, P):
          0,
     ]))
     b2 = 0
-    Cphi = 0.003905
+    Cphi = -0.0039056 # from PM16 code this should be negative (MP98 typo)
     C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['HSO4'])))
     C1 = 0
     alph1 = 2
@@ -8486,6 +8606,24 @@ def theta_BOH4_Cl_MP98(T, P):
     theta = -0.0323 + (T - 298.15)*-0.42333e-4 + (T - 298.15)**2*-21.926e-6
     valid = logical_and(T >= 273.15, T <= 318.15)
     return theta, valid
+
+def theta_BOH4_Cl_MP98typo(T, P):
+    """a-a': borate chloride [MP98typo]."""
+    # This replicates a typo in the Pierrot_2018_Interaction_Model.xlsm code
+    #   (298.25 instead of 298.15 in the T**2 term).
+    # For proper modelling, should use theta_BOH4_Cl_MP98 instead.
+    theta = -0.0323 + (T - 298.15)*-0.42333e-4 + (T - 298.25)**2*-21.926e-6
+    valid = logical_and(T >= 273.15, T <= 318.15)
+    return theta, valid
+
+def psi_Ca_K_Cl_MP98typo(T, P):
+    """c-c'-a: calcium potassium chloride [MP98typo]."""
+    # This replicates a typo in the Pierrot_2018_Interaction_Model.xlsm code
+    #   (in the first term).
+    # For proper modelling, should use psi_Ca_K_Cl_GM89 instead.
+    psi = 0.047627877 - 27.0770507/T
+    valid = logical_and(T >= 273.15, T <= 523.15)
+    return psi, valid
 
 def bC_Mg_HCO3_MP98(T, P):
     """c-a: magnesium bicarbonate [MP98]."""
@@ -8604,8 +8742,9 @@ def theta_Na_Sr_MP98(T, P):
 def theta_K_Sr_MP98(T, P):
     """c-c': potassium strontium [MP98]."""
     # MP98 say this is set equal to the sodium value (i.e. theta_Na_Sr_MP98?)
-    # but then state a different number...
-    theta = 0.01
+    # but then state a different number (0.01)... 0.07 is used in the program
+    # Pierrot_2018_Interaction_Model.xlsm
+    theta = 0.07
     valid = T == 298.15
     return theta, valid
 
@@ -8669,45 +8808,228 @@ def zeta_H3PO4_Na_Cl_MP98(T, P):
     valid = T == 298.15
     return zeta, valid
 
+def theta_H_K_MP98(T, P):
+    """c-c': hydrogen potassium [MP98]."""
+    # Direct from Pierrot_2018_Interaction_Model.xlsm, conflicts with CMR93
+    theta = 0.005 - 0.0002275*(T - 298.15)
+    valid = logical_and(T >= 273.15, T <= 328.15)
+    return theta, valid
+
+def theta_H_Na_MP98(T, P):
+    """c-c': hydrogen sodium [MP98]."""
+    # Direct from Pierrot_2018_Interaction_Model.xlsm, conflicts with CMR93
+    theta = 0.03416 - 0.000209*(T - Tzero)
+    valid = logical_and(T >= 273.15, T <= 328.15)
+    return theta, valid
+
+def bC_K_CO3_MP98(T, P):
+    """c-a: potassium carbonate [MP98]."""
+    # Direct from Pierrot_2018_Interaction_Model.xlsm, conflicts with SRG87
+    b0 = 0.1288 + 1.1e-3*(T - 298.15) - 5.1e-6*(T - 298.15)**2
+    b1 = 1.433 + 4.36e-3*(T - 298.15) + 2.07e-5*(T - 298.15)**2
+    b2 = 0
+    Cphi = 0.0005 # not in SRG87!
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['CO3'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 278.15, T <= 368.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def theta_H_Mg_MP98(T, P):
+    """c-c': hydrogen magnesium [MP98]."""
+    # RGB80 has no temperature term, as declared by MP98
+    theta = 0.0620 + 0.0003275*(T - 298.15)
+    valid = T == 298.15
+    return theta, valid
+
+def psi_H_Mg_Cl_MP98(T, P):
+    """c-c': hydrogen magnesium chloride [MP98]."""
+    # RGB80 has no temperature term, as declared by MP98
+    theta = 0.001 - 0.0007325*(T - 298.15)
+    valid = T == 298.15
+    return theta, valid
+
+def theta_Ca_H_MP98(T, P):
+    """c-c': calcium hydrogen [MP98]."""
+    # MP98 have really messed this one up? (see notes on theta_Ca_H_RGO81)
+    theta = 0.0612 + 0.0003275*(T - 298.15)
+    valid = T == 298.15
+    return theta, valid
+
+def psi_Ca_H_Cl_MP98(T, P):
+    """c-c': calcium hydrogen chloride [MP98]."""
+    # RGO81 has no temperature term, as declared by MP98
+    theta = 0.0008 - 0.000725*(T - 298.15)
+    valid = T == 298.15
+    return theta, valid
+
+def psi_K_Cl_SO4_MP98(T, P):
+    """c-a-a': potassium chloride sulfate [MP98]."""
+    # MP98 say this is GM89 but don't use full precision for the first
+    #   constant in the PM program
+    psi = GM89_eq3(T, float_([
+        -2.12481e-1,
+         2.84698333e-4,
+         3.75619614e+1,
+         0, 0, 0, 0, 0,
+    ]))
+    valid = logical_and(T >= 273.15, T <= 523.15)
+    return psi, valid
+
+def bC_Na_CO3_MP98(T, P):
+    """c-a: sodium carbonate [MP98]."""
+    # I have no idea where MP98 got their T**2 terms from
+    b0 = 0.0362 + 0.00179*(T - 298.15) + 1.694e-21*(T - 298.15)**2
+    b1 = 1.51 + 0.00205*(T - 298.15) + 1.626E-19*(T - 298.15)**2
+    b2 = 0
+    Cphi = 0.0052
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['CO3'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_HCO3_MP98(T, P):
+    """c-a: sodium bicarbonate [MP98]."""
+    # I have no idea where MP98 got their T**2 terms from
+    b0 = 0.028 + 0.001*(T - 298.15) + 5.082001e-21*(T - 298.15)**2
+    b1 = 0.044 + 0.0011*(T - 298.15) - 3.88e-21*(T - 298.15)**2
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 273.15, T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_HSO4_MP98(T, P):
+    """c-a: potassium bisulfate [MP98]."""
+    # MP98 cite Pierrot & Millero (1997) in the PM16 code for this
+    b0 = -1.8949 - 0.00059751*(T - 298.15)
+    b1 = 5.0284 - 0.0284*(T - 298.15)
+    b2 = 0.0
+    Cphi = 0.9246 + 0.0039751*(T - 298.15)
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['HSO4'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Mg_HSO4_MP98(T, P):
+    """c-a: magnesium bisulfate [MP98]."""
+    # MP98 cite Pierrot & Millero (1997) in the PM16 code for this
+    b0 = -0.61656 - 0.00075174*(T - 298.15)
+    b1 = 7.716066 - 0.0164302*(T - 298.15)
+    b2 = 0.0
+    Cphi = 0.43026 + 0.00199601*(T - 298.15)
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Mg']*i2c['HSO4'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_BOH4_MP98(T, P):
+    """c-a: potassium borate [MP98]."""
+    # MP98 say this is SRRJ87 but then use different coefficients for Cphi
+    b0 = SRRJ87_eq7(T, [
+        0.1469,
+        2.881,
+        0,
+    ])
+    b1 = SRRJ87_eq7(T, [
+        -0.0989,
+        -6.876,
+         0,
+    ])
+    b2 = 0
+    Cphi = SRRJ87_eq7(T, [
+        -56.43e-3,
+        -0.956,
+         0,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['BOH4'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 278.15, T <= 328.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_BOH4_MP98(T, P):
+    """c-a: sodium borate [MP98]."""
+    # MP98 say this is SRRJ87 but then use different coefficients for Cphi
+    b0 = SRRJ87_eq7(T, [
+        -0.0510,
+         5.264,
+         0,
+    ])
+    b1 = SRRJ87_eq7(T, [
+         0.0961,
+        -10.68,
+         0,
+    ])
+    b2 = 0
+    Cphi = SRRJ87_eq7(T, [
+         14.98e-3,
+        -1.57,
+         0,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['BOH4'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = logical_and(T >= 278.15, T <= 328.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Archer (1999) ~~~~~
 def A99_eq22(T, a):
     """A99 equation 22."""
     Tref  = 298.15
-    return   a[0] \
-           + a[1] * (T - Tref)    * 1e-2 \
-           + a[2] * (T - Tref)**2 * 1e-5 \
-           + a[3] * 1e2 / (T - 225) \
-           + a[4] * 1e3 /  T \
-           + a[5] * 1e6 / (T - 225)**3
+    return  (a[0]
+           + a[1] * (T - Tref)    * 1e-2
+           + a[2] * (T - Tref)**2 * 1e-5
+           + a[3] * 1e2 / (T - 225)
+           + a[4] * 1e3 /  T
+           + a[5] * 1e6 / (T - 225)**3)
 
 def bC_K_Cl_A99(T, P):
     """c-a: potassium chloride [A99]."""
     # KCl T parameters from A99 Table 4
-    b0 = A99_eq22(T, float_([
+    b0 = A99_eq22(T, [
          0.413229483398493,
         -0.0870121476114027,
          0.101413736179231,
         -0.0199822538522801,
         -0.0998120581680816,
          0,
-    ]))
-    b1 = A99_eq22(T, float_([
+    ])
+    b1 = A99_eq22(T, [
          0.206691413598171,
          0.102544606022162,
          0,
          0,
          0,
         -0.00188349608000903,
-    ]))
+    ])
     b2 = 0
-    C0 = A99_eq22(T, float_([
+    C0 = A99_eq22(T, [
         -0.00133515934994478,
          0,
          0,
          0.00234117693834228,
         -0.00075896583546707,
          0,
-    ]))
+    ])
     C1 = 0
     alph1 = 2
     alph2 = -9
@@ -8804,8 +9126,8 @@ def bC_Ca_SO4_WM13(T, P):
     b0, b1, b2, C0, C1, alph1, alph2, omega, valid = bC_Ca_SO4_HMW84(T, P)
     # WM13 use temperature derivatives from P91
     # The b0 temperature correction in P91 is zero
-    b1 = b1 + (T - TR) * P91_Ch3_T13_II['Ca-SO4']['b1']
-    b2 = b2 + (T - TR) * P91_Ch3_T13_II['Ca-SO4']['b2']
+    b1 = b1 + (T - TR)*5.460e-2
+    b2 = b2 + (T - TR)*-5.16e-1
     # The C0 temperature correction in P91 is zero
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -8814,9 +9136,9 @@ def bC_Ca_HSO4_WM13(T, P):
     TR = 298.15
     b0, b1, b2, C0, C1, alph1, alph2, omega, valid = bC_Ca_HSO4_HMW84(T, P)
     # WM13 use temperature derivatives for Ca-ClO4 from P91, but with typos
-    b0 = b0 + (T - TR) * P91_Ch3_T13_I['Ca-ClO4']['b0']
-    b1 = b1 + (T - TR) * P91_Ch3_T13_I['Ca-ClO4']['b1']
-    C0 = C0 + (T - TR) * P91_Ch3_T13_I['Ca-ClO4']['C0']
+    b0 = b0 + (T - TR)*0.830e-3
+    b1 = b1 + (T - TR)*5.08e-3
+    C0 = C0 + (T - TR)*-1.090e-4
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 def bC_K_HSO4_WM13(T, P):
@@ -8824,8 +9146,8 @@ def bC_K_HSO4_WM13(T, P):
     TR = 298.15
     b0, b1, b2, C0, C1, alph1, alph2, omega, valid = bC_K_HSO4_HMW84(T, P)
     # WM13 use temperature derivatives for K-ClO4 from P91
-    b0 = b0 + (T - TR) * P91_Ch3_T12['K-ClO4']['b0']
-    b1 = b1 + (T - TR) * P91_Ch3_T12['K-ClO4']['b1']
+    b0 = b0 + (T - TR)*0.600e-4
+    b1 = b1 + (T - TR)*100.700e-4
     # The Cphi temperature correction in P91 is zero
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
@@ -9152,3 +9474,700 @@ def mu_tris_tris_tris_MarChemSpec25(T, P):
     mu = 0.0009529
     valid = T == 298.15
     return mu, valid
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ JESS ~~~~~
+# Ref. JESS = parameters obtained from http://jess.murdoch.edu.au/vewbel.shtml
+def JESS_eq(T, P, j):
+    Tr = 298.15
+    Pr = 10
+    return j[0] + j[1]*(1/T - 1/Tr)*1e3 + j[2]*log(T/Tr) + j[3]*(P - Pr)*0.0001
+
+def bC_H_Br_JESS(T, P):
+    """c-a: hydrogen bromide [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.210904,
+        -0.0111577,
+        -0.0965749,
+        -0.00485161,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.324833,
+        -0.141250,
+        -0.287944,
+        -0.0209720,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        0.00113432,
+        -0.0110028,
+        -0.0542243,
+        0.000704627,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['Br'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_H_Cl_JESS(T, P):
+    """c-a: hydrogen chloride [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.178627,
+        0.209336,
+        0.580887,
+        0.000743741,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.288278,
+        -0.757685,
+        -2.38033,
+        -0.00662854,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        0.000259560,
+        -0.0628809,
+        -0.219810,
+        1.46066E-5,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['Cl'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_H_ClO4_JESS(T, P):
+    """c-a: hydrogen perchlorate [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.177990,
+        -0.126144,
+        -0.278470,
+        -0.000346259,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.282791,
+        -0.469348,
+        -0.990997,
+        -0.0550796,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        0.00754498,
+        0.0103387,
+        0.000000,
+        -0.00157682,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['ClO4'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_H_I_JESS(T, P):
+    """c-a: hydrogen iodide [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.231988,
+        -0.138301,
+        -0.470802,
+        -0.0212351,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.419989,
+        -0.344954,
+        -0.859537,
+        0.0477403,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        0.00286688,
+        0.00703988,
+        0.000000,
+        0.00346557,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['I'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_H_NO3_JESS(T, P):
+    """c-a: hydrogen nitrate [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.116523,
+        -0.0848453,
+        -0.216476,
+        -0.0109287,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.351089,
+        -0.830710,
+        -2.43129,
+        0.0206574,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        -0.00531372,
+        -0.0289539,
+        -0.123911,
+        0.00299856,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['H']*i2c['NO3'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_Br_JESS(T, P):
+    """c-a: potassium bromide [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.0547434,
+        -0.420409,
+        -1.13677,
+        0.00766319,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.238709,
+        -0.160445,
+        -0.235802,
+        0.0172136,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        -0.00145317,
+        0.0658735,
+        0.185412,
+        -0.000339080,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['Br'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_Cl_JESS(T, P):
+    """c-a: potassium chloride [JESS]."""
+    # Coefficients obtained online [2019-08-08]
+    b0 = JESS_eq(T, P, [
+        0.0478024,
+        -0.359514,
+        -1.00809,
+        0.0104416,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.220310,
+        -0.158289,
+        -0.228114,
+        0.0198966,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        -0.000751880,
+        0.0516663,
+        0.149612,
+        -0.000853398,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['Cl'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_I_JESS(T, P):
+    """c-a: potassium iodide [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.0706420,
+        -0.176246,
+        -0.291178,
+        0.0103160,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.279022,
+        -1.11921,
+        -3.31506,
+        -0.0125590,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        -0.00335865,
+        0.000000,
+        -0.0301254,
+        -0.00160355,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['I'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_NO3_JESS(T, P):
+    """c-a: potassium nitrate [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        -0.0763632,
+        -0.582629,
+        -1.49134,
+        -0.000422651,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.0435708,
+        -1.90996,
+        -4.95256,
+        0.0795007,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        0.00526553,
+        0.101479,
+        0.274296,
+        0.00254839,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['NO3'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_K_OH_JESS(T, P):
+    """c-a: potassium hydroxide [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.153478,
+        -0.519124,
+        -1.69587,
+        0.0274921,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.184252,
+        0.107673,
+        0.539154,
+        0.000813086,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        -0.000479227,
+        0.0899943,
+        0.295729,
+        -0.00264638,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['K']*i2c['OH'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Li_Br_JESS(T, P):
+    """c-a: lithium bromide [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.173865,
+        0.174090,
+        0.523963,
+        0.00576938,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.287573,
+        -0.908258,
+        -2.72816,
+        -0.0110614,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        0.00505045,
+        -0.0474007,
+        -0.165446,
+        -0.00114107,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Li']*i2c['Br'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Li_Cl_JESS(T, P):
+    """c-a: lithium chloride [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.148491,
+        0.0993795,
+        0.288338,
+        0.00616159,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.305863,
+        -0.534953,
+        -1.57812,
+        0.00327985,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        0.00363693,
+        -0.0309516,
+        -0.118649,
+        -0.000747312,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Li']*i2c['Cl'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Li_ClO4_JESS(T, P):
+    """c-a: lithium perchlorate [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.194332,
+        0.0519232,
+        0.179439,
+        -0.000735779,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.435514,
+        -0.694923,
+        -2.09437,
+        0.00524685,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        0.00160986,
+        -0.0229881,
+        -0.0977900,
+        0.000703517,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Li']*i2c['ClO4'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Li_I_JESS(T, P):
+    """c-a: lithium iodide [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.176338,
+        0.000000,
+        -0.129076,
+        -0.00291167,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.523319,
+        0.0858259,
+        0.810061,
+        -0.000530723,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        0.0109604,
+        -0.0457470,
+        -0.125706,
+        0.000223867,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Li']*i2c['I'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Li_NO3_JESS(T, P):
+    """c-a: lithium nitrate [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.140963,
+        -0.285745,
+        -0.959602,
+        -0.00269645,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.286879,
+        0.763311,
+        2.87993,
+        0.0225144,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        -0.00543304,
+        0.00233974,
+        0.000000,
+        0.000892616,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Li']*i2c['NO3'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Li_OH_JESS(T, P):
+    """c-a: lithium hydroxide [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.0544861,
+        -0.245358,
+        -0.865967,
+        0.00588145,
+    ])
+    b1 = JESS_eq(T, P, [
+        -0.139320,
+        -0.725360,
+        -2.44668,
+        0.0583334,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        -0.00433424,
+        0.0208725,
+        0.0579693,
+        0.00152371,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Li']*i2c['OH'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_Br_JESS(T, P):
+    """c-a: sodium bromide [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.0987329,
+        -0.428710,
+        -1.19150,
+        0.00937076,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.285551,
+        -0.452514,
+        -1.24784,
+        0.000698698,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        0.000736067,
+        0.0467849,
+        0.124757,
+        -0.00113162,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['Br'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_Cl_JESS(T, P):
+    """c-a: sodium chloride [JESS]."""
+    # Coefficients obtained online [2019-08-08]
+    b0 = JESS_eq(T, P, [
+        0.0779802,
+        -0.429500,
+        -1.21510,
+        0.0108697,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.269983,
+        -0.379473,
+        -1.03405,
+        0.00877337,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        0.000918109,
+        0.0518882,
+        0.139812,
+        -0.000952450,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['Cl'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_ClO4_JESS(T, P):
+    """c-a: sodium perchlorate [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.0557192,
+        -0.519285,
+        -1.35911,
+        0.00925914,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.280349,
+        -1.02206,
+        -2.73189,
+        0.0158837,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        -0.00126494,
+        0.0944381,
+        0.269364,
+        -0.000962511,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['ClO4'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_I_JESS(T, P):
+    """c-a: sodium iodide [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.124139,
+        -0.149852,
+        -0.225275,
+        0.00691965,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.317353,
+        -1.47625,
+        -4.67803,
+        -0.0109580,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        0.000609691,
+        -0.0485681,
+        -0.197132,
+        -0.000968575,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['I'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_NO3_JESS(T, P):
+    """c-a: sodium nitrate [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.00500042,
+        -0.708908,
+        -1.99654,
+        0.00501474,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.200360,
+        -0.879277,
+        -2.23652,
+        0.0625764,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        -0.000347888,
+        0.153367,
+        0.461828,
+        0.000540176,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['NO3'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+def bC_Na_OH_JESS(T, P):
+    """c-a: sodium hydroxide [JESS]."""
+    # Coefficients obtained online [2019-08-09]
+    b0 = JESS_eq(T, P, [
+        0.0857078,
+        -0.618667,
+        -1.90371,
+        0.0278606,
+    ])
+    b1 = JESS_eq(T, P, [
+        0.276706,
+        -0.443782,
+        -1.30232,
+        0.0242386,
+    ])
+    b2 = 0
+    Cphi = JESS_eq(T, P, [
+        0.00418666,
+        0.0982562,
+        0.285252,
+        -0.00224765,
+    ])
+    C0 = Cphi/(2*sqrt(np_abs(i2c['Na']*i2c['OH'])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = T == 298.15 # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+# def bC___JESS(T, P):
+#     """c-a:  [JESS]."""
+#     # Coefficients obtained online [2019-08-08]
+#     b0 = JESS_eq(T, P, [
+#         ,
+#         ,
+#         ,
+#         ,
+#     ])
+#     b1 = JESS_eq(T, P, [
+#         ,
+#         ,
+#         ,
+#         ,
+#     ])
+#     b2 = 0
+#     Cphi = JESS_eq(T, P, [
+#         ,
+#         ,
+#         ,
+#         ,
+#     ])
+#     C0 = Cphi/(2*sqrt(np_abs(i2c['']*i2c[''])))
+#     C1 = 0
+#     alph1 = 2
+#     alph2 = -9
+#     omega = -9
+#     valid = T == 298.15 # unknown validity
+#     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid

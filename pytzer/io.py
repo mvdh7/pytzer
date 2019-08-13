@@ -8,6 +8,8 @@ def getmols(filename, delimiter=',', skip_top=0):
     """Import molality, temperature and pressure data from a CSV file, where
     all ionic concentrations are defined (i.e. no equilibration)."""
     data = genfromtxt(filename, delimiter=delimiter, skip_header=skip_top+1)
+    if len(shape(data)) == 1:
+        data = array([data,])
     head = genfromtxt(filename, delimiter=delimiter, dtype='U',
         skip_header=skip_top, skip_footer=shape(data)[0])
     nan_to_num(data, copy=False)
@@ -23,6 +25,8 @@ def gettots(filename, delimiter=',', skip_top=0):
     """Import molality, temperature and pressure data from a CSV file, where
     some total concentrations are defined (i.e. with equilibration)."""
     data = genfromtxt(filename, delimiter=delimiter, skip_header=skip_top+1)
+    if len(shape(data)) == 1:
+        data = array([data,])
     head = genfromtxt(filename, delimiter=delimiter, dtype='U',
         skip_header=skip_top, skip_footer=shape(data)[0])
     nan_to_num(data, copy=False)

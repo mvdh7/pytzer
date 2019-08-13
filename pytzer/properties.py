@@ -9,6 +9,7 @@ _ion2charge = {
     # Neutrals
     'BOH3': 0,
     'CO2': 0,
+    'H2S': 0,
     'H3PO4': 0,
     'HF': 0,
     'glycerol': 0,
@@ -173,23 +174,42 @@ _ele2ions = {
     'CuSO4': (('Cujj', 'SO4'), (1, 1)),
     'glycerol': (('glycerol',), (1,)),
     'H2SO4': (('HSO4', 'SO4', 'H', 'OH'), (0.5, 0.5, 1.5, 0.0)),
+    'HBr': (('H', 'Br'), (1, 1)),
+    'HCl': (('H', 'Cl'), (1, 1)),
+    'HClO4': (('H', 'ClO4'), (1, 1)),
+    'HI': (('H', 'I'), (1, 1)),
+    'HNO3': (('H', 'NO3'), (1, 1)),
+    'KB(OH)4': (('K', 'BOH4'), (1, 1)),
     'K2CO3': (('K', 'CO3'), (2, 1)),
     'K2SO4': (('K', 'SO4'), (2, 1)),
+    'KBr': (('K', 'Br'), (1, 1)),
     'KCl': (('K', 'Cl'), (1, 1)),
     'KF': (('K', 'F'), (1, 1)),
+    'KI': (('K', 'I'), (1, 1)),
+    'KNO3': (('K', 'NO3'), (1, 1)),
+    'KOH': (('K', 'OH'), (1, 1)),
     'LaCl3': (('La', 'Cl'), (1, 3)),
     'Li2SO4': (('Li', 'SO4'), (2, 1)),
+    'LiBr': (('Li', 'Br'), (1, 1)),
     'LiCl': (('Li', 'Cl'), (1, 1)),
+    'LiClO4': (('Li', 'ClO4'), (1, 1)),
     'LiI': (('Li', 'I'), (1, 1)),
+    'LiNO3': (('Li', 'NO3'), (1, 1)),
+    'LiOH': (('Li', 'OH'), (1, 1)),
     'MgCl2': (('Mg', 'Cl'), (1, 2)),
     'Mg(ClO4)2': (('Mg', 'ClO4'), (1, 2)),
     'Mg(NO3)2': (('Mg', 'NO3'), (1, 2)),
     'MgSO4': (('Mg', 'SO4'), (1, 1)),
     'Na2S2O3': (('Na', 'S2O3'), (2, 1)),
     'Na2SO4': (('Na', 'SO4'), (2, 1)),
+    'NaB(OH)4': (('Na', 'BOH4'), (1, 1)),
+    'NaBr': (('Na', 'Br'), (1, 1)),
     'NaCl': (('Na', 'Cl'), (1, 1)),
+    'NaClO4': (('Na', 'ClO4'), (1, 1)),
     'NaF': (('Na', 'F'), (1, 1)),
+    'NaI': (('Na', 'I'), (1, 1)),
     'NaOH': (('Na', 'OH'), (1, 1)),
+    'NaNO3': (('Na', 'NO3'), (1, 1)),
     'RbCl': (('Rb', 'Cl'), (1, 1)),
     'SrCl2': (('Sr', 'Cl'), (1, 2)),
     'Sr(NO3)2': (('Sr', 'NO3'), (1, 2)),
@@ -205,9 +225,11 @@ _ele2ions = {
 
 # Define electrolyte to ions conversion dict for equilibria
 _eq2ions = {
+    't_H2CO3': ('CO2', 'HCO3', 'CO3'),
     't_HSO4': ('HSO4', 'SO4'),
     't_Mg': ('Mg', 'MgOH'),
     't_trisH': ('trisH', 'tris'),
+    't_BOH3': ('BOH3', 'BOH4'),
 }
 
 def charges(ions):
@@ -226,11 +248,14 @@ def charges(ions):
 
 def getallions(eles, fixions):
     """Get all ions given list of electrolytes for equilibria."""
-    allions = concatenate([
-        fixions,
-        concatenate([_eq2ions[ele] for ele in eles]),
-        ['H', 'OH'],
-    ])
+    if len(eles) == 0:
+        allions = concatenate([fixions, ['H', 'OH']])
+    else:
+        allions = concatenate([
+            fixions,
+            concatenate([_eq2ions[ele] for ele in eles]),
+            ['H', 'OH'],
+        ])
     if len(unique(allions)) < len(allions):
         allions = list(allions)
         allions.reverse()

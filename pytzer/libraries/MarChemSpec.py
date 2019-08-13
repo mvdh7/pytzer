@@ -16,5 +16,5 @@ mu = MarChemSpec25.mu
 lnk = {}
 lnk['H2O'] = dissociation.H2O_MF
 lnk['HSO4'] = dissociation.HSO4_CRP94
-lnk['Mg'] = dissociation.Mg_CW91
+lnk['MgOH'] = dissociation.MgOH_CW91
 lnk['trisH'] = dissociation.trisH_BH64
