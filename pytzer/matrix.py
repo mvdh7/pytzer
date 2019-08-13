@@ -53,7 +53,7 @@ def etheta(Aosm, I, zs):
 def Gex_nRT(mols, allmxs):
     """Excess Gibbs energy of a solution."""
     (zs, Aosm, b0mx, b1mx, b2mx, C0mx, C1mx, alph1mx, alph2mx, omegamx,
-        thetamx, lambdamx, psimxcca, psimxcaa, zetamx, mumx) = allmxs
+        thetamx, lambdamx, psimxcca, psimxcaa, zetamx, mumx, _) = allmxs
     I = Istr(mols, zs)
     cats = array([mols[zs > 0]])
     anis = array([mols[zs < 0]])
@@ -180,6 +180,7 @@ def assemble(ions, tempK, pres, prmlib=Seawater):
                 iset3 = '-'.join((neutral, cation, anion))
                 zetamx[N, C*size(anions)+A] = (
                     prmlib.zeta[iset3](tempK, pres)[0])
+    equilibria = prmlib.lnk.keys()
     # Equilibrate functions rely on 'equilibria' being the final output here:
     return (zs, Aosm, b0mx, b1mx, b2mx, C0mx, C1mx, alph1mx, alph2mx, omegamx,
-        thetamx, lambdamx, psimxcca, psimxcaa, zetamx, mumx)
+        thetamx, lambdamx, psimxcca, psimxcaa, zetamx, mumx, equilibria)
