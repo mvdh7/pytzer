@@ -74,22 +74,6 @@ def MgOH_MP98(tempK, pres):
     lnkMg = log10kMg*log(10)
     return lnkMg
 
-def MP98_eq24(tempK, A, B, C):
-    pK = A + B/tempK + C*tempK
-    return -pK*log(10)
-
-def MgCO3_MP98(tempK, pres):
-    """MgCO3 formation [MR97 via MP98]."""
-    return MP98_eq24(tempK, 1.028, 0, 0.0066154)
-
-def CaCO3_MP98(tempK, pres):
-    """CaCO3 formation [MR97 via MP98]."""
-    return MP98_eq24(tempK, 1.178, 0, 0.0066154)
-
-def SrCO3_MP98(tempK, pres):
-    """SrCO3 formation [MR97 via MP98]."""
-    return MP98_eq24(tempK, 1.028, 0, 0.0066154)
-
 def MP98_eq23(tempK, A, B, C, D):
     return A + B/tempK + C*log(tempK) + D*tempK
 

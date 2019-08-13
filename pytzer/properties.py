@@ -13,7 +13,6 @@ _ion2charge = {
     'H3PO4': 0,
     'HF': 0,
     'glycerol': 0,
-    'MgCO3': 0,
     'NH3': 0,
     'SO2': 0,
     'sucrose': 0,

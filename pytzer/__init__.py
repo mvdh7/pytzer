@@ -111,7 +111,14 @@ def blackbox_equilibrate(filename, prmlib=libraries.MIAMI, savefile=True):
     prmlib = deepcopy(prmlib)
     prmlib.add_zeros(allions) # just in case
     # Solve for equilibria
-    eqstate_guess = equilibrate.countlnks(eles, prmlib)
+    q = 0
+    for ele in eles:
+        q += len(properties._eq2ions[ele]) - 1
+    eqstate_guess = [0.0 for _ in range(q)]
+    if q == 0:
+        eqstate_guess = [30.0,]
+    else:
+        eqstate_guess.append(30.0)
     allmols, allions, eqstates = equilibrate.solveloop(eqstate_guess, tots,
         fixmols, eles, fixions, tempK, pres, prmlib=prmlib)
     # Separate out zero ionic strengths

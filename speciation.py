@@ -40,8 +40,6 @@ pKstarBOH3 = -np.log10(calk.dissociation.kBOH3_T_D90a(298.15, 35))
 pKstarHSO4_pz = -np.log10(mSO4*mH/mHSO4)
 pKstarHSO4 = -np.log10(calk.dissociation.kHSO4_F_D90b(298.15, 35))
 mMgOH = allmols[allions == 'MgOH'][0][0]
-mMg = allmols[allions == 'Mg'][0][0]
-pKstarMgOH_pz = -np.log10(mMgOH/(mMg*mOH))
 
 #%%
 #tots, fixmols, eles, fixions, tempK, pres = pz.io.gettots(filename)

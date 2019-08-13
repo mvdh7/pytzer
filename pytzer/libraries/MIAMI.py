@@ -264,7 +264,6 @@ zeta = { # all from Table A12
 lnk = {
     'BOH3': dissociation.BOH3_M79,
     'MgOH': dissociation.MgOH_MP98,
-#    'MgCO3': dissociation.MgCO3_MP98,
     'H2O': dissociation.H2O_M79,
     'HSO4': dissociation.HSO4_CRP94,
     'H2CO3': dissociation.H2CO3_MP98,
