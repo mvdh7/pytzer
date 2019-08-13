@@ -48,9 +48,9 @@ A manuscript describing Pytzer is in preparation for publication. Please check b
 
 ## Acknowledgements
 
-Pytzer is maintained by [Dr Matthew P. Humphreys](https://mvdh.xyz) at the Centre for Ocean and Atmospheric Sciences, School of Environmental Sciences, University of East Anglia, Norwich, UK.
+Pytzer is maintained by [Dr Matthew P. Humphreys](https://mvdh.xyz) at the Centre for Ocean and Atmospheric Sciences, School of Environmental Sciences, University of East Anglia, Norwich, UK. Its ongoing development is funded by the Natural Environment Research Council (NERC, UK) through grant NE/P012361/1: *NSFGEO-NERC: A Thermodynamic Chemical Speciation Model for the Oceans, Seas, and Estuaries*.
 
-Its ongoing development is funded by the Natural Environment Research Council (NERC, UK) through grant NE/P012361/1: *NSFGEO-NERC: A Thermodynamic Chemical Speciation Model for the Oceans, Seas, and Estuaries*.
+Pytzer contains myriad functions and coefficients representing the effects of different solute interactions on solution properties that have been empirically determined from painstaking experiments and data compilations by hundreds of researchers over the course at least a century. The small selection of this enormous body of work that we have brought together here is listed in the [references](../references).
 
 ## License
 
