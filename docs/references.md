@@ -62,7 +62,7 @@ In alphanumerical order of the source codes:
 <td>Hovey, J. K., Pitzer, K. S., and Rard, J. A. (1993). Thermodynamics of Na<sub>2</sub>SO<sub>4</sub>(aq) at temperatures <i>T</i> from 273 K to 373 K and of {(1-<i>y</i>)H<sub>2</sub>SO<sub>4</sub>+<i>y</i>Na<sub>2</sub>SO<sub>4</sub>}(aq) at <i>T</i> = 298.15 K. <i>J. Chem. Thermodyn.</i> 25(1), 173–192. <a href="https://doi.org/10.1006/jcht.1993.1016">doi:10.1006/jcht.1993.1016</a>.</td></tr><tr>
 
 <td id="JESS"><code>JESS</code></td>
-<td>May, P. M. (2015). JESS at thirty: Strengths, weaknesses and future needs in the modelling of chemical speciation. <i>Appl. Geochem.</i> 55, 3–16. <a href="https://doi.org/10.1016/j.apgeochem.2014.11.023">doi:10.1016/j.apgeochem.2014.11.023</a>.</td></tr><tr>
+<td>May, P. M., Rowland, D., Hefter, G., and Königsbeger, E. (2011). A Generic and Updatable Pitzer Characterization of Aqueous Binary Electrolyte Solutions at 1 bar and 25 °C. <i>J. Chem. Eng. Data</i> 56(12), 5066–5077. <a href="https://doi.org/10.1021/je2009329">doi:10.1021/je2009329</a>.<br />See also: <a href="http://jess.murdoch.edu.au/vewbel.shtml">jess.murdoch.edu.au/vewbel.shtml</a></td></tr><tr>
 
 <td id="M79"><code>M79</code></td>
 <td>Millero, F. J. (1979). The thermodynamics of the carbonate system in seawater. <i>Geochim. Cosmochim. Acta</i> 43(10), 1651–1661. <a href="https://doi.org/10.1016/0016-7037(79)90184-4">doi:10.1016/0016-7037(79)90184-4</a>.</td></tr><tr>
