@@ -6,7 +6,7 @@ Version 0.4 remains in beta testing. The main change from version 0.3 is includi
 
 **Release date:** forthcoming
 
-
+  * Removed pressure input from thermodynamic equilibrium constant functions.
 
 ## 0.4.1
 
