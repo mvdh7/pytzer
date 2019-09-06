@@ -1,6 +1,6 @@
 <!--<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>-->
 
-# Pytzer v0.4.2-dev
+# Pytzer v0.4.2
 
 **Pytzer** is a Python 3.6+ implementation of the Pitzer model for chemical activities in aqueous solutions [[P91](references/#P91)].
 

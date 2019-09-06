@@ -2,7 +2,7 @@
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 """Define module metadata."""
 from . import parameters
-version = '0.4.2-dev'
+version = '0.4.2'
 
 def getprmfuncs():
     """Generate dict containing all interaction parameter functions."""

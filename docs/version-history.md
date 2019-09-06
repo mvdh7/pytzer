@@ -4,7 +4,7 @@ Version 0.4 remains in beta testing. The main change from version 0.3 is includi
 
 ## 0.4.2
 
-**Release date:** forthcoming
+**Release date:** 2019-09-06
 
   * Removed pressure input from thermodynamic equilibrium constant functions;
   * Converted copies from shallow to deep in parameter library modules.
