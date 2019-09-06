@@ -311,23 +311,23 @@ def _oosetup(eqstate_guess, tots, eles, fixions, tempK, pres, prmlib):
     q = 0
     for ele in eles:
         if ele == 't_HSO4':
-            lnks[q] = prmlib.lnk['HSO4'](tempK, pres)
+            lnks[q] = prmlib.lnk['HSO4'](tempK)
             q += 1
         elif ele == 't_Mg':
-            lnks[q] = prmlib.lnk['MgOH'](tempK, pres)
+            lnks[q] = prmlib.lnk['MgOH'](tempK)
             q += 1
         elif ele == 't_trisH':
-            lnks[q] = prmlib.lnk['trisH'](tempK, pres)
+            lnks[q] = prmlib.lnk['trisH'](tempK)
             q += 1
         elif ele == 't_H2CO3':
-            lnks[q] = prmlib.lnk['H2CO3'](tempK, pres)
-            lnks[q+1] = prmlib.lnk['HCO3'](tempK, pres)
+            lnks[q] = prmlib.lnk['H2CO3'](tempK)
+            lnks[q+1] = prmlib.lnk['HCO3'](tempK)
             q += 2
         elif ele == 't_BOH3':
-            lnks[q] = prmlib.lnk['BOH3'](tempK, pres)
+            lnks[q] = prmlib.lnk['BOH3'](tempK)
             q += 1
     if len(eqstate_guess) == q+1:
-        lnks[-1] = prmlib.lnk['H2O'](tempK, pres)
+        lnks[-1] = prmlib.lnk['H2O'](tempK)
     return eqstates, allmols, allions, lnks
 
 def solveloop(eqstate_guess, tots, fixmols, eles, fixions, tempK, pres,

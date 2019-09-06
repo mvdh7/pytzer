@@ -9,15 +9,15 @@ MathJax.Hub.Config({TeX: {extensions: ["[mhchem]/mhchem.js"]}});
 
 *The casual user has no need to explicitly call this module.*
 
-`.dissociation` contains functions to evaluate thermodynamic equilibrium constants from temperature and pressure.
+`.dissociation` contains functions to evaluate thermodynamic equilibrium constants from temperature.
 
 The functions all use the same syntax:
 
 ```python
-lnk_EQ = pz.dissociation.EQ_SRC(tempK, pres)
+lnk_EQ = pz.dissociation.EQ_SRC(tempK)
 ```
 
-where `tempK` and `pres` have their usual meanings, and `lnk_EQ` is the natural logarithm of the equilibrium constant for the equilibrium `EQ`, following `SRC`.
+where `tempK` has its usual meanings, and `lnk_EQ` is the natural logarithm of the equilibrium constant for the equilibrium `EQ`, following `SRC`.
 
 ---
 

@@ -1,19 +1,20 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
+from copy import deepcopy
 from .. import parameters as prm
 from .. import debyehueckel#, dissociation
 # Start from MIAMI plus MarChemSpec equilibria and mu
 from . import MarChemSpec, MIAMI
 name = 'Seawater'
 # Copy MIAMI/MarChemSpec:
-jfunc = MIAMI.jfunc
-bC = MIAMI.bC
-theta = MIAMI.theta
-psi = MIAMI.psi
-lambd = MIAMI.lambd
-zeta = MIAMI.zeta
-mu = MarChemSpec.mu
-lnk = MIAMI.lnk
+jfunc = deepcopy(MIAMI.jfunc)
+bC = deepcopy(MIAMI.bC)
+theta = deepcopy(MIAMI.theta)
+psi = deepcopy(MIAMI.psi)
+lambd = deepcopy(MIAMI.lambd)
+zeta = deepcopy(MIAMI.zeta)
+mu = deepcopy(MarChemSpec.mu)
+lnk = deepcopy(MIAMI.lnk)
 # Overwrite MIAMI/MarChemSpec:
 dh = {'Aosm': debyehueckel.Aosm_AW90}
 bC['Na-Cl'] = prm.bC_Na_Cl_A92ii
