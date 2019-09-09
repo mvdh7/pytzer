@@ -2,6 +2,12 @@
 
 Version 0.4 remains in beta testing. The main change from version 0.3 is including solvers to determine the equilibrium composition of aqueous solutions.
 
+## 0.4.3
+
+**Release date:** forthcoming
+
+  * Added `osm` function for osmotic coefficient to **matrix** module.
+
 ## 0.4.2
 
 **Release date:** 2019-09-06

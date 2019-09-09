@@ -7,7 +7,7 @@ from numpy import sum as np_sum
 import pytzer as pz
 #from scipy.special import factorial
 import numpy as np
-prmlib = deepcopy(pz.libraries.MIAMI)
+prmlib = deepcopy(pz.libraries.MarChemSpec)
 prmlib.lnk['HSO4'] = pz.dissociation.HSO4_CRP94
 
 # Read in isopiestic data
@@ -47,8 +47,8 @@ prmlib.ions = unique(append(prmlib.ions,testions))
 prmlib.add_zeros(prmlib.ions)
 
 # Calculate activities and difference from test ele
-from time import time
-go = time()
+#from time import time
+#go = time()
 for i, irow in enumerate(testdict.keys()):
     if (i+1)%20 == 0:
         print('Solving {} of {}...'.format(i+1, len(testdict.keys())))
@@ -62,7 +62,7 @@ for i, irow in enumerate(testdict.keys()):
             allions = np.array(trc['ions'])
             allmxs = pz.matrix.assemble(allions, trc['tempK'], trc['pres'],
                 prmlib=prmlib)
-            lnks = [prmlib.lnk['HSO4'](trc['tempK'], trc['pres'])]
+            lnks = [prmlib.lnk['HSO4'](trc['tempK'])]
             eqstate_guess = [0.0]
             tots1 = trc['tots']
             fixmols1 = np.array([])
@@ -73,19 +73,19 @@ for i, irow in enumerate(testdict.keys()):
             trc['mols'] = np.vstack(pz.equilibrate.eqstate2mols(eqstate, tots1,
                 fixmols1, eles, fixions)[0])
             trc['aw'] = pz.matrix.aw(np.transpose(trc['mols']), allmxs)
-#            eqstate = pz.equilibrate.solvequick(eqstate_guess, trc['tots'],
-#                [], ['t_HSO4'], trc['ions'], [], allmxs, lnks)['x']
-#            trc['mols'] = np.transpose(pz.equilibrate.eqstate2mols(eqstate,
-#                trc['tots'], [], ['t_HSO4'], []))
+            trc['osm'] = pz.matrix.osm(np.transpose(trc['mols']), allmxs)
         # Calculate other water activities
         trc['aw'] = pz.model.aw(trc['mols'], trc['ions'], trc['tempK'],
+            trc['pres'], prmlib=prmlib, Izero=trc['Istr'] == 0)
+        trc['osm'] = pz.model.osm(trc['mols'], trc['ions'], trc['tempK'],
             trc['pres'], prmlib=prmlib, Izero=trc['Istr'] == 0)
 for irow in testdict.keys():
     for icell in testdict[irow].keys():
         if icell != testele:
             trc = testdict[irow][icell]
             trc['del_aw'] = trc['aw'] - testdict[irow][testele]['aw']
-print(time() - go)
+            trc['del_osm'] = trc['osm'] - testdict[irow][testele]['osm']
+#print(time() - go)
 
 #%% Get arrays for plotting
 t_dictrow = vstack([irow for irow  in testdict.keys()
@@ -115,8 +115,8 @@ t_eleaw = vstack([testdict[irow][icell]['aw']
 from matplotlib import pyplot as plt
 
 fig, ax = plt.subplots(2, 1)
-L = t_elemix != 'sabf'
-H = t_elemix == 'H2SO4'
+L = t_elemix == 'KCl'
+H = t_elemix == 'KCl'
 sim_mNaCl = np.arange(0.01, 2.5, 0.01)**2
 sim_mols = np.array([sim_mNaCl, sim_mNaCl])
 sim_ions = np.array(['K', 'Cl'])
