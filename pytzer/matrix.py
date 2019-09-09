@@ -103,7 +103,7 @@ def osm(mols, allmxs):
     ww = 1.0
     return (1.0 - egrad(lambda ww:
         ww*Gex_nRT(mols/ww, allmxs))(ww)/np_sum(mols))
-
+        
 def assemble(ions, tempK, pres, prmlib=Seawater):
     """Assemble parameter matrices."""
     zs, cations, anions, neutrals = properties.charges(ions)
