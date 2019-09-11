@@ -1,4 +1,4 @@
-# Pytzer v0.4.2
+# Pytzer v0.4.3
 
 [![pypi badge](https://img.shields.io/pypi/v/pytzer.svg?style=popout)](https://pypi.org/project/pytzer/)
 
