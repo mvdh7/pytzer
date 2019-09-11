@@ -8,7 +8,7 @@ from autograd.numpy import (array, exp, log, ones, size, sqrt, transpose,
 from autograd.numpy import abs as np_abs
 from autograd.numpy import sum as np_sum
 from . import properties
-from .libraries import Seawater
+from .libraries import MarChemSpec
 from .constants import b, Mw
 from .model import g, h
 from .unsymmetrical import P75_eq47 as jfunc
@@ -98,7 +98,13 @@ def aw(mols, allmxs):
     """Water activity."""
     return exp(lnaw(mols, allmxs))
 
-def assemble(ions, tempK, pres, prmlib=Seawater):
+def osm(mols, allmxs):
+    """Calculate the osmotic coefficient."""
+    ww = 1.0
+    return (1.0 - egrad(lambda ww:
+        ww*Gex_nRT(mols/ww, allmxs))(ww)/np_sum(mols))
+        
+def assemble(ions, tempK, pres, prmlib=MarChemSpec):
     """Assemble parameter matrices."""
     zs, cations, anions, neutrals = properties.charges(ions)
     zs = transpose(zs)

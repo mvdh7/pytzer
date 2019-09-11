@@ -85,6 +85,9 @@ In alphanumerical order of the source codes:
 <td id="MWRB78"><code>MWRB78</code></td>
 <td>Macaskill, J. B., White, D. R., Robinson, R. A., and Bates, R. G. (1978). Isopiestic measurements on aqueous mixtures of sodium chloride and strontium chloride. <i>J. Solution Chem.</i> 7(5), 339–347. <a href="https://doi.org/10.1007/BF00662894">doi:10.1007/BF00662894</a>.</td></tr><tr>
 
+<td id="MZF93"><code>MZF93</code></td>
+<td>Millero, F. J., Zhang, J.-Z., Fiol, S., Sotolongo, S., Roy, R. N., Lee, K., and Mane, S. (1993). The use of buffers to measure the pH of seawater. <i>Mar. Chem.</i> 44, 143–152. <a href="https://doi.org/10.1016/0304-4203(93)90199-X">doi:10.1016/0304-4203(93)90199-X</a>.</td></tr><tr>
+
 <td id="P75"><code>P75</code></td>
 <td>Pitzer, K. S. (1975). Thermodynamics of electrolytes. V. effects of higher-order electrostatic terms. <i>J. Solution Chem.</i> 4, 249–265. <a href="https://doi.org/10.1007/BF00646562">doi:10.1007/BF00646562</a>.</td></tr><tr>
 

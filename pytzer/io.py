@@ -3,6 +3,8 @@
 """Import solution composition data, and export the results."""
 from autograd.numpy import (array, concatenate, genfromtxt, logical_and,
     nan_to_num, savetxt, shape, transpose, vstack)
+from autograd.numpy import sum as np_sum
+from .properties import _ele2ionmass, _ion2mass
 
 def getmols(filename, delimiter=',', skip_top=0):
     """Import molality, temperature and pressure data from a CSV file, where
@@ -65,3 +67,46 @@ def saveall(filename, mols, ions, tempK, pres, osm, aw, acfs):
             ['g'+ion for ion in ions])
         )),
         comments='')
+
+def _u2v(mols, ions, tots, eles):
+    """Get approximate conversion factor for molinity (mol/kg-solution) to
+    molality (mol/kg-H2O).
+    """
+    ionmasses = array([_ion2mass[ion] for ion in ions])*mols.ravel()
+    elemasses = (array([_ion2mass[_ele2ionmass[ele]] for ele in eles])*
+        tots.ravel())
+    totalsalts = (np_sum(ionmasses) + np_sum(elemasses))*1e-3 # kg
+    u2v = 1 + totalsalts
+    return u2v
+    
+def solution2solvent(mols, ions, tots, eles):
+    """Roughly convert molinity (mol/kg-solution) to molality (mol/kg-H2O)."""
+    u2v = _u2v(mols, ions, tots, eles)
+    mols = mols*u2v
+    tots = tots*u2v
+    return mols, tots
+    
+def solvent2solution(mols, ions, tots, eles):
+    """Roughly convert molality (mol/kg-H2O) to molinity (mol/kg-solution)."""
+    u2v = _u2v(mols, ions, tots, eles)
+    mols = mols/u2v
+    tots = tots/u2v
+    return mols, tots
+
+def salinity2mols(salinity, MgOH=False):
+    """Convert salinity (g/kg-sw) to molality for typical seawater, simplified
+    for the WM13 tris buffer model, following MZF93.
+    """
+    if MgOH:
+        mols = (array([0.44516, 0.01077, 0.01058, 0.56912])*
+            salinity/43.189)
+        ions = array(['Na', 'Ca', 'K', 'Cl'])
+        tots = array([0.02926, 0.05518])*salinity/43.189
+        eles = array(['t_HSO4', 't_Mg'])
+    else:
+        mols = (array([0.44516, 0.05518, 0.01077, 0.01058, 0.56912])*
+            salinity/43.189)
+        ions = array(['Na', 'Mg', 'Ca', 'K', 'Cl'])
+        tots = array([0.02926])*salinity/43.189
+        eles = array(['t_HSO4'])
+    return mols, ions, tots, eles

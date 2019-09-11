@@ -2,6 +2,15 @@
 
 Version 0.4 remains in beta testing. The main change from version 0.3 is including solvers to determine the equilibrium composition of aqueous solutions.
 
+## 0.4.3
+
+**Release date:** 2019-09-11
+
+  * Added `osm` function for osmotic coefficient to **matrix** module;
+  * Added **io** module functions to roughly convert between molinity (mol/kg-solution) and molality (mol/kg-H<sub>2</sub>O);
+  * Added `salinity2mols` function in **io** module to estimate molalities from salinity for [MZF93](../references/#MZF93) artificial seawater;
+  * Switched `assemble` function in **matrix** module to use the MarChemSpec parameter library by default.
+
 ## 0.4.2
 
 **Release date:** 2019-09-06
