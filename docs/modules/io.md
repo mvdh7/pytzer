@@ -139,3 +139,22 @@ mols, tots = pz.io.solvent2solution(mols, ions, tots, eles)
 The former function converts both `mols` and `tots` from molinity to molality, as may be required before running Pytzer calculations to get from typical oceanographic units to those required for the physicochemistry. The latter function does the opposite.
 
 Note that if there are any equilibria to be solved then the conversion is, for now, approximate. This is because the total mass of solutes per kilogram of solvent depends on the final equilibrium speciation in the solution. For now, to calculate the conversion factor, we simply assume that each the equilibrating species in `tots` fully dissociates into whichever ion is dominant in typical seawater.
+
+---
+
+## `.salinity2mols` - molalities from salinity
+
+Estimates the solution composition following the simplified artificial seawater recipe of [MZF93](../../references/#MZF93) at the input salinity (in g/kg-sw).
+
+**Syntax:**
+
+```python
+mols, ions, tots, eles = pz.io.salinity2mols(salinity, MgOH=False)
+```
+
+**Inputs:**
+
+  * `salinity` - salinity in g-salts/kg-sw;
+  * `MgOH` - optional; sets whether or not to allow MgOH<sup>+</sup> ion formation (defaults to `False`).
+
+*The calculation approach currently used here is probably not the best way!*

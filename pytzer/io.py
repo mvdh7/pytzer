@@ -92,3 +92,21 @@ def solvent2solution(mols, ions, tots, eles):
     mols = mols/u2v
     tots = tots/u2v
     return mols, tots
+
+def salinity2mols(salinity, MgOH=False):
+    """Convert salinity (g/kg-sw) to molality for typical seawater, simplified
+    for the WM13 tris buffer model, following MZF93.
+    """
+    if MgOH:
+        mols = (array([0.44516, 0.01077, 0.01058, 0.56912])*
+            salinity/43.189)
+        ions = array(['Na', 'Ca', 'K', 'Cl'])
+        tots = array([0.02926, 0.05518])*salinity/43.189
+        eles = array(['t_HSO4', 't_Mg'])
+    else:
+        mols = (array([0.44516, 0.05518, 0.01077, 0.01058, 0.56912])*
+            salinity/43.189)
+        ions = array(['Na', 'Mg', 'Ca', 'K', 'Cl'])
+        tots = array([0.02926])*salinity/43.189
+        eles = array(['t_HSO4'])
+    return mols, ions, tots, eles
