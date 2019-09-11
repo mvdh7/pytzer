@@ -6,7 +6,8 @@ Version 0.4 remains in beta testing. The main change from version 0.3 is includi
 
 **Release date:** forthcoming
 
-  * Added `osm` function for osmotic coefficient to **matrix** module.
+  * Added `osm` function for osmotic coefficient to **matrix** module;
+  * Added **io** module functions to roughly convert between molinity (mol/kg-solution) and molality (mol/kg-H<sub>2</sub>O).
 
 ## 0.4.2
 
