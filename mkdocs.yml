@@ -39,3 +39,6 @@ nav:
     - .meta - package metadata: modules/meta.md
   - References: references.md
   - Version history: version-history.md
+
+markdown_extensions:
+  - admonition
