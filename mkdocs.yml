@@ -1,11 +1,19 @@
 site_name: Pytzer
 site_author: Matthew P. Humphreys
 site_description: Pitzer model for chemical activities in aqueous solutions
-copyright: Copyright &copy; 2019 Matthew P. Humphreys (GNU GPLv3).
+copyright: Copyright &copy; 2019-2020 Matthew P. Humphreys (GNU GPLv3).
 repo_url: https://github.com/mvdh7/pytzer
+repo_name: mvdh7/pytzer
 
 theme:
-    name: readthedocs
+  name: material
+  language: en
+  palette:
+    primary: pink
+    accent: cyan
+  font:
+    text: Roboto
+    code: Roboto Mono
 
 nav:
   - Overview: index.md
