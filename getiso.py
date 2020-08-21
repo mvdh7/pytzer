@@ -8,8 +8,8 @@ import pytzer as pz
 #from scipy.special import factorial
 import numpy as np
 prmlib = deepcopy(pz.libraries.MarChemSpec)
-prmlib.bC['Na-Cl'] = pz.parameters.bC_Na_Cl_A92ii
-prmlib.bC['K-Cl'] = pz.parameters.bC_K_Cl_A99
+prmlib.bC['Na-Cl'] = pz.parameters.bC_none
+prmlib.bC['K-Cl'] = pz.parameters.bC_K_Cl_GM89
 prmlib.lnk['HSO4'] = pz.dissociation.HSO4_CRP94
 
 # Read in isopiestic data
@@ -40,7 +40,7 @@ for r in range(len(isonew.index)):
             irc['pres'] = float_([isonew.pres[r]])
             irc['src'] = isonew.src[r]
 
-#%% Get all data for a particular electrolyte
+#% Get all data for a particular electrolyte
 testele = 'KCl'
 testdict = {irow: isodict[irow] for irow in isodict.keys()
     if testele in isodict[irow].keys()}
@@ -60,21 +60,21 @@ for i, irow in enumerate(testdict.keys()):
         # Calculate ionic strengths
         trc['zs'] = pz.properties.charges(trc['ions'])[0]
         trc['Istr'] = pz.model.Istr(trc['mols'], trc['zs'])
-        # Solve equilibria
-        if icell == 'H2SO4':
-            allions = np.array(trc['ions'])
-            allmxs = pz.matrix.assemble(allions, trc['tempK'], trc['pres'],
-                prmlib=prmlib)
-            lnks = [prmlib.lnk['HSO4'](trc['tempK'])]
-            eqstate_guess = [0.0]
-            tots1 = trc['tots']
-            fixmols1 = np.array([])
-            eles = np.array(['t_HSO4'])
-            fixions = np.array([])
-            eqstate = pz.equilibrate.solve(eqstate_guess, tots1, fixmols1,
-                eles, allions, fixions, allmxs, lnks, ideal=False)['x']
-            trc['mols'] = np.vstack(pz.equilibrate.eqstate2mols(eqstate, tots1,
-                fixmols1, eles, fixions)[0])
+        # # Solve equilibria
+        # if icell == 'H2SO4':
+        #     allions = np.array(trc['ions'])
+        #     allmxs = pz.matrix.assemble(allions, trc['tempK'], trc['pres'],
+        #         prmlib=prmlib)
+        #     lnks = [prmlib.lnk['HSO4'](trc['tempK'])]
+        #     eqstate_guess = [0.0]
+        #     tots1 = trc['tots']
+        #     fixmols1 = np.array([])
+        #     eles = np.array(['t_HSO4'])
+        #     fixions = np.array([])
+        #     eqstate = pz.equilibrate.solve(eqstate_guess, tots1, fixmols1,
+        #         eles, allions, fixions, allmxs, lnks, ideal=False)['x']
+        #     trc['mols'] = np.vstack(pz.equilibrate.eqstate2mols(eqstate, tots1,
+        #         fixmols1, eles, fixions)[0])
         trc['aw'] = pz.model.aw(trc['mols'], trc['ions'], trc['tempK'],
             trc['pres'], prmlib=prmlib, Izero=trc['Istr'] == 0)
         trc['osm'] = pz.model.osm(trc['mols'], trc['ions'], trc['tempK'],
@@ -87,7 +87,7 @@ for irow in testdict.keys():
             trc['del_osm'] = trc['osm'] - testdict[irow][testele]['osm']
 #print(time() - go)
 
-#%% Get arrays for plotting
+#% Get arrays for plotting
 t_dictrow = vstack([irow for irow  in testdict.keys()
     for icell in testdict[irow].keys() if icell != testele])
 t_elemix = vstack([icell for irow  in testdict.keys()
@@ -125,18 +125,18 @@ t_src = vstack([testdict[irow][testele]['src']
 #%% Plot results
 from matplotlib import pyplot as plt
 
-fig, ax = plt.subplots(2, 1)
+fig, ax = plt.subplots(2, 1, dpi=300)
 L = np.logical_and.reduce((
-    np.logical_or.reduce((
-#        t_elemix == 'MgCl2',
-#        t_elemix == 'KCl',
-#        t_elemix == 'H2SO4',
-#        t_elemix == 'CaCl2',
-        t_elemix == 'NaCl',
-    )),
-#    t_tempK >= 273.15,
-#    t_tempK <= 323.15,
-    t_tempK == 298.15,
+    # np.logical_or.reduce((
+    #     t_elemix == 'MgCl2',
+    #     t_elemix == 'KCl',
+    #     # t_elemix == 'H2SO4',
+    #     t_elemix == 'CaCl2',
+    #     t_elemix == 'NaCl',
+    # )),
+    t_tempK >= 273.15,
+    t_tempK <= 323.15,
+    # t_tempK == 298.15,
 ))
 H = np.logical_and(L,
     t_elemix == 'NaCl',
@@ -146,49 +146,56 @@ sim_mols = np.array([sim_mNaCl, sim_mNaCl])
 sim_ions = np.array(['K', 'Cl'])
 sim_aw = pz.model.aw(sim_mols, sim_ions, np.full_like(sim_mNaCl, 298.15),
     np.full_like(sim_mNaCl, 10.1325), prmlib=prmlib, Izero=False)
+fxlim = [0, np.max(sim_mNaCl)]
 ax[0].plot(sim_mNaCl, sim_aw, c='k')
-ax[0].scatter(t_testtot[L], t_eleaw[L])
-ax[0].scatter(t_testtot[H], t_eleaw[H], c='r')
-ax[1].plot(sim_mNaCl, 0*sim_mNaCl, c='k')
-ax[1].scatter(t_testtot[L], t_delaw[L])
-ax[1].scatter(t_testtot[H], t_delaw[H], c='r')
+ax[0].scatter(t_testtot[L], t_eleaw[L], s=10, alpha=0.5, edgecolor='none')
+ax[0].scatter(t_testtot[H], t_eleaw[H], s=20, c='r')
+ax[0].set_ylabel("$a_w$")
+ax[1].axhline(0, c='k')
+ax[1].scatter(t_testtot[L], t_delaw[L], s=10, alpha=0.5, edgecolor='none')
+ax[1].scatter(t_testtot[H], t_delaw[H], s=20, c='r')
+ax[1].set_ylabel("$\Delta a_w$")
+for a in ax:
+    a.set_xlim(fxlim)
+    a.set_xlabel("$m$(KCl) / mol/kg")
+plt.tight_layout()
 
-#%% neat NaCl
-fig, ax = plt.subplots(2, 1)
-L = np.logical_and.reduce((
-    np.logical_or.reduce((
-#        t_elemix == 'MgCl2',
-        t_elemix == 'KCl',
-#        t_elemix == 'H2SO4',
-#        t_elemix == 'CaCl2',
-#        t_elemix == 'NaCl',
-#        t_elemix == 'K2SO4',
-#        t_elemix == 'Na2SO4',
-#        t_elemix == 'MgSO4',
-#        t_elemix == 'KCl-CaCl2',
-    )),
-#    t_tempK >= 273.15,
-#    t_tempK <= 323.15,
-    t_tempK == 298.15,
-))
-figsrcs = np.unique(t_src[L])
-sim_mNaCl = np.arange(0.01, 2.25, 0.01)**2
-sim_mols = np.array([sim_mNaCl, sim_mNaCl])
-sim_ions = np.array(['K', 'Cl'])
-sim_tempK = np.full_like(sim_mNaCl, 298.15)
-sim_pres = np.full_like(sim_mNaCl, 10.1325)
-sim_aw = pz.model.aw(sim_mols, sim_ions, sim_tempK, sim_pres, prmlib=prmlib,
-    Izero=False)
-ax[0].plot(np.sqrt(sim_mNaCl), sim_aw, c='k')
-ax[1].plot(np.sqrt(sim_mNaCl), 0*sim_mNaCl, c='k')
-for src in figsrcs:
-    S = np.logical_and(L, t_src==src)
-    ax[0].scatter(np.sqrt(t_testtot[S]), t_eleaw[S], label=src)
-    ax[1].scatter(np.sqrt(t_testtot[S]), t_delaw[S]*1e4, label=src)
-ax[1].set_ylim(np.max(np.abs(t_delaw[L]))*np.array([-1, 1])*1.1e4)
-ax[0].legend()
-for x in [0, 1]:
-    ax[x].set_xlim((0, np.max(np.sqrt(sim_mNaCl))))
-    ax[x].set_xlabel('sqrt[$m$(KCl) / mol$\cdot$kg$^{-1}$]')
-ax[0].set_ylabel('Water activity ($a_w$)')
-ax[1].set_ylabel('$\Delta a_w \cdot 10^4$')
+# #%% neat NaCl
+# fig, ax = plt.subplots(2, 1)
+# L = np.logical_and.reduce((
+#     np.logical_or.reduce((
+# #        t_elemix == 'MgCl2',
+#         t_elemix == 'KCl',
+# #        t_elemix == 'H2SO4',
+# #        t_elemix == 'CaCl2',
+# #        t_elemix == 'NaCl',
+# #        t_elemix == 'K2SO4',
+# #        t_elemix == 'Na2SO4',
+# #        t_elemix == 'MgSO4',
+# #        t_elemix == 'KCl-CaCl2',
+#     )),
+# #    t_tempK >= 273.15,
+# #    t_tempK <= 323.15,
+#     t_tempK == 298.15,
+# ))
+# figsrcs = np.unique(t_src[L])
+# sim_mNaCl = np.arange(0.01, 2.25, 0.01)**2
+# sim_mols = np.array([sim_mNaCl, sim_mNaCl])
+# sim_ions = np.array(['K', 'Cl'])
+# sim_tempK = np.full_like(sim_mNaCl, 298.15)
+# sim_pres = np.full_like(sim_mNaCl, 10.1325)
+# sim_aw = pz.model.aw(sim_mols, sim_ions, sim_tempK, sim_pres, prmlib=prmlib,
+#     Izero=False)
+# ax[0].plot(np.sqrt(sim_mNaCl), sim_aw, c='k')
+# ax[1].plot(np.sqrt(sim_mNaCl), 0*sim_mNaCl, c='k')
+# for src in figsrcs:
+#     S = np.logical_and(L, t_src==src)
+#     ax[0].scatter(np.sqrt(t_testtot[S]), t_eleaw[S], label=src)
+#     ax[1].scatter(np.sqrt(t_testtot[S]), t_delaw[S]*1e4, label=src)
+# ax[1].set_ylim(np.max(np.abs(t_delaw[L]))*np.array([-1, 1])*1.1e4)
+# ax[0].legend()
+# for x in [0, 1]:
+#     ax[x].set_xlim((0, np.max(np.sqrt(sim_mNaCl))))
+#     ax[x].set_xlabel('sqrt[$m$(KCl) / mol$\cdot$kg$^{-1}$]')
+# ax[0].set_ylabel('Water activity ($a_w$)')
+# ax[1].set_ylabel('$\Delta a_w \cdot 10^4$')
