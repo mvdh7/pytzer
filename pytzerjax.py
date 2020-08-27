@@ -51,8 +51,6 @@ def Aphi_M88(T, P):
     return Aphi, valid
 
 
-
-
 ions2charges = {
     "Na^+": 1,
     "K^+": 1,
