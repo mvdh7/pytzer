@@ -1,5 +1,6 @@
 import jax
 from jax import numpy as jnp
+from . import properties
 
 
 @jax.jit
@@ -92,11 +93,53 @@ class Functions:
         self.nc = {}
         self.na = {}
         self.nn = {}
+        self.nca = {}
         self.nnn = {}
+
+    def add_ca(self, cation, anion, func=BC_NONE):
+        if cation not in self.ca:
+            self.ca[cation] = {}
+        self.ca[cation][anion] = func
+
+    def add_cc(self, cation_x, cation_y, func=THETA_NONE):
+        if cation_x not in self.cc:
+            self.cc[cation_x] = {}
+        if cation_y not in self.cc:
+            self.cc[cation_y] = {}
+        self.cc[cation_x][cation_y] = self.cc[cation_y][cation_x] = func
+
+    def add_aa(self, anion_x, anion_y, func=THETA_NONE):
+        if anion_x not in self.cc:
+            self.cc[anion_x] = {}
+        if anion_y not in self.cc:
+            self.cc[anion_y] = {}
+        self.cc[anion_x][anion_y] = self.cc[anion_y][anion_x] = func
+
+    def add_cca(self, cation_x, cation_y, anion, func=PSI_NONE):
+        if cation_x not in self.cca:
+            self.cca[cation_x] = {}
+        if cation_y not in self.cca[cation_x]:
+            self.cca[cation_x][cation_y] = {}
+        if cation_y not in self.cca:
+            self.cca[cation_y] = {}
+        if cation_x not in self.cca[cation_y]:
+            self.cca[cation_y][cation_x] = {}
+        self.cca[cation_x][cation_y][anion] = self.cca[cation_y][cation_x][anion] = func
+
+    def add_caa(self, cation, anion_x, anion_y, func=PSI_NONE):
+        if cation not in self.caa:
+            self.caa[cation] = {}
+        if anion_x not in self.caa[cation]:
+            self.caa[cation][anion_x] = {}
+        if anion_y not in self.caa[cation]:
+            self.caa[cation][anion_y] = {}
+        self.caa[cation][anion_x][anion_y] = self.cca[cation][anion_y][anion_x] = func
 
 
 class Parameters:
-    def __init__(self):
+    def __init__(self, temperature=None, pressure=None):
+        self.temperature = temperature
+        self.pressure = pressure
         self.ca = {}
         self.cc = {}
         self.aa = {}
@@ -105,7 +148,26 @@ class Parameters:
         self.nc = {}
         self.na = {}
         self.nn = {}
+        self.nca = {}
         self.nnn = {}
+
+
+def get_Ifunc(func_TP):
+    ftp = func_TP
+
+    def Ifunc(sqrt_I, Z):
+        return 2 * (
+            ftp["b0"]
+            + ftp["b1"] * g(ftp["alph1"] * sqrt_I)
+            + ftp["b2"] * g(ftp["alph2"] * sqrt_I)
+        ) + Z * (ftp["C0"] + 4 * ftp["C1"] * h(ftp["omega"] * sqrt_I))
+
+    return Ifunc
+
+
+def ions2charges(ions):
+    """Find the charge on each of a list of ions."""
+    return jnp.array([properties._ion2charge[ion] for ion in ions])
 
 
 class ParameterLibrary:
@@ -114,15 +176,18 @@ class ParameterLibrary:
         self.parameters = Parameters()
 
     def set_parameters(self, ions, temperature=298.15, pressure=10.1325):
-        self.temperature, self.pressure = T, P = temperature, pressure
-        charges = FUNCS.ions2charges(ions)
+        self.parameters.temperature, self.parameters.pressure = T, P = (
+            temperature,
+            pressure,
+        )
+        charges = ions2charges(ions)
         cations = ions[charges > 0]
         anions = ions[charges < 0]
         neutrals = ions[charges == 0]
         for CX, cation_x in enumerate(cations):
             for A, anion in enumerate(anions):
                 self.parameters.ca[CX][A] = jax.jit(
-                    FUNCS.get_Ifunc(self.functions.ca[cation_x][anion](T, P))
+                    get_Ifunc(self.functions.ca[cation_x][anion](T, P))
                 )
             for _CY, cation_y in enumerate(cations[CX + 1 :]):
                 CY = _CY + CX + 1
@@ -157,15 +222,6 @@ class ParameterLibrary:
             self.parameters.nnn[NX] = self.functions.nnn[neutral_x](T, P)
 
 
-# Next steps [2020-08-27]:
-# - Set up the parameters input
-# --- .ca is a numpy array where each element is a function of sqrt_I at T, P
-# --- Other fields are arrays of parameters already evaluated at T, P
-# --- The order of entries in these arrays needs to match their order in molalities
-# - Both charges and parameters inputs should be automatically generated from a list of
-#   ions along with T, P conditions (e.g. with a Parameters method)
-
-
 @jax.jit
 def Gex_nRT(molalities, charges, parameters):
     """Calculate the excess Gibbs energy of a solution."""
@@ -174,6 +230,7 @@ def Gex_nRT(molalities, charges, parameters):
     # should also be taken into account for this model
     # Ionic strength etc.
     I = ionic_strength(molalities, charges)
+    Z = ionic_z(molalities, charges)
     sqrt_I = jnp.sqrt(I)
     m_cats = molalities[charges > 0]
     m_anis = molalities[charges < 0]
@@ -187,7 +244,7 @@ def Gex_nRT(molalities, charges, parameters):
     for CX, m_cat_x in enumerate(m_cats):
         # Add c-a interactions
         for A, m_ani in enumerate(m_anis):
-            Gex_nRT = Gex_nRT + m_cat_x * m_ani * parameters.ca[CX][A](sqrt_I)
+            Gex_nRT = Gex_nRT + m_cat_x * m_ani * parameters.ca[CX][A](sqrt_I, Z)
         # Add c-c' interactions
         for _CY, m_cat_y in enumerate(m_cats[CX + 1 :]):
             CY = _CY + CX + 1
