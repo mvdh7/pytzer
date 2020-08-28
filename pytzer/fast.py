@@ -82,14 +82,79 @@ def etheta(I, z0, z1, parameters):
     )
 
 
-# class Functions:
-#     def __init__(self):
-#         self.ca = []
+class Functions:
+    def __init__(self):
+        self.ca = {}
+        self.cc = {}
+        self.aa = {}
+        self.cca = {}
+        self.caa = {}
+        self.nc = {}
+        self.na = {}
+        self.nn = {}
+        self.nnn = {}
 
 
-# class Parameters:
-#     def __init__(self):
-#         self.functions = Functions()
+class Parameters:
+    def __init__(self):
+        self.ca = {}
+        self.cc = {}
+        self.aa = {}
+        self.cca = {}
+        self.caa = {}
+        self.nc = {}
+        self.na = {}
+        self.nn = {}
+        self.nnn = {}
+
+
+class ParameterLibrary:
+    def __init__(self):
+        self.functions = Functions()
+        self.parameters = Parameters()
+
+    def set_parameters(self, ions, temperature=298.15, pressure=10.1325):
+        self.temperature, self.pressure = T, P = temperature, pressure
+        charges = FUNCS.ions2charges(ions)
+        cations = ions[charges > 0]
+        anions = ions[charges < 0]
+        neutrals = ions[charges == 0]
+        for CX, cation_x in enumerate(cations):
+            for A, anion in enumerate(anions):
+                self.parameters.ca[CX][A] = jax.jit(
+                    FUNCS.get_Ifunc(self.functions.ca[cation_x][anion](T, P))
+                )
+            for _CY, cation_y in enumerate(cations[CX + 1 :]):
+                CY = _CY + CX + 1
+                self.parameters.cc[CX][CY] = self.functions.cc[cation_x][cation_y](T, P)
+                for A, anion in enumerate(anions):
+                    self.parameters.cca[CX][CY][A] = self.functions.cca[cation_x][
+                        cation_y
+                    ][anion](T, P)
+        for AX, anion_x in enumerate(anions):
+            for _AY, anion_y in enumerate(anions[AX + 1 :]):
+                AY = _AY + AX + 1
+                self.parameters.aa[AX][AY] = self.functions.aa[anion_x][anion_y](T, P)
+                for C, cation in enumerate(cations):
+                    self.parameters.caa[C][AX][AY] = self.functions.caa[cation][
+                        anion_x
+                    ][anion_y](T, P)
+        for NX, neutral_x in enumerate(neutrals):
+            for C, cation in enumerate(cations):
+                self.parameters.nc[NX][C] = self.functions.nc[neutral_x][cation](T, P)
+                for A, anion in enumerate(anions):
+                    self.parameters.nca[NX][C][A] = self.functions.nca[neutral_x][
+                        cation
+                    ][anion](T, P)
+            for A, anion in enumerate(anions):
+                self.parameters.na[NX][A] = self.functions.na[neutral_x][anion](T, P)
+            for _NY, neutral_y in enumerate(neutrals[NX + 1 :]):
+                NY = _NY + NX + 1
+                self.parameters.nn[NX][NY] = self.functions.nn[neutral_x][neutral_y](
+                    T, P
+                )
+            self.parameters.nn[NX][NX] = self.functions.nn[neutral_x][neutral_x](T, P)
+            self.parameters.nnn[NX] = self.functions.nnn[neutral_x](T, P)
 
 
 # Next steps [2020-08-27]:
@@ -99,6 +164,7 @@ def etheta(I, z0, z1, parameters):
 # --- The order of entries in these arrays needs to match their order in molalities
 # - Both charges and parameters inputs should be automatically generated from a list of
 #   ions along with T, P conditions (e.g. with a Parameters method)
+
 
 @jax.jit
 def Gex_nRT(molalities, charges, parameters):
@@ -121,11 +187,11 @@ def Gex_nRT(molalities, charges, parameters):
     for CX, m_cat_x in enumerate(m_cats):
         # Add c-a interactions
         for A, m_ani in enumerate(m_anis):
-            Gex_nRT = Gex_nRT + m_cat_x * m_ani * parameters.ca[CX, A](sqrt_I)
+            Gex_nRT = Gex_nRT + m_cat_x * m_ani * parameters.ca[CX][A](sqrt_I)
         # Add c-c' interactions
         for _CY, m_cat_y in enumerate(m_cats[CX + 1 :]):
             CY = _CY + CX + 1
-            Gex_nRT = Gex_nRT + m_cat_x * m_cat_y * 2 * parameters.cc[CX, CY]
+            Gex_nRT = Gex_nRT + m_cat_x * m_cat_y * 2 * parameters.cc[CX][CY]
             # Unsymmetrical mixing terms
             if z_cats[CX] != z_cats[CY]:
                 Gex_nRT = Gex_nRT + m_cat_x * m_cat_y * 2 * etheta(
@@ -134,14 +200,14 @@ def Gex_nRT(molalities, charges, parameters):
             # Add c-c'-a interactions
             for A, m_ani in enumerate(m_anis):
                 Gex_nRT = (
-                    Gex_nRT + m_cat_x * m_cat_y * m_ani * parameters.cca[CX, CY, A]
+                    Gex_nRT + m_cat_x * m_cat_y * m_ani * parameters.cca[CX][CY][A]
                 )
     # Loop through anions
     for AX, m_ani_x in enumerate(m_anis):
         # Add a-a' interactions
         for _AY, m_ani_y in enumerate(m_anis[AX + 1 :]):
             AY = _AY + AX + 1
-            Gex_nRT = Gex_nRT + m_ani_x * m_ani_y * 2 * parameters.aa[AX, AY]
+            Gex_nRT = Gex_nRT + m_ani_x * m_ani_y * 2 * parameters.aa[AX][AY]
             # Unsymmetrical mixing terms
             if z_anis[AX] != z_anis[AY]:
                 Gex_nRT = Gex_nRT + m_ani_x * m_ani_y * 2 * etheta(
@@ -150,25 +216,25 @@ def Gex_nRT(molalities, charges, parameters):
             # Add c-a-a' interactions
             for C, m_cat in enumerate(m_cats):
                 Gex_nRT = (
-                    Gex_nRT + m_ani_x * m_ani_y * m_cat * parameters.caa[C, AX, AY]
+                    Gex_nRT + m_ani_x * m_ani_y * m_cat * parameters.caa[C][AX][AY]
                 )
     # Add neutral interactions
     for NX, m_neu_x in enumerate(m_neus):
         # Add n-c interactions
         for C, m_cat in enumerate(m_cats):
-            Gex_nRT = Gex_nRT + m_neu_x * m_cat * 2 * parameters.nc[NX, C]
+            Gex_nRT = Gex_nRT + m_neu_x * m_cat * 2 * parameters.nc[NX][C]
             # Add n-c-a interactions
             for A, m_ani in enumerate(m_anis):
-                Gex_nRT = Gex_nRT + m_neu_x * m_cat * m_ani * parameters.nca[NX, C, A]
+                Gex_nRT = Gex_nRT + m_neu_x * m_cat * m_ani * parameters.nca[NX][C][A]
         # Add n-a interactions
         for A, m_ani in enumerate(m_anis):
-            Gex_nRT = Gex_nRT + m_neu_x * m_ani * 2 * parameters.na[NX, A]
+            Gex_nRT = Gex_nRT + m_neu_x * m_ani * 2 * parameters.na[NX][A]
         # n-n' excluding n-n
         for _NY, m_neu_y in enumerate(m_neus[NX + 1 :]):
             NY = _NY + NX + 1
-            Gex_nRT = Gex_nRT + m_neu_x * m_neu_y * 2 * parameters.nn[NX, NY]
+            Gex_nRT = Gex_nRT + m_neu_x * m_neu_y * 2 * parameters.nn[NX][NY]
         # n-n
-        Gex_nRT = Gex_nRT + m_neu_x ** 2 * parameters.nn[NX, NX]
+        Gex_nRT = Gex_nRT + m_neu_x ** 2 * parameters.nn[NX][NX]
         # n-n-n
         Gex_nRT = Gex_nRT + m_neu_x ** 3 * parameters.nnn[NX]
     return Gex_nRT
