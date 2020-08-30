@@ -244,7 +244,10 @@ def Gex_nRT(molalities, charges, parameters):
     for CX, m_cat_x in enumerate(m_cats):
         # Add c-a interactions
         for A, m_ani in enumerate(m_anis):
-            Gex_nRT = Gex_nRT + m_cat_x * m_ani * parameters.ca[CX][A](sqrt_I, Z)
+            Gex_nRT = Gex_nRT + m_cat_x * m_ani * (
+                2 * B(sqrt_I, parameters.ca[CX][A])
+                + Z * CT(sqrt_I, parameters.ca[CX][A])
+            )
         # Add c-c' interactions
         for _CY, m_cat_y in enumerate(m_cats[CX + 1 :]):
             CY = _CY + CX + 1
