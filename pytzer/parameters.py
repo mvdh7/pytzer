@@ -5,6 +5,11 @@ from jax import numpy as np
 from .constants import Tzero
 from .properties import _ion2charge as i2c
 
+# Tolerances for np.isclose() assessment of temperature/pressure validity
+temperature_tol = dict(atol=1e-8, rtol=0)  # K
+pressure_tol = dict(atol=1e-8, rtol=0)  # dbar
+
+
 # Note that variable T in this module is equivalent to tempK elsewhere (in K),
 # and P is equivalent to pres (in dbar), for convenience
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Zero functions ~~~~~
@@ -45,8 +50,8 @@ def lambd_none(T, P):
 
 def zeta_none(T, P):
     """n-c-a: no interaction effect."""
-    valid = T > 0
     zeta = 0
+    valid = T > 0
     return zeta, valid
 
 
@@ -70,7 +75,7 @@ def bC_H_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -86,7 +91,7 @@ def bC_H_Br_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -102,7 +107,7 @@ def bC_H_I_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -118,7 +123,7 @@ def bC_H_ClO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -134,7 +139,7 @@ def bC_H_NO3_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -150,7 +155,7 @@ def bC_Li_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -166,7 +171,7 @@ def bC_Li_Br_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -182,7 +187,7 @@ def bC_Li_I_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -198,7 +203,7 @@ def bC_Li_OH_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -214,7 +219,7 @@ def bC_Li_ClO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -230,7 +235,7 @@ def bC_Li_NO2_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -246,7 +251,7 @@ def bC_Li_NO3_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -261,7 +266,7 @@ def bC_Na_F_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -277,7 +282,7 @@ def bC_Na_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -293,7 +298,7 @@ def bC_Na_Br_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -309,7 +314,7 @@ def bC_Na_I_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -325,7 +330,7 @@ def bC_Na_OH_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -341,7 +346,7 @@ def bC_Na_ClO3_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -357,7 +362,7 @@ def bC_Na_ClO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -373,7 +378,7 @@ def bC_Na_BrO3_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -389,7 +394,7 @@ def bC_Na_SCN_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -405,7 +410,7 @@ def bC_Na_NO2_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -421,7 +426,7 @@ def bC_Na_NO3_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -437,7 +442,7 @@ def bC_Na_H2PO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -453,7 +458,7 @@ def bC_Na_H2AsO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -469,7 +474,7 @@ def bC_Na_BO2_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -485,7 +490,7 @@ def bC_Na_BF4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -501,7 +506,7 @@ def bC_K_F_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -517,7 +522,7 @@ def bC_K_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -533,7 +538,7 @@ def bC_K_Br_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -549,7 +554,7 @@ def bC_K_I_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -565,7 +570,7 @@ def bC_K_OH_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -581,7 +586,7 @@ def bC_K_ClO3_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -597,7 +602,7 @@ def bC_K_BrO3_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -613,7 +618,7 @@ def bC_K_SCN_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -629,7 +634,7 @@ def bC_K_NO2_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -645,7 +650,7 @@ def bC_K_NO3_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -661,7 +666,7 @@ def bC_K_H2PO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -677,7 +682,7 @@ def bC_K_H2AsO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -693,7 +698,7 @@ def bC_K_PtF6_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -709,7 +714,7 @@ def bC_Rb_F_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -725,7 +730,7 @@ def bC_Rb_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -741,7 +746,7 @@ def bC_Rb_Br_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -757,7 +762,7 @@ def bC_Rb_I_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -773,7 +778,7 @@ def bC_Rb_NO2_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -789,7 +794,7 @@ def bC_Rb_NO3_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -805,7 +810,7 @@ def bC_Cs_F_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -821,7 +826,7 @@ def bC_Cs_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -837,7 +842,7 @@ def bC_Cs_Br_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -853,7 +858,7 @@ def bC_Cs_I_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -869,7 +874,7 @@ def bC_Cs_OH_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -885,7 +890,7 @@ def bC_Cs_NO3_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -901,7 +906,7 @@ def bC_Cs_NO2_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -917,7 +922,7 @@ def bC_Ag_NO3_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -933,7 +938,7 @@ def bC_Tl_ClO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -949,7 +954,7 @@ def bC_Tl_NO3_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -965,7 +970,7 @@ def bC_NH4_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -981,7 +986,7 @@ def bC_NH4_Br_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -997,7 +1002,7 @@ def bC_NH4_ClO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1013,7 +1018,7 @@ def bC_NH4_NO3_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1029,7 +1034,7 @@ def bC_Mg_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1045,7 +1050,7 @@ def bC_Mg_Br_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1061,7 +1066,7 @@ def bC_Mg_I_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1077,7 +1082,7 @@ def bC_Mg_ClO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1093,7 +1098,7 @@ def bC_Mg_NO3_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1109,7 +1114,7 @@ def bC_Ca_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1125,7 +1130,7 @@ def bC_Ca_Br_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1141,7 +1146,7 @@ def bC_Ca_I_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1157,7 +1162,7 @@ def bC_Ca_ClO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1173,7 +1178,7 @@ def bC_Ca_NO3_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1189,7 +1194,7 @@ def bC_Sr_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1205,7 +1210,7 @@ def bC_Sr_Br_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1221,7 +1226,7 @@ def bC_Sr_I_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1237,7 +1242,7 @@ def bC_Sr_ClO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1253,7 +1258,7 @@ def bC_Sr_NO3_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1269,7 +1274,7 @@ def bC_Ba_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1285,7 +1290,7 @@ def bC_Ba_Br_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1301,7 +1306,7 @@ def bC_Ba_I_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1317,7 +1322,7 @@ def bC_Ba_OH_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1333,7 +1338,7 @@ def bC_Ba_ClO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1349,7 +1354,7 @@ def bC_Ba_NO3_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1365,7 +1370,7 @@ def bC_Mnjj_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1381,7 +1386,7 @@ def bC_Fejj_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1397,7 +1402,7 @@ def bC_Cojj_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1413,7 +1418,7 @@ def bC_Cojj_Br_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1429,7 +1434,7 @@ def bC_Cojj_I_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1445,7 +1450,7 @@ def bC_Cojj_NO3_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1461,7 +1466,7 @@ def bC_Nijj_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1477,7 +1482,7 @@ def bC_Cujj_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1493,7 +1498,7 @@ def bC_Cujj_NO3_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1509,7 +1514,7 @@ def bC_Znjj_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1525,7 +1530,7 @@ def bC_Znjj_Br_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1541,7 +1546,7 @@ def bC_Znjj_I_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1557,7 +1562,7 @@ def bC_Znjj_ClO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1573,7 +1578,7 @@ def bC_Znjj_NO3_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1589,7 +1594,7 @@ def bC_Cdjj_NO3_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1605,7 +1610,7 @@ def bC_Pbjj_ClO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1621,7 +1626,7 @@ def bC_Pbjj_NO3_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1637,7 +1642,7 @@ def bC_UO2_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1653,7 +1658,7 @@ def bC_UO2_ClO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1669,7 +1674,7 @@ def bC_UO2_NO3_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1685,7 +1690,7 @@ def bC_Li_SO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1701,7 +1706,7 @@ def bC_Na_SO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1717,7 +1722,7 @@ def bC_Na_S2O3_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1733,7 +1738,7 @@ def bC_Na_CrO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1749,7 +1754,7 @@ def bC_Na_CO3_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1765,7 +1770,7 @@ def bC_Na_HPO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1781,7 +1786,7 @@ def bC_Na_HAsO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1797,7 +1802,7 @@ def bC_K_SO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1813,7 +1818,7 @@ def bC_K_CrO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1829,7 +1834,7 @@ def bC_K_PtCN4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1845,7 +1850,7 @@ def bC_K_HPO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1861,7 +1866,7 @@ def bC_K_HAsO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1877,7 +1882,7 @@ def bC_Rb_SO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1893,7 +1898,7 @@ def bC_Cs_SO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1909,7 +1914,7 @@ def bC_NH4_SO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1925,7 +1930,7 @@ def bC_Aljjj_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1941,7 +1946,7 @@ def bC_Srjjj_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1957,7 +1962,7 @@ def bC_Y_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1973,7 +1978,7 @@ def bC_La_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -1989,7 +1994,7 @@ def bC_Ce_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2005,7 +2010,7 @@ def bC_Pr_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2021,7 +2026,7 @@ def bC_Nd_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2037,7 +2042,7 @@ def bC_Sm_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2053,7 +2058,7 @@ def bC_Eu_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2069,7 +2074,7 @@ def bC_Cr_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2085,7 +2090,7 @@ def bC_Cr_NO3_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2101,7 +2106,7 @@ def bC_Ga_ClO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2117,7 +2122,7 @@ def bC_In_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2133,7 +2138,7 @@ def bC_Na_PO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2149,7 +2154,7 @@ def bC_Na_AsO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2165,7 +2170,7 @@ def bC_K_PO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2181,7 +2186,7 @@ def bC_K_P3O9_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2197,7 +2202,7 @@ def bC_K_AsO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2213,7 +2218,7 @@ def bC_K_FejjjCN6_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2229,7 +2234,7 @@ def bC_K_CoCN6_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2245,7 +2250,7 @@ def bC_Coen3_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2261,7 +2266,7 @@ def bC_Coen3_NO3_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2277,7 +2282,7 @@ def bC_Coen3_ClO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2293,7 +2298,7 @@ def bC_Copn3_ClO4_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2309,7 +2314,7 @@ def bC_Th_Cl_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2325,7 +2330,7 @@ def bC_Th_NO3_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2341,7 +2346,7 @@ def bC_Na_P2O7_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2357,7 +2362,7 @@ def bC_K_P2O7_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2373,7 +2378,7 @@ def bC_K_FejjCN6_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2389,7 +2394,7 @@ def bC_K_MoCN8_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2405,7 +2410,7 @@ def bC_K_WCN8_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2421,7 +2426,7 @@ def bC_MeN_MoCN8_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2437,7 +2442,7 @@ def bC_Na_P3O10_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2453,7 +2458,7 @@ def bC_K_P3O10_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2470,7 +2475,7 @@ def bC_Na_acetate_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2486,7 +2491,7 @@ def bC_K_acetate_PM73(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -2494,581 +2499,581 @@ def bC_K_acetate_PM73(T, P):
 def theta_Mg_Na_PK74(T, P):
     """c-c': magnesium sodium [PK74]."""
     theta = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_Ca_Na_PK74(T, P):
     """c-c': calcium sodium [PK74]."""
     theta = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_K_Na_PK74(T, P):
     """c-c': potassium sodium [PK74]."""
     theta = -0.012
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_Li_Na_PK74(T, P):
     """c-c': lithium sodium [PK74]."""
     theta = 0.012
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_Ba_Na_PK74(T, P):
     """c-c': barium sodium [PK74]."""
     theta = -0.003
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_Na_Znjj_PK74(T, P):
     """c-c': sodium zinc(II) [PK74]."""
     theta = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_Mnjj_Na_PK74(T, P):
     """c-c': manganese(II) sodium [PK74]."""
     theta = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_Cs_Na_PK74(T, P):
     """c-c': caesium sodium [PK74]."""
     theta = -0.033
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_H_Na_PK74(T, P):
     """c-c': hydrogen sodium [PK74]."""
     theta = 0.036
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_Ca_Mg_PK74(T, P):
     """c-c': calcium magnesium [PK74]."""
     theta = 0.01
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_Ca_K_PK74(T, P):
     """c-c': calcium potassium [PK74]."""
     theta = -0.04
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_K_Li_PK74(T, P):
     """c-c': potassium lithium [PK74]."""
     theta = -0.022
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_Ba_K_PK74(T, P):
     """c-c': barium potassium [PK74]."""
     theta = -0.072
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_Cs_K_PK74(T, P):
     """c-c': caesium potassium [PK74]."""
     theta = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_H_K_PK74(T, P):
     """c-c': hydrogen potassium [PK74]."""
     theta = 0.005
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_H_Sr_PK74(T, P):
     """c-c': hydrogen strontium [PK74]."""
     theta = -0.02
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_Ba_Li_PK74(T, P):
     """c-c': barium lithium [PK74]."""
     theta = -0.07
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_Cs_Li_PK74(T, P):
     """c-c': caesium lithium [PK74]."""
     theta = -0.095
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_H_Li_PK74(T, P):
     """c-c': hydrogen lithium [PK74]."""
     theta = 0.015
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_H_NH4_PK74(T, P):
     """c-c': hydrogen ammonium [PK74]."""
     theta = -0.016
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_Ba_Cs_PK74(T, P):
     """c-c': barium caesium [PK74]."""
     theta = -0.15
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_Ba_H_PK74(T, P):
     """c-c': barium hydrogen [PK74]."""
     theta = -0.036
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_H_Mnjj_PK74(T, P):
     """c-c': hydrogen manganese(II) [PK74]."""
     theta = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_Cs_H_PK74(T, P):
     """c-c': caesium hydrogen [PK74]."""
     theta = -0.044
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_Et4N_H_PK74(T, P):
     """c-c': tetraethylammonium hydrogen [PK74]."""
     theta = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_H_Me4N_PK74(T, P):
     """c-c': hydrogen tetramethylammonium [PK74]."""
     theta = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_Cl_SO4_PK74(T, P):
     """a-a': chloride sulfate [PK74]."""
     theta = -0.035
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_Br_Cl_PK74(T, P):
     """a-a': bromide chloride [PK74]."""
     theta = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_Cl_NO3_PK74(T, P):
     """a-a': chloride nitrate [PK74]."""
     theta = 0.016
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_Cl_OH_PK74(T, P):
     """a-a': chloride hydroxide [PK74]."""
     theta = -0.05
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_Br_OH_PK74(T, P):
     """a-a': bromide hydroxide [PK74]."""
     theta = -0.065
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Mg_Na_Cl_PK74(T, P):
     """c-c'-a: magnesium sodium chloride [PK74]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_Na_Cl_PK74(T, P):
     """c-c'-a: calcium sodium chloride [PK74]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_Na_Cl_PK74(T, P):
     """c-c'-a: potassium sodium chloride [PK74]."""
     psi = -0.0018
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Li_Na_Cl_PK74(T, P):
     """c-c'-a: lithium sodium chloride [PK74]."""
     psi = -0.003
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ba_Na_Cl_PK74(T, P):
     """c-c'-a: barium sodium chloride [PK74]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mnjj_Na_Cl_PK74(T, P):
     """c-c'-a: manganese(II) sodium chloride [PK74]."""
     psi = -0.003
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Cs_Na_Cl_PK74(T, P):
     """c-c'-a: caesium sodium chloride [PK74]."""
     psi = -0.003
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_Na_Cl_PK74(T, P):
     """c-c'-a: hydrogen sodium chloride [PK74]."""
     psi = -0.004
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_Mg_Cl_PK74(T, P):
     """c-c'-a: calcium magnesium chloride [PK74]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_K_Cl_PK74(T, P):
     """c-c'-a: calcium potassium chloride [PK74]."""
     psi = -0.015
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_Li_Cl_PK74(T, P):
     """c-c'-a: potassium lithium chloride [PK74]."""
     psi = -0.01
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ba_K_Cl_PK74(T, P):
     """c-c'-a: barium potassium chloride [PK74]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Cs_K_Cl_PK74(T, P):
     """c-c'-a: caesium potassium chloride [PK74]."""
     psi = -0.0013
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_K_Cl_PK74(T, P):
     """c-c'-a: hydrogen potassium chloride [PK74]."""
     psi = -0.007
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_Sr_Cl_PK74(T, P):
     """c-c'-a: hydrogen strontium chloride [PK74]."""
     psi = 0.018
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ba_Li_Cl_PK74(T, P):
     """c-c'-a: barium lithium chloride [PK74]."""
     psi = 0.019
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Cs_Li_Cl_PK74(T, P):
     """c-c'-a: caesium lithium chloride [PK74]."""
     psi = -0.0094
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_Li_Cl_PK74(T, P):
     """c-c'-a: hydrogen lithium chloride [PK74]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_NH4_Cl_PK74(T, P):
     """c-c'-a: hydrogen ammonium chloride [PK74]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ba_Cs_Cl_PK74(T, P):
     """c-c'-a: barium caesium chloride [PK74]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ba_H_Cl_PK74(T, P):
     """c-c'-a: barium hydrogen chloride [PK74]."""
     psi = 0.024
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_Mnjj_Cl_PK74(T, P):
     """c-c'-a: hydrogen manganese(II) chloride [PK74]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Cs_H_Cl_PK74(T, P):
     """c-c'-a: caesium hydrogen chloride [PK74]."""
     psi = -0.019
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Et4N_H_Cl_PK74(T, P):
     """c-c'-a: tetraethylammonium hydrogen chloride [PK74]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_Me4N_Cl_PK74(T, P):
     """c-c'-a: hydrogen tetramethylammonium chloride [PK74]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mg_Na_SO4_PK74(T, P):
     """c-c'-a: magnesium sodium sulfate [PK74]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_Na_SO4_PK74(T, P):
     """c-c'-a: potassium sodium sulfate [PK74]."""
     psi = -0.01
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_Na_Br_PK74(T, P):
     """c-c'-a: potassium sodium bromide [PK74]."""
     psi = -0.0022
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Na_Znjj_Br_PK74(T, P):
     """c-c'-a: sodium zinc(II) bromide [PK74]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_Na_Br_PK74(T, P):
     """c-c'-a: hydrogen sodium bromide [PK74]."""
     psi = -0.012
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_K_Br_PK74(T, P):
     """c-c'-a: hydrogen potassium bromide [PK74]."""
     psi = -0.021
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_Li_Br_PK74(T, P):
     """c-c'-a: hydrogen lithium bromide [PK74]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_Na_NO3_PK74(T, P):
     """c-c'-a: potassium sodium nitrate [PK74]."""
     psi = -0.0012
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Li_Na_NO3_PK74(T, P):
     """c-c'-a: lithium sodium nitrate [PK74]."""
     psi = -0.0072
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Li_Na_ClO4_PK74(T, P):
     """c-c'-a: lithium sodium perchlorate [PK74]."""
     psi = -0.008
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_Na_ClO4_PK74(T, P):
     """c-c'-a: hydrogen sodium perchlorate [PK74]."""
     psi = -0.016
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_Li_ClO4_PK74(T, P):
     """c-c'-a: hydrogen lithium perchlorate [PK74]."""
     psi = -0.0017
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Li_Na_OAc_PK74(T, P):
     """c-c'-a: lithium sodium OAc [PK74]."""
     psi = -0.0043
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Na_Cl_SO4_PK74(T, P):
     """c-a-a': sodium chloride sulfate [PK74]."""
     psi = 0.007
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Na_Br_Cl_PK74(T, P):
     """c-a-a': sodium bromide chloride [PK74]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Na_Cl_NO3_PK74(T, P):
     """c-a-a': sodium chloride nitrate [PK74]."""
     psi = -0.006
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Na_Cl_OH_PK74(T, P):
     """c-a-a': sodium chloride hydroxide [PK74]."""
     psi = -0.006
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Na_Br_OH_PK74(T, P):
     """c-a-a': sodium bromide hydroxide [PK74]."""
     psi = -0.018
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mg_Cl_SO4_PK74(T, P):
     """c-a-a': magnesium chloride sulfate [PK74]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mg_Cl_NO3_PK74(T, P):
     """c-a-a': magnesium chloride nitrate [PK74]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_Cl_NO3_PK74(T, P):
     """c-a-a': calcium chloride nitrate [PK74]."""
     psi = -0.017
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_Cl_SO4_PK74(T, P):
     """c-a-a': potassium chloride sulfate [PK74]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_Br_Cl_PK74(T, P):
     """c-a-a': potassium bromide chloride [PK74]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_Cl_NO3_PK74(T, P):
     """c-a-a': potassium chloride nitrate [PK74]."""
     psi = -0.006
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_Cl_OH_PK74(T, P):
     """c-a-a': potassium chloride hydroxide [PK74]."""
     psi = -0.008
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_Br_OH_PK74(T, P):
     """c-a-a': potassium bromide hydroxide [PK74]."""
     psi = -0.014
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Li_Cl_NO3_PK74(T, P):
     """c-a-a': lithium chloride nitrate [PK74]."""
     psi = -0.003
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
@@ -3076,56 +3081,56 @@ def psi_Li_Cl_NO3_PK74(T, P):
 def lambd_H3PO4_H3PO4_PS76(T, P):
     """n-n: phosphoric-acid phosphoric-acid [PS76]."""
     lambd = 0.05031
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_H3PO4_H2PO4_PS76(T, P):
     """n-a: phosphoric-acid dihydrogen-phosphate [PS76]."""
     lambd = -0.400
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_H3PO4_K_PS76(T, P):
     """n-c: phosphoric-acid potassium [PS76]."""
     lambd = -0.070
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_H3PO4_H_PS76(T, P):
     """n-c: phosphoric-acid hydrogen [PS76]."""
     lambd = 0.290
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_H3PO4_Cl_PS76(T, P):
     """n-a: phosphoric-acid chloride [PS76]."""
     lambd = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def mu_H3PO4_H3PO4_H3PO4_PS76(T, P):
     """n-n-n: phosphoric-acid phosphoric-acid phosphoric-acid [PS76]."""
     mu = 0.01095
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return mu, valid
 
 
 def theta_Cl_H2PO4_PS76(T, P):
     """a-a': chloride dihydrogen-phosphate [PS76]."""
     theta = 0.10
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_K_Cl_H2PO4_PS76(T, P):
     """c-a-a': potassium chloride dihydrogen-phosphate [PS76]."""
     psi = -0.0105
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
@@ -3143,7 +3148,7 @@ def bC_Sr_Cl_MWRB78(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -3159,21 +3164,21 @@ def bC_Sr_Cl_MWRB78hi(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
 def theta_Na_Sr_MWRB78(T, P):
     """c-c': sodium strontium [MWRB78]."""
     theta = -0.0076
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Na_Sr_Cl_MWRB78(T, P):
     """c-c'-a: sodium strontium chloride [MWRB78]."""
     psi = -0.0052
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
@@ -3907,7 +3912,7 @@ def theta_H_Mg_RGB80(T, P):
     #  equation to interpolate between them.
     # This function just returns the 25 degC value.
     theta = 0.0620
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
@@ -3917,7 +3922,7 @@ def psi_H_Mg_Cl_RGB80(T, P):
     #  equation to interpolate between them.
     # This function just returns the 25 degC value.
     theta = 0.0010
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
@@ -3933,7 +3938,7 @@ def bC_Mg_SO4_RM81i(T, P):
     alph1 = 1.4
     alph2 = 12
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -3980,21 +3985,21 @@ def bC_Na_HCO3_PP82(T, P):
 def theta_Cl_HCO3_PP82(T, P):
     """a-a': chloride bicarbonate [PP82]."""
     theta = 0.0359
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_CO3_Cl_PP82(T, P):
     """a-a': carbonate chloride [PP82]."""
     theta = -0.053
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Na_Cl_HCO3_PP82(T, P):
     """c-a-a': sodium chloride bicarbonate [PP82]."""
     psi = -0.0143
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
@@ -4002,14 +4007,14 @@ def psi_Na_Cl_HCO3_PP82(T, P):
 def theta_Ca_H_RGO81(T, P):
     """c-c': calcium hydrogen [RGO81]."""
     theta = 0.0612
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Ca_H_Cl_RGO81(T, P):
     """c-c': calcium hydrogen chloride [RGO81]."""
     theta = 0.0008
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
@@ -4017,7 +4022,7 @@ def psi_Ca_H_Cl_RGO81(T, P):
 def psi_Na_CO3_Cl_TM82(T, P):
     """c-a-a': sodium carbonate chloride [TM82]."""
     psi = 0.016
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
@@ -4102,7 +4107,7 @@ def theta_Cl_H2AsO4_M83(T, P):
     """a-a': chloride dihydrogen-arsenate [M83]."""
     # NOTE: this coefficient is for use only WITHOUT unsymmetrical mixing!
     theta = 0.228
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
@@ -4110,7 +4115,7 @@ def theta_Cl_HAsO4_M83(T, P):
     """a-a': chloride hydrogen-arsenate [M83]."""
     # NOTE: this coefficient is for use only WITHOUT unsymmetrical mixing!
     theta = 0.122
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
@@ -4118,7 +4123,7 @@ def theta_AsO4_Cl_M83(T, P):
     """a-a': arsenate chloride [M83]."""
     # NOTE: this coefficient is for use only WITHOUT unsymmetrical mixing!
     theta = 0.060
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
@@ -4126,7 +4131,7 @@ def theta_acetate_Cl_M83(T, P):
     """a-a': acetate chloride [M83]."""
     # NOTE: this coefficient is for use only WITHOUT unsymmetrical mixing!
     theta = -0.017
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
@@ -4134,7 +4139,7 @@ def psi_Na_Cl_H2AsO4_M83(T, P):
     """c-a-a': sodium chloride dihydrogen-arsenate [M83]."""
     # NOTE: this coefficient is for use only WITHOUT unsymmetrical mixing!
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
@@ -4142,7 +4147,7 @@ def psi_Na_Cl_HAsO4_M83(T, P):
     """c-a-a': sodium chloride hydrogen-arsenate [M83]."""
     # NOTE: this coefficient is for use only WITHOUT unsymmetrical mixing!
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
@@ -4150,7 +4155,7 @@ def psi_Na_AsO4_Cl_M83(T, P):
     """c-a-a': sodium arsenate chloride [M83]."""
     # NOTE: this coefficient is for use only WITHOUT unsymmetrical mixing!
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
@@ -4158,7 +4163,7 @@ def theta_Na_acetate_Cl_M83(T, P):
     """c-a-a': sodium acetate chloride [M83]."""
     # NOTE: this coefficient is for use only WITHOUT unsymmetrical mixing!
     theta = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
@@ -4194,7 +4199,7 @@ def bC_Na_Cl_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4209,7 +4214,7 @@ def bC_Na_SO4_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4223,7 +4228,7 @@ def bC_Na_HSO4_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4238,7 +4243,7 @@ def bC_Na_OH_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4252,7 +4257,7 @@ def bC_Na_HCO3_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4267,7 +4272,7 @@ def bC_Na_CO3_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4282,7 +4287,7 @@ def bC_K_Cl_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4296,7 +4301,7 @@ def bC_K_SO4_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4310,7 +4315,7 @@ def bC_K_HSO4_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4325,7 +4330,7 @@ def bC_K_OH_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4340,7 +4345,7 @@ def bC_K_HCO3_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4355,7 +4360,7 @@ def bC_K_CO3_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4370,7 +4375,7 @@ def bC_Ca_Cl_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4384,7 +4389,7 @@ def bC_Ca_SO4_HMW84(T, P):
     alph1 = 1.4
     alph2 = 12
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4398,7 +4403,7 @@ def bC_Ca_HSO4_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4412,7 +4417,7 @@ def bC_Ca_OH_HMW84(T, P):
     alph1 = 2
     alph2 = 12
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4426,7 +4431,7 @@ def bC_Ca_HCO3_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4440,7 +4445,7 @@ def bC_Ca_CO3_HMW84(T, P):
     alph1 = 1.4
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4455,7 +4460,7 @@ def bC_Mg_Cl_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4470,7 +4475,7 @@ def bC_Mg_SO4_HMW84(T, P):
     alph1 = 1.4
     alph2 = 12
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4484,7 +4489,7 @@ def bC_Mg_HSO4_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4498,7 +4503,7 @@ def bC_Mg_OH_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4512,7 +4517,7 @@ def bC_Mg_HCO3_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4526,7 +4531,7 @@ def bC_Mg_CO3_HMW84(T, P):
     alph1 = 1.4
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4540,7 +4545,7 @@ def bC_MgOH_Cl_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4554,7 +4559,7 @@ def bC_MgOH_SO4_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4568,7 +4573,7 @@ def bC_MgOH_HSO4_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4582,7 +4587,7 @@ def bC_MgOH_OH_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4596,7 +4601,7 @@ def bC_MgOH_HCO3_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4610,7 +4615,7 @@ def bC_MgOH_CO3_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4625,7 +4630,7 @@ def bC_H_Cl_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4640,7 +4645,7 @@ def bC_H_SO4_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4654,7 +4659,7 @@ def bC_H_HSO4_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4668,7 +4673,7 @@ def bC_H_OH_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4682,7 +4687,7 @@ def bC_H_HCO3_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -4696,1533 +4701,1533 @@ def bC_H_CO3_HMW84(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
 def theta_Cl_SO4_HMW84(T, P):
     """a-a': chloride sulfate [HMW84]."""
     theta = 0.02
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Na_Cl_SO4_HMW84(T, P):
     """c-a-a': sodium chloride sulfate [HMW84]."""
     psi = 0.0014
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_Cl_SO4_HMW84(T, P):
     """c-a-a': potassium chloride sulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_Cl_SO4_HMW84(T, P):
     """c-a-a': calcium chloride sulfate [HMW84]."""
     psi = -0.018
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mg_Cl_SO4_HMW84(T, P):
     """c-a-a': magnesium chloride sulfate [HMW84]."""
     psi = -0.004
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_MgOH_Cl_SO4_HMW84(T, P):
     """c-a-a': magnesium-hydroxide chloride sulfate [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_Cl_SO4_HMW84(T, P):
     """c-a-a': hydrogen chloride sulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_Cl_HSO4_HMW84(T, P):
     """a-a': chloride bisulfate [HMW84]."""
     theta = -0.006
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Na_Cl_HSO4_HMW84(T, P):
     """c-a-a': sodium chloride bisulfate [HMW84]."""
     psi = -0.006
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_Cl_HSO4_HMW84(T, P):
     """c-a-a': potassium chloride bisulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_Cl_HSO4_HMW84(T, P):
     """c-a-a': calcium chloride bisulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mg_Cl_HSO4_HMW84(T, P):
     """c-a-a': magnesium chloride bisulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_MgOH_Cl_HSO4_HMW84(T, P):
     """c-a-a': magnesium-hydroxide chloride bisulfate [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_Cl_HSO4_HMW84(T, P):
     """c-a-a': hydrogen chloride bisulfate [HMW84]."""
     psi = 0.013
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_Cl_OH_HMW84(T, P):
     """a-a': chloride hydroxide [HMW84]."""
     theta = -0.05
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Na_Cl_OH_HMW84(T, P):
     """c-a-a': sodium chloride hydroxide [HMW84]."""
     psi = -0.006
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_Cl_OH_HMW84(T, P):
     """c-a-a': potassium chloride hydroxide [HMW84]."""
     psi = -0.006
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_Cl_OH_HMW84(T, P):
     """c-a-a': calcium chloride hydroxide [HMW84]."""
     psi = -0.025
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mg_Cl_OH_HMW84(T, P):
     """c-a-a': magnesium chloride hydroxide [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_MgOH_Cl_OH_HMW84(T, P):
     """c-a-a': magnesium-hydroxide chloride hydroxide [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_Cl_OH_HMW84(T, P):
     """c-a-a': hydrogen chloride hydroxide [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_Cl_HCO3_HMW84(T, P):
     """a-a': chloride bicarbonate [HMW84]."""
     theta = 0.03
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Na_Cl_HCO3_HMW84(T, P):
     """c-a-a': sodium chloride bicarbonate [HMW84]."""
     psi = -0.15
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_Cl_HCO3_HMW84(T, P):
     """c-a-a': potassium chloride bicarbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_Cl_HCO3_HMW84(T, P):
     """c-a-a': calcium chloride bicarbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mg_Cl_HCO3_HMW84(T, P):
     """c-a-a': magnesium chloride bicarbonate [HMW84]."""
     psi = -0.096
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_MgOH_Cl_HCO3_HMW84(T, P):
     """c-a-a': magnesium-hydroxide chloride bicarbonate [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_Cl_HCO3_HMW84(T, P):
     """c-a-a': hydrogen chloride bicarbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_CO3_Cl_HMW84(T, P):
     """a-a': carbonate chloride [HMW84]."""
     theta = -0.02
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Na_CO3_Cl_HMW84(T, P):
     """c-a-a': sodium carbonate chloride [HMW84]."""
     psi = 0.0085
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_CO3_Cl_HMW84(T, P):
     """c-a-a': potassium carbonate chloride [HMW84]."""
     psi = 0.004
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_CO3_Cl_HMW84(T, P):
     """c-a-a': calcium carbonate chloride [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mg_CO3_Cl_HMW84(T, P):
     """c-a-a': magnesium carbonate chloride [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_MgOH_CO3_Cl_HMW84(T, P):
     """c-a-a': magnesium-hydroxide carbonate chloride [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_CO3_Cl_HMW84(T, P):
     """c-a-a': hydrogen carbonate chloride [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_HSO4_SO4_HMW84(T, P):
     """a-a': bisulfate sulfate [HMW84]."""
     theta = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Na_HSO4_SO4_HMW84(T, P):
     """c-a-a': sodium bisulfate sulfate [HMW84]."""
     psi = -0.0094
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_HSO4_SO4_HMW84(T, P):
     """c-a-a': potassium bisulfate sulfate [HMW84]."""
     psi = -0.0677
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_HSO4_SO4_HMW84(T, P):
     """c-a-a': calcium bisulfate sulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mg_HSO4_SO4_HMW84(T, P):
     """c-a-a': magnesium bisulfate sulfate [HMW84]."""
     psi = -0.0425
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_MgOH_HSO4_SO4_HMW84(T, P):
     """c-a-a': magnesium-hydroxide bisulfate sulfate [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_HSO4_SO4_HMW84(T, P):
     """c-a-a': hydrogen bisulfate sulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_OH_SO4_HMW84(T, P):
     """a-a': hydroxide sulfate [HMW84]."""
     theta = -0.013
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Na_OH_SO4_HMW84(T, P):
     """c-a-a': sodium hydroxide sulfate [HMW84]."""
     psi = -0.009
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_OH_SO4_HMW84(T, P):
     """c-a-a': potassium hydroxide sulfate [HMW84]."""
     psi = -0.05
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_OH_SO4_HMW84(T, P):
     """c-a-a': calcium hydroxide sulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mg_OH_SO4_HMW84(T, P):
     """c-a-a': magnesium hydroxide sulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_MgOH_OH_SO4_HMW84(T, P):
     """c-a-a': magnesium-hydroxide hydroxide sulfate [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_OH_SO4_HMW84(T, P):
     """c-a-a': hydrogen hydroxide sulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_HCO3_SO4_HMW84(T, P):
     """a-a': bicarbonate sulfate [HMW84]."""
     theta = 0.01
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Na_HCO3_SO4_HMW84(T, P):
     """c-a-a': sodium bicarbonate sulfate [HMW84]."""
     psi = -0.005
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_HCO3_SO4_HMW84(T, P):
     """c-a-a': potassium bicarbonate sulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_HCO3_SO4_HMW84(T, P):
     """c-a-a': calcium bicarbonate sulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mg_HCO3_SO4_HMW84(T, P):
     """c-a-a': magnesium bicarbonate sulfate [HMW84]."""
     psi = -0.161
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_MgOH_HCO3_SO4_HMW84(T, P):
     """c-a-a': magnesium-hydroxide bicarbonate sulfate [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_HCO3_SO4_HMW84(T, P):
     """c-a-a': hydrogen bicarbonate sulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_CO3_SO4_HMW84(T, P):
     """a-a': carbonate sulfate [HMW84]."""
     theta = 0.02
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Na_CO3_SO4_HMW84(T, P):
     """c-a-a': sodium carbonate sulfate [HMW84]."""
     psi = -0.005
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_CO3_SO4_HMW84(T, P):
     """c-a-a': potassium carbonate sulfate [HMW84]."""
     psi = -0.009
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_CO3_SO4_HMW84(T, P):
     """c-a-a': calcium carbonate sulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mg_CO3_SO4_HMW84(T, P):
     """c-a-a': magnesium carbonate sulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_MgOH_CO3_SO4_HMW84(T, P):
     """c-a-a': magnesium-hydroxide carbonate sulfate [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_CO3_SO4_HMW84(T, P):
     """c-a-a': hydrogen carbonate sulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_HSO4_OH_HMW84(T, P):
     """a-a': bisulfate hydroxide [HMW84]."""
     theta = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Na_HSO4_OH_HMW84(T, P):
     """c-a-a': sodium bisulfate hydroxide [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_HSO4_OH_HMW84(T, P):
     """c-a-a': potassium bisulfate hydroxide [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_HSO4_OH_HMW84(T, P):
     """c-a-a': calcium bisulfate hydroxide [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mg_HSO4_OH_HMW84(T, P):
     """c-a-a': magnesium bisulfate hydroxide [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_MgOH_HSO4_OH_HMW84(T, P):
     """c-a-a': magnesium-hydroxide bisulfate hydroxide [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_HSO4_OH_HMW84(T, P):
     """c-a-a': hydrogen bisulfate hydroxide [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_HCO3_HSO4_HMW84(T, P):
     """a-a': bicarbonate bisulfate [HMW84]."""
     theta = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Na_HCO3_HSO4_HMW84(T, P):
     """c-a-a': sodium bicarbonate bisulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_HCO3_HSO4_HMW84(T, P):
     """c-a-a': potassium bicarbonate bisulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_HCO3_HSO4_HMW84(T, P):
     """c-a-a': calcium bicarbonate bisulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mg_HCO3_HSO4_HMW84(T, P):
     """c-a-a': magnesium bicarbonate bisulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_MgOH_HCO3_HSO4_HMW84(T, P):
     """c-a-a': magnesium-hydroxide bicarbonate bisulfate [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_HCO3_HSO4_HMW84(T, P):
     """c-a-a': hydrogen bicarbonate bisulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_CO3_HSO4_HMW84(T, P):
     """a-a': carbonate bisulfate [HMW84]."""
     theta = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Na_CO3_HSO4_HMW84(T, P):
     """c-a-a': sodium carbonate bisulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_CO3_HSO4_HMW84(T, P):
     """c-a-a': potassium carbonate bisulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_CO3_HSO4_HMW84(T, P):
     """c-a-a': calcium carbonate bisulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mg_CO3_HSO4_HMW84(T, P):
     """c-a-a': magnesium carbonate bisulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_MgOH_CO3_HSO4_HMW84(T, P):
     """c-a-a': magnesium-hydroxide carbonate bisulfate [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_CO3_HSO4_HMW84(T, P):
     """c-a-a': hydrogen carbonate bisulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_HCO3_OH_HMW84(T, P):
     """a-a': bicarbonate hydroxide [HMW84]."""
     theta = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Na_HCO3_OH_HMW84(T, P):
     """c-a-a': sodium bicarbonate hydroxide [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_HCO3_OH_HMW84(T, P):
     """c-a-a': potassium bicarbonate hydroxide [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_HCO3_OH_HMW84(T, P):
     """c-a-a': calcium bicarbonate hydroxide [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mg_HCO3_OH_HMW84(T, P):
     """c-a-a': magnesium bicarbonate hydroxide [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_MgOH_HCO3_OH_HMW84(T, P):
     """c-a-a': magnesium-hydroxide bicarbonate hydroxide [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_HCO3_OH_HMW84(T, P):
     """c-a-a': hydrogen bicarbonate hydroxide [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_CO3_OH_HMW84(T, P):
     """a-a': carbonate hydroxide [HMW84]."""
     theta = 0.1
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Na_CO3_OH_HMW84(T, P):
     """c-a-a': sodium carbonate hydroxide [HMW84]."""
     psi = -0.017
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_CO3_OH_HMW84(T, P):
     """c-a-a': potassium carbonate hydroxide [HMW84]."""
     psi = -0.01
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_CO3_OH_HMW84(T, P):
     """c-a-a': calcium carbonate hydroxide [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mg_CO3_OH_HMW84(T, P):
     """c-a-a': magnesium carbonate hydroxide [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_MgOH_CO3_OH_HMW84(T, P):
     """c-a-a': magnesium-hydroxide carbonate hydroxide [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_CO3_OH_HMW84(T, P):
     """c-a-a': hydrogen carbonate hydroxide [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_CO3_HCO3_HMW84(T, P):
     """a-a': carbonate bicarbonate [HMW84]."""
     theta = -0.04
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Na_CO3_HCO3_HMW84(T, P):
     """c-a-a': sodium carbonate bicarbonate [HMW84]."""
     psi = 0.002
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_CO3_HCO3_HMW84(T, P):
     """c-a-a': potassium carbonate bicarbonate [HMW84]."""
     psi = 0.012
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_CO3_HCO3_HMW84(T, P):
     """c-a-a': calcium carbonate bicarbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mg_CO3_HCO3_HMW84(T, P):
     """c-a-a': magnesium carbonate bicarbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_MgOH_CO3_HCO3_HMW84(T, P):
     """c-a-a': magnesium-hydroxide carbonate bicarbonate [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_CO3_HCO3_HMW84(T, P):
     """c-a-a': hydrogen carbonate bicarbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_K_Na_HMW84(T, P):
     """c-c': potassium sodium [HMW84]."""
     theta = -0.012
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_K_Na_Cl_HMW84(T, P):
     """c-c'-a: potassium sodium chloride [HMW84]."""
     psi = -0.0018
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_Na_SO4_HMW84(T, P):
     """c-c'-a: potassium sodium sulfate [HMW84]."""
     psi = -0.01
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_Na_HSO4_HMW84(T, P):
     """c-c'-a: potassium sodium bisulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_Na_OH_HMW84(T, P):
     """c-c'-a: potassium sodium hydroxide [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_Na_HCO3_HMW84(T, P):
     """c-c'-a: potassium sodium bicarbonate [HMW84]."""
     psi = -0.003
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_Na_CO3_HMW84(T, P):
     """c-c'-a: potassium sodium carbonate [HMW84]."""
     psi = 0.003
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_Ca_Na_HMW84(T, P):
     """c-c': calcium sodium [HMW84]."""
     theta = 0.07
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Ca_Na_Cl_HMW84(T, P):
     """c-c'-a: calcium sodium chloride [HMW84]."""
     psi = -0.007
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_Na_SO4_HMW84(T, P):
     """c-c'-a: calcium sodium sulfate [HMW84]."""
     psi = -0.055
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_Na_HSO4_HMW84(T, P):
     """c-c'-a: calcium sodium bisulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_Na_OH_HMW84(T, P):
     """c-c'-a: calcium sodium hydroxide [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_Na_HCO3_HMW84(T, P):
     """c-c'-a: calcium sodium bicarbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_Na_CO3_HMW84(T, P):
     """c-c'-a: calcium sodium carbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_Mg_Na_HMW84(T, P):
     """c-c': magnesium sodium [HMW84]."""
     theta = 0.07
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Mg_Na_Cl_HMW84(T, P):
     """c-c'-a: magnesium sodium chloride [HMW84]."""
     psi = -0.012
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mg_Na_SO4_HMW84(T, P):
     """c-c'-a: magnesium sodium sulfate [HMW84]."""
     psi = -0.015
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mg_Na_HSO4_HMW84(T, P):
     """c-c'-a: magnesium sodium bisulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mg_Na_OH_HMW84(T, P):
     """c-c'-a: magnesium sodium hydroxide [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mg_Na_HCO3_HMW84(T, P):
     """c-c'-a: magnesium sodium bicarbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mg_Na_CO3_HMW84(T, P):
     """c-c'-a: magnesium sodium carbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_MgOH_Na_HMW84(T, P):
     """c-c': magnesium-hydroxide sodium [HMW84]."""
     theta = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_MgOH_Na_Cl_HMW84(T, P):
     """c-c'-a: magnesium-hydroxide sodium chloride [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_MgOH_Na_SO4_HMW84(T, P):
     """c-c'-a: magnesium-hydroxide sodium sulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_MgOH_Na_HSO4_HMW84(T, P):
     """c-c'-a: magnesium-hydroxide sodium bisulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_MgOH_Na_OH_HMW84(T, P):
     """c-c'-a: magnesium-hydroxide sodium hydroxide [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_MgOH_Na_HCO3_HMW84(T, P):
     """c-c'-a: magnesium-hydroxide sodium bicarbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_MgOH_Na_CO3_HMW84(T, P):
     """c-c'-a: magnesium-hydroxide sodium carbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_H_Na_HMW84(T, P):
     """c-c': hydrogen sodium [HMW84]."""
     theta = 0.036
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_H_Na_Cl_HMW84(T, P):
     """c-c'-a: hydrogen sodium chloride [HMW84]."""
     psi = -0.004
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_Na_SO4_HMW84(T, P):
     """c-c'-a: hydrogen sodium sulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_Na_HSO4_HMW84(T, P):
     """c-c'-a: hydrogen sodium bisulfate [HMW84]."""
     psi = -0.0129
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_Na_OH_HMW84(T, P):
     """c-c'-a: hydrogen sodium hydroxide [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_Na_HCO3_HMW84(T, P):
     """c-c'-a: hydrogen sodium bicarbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_Na_CO3_HMW84(T, P):
     """c-c'-a: hydrogen sodium carbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_Ca_K_HMW84(T, P):
     """c-c': calcium potassium [HMW84]."""
     theta = 0.032
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Ca_K_Cl_HMW84(T, P):
     """c-c'-a: calcium potassium chloride [HMW84]."""
     psi = -0.025
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_K_SO4_HMW84(T, P):
     """c-c'-a: calcium potassium sulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_K_HSO4_HMW84(T, P):
     """c-c'-a: calcium potassium bisulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_K_OH_HMW84(T, P):
     """c-c'-a: calcium potassium hydroxide [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_K_HCO3_HMW84(T, P):
     """c-c'-a: calcium potassium bicarbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_K_CO3_HMW84(T, P):
     """c-c'-a: calcium potassium carbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_K_Mg_HMW84(T, P):
     """c-c': potassium magnesium [HMW84]."""
     theta = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_K_Mg_Cl_HMW84(T, P):
     """c-c'-a: potassium magnesium chloride [HMW84]."""
     psi = -0.022
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_Mg_SO4_HMW84(T, P):
     """c-c'-a: potassium magnesium sulfate [HMW84]."""
     psi = -0.048
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_Mg_HSO4_HMW84(T, P):
     """c-c'-a: potassium magnesium bisulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_Mg_OH_HMW84(T, P):
     """c-c'-a: potassium magnesium hydroxide [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_Mg_HCO3_HMW84(T, P):
     """c-c'-a: potassium magnesium bicarbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_Mg_CO3_HMW84(T, P):
     """c-c'-a: potassium magnesium carbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_K_MgOH_HMW84(T, P):
     """c-c': potassium magnesium-hydroxide [HMW84]."""
     theta = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_K_MgOH_Cl_HMW84(T, P):
     """c-c'-a: potassium magnesium-hydroxide chloride [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_MgOH_SO4_HMW84(T, P):
     """c-c'-a: potassium magnesium-hydroxide sulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_MgOH_HSO4_HMW84(T, P):
     """c-c'-a: potassium magnesium-hydroxide bisulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_MgOH_OH_HMW84(T, P):
     """c-c'-a: potassium magnesium-hydroxide hydroxide [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_MgOH_HCO3_HMW84(T, P):
     """c-c'-a: potassium magnesium-hydroxide bicarbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_K_MgOH_CO3_HMW84(T, P):
     """c-c'-a: potassium magnesium-hydroxide carbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_H_K_HMW84(T, P):
     """c-c': hydrogen potassium [HMW84]."""
     theta = 0.005
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_H_K_Cl_HMW84(T, P):
     """c-c'-a: hydrogen potassium chloride [HMW84]."""
     psi = -0.011
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_K_SO4_HMW84(T, P):
     """c-c'-a: hydrogen potassium sulfate [HMW84]."""
     psi = 0.197
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_K_HSO4_HMW84(T, P):
     """c-c'-a: hydrogen potassium bisulfate [HMW84]."""
     psi = -0.0265
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_K_OH_HMW84(T, P):
     """c-c'-a: hydrogen potassium hydroxide [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_K_HCO3_HMW84(T, P):
     """c-c'-a: hydrogen potassium bicarbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_K_CO3_HMW84(T, P):
     """c-c'-a: hydrogen potassium carbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_Ca_Mg_HMW84(T, P):
     """c-c': calcium magnesium [HMW84]."""
     theta = 0.007
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Ca_Mg_Cl_HMW84(T, P):
     """c-c'-a: calcium magnesium chloride [HMW84]."""
     psi = -0.012
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_Mg_SO4_HMW84(T, P):
     """c-c'-a: calcium magnesium sulfate [HMW84]."""
     psi = 0.024
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_Mg_HSO4_HMW84(T, P):
     """c-c'-a: calcium magnesium bisulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_Mg_OH_HMW84(T, P):
     """c-c'-a: calcium magnesium hydroxide [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_Mg_HCO3_HMW84(T, P):
     """c-c'-a: calcium magnesium bicarbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_Mg_CO3_HMW84(T, P):
     """c-c'-a: calcium magnesium carbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_Ca_MgOH_HMW84(T, P):
     """c-c': calcium magnesium-hydroxide [HMW84]."""
     theta = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Ca_MgOH_Cl_HMW84(T, P):
     """c-c'-a: calcium magnesium-hydroxide chloride [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_MgOH_SO4_HMW84(T, P):
     """c-c'-a: calcium magnesium-hydroxide sulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_MgOH_HSO4_HMW84(T, P):
     """c-c'-a: calcium magnesium-hydroxide bisulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_MgOH_OH_HMW84(T, P):
     """c-c'-a: calcium magnesium-hydroxide hydroxide [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_MgOH_HCO3_HMW84(T, P):
     """c-c'-a: calcium magnesium-hydroxide bicarbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_MgOH_CO3_HMW84(T, P):
     """c-c'-a: calcium magnesium-hydroxide carbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_Ca_H_HMW84(T, P):
     """c-c': calcium hydrogen [HMW84]."""
     theta = 0.092
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Ca_H_Cl_HMW84(T, P):
     """c-c'-a: calcium hydrogen chloride [HMW84]."""
     psi = -0.015
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_H_SO4_HMW84(T, P):
     """c-c'-a: calcium hydrogen sulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_H_HSO4_HMW84(T, P):
     """c-c'-a: calcium hydrogen bisulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_H_OH_HMW84(T, P):
     """c-c'-a: calcium hydrogen hydroxide [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_H_HCO3_HMW84(T, P):
     """c-c'-a: calcium hydrogen bicarbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Ca_H_CO3_HMW84(T, P):
     """c-c'-a: calcium hydrogen carbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_Mg_MgOH_HMW84(T, P):
     """c-c': magnesium magnesium-hydroxide [HMW84]."""
     theta = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Mg_MgOH_Cl_HMW84(T, P):
     """c-c'-a: magnesium magnesium-hydroxide chloride [HMW84]."""
     psi = 0.028
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mg_MgOH_SO4_HMW84(T, P):
     """c-c'-a: magnesium magnesium-hydroxide sulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mg_MgOH_HSO4_HMW84(T, P):
     """c-c'-a: magnesium magnesium-hydroxide bisulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mg_MgOH_OH_HMW84(T, P):
     """c-c'-a: magnesium magnesium-hydroxide hydroxide [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mg_MgOH_HCO3_HMW84(T, P):
     """c-c'-a: magnesium magnesium-hydroxide bicarbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_Mg_MgOH_CO3_HMW84(T, P):
     """c-c'-a: magnesium magnesium-hydroxide carbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_H_Mg_HMW84(T, P):
     """c-c': hydrogen magnesium [HMW84]."""
     theta = 0.1
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_H_Mg_Cl_HMW84(T, P):
     """c-c'-a: hydrogen magnesium chloride [HMW84]."""
     psi = -0.011
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_Mg_SO4_HMW84(T, P):
     """c-c'-a: hydrogen magnesium sulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_Mg_HSO4_HMW84(T, P):
     """c-c'-a: hydrogen magnesium bisulfate [HMW84]."""
     psi = -0.0178
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_Mg_OH_HMW84(T, P):
     """c-c'-a: hydrogen magnesium hydroxide [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_Mg_HCO3_HMW84(T, P):
     """c-c'-a: hydrogen magnesium bicarbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_Mg_CO3_HMW84(T, P):
     """c-c'-a: hydrogen magnesium carbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_H_MgOH_HMW84(T, P):
     """c-c': hydrogen magnesium-hydroxide [HMW84]."""
     theta = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_H_MgOH_Cl_HMW84(T, P):
     """c-c'-a: hydrogen magnesium-hydroxide chloride [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_MgOH_SO4_HMW84(T, P):
     """c-c'-a: hydrogen magnesium-hydroxide sulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_MgOH_HSO4_HMW84(T, P):
     """c-c'-a: hydrogen magnesium-hydroxide bisulfate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_MgOH_OH_HMW84(T, P):
     """c-c'-a: hydrogen magnesium-hydroxide hydroxide [HMW84]."""
     psi = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_MgOH_HCO3_HMW84(T, P):
     """c-c'-a: hydrogen magnesium-hydroxide bicarbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def psi_H_MgOH_CO3_HMW84(T, P):
     """c-c'-a: hydrogen magnesium-hydroxide carbonate [HMW84]."""
     psi = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def lambd_CO2_H_HMW84(T, P):
     """n-c: carbon-dioxide hydrogen [HMW84]."""
     lambd = 0.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_CO2_Na_HMW84(T, P):
     """n-c: carbon-dioxide sodium [HMW84]."""
     lambd = 0.1
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_CO2_K_HMW84(T, P):
     """n-c: carbon-dioxide potassium [HMW84]."""
     lambd = 0.051
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_CO2_Ca_HMW84(T, P):
     """n-c: carbon-dioxide calcium [HMW84]."""
     lambd = 0.183
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_CO2_Mg_HMW84(T, P):
     """n-c: carbon-dioxide magnesium [HMW84]."""
     lambd = 0.183
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_CO2_Cl_HMW84(T, P):
     """n-a: carbon-dioxide chloride [HMW84]."""
     lambd = -0.005
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_CO2_SO4_HMW84(T, P):
     """n-a: carbon-dioxide sulfate [HMW84]."""
     lambd = 0.097
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_CO2_HSO4_HMW84(T, P):
     """n-c: carbon-dioxide bisulfate [HMW84]."""
     lambd = -0.003
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
@@ -6237,7 +6242,7 @@ def bC_Mg_HCO3_POS85(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -6251,7 +6256,7 @@ def bC_Ca_HCO3_POS85(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -6267,7 +6272,7 @@ def bC_Na_BOH4_FW86(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -6281,7 +6286,7 @@ def bC_Na_B3O3OH4_FW86(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -6295,7 +6300,7 @@ def bC_Na_B4O5OH4_FW86(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -6309,7 +6314,7 @@ def bC_K_BOH4_FW86(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -6323,7 +6328,7 @@ def bC_K_B3O3OH4_FW86(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -6337,7 +6342,7 @@ def bC_K_B4O5OH4_FW86(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -6351,7 +6356,7 @@ def bC_MgBOH4_Cl_FW86(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -6365,133 +6370,133 @@ def bC_CaBOH4_Cl_FW86(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
 def theta_BOH4_Cl_FW86(T, P):
     """a-a': borate chloride [FW86]."""
     theta = -0.065
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Na_BOH4_Cl_FW86(T, P):
     """c-a-a': sodium borate chloride [FW86]."""
     psi = -0.0073
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_BOH4_SO4_FW86(T, P):
     """a-a': borate sulfate [FW86]."""
     theta = -0.012
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_B3O3OH4_Cl_FW86(T, P):
     """a-a': triborate chloride [FW86]."""
     theta = 0.12
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Na_B3O3OH4_Cl_FW86(T, P):
     """c-a-a': sodium triborate chloride [FW86]."""
     psi = -0.024
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_B3O3OH4_SO4_FW86(T, P):
     """a-a': triborate sulfate [FW86]."""
     theta = 0.10
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_B3O3OH4_HCO3_FW86(T, P):
     """a-a': triborate bicarbonate [FW86]."""
     theta = -0.10
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_B4O5OH4_Cl_FW86(T, P):
     """a-a': tetraborate chloride [FW86]."""
     theta = 0.074
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Na_B4O5OH4_Cl_FW86(T, P):
     """c-a-a': sodium tetraborate chloride [FW86]."""
     psi = 0.026
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_B4O5OH4_SO4_FW86(T, P):
     """a-a': tetraborate sulfate [FW86]."""
     theta = 0.12
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_B4O5OH4_HCO3_FW86(T, P):
     """a-a': tetraborate bicarbonate [FW86]."""
     theta = -0.087
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def lambd_BOH3_Cl_FW86(T, P):
     """n-a: boric-acid chloride [FW86]."""
     lambd = 0.091
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_BOH3_SO4_FW86(T, P):
     """n-a: boric-acid sulfate [FW86]."""
     lambd = 0.018
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_BOH3_B3O3OH4_FW86(T, P):
     """n-a: boric-acid triborate [FW86]."""
     lambd = -0.20
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_BOH3_Na_FW86(T, P):
     """n-c: boric-acid sodium [FW86]."""
     lambd = -0.097
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_BOH3_K_FW86(T, P):
     """n-c: boric-acid potassium [FW86]."""
     lambd = -0.14
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def zeta_BOH3_H_Cl_FW86(T, P):
     """n-c-a: boric-acid hydrogen chloride [FW86]."""
     zeta = -0.0102
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return zeta, valid
 
 
 def zeta_BOH3_Na_SO4_FW86(T, P):
     """n-c-a: boric-acid sodium sulfate [FW86]."""
     zeta = 0.046
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return zeta, valid
 
 
@@ -7020,7 +7025,7 @@ def bC_Mg_HS_HPM88(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -7034,7 +7039,7 @@ def bC_Ca_HS_HPM88(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -7266,238 +7271,238 @@ def lambd_NH3_NH3_CB89(T, P):
 def lambd_NH3_Mg_CB89(T, P):
     """n-c: ammonia magnesium [CB89]."""
     lambd = -0.21
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_NH3_Ca_CB89(T, P):
     """n-c: ammonia calcium [CB89]."""
     lambd = -0.081
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_NH3_Sr_CB89(T, P):
     """n-c: ammonia strontium [CB89]."""
     lambd = -0.041
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_NH3_Ba_CB89(T, P):
     """n-c: ammonia barium [CB89]."""
     lambd = -0.021
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_NH3_Li_CB89(T, P):
     """n-c: ammonia lithium [CB89]."""
     lambd = -0.038
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_NH3_Na_CB89(T, P):
     """n-c: ammonia sodium [CB89]."""
     lambd = 0.0175
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_NH3_K_CB89(T, P):
     """n-c: ammonia potassium [CB89]."""
     lambd = 0.0454 + (T - 298.15) * -0.000141
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_NH3_NH4_CB89(T, P):
     """n-c: ammonia ammonium [CB89]."""
     lambd = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_NH3_F_CB89(T, P):
     """n-a: ammonia fluoride [CB89]."""
     lambd = 0.091
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_NH3_Cl_CB89(T, P):
     """n-a: ammonia chloride [CB89]."""
     lambd = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_NH3_Br_CB89(T, P):
     """n-a: ammonia bromide [CB89]."""
     lambd = -0.022
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_NH3_I_CB89(T, P):
     """n-a: ammonia iodide [CB89]."""
     lambd = -0.051
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_NH3_OH_CB89(T, P):
     """n-a: ammonia hydroxide [CB89]."""
     lambd = 0.103
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_NH3_ClO3_CB89(T, P):
     """n-a: ammonia chlorate [CB89]."""
     lambd = -0.004
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_NH3_ClO4_CB89(T, P):
     """n-a: ammonia perchlorate [CB89]."""
     lambd = -0.056
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_NH3_NO2_CB89(T, P):
     """n-a: ammonia nitrite [CB89]."""
     lambd = -0.003
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_NH3_NO3_CB89(T, P):
     """n-a: ammonia nitrate [CB89]."""
     lambd = -0.01
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_NH3_SCN_CB89(T, P):
     """n-a: ammonia thiocyanide [CB89]."""
     lambd = -0.017
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_NH3_S_CB89(T, P):
     """n-a: ammonia sulfide [CB89]."""
     lambd = 0.174
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_NH3_SO3_CB89(T, P):
     """n-a: ammonia sulfite [CB89]."""
     lambd = 0.158
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_NH3_SO4_CB89(T, P):
     """n-a: ammonia sulfate [CB89]."""
     lambd = 0.140
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_NH3_CO3_CB89(T, P):
     """n-a: ammonia carbonate [CB89]."""
     lambd = 0.180
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_NH3_HCOO_CB89(T, P):
     """n-a: ammonia methanoate [CB89]."""
     lambd = 0.048
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_NH3_CH3COO_CB89(T, P):
     """n-a: ammonia ethanoate [CB89]."""
     lambd = 0.036
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_NH3_COO2_CB89(T, P):
     """n-a: ammonia oxalate [CB89]."""
     lambd = 0.012
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def mun2i_NH3_NH3_Na_CB89(T, P):
     """n-n-c: ammonia ammonia sodium [CB89]."""
     mun2i = -0.000311
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return mun2i, valid
 
 
 def mun2i_NH3_NH3_K_CB89(T, P):
     """n-n-c: ammonia ammonia potassium [CB89]."""
     mun2i = -0.000321
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return mun2i, valid
 
 
 def mun2i_NH3_NH3_NH4_CB89(T, P):
     """n-n-c: ammonia ammonia ammonium [CB89]."""
     mun2i = -0.00075
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return mun2i, valid
 
 
 def mun2i_NH3_NH3_Cl_CB89(T, P):
     """n-n-a: ammonia ammonia chloride [CB89]."""
     mun2i = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return mun2i, valid
 
 
 def mun2i_NH3_NH3_NO3_CB89(T, P):
     """n-n-a: ammonia ammonia nitrate [CB89]."""
     mun2i = -0.000437
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return mun2i, valid
 
 
 def mun2i_NH3_NH3_CO3_CB89(T, P):
     """n-n-a: ammonia ammonia carbonate [CB89]."""
     mun2i = 0.000625
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return mun2i, valid
 
 
 def zeta_NH3_Ca_Cl_CB89(T, P):
     """n-c-a: ammonia calcium chloride [CB89]."""
     zeta = -0.00134
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return zeta, valid
 
 
 def zeta_NH3_K_OH_CB89(T, P):
     """n-c-a: ammonia potassium hydroxide [CB89]."""
     zeta = 0.00385
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return zeta, valid
 
 
 def munii_NH3_NH4_SO4_CB89(T, P):
     """n-a-a': ammonia ammonium sulfate [CB89]."""
     munii = -0.00153
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return munii, valid
 
 
@@ -7650,7 +7655,7 @@ def bC_Mg_H2PO4_HFM89(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -7664,70 +7669,70 @@ def bC_Mg_HPO4_HFM89(T, P):
     alph1 = 1.4
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
 def theta_Cl_H2PO4_HFM89(T, P):
     """a-a': chloride dihydrogen-phosphate [HFM89]."""
     theta = 0.10
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Na_Cl_H2PO4_HFM89(T, P):
     """c-a-a': sodium chloride dihydrogen-phosphate [HFM89]."""
     psi = -0.028
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_Cl_HPO4_HFM89(T, P):
     """a-a': chloride hydrogen-phosphate [HFM89]."""
     theta = -0.105
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Na_Cl_HPO4_HFM89(T, P):
     """c-a-a': sodium chloride hydrogen-phosphate [HFM89]."""
     psi = -0.003
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def theta_Cl_PO4_HFM89(T, P):
     """a-a': chloride phosphate [HFM89]."""
     theta = -0.59
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Na_Cl_PO4_HFM89(T, P):
     """c-a-a': sodium chloride phosphate [HFM89]."""
     psi = 0.110
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def lambd_H3PO4_Na_HFM89(T, P):
     """n-c: phosphoric-acid sodium [HFM89]."""
     lambd = 0.075
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_H3PO4_Cl_HFM89(T, P):
     """n-a: phosphoric-acid chloride [HFM89]."""
     lambd = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_MgHPO4_Na_HFM89(T, P):
     """n-n': magnesium-hydrogen-phosphate sodium [HFM89]."""
     lambd = -0.124
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
@@ -7780,7 +7785,7 @@ def lambd_SO2_Na_MHJZ89(T, P):
     """n-c: sulfur-dioxide sodium [MHJZ89]."""
     # RZM93 and MP98 both cite MHJZ89 but can't find this value therein
     lambd = 0.0283
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
@@ -7788,7 +7793,7 @@ def lambd_SO2_Cl_MHJZ89(T, P):
     """n-a: sulfur-dioxide chloride [MHJZ89]."""
     # RZM93 and MP98 both cite MHJZ89 but can't find this value therein
     lambd = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
@@ -7804,7 +7809,7 @@ def bC_Mg_HSO3_RZM91(T, P):
     alph1 = 2.0
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -7818,14 +7823,14 @@ def bC_Mg_SO3_RZM91(T, P):
     alph1 = 1.4
     alph2 = 12
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
 def lambd_SO2_Mg_RZM91(T, P):
     """n-c: sulfur-dioxide magnesium [RZM91]."""
     lambd = 0.085
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
@@ -8313,7 +8318,7 @@ def bC_Na_HSO4_HPR93(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -8847,7 +8852,7 @@ def theta_Cl_F_MP98(T, P):
     """a-a': chloride fluoride [MP98]."""
     # MP98 state value is "determined from CB88 data"
     theta = 0.01
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
@@ -8855,7 +8860,7 @@ def psi_Na_Cl_F_MP98(T, P):
     """c-a-a': sodium chloride fluoride [MP98]."""
     # MP98 state value is "determined from CB88 data"
     psi = 0.0023
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
@@ -8954,7 +8959,7 @@ def bC_Mg_HCO3_MP98(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -9032,7 +9037,7 @@ def theta_Na_Sr_MP98(T, P):
     """c-c': sodium strontium [MP98]."""
     # MP98 cite PK74 but I can't find this value in there
     theta = 0.07
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
@@ -9042,7 +9047,7 @@ def theta_K_Sr_MP98(T, P):
     # but then state a different number (0.01)... 0.07 is used in the program
     # Pierrot_2018_Interaction_Model.xlsm
     theta = 0.07
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
@@ -9058,7 +9063,7 @@ def psi_Na_Sr_Cl_MP98(T, P):
     """c-c'-a: sodium strontium chloride [MP98]."""
     # MP98 cite PK74 but I can't find this value in there
     psi = -0.015
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
@@ -9071,7 +9076,7 @@ def psi_H_K_Br_MP98(T, P):
     """c-c'-a: hydrogen potassium bromide [MP98]."""
     # MP98 cite HMW84 but I can't find this value in there
     psi = -0.021
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
@@ -9079,7 +9084,7 @@ def psi_H_Mg_Br_MP98(T, P):
     """c-c'-a: hydrogen magnesium bromide [MP98]."""
     # MP98 cite PK74 but I can't find this value in there
     psi = -0.005
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
@@ -9087,7 +9092,7 @@ def psi_K_Cl_H2PO4_MP98(T, P):
     """c-a-a': potassium chloride dihydrogen-phosphate [MP98]."""
     # MP98 cite Pitzer & Silvester (1976) but I can't find that paper
     psi = -0.0105
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
@@ -9095,7 +9100,7 @@ def lambd_HF_Cl_MP98(T, P):
     """n-a: hydrogen-fluoride chloride [MP98]."""
     # MP98 Table A12 says this is derived "from CB88 data"
     lambd = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
@@ -9103,7 +9108,7 @@ def lambd_HF_Na_MP98(T, P):
     """n-c: hydrogen-fluoride sodium [MP98]."""
     # MP98 Table A12 says this is derived "from CB88 data"
     lambd = 0.011
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
@@ -9111,7 +9116,7 @@ def zeta_H3PO4_Na_Cl_MP98(T, P):
     """phosphoric-acid sodium chloride [MP98]."""
     # MP98 say this comes from PS76 but there's no sodium in there
     zeta = 0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return zeta, valid
 
 
@@ -9151,7 +9156,7 @@ def theta_H_Mg_MP98(T, P):
     """c-c': hydrogen magnesium [MP98]."""
     # RGB80 has no temperature term, as declared by MP98
     theta = 0.0620 + 0.0003275 * (T - 298.15)
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
@@ -9159,7 +9164,7 @@ def psi_H_Mg_Cl_MP98(T, P):
     """c-c': hydrogen magnesium chloride [MP98]."""
     # RGB80 has no temperature term, as declared by MP98
     theta = 0.001 - 0.0007325 * (T - 298.15)
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
@@ -9167,7 +9172,7 @@ def theta_Ca_H_MP98(T, P):
     """c-c': calcium hydrogen [MP98]."""
     # MP98 have really messed this one up? (see notes on theta_Ca_H_RGO81)
     theta = 0.0612 + 0.0003275 * (T - 298.15)
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
@@ -9175,7 +9180,7 @@ def psi_Ca_H_Cl_MP98(T, P):
     """c-c': calcium hydrogen chloride [MP98]."""
     # RGO81 has no temperature term, as declared by MP98
     theta = 0.0008 - 0.000725 * (T - 298.15)
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
@@ -9231,7 +9236,7 @@ def bC_K_HSO4_MP98(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -9247,7 +9252,7 @@ def bC_Mg_HSO4_MP98(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -9338,7 +9343,7 @@ def bC_Mg_HSO4_RC99(T, P):
     alph1 = 2
     alph2 = -9
     omega = 1
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -9346,7 +9351,7 @@ def psi_H_Mg_HSO4_RC99(T, P):
     """c-c'-a: hydrogen magnesium bisulfate [RC99]."""
     # RC99 Table 6, left column
     psi = -0.027079
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
@@ -9354,7 +9359,7 @@ def psi_H_Mg_SO4_RC99(T, P):
     """c-c'-a: hydrogen magnesium sulfate [RC99]."""
     # RC99 Table 6, left column
     psi = -0.047368
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
@@ -9362,7 +9367,7 @@ def psi_Mg_HSO4_SO4_RC99(T, P):
     """c-a-a': magnesium bisulfate sulfate [RC99]."""
     # RC99 Table 6, left column
     psi = -0.078418
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
@@ -9377,7 +9382,7 @@ def bC_Mg_Cl_MNTR08(T, P):
     alph1 = 3.0
     alph2 = -9
     omega = 1.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -9391,21 +9396,21 @@ def bC_Mg_SO4_MNTR08(T, P):
     alph1 = 1.4
     alph2 = 12.0
     omega = 1.0
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
 def theta_Cl_SO4_MNTR08(T,):
     """a-a': chloride sulfate [MNTR08]."""
     theta = -0.07122
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_Mg_Cl_SO4_MNTR08(T,):
     """c-a-a': magnesium chloride sulfate [MNTR08]."""
     psi = -0.038505
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
@@ -9561,7 +9566,7 @@ def bC_Na_Cl_GT17simopt(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -9576,7 +9581,7 @@ def bC_trisH_Cl_GT17simopt(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -9591,56 +9596,56 @@ def bC_trisH_SO4_GT17simopt(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
 def theta_H_trisH_GT17simopt(T, P):
     """c-c': hydrogen trisH [GT17simopt]."""
     theta = -0.00575
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def psi_H_trisH_Cl_GT17simopt(T, P):
     """c-c'-a: hydrogen trisH chloride [GT17simopt]."""
     psi = -0.00700
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
 
 def lambd_tris_trisH_GT17simopt(T, P):
     """n-c: tris trisH [GT17simopt]."""
     lambd = 0.06306
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_tris_Na_GT17simopt(T, P):
     """n-c: tris sodium [GT17simopt]."""
     lambd = 0.01580
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_tris_K_GT17simopt(T, P):
     """n-c: tris potassium [GT17simopt]."""
     lambd = 0.02895
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_tris_Mg_GT17simopt(T, P):
     """n-c: tris magnesium [GT17simopt]."""
     lambd = -0.14505
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
 def lambd_tris_Ca_GT17simopt(T, P):
     """n-c: tris calcium [GT17simopt]."""
     lambd = -0.31081
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
@@ -9823,14 +9828,14 @@ def theta_Ca_H_MarChemSpec(T, P):
 def theta_H_Na_MarChemSpec25(T, P):
     """c-c': hydrogen sodium [MarChemSpec]."""
     theta = 0.036
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
 def theta_H_K_MarChemSpec25(T, P):
     """c-c': hydrogen potassium [MarChemSpec]."""
     theta = 0.005
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return theta, valid
 
 
@@ -9838,7 +9843,7 @@ def lambd_tris_tris_MarChemSpec25(T, P):
     """n-n: tris tris [MarChemSpec]."""
     # Temporary value from "MODEL PARAMETERS FOR TRIS Tests.docx" (2019-01-31)
     lambd = -0.006392
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
@@ -9846,7 +9851,7 @@ def zeta_tris_Na_Cl_MarChemSpec25(T, P):
     """n-c-a: tris sodium chloride [MarChemSpec]."""
     # Temporary value from "MODEL PARAMETERS FOR TRIS Tests.docx" (2019-01-31)
     zeta = -0.003231
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return zeta, valid
 
 
@@ -9854,7 +9859,7 @@ def mu_tris_tris_tris_MarChemSpec25(T, P):
     """n-n-n: tris tris tris [MarChemSpec]."""
     # Temporary value from "MODEL PARAMETERS FOR TRIS Tests.docx" (2019-01-31)
     mu = 0.0009529
-    valid = T == 298.15
+    valid = np.isclose(T, 298.15, **temperature_tol)
     return mu, valid
 
 
@@ -9883,7 +9888,7 @@ def bC_H_Br_JESS(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15  # unknown validity
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -9899,7 +9904,7 @@ def bC_H_Cl_JESS(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15  # unknown validity
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -9915,7 +9920,7 @@ def bC_H_ClO4_JESS(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15  # unknown validity
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -9931,7 +9936,7 @@ def bC_H_I_JESS(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15  # unknown validity
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -9947,7 +9952,7 @@ def bC_H_NO3_JESS(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15  # unknown validity
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -9963,7 +9968,7 @@ def bC_K_Br_JESS(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15  # unknown validity
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -9979,7 +9984,7 @@ def bC_K_Cl_JESS(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15  # unknown validity
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -9995,7 +10000,7 @@ def bC_K_I_JESS(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15  # unknown validity
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -10011,7 +10016,7 @@ def bC_K_NO3_JESS(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15  # unknown validity
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -10027,7 +10032,7 @@ def bC_K_OH_JESS(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15  # unknown validity
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -10043,7 +10048,7 @@ def bC_Li_Br_JESS(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15  # unknown validity
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -10059,7 +10064,7 @@ def bC_Li_Cl_JESS(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15  # unknown validity
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -10075,7 +10080,7 @@ def bC_Li_ClO4_JESS(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15  # unknown validity
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -10091,7 +10096,7 @@ def bC_Li_I_JESS(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15  # unknown validity
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -10107,7 +10112,7 @@ def bC_Li_NO3_JESS(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15  # unknown validity
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -10123,7 +10128,7 @@ def bC_Li_OH_JESS(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15  # unknown validity
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -10139,7 +10144,7 @@ def bC_Na_Br_JESS(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15  # unknown validity
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -10155,7 +10160,7 @@ def bC_Na_Cl_JESS(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15  # unknown validity
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -10171,7 +10176,7 @@ def bC_Na_ClO4_JESS(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15  # unknown validity
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -10187,7 +10192,7 @@ def bC_Na_I_JESS(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15  # unknown validity
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -10203,7 +10208,7 @@ def bC_Na_NO3_JESS(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15  # unknown validity
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -10219,7 +10224,7 @@ def bC_Na_OH_JESS(T, P):
     alph1 = 2
     alph2 = -9
     omega = -9
-    valid = T == 298.15  # unknown validity
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
@@ -10250,5 +10255,5 @@ def bC_Na_OH_JESS(T, P):
 #     alph1 = 2
 #     alph2 = -9
 #     omega = -9
-#     valid = T == 298.15 # unknown validity
+#     valid = np.isclose(T, 298.15, **temperature_tol) # unknown validity
 #     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
