@@ -1,6 +1,7 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019--2020  Matthew Paul Humphreys  (GNU GPLv3)
 """Unsymmetrical mixing functions."""
+import jax
 from jax import numpy as np
 from scipy import integrate
 from autograd.extend import primitive, defvjp
@@ -31,8 +32,9 @@ def none(x):
 #     return J
 
 
+@jax.jit
 def P75_eq46(x):
-    """Evaluate unsymmetrical mixing function following P75, eq. (46)."""
+    """Evaluate unsymmetrical mixing function, following P75 eq. (46)."""
     # P75 Table III
     C = [
         4.118,
@@ -48,8 +50,9 @@ def P75_eq46(x):
     return -(x ** 2) * np.log(x) * np.exp(-10 * x ** 2) / 6 + 1 / Jsum
 
 
+@jax.jit
 def P75_eq47(x):
-    """Evaluate unsymmetrical mixing function following P75, eq. (47)."""
+    """Evaluate unsymmetrical mixing function, following P75 eq. (47)."""
     C = [
         4.0,
         4.581,
@@ -61,9 +64,10 @@ def P75_eq47(x):
     return J
 
 
-# ~~~~~~~ Harvie's method as described by Pitzer (1991) Ch. 3, pp. 124-125 ~~~~~
-def Harvie(x):
-    """Evaluate unsymmetrical mixing function using Harvie's method."""
+def _Harvie_raw(x):
+    """Evaluate unsymmetrical mixing function and its derivative using
+    Harvie's method, as described by P91 Ch. 3, pp. 124-125.
+    """
     if x < 1.0:
         # Values from Table B-1, middle column (akI)
         ak = [
@@ -130,3 +134,19 @@ def Harvie(x):
     J = 0.25 * x - 1 + 0.5 * (b0 - b2)  # Eq. (B-29)
     Jp = 0.25 + 0.5 * dz_dx * (d0 - d2)  # Eq. (B-30)
     return J, Jp
+
+
+@jax.custom_jvp
+def Harvie(x):
+    """Evaluate unsymmetrical mixing function using Harvie's method,
+    as described by P91 Ch. 3, pp. 124-125.
+    """
+    return _Harvie_raw(x)[0]
+
+
+@Harvie.defjvp
+def _Harvie_jvp(primals, tangents):
+    (x,) = primals
+    (x_dot,) = tangents
+    ans, ans_dot = _Harvie_raw(x)
+    return ans, ans_dot * x_dot
