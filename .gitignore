@@ -114,3 +114,6 @@ testfiles/threeway/*
 # MATLAB
 *.asv
 *.mat
+
+# VSCodium
+.vscode/*
