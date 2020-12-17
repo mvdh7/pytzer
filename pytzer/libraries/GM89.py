@@ -1,5 +1,5 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2020  Matthew Paul Humphreys  (GNU GPLv3)
 from .. import parameters as prm
 from .. import debyehueckel, unsymmetrical
 # Greenberg & Møller (1988). Geochim. Cosmochim. Acta 53, 2503-2518,

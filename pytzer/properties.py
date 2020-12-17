@@ -1,5 +1,5 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2020  Matthew Paul Humphreys  (GNU GPLv3)
 """Define solute properties."""
 from autograd.numpy import concatenate, float_, unique, vstack
 

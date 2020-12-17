@@ -1,5 +1,5 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2020  Matthew Paul Humphreys  (GNU GPLv3)
 """Assemble dicts of Pitzer model interaction parameter functions into
 parameter libraries.
 """

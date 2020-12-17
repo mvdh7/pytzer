@@ -1,5 +1,5 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2020  Matthew Paul Humphreys  (GNU GPLv3)
 from .. import parameters as prm
 from .. import debyehueckel, dissociation, unsymmetrical
 # Clegg et al. (1994). J. Chem. Soc., Faraday Trans. 90, 1875-1894,
