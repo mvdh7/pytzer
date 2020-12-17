@@ -1,7 +1,7 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2020  Matthew Paul Humphreys  (GNU GPLv3)
 """Calculate Debye-Hueckel limiting slopes."""
-from autograd.numpy import exp, float_, logical_and, pi, sqrt
+from jax import numpy as np
 from . import teos10
 from .parameters import M88_eq13
 from .constants import NA, dbar2Pa, dbar2MPa
@@ -11,20 +11,18 @@ def Aosm_M88(tempK, pres):
     """From Moller (1988)."""
     Aosm = M88_eq13(
         tempK,
-        float_(
-            [
-                3.36901532e-1,
-                -6.32100430e-4,
-                9.14252359e00,
-                -1.35143986e-2,
-                2.26089488e-3,
-                1.92118597e-6,
-                4.52586464e1,
-                0,
-            ]
-        ),
+        [
+            3.36901532e-1,
+            -6.32100430e-4,
+            9.14252359e00,
+            -1.35143986e-2,
+            2.26089488e-3,
+            1.92118597e-6,
+            4.52586464e1,
+            0,
+        ],
     )
-    valid = logical_and(logical_and(tempK >= 273.15, tempK <= 573.15), pres == 10.1325)
+    valid = (tempK >= 273.15) & (tempK <= 573.15) & (pres == 10.1325)
     return Aosm, valid
 
 
@@ -98,7 +96,7 @@ def Aosm_CRP94(tempK, pres):
         + Tmx18 * a_Aosm[18]
     )
     # Validity range:
-    valid = logical_and(logical_and(tempK >= 234.15, tempK <= 373.15), pres == 10.1325)
+    valid = (tempK >= 234.15) & (tempK <= 373.15) & (pres == 10.1325)
     return Aosm, valid
 
 
@@ -119,7 +117,7 @@ def Aosm_MarChemSpec05(tempK, pres):
 def Aosm_MarChemSpec(tempK, pres):
     """Following CRP94, but with a correction to match AW90."""
     Aosm = Aosm_CRP94(tempK, pres)[0] + 2.99e-8
-    valid = logical_and(logical_and(tempK >= 234.15, tempK <= 373.15), pres == 10.1325)
+    valid = (tempK >= 234.15) & (tempK <= 373.15) & (pres == 10.1325)
     return Aosm, valid
 
 
@@ -142,11 +140,11 @@ def _gm1drho(tempK, presMPa):
     # AW90 Eq. (3):
     gm1drho = (
         b[0] * presMPa / tempK
-        + b[1] / sqrt(tempK)
+        + b[1] / np.sqrt(tempK)
         + b[2] / (tempK - 215)
-        + b[3] / sqrt(tempK - 215)
+        + b[3] / np.sqrt(tempK - 215)
         + b[4] / (tempK - 215) ** 0.25
-        + exp(
+        + np.exp(
             b[5] / tempK
             + b[6] / tempK ** 2
             + b[7] * presMPa / tempK
@@ -172,12 +170,12 @@ def _D(tempK, presMPa, rho):
     A = (
         (al + _g(tempK, presMPa, rho) * mu ** 2 / (3 * k * tempK))
         * 4
-        * pi
+        * np.pi
         * NA
         * rho
         / (3 * Mw)
     )
-    return (1 + 9 * A + 3 * sqrt(9 * A ** 2 + 2 * A + 1)) / 4
+    return (1 + 9 * A + 3 * np.sqrt(9 * A ** 2 + 2 * A + 1)) / 4
 
 
 def Aosm_AW90(tempK, pres):
@@ -191,11 +189,11 @@ def Aosm_AW90(tempK, pres):
     k = 1.380658e-23  # Boltzmann constant in J/K
     rho = teos10.rho(tempK, presPa) * 1e-3
     Aosm = (
-        sqrt(2e-3 * pi * rho * NA)
-        * (100 * e ** 2 / (4 * pi * _D(tempK, presMPa, rho) * E0 * k * tempK)) ** 1.5
+        np.sqrt(2e-3 * np.pi * rho * NA)
+        * (100 * e ** 2 / (4 * np.pi * _D(tempK, presMPa, rho) * E0 * k * tempK)) ** 1.5
         / 3
     )
-    valid = logical_and(
+    valid = np.logical_and(
         (tempK >= 270.5 - presPa * 7.43e-8) & (tempK <= 313.15),
         (presPa >= 100) & (presPa <= 1e8),
     )
