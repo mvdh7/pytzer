@@ -117,3 +117,6 @@ testfiles/threeway/*
 
 # VSCodium
 .vscode/*
+
+# Testing
+junit.xml
