@@ -60,8 +60,11 @@ def ionic_z(molalities, charges):
 
 @jax.jit
 def Gibbs_nRT(
-    molalities,
-    charges,
+    m_cats,
+    m_anis,
+    m_neus,
+    z_cats,
+    z_anis,
     Aosm=None,
     ca=None,
     cc=None,
@@ -80,23 +83,21 @@ def Gibbs_nRT(
     # so at the sea surface pressure = 0 dbar, but the atmospheric pressure
     # should also be taken into account for this model.
     # Ionic strength etc.
+    molalities = np.array([*m_cats, *m_anis, *m_neus])
+    charges = np.array([*z_cats, *z_anis])
     I = ionic_strength(molalities, charges)
     Z = ionic_z(molalities, charges)
     sqrt_I = np.sqrt(I)
-    m_cats = molalities[charges > 0]
-    m_anis = molalities[charges < 0]
-    m_neus = molalities[charges == 0]
-    # Split up charges
-    z_cats = charges[charges > 0]
-    z_anis = charges[charges < 0]
     # Begin with Debye-Hueckel component
     Gibbs_nRT = Gibbs_DH(Aosm, I)
     # Loop through cations
     for CX, m_cat_x in enumerate(m_cats):
         # Add c-a interactions
         for A, m_ani in enumerate(m_anis):
+            v_ca = ca[CX][A]
             Gibbs_nRT = Gibbs_nRT + m_cat_x * m_ani * (
-                2 * B(sqrt_I, *ca[CX][A]) + Z * CT(sqrt_I, *ca[CX][A])
+                2 * B(sqrt_I, v_ca[0], v_ca[1], v_ca[2], v_ca[5], v_ca[6])
+                + Z * CT(sqrt_I, v_ca[3], v_ca[4], v_ca[7])
             )
         # Add c-c' interactions
         for _CY, m_cat_y in enumerate(m_cats[CX + 1 :]):
@@ -147,15 +148,19 @@ def Gibbs_nRT(
 
 
 @jax.jit
-def log_activity_coefficients(molalities, charges, **parameters):
+def log_activity_coefficients(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters):
     """Calculate the natural log of the activity coefficient of all solutes."""
-    return jax.grad(Gibbs_nRT)(molalities, charges, **parameters)
+    log_acf_cats = jax.grad(Gibbs_nRT, 0)(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters)
+    log_acf_anis = jax.grad(Gibbs_nRT, 1)(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters)
+    log_acf_neus = jax.grad(Gibbs_nRT, 2)(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters)
+    return log_acf_cats, log_acf_anis, log_acf_neus
 
 
 @jax.jit
-def activity_coefficients(molalities, charges, **parameters):
+def activity_coefficients(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters):
     """Calculate the activity coefficient of all solutes."""
-    return np.exp(log_activity_coefficients(molalities, charges, **parameters))
+    log_acfs = log_activity_coefficients(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters)
+    return [np.exp(log_acf) for log_acf in log_acfs]
 
 
 # def acfs(mols, ions, tempK, pres, prmlib=Seawater, Izero=False):
@@ -163,9 +168,9 @@ def activity_coefficients(molalities, charges, **parameters):
 #     return np.exp(ln_acfs(mols, ions, tempK, pres, prmlib, Izero))
 
 
-# def ln_acf2ln_acf_MX(ln_acfM, ln_acfX, nM, nX):
-#     """Calculate the mean activity coefficient for an electrolyte."""
-#     return (nM * ln_acfM + nX * ln_acfX) / (nM + nX)
+def ln_acf2ln_acf_MX(ln_acfM, ln_acfX, nM, nX):
+    """Calculate the mean activity coefficient for an electrolyte."""
+    return (nM * ln_acfM + nX * ln_acfX) / (nM + nX)
 
 
 # # Osmotic coefficient
