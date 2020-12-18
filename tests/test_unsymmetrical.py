@@ -19,7 +19,9 @@ def test_jit_grads():
 
 
 def test_Harvie_values():
-    """Do Harvie and grad(Harvie) return the exact correct values?"""
+    """Do Harvie and grad(Harvie) return the exact correct values compared
+    with the _Harvie_raw function?
+    """
     for x in xs:
         j__Harvie_raw, jg__Harvie_raw = [
             j.item() for j in pz.unsymmetrical._Harvie_raw(x)
@@ -46,8 +48,17 @@ def test_grad_values():
         assert np.allclose(jgs, jgs_mean, atol=0, rtol=0.02)
 
 
+def test_Harvie_checks():
+    """Do Harvie and grad(Harvie) return the check values given by P91 p. 125?"""
+    j = pz.unsymmetrical.Harvie(1.0)
+    assert np.round(j, decimals=6) == 0.116437
+    jg = jax.grad(pz.unsymmetrical.Harvie)(1.0)
+    assert np.round(jg, decimals=6) == 0.160527
+
+
 # test_grads()
 # test_jit_grads()
 # test_Harvie_values()
 # test_values()
 # test_grad_values()
+# test_Harvie_checks()
