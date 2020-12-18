@@ -58,6 +58,16 @@ def ionic_z(molalities, charges):
     return np.sum(molalities * np.abs(charges))
 
 
+def split_molalities_charges(molalities, charges):
+    """Split up molalities and charges inputs as required by other functions."""
+    m_cats = np.compress(charges > 0, molalities)
+    m_anis = np.compress(charges < 0, molalities)
+    m_neus = np.compress(charges == 0, molalities)
+    z_cats = np.compress(charges > 0, charges)
+    z_anis = np.compress(charges < 0, charges)
+    return m_cats, m_anis, m_neus, z_cats, z_anis
+
+
 @jax.jit
 def Gibbs_nRT(
     m_cats,
@@ -150,61 +160,51 @@ def Gibbs_nRT(
 @jax.jit
 def log_activity_coefficients(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters):
     """Calculate the natural log of the activity coefficient of all solutes."""
-    log_acf_cats = jax.grad(Gibbs_nRT, 0)(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters)
-    log_acf_anis = jax.grad(Gibbs_nRT, 1)(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters)
-    log_acf_neus = jax.grad(Gibbs_nRT, 2)(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters)
+    log_acf_cats = jax.grad(Gibbs_nRT, 0)(
+        m_cats, m_anis, m_neus, z_cats, z_anis, **parameters
+    )
+    log_acf_anis = jax.grad(Gibbs_nRT, 1)(
+        m_cats, m_anis, m_neus, z_cats, z_anis, **parameters
+    )
+    log_acf_neus = jax.grad(Gibbs_nRT, 2)(
+        m_cats, m_anis, m_neus, z_cats, z_anis, **parameters
+    )
     return log_acf_cats, log_acf_anis, log_acf_neus
 
 
 @jax.jit
 def activity_coefficients(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters):
     """Calculate the activity coefficient of all solutes."""
-    log_acfs = log_activity_coefficients(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters)
+    log_acfs = log_activity_coefficients(
+        m_cats, m_anis, m_neus, z_cats, z_anis, **parameters
+    )
     return [np.exp(log_acf) for log_acf in log_acfs]
 
 
-# def acfs(mols, ions, tempK, pres, prmlib=Seawater, Izero=False):
-#     """Calculate the activity coefficients of all solutes."""
-#     return np.exp(ln_acfs(mols, ions, tempK, pres, prmlib, Izero))
+@jax.jit
+def osmotic_coefficient(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters):
+    """Calculate the osmotic coefficient."""
+    return 1 - jax.grad(
+        lambda ww: ww
+        * Gibbs_nRT(m_cats / ww, m_anis / ww, m_neus / ww, z_cats, z_anis, **parameters)
+    )(1.0) / (np.sum(m_cats) + np.sum(m_anis) + np.sum(m_neus))
 
 
-def ln_acf2ln_acf_MX(ln_acfM, ln_acfX, nM, nX):
-    """Calculate the mean activity coefficient for an electrolyte."""
-    return (nM * ln_acfM + nX * ln_acfX) / (nM + nX)
+@jax.jit
+def log_activity_water(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters):
+    """Calculate the natural log of the water activity."""
+    return (
+        jax.grad(
+            lambda ww: ww
+            * Gibbs_nRT(
+                m_cats / ww, m_anis / ww, m_neus / ww, z_cats, z_anis, **parameters
+            )
+        )(1.0)
+        - (np.sum(m_cats) + np.sum(m_anis) + np.sum(m_neus))
+    ) * Mw
 
 
-# # Osmotic coefficient
-# def osm(mols, ions, tempK, pres, prmlib=Seawater, Izero=False):
-#     """Calculate the osmotic coefficient."""
-#     ww = full_like(tempK, 1.0)
-#     return 1 - egrad(
-#         lambda ww: ww * Gibbs_nRT(mols / ww, ions, tempK, pres, prmlib, Izero)
-#     )(ww) / np.sum(mols, axis=0)
-
-
-# # Water activity
-# def lnaw(mols, ions, tempK, pres, prmlib=Seawater, Izero=False):
-#     """Calculate the natural log of the water activity."""
-#     ww = full_like(tempK, 1.0)
-#     return (
-#         egrad(lambda ww: ww * Gibbs_nRT(mols / ww, ions, tempK, pres, prmlib, Izero))(
-#             ww
-#         )
-#         - np.sum(mols, axis=0)
-#     ) * Mw
-
-
-# def aw(mols, ions, tempK, pres, prmlib=Seawater, Izero=False):
-#     """Calculate the water activity."""
-#     return np.exp(lnaw(mols, ions, tempK, pres, prmlib, Izero))
-
-
-# # Conversions
-# def osm2aw(mols, osm):
-#     """Convert osmotic coefficient to water activity."""
-#     return np.exp(-osm * Mw * np.sum(mols, axis=0))
-
-
-# def aw2osm(mols, aw):
-#     """Convert water activity to osmotic coefficient."""
-#     return -np.log(aw) / (Mw * np.sum(mols, axis=0))
+@jax.jit
+def activity_water(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters):
+    """Calculate the water activity."""
+    return np.exp(log_activity_water(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters))
