@@ -1,13 +1,18 @@
 # Version history
 
+## 0.5
+
+Switches from Autograd to [JAX](https://jax.readthedocs.io/en/latest/) for faster automatic differentiation and JIT compilation.
+
+## 0.5.0 (forthcoming)
+
+!!! example "Changes in v0.5.0"
+    * Switched from Autograd to [JAX](https://jax.readthedocs.io/en/latest/) for faster automatic differentiation and JIT compilation.
+    * Renamed most functions for clarity and modified their inputs and outputs to work more effectively for solving equilibria.
+
 ## 0.4
 
 Adds solvers to determine the equilibrium composition of aqueous solutions.
-
-### 0.4.4 (forthcoming)
-
-!!! example "Changes in v0.4.4"
-    * Docs switched to [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) theme.
 
 ### 0.4.3 (11 Sep 2019)
 

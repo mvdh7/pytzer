@@ -6,8 +6,6 @@
 
 ## Installation
 
-If using Conda, first create and activate a new environment with Python v3.6+, NumPy v1.15+ and SciPy v1.2+. Other versions are probably fine, but untested. Activate the environment, and then enter:
-
     pip install pytzer
 
 See the [quick-start guide](quick-start) for more detailed instructions and examples.
@@ -45,7 +43,7 @@ A manuscript describing Pytzer is in preparation for publication.  Please check 
 
 ## Acknowledgements
 
-Pytzer is maintained by [Dr Matthew P. Humphreys](https://mvdh.xyz) at the NIOZ Royal Netherlands Institute for Sea Research/Utrecht University.  Its initial development at the University of East Anglia was funded by the Natural Environment Research Council (NERC, UK) through grant NE/P012361/1: *NSFGEO-NERC: A Thermodynamic Chemical Speciation Model for the Oceans, Seas, and Estuaries*.
+Pytzer is maintained by [Dr Matthew P. Humphreys](https://mvdh.xyz) at the NIOZ Royal Netherlands Institute for Sea Research (Texel, the Netherlands).  Its initial development at the University of East Anglia was funded by the Natural Environment Research Council (NERC, UK) through grant NE/P012361/1: *NSFGEO-NERC: A Thermodynamic Chemical Speciation Model for the Oceans, Seas, and Estuaries*.
 
 Pytzer contains myriad functions and coefficients representing the effects of different solute interactions on solution properties that have been empirically determined from painstaking experiments and data compilations by hundreds of researchers over the course at least a century.  The small selection of this enormous body of work that we have brought together here is listed in the [references](references).
 
