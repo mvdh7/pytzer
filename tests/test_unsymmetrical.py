@@ -13,8 +13,4 @@ j__Harvie_raw, jg__Harvie_raw = [j.item() for j in pz.unsymmetrical._Harvie_raw(
 
 j__Harvie = pz.unsymmetrical.Harvie(x).item()
 jg__Harvie = jax.jit(jax.grad(pz.unsymmetrical.Harvie))(x).item()
-
-#%%
-with open("requirements.txt", "r") as f:
-    requirements = f.read().splitlines()
-    
+   
