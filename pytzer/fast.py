@@ -1,6 +1,6 @@
 import jax
 from jax import numpy as jnp
-from . import properties
+from . import properties, parameters
 
 
 @jax.jit
@@ -96,26 +96,26 @@ class Functions:
         self.nca = {}
         self.nnn = {}
 
-    def add_ca(self, cation, anion, func=BC_NONE):
+    def add_ca(self, cation, anion, func=parameters.bC_none):
         if cation not in self.ca:
             self.ca[cation] = {}
         self.ca[cation][anion] = func
 
-    def add_cc(self, cation_x, cation_y, func=THETA_NONE):
+    def add_cc(self, cation_x, cation_y, func=parameters.theta_none):
         if cation_x not in self.cc:
             self.cc[cation_x] = {}
         if cation_y not in self.cc:
             self.cc[cation_y] = {}
         self.cc[cation_x][cation_y] = self.cc[cation_y][cation_x] = func
 
-    def add_aa(self, anion_x, anion_y, func=THETA_NONE):
+    def add_aa(self, anion_x, anion_y, func=parameters.theta_none):
         if anion_x not in self.cc:
             self.cc[anion_x] = {}
         if anion_y not in self.cc:
             self.cc[anion_y] = {}
         self.cc[anion_x][anion_y] = self.cc[anion_y][anion_x] = func
 
-    def add_cca(self, cation_x, cation_y, anion, func=PSI_NONE):
+    def add_cca(self, cation_x, cation_y, anion, func=parameters.psi_none):
         if cation_x not in self.cca:
             self.cca[cation_x] = {}
         if cation_y not in self.cca[cation_x]:
@@ -126,7 +126,7 @@ class Functions:
             self.cca[cation_y][cation_x] = {}
         self.cca[cation_x][cation_y][anion] = self.cca[cation_y][cation_x][anion] = func
 
-    def add_caa(self, cation, anion_x, anion_y, func=PSI_NONE):
+    def add_caa(self, cation, anion_x, anion_y, func=parameters.psi_none):
         if cation not in self.caa:
             self.caa[cation] = {}
         if anion_x not in self.caa[cation]:
