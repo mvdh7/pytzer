@@ -3,8 +3,10 @@
 import setuptools
 from pytzer import __version__
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+with open("README.md", "r") as f:
+    long_description = f.read()
+with open("requirements.txt", "r") as f:
+    requirements = f.read().splitlines()
 setuptools.setup(
     name="Pytzer",
     version=__version__,
@@ -13,7 +15,7 @@ setuptools.setup(
     description="Pitzer model for chemical activities in aqueous solutions",
     url="https://github.com/mvdh7/pytzer",
     packages=setuptools.find_packages(),
-    install_requires=["autograd==1.3", "numpy>=1.15", "scipy>=1.2",],
+    install_requires=requirements,
     long_description=long_description,
     long_description_content_type="text/markdown",
     classifiers=[

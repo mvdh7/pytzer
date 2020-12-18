@@ -1,0 +1,3 @@
+numpy >= 1.17
+jax == 0.2.7
+autograd == 1.3
