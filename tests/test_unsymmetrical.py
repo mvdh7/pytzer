@@ -13,4 +13,11 @@ j__Harvie_raw, jg__Harvie_raw = [j.item() for j in pz.unsymmetrical._Harvie_raw(
 
 j__Harvie = pz.unsymmetrical.Harvie(x).item()
 jg__Harvie = jax.jit(jax.grad(pz.unsymmetrical.Harvie))(x).item()
-   
+
+
+
+def test_tests():
+    assert 1 == 1
+    
+    
+test_tests()
