@@ -40,7 +40,7 @@ def xij(Aosm, I, z0, z1):
     return 6 * z0 * z1 * Aosm * np.sqrt(I)
 
 
-def etheta(Aosm, I, z0, z1, func_J):
+def etheta(Aosm, I, z0, z1, func_J=unsymmetrical.Harvie):
     """etheta function for unsymmetrical mixing."""
     x00 = xij(Aosm, I, z0, z0)
     x01 = xij(Aosm, I, z0, z1)
@@ -48,13 +48,11 @@ def etheta(Aosm, I, z0, z1, func_J):
     return z0 * z1 * (func_J(x01) - 0.5 * (func_J(x00) + func_J(x11))) / (4 * I)
 
 
-@jax.jit
 def ionic_strength(molalities, charges):
     """Ionic strength."""
     return 0.5 * np.sum(molalities * charges ** 2)
 
 
-@jax.jit
 def ionic_z(molalities, charges):
     """Z function."""
     return np.sum(molalities * np.abs(charges))
@@ -75,7 +73,7 @@ def Gibbs_nRT(
     na=None,
     nca=None,
     nnn=None,
-    func_J=unsymmetrical.P75_eq47,
+    func_J=unsymmetrical.Harvie,
 ):
     """Calculate the excess Gibbs energy of a solution divided by n*R*T."""
     # Note that oceanographers record ocean pressure as only due to the water,
@@ -107,7 +105,7 @@ def Gibbs_nRT(
             # Unsymmetrical mixing terms
             if z_cats[CX] != z_cats[CY]:
                 Gibbs_nRT = Gibbs_nRT + m_cat_x * m_cat_y * 2 * etheta(
-                    Aosm, I, z_cats[CX], z_cats[CY], func_J
+                    Aosm, I, z_cats[CX], z_cats[CY], func_J=func_J
                 )
             # Add c-c'-a interactions
             for A, m_ani in enumerate(m_anis):
@@ -121,7 +119,7 @@ def Gibbs_nRT(
             # Unsymmetrical mixing terms
             if z_anis[AX] != z_anis[AY]:
                 Gibbs_nRT = Gibbs_nRT + m_ani_x * m_ani_y * 2 * etheta(
-                    Aosm, I, z_anis[AX], z_anis[AY], func_J
+                    Aosm, I, z_anis[AX], z_anis[AY], func_J=func_J
                 )
             # Add c-a-a' interactions
             for C, m_cat in enumerate(m_cats):
