@@ -64,13 +64,14 @@ def P75_eq47(x):
     return J
 
 
+@jax.jit
 def _Harvie_raw(x):
     """Evaluate unsymmetrical mixing function and its derivative using
     Harvie's method, as described by P91 Ch. 3, pp. 124-125.
     """
-    if x < 1.0:
-        # Values from Table B-1, middle column (akI)
-        ak = [
+    # Values from Table B-1, middle column (akI)
+    akI = np.array(
+        [
             -0.000000000010991,
             -0.000000000002563,
             0.000000000001943,
@@ -93,11 +94,10 @@ def _Harvie_raw(x):
             -0.060076477753119,
             1.925154014814667,
         ]
-        z = 4 * x ** 0.2 - 2  # Eq. (B-21)
-        dz_dx = 4 * x ** -0.8 / 5  # Eq. (B-22)
-    else:
-        # Values from Table B-1, final column (akII)
-        ak = [
+    )
+    # Values from Table B-1, final column (akII)
+    akII = np.array(
+        [
             0.000000000237816,
             -0.000000002849257,
             -0.000000006944757,
@@ -120,8 +120,15 @@ def _Harvie_raw(x):
             0.462762985338493,
             0.628023320520852,
         ]
-        z = 40 / 9 * x ** -0.1 - 22 / 9  # Eq. (B-25)
-        dz_dx = -4 * x ** -1.1 / 9  # Eq. (B-26)
+    )
+    x_vec = np.full_like(akI, x)
+    ak = np.where(x_vec < 1, akI, akII)
+    z = np.where(
+        x < 1, 4 * x ** 0.2 - 2, 40 / 9 * x ** -0.1 - 22 / 9  # Eq. (B-21)  # Eq. (B-25)
+    )
+    dz_dx = np.where(
+        x < 1, 4 * x ** -0.8 / 5, -4 * x ** -1.1 / 9  # Eq. (B-22)  # Eq. (B-26)
+    )
     b2, b1, b0 = 0.0, 0.0, 0.0
     d2, d1, d0 = 0.0, 0.0, 0.0
     for a in ak:
