@@ -3,7 +3,7 @@
 """Assemble dicts of Pitzer model interaction parameter functions into
 parameter libraries.
 """
-from autograd.numpy import array
+import numpy as np
 from .ParameterLibrary import ParameterLibrary
 from . import (
     CRP94,
@@ -19,22 +19,9 @@ from . import (
     WM13_MarChemSpec25,
 )
 
-__all__ = [
-    'CRP94',
-    'GM89',
-    'HMW84',
-    'M88',
-    'MarChemSpec',
-    'MarChemSpec05',
-    'MarChemSpec25',
-    'MIAMI',
-    'Seawater',
-    'WM13',
-    'WM13_MarChemSpec25',
-]
-
-MarChemSpecSolutes = array(['H', 'Na', 'Mg', 'Ca', 'K', 'MgOH', 'trisH',
-    'Cl', 'SO4', 'HSO4', 'OH', 'tris'])
+MarChemSpecSolutes = np.array(
+    ["H", "Na", "Mg", "Ca", "K", "MgOH", "trisH", "Cl", "SO4", "HSO4", "OH", "tris"]
+)
 
 # Clegg et al. (1994)
 CRP94 = ParameterLibrary(module=CRP94)

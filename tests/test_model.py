@@ -7,9 +7,8 @@ T = 273
 P = 10
 ca = [[pz.parameters.bC_Na_Cl_A92ii(T, P)[:-1]]]
 
-
 args = pz.split_molalities_charges(molalities, charges)
-params = dict(Aosm=0.3763, ca=ca)
+params = dict(Aphi=0.3763, ca=ca)
 
 g = pz.Gibbs_nRT(*args, **params).item()
 ln_acfs = pz.log_activity_coefficients(*args, **params)
