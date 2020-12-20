@@ -86,8 +86,8 @@ def Gibbs_nRT(
     cca=None,
     caa=None,
     nc=None,
-    nn=None,
     na=None,
+    nn=None,
     nca=None,
     nnn=None,
 ):
