@@ -10,6 +10,7 @@ class ParameterLibrary(dict):
         self.update({"Aphi": func})
 
     def update_ca(self, cation, anion, func=prm.bC_none):
+        """Add or update a cation-anion interaction parameters function."""
         if "ca" not in self:
             self["ca"] = {}
         if cation not in self["ca"]:
@@ -17,6 +18,7 @@ class ParameterLibrary(dict):
         self["ca"][cation].update({anion: func})
 
     def update_cc(self, cation1, cation2, func=prm.theta_none):
+        """Add or update a cation-cation interaction parameter function."""
         if "cc" not in self:
             self["cc"] = {}
         if cation1 not in self["cc"]:
@@ -27,6 +29,7 @@ class ParameterLibrary(dict):
         self["cc"][cation2].update({cation1: func})
 
     def update_aa(self, anion1, anion2, func=prm.theta_none):
+        """Add or update an anion-anion interaction parameter function."""
         if "aa" not in self:
             self["aa"] = {}
         if anion1 not in self["aa"]:
@@ -37,6 +40,7 @@ class ParameterLibrary(dict):
         self["aa"][anion2].update({anion1: func})
 
     def update_cca(self, cation1, cation2, anion, func=prm.psi_none):
+        """Add or update a cation-cation-anion interaction parameter function."""
         if "cca" not in self:
             self["cca"] = {}
         if cation1 not in self["cca"]:
@@ -51,6 +55,7 @@ class ParameterLibrary(dict):
         self["cca"][cation2][cation1].update({anion: func})
 
     def update_caa(self, cation, anion1, anion2, func=prm.psi_none):
+        """Add or update a cation-anion-anion interaction parameter function."""
         if "caa" not in self:
             self["caa"] = {}
         if cation not in self["caa"]:
@@ -63,6 +68,7 @@ class ParameterLibrary(dict):
         self["caa"][cation][anion2].update({anion1: func})
 
     def update_nc(self, neutral, cation, func=prm.lambd_none):
+        """Add or update a neutral-cation interaction parameter function."""
         if "nc" not in self:
             self["nc"] = {}
         if neutral not in self["nc"]:
@@ -70,6 +76,7 @@ class ParameterLibrary(dict):
         self["nc"][neutral].update({cation: func})
 
     def update_na(self, neutral, anion, func=prm.lambd_none):
+        """Add or update a cation-anion interaction parameter function."""
         if "na" not in self:
             self["na"] = {}
         if neutral not in self["na"]:
@@ -77,6 +84,7 @@ class ParameterLibrary(dict):
         self["na"][neutral].update({anion: func})
 
     def update_nca(self, neutral, cation, anion, func=prm.zeta_none):
+        """Add or update a neutral-cation-anion interaction parameter function."""
         if "nca" not in self:
             self["nca"] = {}
         if neutral not in self["nca"]:
@@ -86,6 +94,7 @@ class ParameterLibrary(dict):
         self["nca"][neutral][cation].update({anion: func})
 
     def update_nn(self, neutral1, neutral2, func=prm.lambd_none):
+        """Add or update a neutral-neutral interaction parameter function."""
         if "nn" not in self:
             self["nn"] = {}
         if neutral1 not in self["nn"]:
@@ -96,14 +105,17 @@ class ParameterLibrary(dict):
         self["nn"][neutral2].update({neutral1: func})
 
     def update_nnn(self, neutral, func=prm.mu_none):
+        """Add or update a neutral-neutral-neutral interaction parameter function."""
         if "nnn" not in self:
             self["nnn"] = {}
         self["nnn"].update({neutral: func})
 
     def assign_func_J(self, func_J):
+        """Assign which J function should be used for unsymmetrical mixing terms."""
         self["func_J"] = func_J
 
     def set_func_J(self, pytzer, func_J=None):
+        """Implement the assigned J function throughout pytzer."""
         if func_J is None:
             assert "func_J" in self
         else:
@@ -120,6 +132,7 @@ class ParameterLibrary(dict):
         pressure=10.1023,
         verbose=True,
     ):
+        """Evaluate all interaction parameters under specific conditions."""
         if verbose:
             missing_coeffs = []
 
@@ -268,25 +281,25 @@ params = Moller88.get_parameters(
 )
 
 
-# pz.model.func_J = unsym.none
+pz.model.func_J = unsym.none
 
-# molalities = np.array([1.0, 1.0, 1.0, 1.0])
-# charges = np.array([+1, -1, +2, -2])
-# args = pz.split_molalities_charges(molalities, charges)
-# gibbs = pz.Gibbs_nRT(*args, **params)
-# acf = pz.activity_coefficients(*args, **params)
-# print(acf)
+molalities = np.array([1.0, 1.0, 1.0, 1.0])
+charges = np.array([+1, -1, +2, -2])
+args = pz.split_molalities_charges(molalities, charges)
+gibbs = pz.Gibbs_nRT(*args, **params)
+acf = pz.activity_coefficients(*args, **params)
+print(acf)
 
-# # import importlib
-# # pz.model = importlib.reload(pz.model)
-# # pz = importlib.reload(pz)
-# # pz.model.func_J = unsym.Harvie
+# import importlib
+# pz.model = importlib.reload(pz.model)
+# pz = importlib.reload(pz)
+# pz.model.func_J = unsym.Harvie
 
-# # pz.update_func_J(pz, unsym.Harvie)
-# Moller88.set_func_J(pz)
-# acf = pz.activity_coefficients(*args, **params)
-# print(acf)
+# pz.update_func_J(pz, unsym.Harvie)
+Moller88.set_func_J(pz)
+acf = pz.activity_coefficients(*args, **params)
+print(acf)
 
-# Moller88.set_func_J(pz)
-# acf = pz.activity_coefficients(*args, **params)
-# print(acf)
+Moller88.set_func_J(pz)
+acf = pz.activity_coefficients(*args, **params)
+print(acf)
