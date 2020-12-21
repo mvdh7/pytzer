@@ -4,6 +4,15 @@ from . import model, prepare
 from .libraries import Seawater
 
 
+def Gibbs_nRT(
+    solute_molalities, temperature=298.15, pressure=10.10325, library=Seawater
+):
+    """Calculate the excess Gibbs energy of a solution divided by n*R*T."""
+    args, ss = prepare.get_pytzer_args(solute_molalities)
+    params = library.get_parameters(**ss, temperature=temperature, pressure=pressure)
+    return model.Gibbs_nRT(*args, **params)
+
+    
 def activity_coefficients(
     solute_molalities, temperature=298.15, pressure=10.10325, library=Seawater
 ):
@@ -20,15 +29,6 @@ def activity_water(
     args, ss = prepare.get_pytzer_args(solute_molalities)
     params = library.get_parameters(**ss, temperature=temperature, pressure=pressure)
     return model.activity_water(*args, **params)
-
-
-def Gibbs_nRT(
-    solute_molalities, temperature=298.15, pressure=10.10325, library=Seawater
-):
-    """Calculate the excess Gibbs energy of a solution divided by n*R*T."""
-    args, ss = prepare.get_pytzer_args(solute_molalities)
-    params = library.get_parameters(**ss, temperature=temperature, pressure=pressure)
-    return model.Gibbs_nRT(*args, **params)
 
 
 def log_activity_coefficients(
