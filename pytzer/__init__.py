@@ -19,7 +19,7 @@ from . import (
     convert,
     debyehueckel,
     dissociation,
-    # equilibrate,
+    equilibrate,
     # io,
     libraries,
     # measure,
