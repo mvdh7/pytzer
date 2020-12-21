@@ -4,8 +4,8 @@ from .. import parameters as prm
 from .. import debyehueckel, dissociation, unsymmetrical
 
 name = "MIAMI"
-dh = {"Aosm": debyehueckel.Aosm_M88}
-jfunc = unsymmetrical.Harvie
+plname.update_Aphi(debyehueckel.Aosm_M88)
+plname.assign_func_J(unsymmetrical.Harvie)
 bC = {
     # Table A1
     "Na-Cl": prm.bC_Na_Cl_M88,

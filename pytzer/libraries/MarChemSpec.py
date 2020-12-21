@@ -7,7 +7,7 @@ from .. import debyehueckel, dissociation
 from . import MarChemSpec25
 
 name = "MarChemSpec"
-dh = {"Aosm": debyehueckel.Aosm_MarChemSpec}
+plname.update_Aphi(debyehueckel.Aosm_MarChemSpec)
 jfunc = deepcopy(MarChemSpec25.jfunc)
 bC = deepcopy(MarChemSpec25.bC)
 theta = deepcopy(MarChemSpec25.theta)

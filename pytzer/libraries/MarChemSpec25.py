@@ -14,12 +14,12 @@ jfunc = deepcopy(WM13_MarChemSpec25.jfunc)
 # Add parameters from GT17 Supp. Info. Table S6 (simultaneous optimisation)
 bC = deepcopy(WM13_MarChemSpec25.bC)
 # bC['Na-Cl'] = prm.bC_Na_Cl_GT17simopt
-bC["trisH-SO4"] = prm.bC_trisH_SO4_GT17simopt
-bC["trisH-Cl"] = prm.bC_trisH_Cl_GT17simopt
+plname.update_ca("trisH", "SO4", prm.bC_trisH_SO4_GT17simopt)
+plname.update_ca("trisH", "Cl", prm.bC_trisH_Cl_GT17simopt)
 theta = deepcopy(WM13_MarChemSpec25.theta)
-theta["H-trisH"] = prm.theta_H_trisH_GT17simopt
+plname.update_xx("H", "trisH", prm.theta_H_trisH_GT17simopt)
 psi = deepcopy(WM13_MarChemSpec25.psi)
-psi["H-trisH-Cl"] = prm.psi_H_trisH_Cl_GT17simopt
+plname.update_cxa("H", "trisH", "Cl", prm.psi_H_trisH_Cl_GT17simopt)
 lambd = {}
 lambd["tris-trisH"] = prm.lambd_tris_trisH_GT17simopt
 lambd["tris-Na"] = prm.lambd_tris_Na_GT17simopt

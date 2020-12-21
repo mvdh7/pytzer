@@ -194,7 +194,7 @@ Different options for the functions needed here can be found in the [unsymmetric
 **Example:**
 
 ```python
-prmlib.jfunc = unsymmetrical.Harvie
+prmlib.plname.assign_func_J(unsymmetrical.Harvie)
 ```
 
 ### Thermodynamic equilibrium constants
@@ -243,7 +243,7 @@ myprmlib.bC['Ca-Cl' ] = parameters.bC_Ca_Cl_M88
 myprmlib.bC['Na-Cl' ] = parameters.bC_Na_Cl_M88
 myprmlib.theta['Ca-Na' ] = parameters.theta_Ca_Na_M88
 myprmlib.psi['Ca-Na-Cl' ] = parameters.psi_Ca_Na_Cl_M88
-myprmlib.jfunc = unsymmetrical.Harvie
+myprmlib.plname.assign_func_J(unsymmetrical.Harvie)
 myprmlib.add_zeros(np.array(['Na','Ca','Cl']))
 ```
 

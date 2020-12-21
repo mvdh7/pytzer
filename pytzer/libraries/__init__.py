@@ -4,9 +4,11 @@
 from .ParameterLibrary import ParameterLibrary
 from .Clegg94 import Clegg94
 from .Moller88 import Moller88
+from .Waters13 import Waters13
 
 CRP94 = Clegg94
 M88 = Moller88
+WM13 = Waters13
 
 # from . import (
 #     CRP94,

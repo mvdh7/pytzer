@@ -9,12 +9,12 @@ from .. import debyehueckel, unsymmetrical
 from . import WM13
 
 name = "WM13_MarChemSpec25"
-dh = {"Aosm": debyehueckel.Aosm_MarChemSpec25}
-jfunc = unsymmetrical.P75_eq47
+plname.update_Aphi(debyehueckel.Aosm_MarChemSpec25)
+plname.assign_func_J(unsymmetrical.P75_eq47)
 bC = deepcopy(WM13.bC)
 theta = deepcopy(WM13.theta)
-theta["H-Na"] = prm.theta_H_Na_MarChemSpec25
-theta["H-K"] = prm.theta_H_K_MarChemSpec25
-theta["Ca-H"] = prm.theta_Ca_H_MarChemSpec
+plname.update_xx("H", "Na", prm.theta_H_Na_MarChemSpec25)
+plname.update_xx("H", "K", prm.theta_H_K_MarChemSpec25)
+plname.update_xx("Ca", "H", prm.theta_Ca_H_MarChemSpec)
 psi = deepcopy(WM13.psi)
-psi["Mg-MgOH-Cl"] = prm.psi_Mg_MgOH_Cl_HMW84
+plname.update_cxa("Mg", "MgOH", "Cl", prm.psi_Mg_MgOH_Cl_HMW84)
