@@ -1,5 +1,5 @@
 import jax
-import numpy as np, pytzer as pz
+import pytzer as pz
 from pytzer.libraries import Seawater as plib
 from pytzer import unsymmetrical as unsym
 
