@@ -22,7 +22,6 @@ from . import (
     # equilibrate,
     # io,
     libraries,
-    # matrix,
     # measure,
     meta,
     model,
