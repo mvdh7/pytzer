@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Pitzer model for chemical activities in aqueous solutions."""
-import importlib
 from . import (
     constants,
     convert,
@@ -39,6 +38,8 @@ from .convert import (
     log_activities_to_mean,
     osmotic_to_activity,
 )
+from .libraries import ParameterLibrary
+from .meta import update_func_J
 from .model import (
     activity_coefficients,
     activity_water,
@@ -58,15 +59,6 @@ def hello():
 
 
 say_hello = hello
-
-
-def update_func_J(pytzer, func_J):
-    """Update the unsymmetrical mixing function."""
-    if pytzer.model.func_J is not func_J:
-        pytzer.model = importlib.reload(pytzer.model)
-        pytzer = importlib.reload(pytzer)
-        pytzer.model.func_J = func_J
-    return pytzer
 
 
 # from copy import deepcopy

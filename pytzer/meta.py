@@ -1,9 +1,19 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019--2020  Matthew Paul Humphreys  (GNU GPLv3)
 """Define package metadata."""
+import importlib
 from . import parameters
 
 version = "0.5.0"
+
+
+def update_func_J(pytzer, func_J):
+    """Update the unsymmetrical mixing function."""
+    if pytzer.model.func_J is not func_J:
+        pytzer.model = importlib.reload(pytzer.model)
+        pytzer = importlib.reload(pytzer)
+        pytzer.model.func_J = func_J
+    return pytzer
 
 
 def getprmfuncs():

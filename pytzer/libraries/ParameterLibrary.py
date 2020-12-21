@@ -1,248 +1,265 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019--2020  Matthew Paul Humphreys  (GNU GPLv3)
+from .. import debyehueckel as dh, parameters as prm
+from ..meta import update_func_J
 import numpy as np
-from .. import parameters as prm, properties
-from ..meta import version
 
 
-class ParameterLibrary:
-    def __init__(
+class ParameterLibrary(dict):
+    def __init__(self, name="ParameterLibrary"):
+        self["name"] = name
+
+    def update_Aphi(self, func=dh.Aosm_M88):
+        self.update({"Aphi": func})
+
+    def update_ca(self, cation, anion, func=prm.bC_none):
+        """Add or update a cation-anion interaction parameters function."""
+        if "ca" not in self:
+            self["ca"] = {}
+        if cation not in self["ca"]:
+            self["ca"][cation] = {}
+        self["ca"][cation].update({anion: func})
+
+    def update_cc(self, cation1, cation2, func=prm.theta_none):
+        """Add or update a cation-cation interaction parameter function."""
+        if "cc" not in self:
+            self["cc"] = {}
+        if cation1 not in self["cc"]:
+            self["cc"][cation1] = {}
+        if cation2 not in self["cc"]:
+            self["cc"][cation2] = {}
+        self["cc"][cation1].update({cation2: func})
+        self["cc"][cation2].update({cation1: func})
+
+    def update_aa(self, anion1, anion2, func=prm.theta_none):
+        """Add or update an anion-anion interaction parameter function."""
+        if "aa" not in self:
+            self["aa"] = {}
+        if anion1 not in self["aa"]:
+            self["aa"][anion1] = {}
+        if anion2 not in self["aa"]:
+            self["aa"][anion2] = {}
+        self["aa"][anion1].update({anion2: func})
+        self["aa"][anion2].update({anion1: func})
+
+    def update_cca(self, cation1, cation2, anion, func=prm.psi_none):
+        """Add or update a cation-cation-anion interaction parameter function."""
+        if "cca" not in self:
+            self["cca"] = {}
+        if cation1 not in self["cca"]:
+            self["cca"][cation1] = {}
+        if cation2 not in self["cca"][cation1]:
+            self["cca"][cation1][cation2] = {}
+        if cation2 not in self["cca"]:
+            self["cca"][cation2] = {}
+        if cation1 not in self["cca"][cation2]:
+            self["cca"][cation2][cation1] = {}
+        self["cca"][cation1][cation2].update({anion: func})
+        self["cca"][cation2][cation1].update({anion: func})
+
+    def update_caa(self, cation, anion1, anion2, func=prm.psi_none):
+        """Add or update a cation-anion-anion interaction parameter function."""
+        if "caa" not in self:
+            self["caa"] = {}
+        if cation not in self["caa"]:
+            self["caa"][cation] = {}
+        if anion1 not in self["caa"][cation]:
+            self["caa"][cation][anion1] = {}
+        if anion2 not in self["caa"][cation]:
+            self["caa"][cation][anion2] = {}
+        self["caa"][cation][anion1].update({anion2: func})
+        self["caa"][cation][anion2].update({anion1: func})
+
+    def update_nc(self, neutral, cation, func=prm.lambd_none):
+        """Add or update a neutral-cation interaction parameter function."""
+        if "nc" not in self:
+            self["nc"] = {}
+        if neutral not in self["nc"]:
+            self["nc"][neutral] = {}
+        self["nc"][neutral].update({cation: func})
+
+    def update_na(self, neutral, anion, func=prm.lambd_none):
+        """Add or update a cation-anion interaction parameter function."""
+        if "na" not in self:
+            self["na"] = {}
+        if neutral not in self["na"]:
+            self["na"][neutral] = {}
+        self["na"][neutral].update({anion: func})
+
+    def update_nca(self, neutral, cation, anion, func=prm.zeta_none):
+        """Add or update a neutral-cation-anion interaction parameter function."""
+        if "nca" not in self:
+            self["nca"] = {}
+        if neutral not in self["nca"]:
+            self["nca"][neutral] = {}
+        if cation not in self["nca"][neutral]:
+            self["nca"][neutral][cation] = {}
+        self["nca"][neutral][cation].update({anion: func})
+
+    def update_nn(self, neutral1, neutral2, func=prm.lambd_none):
+        """Add or update a neutral-neutral interaction parameter function."""
+        if "nn" not in self:
+            self["nn"] = {}
+        if neutral1 not in self["nn"]:
+            self["nn"][neutral1] = {}
+        if neutral2 not in self["nn"]:
+            self["nn"][neutral2] = {}
+        self["nn"][neutral1].update({neutral2: func})
+        self["nn"][neutral2].update({neutral1: func})
+
+    def update_nnn(self, neutral, func=prm.mu_none):
+        """Add or update a neutral-neutral-neutral interaction parameter function."""
+        if "nnn" not in self:
+            self["nnn"] = {}
+        self["nnn"].update({neutral: func})
+
+    def assign_func_J(self, func_J):
+        """Assign which J function should be used for unsymmetrical mixing terms."""
+        self["func_J"] = func_J
+
+    def set_func_J(self, pytzer, func_J=None):
+        """Implement the assigned J function throughout pytzer."""
+        if func_J is None:
+            assert "func_J" in self
+        else:
+            self.assign_func_J(func_J)
+        pytzer = update_func_J(pytzer, self["func_J"])
+        return pytzer
+
+    def get_parameters(
         self,
-        module=None,
-        name="",
-        dh={},
-        bC={},
-        theta={},
-        jfunc=[],
-        psi={},
-        lambd={},
-        zeta={},
-        mu={},
-        lnk={},
-        ions=np.array([]),
-        srcs=np.array([]),
+        cations=None,
+        anions=None,
+        neutrals=None,
+        temperature=298.15,
+        pressure=10.1023,
+        verbose=True,
     ):
-        self.name = name
-        self.dh = dh  # Aosm
-        self.bC = bC  # c-a
-        self.theta = theta  # c-c' and a-a'
-        self.jfunc = jfunc  # unsymmetrical mixing
-        self.psi = psi  # c-c'-a and c-a-a'
-        self.lambd = lambd  # # n-c, n-a, n-n and n-n'
-        self.zeta = zeta  # n-c-a
-        self.mu = mu  # n-n-n
-        self.lnk = lnk  # thermodynamic equilibrium constants
-        self.ions = ions
-        self.srcs = srcs
-        if module is not None:
-            if "name" in dir(module):
-                self.name = module.name
-            if "dh" in dir(module):
-                self.dh = module.dh
-            if "bC" in dir(module):
-                self.bC = module.bC
-            if "theta" in dir(module):
-                self.theta = module.theta
-            if "jfunc" in dir(module):
-                self.jfunc = module.jfunc
-            if "psi" in dir(module):
-                self.psi = module.psi
-            if "lambd" in dir(module):
-                self.lambd = module.lambd
-            if "zeta" in dir(module):
-                self.zeta = module.zeta
-            if "mu" in dir(module):
-                self.mu = module.mu
-            if "lnk" in dir(module):
-                self.lnk = module.lnk
-            if "ions" in dir(module):
-                self.ions = module.ions
-            if "srcs" in dir(module):
-                self.srcs = module.srcs
+        """Evaluate all interaction parameters under specific conditions."""
+        if verbose:
+            missing_coeffs = []
 
-    def add_zeros(self, ions):
-        """Add zero-functions for missing combinations of solutes."""
-        _, cations, anions, neutrals = properties.charges(ions)
-        cations.sort()
-        anions.sort()
-        neutrals.sort()
-        # betas and Cs
-        for cation in cations:
-            for anion in anions:
-                istr = "-".join((cation, anion))
-                if istr not in self.bC.keys():
-                    self.bC[istr] = prm.bC_none
-        # c-c'-a thetas and psis
-        for C0, cation0 in enumerate(cations):
-            for cation1 in cations[C0 + 1 :]:
-                istr = "-".join((cation0, cation1))
-                if istr not in self.theta.keys():
-                    self.theta[istr] = prm.theta_none
-                for anion in anions:
-                    istr = "-".join((cation0, cation1, anion))
-                    if istr not in self.psi.keys():
-                        self.psi[istr] = prm.psi_none
-        # c-a-a' thetas and psis
-        for A0, anion0 in enumerate(anions):
-            for anion1 in anions[A0 + 1 :]:
-                istr = "-".join((anion0, anion1))
-                if istr not in self.theta.keys():
-                    self.theta[istr] = prm.theta_none
-                for cation in cations:
-                    istr = "-".join((cation, anion0, anion1))
-                    if istr not in self.psi.keys():
-                        self.psi[istr] = prm.psi_none
-        # Neutral interactions
-        for N0, neutral0 in enumerate(neutrals):
-            # n-c lambdas
-            for cation in cations:
-                inc = "-".join((neutral0, cation))
-                if inc not in self.lambd.keys():
-                    self.lambd[inc] = prm.lambd_none
-                # n-c-a zetas
-                for anion in anions:
-                    inca = "-".join((neutral0, cation, anion))
-                    if inca not in self.zeta.keys():
-                        self.zeta[inca] = prm.zeta_none
-            # n-a lambdas
-            for anion in anions:
-                ina = "-".join((neutral0, anion))
-                if ina not in self.lambd.keys():
-                    self.lambd[ina] = prm.lambd_none
-            # n-n' lambdas including n-n
-            for neutral1 in neutrals[N0:]:
-                inn = "-".join((neutral0, neutral1))
-                if inn not in self.lambd.keys():
-                    self.lambd[inn] = prm.lambd_none
-            # n-n-n mus
-            innn = "-".join((neutral0, neutral0, neutral0))
-            if innn not in self.mu.keys():
-                self.mu[innn] = prm.mu_none
+        def report_missing_coeffs(*solutes):
+            if verbose:
+                solutes_list = list(solutes)
+                solutes_list.sort()
+                if solutes_list not in missing_coeffs:
+                    print(
+                        (
+                            "{} has no interaction coefficients for "
+                            + "-".join(["{}"] * len(solutes))
+                            + "; using zero."
+                        ).format(self["name"], *solutes)
+                    )
+                    missing_coeffs.append(solutes_list)
 
-    def print_parameters(self, T, P, filename):
-        """Print all parameter values at a given temperature and pressure
-        to a text file.
-        """
-        f = open(filename, "w")
-        f.write("Parameter library: {} [pytzer-v{}]\n\n".format(self.name, version))
-        ionslist = "Ions: " + (len(self.ions) - 1) * "{}, " + "{}\n\n"
-        f.write(ionslist.format(*self.ions))
-        #        srcslist = 'Sources: ' + (len(self.srcs)-1)*'{}, ' + '{}\n\n'
-        #        f.write(srcslist.format(*self.srcs))
-        f.write("Temperature: {} K\n".format(T))
-        f.write("   Pressure: {} dbar\n\n".format(P))
-        # Debye-Hueckel slope
-        f.write("Debye-Hueckel limiting slope\n")
-        f.write("============================\n")
-        eval_Aosm = self.dh["Aosm"](T, P)[0]
-        src = self.dh["Aosm"].__name__.split("_")[-1]
-        f.write("{:^12}  {:15}\n".format("Aosm", "source"))
-        f.write("{:>12.9f}  {:15}\n".format(eval_Aosm, src))
-        # Write cation-anion parameters (betas and Cs)
-        f.write("\n")
-        f.write("c-a pairs (betas and Cs)\n")
-        f.write("========================\n")
-        bChead = 2 * "{:7}" + 5 * "{:^13}" + 3 * "{:>6}" + "  {:15}\n"
-        bCvals = 2 * "{:7}" + 5 * "{:>13.5e}" + 3 * "{:>6.1f}" + "  {:15}\n"
-        f.write(
-            bChead.format(
-                "cat",
-                "ani",
-                "b0",
-                "b1",
-                "b2",
-                "C0",
-                "C1",
-                "al1",
-                "al2",
-                "omg",
-                "source",
-            )
-        )
-        for bC in self.bC.keys():
-            cation, anion = bC.split("-")
-            b0, b1, b2, C0, C1, alph1, alph2, omega, _ = self.bC[bC](T, P)
-            src = self.bC[bC].__name__.split("_")[-1]
-            f.write(
-                bCvals.format(
-                    cation, anion, b0, b1, b2, C0, C1, alph1, alph2, omega, src
+        parameters = {}
+        TP = (temperature, pressure)
+        if "Aphi" in self:
+            parameters.update({"Aphi": self["Aphi"](*TP)[0]})
+        else:
+            if verbose:
+                print(
+                    "{} has no Aphi function; no value returned.".format(self["name"])
                 )
-            )
-        # Write same charge ion-ion parameters (thetas)
-        f.write("\n")
-        f.write("c-c' and a-a' pairs (thetas)\n")
-        f.write("============================\n")
-        thetaHead = 2 * "{:7}" + "{:^13}" + "  {:15}\n"
-        thetaVals = 2 * "{:7}" + "{:>13.5e}" + "  {:15}\n"
-        f.write(thetaHead.format("ion1", "ion2", "theta", "source"))
-        for theta in self.theta.keys():
-            ion0, ion1 = theta.split("-")
-            eval_theta = self.theta[theta](T, P)[0]
-            src = self.theta[theta].__name__.split("_")[-1]
-            f.write(thetaVals.format(ion0, ion1, eval_theta, src))
-        # Write ion triplet parameters (psis)
-        f.write("\n")
-        f.write("c-c'-a and c-a-a' triplets (psis)\n")
-        f.write("=================================\n")
-        psiHead = 3 * "{:7}" + "{:^12}" + "  {:15}\n"
-        psiVals = 3 * "{:7}" + "{:>12.5e}" + "  {:15}\n"
-        f.write(psiHead.format("ion1", "ion2", "ion3", "psi", "source"))
-        for psi in self.psi.keys():
-            ion0, ion1, ion2 = psi.split("-")
-            eval_psi = self.psi[psi](T, P)[0]
-            src = self.psi[psi].__name__.split("_")[-1]
-            f.write(psiVals.format(ion0, ion1, ion2, eval_psi, src))
-        # Write neutral-ion parameters (lambdas)
-        f.write("\n")
-        f.write("n-c, n-a and n-n' pairs (lambdas)\n")
-        f.write("=================================\n")
-        lambdHead = 2 * "{:7}" + "{:^13}" + "  {:15}\n"
-        lambdVals = 2 * "{:7}" + "{:>13.5e}" + "  {:15}\n"
-        f.write(lambdHead.format("neut", "ion", "lambda", "source"))
-        for lambd in self.lambd.keys():
-            neut, ion = lambd.split("-")
-            eval_lambd = self.lambd[lambd](T, P)[0]
-            src = self.lambd[lambd].__name__.split("_")[-1]
-            f.write(lambdVals.format(neut, ion, eval_lambd, src))
-        # Write neutral-cation-anion triplet parameters (zetas)
-        f.write("\n")
-        f.write("n-c-a triplets (zetas)\n")
-        f.write("======================\n")
-        zetaHead = 3 * "{:7}" + "{:^12}" + "  {:15}\n"
-        zetaVals = 3 * "{:7}" + "{:>12.5e}" + "  {:15}\n"
-        f.write(zetaHead.format("neut", "cat", "ani", "zeta", "source"))
-        for zeta in self.zeta.keys():
-            neut, cat, ani = zeta.split("-")
-            eval_zeta = self.zeta[zeta](T, P)[0]
-            src = self.zeta[zeta].__name__.split("_")[-1]
-            f.write(zetaVals.format(neut, cat, ani, eval_zeta, src))
-        # Write neutral-neutral-neutral triplet parameters (mus)
-        f.write("\n")
-        f.write("n-n-n triplets (mus)\n")
-        f.write("====================\n")
-        muHead = 3 * "{:7}" + "{:^12}" + "  {:15}\n"
-        muVals = 3 * "{:7}" + "{:>12.5e}" + "  {:15}\n"
-        f.write(muHead.format("neut1", "neut2", "neut3", "mu", "source"))
-        for mu in self.mu.keys():
-            neut1, neut2, neut3 = mu.split("-")
-            eval_mu = self.mu[mu](T, P)[0]
-            src = self.mu[mu].__name__.split("_")[-1]
-            f.write(muVals.format(neut1, neut2, neut3, eval_mu, src))
-
-    def get_contents(self):
-        """Get all ions and sources in the parameter library."""
-        ctypes = [self.bC, self.theta, self.psi, self.lambd, self.zeta, self.mu]
-        ctypes = [ctype for ctype in ctypes if any(ctype)]
-        self.ions = np.unique(
-            np.concatenate([key.split("-") for ctype in ctypes for key in ctype.keys()])
-        )
-        self.srcs = np.unique(
-            np.concatenate(
-                [
-                    [ctype[key].__name__.split("_")[-1] for key in ctype.keys()]
-                    for ctype in ctypes
-                ]
-            )
-        )
-        self.ions.sort()
-        self.srcs.sort()
+        if cations is not None and anions is not None:
+            parameters["ca"] = np.zeros((len(cations), len(anions), 8))
+            for c, cation in enumerate(cations):
+                for a, anion in enumerate(anions):
+                    try:
+                        ca = self["ca"][cation][anion](*TP)[:-1]
+                    except KeyError:
+                        ca = np.zeros(8)
+                        report_missing_coeffs(cation, anion)
+                    parameters["ca"][c][a] = ca
+            parameters["cc"] = np.zeros((len(cations), len(cations)))
+            for c1, cation1 in enumerate(cations):
+                for c2, cation2 in enumerate(cations):
+                    try:
+                        cc = self["cc"][cation1][cation2](*TP)[0]
+                    except KeyError:
+                        cc = 0.0
+                        if cation1 != cation2:
+                            report_missing_coeffs(cation1, cation2)
+                    parameters["cc"][c1][c2] = cc
+            parameters["aa"] = np.zeros((len(anions), len(anions)))
+            for a1, anion1 in enumerate(anions):
+                for a2, anion2 in enumerate(anions):
+                    try:
+                        aa = self["aa"][anion1][anion2](*TP)[0]
+                    except KeyError:
+                        aa = 0.0
+                        if anion1 != anion2:
+                            report_missing_coeffs(anion1, anion2)
+                    parameters["aa"][a1][a2] = aa
+            parameters["cca"] = np.zeros((len(cations), len(cations), len(anions)))
+            for c1, cation1 in enumerate(cations):
+                for c2, cation2 in enumerate(cations):
+                    for a, anion in enumerate(anions):
+                        try:
+                            cca = self["cca"][cation1][cation2][anion](*TP)[0]
+                        except KeyError:
+                            cca = 0.0
+                            if cation1 != cation2:
+                                report_missing_coeffs(cation1, cation2, anion)
+                        parameters["cca"][c1][c2][a] = cca
+            parameters["caa"] = np.zeros((len(cations), len(anions), len(anions)))
+            for c, cation in enumerate(cations):
+                for a1, anion1 in enumerate(anions):
+                    for a2, anion2 in enumerate(anions):
+                        try:
+                            caa = self["caa"][cation][anion1][anion2](*TP)[0]
+                        except KeyError:
+                            caa = 0.0
+                            if anion1 != anion2:
+                                report_missing_coeffs(cation, anion1, anion2)
+                        parameters["caa"][c][a1][a2] = caa
+        if neutrals is not None and cations is not None:
+            parameters["nc"] = np.zeros((len(neutrals), len(cations)))
+            for n, neutral in enumerate(neutrals):
+                for c, cation in enumerate(cations):
+                    try:
+                        nc = self["nc"][neutral][cation](*TP)[0]
+                    except KeyError:
+                        nc = 0.0
+                        report_missing_coeffs(neutral, cation)
+                    parameters["nc"][n][c] = nc
+        if neutrals is not None and anions is not None:
+            parameters["na"] = np.zeros((len(neutrals), len(anions)))
+            for n, neutral in enumerate(neutrals):
+                for a, anion in enumerate(anions):
+                    try:
+                        na = self["na"][neutral][anion](*TP)[0]
+                    except KeyError:
+                        na = 0.0
+                        report_missing_coeffs(neutral, anion)
+                    parameters["na"][n][a] = na
+            if cations is not None:
+                parameters["nca"] = np.zeros((len(neutrals), len(cations), len(anions)))
+                for n, neutral in enumerate(neutrals):
+                    for c, cation in enumerate(cations):
+                        for a, anion in enumerate(anions):
+                            try:
+                                nca = self["nca"][neutral][cation][anion](*TP)[0]
+                            except KeyError:
+                                nca = 0.0
+                                report_missing_coeffs(neutral, cation, anion)
+                            parameters["nca"][n][c][a] = nca
+        if neutrals is not None:
+            parameters["nn"] = np.zeros((len(neutrals), len(neutrals)))
+            parameters["nnn"] = np.zeros(len(neutrals))
+            for n1, neutral1 in enumerate(neutrals):
+                for n2, neutral2 in enumerate(neutrals):
+                    try:
+                        nn = self["nn"][neutral1][neutral2](*TP)[0]
+                    except KeyError:
+                        nn = 0.0
+                        report_missing_coeffs(neutral1, neutral2)
+                    parameters["nn"][n1][n2] = nn
+                try:
+                    nnn = self["nn"][neutral1](*TP)[0]
+                except KeyError:
+                    nnn = 0.0
+                    report_missing_coeffs(neutral1, neutral1, neutral1)
+                parameters["nnn"][n1] = nnn
+        return parameters
