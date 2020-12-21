@@ -26,11 +26,13 @@ from . import (
     meta,
     model,
     parameters,
+    prepare,
     # plot,
     # potentials,
     # properties,
     # teos10,
     unsymmetrical,
+    wrap,
 )
 from .convert import (
     activity_to_osmotic,
@@ -39,15 +41,15 @@ from .convert import (
 )
 from .libraries import ParameterLibrary
 from .meta import update_func_J
-from .model import (
+from .wrap import (
     activity_coefficients,
     activity_water,
     Gibbs_nRT,
     log_activity_coefficients,
     log_activity_water,
     osmotic_coefficient,
-    split_molalities_charges,
 )
+from .prepare import expand_solute_molalities, get_pytzer_args, split_solute_types
 
 __version__ = meta.version
 __author__ = "Matthew P. Humphreys"

@@ -58,16 +58,6 @@ def ionic_z(molalities, charges):
     return np.sum(molalities * np.abs(charges))
 
 
-def split_molalities_charges(molalities, charges):
-    """Split up molalities and charges inputs as required by other functions."""
-    m_cats = np.compress(charges > 0, molalities)
-    m_anis = np.compress(charges < 0, molalities)
-    m_neus = np.compress(charges == 0, molalities)
-    z_cats = np.compress(charges > 0, charges)
-    z_anis = np.compress(charges < 0, charges)
-    return m_cats, m_anis, m_neus, z_cats, z_anis
-
-
 # Temporary way to allow adjustment of func_J (not very robust)
 func_J = unsymmetrical.Harvie
 
@@ -97,7 +87,7 @@ def Gibbs_nRT(
     # should also be taken into account for this model.
     # Ionic strength etc.
     molalities = np.array([*m_cats, *m_anis, *m_neus])
-    charges = np.array([*z_cats, *z_anis])
+    charges = np.array([*z_cats, *z_anis, *np.zeros_like(m_neus)])
     I = ionic_strength(molalities, charges)
     Z = ionic_z(molalities, charges)
     sqrt_I = np.sqrt(I)
@@ -184,7 +174,7 @@ def activity_coefficients(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters):
 
 @jax.jit
 def osmotic_coefficient(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters):
-    """Calculate the osmotic coefficient."""
+    """Calculate the osmotic coefficient of the solution."""
     return 1 - jax.grad(
         lambda ww: ww
         * Gibbs_nRT(m_cats / ww, m_anis / ww, m_neus / ww, z_cats, z_anis, **parameters)

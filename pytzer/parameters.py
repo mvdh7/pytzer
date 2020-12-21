@@ -3,7 +3,7 @@
 """Evaluate Pitzer model interaction parameters."""
 from jax import numpy as np
 from .constants import Tzero
-from .properties import _ion2charge as i2c
+from .convert import solute_to_charge as i2c
 
 # Tolerances for np.isclose() assessment of temperature/pressure validity
 temperature_tol = dict(atol=1e-8, rtol=0)  # K
