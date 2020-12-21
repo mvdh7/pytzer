@@ -1,6 +1,7 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019--2020  Matthew Paul Humphreys  (GNU GPLv3)
 """Define solute properties."""
+from . import convert
 from autograd.numpy import concatenate, float_, unique, vstack
 
 _ion2name = {
@@ -229,10 +230,10 @@ def charges(ions):
         anions = []
         neutrals = []
     else:
-        zs = vstack([float_(_ion2charge[ion]) for ion in ions])
-        cations = [ion for ion in ions if _ion2charge[ion] > 0]
-        anions = [ion for ion in ions if _ion2charge[ion] < 0]
-        neutrals = [ion for ion in ions if _ion2charge[ion] == 0]
+        zs = vstack([float_(convert.solute_to_charge[ion]) for ion in ions])
+        cations = [ion for ion in ions if convert.solute_to_charge[ion] > 0]
+        anions = [ion for ion in ions if convert.solute_to_charge[ion] < 0]
+        neutrals = [ion for ion in ions if convert.solute_to_charge[ion] == 0]
     return zs, cations, anions, neutrals
 
 
