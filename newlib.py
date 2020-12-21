@@ -23,7 +23,7 @@ gibbs = pz.model.Gibbs_nRT(*args, **params)
 acf = pz.model.activity_coefficients(*args, **params)
 print(acf)
 
-acf2 = pz.activity_coefficients(solutes)
+acf2 = pz.activity_coefficients(solutes, verbose=False)
 
 func_acf = jax.jit(lambda args: pz.activity_coefficients(*args, **params))
 
