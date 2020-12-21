@@ -1,23 +1,13 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019--2020  Matthew Paul Humphreys  (GNU GPLv3)
-from copy import deepcopy
-from .. import debyehueckel, dissociation
+import copy
+from .. import debyehueckel, dissociation as k
+from .MarChemSpec25 import MarChemSpec25
 
-# MarChemSpec project
-from . import MarChemSpec25
-
-name = "MarChemSpec"
-plname.update_Aphi(debyehueckel.Aosm_MarChemSpec)
-jfunc = deepcopy(MarChemSpec25.jfunc)
-bC = deepcopy(MarChemSpec25.bC)
-theta = deepcopy(MarChemSpec25.theta)
-psi = deepcopy(MarChemSpec25.psi)
-lambd = deepcopy(MarChemSpec25.lambd)
-zeta = deepcopy(MarChemSpec25.zeta)
-mu = deepcopy(MarChemSpec25.mu)
+MarChemSpec = copy.deepcopy(MarChemSpec25)
+MarChemSpec.update_Aphi(debyehueckel.Aosm_MarChemSpec)
 # Add equilibrium constants
-lnk = {}
-lnk["H2O"] = dissociation.H2O_MF
-lnk["HSO4"] = dissociation.HSO4_CRP94
-lnk["MgOH"] = dissociation.MgOH_CW91
-lnk["trisH"] = dissociation.trisH_BH64
+MarChemSpec.update_equilibrium("H2O", k.H2O_MF)
+MarChemSpec.update_equilibrium("HSO4", k.HSO4_CRP94)
+MarChemSpec.update_equilibrium("MgOH", k.MgOH_CW91)
+MarChemSpec.update_equilibrium("trisH", k.trisH_BH64)

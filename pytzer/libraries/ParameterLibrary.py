@@ -263,7 +263,7 @@ class ParameterLibrary(dict):
                         report_missing_coeffs(neutral1, neutral2)
                     parameters["nn"][n1][n2] = nn
                 try:
-                    nnn = self["nn"][neutral1](*TP)[0]
+                    nnn = self["nnn"][neutral1](*TP)[0]
                 except KeyError:
                     nnn = 0.0
                     report_missing_coeffs(neutral1, neutral1, neutral1)

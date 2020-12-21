@@ -1,8 +1,8 @@
 import numpy as np, pytzer as pz
-from pytzer.libraries import Moller88
+from pytzer.libraries import Seawater as plib
 from pytzer import unsymmetrical as unsym
 
-params = Moller88.get_parameters(
+params = plib.get_parameters(
     cations=["Na", "Ca"], anions=["Cl", "SO4"], neutrals=["tris"]
 )
 
@@ -16,16 +16,10 @@ gibbs = pz.Gibbs_nRT(*args, **params)
 acf = pz.activity_coefficients(*args, **params)
 print(acf)
 
-# import importlib
-# pz.model = importlib.reload(pz.model)
-# pz = importlib.reload(pz)
-# pz.model.func_J = unsym.Harvie
-
-# pz.update_func_J(pz, unsym.Harvie)
-Moller88.set_func_J(pz)
+plib.set_func_J(pz)
 acf = pz.activity_coefficients(*args, **params)
 print(acf)
 
-Moller88.set_func_J(pz)
+plib.set_func_J(pz)
 acf = pz.activity_coefficients(*args, **params)
 print(acf)
