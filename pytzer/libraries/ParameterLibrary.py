@@ -126,6 +126,12 @@ class ParameterLibrary(dict):
         pytzer = update_func_J(pytzer, self["func_J"])
         return pytzer
 
+    def update_equilibrium(self, equilibrium, func):
+        """Add or update the function for a thermodynamic equilibrium constant."""
+        if "equilibria" not in self:
+            self["equilibria"] = {}
+        self["equilibria"].update({equilibrium: func})
+
     def get_parameters(
         self,
         cations=None,

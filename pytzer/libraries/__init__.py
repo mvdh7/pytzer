@@ -2,7 +2,11 @@
 # Copyright (C) 2019--2020  Matthew Paul Humphreys  (GNU GPLv3)
 """Assemble parameter libraries."""
 from .ParameterLibrary import ParameterLibrary
+from .Clegg94 import Clegg94
 from .Moller88 import Moller88
+
+CRP94 = Clegg94
+M88 = Moller88
 
 # from . import (
 #     CRP94,

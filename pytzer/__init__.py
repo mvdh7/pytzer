@@ -18,7 +18,7 @@ from . import (
     constants,
     convert,
     debyehueckel,
-    # dissociation,
+    dissociation,
     # equilibrate,
     # io,
     libraries,
