@@ -58,7 +58,7 @@ def pH_to_solute_molalities(pH, kstar_H2O):
 def pH_to_molalities(pH, kstar_H2O):
     H = 10.0 ** -pH
     OH = kstar_H2O / H
-    Cl = H - OH + 1.0
+    Cl = 1.2  # nope
     Na = 1.0
     return np.array([H, Na]), np.array([OH, Cl]), np.array([])
 
