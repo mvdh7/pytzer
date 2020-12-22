@@ -1,7 +1,8 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019--2020  Matthew Paul Humphreys  (GNU GPLv3)
 """Solve for equilibrium."""
-
+import jax
+from jax import numpy as np
 
 
 # def _varmols(eqstate, tots1, fixmols1, eles, fixions, fixcharges):
@@ -126,9 +127,10 @@
 #     )
 
 
-# def Gibbs_H2O(lnaw, mH, lnacfH, mOH, lnacfOH, lnkH2O):
-#     """Evaluate the Gibbs energy for water dissocation."""
-#     return lnacfH + np.log(mH) + lnacfOH + np.log(mOH) - lnaw - lnkH2O
+@jax.jit
+def Gibbs_H2O(ln_aw, m_H, ln_acf_H, m_OH, ln_acf_OH, ln_kH2O):
+    """Evaluate the Gibbs energy for water dissocation."""
+    return ln_acf_H + np.log(m_H) + ln_acf_OH + np.log(m_OH) - ln_aw - ln_kH2O
 
 
 # def Gibbs_HSO4(mH, lnacfH, mSO4, lnacfSO4, mHSO4, lnacfHSO4, lnkHSO4):

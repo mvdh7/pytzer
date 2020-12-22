@@ -175,7 +175,7 @@ class ParameterLibrary(dict):
                     try:
                         ca = self["ca"][cation][anion](*TP)[:-1]
                     except KeyError:
-                        ca = np.zeros(8)
+                        ca = [0, 0, 0, 0, 0, -9, -9, -9]
                         report_missing_coeffs(cation, anion)
                     parameters["ca"][c][a] = ca
             parameters["cc"] = np.zeros((len(cations), len(cations)))
