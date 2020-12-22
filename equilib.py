@@ -138,6 +138,7 @@ def solve_pkstar_H2O(ln_k_H2O, alkalinity, z_cats, z_anis, params):
         return pkstar_H2O
 
     while cond(pkstar_H2O):
+        print(pkstar_H2O)
         pkstar_H2O = body(pkstar_H2O)
 
     # pkstar_H2O = lax.while_loop(cond, body, pkstar_H2O)
