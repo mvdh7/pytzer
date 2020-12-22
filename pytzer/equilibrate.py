@@ -440,55 +440,55 @@ def Gibbs_H2O(ln_aw, m_H, ln_acf_H, m_OH, ln_acf_OH, ln_kH2O):
 #     return transpose(allmols), allions, eqstates
 
 
-def eqstate2mols(eqstate, tots1, fixmols1, eles, fixions):
-    """Convert eqstate solution to arrays required for Pytzer functions."""
-    fixcharges = transpose(properties.charges(fixions)[0])
-    (
-        mH,
-        mOH,
-        mHSO4,
-        mSO4,
-        mMg,
-        mMgOH,
-        mtris,
-        mtrisH,
-        mCO2,
-        mHCO3,
-        mCO3,
-        mBOH3,
-        mBOH4,
-    ) = _varmols(eqstate, tots1, fixmols1, eles, fixions, fixcharges)
-    allions = properties.getallions(eles, fixions)
-    allmols = full_like(allions, 0.0, dtype="float64")
-    for i, ion in enumerate(allions):
-        if len(fixions) > 0:
-            if ion in fixions:
-                allmols[i] = fixmols1[fixions == ion]
-        if ion not in fixions:
-            if ion == "H":
-                allmols[i] = mH
-            elif ion == "OH":
-                allmols[i] = mOH
-            elif ion == "HSO4":
-                allmols[i] = mHSO4
-            elif ion == "SO4":
-                allmols[i] = mSO4
-            elif ion == "Mg":
-                allmols[i] = mMg
-            elif ion == "MgOH":
-                allmols[i] = mMgOH
-            elif ion == "tris":
-                allmols[i] = mtris
-            elif ion == "trisH":
-                allmols[i] = mtrisH
-            elif ion == "CO2":
-                allmols[i] = mCO2
-            elif ion == "HCO3":
-                allmols[i] = mHCO3
-            elif ion == "CO3":
-                allmols[i] = mCO3
-            elif ion == "BOH3":
-                allmols[i] = mBOH3
-            elif ion == "BOH4":
-                allmols[i] = mBOH4
-    return allmols, allions
+# def eqstate2mols(eqstate, tots1, fixmols1, eles, fixions):
+#     """Convert eqstate solution to arrays required for Pytzer functions."""
+#     fixcharges = transpose(properties.charges(fixions)[0])
+#     (
+#         mH,
+#         mOH,
+#         mHSO4,
+#         mSO4,
+#         mMg,
+#         mMgOH,
+#         mtris,
+#         mtrisH,
+#         mCO2,
+#         mHCO3,
+#         mCO3,
+#         mBOH3,
+#         mBOH4,
+#     ) = _varmols(eqstate, tots1, fixmols1, eles, fixions, fixcharges)
+#     allions = properties.getallions(eles, fixions)
+#     allmols = full_like(allions, 0.0, dtype="float64")
+#     for i, ion in enumerate(allions):
+#         if len(fixions) > 0:
+#             if ion in fixions:
+#                 allmols[i] = fixmols1[fixions == ion]
+#         if ion not in fixions:
+#             if ion == "H":
+#                 allmols[i] = mH
+#             elif ion == "OH":
+#                 allmols[i] = mOH
+#             elif ion == "HSO4":
+#                 allmols[i] = mHSO4
+#             elif ion == "SO4":
+#                 allmols[i] = mSO4
+#             elif ion == "Mg":
+#                 allmols[i] = mMg
+#             elif ion == "MgOH":
+#                 allmols[i] = mMgOH
+#             elif ion == "tris":
+#                 allmols[i] = mtris
+#             elif ion == "trisH":
+#                 allmols[i] = mtrisH
+#             elif ion == "CO2":
+#                 allmols[i] = mCO2
+#             elif ion == "HCO3":
+#                 allmols[i] = mHCO3
+#             elif ion == "CO3":
+#                 allmols[i] = mCO3
+#             elif ion == "BOH3":
+#                 allmols[i] = mBOH3
+#             elif ion == "BOH4":
+#                 allmols[i] = mBOH4
+#     return allmols, allions

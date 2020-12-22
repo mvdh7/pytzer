@@ -90,7 +90,7 @@ def get_Gibbs_H2O(pkstar_H2O, ln_k_H2O, alkalinity, z_cats, z_anis, params):
 
     gH2O = pz.equilibrate.Gibbs_H2O(ln_aw, m_H, ln_acf_H, m_OH, ln_acf_OH, ln_k_H2O)
 
-    return gH2O
+    return gH2O ** 2
 
 
 #%%
