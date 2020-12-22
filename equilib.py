@@ -3,21 +3,29 @@ from jax import numpy as np, lax
 import pytzer as pz
 
 
+def get_alkalinity_ec(solute_molalities):
+    alkalinity = 0.0
+    if "Na" in solute_molalities:
+        alkalinity = alkalinity + solute_molalities["Na"]
+    if "Cl" in solute_molalities:
+        alkalinity = alkalinity - solute_molalities["Cl"]
+    return alkalinity
+
 @jax.jit
-def get_alkalinity(pH, kstar_H2O):
+def get_alkalinity_from_pH(pH, kstar_H2O):
     h = 10.0 ** -pH
     return kstar_H2O / h - h
 
 
 @jax.jit
-def grad_alkalinity(pH, kstar_H2O):
-    return jax.grad(get_alkalinity)(pH, kstar_H2O)
+def grad_alkalinity_from_pH(pH, kstar_H2O):
+    return jax.grad(get_alkalinity_from_pH)(pH, kstar_H2O)
 
 
 @jax.jit
 def get_delta_pH(pH, alkalinity, kstar_H2O):
-    grad = grad_alkalinity(pH, kstar_H2O)
-    return np.where(grad == 0, 0.0, (alkalinity - get_alkalinity(pH, kstar_H2O)) / grad)
+    grad = grad_alkalinity_from_pH(pH, kstar_H2O)
+    return np.where(grad == 0, 0.0, (alkalinity - get_alkalinity_from_pH(pH, kstar_H2O)) / grad)
 
 
 @jax.jit
@@ -59,7 +67,7 @@ pH = 3.1
 pk_H2O = 14.0
 kstar_H2O_i = 10.0 ** -pk_H2O
 ln_k_H2O = np.log(kstar_H2O_i)
-alkalinity = get_alkalinity(pH, kstar_H2O_i)  # should be from EC here
+alkalinity = get_alkalinity_from_pH(pH, kstar_H2O_i)  # should be from EC here
 
 #%% Solve
 
