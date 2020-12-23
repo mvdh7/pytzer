@@ -1,0 +1,252 @@
+import copy, jax, pytzer as pz, numpy as onp
+from jax import numpy as np, lax
+
+
+def get_alkalinity_ec(molality_args, alkalinity_args):
+    return np.sum(
+        np.array([m * a for m, a in zip(molality_args, alkalinity_args) if len(m) > 0])
+    )
+
+
+def alkalinity_pH(pH, pkstars, m_tots):
+    H = 10.0 ** -pH
+    k1, k2, kw = 10.0 ** -pkstars
+    (t_CO2,) = m_tots
+    return t_CO2 * (2 * k1 * k2 + k1 * H) / (H ** 2 + k1 * H + k1 * k2) + kw / H - H
+
+
+@jax.jit
+def grad_alkalinity_pH(pH, pkstars, m_tots):
+    return jax.jit(jax.grad(alkalinity_pH))(pH, pkstars, m_tots)
+
+
+@jax.jit
+def get_delta_pH(pH, alkalinity, pkstars, m_tots):
+    grad = grad_alkalinity_pH(pH, pkstars, m_tots)
+    return np.where(
+        grad == 0, 0.0, (alkalinity - alkalinity_pH(pH, pkstars, m_tots)) / grad
+    )
+
+
+@jax.jit
+def solve_pH(alkalinity, pkstars, m_tots):
+    pH = 7.0
+    tol = 1e-6
+
+    def cond(pH):
+        return np.abs(get_delta_pH(pH, alkalinity, pkstars, m_tots)) >= tol
+
+    def body(pH):
+        pH = pH + get_delta_pH(pH, alkalinity, pkstars, m_tots)
+        return pH
+
+    pH = lax.while_loop(cond, body, pH)
+    return pH
+
+
+@jax.jit
+def pH_to_molalities(pH, pkstars, m_tots, m_cats_f, m_anis_f, m_neus_f):
+    H = 10.0 ** -pH
+    k1, k2, kw = 10.0 ** -pkstars
+    (t_CO2,) = m_tots
+    CO2 = t_CO2 * H ** 2 / (H ** 2 + k1 * H + k1 * k2)
+    HCO3 = t_CO2 * k1 * H / (H ** 2 + k1 * H + k1 * k2)
+    CO3 = t_CO2 * k1 * k2 / (H ** 2 + k1 * H + k1 * k2)
+    OH = kw / H
+    return (
+        np.array([*m_cats_f, H]),
+        np.array([*m_anis_f, HCO3, CO3, OH]),
+        np.array([*m_neus_f, CO2]),
+    )
+
+
+@jax.jit
+def _get_Gibbs_equilibria(
+    pkstars, lnks, alkalinity, m_cats_f, m_anis_f, m_neus_f, z_cats, z_anis, params
+):
+    # Solve for pH
+    pH = solve_pH(alkalinity, pkstars, m_tots)
+    m_cats, m_anis, m_neus = pH_to_molalities(
+        pH, pkstars, m_tots, m_cats_f, m_anis_f, m_neus_f
+    )
+    ln_aw = pz.model.log_activity_water(
+        m_cats, m_anis, m_neus, z_cats, z_anis, **params
+    )
+    ln_acfs = pz.model.log_activity_coefficients(
+        m_cats, m_anis, m_neus, z_cats, z_anis, **params
+    )
+    # Extract outputs
+    _, H = m_cats
+    _, ln_acf_H = ln_acfs[0]
+    _, HCO3, CO3, OH = m_anis
+    _, ln_acf_HCO3, ln_acf_CO3, ln_acf_OH = ln_acfs[1]
+    (CO2,) = m_neus
+    (ln_acf_CO2,) = ln_acfs[2]
+    # Get equilibria
+    lnk1, lnk2, lnkw = lnks
+    gH2O = pz.equilibrate.Gibbs_H2O(ln_aw, H, ln_acf_H, OH, ln_acf_OH, lnkw)
+    gH2CO3 = pz.equilibrate.Gibbs_H2CO3(
+        ln_aw, H, ln_acf_H, HCO3, ln_acf_HCO3, CO2, ln_acf_CO2, lnk1
+    )
+    gHCO3 = pz.equilibrate.Gibbs_HCO3(
+        H, ln_acf_H, HCO3, ln_acf_HCO3, CO3, ln_acf_CO3, lnk2
+    )
+    g_total = gH2O ** 2 + gH2CO3 ** 2 + gHCO3 ** 2
+    return g_total
+
+
+def get_Gibbs_equilibria(
+    pkstars, lnks, alkalinity, m_cats_f, m_anis_f, m_neus_f, z_cats, z_anis, params
+):
+    return _get_Gibbs_equilibria(
+        pkstars, lnks, alkalinity, m_cats_f, m_anis_f, m_neus_f, z_cats, z_anis, params
+    ).item()
+
+
+# @jax.jit
+# def grad_Gibbs_equilibria(
+#     pkstars, lnks, alkalinity, m_cats_f, m_anis_f, m_neus_f, z_cats, z_anis, params
+# ):
+#     f = lambda pkstars: get_Gibbs_equilibria(
+#         pkstars, lnks, alkalinity, m_cats_f, m_anis_f, m_neus_f, z_cats, z_anis, params
+#     )
+#     v = np.ones_like(pkstars)
+#     return jax.jvp(f, (pkstars,), (v,))
+
+
+# @jax.jit
+# def get_delta_pkstars(
+#     pkstars, lnks, alkalinity, m_cats_f, m_anis_f, m_neus_f, z_cats, z_anis, params
+# ):
+#     g, gr = grad_Gibbs_equilibria(
+#         pkstars, lnks, alkalinity, m_cats_f, m_anis_f, m_neus_f, z_cats, z_anis, params
+#     )
+#     return np.where(gr == 0, 0.0, -g / gr)
+
+
+# def solve_pkstars(
+#     lnks, alkalinity, m_cats_f, m_anis_f, m_neus_f, z_cats, z_anis, params
+# ):
+
+#     pkstars = copy.deepcopy(lnks)
+#     tol = 1e-6
+
+#     def cond(pkstars):
+#         return np.any(
+#             np.abs(
+#                 get_delta_pkstars(
+#                     pkstars,
+#                     lnks,
+#                     alkalinity,
+#                     m_cats_f,
+#                     m_anis_f,
+#                     m_neus_f,
+#                     z_cats,
+#                     z_anis,
+#                     params,
+#                 )
+#             )
+#             >= tol
+#         )
+
+#     def body(pkstars):
+#         pkstars = pkstars + get_delta_pkstars(
+#             pkstars,
+#             lnks,
+#             alkalinity,
+#             m_cats_f,
+#             m_anis_f,
+#             m_neus_f,
+#             z_cats,
+#             z_anis,
+#             params,
+#         )
+#         return pkstars
+
+#     delta = get_delta_pkstars(
+#         pkstars,
+#         lnks,
+#         alkalinity,
+#         m_cats_f,
+#         m_anis_f,
+#         m_neus_f,
+#         z_cats,
+#         z_anis,
+#         params,
+#     )
+#     print(delta)
+    
+#     while cond(pkstars):
+#         print(pkstars)
+#         pkstars = body(pkstars)
+
+#     # pkstars = lax.while_loop(cond, body, pkstars)
+#     return pkstars
+
+
+# Test inputs
+cations_f = ["Na"]
+m_cats_f = np.array([1.0 + 2250e-6])
+z_cats_f = np.array([+1])
+a_cats_f = np.array([+1])
+cations = [*cations_f, "H"]
+z_cats = [*z_cats_f, +1]
+anions_f = ["Cl"]
+m_anis_f = np.array([1.0])
+z_anis_f = np.array([-1])
+a_anis_f = np.array([-1])
+anions = [*anions_f, "HCO3", "CO3", "OH"]
+z_anis = [*z_anis_f, -1, -2, -1]
+neutrals_f = []
+m_neus_f = np.array([])
+a_neus_f = np.array([])
+neutrals = [*neutrals_f, "CO2"]
+totals = ["t_CO2"]
+m_tots = np.array([2000e-6])
+a_tots = np.array([0])
+reactions = ["k1", "k2", "kw"]
+pkstars = np.array([6.35, 10.33, 14.0])
+lnks = onp.array([6.35, 10.33, 14.0])
+
+# Workflow/testing
+alkalinity_ec = get_alkalinity_ec(
+    (m_cats_f, m_anis_f, m_neus_f, m_tots), (a_cats_f, a_anis_f, a_neus_f, a_tots)
+).item()
+pH_solved = solve_pH(alkalinity_ec, pkstars, m_tots).item()  # initial condition
+alkalinity_solved = alkalinity_pH(pH_solved, pkstars, m_tots)  # just to check
+molalities = pH_to_molalities(pH_solved, pkstars, m_tots, m_cats_f, m_anis_f, m_neus_f)
+params = pz.libraries.Seawater.get_parameters(cations, anions, neutrals, verbose=False)
+
+print("here we go")
+get_Gibbs_eq = get_Gibbs_equilibria(
+    pkstars, lnks, alkalinity_ec, m_cats_f, m_anis_f, m_neus_f, z_cats, z_anis, params
+)
+
+#%%
+from scipy.optimize import minimize, least_squares
+
+args = (lnks, alkalinity_ec, m_cats_f, m_anis_f, m_neus_f, z_cats, z_anis, params)
+
+print("here we go")
+sps = minimize(get_Gibbs_equilibria, lnks, args=args, method="Nelder-Mead",
+               options=dict(adaptive=True))
+sps_Gibbs = get_Gibbs_equilibria(sps["x"], *args)
+spls_Gibbs = get_Gibbs_equilibria(spls["x"], *args)
+
+# print("here we go")
+# grad_Gibbs_eq = grad_Gibbs_equilibria(
+#     pkstars, lnks, alkalinity_ec, m_cats_f, m_anis_f, m_neus_f, z_cats, z_anis, params
+# )
+# print("here we go")
+# delta_pks = get_delta_pkstars(
+#     pkstars, lnks, alkalinity_ec, m_cats_f, m_anis_f, m_neus_f, z_cats, z_anis, params
+# )
+
+
+# pkstars_solved = solve_pkstars(
+#     lnks, alkalinity_ec, m_cats_f, m_anis_f, m_neus_f, z_cats, z_anis, params
+# )
+# pH_final = solve_pH(alkalinity_ec, pkstars_solved, m_tots).item()
+# molalities_final = pH_to_molalities(
+#     pH_final, pkstars_solved, m_tots, m_cats_f, m_anis_f, m_neus_f
+# )

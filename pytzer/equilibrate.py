@@ -150,23 +150,23 @@ def Gibbs_H2O(ln_aw, m_H, ln_acf_H, m_OH, ln_acf_OH, ln_kH2O):
 #     )
 
 
-# def Gibbs_H2CO3(lnaw, mH, lnacfH, mHCO3, lnacfHCO3, mCO2, lnacfCO2, lnkH2CO3):
-#     """Evaluate the Gibbs energy for the H2CO3-bicarbonate equilibrium."""
-#     return (
-#         lnacfH
-#         + np.log(mH)
-#         + lnacfHCO3
-#         + np.log(mHCO3)
-#         - lnacfCO2
-#         - np.log(mCO2)
-#         - lnaw
-#         - lnkH2CO3
-#     )
+def Gibbs_H2CO3(lnaw, mH, lnacfH, mHCO3, lnacfHCO3, mCO2, lnacfCO2, lnkH2CO3):
+    """Evaluate the Gibbs energy for the H2CO3-bicarbonate equilibrium."""
+    return (
+        lnacfH
+        + np.log(mH)
+        + lnacfHCO3
+        + np.log(mHCO3)
+        - lnacfCO2
+        - np.log(mCO2)
+        - lnaw
+        - lnkH2CO3
+    )
 
 
-# def Gibbs_HCO3(mH, lnacfH, mHCO3, lnacfHCO3, mCO3, lnacfCO3, lnkHCO3):
-#     """Evaluate the Gibbs energy for the bicarbonate-carbonate equilibrium."""
-#     return lnacfH + np.log(mH) + lnacfCO3 + np.log(mCO3) - lnacfHCO3 - np.log(mHCO3) - lnkHCO3
+def Gibbs_HCO3(mH, lnacfH, mHCO3, lnacfHCO3, mCO3, lnacfCO3, lnkHCO3):
+    """Evaluate the Gibbs energy for the bicarbonate-carbonate equilibrium."""
+    return lnacfH + np.log(mH) + lnacfCO3 + np.log(mCO3) - lnacfHCO3 - np.log(mHCO3) - lnkHCO3
 
 
 # def Gibbs_BOH3(lnaw, lnacfBOH4, mBOH4, lnacfBOH3, mBOH3, lnacfH, mH, lnkBOH3):

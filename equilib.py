@@ -4,7 +4,7 @@ import pytzer as pz
 
 
 @jax.jit
-def get_alkalinity_ec(
+def get_alkalinity_ec_v2(
     Br=0.0,
     Ca=0.0,
     Cl=0.0,
@@ -94,7 +94,7 @@ def pH_to_molalities(pH, kstar_H2O):
 
 
 sm = pz.prepare.salinity_to_molalities_MFWM08(totals=["t_SO4", "t_HF"])
-alk = get_alkalinity_ec(**sm).item() * 1e6
+alk_v2 = get_alkalinity_ec_v2(**sm).item() * 1e6
 
 
 pH = 3.1
