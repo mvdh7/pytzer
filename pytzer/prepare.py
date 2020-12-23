@@ -36,3 +36,63 @@ def get_pytzer_args(solute_molalities):
         solutes_split["neutrals"],
     ) = split_solute_types(solutes, charges)
     return pytzer_args, solutes_split
+
+
+def salinity_to_molalities_MZF93(salinity, MgOH=False):
+    """Convert salinity (g/kg-sw) to molality for typical seawater, simplified
+    for the WM13 tris buffer model, following MZF93.
+    """
+    if MgOH:
+        mols = np.array([0.44516, 0.01077, 0.01058, 0.56912]) * salinity / 43.189
+        ions = np.array(["Na", "Ca", "K", "Cl"])
+        tots = np.array([0.02926, 0.05518]) * salinity / 43.189
+        eles = np.array(["t_HSO4", "t_Mg"])
+    else:
+        mols = (
+            np.array([0.44516, 0.05518, 0.01077, 0.01058, 0.56912]) * salinity / 43.189
+        )
+        ions = np.array(["Na", "Mg", "Ca", "K", "Cl"])
+        tots = np.array([0.02926]) * salinity / 43.189
+        eles = np.array(["t_HSO4"])
+    solute_molalities = {ion: mol for ion, mol in zip(ions, mols)}
+    solute_molalities.update({ele: tot for ele, tot in zip(eles, tots)})
+    return solute_molalities
+
+
+def salinity_to_molalities_MFWM08(salinity=35, totals=None):
+    """Convert salinity (g/kg-sw) to molality for standard seawater following MFWM08."""
+    solute_molalities = {
+        "Na": 0.4860597,
+        "Mg": 0.0547421,
+        "Ca": 0.0106568,
+        "K": 0.0105797,
+        "Sr": 0.0000940,
+        "Cl": 0.5657647,
+        "SO4": 0.0292643,
+        "HCO3": 0.0017803,
+        "Br": 0.0008728,
+        "CO3": 0.0002477,
+        "BOH4": 0.0001045,
+        "F": 0.0000708,
+        "OH": 0.0000082,
+        "BOH3": 0.0003258,
+        "CO2": 0.0000100,
+    }
+    if totals is not None:
+        if "t_HF" in totals:
+            t_HF = solute_molalities.pop("F")
+            solute_molalities.update({"t_HF": t_HF})
+        if "t_SO4" in totals:
+            t_SO4 = solute_molalities.pop("SO4")
+            solute_molalities.update({"t_SO4": t_SO4})
+        # solute_molalities.update({
+        #     "t_BOH3": sm["BOH3"] + sm["BOH4"],
+        #     "t_CO2": sm["CO2"] + sm["HCO3"] + sm["CO3"],
+        #     "t_HF": sm["F"],
+        #     "t_SO4": sm["SO4"],
+        # })
+    solute_molalities = {
+        solute: molality * salinity / 35
+        for solute, molality in solute_molalities.items()
+    }
+    return solute_molalities

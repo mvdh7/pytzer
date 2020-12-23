@@ -3,13 +3,41 @@ from jax import numpy as np, lax
 import pytzer as pz
 
 
-def get_alkalinity_ec(solute_molalities):
-    alkalinity = 0.0
-    if "Na" in solute_molalities:
-        alkalinity = alkalinity + solute_molalities["Na"]
-    if "Cl" in solute_molalities:
-        alkalinity = alkalinity - solute_molalities["Cl"]
-    return alkalinity
+@jax.jit
+def get_alkalinity_ec(
+    Br=0.0,
+    Ca=0.0,
+    Cl=0.0,
+    K=0.0,
+    Mg=0.0,
+    Na=0.0,
+    NO3=0.0,
+    Sr=0.0,
+    t_HF=0.0,
+    t_NH3=0.0,
+    t_NO2=0.0,
+    t_PO4=0.0,
+    t_SO4=0.0,
+    **kwargs
+):
+    """Total alkalinity from the explicit conservative expression of WZK07."""
+    alkalinity_ec = (
+        Na
+        + 2 * Mg
+        + 2 * Ca
+        + K
+        + 2 * Sr
+        - Cl
+        - Br
+        - NO3
+        + t_NH3
+        - t_PO4
+        - 2 * t_NO2
+        - 2 * t_SO4
+        - t_HF
+    )
+    return alkalinity_ec
+
 
 @jax.jit
 def get_alkalinity_from_pH(pH, kstar_H2O):
@@ -25,7 +53,9 @@ def grad_alkalinity_from_pH(pH, kstar_H2O):
 @jax.jit
 def get_delta_pH(pH, alkalinity, kstar_H2O):
     grad = grad_alkalinity_from_pH(pH, kstar_H2O)
-    return np.where(grad == 0, 0.0, (alkalinity - get_alkalinity_from_pH(pH, kstar_H2O)) / grad)
+    return np.where(
+        grad == 0, 0.0, (alkalinity - get_alkalinity_from_pH(pH, kstar_H2O)) / grad
+    )
 
 
 @jax.jit
@@ -61,6 +91,10 @@ def pH_to_molalities(pH, kstar_H2O):
     Cl = 1.2  # nope
     Na = 1.0
     return np.array([H, Na]), np.array([OH, Cl]), np.array([])
+
+
+sm = pz.prepare.salinity_to_molalities_MFWM08(totals=["t_SO4", "t_HF"])
+alk = get_alkalinity_ec(**sm).item() * 1e6
 
 
 pH = 3.1
