@@ -61,7 +61,7 @@ def pH_to_molalities(pH, pkstars, m_tots, m_cats_f, m_anis_f, m_neus_f):
 
 
 @jax.jit
-def _get_Gibbs_equilibria(
+def get_Gibbs_equilibria(
     pkstars, lnks, alkalinity, m_cats_f, m_anis_f, m_neus_f, z_cats, z_anis, params
 ):
     # Solve for pH
@@ -91,16 +91,16 @@ def _get_Gibbs_equilibria(
     gHCO3 = pz.equilibrate.Gibbs_HCO3(
         H, ln_acf_H, HCO3, ln_acf_HCO3, CO3, ln_acf_CO3, lnk2
     )
-    g_total = gH2O ** 2 + gH2CO3 ** 2 + gHCO3 ** 2
+    g_total = np.array([gH2O, gH2CO3, gHCO3])
     return g_total
 
 
-def get_Gibbs_equilibria(
-    pkstars, lnks, alkalinity, m_cats_f, m_anis_f, m_neus_f, z_cats, z_anis, params
-):
-    return _get_Gibbs_equilibria(
-        pkstars, lnks, alkalinity, m_cats_f, m_anis_f, m_neus_f, z_cats, z_anis, params
-    ).item()
+# def get_Gibbs_equilibria(
+#     pkstars, lnks, alkalinity, m_cats_f, m_anis_f, m_neus_f, z_cats, z_anis, params
+# ):
+#     return _get_Gibbs_equilibria(
+#         pkstars, lnks, alkalinity, m_cats_f, m_anis_f, m_neus_f, z_cats, z_anis, params
+#     ).item()
 
 
 # @jax.jit
@@ -175,7 +175,7 @@ def get_Gibbs_equilibria(
 #         params,
 #     )
 #     print(delta)
-    
+
 #     while cond(pkstars):
 #         print(pkstars)
 #         pkstars = body(pkstars)
@@ -206,7 +206,7 @@ m_tots = np.array([2000e-6])
 a_tots = np.array([0])
 reactions = ["k1", "k2", "kw"]
 pkstars = np.array([6.35, 10.33, 14.0])
-lnks = onp.array([6.35, 10.33, 14.0])
+lnks = np.log(10.0 ** -pkstars)
 
 # Workflow/testing
 alkalinity_ec = get_alkalinity_ec(
@@ -223,30 +223,17 @@ get_Gibbs_eq = get_Gibbs_equilibria(
 )
 
 #%%
-from scipy.optimize import minimize, least_squares
+from scipy import optimize
+import copy
 
 args = (lnks, alkalinity_ec, m_cats_f, m_anis_f, m_neus_f, z_cats, z_anis, params)
 
+x0 = copy.deepcopy(pkstars)
+
 print("here we go")
-sps = minimize(get_Gibbs_equilibria, lnks, args=args, method="Nelder-Mead",
-               options=dict(adaptive=True))
-sps_Gibbs = get_Gibbs_equilibria(sps["x"], *args)
-spls_Gibbs = get_Gibbs_equilibria(spls["x"], *args)
-
-# print("here we go")
-# grad_Gibbs_eq = grad_Gibbs_equilibria(
-#     pkstars, lnks, alkalinity_ec, m_cats_f, m_anis_f, m_neus_f, z_cats, z_anis, params
-# )
-# print("here we go")
-# delta_pks = get_delta_pkstars(
-#     pkstars, lnks, alkalinity_ec, m_cats_f, m_anis_f, m_neus_f, z_cats, z_anis, params
-# )
-
-
-# pkstars_solved = solve_pkstars(
-#     lnks, alkalinity_ec, m_cats_f, m_anis_f, m_neus_f, z_cats, z_anis, params
-# )
-# pH_final = solve_pH(alkalinity_ec, pkstars_solved, m_tots).item()
-# molalities_final = pH_to_molalities(
-#     pH_final, pkstars_solved, m_tots, m_cats_f, m_anis_f, m_neus_f
-# )
+pkstars_solved = optimize.root(get_Gibbs_equilibria, x0, args=args)["x"]
+sps_Gibbs = get_Gibbs_equilibria(pkstars_solved, *args)
+pH_final = solve_pH(alkalinity_ec, pkstars_solved, m_tots).item()
+molalities_final = pH_to_molalities(
+    pH_final, pkstars_solved, m_tots, m_cats_f, m_anis_f, m_neus_f
+)
