@@ -1,10 +1,17 @@
-import copy, jax, pytzer as pz, numpy as onp
+import copy, jax, pytzer as pz
 from jax import numpy as np, lax
+from scipy import optimize
 
 
 def get_alkalinity_ec(molality_args, alkalinity_args):
     return np.sum(
-        np.array([m * a for m, a in zip(molality_args, alkalinity_args) if len(m) > 0])
+        np.array(
+            [
+                np.sum(m * a)
+                for m, a in zip(molality_args, alkalinity_args)
+                if len(m) > 0
+            ]
+        )
     )
 
 
@@ -76,8 +83,8 @@ def get_Gibbs_equilibria(
         m_cats, m_anis, m_neus, z_cats, z_anis, **params
     )
     # Extract outputs
-    _, H = m_cats
-    _, ln_acf_H = ln_acfs[0]
+    H = m_cats[4]
+    ln_acf_H = ln_acfs[0][4]
     _, HCO3, CO3, OH = m_anis
     _, ln_acf_HCO3, ln_acf_CO3, ln_acf_OH = ln_acfs[1]
     (CO2,) = m_neus
@@ -184,15 +191,15 @@ def get_Gibbs_equilibria(
 #     return pkstars
 
 
-# Test inputs
-cations_f = ["Na"]
-m_cats_f = np.array([1.0 + 2250e-6])
-z_cats_f = np.array([+1])
-a_cats_f = np.array([+1])
+#%% Test inputs
+cations_f = ["Na", "Mg", "Ca"]
+m_cats_f = np.array([1.0 + 2250e-6, 0.5, 0.5])
+z_cats_f = np.array([+1, +2, +2])
+a_cats_f = np.array([+1, +2, +2])
 cations = [*cations_f, "H"]
 z_cats = [*z_cats_f, +1]
 anions_f = ["Cl"]
-m_anis_f = np.array([1.0])
+m_anis_f = np.array([3.0])
 z_anis_f = np.array([-1])
 a_anis_f = np.array([-1])
 anions = [*anions_f, "HCO3", "CO3", "OH"]
@@ -222,16 +229,13 @@ get_Gibbs_eq = get_Gibbs_equilibria(
     pkstars, lnks, alkalinity_ec, m_cats_f, m_anis_f, m_neus_f, z_cats, z_anis, params
 )
 
-#%%
-from scipy import optimize
-import copy
-
+# Solving
 args = (lnks, alkalinity_ec, m_cats_f, m_anis_f, m_neus_f, z_cats, z_anis, params)
-
 x0 = copy.deepcopy(pkstars)
 
 print("here we go")
-pkstars_solved = optimize.root(get_Gibbs_equilibria, x0, args=args)["x"]
+pkstars_optresult = optimize.root(get_Gibbs_equilibria, x0, args=args, method="hybr")
+pkstars_solved = pkstars_optresult["x"]
 sps_Gibbs = get_Gibbs_equilibria(pkstars_solved, *args)
 pH_final = solve_pH(alkalinity_ec, pkstars_solved, m_tots).item()
 molalities_final = pH_to_molalities(
