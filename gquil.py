@@ -224,7 +224,7 @@ alkalinity_solved = alkalinity_pH(pH_solved, pkstars, m_tots)  # just to check
 molalities = pH_to_molalities(pH_solved, pkstars, m_tots, m_cats_f, m_anis_f, m_neus_f)
 params = pz.libraries.Seawater.get_parameters(cations, anions, neutrals, verbose=False)
 
-print("here we go")
+print("here we go - warm-up")
 go = time.time()
 get_Gibbs_eq = get_Gibbs_equilibria(
     pkstars, lnks, alkalinity_ec, m_cats_f, m_anis_f, m_neus_f, z_cats, z_anis, params
@@ -232,7 +232,7 @@ get_Gibbs_eq = get_Gibbs_equilibria(
 print(time.time() - go)
 
 # Solving
-print("here we go")
+print("here we go - solver")
 go = time.time()
 args = (lnks, alkalinity_ec, m_cats_f, m_anis_f, m_neus_f, z_cats, z_anis, params)
 x0 = copy.deepcopy(pkstars)
