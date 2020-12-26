@@ -82,13 +82,13 @@ def get_Gibbs_equilibria(
     ln_acfs = pz.model.log_activity_coefficients_map(
         m_cats, m_anis, m_neus, z_cats, z_anis, **params
     )
-    # Extract outputs
-    H = m_cats[4]
-    ln_acf_H = ln_acfs[0][4]
-    _, HCO3, CO3, OH = m_anis
-    _, ln_acf_HCO3, ln_acf_CO3, ln_acf_OH = ln_acfs[1]
-    (CO2,) = m_neus
-    (ln_acf_CO2,) = ln_acfs[2]
+    # Extract outputs - BRITTLE!
+    H = m_cats[-1]  # BRITTLE!
+    ln_acf_H = ln_acfs[0][-1]  # BRITTLE!
+    _, _, HCO3, CO3, OH = m_anis  # BRITTLE!
+    _, _, ln_acf_HCO3, ln_acf_CO3, ln_acf_OH = ln_acfs[1]  # BRITTLE!
+    (CO2,) = m_neus  # BRITTLE!
+    (ln_acf_CO2,) = ln_acfs[2]  # BRITTLE!
     # Get equilibria
     lnk1, lnk2, lnkw = lnks
     gH2O = pz.equilibrate.Gibbs_H2O(ln_aw, H, ln_acf_H, OH, ln_acf_OH, lnkw)
@@ -192,16 +192,16 @@ def get_Gibbs_equilibria(
 
 
 #%% Test inputs
-cations_f = ["Na", "Mg", "Ca"]
-m_cats_f = np.array([1.0 + 2250e-6, 0.5, 0.5])
-z_cats_f = np.array([+1, +2, +2])
-a_cats_f = np.array([+1, +2, +2])
+cations_f = ["Na", "Mg", "Ca", "K", "Sr"]
+m_cats_f = np.array([1.0 + 2250e-6, 0.5, 0.5, 0.1, 0.2])
+z_cats_f = np.array([+1, +2, +2, +1, +2])
+a_cats_f = np.array([+1, +2, +2, +1, +2])
 cations = [*cations_f, "H"]
 z_cats = np.array([*z_cats_f, +1])
-anions_f = ["Cl"]
-m_anis_f = np.array([3.0])
-z_anis_f = np.array([-1])
-a_anis_f = np.array([-1])
+anions_f = ["Cl", "Br"]
+m_anis_f = np.array([3.0, 0.5])
+z_anis_f = np.array([-1, -1])
+a_anis_f = np.array([-1, -1])
 anions = [*anions_f, "HCO3", "CO3", "OH"]
 z_anis = np.array([*z_anis_f, -1, -2, -1])
 neutrals_f = []
