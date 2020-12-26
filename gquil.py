@@ -17,12 +17,13 @@ def get_alkalinity_ec(molality_args, alkalinity_args):
 
 def alkalinity_pH(pH, pkstars, m_tots):
     H = 10.0 ** -pH
-    k1, k2, kw, kB = 10.0 ** -pkstars
-    t_CO2, t_BOH3 = m_tots
+    k1, k2, kw, kB, kSO4 = 10.0 ** -pkstars
+    t_CO2, t_BOH3, t_SO4 = m_tots
     alk_CO2 = t_CO2 * (2 * k1 * k2 + k1 * H) / (H ** 2 + k1 * H + k1 * k2)
     alk_w = kw / H - H
     alk_BOH3 = t_BOH3 * kB / (kB + H)
-    return alk_CO2 + alk_BOH3 + alk_w
+    alk_HSO4 = -t_SO4 / (1 + kSO4 / H)
+    return alk_CO2 + alk_BOH3 + alk_w + alk_HSO4
 
 
 @jax.jit
@@ -57,17 +58,19 @@ def solve_pH(alkalinity, pkstars, m_tots):
 @jax.jit
 def pH_to_molalities(pH, pkstars, m_tots, m_cats_f, m_anis_f, m_neus_f):
     H = 10.0 ** -pH
-    k1, k2, kw, kB = 10.0 ** -pkstars
-    t_CO2, t_BOH3 = m_tots
+    k1, k2, kw, kB, kSO4 = 10.0 ** -pkstars
+    t_CO2, t_BOH3, t_SO4 = m_tots
     CO2 = t_CO2 * H ** 2 / (H ** 2 + k1 * H + k1 * k2)
     HCO3 = t_CO2 * k1 * H / (H ** 2 + k1 * H + k1 * k2)
     CO3 = t_CO2 * k1 * k2 / (H ** 2 + k1 * H + k1 * k2)
     BOH4 = t_BOH3 * kB / (kB + H)
-    BOH3 = t_BOH3 - BOH4
+    BOH3 = t_BOH3 - BOH4  # TODO switch to get this from H instead
     OH = kw / H
+    HSO4 = t_SO4 / (1 + kSO4 / H)
+    SO4 = t_SO4 - HSO4
     return (
         np.array([*m_cats_f, H]),
-        np.array([*m_anis_f, HCO3, CO3, OH, BOH4]),
+        np.array([*m_anis_f, HCO3, CO3, OH, BOH4, HSO4, SO4]),
         np.array([*m_neus_f, CO2, BOH3]),
     )
 
@@ -90,12 +93,23 @@ def get_Gibbs_equilibria(
     # Extract outputs - BRITTLE!
     H = m_cats[-1]  # BRITTLE!
     ln_acf_H = ln_acfs[0][-1]  # BRITTLE!
-    _, _, HCO3, CO3, OH, BOH4 = m_anis  # BRITTLE!
-    _, _, ln_acf_HCO3, ln_acf_CO3, ln_acf_OH, ln_acf_BOH4 = ln_acfs[1]  # BRITTLE!
+    _, _, HCO3, CO3, OH, BOH4, HSO4, SO4 = m_anis  # BRITTLE!
+    (
+        _,
+        _,
+        ln_acf_HCO3,
+        ln_acf_CO3,
+        ln_acf_OH,
+        ln_acf_BOH4,
+        ln_acf_HSO4,
+        ln_acf_SO4,
+    ) = ln_acfs[
+        1
+    ]  # BRITTLE!
     CO2, BOH3 = m_neus  # BRITTLE!
     ln_acf_CO2, ln_acf_BOH3 = ln_acfs[2]  # BRITTLE!
     # Get equilibria
-    lnk1, lnk2, lnkw, lnkBOH3 = lnks
+    lnk1, lnk2, lnkw, lnkBOH3, lnkHSO4 = lnks
     gH2O = pz.equilibrate.Gibbs_H2O(ln_aw, H, ln_acf_H, OH, ln_acf_OH, lnkw)
     gH2CO3 = pz.equilibrate.Gibbs_H2CO3(
         ln_aw, H, ln_acf_H, HCO3, ln_acf_HCO3, CO2, ln_acf_CO2, lnk1
@@ -106,32 +120,35 @@ def get_Gibbs_equilibria(
     gBOH3 = pz.equilibrate.Gibbs_BOH3(
         ln_aw, ln_acf_BOH4, BOH4, ln_acf_BOH3, BOH3, ln_acf_H, H, lnkBOH3
     )
-    g_total = np.array([gH2O, gH2CO3, gHCO3, gBOH3])
+    gSO4 = pz.equilibrate.Gibbs_HSO4(
+        H, ln_acf_H, SO4, ln_acf_SO4, HSO4, ln_acf_HSO4, lnkHSO4
+    )
+    g_total = np.array([gH2O, gH2CO3, gHCO3, gBOH3, gSO4])
     return g_total
 
 
 #%% Test inputs
 cations_f = ["Na", "Mg", "Ca", "K", "Sr"]
-m_cats_f = np.array([0.48, 0.05, 0.01, 0.01, 0.0001])
+m_cats_f = np.array([0.52, 0.06, 0.01, 0.01, 0.0001])
 z_cats_f = np.array([+1, +2, +2, +1, +2])
 a_cats_f = np.array([+1, +2, +2, +1, +2])
 cations = [*cations_f, "H"]
 z_cats = np.array([*z_cats_f, +1])
 anions_f = ["Cl", "Br"]
-m_anis_f = np.array([0.6069499, 0.001])
+m_anis_f = np.array([0.60695, 0.001])
 z_anis_f = np.array([-1, -1])
 a_anis_f = np.array([-1, -1])
-anions = [*anions_f, "HCO3", "CO3", "OH", "BOH4"]
-z_anis = np.array([*z_anis_f, -1, -2, -1, -1])
+anions = [*anions_f, "HCO3", "CO3", "OH", "BOH4", "HSO4", "SO4"]
+z_anis = np.array([*z_anis_f, -1, -2, -1, -1, -1, -2])
 neutrals_f = []
 m_neus_f = np.array([])
 a_neus_f = np.array([])
 neutrals = [*neutrals_f, "CO2", "BOH3"]
-totals = ["t_CO2", "t_BOH3"]
-m_tots = np.array([2000e-6, 400e-6])
-a_tots = np.array([0.0, 0.0])
-reactions = ["k1", "k2", "kw", "kBOH3"]
-pkstars = np.array([6.35, 10.33, 14.0, 8.6])
+totals = ["t_CO2", "t_BOH3", "t_SO4"]
+m_tots = np.array([2000e-6, 400e-6, 0.03])
+a_tots = np.array([0.0, 0.0, -2.0])
+reactions = ["k1", "k2", "kw", "kBOH3", "kSO4"]
+pkstars = np.array([6.35, 10.33, 14.0, 8.6, 1.0])
 lnks = np.log(10.0 ** -pkstars)
 
 # Workflow/testing

@@ -133,9 +133,17 @@ def Gibbs_H2O(ln_aw, m_H, ln_acf_H, m_OH, ln_acf_OH, ln_kH2O):
     return ln_acf_H + np.log(m_H) + ln_acf_OH + np.log(m_OH) - ln_aw - ln_kH2O
 
 
-# def Gibbs_HSO4(mH, lnacfH, mSO4, lnacfSO4, mHSO4, lnacfHSO4, lnkHSO4):
-#     """Evaluate the Gibbs energy for the bisulfate-sulfate equilibrium."""
-#     return lnacfH + np.log(mH) + lnacfSO4 + np.log(mSO4) - lnacfHSO4 - np.log(mHSO4) - lnkHSO4
+def Gibbs_HSO4(mH, lnacfH, mSO4, lnacfSO4, mHSO4, lnacfHSO4, lnkHSO4):
+    """Evaluate the Gibbs energy for the bisulfate-sulfate equilibrium."""
+    return (
+        lnacfH
+        + np.log(mH)
+        + lnacfSO4
+        + np.log(mSO4)
+        - lnacfHSO4
+        - np.log(mHSO4)
+        - lnkHSO4
+    )
 
 
 # def Gibbs_Mg(mMg, lnacfMg, mMgOH, lnacfMgOH, mOH, lnacfOH, lnkMg):
