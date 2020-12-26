@@ -112,13 +112,13 @@ def get_Gibbs_equilibria(
 
 #%% Test inputs
 cations_f = ["Na", "Mg", "Ca", "K", "Sr"]
-m_cats_f = np.array([1.0 + 2250e-6, 0.5, 0.5, 0.1, 0.2])
+m_cats_f = np.array([0.48, 0.05, 0.01, 0.01, 0.0001])
 z_cats_f = np.array([+1, +2, +2, +1, +2])
 a_cats_f = np.array([+1, +2, +2, +1, +2])
 cations = [*cations_f, "H"]
 z_cats = np.array([*z_cats_f, +1])
 anions_f = ["Cl", "Br"]
-m_anis_f = np.array([3.0, 0.5])
+m_anis_f = np.array([0.6069499, 0.001])
 z_anis_f = np.array([-1, -1])
 a_anis_f = np.array([-1, -1])
 anions = [*anions_f, "HCO3", "CO3", "OH", "BOH4"]
