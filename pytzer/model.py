@@ -338,6 +338,20 @@ def log_activity_water(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters):
 
 
 @jax.jit
+def log_activity_water_map(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters):
+    """Calculate the natural log of the water activity."""
+    return (
+        jax.grad(
+            lambda ww: ww
+            * Gibbs_map(
+                m_cats / ww, m_anis / ww, m_neus / ww, z_cats, z_anis, **parameters
+            )
+        )(1.0)
+        - (np.sum(m_cats) + np.sum(m_anis) + np.sum(m_neus))
+    ) * Mw
+
+
+@jax.jit
 def activity_water(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters):
     """Calculate the water activity."""
     return np.exp(

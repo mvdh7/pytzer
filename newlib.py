@@ -19,7 +19,7 @@ solutes = {
     "CO2": 0.2,
 }
 
-# molalities, charges = pz.get_molalities_charges(solutes)
+_, molalities, charges = pz.prepare.expand_solute_molalities(solutes)
 args, ss = pz.get_pytzer_args(solutes)
 params = plib.get_parameters(**ss, verbose=False)
 
@@ -56,3 +56,19 @@ print(time.time() - go)
 # plib.set_func_J(pz)
 # acf = pz.activity_coefficients(*args, **params)
 # print(acf)
+
+#%%
+from jax import numpy as np
+
+
+def testsplit(molalities, charges):
+    def f_m_cats(molalities):
+        return np.extract(charges > 0, molalities)
+
+    m_cats = jax.jit(f_m_cats)(molalities)
+    return m_cats
+
+
+# testsplit = jax.jit(testsplit)
+test = testsplit(molalities, charges)
+print(test)

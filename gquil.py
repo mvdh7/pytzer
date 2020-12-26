@@ -1,4 +1,4 @@
-import copy, jax, pytzer as pz
+import copy, jax, pytzer as pz, time
 from jax import numpy as np, lax
 from scipy import optimize
 
@@ -76,10 +76,10 @@ def get_Gibbs_equilibria(
     m_cats, m_anis, m_neus = pH_to_molalities(
         pH, pkstars, m_tots, m_cats_f, m_anis_f, m_neus_f
     )
-    ln_aw = pz.model.log_activity_water(
+    ln_aw = pz.model.log_activity_water_map(
         m_cats, m_anis, m_neus, z_cats, z_anis, **params
     )
-    ln_acfs = pz.model.log_activity_coefficients(
+    ln_acfs = pz.model.log_activity_coefficients_map(
         m_cats, m_anis, m_neus, z_cats, z_anis, **params
     )
     # Extract outputs
@@ -197,13 +197,13 @@ m_cats_f = np.array([1.0 + 2250e-6, 0.5, 0.5])
 z_cats_f = np.array([+1, +2, +2])
 a_cats_f = np.array([+1, +2, +2])
 cations = [*cations_f, "H"]
-z_cats = [*z_cats_f, +1]
+z_cats = np.array([*z_cats_f, +1])
 anions_f = ["Cl"]
 m_anis_f = np.array([3.0])
 z_anis_f = np.array([-1])
 a_anis_f = np.array([-1])
 anions = [*anions_f, "HCO3", "CO3", "OH"]
-z_anis = [*z_anis_f, -1, -2, -1]
+z_anis = np.array([*z_anis_f, -1, -2, -1])
 neutrals_f = []
 m_neus_f = np.array([])
 a_neus_f = np.array([])
@@ -225,16 +225,19 @@ molalities = pH_to_molalities(pH_solved, pkstars, m_tots, m_cats_f, m_anis_f, m_
 params = pz.libraries.Seawater.get_parameters(cations, anions, neutrals, verbose=False)
 
 print("here we go")
+go = time.time()
 get_Gibbs_eq = get_Gibbs_equilibria(
     pkstars, lnks, alkalinity_ec, m_cats_f, m_anis_f, m_neus_f, z_cats, z_anis, params
 )
+print(time.time() - go)
 
 # Solving
+print("here we go")
+go = time.time()
 args = (lnks, alkalinity_ec, m_cats_f, m_anis_f, m_neus_f, z_cats, z_anis, params)
 x0 = copy.deepcopy(pkstars)
-
-print("here we go")
 pkstars_optresult = optimize.root(get_Gibbs_equilibria, x0, args=args, method="hybr")
+print(time.time() - go)
 pkstars_solved = pkstars_optresult["x"]
 sps_Gibbs = get_Gibbs_equilibria(pkstars_solved, *args)
 pH_final = solve_pH(alkalinity_ec, pkstars_solved, m_tots).item()
