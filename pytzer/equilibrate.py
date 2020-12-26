@@ -166,21 +166,29 @@ def Gibbs_H2CO3(lnaw, mH, lnacfH, mHCO3, lnacfHCO3, mCO2, lnacfCO2, lnkH2CO3):
 
 def Gibbs_HCO3(mH, lnacfH, mHCO3, lnacfHCO3, mCO3, lnacfCO3, lnkHCO3):
     """Evaluate the Gibbs energy for the bicarbonate-carbonate equilibrium."""
-    return lnacfH + np.log(mH) + lnacfCO3 + np.log(mCO3) - lnacfHCO3 - np.log(mHCO3) - lnkHCO3
+    return (
+        lnacfH
+        + np.log(mH)
+        + lnacfCO3
+        + np.log(mCO3)
+        - lnacfHCO3
+        - np.log(mHCO3)
+        - lnkHCO3
+    )
 
 
-# def Gibbs_BOH3(lnaw, lnacfBOH4, mBOH4, lnacfBOH3, mBOH3, lnacfH, mH, lnkBOH3):
-#     """Evaluate the Gibbs energy for the boric acid equilibrium."""
-#     return (
-#         lnacfBOH4
-#         + np.log(mBOH4)
-#         + lnacfH
-#         + np.log(mH)
-#         - lnacfBOH3
-#         - np.log(mBOH3)
-#         - lnaw
-#         - lnkBOH3
-#     )
+def Gibbs_BOH3(lnaw, lnacfBOH4, mBOH4, lnacfBOH3, mBOH3, lnacfH, mH, lnkBOH3):
+    """Evaluate the Gibbs energy for the boric acid equilibrium."""
+    return (
+        lnacfBOH4
+        + np.log(mBOH4)
+        + lnacfH
+        + np.log(mH)
+        - lnacfBOH3
+        - np.log(mBOH3)
+        - lnaw
+        - lnkBOH3
+    )
 
 
 # def Gibbs_components(
