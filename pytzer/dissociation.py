@@ -112,26 +112,40 @@ def MgOH_MP98(T=298.15):
     return lnkMg
 
 
-def MP98_eq23(T, A, B, C, D):
-    """Equation (23) of MP98."""
+def _MP98_eq23(T, A, B, C, D):
+    """Equation (23) of MP98.  Returns ln(K)."""
     return A + B / T + C * np.log(T) + D * T
 
 
 def H2CO3_MP98(T=298.15):
     """H2CO3 dissociation [MP98 following M79]."""
-    return MP98_eq23(T, 290.9097, -14554.21, -45.0575, 0)
+    return _MP98_eq23(T, 290.9097, -14554.21, -45.0575, 0)
 
 
 def HCO3_MP98(T=298.15):
     """HCO3 dissociation [MP98 following M79]."""
-    return MP98_eq23(T, 207.6548, -11843.79, -33.6485, 0)
+    return _MP98_eq23(T, 207.6548, -11843.79, -33.6485, 0)
 
 
 def BOH3_M79(T=298.15):
     """Boric acid dissociation [MP98 following M79]."""
-    return MP98_eq23(T, 148.0248, -8966.901, -24.4344, 0)
+    return _MP98_eq23(T, 148.0248, -8966.901, -24.4344, 0)
 
 
 def HF_MP98(T=298.15):
-    """Hydrogen fluoride dissociation [MP98 following DR98a]."""
-    return MP98_eq23(T, -12.641, 1590.2, 0, 0)
+    """Hydrogen fluoride dissociation [MP98 following DR79a]."""
+    return _MP98_eq23(T, -12.641, 1590.2, 0, 0)
+
+
+def _MP98_eq24(T, A=0, B=0, C=0):
+    """Equation (24) of MP98.  Returns pK."""
+    return A + B / T + C * T
+
+
+def pK_MgF(T=298.15):
+    """MgF+ formation [MP98 following MR97]."""
+    return _MP98_eq24(T, A=3.504, B=-501.6)
+
+def pK_CaF(T=298.15):
+    """CaF+ formation [MP98 following MR97]."""
+    return _MP98_eq24(T, A=3.014, B=-501.6)

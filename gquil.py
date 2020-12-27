@@ -65,12 +65,12 @@ def pH_to_molalities(pH, pkstars, m_tots, m_cats_f, m_anis_f, m_neus_f):
     HCO3 = t_CO2 * k1 * H / (H ** 2 + k1 * H + k1 * k2)
     CO3 = t_CO2 * k1 * k2 / (H ** 2 + k1 * H + k1 * k2)
     BOH4 = t_BOH3 * kB / (kB + H)
-    BOH3 = t_BOH3 - BOH4  # TODO switch to get this from H instead
+    BOH3 = t_BOH3 / (1 + kB / H)
     OH = kw / H
     HSO4 = t_SO4 / (1 + kSO4 / H)
-    SO4 = t_SO4 - HSO4  # TODO switch to get this from H instead
+    SO4 = t_SO4 * kSO4 / (kSO4 + H)
     HF = t_HF / (1 + kHF / H)
-    F = t_HF - HF  # TODO switch to get this from H instead
+    F = t_HF * kHF / (kHF + H)
     return (
         np.array([*m_cats_f, H]),
         np.array([*m_anis_f, OH, HCO3, CO3, BOH4, HSO4, SO4, F]),
