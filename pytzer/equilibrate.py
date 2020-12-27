@@ -199,6 +199,11 @@ def Gibbs_BOH3(lnaw, lnacfBOH4, mBOH4, lnacfBOH3, mBOH3, lnacfH, mH, lnkBOH3):
     )
 
 
+def Gibbs_HF(mH, lnacfH, mF, lnacfF, mHF, lnacfHF, lnkHF):
+    """Evaluate the Gibbs energy of the hydrogen fluoride equilibrium."""
+    return lnacfH + np.log(mH) + lnacfF + np.log(mF) - lnacfHF - np.log(mHF) - lnkHF
+
+
 # def Gibbs_components(
 #     eqstate,
 #     tots1,

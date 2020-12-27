@@ -130,3 +130,8 @@ def HCO3_MP98(T=298.15):
 def BOH3_M79(T=298.15):
     """Boric acid dissociation [MP98 following M79]."""
     return MP98_eq23(T, 148.0248, -8966.901, -24.4344, 0)
+
+
+def HF_MP98(T=298.15):
+    """Hydrogen fluoride dissociation [MP98 following DR98a]."""
+    return MP98_eq23(T, -12.641, 1590.2, 0, 0)
