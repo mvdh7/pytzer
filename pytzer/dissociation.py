@@ -113,6 +113,7 @@ def MgOH_MP98(T=298.15):
 
 
 def MP98_eq23(T, A, B, C, D):
+    """Equation (23) of MP98."""
     return A + B / T + C * np.log(T) + D * T
 
 
