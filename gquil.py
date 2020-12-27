@@ -70,7 +70,7 @@ def pH_to_molalities(pH, pkstars, m_tots, m_cats_f, m_anis_f, m_neus_f):
     SO4 = t_SO4 - HSO4
     return (
         np.array([*m_cats_f, H]),
-        np.array([*m_anis_f, HCO3, CO3, OH, BOH4, HSO4, SO4]),
+        np.array([*m_anis_f, OH, HCO3, CO3, BOH4, HSO4, SO4]),
         np.array([*m_neus_f, CO2, BOH3]),
     )
 
@@ -91,23 +91,19 @@ def get_Gibbs_equilibria(
         m_cats, m_anis, m_neus, z_cats, z_anis, **params
     )
     # Extract outputs - BRITTLE!
-    H = m_cats[-1]  # BRITTLE!
-    ln_acf_H = ln_acfs[0][-1]  # BRITTLE!
-    _, _, HCO3, CO3, OH, BOH4, HSO4, SO4 = m_anis  # BRITTLE!
+    H = m_cats[-1]
+    ln_acf_H = ln_acfs[0][-1]
+    OH, HCO3, CO3, BOH4, HSO4, SO4 = m_anis[-6:]
     (
-        _,
-        _,
+        ln_acf_OH,
         ln_acf_HCO3,
         ln_acf_CO3,
-        ln_acf_OH,
         ln_acf_BOH4,
         ln_acf_HSO4,
         ln_acf_SO4,
-    ) = ln_acfs[
-        1
-    ]  # BRITTLE!
-    CO2, BOH3 = m_neus  # BRITTLE!
-    ln_acf_CO2, ln_acf_BOH3 = ln_acfs[2]  # BRITTLE!
+    ) = ln_acfs[1][-6:]
+    CO2, BOH3 = m_neus
+    ln_acf_CO2, ln_acf_BOH3 = ln_acfs[2]
     # Get equilibria
     lnk1, lnk2, lnkw, lnkBOH3, lnkHSO4 = lnks
     gH2O = pz.equilibrate.Gibbs_H2O(ln_aw, H, ln_acf_H, OH, ln_acf_OH, lnkw)
@@ -138,8 +134,8 @@ anions_f = ["Cl", "Br"]
 m_anis_f = np.array([0.60695, 0.001])
 z_anis_f = np.array([-1, -1])
 a_anis_f = np.array([-1, -1])
-anions = [*anions_f, "HCO3", "CO3", "OH", "BOH4", "HSO4", "SO4"]
-z_anis = np.array([*z_anis_f, -1, -2, -1, -1, -1, -2])
+anions = [*anions_f, "OH", "HCO3", "CO3", "BOH4", "HSO4", "SO4"]
+z_anis = np.array([*z_anis_f, -1, -1, -2, -1, -1, -2])
 neutrals_f = []
 m_neus_f = np.array([])
 a_neus_f = np.array([])
@@ -148,8 +144,16 @@ totals = ["t_CO2", "t_BOH3", "t_SO4"]
 m_tots = np.array([2000e-6, 400e-6, 0.03])
 a_tots = np.array([0.0, 0.0, -2.0])
 reactions = ["k1", "k2", "kw", "kBOH3", "kSO4"]
-pkstars = np.array([6.35, 10.33, 14.0, 8.6, 1.0])
-lnks = np.log(10.0 ** -pkstars)
+lnks = np.array(
+    [
+        pz.dissociation.H2CO3_MP98(),
+        pz.dissociation.HCO3_MP98(),
+        pz.dissociation.H2O_MF(),
+        pz.dissociation.BOH3_M79(),
+        pz.dissociation.HSO4_CRP94(),
+    ]
+)
+pkstars = -np.log10(np.exp(lnks))
 
 # Workflow/testing
 alkalinity_ec = get_alkalinity_ec(
