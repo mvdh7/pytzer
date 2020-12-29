@@ -4,28 +4,32 @@ from jax import numpy as np
 
 def lh(h_f, totals, k_constants):
     h, f = h_f
-    t_Mg = totals[1]
-    k_H2O, k_MgOH, k_HF, k_MgF, _ = k_constants
+    _, t_Mg, _, t_CO2 = totals
+    k_H2O, k_MgOH, k_HF, k_MgF, _, k_C1, k_C2 = k_constants
     Mg = t_Mg / (1 + k_MgOH / h + k_MgF * f)
-    return k_H2O / h - h + k_MgOH * Mg / h - h * f / k_HF
+    HCO3 = t_CO2 * k_C1 * h / (h ** 2 + k_C1 * h + k_C1 * k_C2)
+    CO3 = t_CO2 * k_C1 * k_C2 / (h ** 2 + k_C1 * h + k_C1 * k_C2)
+    return k_H2O / h - h + k_MgOH * Mg / h - h * f / k_HF + HCO3 + 2 * CO3
 
 
 def lf(h_f, totals, k_constants):
     h, f = h_f
-    _, t_Mg, t_Ca = totals
-    k_H2O, k_MgOH, k_HF, k_MgF, k_CaF = k_constants
+    _, t_Mg, t_Ca, t_CO2 = totals
+    k_H2O, k_MgOH, k_HF, k_MgF, k_CaF, k_C1, k_C2 = k_constants
     Mg = t_Mg / (1 + k_MgF * f + k_MgOH / h)
     Ca = t_Ca / (1 + k_CaF * f)
-    return h + Mg + Ca - f - k_H2O / h
+    HCO3 = t_CO2 * k_C1 * h / (h ** 2 + k_C1 * h + k_C1 * k_C2)
+    CO3 = t_CO2 * k_C1 * k_C2 / (h ** 2 + k_C1 * h + k_C1 * k_C2)
+    return h + Mg + Ca - f - k_H2O / h - HCO3 - 2 * CO3
 
 
 def eh(totals, Na=0, Cl=0):
-    t_F, t_Mg, t_Ca = totals
+    t_F, t_Mg, t_Ca, _ = totals
     return Na - Cl + 2 * t_Mg + 2 * t_Ca - t_F
 
 
 def ef(totals, Na=0, Cl=0):
-    _, t_Mg, t_Ca = totals
+    _, t_Mg, t_Ca, _ = totals
     return Cl - Na - t_Mg - t_Ca
 
 
@@ -39,8 +43,8 @@ def lh_lf(h_f, totals, k_constants):
 
 def total_F(h_f, totals, k_constants):
     h, f = h_f
-    _, t_Mg, t_Ca = totals
-    _, k_MgOH, k_HF, k_MgF, k_CaF = k_constants
+    _, t_Mg, t_Ca, _ = totals
+    _, k_MgOH, k_HF, k_MgF, k_CaF, _, _ = k_constants
     HF = h * f / k_HF
     Mg = t_Mg / (1 + k_MgOH / h + k_MgF * f)
     MgF = k_MgF * Mg * f
@@ -63,8 +67,16 @@ def h_f_funcs(ph_pf, totals, k_constants, Na=2250e-6, Cl=0.1399):
 
 h_f_jac = jax.jit(jax.jacfwd(h_f_funcs))
 
-totals = t_F, t_Mg, t_Ca = 0.0001, 0.06, 0.01
-pk_constants = pk_H2O, pk_MgOH, pk_HF, pk_MgF, pk_CaF = 14, 10, 3, -1.8, -1.3
+totals = t_F, t_Mg, t_Ca, t_CO2 = 0.0001, 0.06, 0.01, 2000e-6
+pk_constants = pk_H2O, pk_MgOH, pk_HF, pk_MgF, pk_CaF, pk_C1, pk_C2 = (
+    14,
+    10,
+    3,
+    -1.8,
+    -1.3,
+    5.8,
+    8.9,
+)
 k_constants = [10.0 ** -pk for pk in pk_constants]
 
 ph_pf_i = np.array([8, -np.log10(t_F / 2)])
