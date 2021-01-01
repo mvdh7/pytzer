@@ -59,7 +59,7 @@ def salinity_to_molalities_MZF93(salinity, MgOH=False):
     return solute_molalities
 
 
-def salinity_to_molalities_MFWM08(salinity=35, totals=None):
+def salinity_to_molalities_MFWM08(salinity=35):
     """Convert salinity (g/kg-sw) to molality for standard seawater following MFWM08."""
     solute_molalities = {
         "Na": 0.4860597,
@@ -78,21 +78,30 @@ def salinity_to_molalities_MFWM08(salinity=35, totals=None):
         "BOH3": 0.0003258,
         "CO2": 0.0000100,
     }
-    if totals is not None:
-        if "t_HF" in totals:
-            t_HF = solute_molalities.pop("F")
-            solute_molalities.update({"t_HF": t_HF})
-        if "t_SO4" in totals:
-            t_SO4 = solute_molalities.pop("SO4")
-            solute_molalities.update({"t_SO4": t_SO4})
-        # solute_molalities.update({
-        #     "t_BOH3": sm["BOH3"] + sm["BOH4"],
-        #     "t_CO2": sm["CO2"] + sm["HCO3"] + sm["CO3"],
-        #     "t_HF": sm["F"],
-        #     "t_SO4": sm["SO4"],
-        # })
     solute_molalities = {
         solute: molality * salinity / 35
         for solute, molality in solute_molalities.items()
     }
     return solute_molalities
+
+
+def salinity_to_totals_MFWM08(salinity=35):
+    """Convert salinity (g/kg-sw) to total molality for standard seawater following MFWM08."""
+    total_molalities = {
+        "Na": 0.4860597,
+        "Mg": 0.0547421,
+        "Ca": 0.0106568,
+        "K": 0.0105797,
+        "Sr": 0.0000940,
+        "Cl": 0.5657647,
+        "SO4": 0.0292643,
+        "CO2": 0.0017803 + 0.0002477 + 0.0000100,
+        "Br": 0.0008728,
+        "B": 0.0001045 + 0.0003258,
+        "F": 0.0000708,
+    }
+    total_molalities = {
+        total: molality * salinity / 35
+        for total, molality in total_molalities.items()
+    }
+    return total_molalities

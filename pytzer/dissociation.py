@@ -112,29 +112,54 @@ def MgOH_MP98(T=298.15):
     return lnkMg
 
 
-def _MP98_eq23(T, A, B, C, D):
+def _MP98_eq23(T, A=0, B=0, C=0, D=0):
     """Equation (23) of MP98.  Returns ln(K)."""
     return A + B / T + C * np.log(T) + D * T
 
 
-def H2CO3_MP98(T=298.15):
-    """H2CO3 dissociation [MP98 following M79]."""
-    return _MP98_eq23(T, 290.9097, -14554.21, -45.0575, 0)
+def HF_MP98(T=298.15):
+    """Hydrogen fluoride dissociation [MP98 following DR79a]."""
+    return _MP98_eq23(T, A=-12.641, B=1590.2)
 
 
-def HCO3_MP98(T=298.15):
-    """HCO3 dissociation [MP98 following M79]."""
-    return _MP98_eq23(T, 207.6548, -11843.79, -33.6485, 0)
+def H2S_MP98(T=298.15):
+    """Hydrogen sulfide dissociation [MP98 following M88]."""
+    return _MP98_eq23(T, A=225.8375, B=-13275.324, C=-34.64354)
 
 
 def BOH3_M79(T=298.15):
     """Boric acid dissociation [MP98 following M79]."""
-    return _MP98_eq23(T, 148.0248, -8966.901, -24.4344, 0)
+    return _MP98_eq23(T, A=148.0248, B=-8966.901, C=-24.4344)
 
 
-def HF_MP98(T=298.15):
-    """Hydrogen fluoride dissociation [MP98 following DR79a]."""
-    return _MP98_eq23(T, -12.641, 1590.2, 0, 0)
+def NH4_MP98(T=298.15):
+    """Ammonium dissociation [MP98 following BP49]."""
+    return _MP98_eq23(T, A=-0.25444, B=-6285.33, D=0.0001635)
+
+
+def H2CO3_MP98(T=298.15):
+    """H2CO3 dissociation [MP98 following M79]."""
+    return _MP98_eq23(T, A=290.9097, B=-14554.21, C=-45.0575)
+
+
+def HCO3_MP98(T=298.15):
+    """HCO3 dissociation [MP98 following M79]."""
+    return _MP98_eq23(T, A=207.6548, B=-11843.79, C=-33.6485)
+
+
+def H3PO4_MP98(T=298.15):
+    """H3PO4 dissociation [MP98 following B51]."""
+    return _MP98_eq23(T, A=115.54, B=-4576.7518, C=-18.453)
+
+
+def H2PO4_MP98(T=298.15):
+    """H2PO4 dissociation [MP98 following BA43]."""
+    return _MP98_eq23(T, A=172.1033, B=-8814.715, C=-27.927)
+
+
+def HPO4_MP98(T=298.15):
+    """HPO4 dissociation [MP98 following SM64]."""
+    return _MP98_eq23(T, A=-18.126, B=-3070.75)
 
 
 def _MP98_eq24(T, A=0, B=0, C=0):
@@ -142,10 +167,90 @@ def _MP98_eq24(T, A=0, B=0, C=0):
     return A + B / T + C * T
 
 
+def pK_MgOH(T=298.15):
+    """MgOH+ formation [MP98 following MR97]."""
+    return _MP98_eq24(T, A=3.87, B=-501.6)
+
+
 def pK_MgF(T=298.15):
     """MgF+ formation [MP98 following MR97]."""
     return _MP98_eq24(T, A=3.504, B=-501.6)
 
+
 def pK_CaF(T=298.15):
     """CaF+ formation [MP98 following MR97]."""
     return _MP98_eq24(T, A=3.014, B=-501.6)
+
+
+def pK_MgCO3(T=298.15):
+    """MgCO3 formation [MP98 following MR97]."""
+    return _MP98_eq24(T, A=1.028, C=0.0066154)
+
+
+def pK_CaCO3(T=298.15):
+    """CaCO3 formation [MP98 following MR97]."""
+    return _MP98_eq24(T, A=1.178, C=0.0066154)
+
+
+def pK_SrCO3(T=298.15):
+    """SrCO3 formation [MP98 following MR97]."""
+    return _MP98_eq24(T, A=1.028, C=0.0066154)
+
+
+def pK_MgH2PO4(T=298.15):
+    """MgH2PO4+ formation [MP98 following MR97]."""
+    return 1.13
+
+
+def pK_CaH2PO4(T=298.15):
+    """CaH2PO4+ formation [MP98 following MR97]."""
+    return 1.0
+
+
+def pK_MgHPO4(T=298.15):
+    """MgHPO4 formation [MP98 following MR97]."""
+    return 2.7
+
+
+def pK_CaHPO4(T=298.15):
+    """CaHPO4 formation [MP98 following MR97]."""
+    return 2.74
+
+
+def pK_MgPO4(T=298.15):
+    """MgPO4- formation [MP98 following MR97]."""
+    return 5.63
+
+
+def pK_CaPO4(T=298.15):
+    """CaPO4- formation [MP98 following MR97]."""
+    return 7.1
+
+
+def assemble(T=298.15):
+    """Assemble dict of all equilibrium constants."""
+    k_constants = {}
+    k_constants["HF"] = np.exp(HF_MP98(T=T))
+    k_constants["H2S"] = np.exp(H2S_MP98(T=T))
+    k_constants["H2O"] = np.exp(H2O_M88(T=T))
+    k_constants["B"] = np.exp(BOH3_M79(T=T))
+    k_constants["HSO4"] = np.exp(HSO4_CRP94(T=T))
+    k_constants["NH4"] = np.exp(NH4_MP98(T=T))
+    k_constants["C1"] = np.exp(H2CO3_MP98(T=T))
+    k_constants["C2"] = np.exp(HCO3_MP98(T=T))
+    k_constants["P1"] = np.exp(H3PO4_MP98(T=T))
+    k_constants["P2"] = np.exp(H2PO4_MP98(T=T))
+    k_constants["P3"] = np.exp(HPO4_MP98(T=T))
+    k_constants["MgOH"] = 10.0 ** -pK_MgOH(T=T)
+    k_constants["MgF"] = 10.0 ** -pK_MgF(T=T)
+    k_constants["CaF"] = 10.0 ** -pK_CaF(T=T)
+    k_constants["MgCO3"] = 10.0 ** -pK_MgCO3(T=T)
+    k_constants["CaCO3"] = 10.0 ** -pK_CaCO3(T=T)
+    k_constants["SrCO3"] = 10.0 ** -pK_SrCO3(T=T)
+    k_constants["MgH2PO4"] = 10.0 ** -pK_MgH2PO4(T=T)
+    k_constants["CaH2PO4"] = 10.0 ** -pK_CaH2PO4(T=T)
+    k_constants["MgHPO4"] = 10.0 ** -pK_MgHPO4(T=T)
+    k_constants["CaHPO4"] = 10.0 ** -pK_CaHPO4(T=T)
+    k_constants["MgPO4"] = 10.0 ** -pK_MgPO4(T=T)
+    k_constants["CaPO4"] = 10.0 ** -pK_CaPO4(T=T)
+    return k_constants
