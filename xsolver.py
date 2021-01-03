@@ -1,5 +1,5 @@
 import jax, copy
-from jax import numpy as np
+from jax import numpy as np, lax
 
 
 def get_OH(h, k_constants):
@@ -487,22 +487,62 @@ jtest = solver_jac(solver_0, es, totals, k_constants)
 solver_x = np.array(copy.deepcopy(solver_0))
 
 #%%
+
+
+
+
+def solver_step(solver_x):
+    target = -solver_func(solver_x, es, totals, k_constants)
+    jac = solver_jac(solver_x, es, totals, k_constants)
+    x_diff = np.linalg.solve(jac, target)
+    x_diff = np.where(x_diff > 1, 1, x_diff)
+    x_diff = np.where(x_diff < -1, -1, x_diff)
+    solver_x = solver_x + x_diff
+    return solver_x
+
+
+
+
+@jax.jit
+def solve_now(solver_x, es, totals, k_constants):
+    
+    tol_alkalinity = 1e-9
+    tol_total_F = 1e-9
+    tol_total_CO2 = 1e-9
+    tol_total_PO4 = 1e-9
+    tols = np.array([tol_alkalinity, tol_total_F, tol_total_CO2, tol_total_PO4])
+    
+    def cond(solver_x):
+        target = solver_func(solver_x, es, totals, k_constants)
+        return np.any(np.abs(target) > tols)
+
+
+    def body(solver_x):
+        target = -solver_func(solver_x, es, totals, k_constants)
+        jac = solver_jac(solver_x, es, totals, k_constants)
+        x_diff = np.linalg.solve(jac, target)
+        x_diff = np.where(x_diff > 1, 1, x_diff)
+        x_diff = np.where(x_diff < -1, -1, x_diff)
+        return solver_x + x_diff
+    
+    return lax.while_loop(cond, body, solver_x)
+
+#%%
+solver_x = solve_now(solver_x, es, totals, k_constants)
+
+
+# solver_x = solver_step(solver_x)
 print(solver_x)
-print(solver_to_molalities(solver_x))
-target = -solver_func(solver_x, es, totals, k_constants)
-jac = solver_jac(solver_x, es, totals, k_constants)
-x_diff = np.linalg.solve(jac, target)
-x_diff = np.where(x_diff > 1, 1, x_diff)
-x_diff = np.where(x_diff < -1, -1, x_diff)
-solver_x = solver_x + x_diff
-print()
-print(jac)
-print()
-print(x_diff)
-print(solver_x)
+print(solver_to_molalities(solver_x)*1e6)
+
+# print()
+# print(jac)
+# print()
+# print(x_diff)
+# print(solver_x)
 # print(solver_to_molalities(solver_x) * 1e6)
 
-# Check validity of solution
+#%% Check validity of solution
 h, f, co3, po4 = solver_to_molalities(solver_x)
 
 solved = s = {}
@@ -517,21 +557,9 @@ s["CaCO3"] = get_CaCO3(h, f, co3, po4, totals, k_constants)
 s["SrCO3"] = get_SrCO3(co3, totals, k_constants)
 
 
-print("HF vs k_HF:")
-print(h * f / s["HF"])
-print(k_constants["HF"])
-
 print("TF vs F + HF + MgF + CaF:")
 print(f + s["HF"] + s["MgF"] + s["CaF"])
 print(totals["F"])
-
-print("K1:")
-print(h * s["HCO3"] / s["CO2"])
-print(k_constants["C1"])
-
-print("K2:")
-print(h * co3 / s["HCO3"])
-print(k_constants["C2"])
 
 print("TCO2:")
 print(co3 + s["CO2"] + s["HCO3"] + s["MgCO3"] + s["CaCO3"] + s["SrCO3"])
@@ -575,7 +603,6 @@ print(
 )
 print(totals["Ca"])
 
-
 l_H, l_F, l_CO3, l_PO4 = get_ls(*solver_to_molalities(solver_x), totals, k_constants)
 
 #%%
@@ -596,3 +623,13 @@ l_H, l_F, l_CO3, l_PO4 = get_ls(*solver_to_molalities(solver_x), totals, k_const
 # ax.plot(fx, fe)
 # ax.grid(alpha=0.5)
 # ax.set_ylim([-4, 4])
+
+
+#%% testing grad capabilities
+def grad_dict(mydict):
+    return mydict["a"] ** 2 + mydict["b"]
+    
+mydict = {"a": 5.0, "b": 6.0}
+
+test = grad_dict(mydict)
+gtest = jax.grad(grad_dict)(mydict)
