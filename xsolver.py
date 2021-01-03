@@ -211,30 +211,30 @@ def get_SrCO3(co3, totals, k_constants):
 def get_ls(h, f, co3, po4, totals, k_constants):
     # Get all components
     OH = get_OH(h, k_constants)
-    Mg = get_Mg(h, f, co3, po4, totals, k_constants)
-    Ca = get_Ca(h, f, co3, po4, totals, k_constants)
-    Sr = get_Sr(co3, totals, k_constants)
+    # Mg = get_Mg(h, f, co3, po4, totals, k_constants)
+    # Ca = get_Ca(h, f, co3, po4, totals, k_constants)
+    # Sr = get_Sr(co3, totals, k_constants)
     MgOH = get_MgOH(h, f, co3, po4, totals, k_constants)
     HF = get_HF(h, f, k_constants)
-    CO2 = get_CO2(h, co3, k_constants)
-    HCO3 = get_HCO3(h, co3, k_constants)
-    HPO4 = get_HPO4(h, po4, k_constants)
-    H2PO4 = get_H2PO4(h, po4, k_constants)
-    H3PO4 = get_H3PO4(h, po4, k_constants)
-    MgCO3 = get_MgCO3(h, f, co3, po4, totals, k_constants)
-    CaCO3 = get_CaCO3(h, f, co3, po4, totals, k_constants)
-    SrCO3 = get_SrCO3(co3, totals, k_constants)
-    MgH2PO4 = get_MgH2PO4(h, f, co3, po4, totals, k_constants)
-    MgHPO4 = get_MgHPO4(h, f, co3, po4, totals, k_constants)
-    MgPO4 = get_MgPO4(h, f, co3, po4, totals, k_constants)
-    CaH2PO4 = get_CaH2PO4(h, f, co3, po4, totals, k_constants)
-    CaHPO4 = get_CaHPO4(h, f, co3, po4, totals, k_constants)
-    CaPO4 = get_CaPO4(h, f, co3, po4, totals, k_constants)
+    # CO2 = get_CO2(h, co3, k_constants)
+    # HCO3 = get_HCO3(h, co3, k_constants)
+    # HPO4 = get_HPO4(h, po4, k_constants)
+    # H2PO4 = get_H2PO4(h, po4, k_constants)
+    # H3PO4 = get_H3PO4(h, po4, k_constants)
+    # MgCO3 = get_MgCO3(h, f, co3, po4, totals, k_constants)
+    # CaCO3 = get_CaCO3(h, f, co3, po4, totals, k_constants)
+    # SrCO3 = get_SrCO3(co3, totals, k_constants)
+    # MgH2PO4 = get_MgH2PO4(h, f, co3, po4, totals, k_constants)
+    # MgHPO4 = get_MgHPO4(h, f, co3, po4, totals, k_constants)
+    # MgPO4 = get_MgPO4(h, f, co3, po4, totals, k_constants)
+    # CaH2PO4 = get_CaH2PO4(h, f, co3, po4, totals, k_constants)
+    # CaHPO4 = get_CaHPO4(h, f, co3, po4, totals, k_constants)
+    # CaPO4 = get_CaPO4(h, f, co3, po4, totals, k_constants)
     SO4 = get_SO4(h, totals, k_constants)
-    HS = get_HS(h, totals, k_constants)
-    H2S = get_H2S(h, totals, k_constants)
-    BOH4 = get_BOH4(h, totals, k_constants)
-    NH3 = get_NH3(h, totals, k_constants)
+    # HS = get_HS(h, totals, k_constants)
+    # H2S = get_H2S(h, totals, k_constants)
+    # BOH4 = get_BOH4(h, totals, k_constants)
+    # NH3 = get_NH3(h, totals, k_constants)
     # H3SiO4 = get_H3SiO4(h, totals, k_constants)
     # HNO2 = get_HNO2(h, totals, k_constants)
     CaF = get_CaF(h, f, co3, po4, totals, k_constants)
@@ -245,101 +245,103 @@ def get_ls(h, f, co3, po4, totals, k_constants):
         - h
         + MgOH
         - HF
-        + HCO3
-        + 2 * co3
-        + HPO4
-        + 2 * po4
-        - H3PO4
-        + 2 * MgCO3
-        + 2 * CaCO3
-        + 2 * SrCO3
-        + MgHPO4
-        + 2 * MgPO4
-        + CaHPO4
-        + 2 * CaPO4
+        # + HCO3
+        # + 2 * co3
+        # + HPO4
+        # + 2 * po4
+        # - H3PO4
+        # + 2 * MgCO3
+        # + 2 * CaCO3
+        # + 2 * SrCO3
+        # + MgHPO4
+        # + 2 * MgPO4
+        # + CaHPO4
+        # + 2 * CaPO4
         + SO4
-        + HS
-        + BOH4
-        + NH3
+        # + HS
+        # + BOH4
+        # + NH3
         # + H3SiO4
         # - HNO2
     )
-    # Fluoralinity
-    l_F = (
-        h
-        + Mg
-        + Ca
-        - f
-        - OH
-        + CO2
-        - co3
-        - SrCO3
-        + 2 * H3PO4
-        + H2PO4
-        - po4
-        + 2 * MgH2PO4
-        + MgHPO4
-        + 2 * CaH2PO4
-        + CaHPO4
-        - SO4
-        + H2S
-        - BOH4
-        - NH3
-        # - H3SiO4
-        # + HNO2
-    )
-    # Carbalinity
-    l_CO3 = (
-        Mg
-        + Ca
-        + Sr
-        + h
-        - OH
-        + CO2
-        - co3
-        + CaF
-        + MgF
-        + HF
-        + 2 * H3PO4
-        + H2PO4
-        - po4
-        + 2 * MgH2PO4
-        + MgHPO4
-        + 2 * CaH2PO4
-        + CaHPO4
-        - SO4
-        + H2S
-        - BOH4
-        - NH3
-        # - H3SiO4
-        # + HNO2
-    )
-    # Phosphalinity
-    l_PO4 = (
-        h
-        - OH
-        + 2 * H3PO4
-        + H2PO4
-        - po4
-        + CO2
-        - co3
-        - SrCO3
-        - CaCO3
-        - MgCO3
-        + HF
-        - MgPO4
-        + MgH2PO4
-        - CaPO4
-        + CaH2PO4
-        - MgOH
-        - SO4
-        + H2S
-        - BOH4
-        - NH3
-        # - H3SiO4
-        # + HNO2
-    )
-    return l_H, l_F, l_CO3, l_PO4
+    # Total fluorine
+    l_F = f + HF + MgF + CaF
+    # # Fluoralinity
+    # l_F = (
+    #     h
+    #     + Mg
+    #     + Ca
+    #     - f
+    #     - OH
+    #     + CO2
+    #     - co3
+    #     - SrCO3
+    #     + 2 * H3PO4
+    #     + H2PO4
+    #     - po4
+    #     + 2 * MgH2PO4
+    #     + MgHPO4
+    #     + 2 * CaH2PO4
+    #     + CaHPO4
+    #     - SO4
+    #     # + H2S
+    #     # - BOH4
+    #     # - NH3
+    #     # - H3SiO4
+    #     # + HNO2
+    # )
+    # # Carbalinity
+    # l_CO3 = (
+    #     Mg
+    #     + Ca
+    #     + Sr
+    #     + h
+    #     - OH
+    #     + CO2
+    #     - co3
+    #     + CaF
+    #     + MgF
+    #     + HF
+    #     + 2 * H3PO4
+    #     + H2PO4
+    #     - po4
+    #     + 2 * MgH2PO4
+    #     + MgHPO4
+    #     + 2 * CaH2PO4
+    #     + CaHPO4
+    #     - SO4
+    #     # + H2S
+    #     # - BOH4
+    #     # - NH3
+    #     # - H3SiO4
+    #     # + HNO2
+    # )
+    # # Phosphalinity
+    # l_PO4 = (
+    #     h
+    #     - OH
+    #     + 2 * H3PO4
+    #     + H2PO4
+    #     - po4
+    #     + CO2
+    #     - co3
+    #     - SrCO3
+    #     - CaCO3
+    #     - MgCO3
+    #     + HF
+    #     - MgPO4
+    #     + MgH2PO4
+    #     - CaPO4
+    #     + CaH2PO4
+    #     - MgOH
+    #     - SO4
+    #     # + H2S
+    #     # - BOH4
+    #     # - NH3
+    #     # - H3SiO4
+    #     # + HNO2
+    # )
+    return l_H, l_F  #, l_CO3, l_PO4
 
 
 def get_es(totals):
@@ -352,79 +354,83 @@ def get_es(totals):
         - t["Br"]
         + 2 * t["Mg"]
         + 2 * t["Ca"]
-        + 2 * t["Sr"]
+        # + 2 * t["Sr"]
         - t["F"]
-        - t["PO4"]
+        # - t["PO4"]
         - t["SO4"]
-        + t["NH3"]
+        # + t["NH3"]
         # - t["NO2"]
     )
-    # Fluoralinity
-    e_F = (
-        t["Cl"]
-        + t["Br"]
-        - t["Na"]
-        - t["K"]
-        + t["CO2"]
-        - t["Ca"]
-        - t["Mg"]
-        - 2 * t["Sr"]
-        + 2 * t["PO4"]
-        + t["SO4"]
-        + t["H2S"]
-        - t["NH3"]
-        # + t["NO2"]
-    )
-    # Carbalinity
-    e_CO3 = (
-        t["Cl"]
-        + t["Br"]
-        - t["Na"]
-        - t["K"]
-        + t["CO2"]
-        - t["Ca"]
-        - t["Mg"]
-        - t["Sr"]
-        + t["F"]
-        + 2 * t["PO4"]
-        + t["SO4"]
-        + t["H2S"]
-        - t["NH3"]
-        # + t["NO2"]
-    )
-    # Phosphalinity
-    e_PO4 = (
-        t["Cl"]
-        + t["Br"]
-        - t["Na"]
-        - t["K"]
-        + t["CO2"]
-        + t["F"]
-        - 2 * t["Sr"]
-        - 2 * t["Mg"]
-        - 2 * t["Ca"]
-        + 2 * t["PO4"]
-        + t["SO4"]
-        + t["H2S"]
-        - t["NH3"]
-        # + t["NO2"]
-    )
-    return e_H, e_F, e_CO3, e_PO4
+    # Total fluorine
+    t_F = t["F"]
+    # # Fluoralinity
+    # e_F = (
+    #     t["Cl"]
+    #     + t["Br"]
+    #     - t["Na"]
+    #     - t["K"]
+    #     + t["CO2"]
+    #     - t["Ca"]
+    #     - t["Mg"]
+    #     - 2 * t["Sr"]
+    #     + 2 * t["PO4"]
+    #     + t["SO4"]
+    #     # + t["H2S"]
+    #     # - t["NH3"]
+    #     # + t["NO2"]
+    # )
+    # # Carbalinity
+    # e_CO3 = (
+    #     t["Cl"]
+    #     + t["Br"]
+    #     - t["Na"]
+    #     - t["K"]
+    #     + t["CO2"]
+    #     - t["Ca"]
+    #     - t["Mg"]
+    #     - t["Sr"]
+    #     + t["F"]
+    #     + 2 * t["PO4"]
+    #     + t["SO4"]
+    #     # + t["H2S"]
+    #     # - t["NH3"]
+    #     # + t["NO2"]
+    # )
+    # # Phosphalinity
+    # e_PO4 = (
+    #     t["Cl"]
+    #     + t["Br"]
+    #     - t["Na"]
+    #     - t["K"]
+    #     + t["CO2"]
+    #     + t["F"]
+    #     - 2 * t["Sr"]
+    #     - 2 * t["Mg"]
+    #     - 2 * t["Ca"]
+    #     + 2 * t["PO4"]
+    #     + t["SO4"]
+    #     # + t["H2S"]
+    #     # - t["NH3"]
+    #     # + t["NO2"]
+    # )
+    # return e_H, e_F, e_CO3, e_PO4
+    return e_H, t_F
 
 
-def f_arctan(x):
-    return (np.arctan(x) + np.pi / 2) / np.pi
+# def f_arctan(x):
+#     return (np.arctan(x) + np.pi / 2) / np.pi
 
 
-def solver_to_molalities(x_solver, totals):
-    pH, fF, fCO3, fPO4 = x_solver
-    t = totals
-    return [
-        10.0 ** -pH,
-        f_arctan(fF) * t["F"],
-        f_arctan(fCO3) * t["CO2"],
-        f_arctan(fPO4) * t["PO4"],
-    ]
+def solver_to_molalities(x_solver):
+    # pH, fF, fCO3, fPO4 = x_solver
+    # t = totals
+    # return [
+    #     10.0 ** -pH,
+    #     f_arctan(fF) * t["F"],
+    #     f_arctan(fCO3) * t["CO2"],
+    #     f_arctan(fPO4) * t["PO4"],
+    # ]
+    return 10.0 ** -x_solver
 
 
 #%%
@@ -436,22 +442,30 @@ totals["NH3"] = 1e-6
 totals["NO2"] = 2e-6
 totals["H2S"] = 3e-6
 totals["PO4"] = 5e-6
-es = e_H, e_F, e_CO3, e_PO4 = get_es(totals)
+# es = e_H, e_F, e_CO3, e_PO4 = get_es(totals)
+es = e_H, t_F = get_es(totals)
 
 k_constants = pz.dissociation.assemble()
 pk_constants = {k: -np.log10(v) for k, v in k_constants.items()}
 
-solver_0 = [8.0, 0.0, 0.0, 0.0]
-molalities_0 = solver_to_molalities(solver_0, totals)
+molalities_0 = np.array([1e-8, totals["F"] / 2,])
+                         # totals["CO2"] / 10,
+                         # totals["PO4"] / 2])
+solver_0 = -np.log10(molalities_0)
 
-l_H, l_F, l_CO3, l_PO4 = get_ls(*molalities_0, totals, k_constants)
+l_H, l_F = get_ls(*[*molalities_0, 0, 0], totals, k_constants)
+# l_CO3, l_PO4
 
 
 def solver_func(solver_x, es, totals, k_constants):
-    molalities = solver_to_molalities(solver_x, totals)
-    e_H, e_F, e_CO3, e_PO4 = es
-    l_H, l_F, l_CO3, l_PO4 = get_ls(*molalities, totals, k_constants)
-    return np.array([e_H - l_H, e_F - l_F, e_CO3 - l_CO3, e_PO4 - l_PO4])
+    molalities = solver_to_molalities(solver_x)
+    molalities = np.array([*molalities, 0, 0])
+    # e_H, e_F, e_CO3, e_PO4 = es
+    # l_H, l_F, l_CO3, l_PO4 = get_ls(*molalities, totals, k_constants)
+    # return np.array([e_H - l_H, e_F - l_F, e_CO3 - l_CO3, e_PO4 - l_PO4])
+    e_H, t_F = es
+    l_H, l_F = get_ls(*molalities, totals, k_constants)
+    return np.array([e_H - l_H, t_F - l_F])
 
 
 solver_jac = jax.jit(jax.jacfwd(solver_func))
@@ -463,10 +477,36 @@ solver_x = np.array(copy.deepcopy(solver_0))
 
 #%%
 print(solver_x)
+print(solver_to_molalities(solver_x))
 target = -solver_func(solver_x, es, totals, k_constants)
 jac = solver_jac(solver_x, es, totals, k_constants)
 x_diff = np.linalg.solve(jac, target)
-solver_x = solver_x + x_diff * 0.1
+x_diff = np.where(x_diff > 1, 1, x_diff)
+x_diff = np.where(x_diff < -1, -1, x_diff)
+solver_x = solver_x + x_diff
+print()
+print(jac)
+print()
+print(x_diff)
+print(solver_x)
+# print(solver_to_molalities(solver_x) * 1e6)
+
+#%% Check validity of solution
+h, f = solver_to_molalities(solver_x)
+
+solved = s = {}
+s["OH"] = get_OH(h, k_constants)
+s["HF"] = get_HF(h, f, k_constants)
+s["MgF"] = get_MgF(h, f, 0, 0, totals, k_constants)
+s["CaF"] = get_CaF(h, f, 0, 0, totals, k_constants)
+
+print("HF vs k_HF:")
+print(h * f / s["HF"])
+print(k_constants["HF"])
+
+print("TF vs F + HF + MgF + CaF:")
+print(f + s["HF"] + s["MgF"] + s["CaF"])
+print(totals["F"])
 
 #%%
 # from matplotlib import pyplot as plt
