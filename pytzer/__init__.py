@@ -15,6 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """Pitzer model for chemical activities in aqueous solutions."""
 from . import (
+    components,
     constants,
     convert,
     debyehueckel,
