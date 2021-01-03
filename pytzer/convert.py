@@ -85,3 +85,8 @@ solute_to_charge = {
     "SO3": -2,
     "SO4": -2,
 }
+
+
+all_cations = set([s for s, c in solute_to_charge.items() if c > 0])
+all_anions = set([s for s, c in solute_to_charge.items() if c < 0])
+all_neutrals = set([s for s, c in solute_to_charge.items() if c == 0])

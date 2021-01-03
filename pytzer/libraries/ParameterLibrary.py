@@ -1,6 +1,6 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019--2020  Matthew Paul Humphreys  (GNU GPLv3)
-from .. import debyehueckel as dh, parameters as prm
+from .. import debyehueckel as dh, parameters as prm, convert
 from ..meta import update_func_J
 import numpy as np
 
@@ -133,13 +133,7 @@ class ParameterLibrary(dict):
         self["equilibria"].update({equilibrium: func})
 
     def get_parameters(
-        self,
-        cations=None,
-        anions=None,
-        neutrals=None,
-        temperature=298.15,
-        pressure=10.1023,
-        verbose=True,
+        self, solutes=None, temperature=298.15, pressure=10.1023, verbose=True,
     ):
         """Evaluate all interaction parameters under specific conditions."""
         if verbose:
@@ -158,6 +152,19 @@ class ParameterLibrary(dict):
                         ).format(self["name"], *solutes)
                     )
                     missing_coeffs.append(solutes_list)
+
+        if solutes is None:
+            cations = anions = neutrals = None
+        else:
+            cations = [s for s in solutes if s in convert.all_cations]
+            anions = [s for s in solutes if s in convert.all_anions]
+            neutrals = [s for s in solutes if s in convert.all_neutrals]
+        if len(cations) == 0:
+            cations = None
+        if len(anions) == 0:
+            anions = None
+        if len(neutrals) == 0:
+            neutrals = None
 
         parameters = {}
         TP = (temperature, pressure)
@@ -268,4 +275,166 @@ class ParameterLibrary(dict):
                     nnn = 0.0
                     report_missing_coeffs(neutral1, neutral1, neutral1)
                 parameters["nnn"][n1] = nnn
+        return parameters
+
+    def get_parameters_v2(
+        self, solutes=None, temperature=298.15, pressure=10.1023, verbose=True,
+    ):
+        """Evaluate all interaction parameters under specific conditions."""
+        if verbose:
+            missing_coeffs = []
+
+        def report_missing_coeffs(*solutes):
+            if verbose:
+                solutes_list = list(solutes)
+                solutes_list.sort()
+                if solutes_list not in missing_coeffs:
+                    print(
+                        (
+                            "{} has no interaction coefficients for "
+                            + "-".join(["{}"] * len(solutes))
+                            + "; using zero."
+                        ).format(self["name"], *solutes)
+                    )
+                    missing_coeffs.append(solutes_list)
+
+        if solutes is None:
+            solutes = []
+        cations = [s for s in solutes if s in convert.all_cations]
+        anions = [s for s in solutes if s in convert.all_anions]
+        neutrals = [s for s in solutes if s in convert.all_neutrals]
+
+        parameters = {}
+        TP = (temperature, pressure)
+        if "Aphi" in self:
+            parameters.update({"Aphi": self["Aphi"](*TP)[0]})
+        else:
+            if verbose:
+                print(
+                    "{} has no Aphi function; no value returned.".format(self["name"])
+                )
+        if len(cations) > 0 and len(anions) > 0:
+            parameters["ca"] = {}
+            for cation in cations:
+                if cation not in parameters["ca"]:
+                    parameters["ca"][cation] = {}
+                for anion in anions:
+                    try:
+                        ca = self["ca"][cation][anion](*TP)[:-1]
+                    except KeyError:
+                        ca = [0, 0, 0, 0, 0, -9, -9, -9]
+                        report_missing_coeffs(cation, anion)
+                    parameters["ca"][cation][anion] = ca
+            parameters["cc"] = {}
+            for cation1 in cations:
+                if cation1 not in parameters["cc"]:
+                    parameters["cc"][cation1] = {}
+                for cation2 in cations:
+                    try:
+                        cc = self["cc"][cation1][cation2](*TP)[0]
+                    except KeyError:
+                        cc = 0.0
+                        if cation1 != cation2:
+                            report_missing_coeffs(cation1, cation2)
+                    parameters["cc"][cation1][cation2] = cc
+            parameters["aa"] = {}
+            for anion1 in anions:
+                if anion1 not in parameters["aa"]:
+                    parameters["aa"][anion1] = {}
+                for anion2 in anions:
+                    try:
+                        aa = self["aa"][anion1][anion2](*TP)[0]
+                    except KeyError:
+                        aa = 0.0
+                        if anion1 != anion2:
+                            report_missing_coeffs(anion1, anion2)
+                    parameters["aa"][anion1][anion2] = aa
+            parameters["cca"] = {}
+            for cation1 in cations:
+                if cation1 not in parameters["cca"]:
+                    parameters["cca"][cation1] = {}
+                for cation2 in cations:
+                    if cation2 not in parameters["cca"][cation1]:
+                        parameters["cca"][cation1][cation2] = {}
+                    for anion in anions:
+                        try:
+                            cca = self["cca"][cation1][cation2][anion](*TP)[0]
+                        except KeyError:
+                            cca = 0.0
+                            if cation1 != cation2:
+                                report_missing_coeffs(cation1, cation2, anion)
+                        parameters["cca"][cation1][cation2][anion] = cca
+            parameters["caa"] = {}
+            for cation in cations:
+                if cation not in parameters["caa"]:
+                    parameters["caa"][cation] = {}
+                for anion1 in anions:
+                    if anion1 not in parameters["caa"][cation]:
+                        parameters["caa"][cation][anion1] = {}
+                    for anion2 in anions:
+                        try:
+                            caa = self["caa"][cation][anion1][anion2](*TP)[0]
+                        except KeyError:
+                            caa = 0.0
+                            if anion1 != anion2:
+                                report_missing_coeffs(cation, anion1, anion2)
+                        parameters["caa"][cation][anion1][anion2] = caa
+        if len(neutrals) > 0 and len(cations) > 0:
+            parameters["nc"] = {}
+            for neutral in neutrals:
+                if neutral not in parameters["nc"]:
+                    parameters["nc"][neutral] = {}
+                for cation in cations:
+                    try:
+                        nc = self["nc"][neutral][cation](*TP)[0]
+                    except KeyError:
+                        nc = 0.0
+                        report_missing_coeffs(neutral, cation)
+                    parameters["nc"][neutral][cation] = nc
+        if len(neutrals) > 0 and len(anions) > 0:
+            parameters["na"] = {}
+            for neutral in neutrals:
+                if neutral not in parameters["na"]:
+                    parameters["na"][neutral] = {}
+                for anion in anions:
+                    try:
+                        na = self["na"][neutral][anion](*TP)[0]
+                    except KeyError:
+                        na = 0.0
+                        report_missing_coeffs(neutral, anion)
+                    parameters["na"][neutral][anion] = na
+            if len(cations) > 0:
+                parameters["nca"] = {}
+                for neutral in neutrals:
+                    if neutral not in parameters["nca"]:
+                        parameters["nca"][neutral] = {}
+                    for cation in cations:
+                        if cation not in parameters["nca"][neutral]:
+                            parameters["nca"][neutral][cation] = {}
+                        for anion in anions:
+                            try:
+                                nca = self["nca"][neutral][cation][anion](*TP)[0]
+                            except KeyError:
+                                nca = 0.0
+                                report_missing_coeffs(neutral, cation, anion)
+                            parameters["nca"][neutral][cation][anion] = nca
+        if len(neutrals) > 0:
+            parameters["nn"] = {}
+            parameters["nnn"] = {}
+            for neutral1 in neutrals:
+                if neutral1 not in parameters["nn"]:
+                    parameters["nn"][neutral1] = {}
+                for neutral2 in neutrals:
+                    try:
+                        nn = self["nn"][neutral1][neutral2](*TP)[0]
+                    except KeyError:
+                        nn = 0.0
+                        report_missing_coeffs(neutral1, neutral2)
+                    parameters["nn"][neutral1][neutral2] = nn
+                try:
+                    nnn = self["nnn"][neutral1](*TP)[0]
+                except KeyError:
+                    nnn = 0.0
+                    report_missing_coeffs(neutral1, neutral1, neutral1)
+                parameters["nnn"][neutral1] = nnn
         return parameters
