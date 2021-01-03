@@ -230,7 +230,7 @@ def get_ls(h, f, co3, po4, totals, k_constants):
     CaH2PO4 = get_CaH2PO4(h, f, co3, po4, totals, k_constants)
     CaHPO4 = get_CaHPO4(h, f, co3, po4, totals, k_constants)
     CaPO4 = get_CaPO4(h, f, co3, po4, totals, k_constants)
-    SO4 = get_SO4(h, totals, k_constants)
+    HSO4 = get_HSO4(h, totals, k_constants)
     HS = get_HS(h, totals, k_constants)
     # H2S = get_H2S(h, totals, k_constants)
     BOH4 = get_BOH4(h, totals, k_constants)
@@ -257,7 +257,7 @@ def get_ls(h, f, co3, po4, totals, k_constants):
         + 2 * MgPO4
         + CaHPO4
         + 2 * CaPO4
-        + SO4
+        - HSO4
         + HS
         + BOH4
         + NH3
@@ -363,8 +363,8 @@ def get_es(totals):
         + 2 * t["Ca"]
         + 2 * t["Sr"]
         - t["F"]
-        # - t["PO4"]
-        - t["SO4"]
+        - t["PO4"]
+        - 2 * t["SO4"]
         + t["NH3"]
         # - t["NO2"]
     )
@@ -448,10 +448,9 @@ def solver_to_molalities(x_solver):
 import pytzer as pz
 
 totals = pz.prepare.salinity_to_totals_MFWM08()
-totals["Cl"] += 0.029246
-totals["NH3"] = 1e-6
-totals["NO2"] = 2e-6
-totals["H2S"] = 3e-6
+totals["NH3"] = 1e-6 * 0
+totals["NO2"] = 2e-6 * 0
+totals["H2S"] = 3e-6 * 0
 totals["PO4"] = 5e-6
 # es = e_H, e_F, e_CO3, e_PO4 = get_es(totals)
 es = e_H, t_F, t_CO3, t_PO4 = get_es(totals)
@@ -552,6 +551,32 @@ print(
     + get_CaH2PO4(h, f, co3, po4, totals, k_constants)
 )
 print(totals['PO4'])
+
+print("TMg:")
+print(
+    get_Mg(h, f, co3, po4, totals, k_constants)
+    + get_MgF(h, f, co3, po4, totals, k_constants)
+    + get_MgOH(h, f, co3, po4, totals, k_constants)
+    + get_MgPO4(h, f, co3, po4, totals, k_constants)
+    + get_MgHPO4(h, f, co3, po4, totals, k_constants)
+    + get_MgH2PO4(h, f, co3, po4, totals, k_constants)
+    + get_MgCO3(h, f, co3, po4, totals, k_constants)
+)
+print(totals["Mg"])
+
+print("TCa:")
+print(
+    get_Ca(h, f, co3, po4, totals, k_constants)
+    + get_CaF(h, f, co3, po4, totals, k_constants)
+    + get_CaPO4(h, f, co3, po4, totals, k_constants)
+    + get_CaHPO4(h, f, co3, po4, totals, k_constants)
+    + get_CaH2PO4(h, f, co3, po4, totals, k_constants)
+    + get_CaCO3(h, f, co3, po4, totals, k_constants)
+)
+print(totals["Ca"])
+
+
+l_H, l_F, l_CO3, l_PO4 = get_ls(*solver_to_molalities(solver_x), totals, k_constants)
 
 #%%
 # from matplotlib import pyplot as plt
