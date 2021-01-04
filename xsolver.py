@@ -1,38 +1,41 @@
 import jax, copy
 from jax import numpy as np, lax
+import pytzer as pz
+
+components = pz.solvers.components
 
 
 def get_ls(h, f, co3, po4, totals, k_constants):
     # Get all components
-    OH = pz.components.get_OH(h, k_constants)
-    # Mg = pz.components.get_Mg(h, f, co3, po4, totals, k_constants)
-    # Ca = pz.components.get_Ca(h, f, co3, po4, totals, k_constants)
-    # Sr = pz.components.get_Sr(co3, totals, k_constants)
-    MgOH = pz.components.get_MgOH(h, f, co3, po4, totals, k_constants)
-    HF = pz.components.get_HF(h, f, k_constants)
-    CO2 = pz.components.get_CO2(h, co3, k_constants)
-    HCO3 = pz.components.get_HCO3(h, co3, k_constants)
-    HPO4 = pz.components.get_HPO4(h, po4, k_constants)
-    H2PO4 = pz.components.get_H2PO4(h, po4, k_constants)
-    H3PO4 = pz.components.get_H3PO4(h, po4, k_constants)
-    MgCO3 = pz.components.get_MgCO3(h, f, co3, po4, totals, k_constants)
-    CaCO3 = pz.components.get_CaCO3(h, f, co3, po4, totals, k_constants)
-    SrCO3 = pz.components.get_SrCO3(co3, totals, k_constants)
-    MgH2PO4 = pz.components.get_MgH2PO4(h, f, co3, po4, totals, k_constants)
-    MgHPO4 = pz.components.get_MgHPO4(h, f, co3, po4, totals, k_constants)
-    MgPO4 = pz.components.get_MgPO4(h, f, co3, po4, totals, k_constants)
-    CaH2PO4 = pz.components.get_CaH2PO4(h, f, co3, po4, totals, k_constants)
-    CaHPO4 = pz.components.get_CaHPO4(h, f, co3, po4, totals, k_constants)
-    CaPO4 = pz.components.get_CaPO4(h, f, co3, po4, totals, k_constants)
-    HSO4 = pz.components.get_HSO4(h, totals, k_constants)
-    HS = pz.components.get_HS(h, totals, k_constants)
-    # H2S = pz.components.get_H2S(h, totals, k_constants)
-    BOH4 = pz.components.get_BOH4(h, totals, k_constants)
-    NH3 = pz.components.get_NH3(h, totals, k_constants)
-    # H3SiO4 = pz.components.get_H3SiO4(h, totals, k_constants)
-    # HNO2 = pz.components.get_HNO2(h, totals, k_constants)
-    CaF = pz.components.get_CaF(h, f, co3, po4, totals, k_constants)
-    MgF = pz.components.get_MgF(h, f, co3, po4, totals, k_constants)
+    OH = components.get_OH(h, k_constants)
+    # Mg = components.get_Mg(h, f, co3, po4, totals, k_constants)
+    # Ca = components.get_Ca(h, f, co3, po4, totals, k_constants)
+    # Sr = components.get_Sr(co3, totals, k_constants)
+    MgOH = components.get_MgOH(h, f, co3, po4, totals, k_constants)
+    HF = components.get_HF(h, f, k_constants)
+    CO2 = components.get_CO2(h, co3, k_constants)
+    HCO3 = components.get_HCO3(h, co3, k_constants)
+    HPO4 = components.get_HPO4(h, po4, k_constants)
+    H2PO4 = components.get_H2PO4(h, po4, k_constants)
+    H3PO4 = components.get_H3PO4(h, po4, k_constants)
+    MgCO3 = components.get_MgCO3(h, f, co3, po4, totals, k_constants)
+    CaCO3 = components.get_CaCO3(h, f, co3, po4, totals, k_constants)
+    SrCO3 = components.get_SrCO3(co3, totals, k_constants)
+    MgH2PO4 = components.get_MgH2PO4(h, f, co3, po4, totals, k_constants)
+    MgHPO4 = components.get_MgHPO4(h, f, co3, po4, totals, k_constants)
+    MgPO4 = components.get_MgPO4(h, f, co3, po4, totals, k_constants)
+    CaH2PO4 = components.get_CaH2PO4(h, f, co3, po4, totals, k_constants)
+    CaHPO4 = components.get_CaHPO4(h, f, co3, po4, totals, k_constants)
+    CaPO4 = components.get_CaPO4(h, f, co3, po4, totals, k_constants)
+    HSO4 = components.get_HSO4(h, totals, k_constants)
+    HS = components.get_HS(h, totals, k_constants)
+    # H2S = components.get_H2S(h, totals, k_constants)
+    BOH4 = components.get_BOH4(h, totals, k_constants)
+    NH3 = components.get_NH3(h, totals, k_constants)
+    # H3SiO4 = components.get_H3SiO4(h, totals, k_constants)
+    # HNO2 = components.get_HNO2(h, totals, k_constants)
+    CaF = components.get_CaF(h, f, co3, po4, totals, k_constants)
+    MgF = components.get_MgF(h, f, co3, po4, totals, k_constants)
     # Alkalinity
     l_H = (
         OH
@@ -238,7 +241,7 @@ def solver_to_molalities(x_solver):
 
 
 #%%
-import pytzer as pz
+
 
 totals = pz.prepare.salinity_to_totals_MFWM08()
 totals["NH3"] = 1e-6 * 0
@@ -272,7 +275,11 @@ solver_jac = jax.jit(jax.jacfwd(solver_func))
 test = solver_func(solver_0, es, totals, k_constants)
 jtest = solver_jac(solver_0, es, totals, k_constants)
 
+test2 = pz.solvers.stoichiometric.solver_func(solver_0, totals, k_constants, *es)
+jtest2 = pz.solvers.stoichiometric.solver_jac(solver_0, totals, k_constants, *es)
+
 solver_x = np.array(copy.deepcopy(solver_0))
+solver_x2 = np.array(copy.deepcopy(solver_0))
 
 #%%
 
@@ -313,7 +320,7 @@ def solve_now(solver_x, es, totals, k_constants):
 
 #%%
 solver_x = solve_now(solver_x, es, totals, k_constants)
-
+solver_x2 = pz.solvers.stoichiometric.solve_now(solver_x2, totals, k_constants, *es)
 
 # solver_x = solver_step(solver_x)
 print(solver_x)
@@ -330,15 +337,15 @@ print(solver_to_molalities(solver_x) * 1e6)
 h, f, co3, po4 = solver_to_molalities(solver_x)
 
 solved = s = {}
-s["OH"] = pz.components.get_OH(h, k_constants)
-s["HF"] = pz.components.get_HF(h, f, k_constants)
-s["MgF"] = pz.components.get_MgF(h, f, co3, po4, totals, k_constants)
-s["CaF"] = pz.components.get_CaF(h, f, co3, po4, totals, k_constants)
-s["HCO3"] = pz.components.get_HCO3(h, co3, k_constants)
-s["CO2"] = pz.components.get_CO2(h, co3, k_constants)
-s["MgCO3"] = pz.components.get_MgCO3(h, f, co3, po4, totals, k_constants)
-s["CaCO3"] = pz.components.get_CaCO3(h, f, co3, po4, totals, k_constants)
-s["SrCO3"] = pz.components.get_SrCO3(co3, totals, k_constants)
+s["OH"] = components.get_OH(h, k_constants)
+s["HF"] = components.get_HF(h, f, k_constants)
+s["MgF"] = components.get_MgF(h, f, co3, po4, totals, k_constants)
+s["CaF"] = components.get_CaF(h, f, co3, po4, totals, k_constants)
+s["HCO3"] = components.get_HCO3(h, co3, k_constants)
+s["CO2"] = components.get_CO2(h, co3, k_constants)
+s["MgCO3"] = components.get_MgCO3(h, f, co3, po4, totals, k_constants)
+s["CaCO3"] = components.get_CaCO3(h, f, co3, po4, totals, k_constants)
+s["SrCO3"] = components.get_SrCO3(co3, totals, k_constants)
 
 
 print("TF vs F + HF + MgF + CaF:")
@@ -352,38 +359,38 @@ print(totals["CO2"])
 print("TP:")
 print(
     po4
-    + pz.components.get_HPO4(h, po4, k_constants)
-    + pz.components.get_H2PO4(h, po4, k_constants)
-    + pz.components.get_H3PO4(h, po4, k_constants)
-    + pz.components.get_MgPO4(h, f, co3, po4, totals, k_constants)
-    + pz.components.get_MgHPO4(h, f, co3, po4, totals, k_constants)
-    + pz.components.get_MgH2PO4(h, f, co3, po4, totals, k_constants)
-    + pz.components.get_CaPO4(h, f, co3, po4, totals, k_constants)
-    + pz.components.get_CaHPO4(h, f, co3, po4, totals, k_constants)
-    + pz.components.get_CaH2PO4(h, f, co3, po4, totals, k_constants)
+    + components.get_HPO4(h, po4, k_constants)
+    + components.get_H2PO4(h, po4, k_constants)
+    + components.get_H3PO4(h, po4, k_constants)
+    + components.get_MgPO4(h, f, co3, po4, totals, k_constants)
+    + components.get_MgHPO4(h, f, co3, po4, totals, k_constants)
+    + components.get_MgH2PO4(h, f, co3, po4, totals, k_constants)
+    + components.get_CaPO4(h, f, co3, po4, totals, k_constants)
+    + components.get_CaHPO4(h, f, co3, po4, totals, k_constants)
+    + components.get_CaH2PO4(h, f, co3, po4, totals, k_constants)
 )
 print(totals["PO4"])
 
 print("TMg:")
 print(
-    pz.components.get_Mg(h, f, co3, po4, totals, k_constants)
-    + pz.components.get_MgF(h, f, co3, po4, totals, k_constants)
-    + pz.components.get_MgOH(h, f, co3, po4, totals, k_constants)
-    + pz.components.get_MgPO4(h, f, co3, po4, totals, k_constants)
-    + pz.components.get_MgHPO4(h, f, co3, po4, totals, k_constants)
-    + pz.components.get_MgH2PO4(h, f, co3, po4, totals, k_constants)
-    + pz.components.get_MgCO3(h, f, co3, po4, totals, k_constants)
+    components.get_Mg(h, f, co3, po4, totals, k_constants)
+    + components.get_MgF(h, f, co3, po4, totals, k_constants)
+    + components.get_MgOH(h, f, co3, po4, totals, k_constants)
+    + components.get_MgPO4(h, f, co3, po4, totals, k_constants)
+    + components.get_MgHPO4(h, f, co3, po4, totals, k_constants)
+    + components.get_MgH2PO4(h, f, co3, po4, totals, k_constants)
+    + components.get_MgCO3(h, f, co3, po4, totals, k_constants)
 )
 print(totals["Mg"])
 
 print("TCa:")
 print(
-    pz.components.get_Ca(h, f, co3, po4, totals, k_constants)
-    + pz.components.get_CaF(h, f, co3, po4, totals, k_constants)
-    + pz.components.get_CaPO4(h, f, co3, po4, totals, k_constants)
-    + pz.components.get_CaHPO4(h, f, co3, po4, totals, k_constants)
-    + pz.components.get_CaH2PO4(h, f, co3, po4, totals, k_constants)
-    + pz.components.get_CaCO3(h, f, co3, po4, totals, k_constants)
+    components.get_Ca(h, f, co3, po4, totals, k_constants)
+    + components.get_CaF(h, f, co3, po4, totals, k_constants)
+    + components.get_CaPO4(h, f, co3, po4, totals, k_constants)
+    + components.get_CaHPO4(h, f, co3, po4, totals, k_constants)
+    + components.get_CaH2PO4(h, f, co3, po4, totals, k_constants)
+    + components.get_CaCO3(h, f, co3, po4, totals, k_constants)
 )
 print(totals["Ca"])
 

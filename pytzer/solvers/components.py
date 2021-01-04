@@ -13,27 +13,27 @@ def get_HF(h, f, k_constants):
 
 def get_HCO3(h, co3, k_constants):
     k = k_constants
-    return co3 * h / k["C2"]
+    return co3 * h / k["HCO3"]
 
 
 def get_CO2(h, co3, k_constants):
     k = k_constants
-    return co3 * h ** 2 / (k["C1"] * k["C2"])
+    return co3 * h ** 2 / (k["H2CO3"] * k["HCO3"])
 
 
 def get_HPO4(h, po4, k_constants):
     k = k_constants
-    return po4 * h / k["P3"]
+    return po4 * h / k["HPO4"]
 
 
 def get_H2PO4(h, po4, k_constants):
     k = k_constants
-    return po4 * h ** 2 / (k["P2"] * k["P3"])
+    return po4 * h ** 2 / (k["H2PO4"] * k["HPO4"])
 
 
 def get_H3PO4(h, po4, k_constants):
     k = k_constants
-    return po4 * h ** 3 / (k["P1"] * k["P2"] * k["P3"])
+    return po4 * h ** 3 / (k["H3PO4"] * k["H2PO4"] * k["HPO4"])
 
 
 def get_SO4(h, totals, k_constants):
@@ -88,12 +88,12 @@ def get_H4SiO4(h, totals, k_constants):
 
 def get_BOH4(h, totals, k_constants):
     t, k = totals, k_constants
-    return k["B"] * t["B"] / (h + k["B"])
+    return k["BOH3"] * t["B"] / (h + k["BOH3"])
 
 
 def get_BOH3(h, totals, k_constants):
     t, k = totals, k_constants
-    return h * t["B"] / (h + k["B"])
+    return h * t["B"] / (h + k["BOH3"])
 
 
 def get_Ca(h, f, co3, po4, totals, k_constants):
@@ -210,28 +210,38 @@ def get_SrCO3(co3, totals, k_constants):
 def get_all(h, f, co3, po4, totals, k_constants):
     solutes = copy.deepcopy(totals)
     solutes["H"] = h
-    solutes["OH"] = get_OH(h, k_constants)
-    solutes["HSO4"] = get_HSO4(h, totals, k_constants)
-    solutes["SO4"] = get_HSO4(h, totals, k_constants)
-    solutes["H2S"] = get_H2S(h, totals, k_constants)
-    solutes["HS"] = get_HS(h, totals, k_constants)
-    solutes["BOH3"] = get_BOH3(h, totals, k_constants)
-    solutes["BOH4"] = get_BOH4(h, totals, k_constants)
-    solutes["NH3"] = get_NH3(h, totals, k_constants)
-    solutes["NH4"] = get_NH4(h, totals, k_constants)
-    solutes["H3SiO4"] = get_H3SiO4(h, totals, k_constants)
-    solutes["H4SiO4"] = get_H4SiO4(h, totals, k_constants)
-    solutes["HNO2"] = get_HNO2(h, totals, k_constants)
-    solutes["NO2"] = get_NO2(h, totals, k_constants)
-    solutes["HF"] = get_HF(h, f, k_constants)
+    if "H2O" in k_constants:
+        solutes["OH"] = get_OH(h, k_constants)
+    if "HSO4" in k_constants:
+        solutes["HSO4"] = get_HSO4(h, totals, k_constants)
+        solutes["SO4"] = get_HSO4(h, totals, k_constants)
+    if "H2S" in k_constants:
+        solutes["H2S"] = get_H2S(h, totals, k_constants)
+        solutes["HS"] = get_HS(h, totals, k_constants)
+    if "BOH3" in k_constants:
+        solutes["BOH3"] = get_BOH3(h, totals, k_constants)
+        solutes["BOH4"] = get_BOH4(h, totals, k_constants)
+    if "NH4" in k_constants:
+        solutes["NH3"] = get_NH3(h, totals, k_constants)
+        solutes["NH4"] = get_NH4(h, totals, k_constants)
+    if "H4SiO4" in k_constants:
+        solutes["H3SiO4"] = get_H3SiO4(h, totals, k_constants)
+        solutes["H4SiO4"] = get_H4SiO4(h, totals, k_constants)
+    if "HNO2" in k_constants:
+        solutes["HNO2"] = get_HNO2(h, totals, k_constants)
+        solutes["NO2"] = get_NO2(h, totals, k_constants)
     solutes["F"] = f
-    solutes["CO2"] = get_CO2(h, co3, k_constants)
-    solutes["HCO3"] = get_HCO3(h, co3, k_constants)
+    if "HF" in k_constants:
+        solutes["HF"] = get_HF(h, f, k_constants)
     solutes["CO3"] = co3
-    solutes["H3PO4"] = get_H3PO4(h, po4, k_constants)
-    solutes["H2PO4"] = get_H2PO4(h, po4, k_constants)
-    solutes["HPO4"] = get_HPO4(h, po4, k_constants)
+    if "H2CO3" in k_constants and "HCO3" in k_constants:
+        solutes["CO2"] = get_CO2(h, co3, k_constants)
+        solutes["HCO3"] = get_HCO3(h, co3, k_constants)
     solutes["PO4"] = po4
+    if "H3PO4" in k_constants and "H2PO4" in k_constants and "HPO4" in k_constants:
+        solutes["H3PO4"] = get_H3PO4(h, po4, k_constants)
+        solutes["H2PO4"] = get_H2PO4(h, po4, k_constants)
+        solutes["HPO4"] = get_HPO4(h, po4, k_constants)
     solutes["Mg"] = get_Mg(h, f, co3, po4, totals, k_constants)
     solutes["MgOH"] = get_MgOH(h, f, co3, po4, totals, k_constants)
     solutes["MgF"] = get_MgF(h, f, co3, po4, totals, k_constants)
@@ -248,86 +258,3 @@ def get_all(h, f, co3, po4, totals, k_constants):
     solutes["Sr"] = get_Sr(co3, totals, k_constants)
     solutes["SrCO3"] = get_SrCO3(co3, totals, k_constants)
     return solutes
-
-
-def get_alkalinity(solutes):
-    return (
-        solutes["OH"]
-        - solutes["H"]
-        + solutes["MgOH"]
-        - solutes["HF"]
-        + solutes["HCO3"]
-        + solutes["CO3"] * 2
-        + solutes["HPO4"]
-        + solutes["po4"] * 2
-        - solutes["H3PO4"]
-        + solutes["MgCO3"] * 2
-        + solutes["CaCO3"] * 2
-        + solutes["SrCO3"] * 2
-        + solutes["MgHPO4"]
-        + solutes["MgPO4"] * 2
-        + solutes["CaHPO4"]
-        + solutes["CaPO4"] * 2
-        - solutes["HSO4"]
-        + solutes["HS"]
-        + solutes["BOH4"]
-        + solutes["NH3"]
-        + solutes["H3SiO4"]
-        - solutes["HNO2"]
-    )
-
-
-def get_explicit_alkalinity(totals):
-    return (
-        t["Na"]
-        + t["K"]
-        - t["Cl"]
-        - t["Br"]
-        + t["Mg"] * 2
-        + t["Ca"] * 2
-        + t["Sr"] * 2
-        - t["F"]
-        - t["PO4"]
-        - t["SO4"] * 2
-        + t["NH3"]
-        - t["NO2"]
-    )
-
-
-def get_total_F(solutes):
-    return solutes["F"] + solutes["HF"] + solutes["MgF"] + solutes["CaF"]
-
-
-def get_total_CO2(solutes):
-    return (
-        solutes["CO2"]
-        + solutes["HCO3"]
-        + solutes["CO3"]
-        + solutes["CaCO3"]
-        + solutes["MgCO3"]
-        + solutes["SrCO3"]
-    )
-
-
-def get_total_PO4(solutes):
-    return (
-        solutes["PO4"]
-        + solutes["HPO4"]
-        + solutes["H2PO4"]
-        + solutes["H3PO4"]
-        + solutes["MgPO4"]
-        + solutes["MgHPO4"]
-        + solutes["MgH2PO4"]
-        + solutes["CaPO4"]
-        + solutes["CaHPO4"]
-        + solutes["CaH2PO4"]
-    )
-
-
-def get_targets(solutes):
-    return (
-        get_alkalinity(solutes),
-        get_total_F(solutes),
-        get_total_CO2(solutes),
-        get_total_PO4(solutes),
-    )
