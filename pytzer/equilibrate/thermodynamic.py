@@ -5,157 +5,57 @@ import jax
 from jax import numpy as np
 
 
-# def _varmols(eqstate, tots1, fixmols1, eles, fixions, fixcharges):
-#     """Calculate variable molalities from solver targets."""
-#     # Seems long-winded, but it's necessary for Autograd
-#     q = 0
-#     if len(eles) > 0:
-#         for e, ele in enumerate(eles):
-#             if ele == "t_HSO4":
-#                 tHSO4 = tots1[e]
-#                 if tHSO4 > 0:
-#                     aHSO4 = _sig01(eqstate[q])
-#                     mHSO4 = tHSO4 * aHSO4
-#                     mSO4 = tHSO4 - mHSO4
-#                 else:
-#                     mHSO4 = 0.0
-#                     mSO4 = 0.0
-#                 q += 1
-#             elif ele == "t_Mg":
-#                 tMg = tots1[e]
-#                 if tMg > 0:
-#                     aMgOH = _sig01(eqstate[q])
-#                     mMg = tMg * aMgOH
-#                     mMgOH = tMg - mMg
-#                 else:
-#                     mMg = 0.0
-#                     mMgOH = 0.0
-#                 q += 1
-#             elif ele == "t_trisH":
-#                 ttrisH = tots1[e]
-#                 if ttrisH > 0:
-#                     atrisH = _sig01(eqstate[q])
-#                     mtrisH = ttrisH * atrisH
-#                     mtris = ttrisH - mtrisH
-#                 else:
-#                     mtrisH = 0.0
-#                     mtris = 0.0
-#                 q += 1
-#             elif ele == "t_H2CO3":
-#                 tH2CO3 = tots1[e]
-#                 if tH2CO3 > 0:
-#                     aH2CO3 = _sig01(eqstate[q])
-#                     aHCO3 = _sig01(eqstate[q + 1])
-#                     mCO2 = tH2CO3 * aH2CO3
-#                     mHCO3 = (tH2CO3 - mCO2) * aHCO3
-#                     mCO3 = tH2CO3 - mCO2 - mHCO3
-#                 else:
-#                     mCO2 = 0.0
-#                     mHCO3 = 0.0
-#                     mCO3 = 0.0
-#                 q += 2
-#             elif ele == "t_BOH3":
-#                 tBOH3 = tots1[e]
-#                 if tBOH3 > 0:
-#                     aBOH3 = _sig01(eqstate[q])
-#                     mBOH3 = tBOH3 * aBOH3
-#                     mBOH4 = tBOH3 - mBOH3
-#                 else:
-#                     mBOH3 = 0.0
-#                     mBOH4 = 0.0
-#                 q += 1
-#         if "t_HSO4" not in eles:
-#             mHSO4 = 0.0
-#             mSO4 = 0.0
-#         if "t_Mg" not in eles:
-#             mMg = 0.0
-#             mMgOH = 0.0
-#         if "t_trisH" not in eles:
-#             mtrisH = 0.0
-#             mtris = 0.0
-#         if "t_H2CO3" not in eles:
-#             mCO2 = 0.0
-#             mHCO3 = 0.0
-#             mCO3 = 0.0
-#         if "t_BOH3" not in eles:
-#             mBOH3 = 0.0
-#             mBOH4 = 0.0
-#     else:
-#         mHSO4 = 0.0
-#         mSO4 = 0.0
-#         mMg = 0.0
-#         mMgOH = 0.0
-#         mtrisH = 0.0
-#         mtris = 0.0
-#         mCO2 = 0.0
-#         mHCO3 = 0.0
-#         mCO3 = 0.0
-#         mBOH3 = 0.0
-#         mBOH4 = 0.0
-#     zbHSO4 = -mHSO4 - 2 * mSO4
-#     zbMg = 2 * mMg + mMgOH
-#     zbtrisH = mtrisH
-#     zbH2CO3 = -(mHCO3 + 2 * mCO3)
-#     zbBOH3 = -mBOH4
-#     if len(fixcharges) == 0:
-#         zbfixed = 0.0
-#     else:
-#         zbfixed = np.sum(fixmols1 * fixcharges)
-#     zbalance = zbfixed + zbHSO4 + zbMg + zbtrisH + zbH2CO3 + zbBOH3
-#     if len(eqstate) == q + 1:
-#         dissociatedH2O = np.exp(-eqstate[-1])
-#     elif len(eqstate) == q:
-#         dissociatedH2O = 0.0
-#     else:
-#         print("WARNING: eqstate and tots1 dimensions are not compatible!")
-#     mOH = (zbalance + np.sqrt(zbalance ** 2 + dissociatedH2O)) / 2
-#     mH = mOH - zbalance
-#     return (
-#         mH,
-#         mOH,
-#         mHSO4,
-#         mSO4,
-#         mMg,
-#         mMgOH,
-#         mtris,
-#         mtrisH,
-#         mCO2,
-#         mHCO3,
-#         mCO3,
-#         mBOH3,
-#         mBOH4,
-#     )
-
-
-@jax.jit
-def Gibbs_H2O(ln_aw, m_H, ln_acf_H, m_OH, ln_acf_OH, ln_kH2O):
+def Gibbs_H2O(solutes, log_activity_coefficients, log_activity_water, log_kH2O):
     """Evaluate the Gibbs energy for water dissocation."""
-    return ln_acf_H + np.log(m_H) + ln_acf_OH + np.log(m_OH) - ln_aw - ln_kH2O
-
-
-def Gibbs_HSO4(mH, lnacfH, mSO4, lnacfSO4, mHSO4, lnacfHSO4, lnkHSO4):
-    """Evaluate the Gibbs energy for the bisulfate-sulfate equilibrium."""
+    m, log_acf = solutes, log_activity_coefficients
     return (
-        lnacfH
-        + np.log(mH)
-        + lnacfSO4
-        + np.log(mSO4)
-        - lnacfHSO4
-        - np.log(mHSO4)
-        - lnkHSO4
+        log_acf["H"]
+        + np.log(m["H"])
+        + log_acf["OH"]
+        + np.log(m["OH"])
+        - log_activity_water
+        - log_kH2O
     )
 
 
-# def Gibbs_Mg(mMg, lnacfMg, mMgOH, lnacfMgOH, mOH, lnacfOH, lnkMg):
-#     """Evaluate the Gibbs energy for the magnesium-MgOH+ equilibrium."""
-#     return lnacfMg + np.log(mMg) + lnacfOH + np.log(mOH) - lnacfMgOH - np.log(mMgOH) + lnkMg
+def Gibbs_HSO4(solutes, log_activity_coefficients, log_kHSO4):
+    """Evaluate the Gibbs energy for the bisulfate-sulfate equilibrium."""
+    m, log_acf = solutes, log_activity_coefficients
+    return (
+        log_acf["H"]
+        + np.log(m["H"])
+        + log_acf["SO4"]
+        + np.log(m["SO4"])
+        - log_acf["HSO4"]
+        - np.log(m["HSO4"])
+        - log_kHSO4
+    )
 
 
-# def Gibbs_trisH(mH, lnacfH, mtris, lnacftris, mtrisH, lnacftrisH, lnktrisH):
-#     """Evaluate the Gibbs energy for the tris-trisH+ equilibrium."""
-#     return (
-#         lnacftris + np.log(mtris) - lnacftrisH - np.log(mtrisH) + lnacfH + np.log(mH) - lnktrisH
-#     )
+def Gibbs_MgOH(mMg, lnacfMg, mMgOH, lnacfMgOH, mOH, lnacfOH, lnkMgOH):
+    """Evaluate the Gibbs energy for the magnesium-MgOH+ equilibrium."""
+    return (
+        lnacfMg
+        + np.log(mMg)
+        + lnacfOH
+        + np.log(mOH)
+        - lnacfMgOH
+        - np.log(mMgOH)
+        + lnkMgOH
+    )
+
+
+def Gibbs_trisH(mH, lnacfH, mtris, lnacftris, mtrisH, lnacftrisH, lnktrisH):
+    """Evaluate the Gibbs energy for the tris-trisH+ equilibrium."""
+    return (
+        lnacftris
+        + np.log(mtris)
+        - lnacftrisH
+        - np.log(mtrisH)
+        + lnacfH
+        + np.log(mH)
+        - lnktrisH
+    )
 
 
 def Gibbs_H2CO3(lnaw, mH, lnacfH, mHCO3, lnacfHCO3, mCO2, lnacfCO2, lnkH2CO3):
@@ -199,9 +99,18 @@ def Gibbs_BOH3(lnaw, lnacfBOH4, mBOH4, lnacfBOH3, mBOH3, lnacfH, mH, lnkBOH3):
     )
 
 
-def Gibbs_HF(mH, lnacfH, mF, lnacfF, mHF, lnacfHF, lnkHF):
+def Gibbs_HF(solutes, log_activity_coefficients, log_kt_HF):
     """Evaluate the Gibbs energy of the hydrogen fluoride equilibrium."""
-    return lnacfH + np.log(mH) + lnacfF + np.log(mF) - lnacfHF - np.log(mHF) - lnkHF
+    m, log_acf = solutes, log_activity_coefficients
+    return (
+        log_acf["H"]
+        + np.log(m["H"])
+        + log_acf["F"]
+        + np.log(m["F"])
+        - log_acf["HF"]
+        - np.log(m["HF"])
+        - log_kt_HF
+    )
 
 
 # def Gibbs_components(

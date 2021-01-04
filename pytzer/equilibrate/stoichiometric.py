@@ -128,14 +128,14 @@ def get_solute_targets(solutes):
 def solver_func(
     p_molalities,
     totals,
-    k_constants,
+    ks_constants,
     target_alkalinity=None,
     target_total_F=None,
     target_total_CO2=None,
     target_total_PO4=None,
 ):
     h, f, co3, po4 = 10 ** -p_molalities
-    solutes = components.get_all(h, f, co3, po4, totals, k_constants)
+    solutes = components.get_all(h, f, co3, po4, totals, ks_constants)
     targets = np.array([])
     if target_alkalinity is not None:
         targets = np.append(targets, target_alkalinity - get_alkalinity(solutes))
@@ -155,7 +155,7 @@ solver_jac = jax.jit(jax.jacfwd(solver_func))
 def solve_now(
     p_molalities,
     totals,
-    k_constants,
+    ks_constants,
     target_alkalinity=None,
     target_total_F=None,
     target_total_CO2=None,
@@ -172,7 +172,7 @@ def solve_now(
         target = solver_func(
             p_molalities,
             totals,
-            k_constants,
+            ks_constants,
             target_alkalinity=target_alkalinity,
             target_total_F=target_total_F,
             target_total_CO2=target_total_CO2,
@@ -184,7 +184,7 @@ def solve_now(
         target = -solver_func(
             p_molalities,
             totals,
-            k_constants,
+            ks_constants,
             target_alkalinity=target_alkalinity,
             target_total_F=target_total_F,
             target_total_CO2=target_total_CO2,
@@ -193,7 +193,7 @@ def solve_now(
         jac = solver_jac(
             p_molalities,
             totals,
-            k_constants,
+            ks_constants,
             target_alkalinity=target_alkalinity,
             target_total_F=target_total_F,
             target_total_CO2=target_total_CO2,

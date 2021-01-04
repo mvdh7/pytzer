@@ -31,9 +31,7 @@ from . import (
     # potentials,
     # properties,
     # teos10,
-    solvers,
     unsymmetrical,
-    wrap,
 )
 from .convert import (
     activity_to_osmotic,
@@ -42,7 +40,7 @@ from .convert import (
 )
 from .libraries import ParameterLibrary
 from .meta import update_func_J
-from .wrap import (
+from .model import (
     activity_coefficients,
     activity_water,
     Gibbs_nRT,
@@ -50,7 +48,6 @@ from .wrap import (
     log_activity_water,
     osmotic_coefficient,
 )
-from .prepare import expand_solute_molalities, get_pytzer_args, split_solute_types
 
 __version__ = meta.version
 __author__ = "Matthew P. Humphreys"

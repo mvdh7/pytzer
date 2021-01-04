@@ -164,6 +164,8 @@ def Gibbs_nRT(
     nca=None,
     nnn=None,
 ):
+    """Calculate the excess Gibbs energy of a solution divided by n*R*T."""
+    
     def add_ca(i_ca):
         ic, ia = i_ca
         v_ca = ca[ic][ia]
