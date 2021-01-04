@@ -2,6 +2,7 @@
 # Copyright (C) 2019--2020  Matthew Paul Humphreys  (GNU GPLv3)
 """Calculate solution properties using the Pitzer model."""
 import itertools, jax
+from collections import OrderedDict
 from jax import numpy as np, lax
 from .constants import b, Mw
 from .libraries import Seawater
@@ -63,7 +64,7 @@ func_J = unsymmetrical.Harvie
 
 
 @jax.jit
-def Gibbs_nRT(
+def Gibbs_nRT_loop(
     m_cats,
     m_anis,
     m_neus,
@@ -149,119 +150,7 @@ def Gibbs_nRT(
 
 
 @jax.jit
-def Gibbs_map(
-    m_cats,
-    m_anis,
-    m_neus,
-    z_cats,
-    z_anis,
-    Aphi=None,
-    ca=None,
-    cc=None,
-    aa=None,
-    cca=None,
-    caa=None,
-    nc=None,
-    na=None,
-    nn=None,
-    nca=None,
-    nnn=None,
-):
-    def add_ca(i_ca):
-        ic, ia = i_ca
-        v_ca = ca[ic][ia]
-        return (
-            m_cats[ic]
-            * m_anis[ia]
-            * (
-                2 * B(sqrt_I, v_ca[0], v_ca[1], v_ca[2], v_ca[5], v_ca[6])
-                + Z * CT(sqrt_I, v_ca[3], v_ca[4], v_ca[7])
-            )
-        )
-
-    def add_cc(i_xy):
-        ix, iy = i_xy
-        return (
-            m_cats[ix]
-            * m_cats[iy]
-            * (cc[ix][iy] + etheta(Aphi, I, z_cats[ix], z_cats[iy], func_J=func_J))
-        )
-
-    def add_aa(i_xy):
-        ix, iy = i_xy
-        return (
-            m_anis[ix]
-            * m_anis[iy]
-            * (aa[ix][iy] + etheta(Aphi, I, z_anis[ix], z_anis[iy], func_J=func_J))
-        )
-
-    def add_cca(i_cca):
-        ix, iy, ia = i_cca
-        return 0.5 * m_cats[ix] * m_cats[iy] * m_anis[ia] * cca[ix][iy][ia]
-
-    def add_caa(i_caa):
-        ic, ix, iy = i_caa
-        return 0.5 * m_cats[ic] * m_anis[ix] * m_anis[iy] * caa[ic][ix][iy]
-
-    def add_nc(i_nc):
-        il, ic = i_nc
-        return 2 * m_neus[il] * m_cats[ic] * nc[il][ic]
-
-    def add_na(i_na):
-        il, ia = i_na
-        return 2 * m_neus[il] * m_anis[ia] * na[il][ia]
-
-    def add_nca(i_nca):
-        il, ic, ia = i_nca
-        return m_neus[il] * m_cats[ic] * m_anis[ia] * nca[il][ic][ia]
-
-    def add_nn(i_nn):
-        ix, iy = i_nn
-        return m_neus[ix] * m_neus[iy] * nn[ix][iy]
-
-    def add_nnn(i_nnn):
-        return m_neus[i_nnn] ** 3 * nnn[i_nnn]
-
-    n_cats = len(m_cats)
-    n_anis = len(m_anis)
-    n_neus = len(m_neus)
-    i_ca = np.array(list(itertools.product(range(n_cats), range(n_anis))))
-    i_cc = np.array(list(itertools.product(range(n_cats), range(n_cats))))
-    i_aa = np.array(list(itertools.product(range(n_anis), range(n_anis))))
-    i_cca = np.array(
-        list(itertools.product(range(n_cats), range(n_cats), range(n_anis)))
-    )
-    i_caa = np.array(
-        list(itertools.product(range(n_cats), range(n_anis), range(n_anis)))
-    )
-    i_nc = np.array(list(itertools.product(range(n_neus), range(n_cats))))
-    i_na = np.array(list(itertools.product(range(n_neus), range(n_anis))))
-    i_nca = np.array(
-        list(itertools.product(range(n_neus), range(n_cats), range(n_anis)))
-    )
-    i_nn = np.array(list(itertools.product(range(n_neus), range(n_neus))))
-    i_nnn = np.array(list(range(n_neus)))
-
-    I = ionic_strength(m_cats, z_cats) + ionic_strength(m_anis, z_anis)
-    Z = ionic_z(m_cats, z_cats) + ionic_z(m_anis, z_anis)
-    sqrt_I = np.sqrt(I)
-    return (
-        Gibbs_DH(Aphi, I)
-        + np.sum(lax.map(add_ca, i_ca))
-        + np.sum(lax.map(add_cc, i_cc))
-        + np.sum(lax.map(add_aa, i_aa))
-        + np.sum(lax.map(add_cca, i_cca))
-        + np.sum(lax.map(add_caa, i_caa))
-        + np.sum(lax.map(add_nc, i_nc))
-        + np.sum(lax.map(add_na, i_na))
-        + np.sum(lax.map(add_nca, i_nca))
-        + np.sum(lax.map(add_nn, i_nn))
-        + np.sum(lax.map(add_nnn, i_nnn))
-    )
-
-
-@jax.jit
-def Gibbs_dict_map(
+def Gibbs_nRT(
     solutes,
     Aphi=None,
     ca=None,
@@ -386,99 +275,101 @@ def Gibbs_dict_map(
 
 
 @jax.jit
-def log_activity_coefficients(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters):
+def log_activity_coefficients_loop(
+    m_cats, m_anis, m_neus, z_cats, z_anis, **parameters
+):
     """Calculate the natural log of the activity coefficient of all solutes."""
-    log_acf_cats = jax.grad(Gibbs_nRT, 0)(
+    log_acf_cats = jax.grad(Gibbs_nRT_loop, 0)(
         m_cats, m_anis, m_neus, z_cats, z_anis, **parameters
     )
-    log_acf_anis = jax.grad(Gibbs_nRT, 1)(
+    log_acf_anis = jax.grad(Gibbs_nRT_loop, 1)(
         m_cats, m_anis, m_neus, z_cats, z_anis, **parameters
     )
-    log_acf_neus = jax.grad(Gibbs_nRT, 2)(
+    log_acf_neus = jax.grad(Gibbs_nRT_loop, 2)(
         m_cats, m_anis, m_neus, z_cats, z_anis, **parameters
     )
     return log_acf_cats, log_acf_anis, log_acf_neus
 
 
 @jax.jit
-def log_activity_coeffs_cations(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters):
-    return jax.grad(Gibbs_map, 0)(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters)
-
-
-@jax.jit
-def log_activity_coeffs_anions(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters):
-    return jax.grad(Gibbs_map, 1)(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters)
-
-
-@jax.jit
-def log_activity_coeffs_neutrals(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters):
-    return jax.grad(Gibbs_map, 2)(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters)
-
-
-@jax.jit
-def log_activity_coefficients_map(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters):
-    """Calculate the natural log of the activity coefficient of all solutes."""
-    log_acf_cats = log_activity_coeffs_cations(
-        m_cats, m_anis, m_neus, z_cats, z_anis, **parameters
-    )
-    log_acf_anis = log_activity_coeffs_anions(
-        m_cats, m_anis, m_neus, z_cats, z_anis, **parameters
-    )
-    log_acf_neus = log_activity_coeffs_neutrals(
-        m_cats, m_anis, m_neus, z_cats, z_anis, **parameters
-    )
-    return log_acf_cats, log_acf_anis, log_acf_neus
-
-
-@jax.jit
-def activity_coefficients(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters):
+def activity_coefficients_loop(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters):
     """Calculate the activity coefficient of all solutes."""
-    log_acfs = log_activity_coefficients(
+    log_acfs_all = log_activity_coefficients_loop(
         m_cats, m_anis, m_neus, z_cats, z_anis, **parameters
     )
-    return [np.exp(log_acf) for log_acf in log_acfs]
+    return [[np.exp(log_acf) for log_acf in log_acfs] for log_acfs in log_acfs_all]
 
 
 @jax.jit
-def osmotic_coefficient(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters):
+def log_activity_coefficients(solutes, **parameters):
+    """Calculate the natural log of the activity coefficient of all solutes."""
+    return jax.grad(Gibbs_nRT)(solutes, **parameters)
+
+
+@jax.jit
+def activity_coefficients(solutes, **parameters):
+    """Calculate the activity coefficient of all solutes."""
+    log_acfs = log_activity_coefficients(solutes, **parameters)
+    return {k: np.exp(v) for k, v in log_acfs.items()}
+
+
+@jax.jit
+def osmotic_coefficient_loop(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters):
     """Calculate the osmotic coefficient of the solution."""
     return 1 - jax.grad(
         lambda ww: ww
-        * Gibbs_nRT(m_cats / ww, m_anis / ww, m_neus / ww, z_cats, z_anis, **parameters)
+        * Gibbs_nRT_loop(
+            m_cats / ww, m_anis / ww, m_neus / ww, z_cats, z_anis, **parameters
+        )
     )(1.0) / (np.sum(m_cats) + np.sum(m_anis) + np.sum(m_neus))
 
 
 @jax.jit
-def log_activity_water(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters):
+def osmotic_coefficient(solutes, **parameters):
+    """Calculate the osmotic coefficient of the solution."""
+    return 1 - jax.grad(
+        lambda ww: ww
+        * Gibbs_nRT(OrderedDict({s: m / ww for s, m in solutes.items()}), **parameters)
+    )(1.0) / np.sum(np.array([m for m in solutes.values()]))
+
+
+@jax.jit
+def log_activity_water_loop(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters):
+    """Calculate the natural log of the water activity."""
+    return (
+        jax.grad(
+            lambda ww: ww
+            * Gibbs_nRT_loop(
+                m_cats / ww, m_anis / ww, m_neus / ww, z_cats, z_anis, **parameters
+            )
+        )(1.0)
+        - (np.sum(m_cats) + np.sum(m_anis) + np.sum(m_neus))
+    ) * Mw
+
+
+@jax.jit
+def activity_water_loop(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters):
+    """Calculate the water activity."""
+    return np.exp(
+        log_activity_water_loop(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters)
+    )
+
+
+@jax.jit
+def log_activity_water(solutes, **parameters):
     """Calculate the natural log of the water activity."""
     return (
         jax.grad(
             lambda ww: ww
             * Gibbs_nRT(
-                m_cats / ww, m_anis / ww, m_neus / ww, z_cats, z_anis, **parameters
+                OrderedDict({s: m / ww for s, m in solutes.items()}), **parameters
             )
         )(1.0)
-        - (np.sum(m_cats) + np.sum(m_anis) + np.sum(m_neus))
+        - np.sum(np.array([m for m in solutes.values()]))
     ) * Mw
 
 
 @jax.jit
-def log_activity_water_map(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters):
-    """Calculate the natural log of the water activity."""
-    return (
-        jax.grad(
-            lambda ww: ww
-            * Gibbs_map(
-                m_cats / ww, m_anis / ww, m_neus / ww, z_cats, z_anis, **parameters
-            )
-        )(1.0)
-        - (np.sum(m_cats) + np.sum(m_anis) + np.sum(m_neus))
-    ) * Mw
-
-
-@jax.jit
-def activity_water(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters):
+def activity_water(solutes, **parameters):
     """Calculate the water activity."""
-    return np.exp(
-        log_activity_water(m_cats, m_anis, m_neus, z_cats, z_anis, **parameters)
-    )
+    return np.exp(log_activity_water(solutes, **parameters))

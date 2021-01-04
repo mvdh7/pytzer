@@ -148,7 +148,7 @@ def solver_func(
     return targets
 
 
-solver_jac = jax.jacfwd(solver_func)
+solver_jac = jax.jit(jax.jacfwd(solver_func))
 
 
 @jax.jit
