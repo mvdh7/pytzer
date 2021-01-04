@@ -227,10 +227,6 @@ def Gibbs_nRT(
     s2c = convert.solute_to_charge
     z_cats = np.array([s2c[s] for s in solutes.keys() if s in convert.all_cations])
     z_anis = np.array([s2c[s] for s in solutes.keys() if s in convert.all_anions])
-
-    r_cats = range(len(m_cats))
-    r_anis = range(len(m_anis))
-    r_neus = range(len(m_neus))
     # Evaluate terms dependent on overall ionic strength
     I = (
         np.sum(
@@ -244,6 +240,9 @@ def Gibbs_nRT(
     sqrt_I = np.sqrt(I)
     Gibbs = Gibbs_DH(Aphi, I)
     # Add Pitzer model interaction terms
+    r_cats = range(len(m_cats))
+    r_anis = range(len(m_anis))
+    r_neus = range(len(m_neus))
     if len(m_cats) > 0 and len(m_anis) > 0:
         i_ca = np.array(list(itertools.product(r_cats, r_anis)))
         i_cc = np.array(list(itertools.product(r_cats, r_cats)))
