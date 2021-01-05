@@ -227,6 +227,18 @@ def pK_CaPO4(T=298.15):
     return 7.1
 
 
+all_log_ks = {
+    "BOH3": BOH3_M79,
+    "H2CO3": H2CO3_MP98,
+    "H2O": H2O_M88,
+    "HCO3": HCO3_MP98,
+    "HF": HF_MP98,
+    "HSO4": HSO4_CRP94,
+    "MgOH": lambda T: np.log(10.0 ** -pK_MgOH(T)),
+    "trisH": trisH_BH64,
+}
+
+
 def assemble(T=298.15):
     """Assemble dict of all equilibrium constants."""
     k_constants = {}

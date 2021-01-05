@@ -152,7 +152,7 @@ solver_jac = jax.jit(jax.jacfwd(solver_func))
 
 
 @jax.jit
-def solve_now(
+def solve(
     p_molalities,
     totals,
     ks_constants,
