@@ -18,7 +18,7 @@ def Gibbs_H2O(solutes, log_activity_coefficients, log_activity_water, log_kH2O):
     )
 
 
-def Gibbs_HSO4(solutes, log_activity_coefficients, log_kHSO4):
+def Gibbs_HSO4(solutes, log_activity_coefficients, log_kt_HSO4):
     """Evaluate the Gibbs energy for the bisulfate-sulfate equilibrium."""
     m, log_acf = solutes, log_activity_coefficients
     return (
@@ -28,7 +28,21 @@ def Gibbs_HSO4(solutes, log_activity_coefficients, log_kHSO4):
         + np.log(m["SO4"])
         - log_acf["HSO4"]
         - np.log(m["HSO4"])
-        - log_kHSO4
+        - log_kt_HSO4
+    )
+
+
+def Gibbs_HF(solutes, log_activity_coefficients, log_kt_HF):
+    """Evaluate the Gibbs energy of the hydrogen fluoride equilibrium."""
+    m, log_acf = solutes, log_activity_coefficients
+    return (
+        log_acf["H"]
+        + np.log(m["H"])
+        + log_acf["F"]
+        + np.log(m["F"])
+        - log_acf["HF"]
+        - np.log(m["HF"])
+        - log_kt_HF
     )
 
 
@@ -96,20 +110,6 @@ def Gibbs_BOH3(lnaw, lnacfBOH4, mBOH4, lnacfBOH3, mBOH3, lnacfH, mH, lnkBOH3):
         - np.log(mBOH3)
         - lnaw
         - lnkBOH3
-    )
-
-
-def Gibbs_HF(solutes, log_activity_coefficients, log_kt_HF):
-    """Evaluate the Gibbs energy of the hydrogen fluoride equilibrium."""
-    m, log_acf = solutes, log_activity_coefficients
-    return (
-        log_acf["H"]
-        + np.log(m["H"])
-        + log_acf["F"]
-        + np.log(m["F"])
-        - log_acf["HF"]
-        - np.log(m["HF"])
-        - log_kt_HF
     )
 
 

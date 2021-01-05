@@ -27,5 +27,7 @@ Seawater.update_ca("K", "Br", prm.bC_K_Br_JESS)
 Seawater.update_ca("K", "Cl", prm.bC_K_Cl_JESS)
 Seawater.update_ca("K", "OH", prm.bC_K_OH_JESS)
 Seawater.update_ca("Na", "Br", prm.bC_Na_Br_JESS)
+Seawater.update_ca("H", "SO4", prm.bC_H_SO4_CRP94)
+Seawater.update_ca("H", "HSO4", prm.bC_H_HSO4_CRP94)
 # Extend MIAMI/MarChemSpec:
 # TBC...
