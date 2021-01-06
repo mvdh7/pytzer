@@ -10257,3 +10257,10 @@ def bC_Na_OH_JESS(T, P):
 #     omega = -9
 #     valid = np.isclose(T, 298.15, **temperature_tol) # unknown validity
 #     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def psi_K_Mg_Cl_A15(T, P):
+    """c-c'-a: potassium magnesium chloride [LS58 via A15]."""
+    psi = -0.022 - 14.27 * (1 / T - 1 / 298.15)
+    valid = (273.15 <= T) & (T <= 473.15)
+    return psi, valid
