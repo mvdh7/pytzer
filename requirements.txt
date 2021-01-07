@@ -2,4 +2,5 @@ numpy >= 1.17
 scipy >= 1.5
 jax == 0.2.7
 jaxlib == 0.1.57
+PyCO2SYS == 1.6.0
 autograd == 1.3

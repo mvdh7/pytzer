@@ -110,12 +110,12 @@ def get_H2S(h, totals, ks_constants):
 
 def get_H3SiO4(h, totals, ks_constants):
     t, k = totals, ks_constants
-    return k["H4SiO4"] * t["SiO4"] / (h + k["H4SiO4"])
+    return k["H4SiO4"] * t["H4SiO4"] / (h + k["H4SiO4"])
 
 
 def get_H4SiO4(h, totals, ks_constants):
     t, k = totals, ks_constants
-    return h * t["SiO4"] / (h + k["H4SiO4"])
+    return h * t["H4SiO4"] / (h + k["H4SiO4"])
 
 
 def get_BOH4(h, totals, ks_constants):
@@ -271,7 +271,7 @@ def get_all(fixed, totals, ks_constants):
     if "NH3" in totals and "NH4" in ks_constants:
         solutes["NH3"] = get_NH3(h, totals, ks_constants)
         solutes["NH4"] = get_NH4(h, totals, ks_constants)
-    if "SiO4" in totals and "H4SiO4" in ks_constants:
+    if "H4SiO4" in totals and "H4SiO4" in ks_constants:
         solutes["H3SiO4"] = get_H3SiO4(h, totals, ks_constants)
         solutes["H4SiO4"] = get_H4SiO4(h, totals, ks_constants)
     if "NO2" in totals and "HNO2" in ks_constants:
