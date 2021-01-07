@@ -168,6 +168,36 @@ def get_Gibbs_equilibria(
 jac_Gibbs_equilibria = jax.jit(jax.jacfwd(get_Gibbs_equilibria))
 
 
+@jax.jit
+def get_Gibbs_equilibria_v2(
+    pks_constants_to_solve,
+    pfixed_initial,
+    totals,
+    all_ks_constants,
+    params,
+    log_kt_constants,
+):
+    for i, rxn in enumerate(log_kt_constants.keys()):
+        all_ks_constants[rxn] = 10.0 ** -pks_constants_to_solve[i]
+    # Solve for pH
+    pfixed_initial = stoichiometric.solve_v2(pfixed_initial, totals, all_ks_constants)
+    fixed_initial = OrderedDict((k, 10.0 ** -v) for k, v in pfixed_initial.items())
+    solutes = components.get_all_v2(fixed_initial, totals, all_ks_constants)
+    log_aw = model.log_activity_water(solutes, **params)
+    log_acfs = model.log_activity_coefficients(solutes, **params)
+    # Get equilibria
+    Gibbs_equilibria = np.array([])
+    for rxn in log_kt_constants.keys():
+        Gibbs_equilibria = np.append(
+            Gibbs_equilibria,
+            all_reactions[rxn](log_kt_constants[rxn], solutes, log_acfs, log_aw),
+        )
+    return Gibbs_equilibria
+
+
+jac_Gibbs_equilibria_v2 = jax.jit(jax.jacfwd(get_Gibbs_equilibria_v2))
+
+
 def update_ks_constants(all_ks_constants, optresult_solve):
     ks_constants = copy.deepcopy(all_ks_constants)
     for i, rxn in enumerate(optresult_solve["equilibria"]):
@@ -199,6 +229,26 @@ def solve(
         ),
         method="hybr",
         jac=jac_Gibbs_equilibria,
+    )
+    optresult["equilibria"] = equilibria_to_solve
+    return optresult
+
+
+def solve_v2(equilibria_to_solve, pfixed_initial, totals, all_ks_constants, params):
+    total_targets = stoichiometric.get_total_targets(totals, pfixed_initial)
+    log_kt_constants = OrderedDict(
+        (eq, dissociation.all_log_ks[eq](T=params["temperature"]))
+        for eq in equilibria_to_solve
+    )
+    pks_constants_to_solve = np.array(
+        [-np.log10(np.exp(log_kt)) for log_kt in log_kt_constants.values()]
+    )
+    optresult = optimize.root(
+        get_Gibbs_equilibria_v2,
+        pks_constants_to_solve,
+        args=(pfixed_initial, totals, all_ks_constants, params, log_kt_constants,),
+        method="hybr",
+        jac=jac_Gibbs_equilibria_v2,
     )
     optresult["equilibria"] = equilibria_to_solve
     return optresult

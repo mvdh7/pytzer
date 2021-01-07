@@ -1,23 +1,41 @@
+from collections import OrderedDict
 import jax
 from jax import lax, numpy as np
 from . import components
 
 
-def guess_pm_initial(totals, which_pms):
+def guess_pm_initial(totals, pfixed):
     m_initial = np.array([])
-    for pm in which_pms:
+    for pm in pfixed:
         if pm == "H":
             m_initial = np.append(m_initial, 1e-8)
         elif pm == "F":
             assert totals["F"] > 0
             m_initial = np.append(m_initial, totals["F"] / 2)
-        elif pm == "CO2":
+        elif pm == "CO3":
             assert totals["CO2"] > 0
             m_initial = np.append(m_initial, totals["CO2"] / 10)
         elif pm == "PO4":
             assert totals["PO4"] > 0
             m_initial = np.append(m_initial, totals["PO4"] / 2)
     return -np.log10(m_initial)
+
+
+def guess_pfixed(totals, fixed_solutes):
+    pfixed = OrderedDict()
+    for fs in fixed_solutes:
+        if fs == "H":
+            pfixed["H"] = 8.0
+        elif fs == "F":
+            assert totals["F"] > 0
+            pfixed["F"] = -np.log10(totals["F"] / 2)
+        elif fs == "CO3":
+            assert totals["CO2"] > 0
+            pfixed["CO3"] = -np.log10(totals["CO2"] / 10)
+        elif fs == "PO4":
+            assert totals["PO4"] > 0
+            pfixed["PO4"] = -np.log10(totals["PO4"] / 2)
+    return pfixed
 
 
 def get_alkalinity(solutes):
@@ -127,31 +145,45 @@ def get_total_PO4(solutes):
 all_total_targets = {
     "H": lambda totals: get_explicit_alkalinity(totals),
     "F": lambda totals: totals["F"],
-    "CO2": lambda totals: totals["CO2"],
+    "CO3": lambda totals: totals["CO2"],
     "PO4": lambda totals: totals["PO4"],
 }
 
 
-def get_total_targets(totals, which_pms):
-    return {pm: all_total_targets[pm](totals) for pm in which_pms}
+def get_total_targets(totals, pfixed):
+    return OrderedDict((pf, all_total_targets[pf](totals)) for pf in pfixed)
 
 
 all_solute_targets = {
     "H": lambda solutes: get_alkalinity(solutes),
     "F": lambda solutes: get_total_F(solutes),
-    "CO2": lambda solutes: get_total_CO2(solutes),
+    "CO3": lambda solutes: get_total_CO2(solutes),
     "PO4": lambda solutes: get_total_PO4(solutes),
 }
 
 
-def get_solute_targets(solutes, which_pms):
-    return {pm: all_solute_targets[pm](solutes) for pm in which_pms}
+def get_solute_targets(solutes, pfixed):
+    return OrderedDict((pf, all_solute_targets[pf](solutes)) for pf in pfixed)
+
+
+def solver_func_v2(pfixed_values, pfixed, totals, ks_constants):
+    fixed = OrderedDict(
+        (k, 10.0 ** -pfixed_values[i]) for i, k in enumerate(pfixed.keys())
+    )
+    total_targets = get_total_targets(totals, pfixed)
+    solutes = components.get_all_v2(fixed, totals, ks_constants)
+    solute_targets = get_solute_targets(solutes, pfixed)
+    targets = np.array([total_targets[pf] - solute_targets[pf] for pf in pfixed.keys()])
+    return targets
+
+
+solver_jac_v2 = jax.jit(jax.jacfwd(solver_func_v2))
 
 
 def solver_func(
     p_molalities, totals, ks_constants, total_targets,
 ):
-    molalities = 10 ** -p_molalities
+    molalities = 10.0 ** -p_molalities
     h, f, co3, po4 = molalities
     solutes = components.get_all(h, f, co3, po4, totals, ks_constants)
     solute_targets = get_solute_targets(solutes, total_targets.keys())
@@ -193,3 +225,34 @@ def solve(
         return p_molalities + p_diff
 
     return lax.while_loop(cond, body, p_molalities)
+
+
+@jax.jit
+def solve_v2(pfixed, totals, ks_constants):
+
+    # tol_alkalinity = 1e-9
+    # tol_total_F = 1e-9
+    # tol_total_CO2 = 1e-9
+    # tol_total_PO4 = 1e-9
+    # tols = np.array([tol_alkalinity, tol_total_F, tol_total_CO2, tol_total_PO4])
+
+    pfixed_values = np.array([v for v in pfixed.values()])
+    total_targets = get_total_targets(totals, pfixed)
+
+    def cond(pfixed_values):
+        target = solver_func_v2(pfixed_values, pfixed, totals, ks_constants)
+        return np.any(np.abs(target) > 1e-9)
+
+    def body(pfixed_values):
+        target = -solver_func_v2(pfixed_values, pfixed, totals, ks_constants)
+        jac = solver_jac_v2(pfixed_values, pfixed, totals, ks_constants)
+        p_diff = np.linalg.solve(jac, target)
+        p_diff = np.where(p_diff > 1, 1, p_diff)
+        p_diff = np.where(p_diff < -1, -1, p_diff)
+        return pfixed_values + p_diff
+
+    pfixed_values = lax.while_loop(cond, body, pfixed_values)
+    pfixed_final = OrderedDict(
+        (k, pfixed_values[i]) for i, k in enumerate(pfixed.keys())
+    )
+    return pfixed_final

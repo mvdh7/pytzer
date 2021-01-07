@@ -14,7 +14,7 @@ ks_constants = pz.dissociation.assemble(
     temperature=temperature
 )  # Needs to be replaced with PyCO2SYS
 
-which_pms = {"H": None, "F": None, "CO2": None, "PO4": None}
+which_pms = {"H": None, "F": None, "CO3": None, "PO4": None}
 pm_initial = pz.equilibrate.stoichiometric.guess_pm_initial(totals, which_pms)
 total_targets = pz.equilibrate.stoichiometric.get_total_targets(totals, which_pms)
 pm_initial = pz.solve_stoichiometric(pm_initial, totals, ks_constants, total_targets)

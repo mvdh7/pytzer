@@ -1,4 +1,5 @@
-import copy
+from collections import OrderedDict
+import jax
 
 
 def get_OH(h, ks_constants):
@@ -6,9 +7,24 @@ def get_OH(h, ks_constants):
     return k["H2O"] / h
 
 
+def get_F(h, totals, ks_constants):
+    t, k = totals, ks_constants
+    return k["HF"] * t["F"] / (k["HF"] + h)
+
+
 def get_HF(h, f, ks_constants):
     k = ks_constants
     return f * h / k["HF"]
+
+
+def get_CO3(h, totals, ks_constants):
+    t, k = totals, ks_constants
+    return (
+        t["CO2"]
+        * k["H2CO3"]
+        * k["HCO3"]
+        / (h ** 2 + k["H2CO3"] * h + k["H2CO3"] * k["HCO3"])
+    )
 
 
 def get_HCO3(h, co3, ks_constants):
@@ -19,6 +35,22 @@ def get_HCO3(h, co3, ks_constants):
 def get_CO2(h, co3, ks_constants):
     k = ks_constants
     return co3 * h ** 2 / (k["H2CO3"] * k["HCO3"])
+
+
+def get_PO4(h, totals, ks_constants):
+    t, k = totals, ks_constants
+    return (
+        t["PO4"]
+        * k["H3PO4"]
+        * k["H2PO4"]
+        * k["HPO4"]
+        / (
+            h ** 3
+            + k["H3PO4"] * h ** 2
+            + k["H3PO4"] * k["H2PO4"] * h
+            + k["H3PO4"] * k["H2PO4"] * k["HPO4"]
+        )
+    )
 
 
 def get_HPO4(h, po4, ks_constants):
@@ -208,7 +240,8 @@ def get_SrCO3(co3, totals, ks_constants):
 
 
 def get_all(h, f, co3, po4, totals, ks_constants):
-    solutes = copy.deepcopy(totals)
+    solutes = OrderedDict()
+    solutes.update(totals)
     solutes["H"] = h
     solutes["OH"] = get_OH(h, ks_constants)
     solutes["HSO4"] = get_HSO4(h, totals, ks_constants)
@@ -226,6 +259,8 @@ def get_all(h, f, co3, po4, totals, ks_constants):
         solutes["HNO2"] = get_HNO2(h, totals, ks_constants)
         solutes["NO2"] = get_NO2(h, totals, ks_constants)
     solutes["F"] = f
+    solutes["CaF"] = get_CaF(h, f, co3, po4, totals, ks_constants)
+    solutes["MgF"] = get_MgF(h, f, co3, po4, totals, ks_constants)
     solutes["HF"] = get_HF(h, f, ks_constants)
     solutes["CO3"] = co3
     solutes["CO2"] = get_CO2(h, co3, ks_constants)
@@ -236,17 +271,103 @@ def get_all(h, f, co3, po4, totals, ks_constants):
     solutes["HPO4"] = get_HPO4(h, po4, ks_constants)
     solutes["Mg"] = get_Mg(h, f, co3, po4, totals, ks_constants)
     solutes["MgOH"] = get_MgOH(h, f, co3, po4, totals, ks_constants)
-    solutes["MgF"] = get_MgF(h, f, co3, po4, totals, ks_constants)
     solutes["MgCO3"] = get_MgCO3(h, f, co3, po4, totals, ks_constants)
     solutes["MgH2PO4"] = get_MgH2PO4(h, f, co3, po4, totals, ks_constants)
     solutes["MgHPO4"] = get_MgHPO4(h, f, co3, po4, totals, ks_constants)
     solutes["MgPO4"] = get_MgPO4(h, f, co3, po4, totals, ks_constants)
     solutes["Ca"] = get_Ca(h, f, co3, po4, totals, ks_constants)
-    solutes["CaF"] = get_CaF(h, f, co3, po4, totals, ks_constants)
     solutes["CaCO3"] = get_CaCO3(h, f, co3, po4, totals, ks_constants)
     solutes["CaH2PO4"] = get_CaH2PO4(h, f, co3, po4, totals, ks_constants)
     solutes["CaHPO4"] = get_CaHPO4(h, f, co3, po4, totals, ks_constants)
     solutes["CaPO4"] = get_CaPO4(h, f, co3, po4, totals, ks_constants)
     solutes["Sr"] = get_Sr(co3, totals, ks_constants)
     solutes["SrCO3"] = get_SrCO3(co3, totals, ks_constants)
+    return solutes
+
+
+@jax.jit
+def get_all_v2(fixed, totals, ks_constants):
+    solutes = OrderedDict()
+    solutes.update(totals)
+    solutes["H"] = h = fixed["H"]  # H must always be fixed (for now)
+    if "F" in fixed:
+        solutes["F"] = f = fixed["F"]
+    else:
+        solutes["F"] = f = get_F(h, totals, ks_constants)
+    if "CO3" in fixed:
+        solutes["CO3"] = co3 = fixed["CO3"]
+    else:
+        solutes["CO3"] = co3 = get_CO3(h, totals, ks_constants)
+    if "PO4" in fixed:
+        solutes["PO4"] = po4 = fixed["PO4"]
+    else:
+        solutes["PO4"] = po4 = get_PO4(h, totals, ks_constants)
+
+    if "H2O" in ks_constants:
+        solutes["OH"] = get_OH(h, ks_constants)
+    if "SO4" in totals and "HSO4" in ks_constants:
+        solutes["HSO4"] = get_HSO4(h, totals, ks_constants)
+        solutes["SO4"] = get_HSO4(h, totals, ks_constants)
+    if "H2S" in totals and "H2S" in ks_constants:
+        solutes["H2S"] = get_H2S(h, totals, ks_constants)
+        solutes["HS"] = get_HS(h, totals, ks_constants)
+    if "BOH3" in totals and "BOH3" in ks_constants:
+        solutes["BOH3"] = get_BOH3(h, totals, ks_constants)
+        solutes["BOH4"] = get_BOH4(h, totals, ks_constants)
+    if "NH3" in totals and "NH4" in ks_constants:
+        solutes["NH3"] = get_NH3(h, totals, ks_constants)
+        solutes["NH4"] = get_NH4(h, totals, ks_constants)
+    if "SiO4" in totals and "H4SiO4" in ks_constants:
+        solutes["H3SiO4"] = get_H3SiO4(h, totals, ks_constants)
+        solutes["H4SiO4"] = get_H4SiO4(h, totals, ks_constants)
+    if "NO2" in totals and "HNO2" in ks_constants:
+        solutes["HNO2"] = get_HNO2(h, totals, ks_constants)
+        solutes["NO2"] = get_NO2(h, totals, ks_constants)
+    if "F" in fixed and "F" in totals:
+        if "Ca" in totals and "CaF" in ks_constants:
+            solutes["CaF"] = get_CaF(h, f, co3, po4, totals, ks_constants)
+        if "Mg" in totals and "MgF" in ks_constants:
+            solutes["MgF"] = get_MgF(h, f, co3, po4, totals, ks_constants)
+    if "F" in totals and "HF" in ks_constants:
+        solutes["HF"] = get_HF(h, f, ks_constants)
+    if "CO3" in fixed:
+        if "CO2" in totals:
+            if "Mg" in totals and "MgCO3" in ks_constants:
+                solutes["MgCO3"] = get_MgCO3(h, f, co3, po4, totals, ks_constants)
+            if "Ca" in totals and "CaCO3" in ks_constants:
+                solutes["CaCO3"] = get_CaCO3(h, f, co3, po4, totals, ks_constants)
+            if "Sr" in totals and "SrCO3" in ks_constants:
+                solutes["Sr"] = get_Sr(co3, totals, ks_constants)
+                solutes["SrCO3"] = get_SrCO3(co3, totals, ks_constants)
+    if "CO2" in totals and "HCO3" in ks_constants:
+        solutes["HCO3"] = get_HCO3(h, co3, ks_constants)
+        if "H2CO3" in ks_constants:
+            solutes["CO2"] = get_CO2(h, co3, ks_constants)
+    if "PO4" in totals and "HPO4" in ks_constants:
+        solutes["HPO4"] = get_HPO4(h, po4, ks_constants)
+        if "H2PO4" in ks_constants:
+            solutes["H2PO4"] = get_H2PO4(h, po4, ks_constants)
+            if "H3PO4" in ks_constants:
+                solutes["H3PO4"] = get_H3PO4(h, po4, ks_constants)
+    if "PO4" in fixed and "PO4" in totals:
+        if "Mg" in totals:
+            if "MgH2PO4" in ks_constants:
+                solutes["MgH2PO4"] = get_MgH2PO4(h, f, co3, po4, totals, ks_constants)
+            if "MgHPO4" in ks_constants:
+                solutes["MgHPO4"] = get_MgHPO4(h, f, co3, po4, totals, ks_constants)
+            if "MgPO4" in ks_constants:
+                solutes["MgPO4"] = get_MgPO4(h, f, co3, po4, totals, ks_constants)
+        if "Ca" in totals:
+            if "CaH2PO4" in ks_constants:
+                solutes["CaH2PO4"] = get_CaH2PO4(h, f, co3, po4, totals, ks_constants)
+            if "CaHPO4" in ks_constants:
+                solutes["CaHPO4"] = get_CaHPO4(h, f, co3, po4, totals, ks_constants)
+            if "CaPO4" in ks_constants:
+                solutes["CaPO4"] = get_CaPO4(h, f, co3, po4, totals, ks_constants)
+    if "Mg" in totals:
+        solutes["Mg"] = get_Mg(h, f, co3, po4, totals, ks_constants)
+        if "MgOH" in ks_constants:
+            solutes["MgOH"] = get_MgOH(h, f, co3, po4, totals, ks_constants)
+    if "Ca" in totals:
+        solutes["Ca"] = get_Ca(h, f, co3, po4, totals, ks_constants)
     return solutes
