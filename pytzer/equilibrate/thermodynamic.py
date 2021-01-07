@@ -1,6 +1,7 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019--2020  Matthew Paul Humphreys  (GNU GPLv3)
 """Solve for thermodynamic equilibrium."""
+import copy
 from collections import OrderedDict
 from scipy import optimize
 import jax
@@ -140,14 +141,16 @@ def get_Gibbs_equilibria(
     pm_initial,
     totals,
     all_ks_constants,
-    targets,
+    total_targets,
     params,
     log_kt_constants,
 ):
     for i, rxn in enumerate(log_kt_constants.keys()):
         all_ks_constants[rxn] = 10.0 ** -pks_constants_to_solve[i]
     # Solve for pH
-    pm_initial = stoichiometric.solve(pm_initial, totals, all_ks_constants, *targets)
+    pm_initial = stoichiometric.solve(
+        pm_initial, totals, all_ks_constants, total_targets
+    )
     molalities = 10.0 ** -pm_initial
     solutes = components.get_all(*molalities, totals, all_ks_constants)
     log_aw = model.log_activity_water(solutes, **params)
@@ -165,20 +168,37 @@ def get_Gibbs_equilibria(
 jac_Gibbs_equilibria = jax.jit(jax.jacfwd(get_Gibbs_equilibria))
 
 
+def update_ks_constants(all_ks_constants, optresult_solve):
+    ks_constants = copy.deepcopy(all_ks_constants)
+    for i, rxn in enumerate(optresult_solve["equilibria"]):
+        ks_constants[rxn] = 10.0 ** -optresult_solve["x"][i]
+    return ks_constants
+
+
 def solve(
-    equilibria_to_solve, pm_initial, totals, all_ks_constants, params,
+    equilibria_to_solve, pm_initial, totals, all_ks_constants, params, which_pms,
 ):
-    targets = stoichiometric.get_total_targets(totals)
+    total_targets = stoichiometric.get_total_targets(totals, which_pms)
     log_kt_constants = OrderedDict(
-        (eq, dissociation.all_log_ks[eq]()) for eq in equilibria_to_solve
+        (eq, dissociation.all_log_ks[eq](T=params["temperature"]))
+        for eq in equilibria_to_solve
     )
     pks_constants_to_solve = np.array(
         [-np.log10(np.exp(log_kt)) for log_kt in log_kt_constants.values()]
     )
-    return optimize.root(
+    optresult = optimize.root(
         get_Gibbs_equilibria,
         pks_constants_to_solve,
-        args=(pm_initial, totals, all_ks_constants, targets, params, log_kt_constants),
+        args=(
+            pm_initial,
+            totals,
+            all_ks_constants,
+            total_targets,
+            params,
+            log_kt_constants,
+        ),
         method="hybr",
         jac=jac_Gibbs_equilibria,
     )
+    optresult["equilibria"] = equilibria_to_solve
+    return optresult

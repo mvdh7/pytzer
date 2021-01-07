@@ -81,6 +81,7 @@ def Gibbs_nRT_loop(
     nn=None,
     nca=None,
     nnn=None,
+    **parameters_extra
 ):
     """Calculate the excess Gibbs energy of a solution divided by n*R*T."""
     # Note that oceanographers record ocean pressure as only due to the water,
@@ -163,9 +164,10 @@ def Gibbs_nRT(
     nn=None,
     nca=None,
     nnn=None,
+    **parameters_extra
 ):
     """Calculate the excess Gibbs energy of a solution divided by n*R*T."""
-    
+
     def add_ca(i_ca):
         ic, ia = i_ca
         v_ca = ca[ic][ia]

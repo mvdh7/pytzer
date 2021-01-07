@@ -166,7 +166,7 @@ class ParameterLibrary(dict):
         if len(neutrals) == 0:
             neutrals = None
 
-        parameters = {}
+        parameters = {"temperature": temperature, "pressure": pressure}
         TP = (temperature, pressure)
         if "Aphi" in self:
             parameters.update({"Aphi": self["Aphi"](*TP)[0]})

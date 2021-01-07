@@ -38,6 +38,9 @@ from .convert import (
     log_activities_to_mean,
     osmotic_to_activity,
 )
+from .equilibrate import solve
+from .equilibrate.stoichiometric import solve as solve_stoichiometric
+from .equilibrate.thermodynamic import solve as solve_thermodynamic
 from .libraries import ParameterLibrary
 from .meta import update_func_J
 from .model import (

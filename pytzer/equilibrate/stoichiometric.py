@@ -3,6 +3,23 @@ from jax import lax, numpy as np
 from . import components
 
 
+def guess_pm_initial(totals, which_pms):
+    m_initial = np.array([])
+    for pm in which_pms:
+        if pm == "H":
+            m_initial = np.append(m_initial, 1e-8)
+        elif pm == "F":
+            assert totals["F"] > 0
+            m_initial = np.append(m_initial, totals["F"] / 2)
+        elif pm == "CO2":
+            assert totals["CO2"] > 0
+            m_initial = np.append(m_initial, totals["CO2"] / 10)
+        elif pm == "PO4":
+            assert totals["PO4"] > 0
+            m_initial = np.append(m_initial, totals["PO4"] / 2)
+    return -np.log10(m_initial)
+
+
 def get_alkalinity(solutes):
     def add_if_in(key):
         if key in solutes:
@@ -107,44 +124,45 @@ def get_total_PO4(solutes):
     )
 
 
-def get_total_targets(totals):
-    return (
-        get_explicit_alkalinity(totals),
-        totals["F"],
-        totals["CO2"],
-        totals["PO4"],
-    )
+all_total_targets = {
+    "H": lambda totals: get_explicit_alkalinity(totals),
+    "F": lambda totals: totals["F"],
+    "CO2": lambda totals: totals["CO2"],
+    "PO4": lambda totals: totals["PO4"],
+}
 
 
-def get_solute_targets(solutes):
-    return (
-        get_alkalinity(solutes),
-        get_total_F(solutes),
-        get_total_CO2(solutes),
-        get_total_PO4(solutes),
-    )
+def get_total_targets(totals, which_pms):
+    return {pm: all_total_targets[pm](totals) for pm in which_pms}
+
+
+all_solute_targets = {
+    "H": lambda solutes: get_alkalinity(solutes),
+    "F": lambda solutes: get_total_F(solutes),
+    "CO2": lambda solutes: get_total_CO2(solutes),
+    "PO4": lambda solutes: get_total_PO4(solutes),
+}
+
+
+def get_solute_targets(solutes, which_pms):
+    return {pm: all_solute_targets[pm](solutes) for pm in which_pms}
 
 
 def solver_func(
-    p_molalities,
-    totals,
-    ks_constants,
-    target_alkalinity=None,
-    target_total_F=None,
-    target_total_CO2=None,
-    target_total_PO4=None,
+    p_molalities, totals, ks_constants, total_targets,
 ):
-    h, f, co3, po4 = 10 ** -p_molalities
+    molalities = 10 ** -p_molalities
+    h, f, co3, po4 = molalities
     solutes = components.get_all(h, f, co3, po4, totals, ks_constants)
-    targets = np.array([])
-    if target_alkalinity is not None:
-        targets = np.append(targets, target_alkalinity - get_alkalinity(solutes))
-    if target_total_F is not None:
-        targets = np.append(targets, target_total_F - get_total_F(solutes))
-    if target_total_CO2 is not None:
-        targets = np.append(targets, target_total_CO2 - get_total_CO2(solutes))
-    if target_total_PO4 is not None:
-        targets = np.append(targets, target_total_PO4 - get_total_PO4(solutes))
+    solute_targets = get_solute_targets(solutes, total_targets.keys())
+    targets = np.array(
+        [
+            total_target - solute_target
+            for total_target, solute_target in zip(
+                total_targets.values(), solute_targets.values()
+            )
+        ]
+    )
     return targets
 
 
@@ -153,13 +171,7 @@ solver_jac = jax.jit(jax.jacfwd(solver_func))
 
 @jax.jit
 def solve(
-    p_molalities,
-    totals,
-    ks_constants,
-    target_alkalinity=None,
-    target_total_F=None,
-    target_total_CO2=None,
-    target_total_PO4=None,
+    p_molalities, totals, ks_constants, total_targets,
 ):
 
     tol_alkalinity = 1e-9
@@ -169,36 +181,12 @@ def solve(
     tols = np.array([tol_alkalinity, tol_total_F, tol_total_CO2, tol_total_PO4])
 
     def cond(p_molalities):
-        target = solver_func(
-            p_molalities,
-            totals,
-            ks_constants,
-            target_alkalinity=target_alkalinity,
-            target_total_F=target_total_F,
-            target_total_CO2=target_total_CO2,
-            target_total_PO4=target_total_PO4,
-        )
+        target = solver_func(p_molalities, totals, ks_constants, total_targets,)
         return np.any(np.abs(target) > tols)
 
     def body(p_molalities):
-        target = -solver_func(
-            p_molalities,
-            totals,
-            ks_constants,
-            target_alkalinity=target_alkalinity,
-            target_total_F=target_total_F,
-            target_total_CO2=target_total_CO2,
-            target_total_PO4=target_total_PO4,
-        )
-        jac = solver_jac(
-            p_molalities,
-            totals,
-            ks_constants,
-            target_alkalinity=target_alkalinity,
-            target_total_F=target_total_F,
-            target_total_CO2=target_total_CO2,
-            target_total_PO4=target_total_PO4,
-        )
+        target = -solver_func(p_molalities, totals, ks_constants, total_targets,)
+        jac = solver_jac(p_molalities, totals, ks_constants, total_targets,)
         p_diff = np.linalg.solve(jac, target)
         p_diff = np.where(p_diff > 1, 1, p_diff)
         p_diff = np.where(p_diff < -1, -1, p_diff)

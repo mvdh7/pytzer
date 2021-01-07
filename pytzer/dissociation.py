@@ -234,35 +234,36 @@ all_log_ks = {
     "HCO3": HCO3_MP98,
     "HF": HF_MP98,
     "HSO4": HSO4_CRP94,
-    "MgOH": lambda T: np.log(10.0 ** -pK_MgOH(T)),
+    "MgOH": lambda T=298.15: np.log(10.0 ** -pK_MgOH(T)),
     "trisH": trisH_BH64,
 }
 
 
-def assemble(T=298.15):
-    """Assemble dict of all equilibrium constants."""
-    k_constants = {}
-    k_constants["HF"] = np.exp(HF_MP98(T=T))
-    k_constants["H2S"] = np.exp(H2S_MP98(T=T))
-    k_constants["H2O"] = np.exp(H2O_M88(T=T))
-    k_constants["BOH3"] = np.exp(BOH3_M79(T=T))
-    k_constants["HSO4"] = np.exp(HSO4_CRP94(T=T))
-    k_constants["NH4"] = np.exp(NH4_MP98(T=T))
-    k_constants["H2CO3"] = np.exp(H2CO3_MP98(T=T))
-    k_constants["HCO3"] = np.exp(HCO3_MP98(T=T))
-    k_constants["H3PO4"] = np.exp(H3PO4_MP98(T=T))
-    k_constants["H2PO4"] = np.exp(H2PO4_MP98(T=T))
-    k_constants["HPO4"] = np.exp(HPO4_MP98(T=T))
-    k_constants["MgOH"] = 10.0 ** -pK_MgOH(T=T)
-    k_constants["MgF"] = 10.0 ** -pK_MgF(T=T)
-    k_constants["CaF"] = 10.0 ** -pK_CaF(T=T)
-    k_constants["MgCO3"] = 10.0 ** -pK_MgCO3(T=T)
-    k_constants["CaCO3"] = 10.0 ** -pK_CaCO3(T=T)
-    k_constants["SrCO3"] = 10.0 ** -pK_SrCO3(T=T)
-    k_constants["MgH2PO4"] = 10.0 ** -pK_MgH2PO4(T=T)
-    k_constants["CaH2PO4"] = 10.0 ** -pK_CaH2PO4(T=T)
-    k_constants["MgHPO4"] = 10.0 ** -pK_MgHPO4(T=T)
-    k_constants["CaHPO4"] = 10.0 ** -pK_CaHPO4(T=T)
-    k_constants["MgPO4"] = 10.0 ** -pK_MgPO4(T=T)
-    k_constants["CaPO4"] = 10.0 ** -pK_CaPO4(T=T)
-    return k_constants
+def assemble(temperature=298.15):
+    """Evaluate all thermodynamic equilibrium constants."""
+    kt_constants = {
+        "HF": np.exp(HF_MP98(T=temperature)),
+        "H2S": np.exp(H2S_MP98(T=temperature)),
+        "H2O": np.exp(H2O_M88(T=temperature)),
+        "BOH3": np.exp(BOH3_M79(T=temperature)),
+        "HSO4": np.exp(HSO4_CRP94(T=temperature)),
+        "NH4": np.exp(NH4_MP98(T=temperature)),
+        "H2CO3": np.exp(H2CO3_MP98(T=temperature)),
+        "HCO3": np.exp(HCO3_MP98(T=temperature)),
+        "H3PO4": np.exp(H3PO4_MP98(T=temperature)),
+        "H2PO4": np.exp(H2PO4_MP98(T=temperature)),
+        "HPO4": np.exp(HPO4_MP98(T=temperature)),
+        "MgOH": 10.0 ** -pK_MgOH(T=temperature),
+        "MgF": 10.0 ** -pK_MgF(T=temperature),
+        "CaF": 10.0 ** -pK_CaF(T=temperature),
+        "MgCO3": 10.0 ** -pK_MgCO3(T=temperature),
+        "CaCO3": 10.0 ** -pK_CaCO3(T=temperature),
+        "SrCO3": 10.0 ** -pK_SrCO3(T=temperature),
+        "MgH2PO4": 10.0 ** -pK_MgH2PO4(T=temperature),
+        "CaH2PO4": 10.0 ** -pK_CaH2PO4(T=temperature),
+        "MgHPO4": 10.0 ** -pK_MgHPO4(T=temperature),
+        "CaHPO4": 10.0 ** -pK_CaHPO4(T=temperature),
+        "MgPO4": 10.0 ** -pK_MgPO4(T=temperature),
+        "CaPO4": 10.0 ** -pK_CaPO4(T=temperature),
+    }
+    return kt_constants
