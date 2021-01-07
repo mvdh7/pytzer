@@ -166,35 +166,14 @@ def get_solute_targets(solutes, pfixed):
     return OrderedDict((pf, all_solute_targets[pf](solutes)) for pf in pfixed)
 
 
-def solver_func_v2(pfixed_values, pfixed, totals, ks_constants):
+def solver_func(pfixed_values, pfixed, totals, ks_constants):
     fixed = OrderedDict(
         (k, 10.0 ** -pfixed_values[i]) for i, k in enumerate(pfixed.keys())
     )
     total_targets = get_total_targets(totals, pfixed)
-    solutes = components.get_all_v2(fixed, totals, ks_constants)
+    solutes = components.get_all(fixed, totals, ks_constants)
     solute_targets = get_solute_targets(solutes, pfixed)
     targets = np.array([total_targets[pf] - solute_targets[pf] for pf in pfixed.keys()])
-    return targets
-
-
-solver_jac_v2 = jax.jit(jax.jacfwd(solver_func_v2))
-
-
-def solver_func(
-    p_molalities, totals, ks_constants, total_targets,
-):
-    molalities = 10.0 ** -p_molalities
-    h, f, co3, po4 = molalities
-    solutes = components.get_all(h, f, co3, po4, totals, ks_constants)
-    solute_targets = get_solute_targets(solutes, total_targets.keys())
-    targets = np.array(
-        [
-            total_target - solute_target
-            for total_target, solute_target in zip(
-                total_targets.values(), solute_targets.values()
-            )
-        ]
-    )
     return targets
 
 
@@ -202,33 +181,7 @@ solver_jac = jax.jit(jax.jacfwd(solver_func))
 
 
 @jax.jit
-def solve(
-    p_molalities, totals, ks_constants, total_targets,
-):
-
-    tol_alkalinity = 1e-9
-    tol_total_F = 1e-9
-    tol_total_CO2 = 1e-9
-    tol_total_PO4 = 1e-9
-    tols = np.array([tol_alkalinity, tol_total_F, tol_total_CO2, tol_total_PO4])
-
-    def cond(p_molalities):
-        target = solver_func(p_molalities, totals, ks_constants, total_targets,)
-        return np.any(np.abs(target) > tols)
-
-    def body(p_molalities):
-        target = -solver_func(p_molalities, totals, ks_constants, total_targets,)
-        jac = solver_jac(p_molalities, totals, ks_constants, total_targets,)
-        p_diff = np.linalg.solve(jac, target)
-        p_diff = np.where(p_diff > 1, 1, p_diff)
-        p_diff = np.where(p_diff < -1, -1, p_diff)
-        return p_molalities + p_diff
-
-    return lax.while_loop(cond, body, p_molalities)
-
-
-@jax.jit
-def solve_v2(pfixed, totals, ks_constants):
+def solve(pfixed, totals, ks_constants):
 
     # tol_alkalinity = 1e-9
     # tol_total_F = 1e-9
@@ -240,12 +193,12 @@ def solve_v2(pfixed, totals, ks_constants):
     total_targets = get_total_targets(totals, pfixed)
 
     def cond(pfixed_values):
-        target = solver_func_v2(pfixed_values, pfixed, totals, ks_constants)
+        target = solver_func(pfixed_values, pfixed, totals, ks_constants)
         return np.any(np.abs(target) > 1e-9)
 
     def body(pfixed_values):
-        target = -solver_func_v2(pfixed_values, pfixed, totals, ks_constants)
-        jac = solver_jac_v2(pfixed_values, pfixed, totals, ks_constants)
+        target = -solver_func(pfixed_values, pfixed, totals, ks_constants)
+        jac = solver_jac(pfixed_values, pfixed, totals, ks_constants)
         p_diff = np.linalg.solve(jac, target)
         p_diff = np.where(p_diff > 1, 1, p_diff)
         p_diff = np.where(p_diff < -1, -1, p_diff)
