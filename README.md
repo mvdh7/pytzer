@@ -19,7 +19,7 @@ Use the [environment.yml](https://github.com/mvdh7/pytzer/blob/jax/environment.y
 
     conda env create -f environment.yml
 
-If you want to run this environment in Spyder v5, you will also need to upgrade `spyder-kernels`:
+If you want to run this environment in Spyder v5, you will also need to upgrade `spyder-kernels` (the default version is suitable for Spyder v4):
 
     conda update -n pytzer -c conda-forge spyder-kernels
 
