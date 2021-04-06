@@ -23,6 +23,8 @@ If you want to run this environment in Spyder v5, you will also need to upgrade 
 
     conda update -n pytzer -c conda-forge spyder-kernels
 
+Finally, fork and/or clone this repo to somewhere that your Python can see it.
+
 ### For general use
 
 At present only up to v0.4.3 is available for installation with `pip` using:
