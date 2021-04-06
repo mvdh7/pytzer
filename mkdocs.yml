@@ -10,8 +10,8 @@ theme:
   language: en
   palette:
     scheme: default
-    primary: red
-    accent: red
+    primary: blue grey
+    accent: teal
   font:
     text: Roboto
     code: Roboto Mono
@@ -55,10 +55,10 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.superfences
   - pymdownx.highlight
-  - pymdownx.inlinehighlight
+  - pymdownx.inlinehilite
   - footnotes
   - pymdownx.arithmatex:
-    generic: true
+      generic: true
 
 extra_javascript:
   - javascripts/config.js
