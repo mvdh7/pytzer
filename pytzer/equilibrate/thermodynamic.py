@@ -184,7 +184,13 @@ def solve(equilibria_to_solve, pfixed_initial, totals, all_ks_constants, params)
     optresult = optimize.root(
         get_Gibbs_equilibria,
         pks_constants_to_solve,
-        args=(pfixed_initial, totals, all_ks_constants, params, log_kt_constants,),
+        args=(
+            pfixed_initial,
+            totals,
+            all_ks_constants,
+            params,
+            log_kt_constants,
+        ),
         method="hybr",
         jac=jac_Gibbs_equilibria,
     )

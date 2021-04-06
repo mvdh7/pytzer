@@ -243,7 +243,11 @@ def getallions(eles, fixions):
         allions = concatenate([fixions, ["H", "OH"]])
     else:
         allions = concatenate(
-            [fixions, concatenate([_eq2ions[ele] for ele in eles]), ["H", "OH"],]
+            [
+                fixions,
+                concatenate([_eq2ions[ele] for ele in eles]),
+                ["H", "OH"],
+            ]
         )
     if len(unique(allions)) < len(allions):
         allions = list(allions)

@@ -2,6 +2,7 @@ import jax
 from jax import numpy as jnp
 import numpy as np
 
+
 def ca_none(T, P):
     """cation:anion --- no interaction effect."""
     return {
@@ -15,6 +16,7 @@ def ca_none(T, P):
         "omega": 1,
         "valid": (T > 0) & (P > 0),
     }
+
 
 @jax.jit
 def M88_eq13(T, a):
@@ -71,22 +73,18 @@ class ParameterLibrary:
         self.Aphi = Aphi_M88
         self.b = 1.2
         self.ca = {}
-        
-        
+
     def add_interaction(self, cation, anion, func=ca_none):
         self.ca[cation + ":" + anion] = func
-        
-        
+
     def get_parameters(self, ions, T=298.15, P=10.1325):
         # charges = i2c(ions)
         # cations = ions[charges > 0]
         # anions = ions[charges < 0]
-        return {"Aphi": self.Aphi(T, P)[0], "b": self.b}#,
-            # "ca": [self.ca[cation + ':' + anion](T, P)
-            #        for cation in cations
-            #        for anion in anions]}
-
-
+        return {"Aphi": self.Aphi(T, P)[0], "b": self.b}  # ,
+        # "ca": [self.ca[cation + ':' + anion](T, P)
+        #        for cation in cations
+        #        for anion in anions]}
 
 
 @jax.jit  # jit here speeds this function by 4x and its deriv by 2x

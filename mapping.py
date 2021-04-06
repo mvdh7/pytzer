@@ -2,9 +2,9 @@ import itertools, jax
 from jax import numpy as np, lax
 import numpy as onp
 
+
 def raiser(x, y, xy):
     return (x + y) * xy
-
 
 
 # @jax.jit
@@ -19,22 +19,20 @@ def get_tot_loop(xs, ys, mx):
 @jax.jit
 def get_tot_map(xs, ys, mx):
     nx, ny = np.shape(mx)
-    
+
     def raiser_ix(ix_iy):
         ix, iy = ix_iy
         return raiser(xs[ix], ys[iy], mx[ix, iy])
-    
+
     tot = 0.0
     ix_iy = np.array(list(itertools.product(range(nx), range(ny))))
     tot = tot + np.sum(lax.map(raiser_ix, ix_iy))
     tot = tot + np.sum(lax.map(raiser_ix, ix_iy))
-    
-    return tot
-    
-    
-# def get_tot_scan(xs, ys, mx):
-    
 
+    return tot
+
+
+# def get_tot_scan(xs, ys, mx):
 
 
 nx, ny = 50, 60

@@ -21,7 +21,11 @@ def getmols(filename, delimiter=",", skip_top=0):
     all ionic concentrations are defined (i.e. no equilibration)."""
     data = genfromtxt(filename, delimiter=delimiter, skip_header=skip_top + 1)
     if len(shape(data)) == 1:
-        data = array([data,])
+        data = array(
+            [
+                data,
+            ]
+        )
     head = genfromtxt(
         filename,
         delimiter=delimiter,
@@ -44,7 +48,11 @@ def gettots(filename, delimiter=",", skip_top=0):
     some total concentrations are defined (i.e. with equilibration)."""
     data = genfromtxt(filename, delimiter=delimiter, skip_header=skip_top + 1)
     if len(shape(data)) == 1:
-        data = array([data,])
+        data = array(
+            [
+                data,
+            ]
+        )
     head = genfromtxt(
         filename,
         delimiter=delimiter,

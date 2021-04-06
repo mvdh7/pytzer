@@ -182,16 +182,6 @@ solver_jac = jax.jit(jax.jacfwd(solver_func))
 
 @jax.jit
 def solve(pfixed, totals, ks_constants):
-
-    # tol_alkalinity = 1e-9
-    # tol_total_F = 1e-9
-    # tol_total_CO2 = 1e-9
-    # tol_total_PO4 = 1e-9
-    # tols = np.array([tol_alkalinity, tol_total_F, tol_total_CO2, tol_total_PO4])
-
-    pfixed_values = np.array([v for v in pfixed.values()])
-    total_targets = get_total_targets(totals, pfixed)
-
     def cond(pfixed_values):
         target = solver_func(pfixed_values, pfixed, totals, ks_constants)
         return np.any(np.abs(target) > 1e-9)
@@ -204,6 +194,7 @@ def solve(pfixed, totals, ks_constants):
         p_diff = np.where(p_diff < -1, -1, p_diff)
         return pfixed_values + p_diff
 
+    pfixed_values = np.array([v for v in pfixed.values()])
     pfixed_values = lax.while_loop(cond, body, pfixed_values)
     pfixed_final = OrderedDict(
         (k, pfixed_values[i]) for i, k in enumerate(pfixed.keys())

@@ -133,7 +133,11 @@ class ParameterLibrary(dict):
         self["equilibria"].update({equilibrium: func})
 
     def get_parameters(
-        self, solutes=None, temperature=298.15, pressure=10.1023, verbose=True,
+        self,
+        solutes=None,
+        temperature=298.15,
+        pressure=10.1023,
+        verbose=True,
     ):
         """Evaluate all interaction parameters under specific conditions."""
         if verbose:
@@ -278,7 +282,11 @@ class ParameterLibrary(dict):
         return parameters
 
     def get_parameters_v2(
-        self, solutes=None, temperature=298.15, pressure=10.1023, verbose=True,
+        self,
+        solutes=None,
+        temperature=298.15,
+        pressure=10.1023,
+        verbose=True,
     ):
         """Evaluate all interaction parameters under specific conditions."""
         if verbose:

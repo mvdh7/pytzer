@@ -1,63 +1,75 @@
-#from copy import deepcopy
+# from copy import deepcopy
 from sys import path
-#calkPath = '../calkulate'
-calkPath = 'E:\Dropbox\MATLAB\My toolkits\calkulate'
+
+# calkPath = '../calkulate'
+calkPath = "E:\Dropbox\MATLAB\My toolkits\calkulate"
 if calkPath not in path:
     path.append(calkPath)
 import calkulate as calk
 import pytzer as pz
 import numpy as np
-#from scipy.optimize import minimize
 
-#mols, ions, tempK, pres, prmlib, Gex_nRT, osm, aw, acfs = \
+# from scipy.optimize import minimize
+
+# mols, ions, tempK, pres, prmlib, Gex_nRT, osm, aw, acfs = \
 #    pz.blackbox('testfiles/MilleroStandardEquilibrated.csv')
 
-filename = 'testfiles/MilleroStandard.csv'
-#filename = 'testfiles/trisASWequilibrium.csv'
-allmols, allions, tempK, pres, prmlib, Gex_nRT, osm, aw, acfs, eqstates \
-    = pz.blackbox_equilibrate(filename, prmlib=pz.libraries.Seawater)
-pH = -np.log10(allmols[allions == 'H']).ravel()
+filename = "testfiles/MilleroStandard.csv"
+# filename = 'testfiles/trisASWequilibrium.csv'
+(
+    allmols,
+    allions,
+    tempK,
+    pres,
+    prmlib,
+    Gex_nRT,
+    osm,
+    aw,
+    acfs,
+    eqstates,
+) = pz.blackbox_equilibrate(filename, prmlib=pz.libraries.Seawater)
+pH = -np.log10(allmols[allions == "H"]).ravel()
 
 #%% Calculate stoichiometric K*s & compare
-mH = allmols[allions == 'H'][0][0]
-mHSO4 = allmols[allions == 'HSO4'][0][0]
-mSO4 = allmols[allions == 'SO4'][0][0]
+mH = allmols[allions == "H"][0][0]
+mHSO4 = allmols[allions == "HSO4"][0][0]
+mSO4 = allmols[allions == "SO4"][0][0]
 mHT = mH + mHSO4
-mOH = allmols[allions == 'OH'][0][0]
-mHCO3 = allmols[allions == 'HCO3'][0][0]
-mCO3 = allmols[allions == 'CO3'][0][0]
-mCO2 = allmols[allions == 'CO2'][0][0]
-mBOH4 = allmols[allions == 'BOH4'][0][0]
-mBOH3 = allmols[allions == 'BOH3'][0][0]
-pKstarH2O_pz = -np.log10(mHT*mOH)
+mOH = allmols[allions == "OH"][0][0]
+mHCO3 = allmols[allions == "HCO3"][0][0]
+mCO3 = allmols[allions == "CO3"][0][0]
+mCO2 = allmols[allions == "CO2"][0][0]
+mBOH4 = allmols[allions == "BOH4"][0][0]
+mBOH3 = allmols[allions == "BOH3"][0][0]
+pKstarH2O_pz = -np.log10(mHT * mOH)
 pKstarH2O = -np.log10(calk.dissociation.kH2O_T_DSC07(298.15, 35))
-pKstarH2CO3_pz = -np.log10(mHCO3*mHT/mCO2)
+pKstarH2CO3_pz = -np.log10(mHCO3 * mHT / mCO2)
 pKstarH2CO3 = -np.log10(calk.dissociation.ksH2CO3_T_LDK00(298.15, 35)[0])
-pKstarHCO3_pz = -np.log10(mCO3*mHT/mHCO3)
+pKstarHCO3_pz = -np.log10(mCO3 * mHT / mHCO3)
 pKstarHCO3 = -np.log10(calk.dissociation.ksH2CO3_T_LDK00(298.15, 35)[1])
-pKstarBOH3_pz = -np.log10(mBOH4*mHT/mBOH3)
+pKstarBOH3_pz = -np.log10(mBOH4 * mHT / mBOH3)
 pKstarBOH3 = -np.log10(calk.dissociation.kBOH3_T_D90a(298.15, 35))
-pKstarHSO4_pz = -np.log10(mSO4*mH/mHSO4)
+pKstarHSO4_pz = -np.log10(mSO4 * mH / mHSO4)
 pKstarHSO4 = -np.log10(calk.dissociation.kHSO4_F_D90b(298.15, 35))
-mMgOH = allmols[allions == 'MgOH'][0][0]
+mMgOH = allmols[allions == "MgOH"][0][0]
 
 #%%
-#tots, fixmols, eles, fixions, tempK, pres = pz.io.gettots(filename)
-#allions = pz.properties.getallions(eles, fixions)
-#prmlib = deepcopy(pz.libraries.MIAMI)
-#prmlib.add_zeros(allions) # just in case
+# tots, fixmols, eles, fixions, tempK, pres = pz.io.gettots(filename)
+# allions = pz.properties.getallions(eles, fixions)
+# prmlib = deepcopy(pz.libraries.MIAMI)
+# prmlib.add_zeros(allions) # just in case
 ## Solve for equilibria
-#q = 0
-#for ele in eles:
+# q = 0
+# for ele in eles:
 #    q += len(pz.properties._eq2ions[ele]) - 1
-#eqstate_guess = [0.0 for _ in range(q)]
-#if q == 0:
+# eqstate_guess = [0.0 for _ in range(q)]
+# if q == 0:
 #    eqstate_guess = [30.0]
-#else:
+# else:
 #    eqstate_guess.append(30.0)
-#eqstates, allmols, allions, lnks = pz.equilibrate._oosetup(eqstate_guess, tots,
+# eqstates, allmols, allions, lnks = pz.equilibrate._oosetup(eqstate_guess, tots,
 #    eles, fixions, tempK, pres, prmlib)
-#for L in range(len(tempK)):
+# for L in range(len(tempK)):
 #    print('Solving {} of {}...'.format(L+1, len(tempK)))
 #    allmxs = pz.matrix.assemble(allions, np.array([tempK[L]]),
 #        np.array([pres[L]]), prmlib)
@@ -75,7 +87,7 @@ mMgOH = allmols[allions == 'MgOH'][0][0]
 #    fixcharges = np.transpose(pz.properties.charges(fixions)[0])
 #    Gargs = (tots1, fixmols1, eles, allions, fixions, fixcharges, allmxs, lnks1,
 #        False)
-##    
+##
 #    # from _GibbsComponents
 #    eqstate = eqstate_guess
 #    mH, mOH, mHSO4, mSO4, mMg, mMgOH, mtris, mtrisH, mCO2, mHCO3, mCO3, mBOH3, mBOH4 = \
@@ -138,7 +150,7 @@ mMgOH = allmols[allions == 'MgOH'][0][0]
 #        lnacfCO3 = lnacfs[allions == 'CO3']
 #        lnacfBOH3 = lnacfs[allions == 'BOH3']
 #        lnacfBOH4 = lnacfs[allions == 'BOH4']
-    
+
 #    gH2O, gHSO4, gMg, gtrisH, gH2CO3, gHCO3 = pz.equilibrate._GibbsComponents(
 #        eqstate_guess, *Gargs)
 ##    test = pz.equilibrate._Gibbs(eqstate_guess, *Gargs)
@@ -148,7 +160,7 @@ mMgOH = allmols[allions == 'MgOH'][0][0]
 ##        method='BFGS',
 ##        jac=lambda eqstate: pz.equilibrate._GibbsGrad(eqstate, *Gargs),
 ##    )
-#    
+#
 ##    if L == 0:
 ##        eqstates[L] = pz.equilibrate.solvequick(*Largs)['x']
 ##    else:
@@ -156,8 +168,8 @@ mMgOH = allmols[allions == 'MgOH'][0][0]
 ##    eqstate_guess = eqstates[L]
 ##    allmols[L] = pz.equilibrate.eqstate2mols(
 ##        eqstates[L], tots1, fixmols1, eles, fixions)[0]
-#    
-#    
+#
+#
 ##allmols, allions, eqstates = pz.equilibrate.solveloop(eqstate_guess, tots,
 ##    fixmols, eles, fixions, tempK, pres, prmlib=prmlib)
 #

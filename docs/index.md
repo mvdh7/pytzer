@@ -1,5 +1,3 @@
-<!--<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>-->
-
 # Pytzer
 
 **Pytzer** is a Python implementation of the Pitzer model for chemical activities in aqueous solutions ([P91](references/#P91)).

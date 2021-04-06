@@ -1,7 +1,7 @@
 site_name: Pytzer
 site_author: Matthew P. Humphreys
 site_description: "Pytzer: the Pitzer model for chemical activities in aqueous solutions in Python"
-copyright: Copyright &copy; 2019-2020 Matthew P. Humphreys (GNU GPLv3).
+copyright: Copyright &copy; 2019–2021 Matthew P. Humphreys (GNU GPLv3).
 repo_url: https://github.com/mvdh7/pytzer
 repo_name: mvdh7/pytzer
 
@@ -9,12 +9,21 @@ theme:
   name: material
   language: en
   palette:
-    scheme: slate
+    scheme: default
     primary: red
-    accent: amber
+    accent: red
   font:
     text: Roboto
     code: Roboto Mono
+  features:
+    - navigation.instant
+    - navigation.expand
+    - navigation.top
+  icon:
+    repo: fontawesome/brands/github-alt
+
+plugins:
+  - search
 
 nav:
   - Overview: index.md
@@ -39,10 +48,21 @@ nav:
     - .potentials - standard chemical potentials: module/potentials.md
     - .meta - package metadata: modules/meta.md
   - References: references.md
-  - Version history: version-history.md
+  - Version history: versions.md
 
 markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.inlinehighlight
+  - footnotes
   - def_list
+  - pymdownx.arithmatex:
+    generic: true
+
+extra_javascript:
+  - javascripts/config.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+  

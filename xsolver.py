@@ -254,7 +254,14 @@ es = e_H, t_F, t_CO3, t_PO4 = get_es(totals)
 k_constants = pz.dissociation.assemble()
 pk_constants = {k: -np.log10(v) for k, v in k_constants.items()}
 
-molalities_0 = np.array([1e-8, totals["F"] / 2, totals["CO2"] / 10, totals["PO4"] / 2,])
+molalities_0 = np.array(
+    [
+        1e-8,
+        totals["F"] / 2,
+        totals["CO2"] / 10,
+        totals["PO4"] / 2,
+    ]
+)
 solver_0 = -np.log10(molalities_0)
 
 l_H, l_F, l_CO3, l_PO4 = get_ls(*molalities_0, totals, k_constants)

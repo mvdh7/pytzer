@@ -3,7 +3,15 @@ import jax
 from jax import numpy as np
 import pytzer as pz
 
-charges = OrderedDict({"Na": +1, "Cl": -1, "Mg": +2, "SO4": -2, "tris": 0,})
+charges = OrderedDict(
+    {
+        "Na": +1,
+        "Cl": -1,
+        "Mg": +2,
+        "SO4": -2,
+        "tris": 0,
+    }
+)
 
 all_cations = set([s for s, c in charges.items() if c > 0])
 all_anions = set([s for s, c in charges.items() if c < 0])
@@ -29,7 +37,13 @@ def Gibbs(solutes):
     return Gex
 
 
-solutes = OrderedDict({"Na": 1.5, "SO4": 0.75, "tris": 0.1,})
+solutes = OrderedDict(
+    {
+        "Na": 1.5,
+        "SO4": 0.75,
+        "tris": 0.1,
+    }
+)
 
 m_cats = np.array([1.5])
 m_anis = np.array([0.75])

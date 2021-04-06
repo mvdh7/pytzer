@@ -75,7 +75,6 @@ params = pz.libraries.Seawater.get_parameters(
 tsolve = pz.solve_thermodynamic(
     equilibria_to_solve, pfixed, totals, ks_constants, params
 )
-
 solutes_final, ks_constants_final = pz.solve(
     equilibria_to_solve, pfixed, totals, ks_constants, params
 )

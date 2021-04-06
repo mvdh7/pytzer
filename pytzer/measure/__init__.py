@@ -3,4 +3,6 @@
 """Tools for analysing experimental measurements."""
 from . import isopiestic
 
-__all__ = ['isopiestic',]
+__all__ = [
+    "isopiestic",
+]

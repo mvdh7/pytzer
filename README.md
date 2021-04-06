@@ -25,9 +25,9 @@ If you want to run this environment in Spyder v5, you will also need to upgrade 
 
 ### For general use
 
-    pip install pytzer
+    pip install pytzer  # for now only installs pre-JAX v0.4
 
-You will also need to set the environment variable `JAX_ENABLE_X64=True`, unless you have built the environment using the environment.yml file from the section above.
+Once v0.5+ is available via `pip`, you will also need to set the environment variable `JAX_ENABLE_X64=True`, unless you have built the environment using the environment.yml file from the section above.
 
 ## Documentation
 

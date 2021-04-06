@@ -2,6 +2,7 @@
 # Copyright (C) 2019--2020  Matthew Paul Humphreys  (GNU GPLv3)
 """Define package metadata."""
 import importlib
+
 # from . import parameters
 
 version = "0.5.0"

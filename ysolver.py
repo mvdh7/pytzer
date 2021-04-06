@@ -15,7 +15,14 @@ pks_constants = {k: -np.log10(v) for k, v in ks_constants.items()}
 
 targets = pz.equilibrate.stoichiometric.get_total_targets(totals)
 solver_x = -np.log10(
-    np.array([1e-8, totals["F"] / 2, totals["CO2"] / 10, totals["PO4"] / 2,])
+    np.array(
+        [
+            1e-8,
+            totals["F"] / 2,
+            totals["CO2"] / 10,
+            totals["PO4"] / 2,
+        ]
+    )
 )
 # ks_constants["HSO4"] = 10.0 ** -6  # required to work for HSO4 - better starting point?
 print(-np.log10(ks_constants["HSO4"]))

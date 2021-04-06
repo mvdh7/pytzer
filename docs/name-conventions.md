@@ -1,10 +1,3 @@
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
-MathJax.Ajax.config.path["mhchem"] =
-  "https://cdnjs.cloudflare.com/ajax/libs/mathjax-mhchem/3.3.2";
-MathJax.Hub.Config({TeX: {extensions: ["[mhchem]/mhchem.js"]}});
-</script><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
-
 # Conventions for solute codes
 
 It is necessary to label each solute component in several places within Pytzer:

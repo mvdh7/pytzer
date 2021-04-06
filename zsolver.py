@@ -28,7 +28,12 @@ params = pz.libraries.Seawater.get_parameters(
 equilibria_to_solve = ["H2O", "HF", "H2CO3", "HCO3", "BOH3", "MgOH"]
 
 solutes_final, ks_constants_final = pz.solve(
-    equilibria_to_solve, pm_initial, totals, ks_constants, params, total_targets,
+    equilibria_to_solve,
+    pm_initial,
+    totals,
+    ks_constants,
+    params,
+    total_targets,
 )
 
 # Display results
