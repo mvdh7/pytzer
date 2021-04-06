@@ -27,26 +27,26 @@ plugins:
 
 nav:
   - Overview: index.md
-  - Quick-start guide: quick-start.md
-  - Example workflows: workflows.md
-  - Conventions: name-conventions.md
-  - Main Pytzer modules:
-    - .io – import and export data: modules/io.md
-    - .model – the Pitzer model: modules/model.md
-    - .equilibrate - equilibrium solvers: modules/equilibrate.md
-  - Behind the scenes:
-    - .libraries – parameter libraries: modules/libraries.md
-    - .parameters – interaction parameter functions: modules/parameters.md
-    - .tables - parameter tables: modules/tables.md
-    - .debyehueckel – Debye-Hückel limiting slopes: modules/debyehueckel.md
-    - .unsymmetrical – unsymmetrical mixing terms: modules/unsymmetrical.md
-    - .properties – solute properties: modules/properties.md
-    - .constants – physical constants: modules/constants.md
-    - .teos10 - TEOS-10 properties: modules/teos10.md
-    - .matrix - matrix model: modules/matrix.md
-    - .dissociation - thermodynamic equilibrium constants: modules/dissociation.md
-    - .potentials - standard chemical potentials: module/potentials.md
-    - .meta - package metadata: modules/meta.md
+  # - Quick-start guide: quick-start.md
+  # - Example workflows: workflows.md
+  # - Conventions: name-conventions.md
+  # - Main Pytzer modules:
+  #   - .io – import and export data: modules/io.md
+  #   - .model – the Pitzer model: modules/model.md
+  #   - .equilibrate - equilibrium solvers: modules/equilibrate.md
+  # - Behind the scenes:
+  #   - .libraries – parameter libraries: modules/libraries.md
+  #   - .parameters – interaction parameter functions: modules/parameters.md
+  #   - .tables - parameter tables: modules/tables.md
+  #   - .debyehueckel – Debye-Hückel limiting slopes: modules/debyehueckel.md
+  #   - .unsymmetrical – unsymmetrical mixing terms: modules/unsymmetrical.md
+  #   - .properties – solute properties: modules/properties.md
+  #   - .constants – physical constants: modules/constants.md
+  #   - .teos10 - TEOS-10 properties: modules/teos10.md
+  #   - .matrix - matrix model: modules/matrix.md
+  #   - .dissociation - thermodynamic equilibrium constants: modules/dissociation.md
+  #   - .potentials - standard chemical potentials: module/potentials.md
+  #   - .meta - package metadata: modules/meta.md
   - References: refs.md
   - Version history: versions.md
 

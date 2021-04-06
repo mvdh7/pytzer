@@ -1,6 +1,6 @@
 # Pytzer
 
-Pytzer is a Python implementation of the Pitzer model for chemical activities in aqueous solutions ([P91](refs/#p)).
+Pytzer is a Python implementation of the Pitzer model for chemical activities in aqueous solutions [[P91](refs/#p)].
 
 ## Installation
 
