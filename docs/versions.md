@@ -165,11 +165,11 @@ Includes calculation of solute activity coefficients, water activity and osmotic
     * Changed to evaluating all neutral interactions (including with ions) even at zero ionic strength;
     * Updated nomenclature for consistency with P91, MP98 and others: `eta` (*η*) is now `zeta` (*ζ*).
 
-### 0.2.3.3 (30 Jan 2019)
+### 0.2.3 (30 Jan 2019)
 
 *The build of v0.2.3 had errors that prevented installation. These were fixed by v0.2.3.3, which is otherwise identical.*
 
-!!! example "Changes in v0.2.3.3"
+!!! example "Changes in v0.2.3"
     * Verified both **jfuncs.P75_eq47** and **jfuncs.Harvie**, and their derivatives, against Prof D.R. Turner's and Prof S.L. Clegg's implementations (GIVAKT and FastPitz respectively):
         * <u>**P75_eq47** returns identical results (to >10 significant figures) in every case</u>;
         * <u>**Harvie** agrees perfectly (to >10 significant figures) with GIVAKT, but FastPitz differs from both by up to 5%</u>;
