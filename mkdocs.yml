@@ -13,7 +13,7 @@ theme:
     primary: blue grey
     accent: teal
   font:
-    text: Roboto
+    text: Roboto Slab
     code: Roboto Mono
   features:
     - navigation.instant
