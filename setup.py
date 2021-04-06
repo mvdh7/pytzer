@@ -7,6 +7,10 @@ with open("README.md", "r") as f:
     long_description = f.read()
 with open("requirements.txt", "r") as f:
     requirements = f.read().splitlines()
+requirements = [
+    "autograd @ {}".format(r) if r.startswith("git") and "autograd" in r else r
+    for r in requirements
+]
 setuptools.setup(
     name="Pytzer",
     version=__version__,
@@ -20,8 +24,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     classifiers=[
         "Development Status :: 4 - Beta",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Operating System :: OS Independent",
         "Natural Language :: English",
