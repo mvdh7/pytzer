@@ -12,11 +12,11 @@ Pytzer is in beta.  Tests of the accuracy of its parameters and equations are un
 
 ## Citation
 
-A manuscript describing Pytzer is in preparation for publication.  Please check back here or [get in touch](https://mvdh.xyz/contact) to find out how to cite Pytzer in your work.
+A manuscript describing Pytzer is in preparation.  Please check back here or [get in touch](https://mvdh.xyz/contact) to find out how to cite Pytzer in your work.
 
 ## Acknowledgements
 
-Pytzer is maintained by [Dr Matthew P. Humphreys](https://www.nioz.nl/en/about/organisation/staff/matthew-humphreys) at the NIOZ Royal Netherlands Institute for Sea Research (Texel, the Netherlands).  Its initial development at the University of East Anglia was funded by the Natural Environment Research Council (NERC, UK).
+Pytzer is maintained by [Dr Matthew P. Humphreys](https://www.nioz.nl/en/about/organisation/staff/matthew-humphreys) at the NIOZ Royal Netherlands Institute for Sea Research (Texel, the Netherlands).  Its initial development at the University of East Anglia was funded indirectly by the Natural Environment Research Council (NERC, UK).
 
 Pytzer contains many functions and coefficients representing the effects of different solute interactions on solution properties that have been empirically determined from painstaking experiments and data compilations by hundreds of researchers over the course at least a century.  We have done our best to list the small selection of this enormous body of work brought together here in the [references](refs).
 
