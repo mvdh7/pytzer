@@ -1,7 +1,5 @@
 # Literature references
 
-References from the peer-reviewed literature (or 'sources', `src`) are written as the initials of the surname of up to the first four authors, followed by the final two digits of the publication year. Extra characters may be added to distinguish between publications that would end up with the same code.
-
 ### A
 
 ??? citation "A92ii: Archer (1992) *J. Phys. Chem. Ref. Data*"
