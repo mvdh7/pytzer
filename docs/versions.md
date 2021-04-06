@@ -8,7 +8,7 @@ Switches from Autograd to [JAX](https://jax.readthedocs.io/en/latest/) for faste
 
 !!! example "Changes in v0.5.0"
     * Switched from Autograd to [JAX](https://jax.readthedocs.io/en/latest/) for faster automatic differentiation and JIT compilation.
-    * Renamed most functions for clarity and modified their inputs and outputs to work more effectively for solving equilibria.
+    * Renamed most functions for clarity and modified their inputs and outputs to work more effectively for solving equilibria with JAX.
 
 ## 0.4
 
