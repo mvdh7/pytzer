@@ -137,7 +137,7 @@ Note that if there are any equilibria to be solved then the conversion is, for n
 
 ## `.salinity2mols` - molalities from salinity
 
-Estimates the solution composition following the simplified artificial seawater recipe of [MZF93](../../refs/#MZF93) at the input salinity (in g/kg-sw).
+Estimates the solution composition following the simplified artificial seawater recipe of [MZF93](../../refs/#m) at the input salinity (in g/kg-sw).
 
 **Syntax:**
 

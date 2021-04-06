@@ -20,7 +20,7 @@ import pytzer as pz
 
 ## Excess Gibbs energy
 
-From a physicochemical perspective, the excess Gibbs energy of a solution ($G_{ex}$) is the master variable from which many other properties are - literally - derived. Following [P91](../../refs/#P91), Eqs. (59) and (F-5), and [CRP94](../../refs/#CRP94), Eq. (AI1):
+From a physicochemical perspective, the excess Gibbs energy of a solution ($G_{ex}$) is the master variable from which many other properties are - literally - derived. Following [P91](../../refs/#p), Eqs. (59) and (F-5), and [CRP94](../../refs/#c), Eq. (AI1):
 
 $$\frac{G_{ex}}{w_wRT} = f_G + 2 \sum_c \sum_a m_c m_a (B_{ca} + Z C_{ca}^{T})$$
 $$+ \sum_i \sum_{i'} m_i m_{i'} \Bigl( 2 \Theta_{ii'} + \sum_j m_j \psi_{ii'j} \Bigr)$$
@@ -35,13 +35,13 @@ The Pitzer model then adds a series of corrections to this approximation for eac
 
 The $m_x$ terms indicate the molality of component $x$, in mol·kg<sup>−1</sup>.
 
-The $B_{ca}$ and $C_{ca}^T$ terms account for cation-anion interactions, and are evaluated by the functions `B` and `CT` ([see below](#b)). $B_{ca}$ depends on the empirical parameters $\beta_0$, $\beta_1$, $\beta_2$, $\alpha_1$ and $\alpha_2$, and $C_{ca}^{T}$ on $C_0$, $C_1$ and $\omega$. $Z$ is defined by [P91](../../refs/#P91), Eq. (66):
+The $B_{ca}$ and $C_{ca}^T$ terms account for cation-anion interactions, and are evaluated by the functions `B` and `CT` ([see below](#b)). $B_{ca}$ depends on the empirical parameters $\beta_0$, $\beta_1$, $\beta_2$, $\alpha_1$ and $\alpha_2$, and $C_{ca}^{T}$ on $C_0$, $C_1$ and $\omega$. $Z$ is defined by [P91](../../refs/#p), Eq. (66):
 
 $$Z = \sum_i m_i |z_i|$$
 
 where $z_i$ is the charge on ion $i$.
 
-The $\Theta_{ii'}$ terms account for cation-cation and anion-anion interactions. As defined by [P91](../../refs/#P91), Eq. (B-6):
+The $\Theta_{ii'}$ terms account for cation-cation and anion-anion interactions. As defined by [P91](../../refs/#p), Eq. (B-6):
 
 $$\Theta_{ii'} = \theta_{ii'} + ^E\theta_{ii'}$$
 
@@ -66,17 +66,17 @@ Gex_nRT = pz.model.Gex_nRT(mols, ions, tempK, pres,
 
 ## Activity and osmotic coefficients
 
-The natural logarithm of the activity coefficient ($\ln \gamma_x$) of any dissolved component of a solution is the first differential of $G_{ex}/w_wRT$ with respect to the component's molality, following [P91](../../refs/#P91), Eq. (34):
+The natural logarithm of the activity coefficient ($\ln \gamma_x$) of any dissolved component of a solution is the first differential of $G_{ex}/w_wRT$ with respect to the component's molality, following [P91](../../refs/#p), Eq. (34):
 
 $$\ln \gamma_x = \frac{\partial (G_{ex}/w_wRT)}{\partial m_x} $$
 
-The osmotic coefficient of a solution ($\phi$) is related to the first differential of $G_{ex}/w_wRT$ with respect to $w_w$, following [P91](../../refs/#P91), Eq. (35):
+The osmotic coefficient of a solution ($\phi$) is related to the first differential of $G_{ex}/w_wRT$ with respect to $w_w$, following [P91](../../refs/#p), Eq. (35):
 
 $$\phi = 1 - \frac{\partial G_{ex}/\partial w_w}{RT} \sum_x m_x$$
 
 where $x$ includes all ions and neutral components.
 
-The solvent (i.e. water) activity ($a_w$) is related to the osmotic coefficient by [P91](../../refs/#P91), Eq. (28):
+The solvent (i.e. water) activity ($a_w$) is related to the osmotic coefficient by [P91](../../refs/#p), Eq. (28):
 
 $$\phi = - \frac{\ln a_w}{M_w \sum_x m_x}$$
 
@@ -171,7 +171,7 @@ The full Pitzer model equation is broken down into some component subfunctions f
 
 ### `.Istr` - ionic strength
 
-Calculates the ionic strength of the solution ($I$, `I`), following [P91](../../refs/#P91), Eq. (11):
+Calculates the ionic strength of the solution ($I$, `I`), following [P91](../../refs/#p), Eq. (11):
 
 $$I = \frac{1}{2} \sum_i m_i z_i^2$$
 
@@ -187,7 +187,7 @@ Input `zs` is a list of the charge on each ion, which can be generated from `ion
 
 ### `.fG` - Debye-Hückel approximation
 
-The Debye-Hückel approximation of the excess Gibbs energy. From [P91](../../refs/#P91), Eq. (48):
+The Debye-Hückel approximation of the excess Gibbs energy. From [P91](../../refs/#p), Eq. (48):
 
 $$f_G = \frac{4 I A_\phi}{-b} \ln (1 + b\sqrt{I})$$
 
@@ -202,7 +202,7 @@ fG = pz.model.fG(tempK, pres, I, prmlib)
 
 ### `.g` - binary interaction subfunction
 
-The function $g$, following [P91](../../refs/#P91), Eq. (50):
+The function $g$, following [P91](../../refs/#p), Eq. (50):
 
 $$g = 2[1 - (1 + x) \exp(-x)] / x^2$$
 
@@ -216,7 +216,7 @@ g = pz.model.g(x)
 
 ### `.h` - binary interaction subfunction
 
-The function $h$, following [CRP94](../../refs/#CRP94), Eq. (AI15):
+The function $h$, following [CRP94](../../refs/#c), Eq. (AI15):
 
 $$h = \\{ 6 - [6 + x (6 + 3x + x^2)] \exp(-x) \\} / x^4$$
 
@@ -230,7 +230,7 @@ h = pz.model.h(x)
 
 ### `.B` - binary interaction subfunction
 
-The function $B_{ca}$, following [P91](../../refs/#P91), Eq. (49):
+The function $B_{ca}$, following [P91](../../refs/#p), Eq. (49):
 
 $$B_{ca} = \beta_0 + \beta_1 g(\alpha_1 \sqrt{I}) + \beta_2 g(\alpha_2 \sqrt{I})$$
 
@@ -246,7 +246,7 @@ B = pz.model.B(I, b0, b1, b2, alph1, alph2)
 
 ### `.CT` - binary interaction subfunction
 
-The function $C_{ca}^T$, following [CRP94](../../refs/#CRP94) Eq. (AI10):
+The function $C_{ca}^T$, following [CRP94](../../refs/#c) Eq. (AI10):
 
 $$C_{ca}^T = C_0 + 4 C_1 h(\omega \sqrt{I})$$
 
@@ -262,7 +262,7 @@ CT = pz.model.CT(I, C0, C1, omega)
 
 ### `.xij` - unsymmetrical mixing subfunction
 
-The variable $x_{ii'}$, following [P91](../../refs/#P91), Eq. (B-14):
+The variable $x_{ii'}$, following [P91](../../refs/#p), Eq. (B-14):
 
 $$x_{ii'} = 6 z_i z_{i'} A_\phi \sqrt{I}$$
 
@@ -278,7 +278,7 @@ where `z0` and `z1` are the charges on ions $i$ and $i'$ respectively (i.e. $z_i
 
 ### `.etheta` - unsymmetrical mixing term
 
-The function $^E\theta_{ii'}$, following [P91](../../refs/#P91), Eq. (B-15):
+The function $^E\theta_{ii'}$, following [P91](../../refs/#p), Eq. (B-15):
 
 $$^E\theta_{ii'} = \frac{z_i z_i'}{4 I} \Bigl[J(x_{ii'}) - \frac{1}{2} J(x_{ii}) - \frac{1}{2} J(x_{i'i'})\Bigr]$$
 

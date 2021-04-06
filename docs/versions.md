@@ -19,7 +19,7 @@ Adds solvers to determine the equilibrium composition of aqueous solutions.
 !!! new-version "Changes in v0.4.3"
     * Added `osm` function for osmotic coefficient to **matrix** module;
     * Added **io** module functions to roughly convert between molinity (mol/kg-solution) and molality (mol/kg-H<sub>2</sub>O);
-    * Added `salinity2mols` function in **io** module to estimate molalities from salinity for [MZF93](../refs/#MZF93) artificial seawater;
+    * Added `salinity2mols` function in **io** module to estimate molalities from salinity for [MZF93](../refs/#m) artificial seawater;
     * Switched `assemble` function in **matrix** module to use the MarChemSpec parameter library by default.
 
 ### 0.4.2 (6 Sep 2019)
@@ -64,8 +64,8 @@ Adds solvers to determine the equilibrium composition of aqueous solutions.
         * Module **cflibs** renamed as **libraries**;
         * Class **CoefficientLibrary** renamed as **ParameterLibrary**, and its abbreviation **cflib** to **prmlib**;
     * Parameter libraries can now be stored in separate script files.
-    * Added complete [HMW84](../refs/#HMW84) parameter library;
-    * Added all interaction coefficients to [MIAMI](../refs/#MP98) parameter library - but its calculation results have not yet been tested;
+    * Added complete [HMW84](../refs/#h) parameter library;
+    * Added all interaction coefficients to [MIAMI](../refs/#m) parameter library - but its calculation results have not yet been tested;
     * Fixed multiplier error for `Cphi` values in `PM73_TableVI` in **tables** module;
     * Added presumably missing `*1e-3` multiplier to `Cphi` values in all SRRJ87 binary interaction functions;
     * Added meta-analysis functions in **meta** module.
