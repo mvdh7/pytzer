@@ -1,5 +1,5 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2020  Matthew Paul Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2021  Matthew P. Humphreys  (GNU GPLv3)
 """Calculate properties of pure water."""
 from autograd.numpy import sqrt
 from autograd import elementwise_grad as egrad

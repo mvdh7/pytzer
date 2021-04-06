@@ -1,5 +1,5 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2020  Matthew Paul Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2021  Matthew P. Humphreys  (GNU GPLv3)
 """Visualise different parameter sets and calculations."""
 from autograd.numpy import array, full, full_like, linspace, nan, sqrt
 from autograd.numpy import min as np_min

@@ -1,5 +1,5 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2020  Matthew Paul Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2021  Matthew P. Humphreys  (GNU GPLv3)
 from .. import debyehueckel as dh, parameters as prm, convert
 from ..meta import update_func_J
 import numpy as np
