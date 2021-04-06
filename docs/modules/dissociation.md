@@ -23,8 +23,8 @@ $$K(\ce{H2O}) = \frac{ a(\ce{OH-}) a(\ce{H+})} {a(\ce{H2O})}$$
 
 **Available functions:**
 
-  * `.H2O_M88` - following [M88](../../references/#M88);
-  * `.H2O_MF` - following [MF](../../references/#MF).
+  * `.H2O_M88` - following [M88](../../refs/#M88);
+  * `.H2O_MF` - following [MF](../../refs/#MF).
 
 ---
 
@@ -37,8 +37,8 @@ $$K(\ce{HSO4-}) = \frac{ a(\ce{SO4^2-}) a(\ce{H+})} {a(\ce{HSO4-})}$$
 
 **Available functions:**
 
-  * `HSO4_CRP94` - following [CRP94](../../references/#CRP94) Eq. 21;
-  * `HSO4_CRP94_extra` - following [CRP94](../../references/#CRP94) Eq. 21, with additional digits on the constant term (S. L. Clegg, pers. comm., 7 February 2019).
+  * `HSO4_CRP94` - following [CRP94](../../refs/#CRP94) Eq. 21;
+  * `HSO4_CRP94_extra` - following [CRP94](../../refs/#CRP94) Eq. 21, with additional digits on the constant term (S. L. Clegg, pers. comm., 7 February 2019).
 
 ---
 
@@ -51,8 +51,8 @@ $$K(\ce{Mg^2+}) = \frac{ a(\ce{MgOH+})} {a(\ce{OH-}) a(\ce{Mg^2+})}$$
 
 **Available functions:**
 
-  * `Mg_CW91` - following [CW91](../../references/#CW91) Eq. 244 in log<sub>10</sub> and then converted to natural log;
-  * `Mg_CW91_ln` - following [CW91](../../references/#CW91) Eq. 244.
+  * `Mg_CW91` - following [CW91](../../refs/#CW91) Eq. 244 in log<sub>10</sub> and then converted to natural log;
+  * `Mg_CW91_ln` - following [CW91](../../refs/#CW91) Eq. 244.
 
 ---
 
@@ -65,4 +65,4 @@ $$K(\ce{trisH+}) = \frac{ a(\ce{tris}) a(\ce{H+})} {a(\ce{trisH+})}$$
 
 **Available function:**
 
-  * `trisH_BH64` - following [BH64](../../references/#BH64) Eq. 3.
+  * `trisH_BH64` - following [BH64](../../refs/#BH64) Eq. 3.

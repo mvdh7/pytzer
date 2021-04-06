@@ -78,4 +78,4 @@ Generates a list of literature references for the functions in an `ifuncs` dict.
 irefs = pz.meta.getirefs(ifuncs)
 ```
 
-The source codes in the output list are defined in the [documentation references](../../references).
+The source codes in the output list are defined in the [documentation references](../../refs).

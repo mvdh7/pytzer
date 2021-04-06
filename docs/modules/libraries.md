@@ -19,7 +19,7 @@ This `prmlib` can then be passed into all of the [Pitzer model functions](../mod
 
 ## Pre-defined parameter libraries
 
-Several ready-to-use parameter libraries are available in this module. To decode their sources, see the [literature references table](../../references).
+Several ready-to-use parameter libraries are available in this module. To decode their sources, see the [literature references table](../../refs).
 
 <table><tr>
 
@@ -30,22 +30,22 @@ Several ready-to-use parameter libraries are available in this module. To decode
 </tr><tr>
 <td>CRP94</td>
 <td>$\ce{H^+}$, $\ce{HSO4^-}$, $\ce{SO4^2-}$</td>
-<td><a href="../../references/#CRP94">CRP94</a></td>
+<td><a href="../../refs/#CRP94">CRP94</a></td>
 
 </tr><tr>
 <td>GM89</td>
 <td>$\ce{Ca^2+}$, $\ce{Cl^-}$, $\ce{K^+}$, $\ce{Na^+}$, $\ce{SO4^2-}$</td>
-<td><a href="../../references/#GM89">GM89</a></td>
+<td><a href="../../refs/#GM89">GM89</a></td>
 
 </tr><tr>
 <td>M88</td>
 <td>$\ce{Ca^2+}$, $\ce{Cl^-}$, $\ce{Na^+}$, $\ce{SO4^2-}$</td>
-<td><a href="../../references/#M88">M88</a></td>
+<td><a href="../../refs/#M88">M88</a></td>
 
 </tr><tr>
 <td>WM13</td>
 <td>$\ce{Ca^2+}$, $\ce{Cl-}$, $\ce{H+}$, $\ce{HSO4-}$, $\ce{K+}$, $\ce{Mg^2+}$, $\ce{MgOH+}$, $\ce{Na+}$, $\ce{OH-}$, $\ce{SO4^2-}$</td>
-<td><a href="../../references/#WM13">WM13</a></td>
+<td><a href="../../refs/#WM13">WM13</a></td>
 
 </tr></table>
 
