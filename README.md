@@ -15,18 +15,9 @@ Due to its dependency on JAX, Pytzer can only be installed on Unix systems, alth
 
 ### For development
 
-First, use the [environment.yml](https://github.com/mvdh7/pytzer/blob/jax/environment.yml) file to create a new environment with Conda:
+Use the [environment.yml](https://github.com/mvdh7/pytzer/blob/jax/environment.yml) file to create a new environment with Conda:
 
     conda env create -f environment.yml
-
-Next, you need to create a plain text file (called e.g. .pythonrc) that contains (at least) the following two lines:
-
-    from jax.config import config as jax_config
-    jax_config.update("jax_enable_x64", True)
-
-Save this somewhere locally and set the full path to it as the `PYTHONSTARTUP` environment variable with Conda:
-
-    conda env config vars set PYTHONSTARTUP=/path/to/.pythonrc -n pytzer
 
 If you want to run this environment in Spyder v5, you will also need to upgrade `spyder-kernels`:
 
@@ -36,7 +27,7 @@ If you want to run this environment in Spyder v5, you will also need to upgrade 
 
     pip install pytzer
 
-You will also need to create a .pythonrc file and set this to the `PYTHONSTARTUP` variable as described above.
+You will also need to set the environment variable `JAX_ENABLE_X64=True`, unless you have built the environment using the environment.yml file from the section above.
 
 ## Documentation
 
