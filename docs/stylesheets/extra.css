@@ -3,15 +3,15 @@
 }
 .md-typeset .admonition.new-version,
 .md-typeset details.new-version {
-  border-color: rgb(15, 20, 25);
+  border-color: rgb(0, 148, 133);
 }
 .md-typeset .new-version > .admonition-title,
 .md-typeset .new-version > summary {
-  background-color: rgba(15, 20, 25, 0.1);
+  background-color: rgba(0, 148, 133, 0.1);
 }
 .md-typeset .new-version > .admonition-title::before,
 .md-typeset .new-version > summary::before {
-  background-color: rgb(15, 20, 25);
+  background-color: rgb(0, 148, 133);
   -webkit-mask-image: var(--md-admonition-icon--new-version);
           mask-image: var(--md-admonition-icon--new-version);
 }

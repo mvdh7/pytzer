@@ -8,11 +8,11 @@ Switches from Autograd to [JAX](https://jax.readthedocs.io/en/latest/) for faste
 
 !!! new-version "Changes in v0.5.0"
     * Switched from Autograd to [JAX](https://jax.readthedocs.io/en/latest/) for faster automatic differentiation and JIT compilation.
-    * Renamed most functions for clarity and modified their inputs and outputs to work more effectively for solving equilibria with JAX.
+    * Renamed and reorganised virtually everything.
 
 ## 0.4 [beta]
 
-Adds solvers to determine the equilibrium composition of aqueous solutions.
+Adds solvers to determine the equilibrium composition of aqueous solutions.  This version was demonstrated at the AGU/ASLO/TOS Ocean Sciences Meeting (San Diego, Feb 2020).
 
 ### 0.4.3 (11 Sep 2019)
 
