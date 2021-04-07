@@ -29,4 +29,4 @@ def test_M88_activity_water():
             assert np.isclose(row["a_H2O"], row["a_H2O_pytzer"], rtol=0, atol=0.0001)
 
 
-test_M88_activity_water()
+# test_M88_activity_water()
