@@ -10,6 +10,7 @@ class ParameterLibrary(dict):
         self["name"] = name
 
     def update_Aphi(self, func=dh.Aosm_M88):
+        """Add or update a Debye-Hueckel limiting slope function."""
         self.update({"Aphi": func})
 
     def update_ca(self, cation, anion, func=prm.bC_none):
