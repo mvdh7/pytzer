@@ -3,7 +3,7 @@ Name                                         Stmts   Miss  Cover
 pytzer/__init__.py                              14      1    93%
 pytzer/constants.py                             14      0   100%
 pytzer/convert.py                               12      3    75%
-pytzer/debyehueckel.py                          69     55    20%
+pytzer/debyehueckel.py                          69     36    48%
 pytzer/dissociation.py                          86     48    44%
 pytzer/equilibrate/__init__.py                  14      8    43%
 pytzer/equilibrate/components.py               216    175    19%
@@ -16,21 +16,21 @@ pytzer/libraries/MarChemSpec.py                  9      0   100%
 pytzer/libraries/MarChemSpec25.py               17      0   100%
 pytzer/libraries/Millero98.py                  238      0   100%
 pytzer/libraries/Moller88.py                    17      0   100%
-pytzer/libraries/ParameterLibrary.py           375    278    26%
+pytzer/libraries/ParameterLibrary.py           375    173    54%
 pytzer/libraries/Seawater.py                    26      0   100%
 pytzer/libraries/Waters13.py                    95      0   100%
 pytzer/libraries/Waters13_MarChemSpec25.py      11      0   100%
 pytzer/libraries/__init__.py                    21      0   100%
 pytzer/meta.py                                   9      5    44%
-pytzer/model.py                                168    127    24%
-pytzer/parameters.py                          6269   5325    15%
+pytzer/model.py                                168     47    72%
+pytzer/parameters.py                          6269   5190    17%
 pytzer/prepare.py                               48     39    19%
 pytzer/properties.py                            31     21    32%
-pytzer/teos10.py                                40     20    50%
+pytzer/teos10.py                                40     10    75%
 pytzer/unsymmetrical.py                         46      1    98%
 tests/__init__.py                                0      0   100%
 tests/test_jax_settings.py                       4      0   100%
-tests/test_model.py                              0      0   100%
+tests/test_model.py                             29      0   100%
 tests/test_unsymmetrical.py                     33      0   100%
 ----------------------------------------------------------------
-TOTAL                                         8330   6218    25%
+TOTAL                                         8359   5869    30%
