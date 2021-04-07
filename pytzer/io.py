@@ -106,7 +106,9 @@ def _u2v(mols, ions, tots, eles):
     molality (mol/kg-H2O).
     """
     ionmasses = array([ion_to_mass[ion] for ion in ions]) * mols.ravel()
-    elemasses = array([ion_to_mass[ele_to_ion_mass[ele]] for ele in eles]) * tots.ravel()
+    elemasses = (
+        array([ion_to_mass[ele_to_ion_mass[ele]] for ele in eles]) * tots.ravel()
+    )
     totalsalts = (np_sum(ionmasses) + np_sum(elemasses)) * 1e-3  # kg
     u2v = 1 + totalsalts
     return u2v
