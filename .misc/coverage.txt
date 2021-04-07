@@ -29,9 +29,9 @@ pytzer/properties.py                            31     21    32%
 pytzer/teos10.py                                40     10    75%
 pytzer/unsymmetrical.py                         46      1    98%
 tests/__init__.py                                0      0   100%
-tests/test_M88.py                               17      0   100%
+tests/test_M88.py                               16      0   100%
 tests/test_jax_settings.py                       4      0   100%
 tests/test_model.py                             41      0   100%
 tests/test_unsymmetrical.py                     33      0   100%
 ----------------------------------------------------------------
-TOTAL                                         8235   5684    31%
+TOTAL                                         8234   5684    31%

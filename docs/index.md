@@ -1,5 +1,12 @@
 # Pytzer
 
+![Tests](https://github.com/mvdh7/pytzer/workflows/Tests/badge.svg)
+[![Coverage](img/coverage.svg)](https://github.com/mvdh7/pytzer/blob/jax/.misc/coverage.txt)
+[![pypi badge](https://img.shields.io/pypi/v/pytzer.svg?style=popout)](https://pypi.org/project/pytzer/)
+[![Docs](https://readthedocs.org/projects/pytzer/badge/?version=jax&style=flat)](https://pytzer.readthedocs.io/en/jax/)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 Pytzer is a Python implementation of the Pitzer model for chemical activities in aqueous solutions [[P91](refs/#p)].
 
 ## Installation
