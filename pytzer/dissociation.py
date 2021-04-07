@@ -94,20 +94,20 @@ def H2O_MF(T=298.15):
 
 def MgOH_CW91_ln(T=298.15):
     """MgOH+ formation following CW91 Eq. (244) [p392]."""
-    return 8.9108 - 1155 / T
+    return -(8.9108 - 1155 / T)
 
 
 def MgOH_CW91(T=298.15):
     """MgOH+ formation following CW91 in log10 and then converted."""
     # Matches Clegg's model [2019-07-02]
-    log10kMg = 3.87 - 501.5 / T
+    log10kMg = -(3.87 - 501.5 / T)
     lnkMg = log10kMg * ln10
     return lnkMg
 
 
 def MgOH_MP98(T=298.15):
     """MgOH+ formation following MP98."""
-    log10kMg = 3.87 - 501.6 / T
+    log10kMg = -(3.87 - 501.6 / T)
     lnkMg = log10kMg * ln10
     return lnkMg
 
@@ -165,6 +165,61 @@ def HPO4_MP98(T=298.15):
 def _MP98_eq24(T, A=0, B=0, C=0):
     """Equation (24) of MP98.  Returns pK."""
     return A + B / T + C * T
+
+
+def MgF_MP98_MR97(T=298.15):
+    """MgF+ formation [MP98 following MR97]."""
+    return -_MP98_eq24(T, A=3.504, B=-501.6) * ln10
+
+
+def CaF_MP98_MR97(T=298.15):
+    """CaF+ formation [MP98 following MR97]."""
+    return -_MP98_eq24(T, A=3.014, B=-501.6) * ln10
+
+
+def MgCO3_MP98_MR97(T=298.15):
+    """MgCO3 formation [MP98 following MR97]."""
+    return -_MP98_eq24(T, A=1.028, C=0.0066154) * ln10
+
+
+def CaCO3_MP98_MR97(T=298.15):
+    """CaCO3 formation [MP98 following MR97]."""
+    return -_MP98_eq24(T, A=1.178, C=0.0066154) * ln10
+
+
+def SrCO3_MP98_MR97(T=298.15):
+    """SrCO3 formation [MP98 following MR97]."""
+    return -_MP98_eq24(T, A=1.028, C=0.0066154) * ln10
+
+
+def MgH2PO4_MP98_MR97(T=298.15):
+    """MgH2PO4+ formation [MP98 following MR97]."""
+    return -1.13 * ln10
+
+
+def CaH2PO4_MP98_MR97(T=298.15):
+    """CaH2PO4+ formation [MP98 following MR97]."""
+    return -1.0 * ln10
+
+
+def MgHPO4_MP98_MR97(T=298.15):
+    """MgHPO4 formation [MP98 following MR97]."""
+    return -2.7 * ln10
+
+
+def CaHPO4_MP98_MR97(T=298.15):
+    """CaHPO4 formation [MP98 following MR97]."""
+    return -2.74 * ln10
+
+
+def MgPO4_MP98_MR97(T=298.15):
+    """MgPO4- formation [MP98 following MR97]."""
+    return -5.63 * ln10
+
+
+def CaPO4_MP98_MR97(T=298.15):
+    """CaPO4- formation [MP98 following MR97]."""
+    return -7.1 * ln10
 
 
 def pK_MgOH(T=298.15):
@@ -234,12 +289,43 @@ all_log_ks = {
     "HCO3": HCO3_MP98,
     "HF": HF_MP98,
     "HSO4": HSO4_CRP94,
-    "MgOH": lambda T=298.15: np.log(10.0 ** -pK_MgOH(T)),
+    # "MgOH": lambda T=298.15: np.log(10.0 ** -pK_MgOH(T)),
+    "MgOH": MgOH_MP98,
     "trisH": trisH_BH64,
 }
 
 
 def assemble(temperature=298.15):
+    """Evaluate all thermodynamic equilibrium constants."""
+    kt_constants = {
+        "HF": np.exp(HF_MP98(T=temperature)),
+        "H2S": np.exp(H2S_MP98(T=temperature)),
+        "H2O": np.exp(H2O_M88(T=temperature)),
+        "BOH3": np.exp(BOH3_M79(T=temperature)),
+        "HSO4": np.exp(HSO4_CRP94(T=temperature)),
+        "NH4": np.exp(NH4_MP98(T=temperature)),
+        "H2CO3": np.exp(H2CO3_MP98(T=temperature)),
+        "HCO3": np.exp(HCO3_MP98(T=temperature)),
+        "H3PO4": np.exp(H3PO4_MP98(T=temperature)),
+        "H2PO4": np.exp(H2PO4_MP98(T=temperature)),
+        "HPO4": np.exp(HPO4_MP98(T=temperature)),
+        "MgOH": np.exp(MgOH_MP98(T=temperature)),
+        "MgF": np.exp(MgF_MP98_MR97(T=temperature)),
+        "CaF": np.exp(CaF_MP98_MR97(T=temperature)),
+        "MgCO3": np.exp(MgCO3_MP98_MR97(T=temperature)),
+        "CaCO3": np.exp(CaCO3_MP98_MR97(T=temperature)),
+        "SrCO3": np.exp(SrCO3_MP98_MR97(T=temperature)),
+        "MgH2PO4": np.exp(MgH2PO4_MP98_MR97(T=temperature)),
+        "CaH2PO4": np.exp(CaH2PO4_MP98_MR97(T=temperature)),
+        "MgHPO4": np.exp(MgHPO4_MP98_MR97(T=temperature)),
+        "CaHPO4": np.exp(CaHPO4_MP98_MR97(T=temperature)),
+        "MgPO4": np.exp(MgPO4_MP98_MR97(T=temperature)),
+        "CaPO4": np.exp(CaPO4_MP98_MR97(T=temperature)),
+    }
+    return kt_constants
+
+
+def assemble_v1(temperature=298.15):
     """Evaluate all thermodynamic equilibrium constants."""
     kt_constants = {
         "HF": np.exp(HF_MP98(T=temperature)),

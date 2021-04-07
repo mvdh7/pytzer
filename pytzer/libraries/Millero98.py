@@ -325,7 +325,14 @@ Millero98.update_nca(
 # Dissociation constants
 Millero98.update_equilibrium("BOH3", k.BOH3_M79)
 Millero98.update_equilibrium("MgOH", k.MgOH_MP98)
-Millero98.update_equilibrium("H2O", k.H2O_M79)
-Millero98.update_equilibrium("HSO4", k.HSO4_CRP94)
+# Millero98.update_equilibrium("H2O", k.H2O_M79)  # maybe?
+Millero98.update_equilibrium("H2O", k.H2O_M88)
 Millero98.update_equilibrium("H2CO3", k.H2CO3_MP98)
 Millero98.update_equilibrium("HCO3", k.HCO3_MP98)
+Millero98.update_equilibrium("HF", k.HF_MP98)
+Millero98.update_equilibrium("H3PO4", k.H3PO4_MP98)
+Millero98.update_equilibrium("H2PO4", k.H2PO4_MP98)
+Millero98.update_equilibrium("HPO4", k.HPO4_MP98)
+Millero98.update_equilibrium("H2S", k.H2S_MP98)
+Millero98.update_equilibrium("HSO4", k.HSO4_CRP94)
+Millero98.update_equilibrium("NH4", k.NH4_MP98)

@@ -4,41 +4,41 @@ from jax import lax, numpy as np
 from . import components
 
 
-def guess_pm_initial(totals, pfixed):
-    m_initial = np.array([])
-    for pm in pfixed:
-        if pm == "H":
-            m_initial = np.append(m_initial, 1e-8)
-        elif pm == "F":
-            assert totals["F"] > 0
-            m_initial = np.append(m_initial, totals["F"] / 2)
-        elif pm == "CO3":
-            assert totals["CO2"] > 0
-            m_initial = np.append(m_initial, totals["CO2"] / 10)
-        elif pm == "PO4":
-            assert totals["PO4"] > 0
-            m_initial = np.append(m_initial, totals["PO4"] / 2)
-    return -np.log10(m_initial)
-
-
-def guess_pfixed(totals, fixed_solutes):
-    pfixed = OrderedDict()
-    for fs in fixed_solutes:
-        if fs == "H":
+@jax.jit
+def guess_pfixed(pfixed, totals=None):
+    """Update pfixed with vaguely sensible first guesses for the stoichiometric solver."""
+    assert isinstance(pfixed, OrderedDict)
+    for s in pfixed:
+        if s == "H":
             pfixed["H"] = 8.0
-        elif fs == "F":
-            assert totals["F"] > 0
+        elif s == "F":
+            assert "F" in totals
             pfixed["F"] = -np.log10(totals["F"] / 2)
-        elif fs == "CO3":
-            assert totals["CO2"] > 0
+        elif s == "CO3":
+            assert "CO2" in totals
             pfixed["CO3"] = -np.log10(totals["CO2"] / 10)
-        elif fs == "PO4":
-            assert totals["PO4"] > 0
+        elif s == "PO4":
+            assert "PO4" in totals
             pfixed["PO4"] = -np.log10(totals["PO4"] / 2)
     return pfixed
 
 
+@jax.jit
+def create_pfixed(totals=None):
+    """Generate pfixed with first-guess solver values."""
+    pfixed = OrderedDict()
+    pfixed["H"] = 0.0
+    if totals is not None:
+        for s, t in {"F": "F", "CO3": "CO2", "PO4": "PO4"}.items():
+            if t in totals:
+                pfixed[s] = 0.0
+    pfixed = guess_pfixed(pfixed, totals=totals)
+    return pfixed
+
+
 def get_alkalinity(solutes):
+    """Calculate 'Dickson' alkalinity."""
+
     def add_if_in(key):
         if key in solutes:
             return solutes[key]
@@ -72,6 +72,8 @@ def get_alkalinity(solutes):
 
 
 def get_explicit_alkalinity(totals):
+    """Calculate explicit total alkalinity."""
+
     def add_if_in(key):
         if key in totals:
             return totals[key]
@@ -155,10 +157,10 @@ def get_total_targets(totals, pfixed):
 
 
 all_solute_targets = {
-    "H": lambda solutes: get_alkalinity(solutes),
-    "F": lambda solutes: get_total_F(solutes),
-    "CO3": lambda solutes: get_total_CO2(solutes),
-    "PO4": lambda solutes: get_total_PO4(solutes),
+    "H": get_alkalinity,
+    "F": get_total_F,
+    "CO3": get_total_CO2,
+    "PO4": get_total_PO4,
 }
 
 
@@ -167,11 +169,9 @@ def get_solute_targets(solutes, pfixed):
 
 
 def solver_func(pfixed_values, pfixed, totals, ks_constants):
-    fixed = OrderedDict(
-        (k, 10.0 ** -pfixed_values[i]) for i, k in enumerate(pfixed.keys())
-    )
+    pfixed = OrderedDict((k, pfixed_values[i]) for i, k in enumerate(pfixed.keys()))
     total_targets = get_total_targets(totals, pfixed)
-    solutes = components.get_solutes(fixed, totals, ks_constants)
+    solutes = components.get_solutes(totals, ks_constants, pfixed)
     solute_targets = get_solute_targets(solutes, pfixed)
     targets = np.array([total_targets[pf] - solute_targets[pf] for pf in pfixed.keys()])
     return targets
@@ -181,7 +181,7 @@ solver_jac = jax.jit(jax.jacfwd(solver_func))
 
 
 @jax.jit
-def solve(pfixed, totals, ks_constants):
+def solve(totals, ks_constants, pfixed=None):
     def cond(pfixed_values):
         target = solver_func(pfixed_values, pfixed, totals, ks_constants)
         return np.any(np.abs(target) > 1e-9)
@@ -194,6 +194,8 @@ def solve(pfixed, totals, ks_constants):
         p_diff = np.where(p_diff < -1, -1, p_diff)
         return pfixed_values + p_diff
 
+    if pfixed is None:
+        pfixed = create_pfixed(totals=totals)
     pfixed_values = np.array([v for v in pfixed.values()])
     pfixed_values = lax.while_loop(cond, body, pfixed_values)
     pfixed_final = OrderedDict(

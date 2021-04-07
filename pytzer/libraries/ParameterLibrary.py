@@ -1,8 +1,9 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019--2021  Matthew P. Humphreys  (GNU GPLv3)
+from collections import OrderedDict
+import numpy as np
 from .. import debyehueckel as dh, parameters as prm, convert
 from ..meta import update_func_J
-import numpy as np
 
 
 class ParameterLibrary(dict):
@@ -130,8 +131,8 @@ class ParameterLibrary(dict):
     def update_equilibrium(self, equilibrium, func):
         """Add or update the function for a thermodynamic equilibrium constant."""
         if "equilibria" not in self:
-            self["equilibria"] = {}
-        self["equilibria"].update({equilibrium: func})
+            self["equilibria"] = OrderedDict()
+        self["equilibria"][equilibrium] = func
 
     def get_parameters(
         self,
@@ -281,3 +282,10 @@ class ParameterLibrary(dict):
                     report_missing_coeffs(neutral1, neutral1, neutral1)
                 parameters["nnn"][n1] = nnn
         return parameters
+
+    def get_equilibria(self, temperature=298.15):
+        equilibria = OrderedDict()
+        if "equilibria" in self:
+            for eq, eqf in self["equilibria"].items():
+                equilibria[eq] = eqf(T=temperature)
+        return equilibria
