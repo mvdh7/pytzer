@@ -4,19 +4,19 @@ pytzer/__init__.py                              15      1    93%
 pytzer/constants.py                             14      0   100%
 pytzer/convert.py                               12      3    75%
 pytzer/debyehueckel.py                          69     33    52%
-pytzer/dissociation.py                          86     48    44%
-pytzer/equilibrate/__init__.py                  15      9    40%
-pytzer/equilibrate/components.py               216    175    19%
-pytzer/equilibrate/stoichiometric.py            94     75    20%
+pytzer/dissociation.py                         111     61    45%
+pytzer/equilibrate/__init__.py                  16     10    38%
+pytzer/equilibrate/components.py               217    176    19%
+pytzer/equilibrate/stoichiometric.py            92     71    23%
 pytzer/equilibrate/thermodynamic.py             51     29    43%
 pytzer/libraries/Clegg94.py                     11      0   100%
 pytzer/libraries/Greenberg89.py                 25      0   100%
 pytzer/libraries/Harvie84.py                   259      0   100%
 pytzer/libraries/MarChemSpec.py                  9      0   100%
 pytzer/libraries/MarChemSpec25.py               17      0   100%
-pytzer/libraries/Millero98.py                  238      0   100%
+pytzer/libraries/Millero98.py                  244      0   100%
 pytzer/libraries/Moller88.py                    17      0   100%
-pytzer/libraries/ParameterLibrary.py           229     22    90%
+pytzer/libraries/ParameterLibrary.py           236     27    89%
 pytzer/libraries/Seawater.py                    26      0   100%
 pytzer/libraries/Waters13.py                    95      0   100%
 pytzer/libraries/Waters13_MarChemSpec25.py      11      0   100%
@@ -34,4 +34,4 @@ tests/test_jax_settings.py                       4      0   100%
 tests/test_model.py                             41      0   100%
 tests/test_unsymmetrical.py                     33      0   100%
 ----------------------------------------------------------------
-TOTAL                                         8170   5632    31%
+TOTAL                                         8208   5648    31%
