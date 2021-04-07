@@ -10,115 +10,68 @@ from .. import dissociation, model
 from . import components, stoichiometric
 
 
-def Gibbs_H2O(log_kt_H2O, solutes, log_activity_coefficients, log_activity_water):
+def Gibbs_H2O(log_kt_H2O, log_ks_H2O, log_acfs, log_aH2O):
     """Evaluate the Gibbs energy for water dissocation."""
-    m, log_acf = solutes, log_activity_coefficients
-    return (
-        log_acf["H"]
-        + np.log(m["H"])
-        + log_acf["OH"]
-        + np.log(m["OH"])
-        - log_activity_water
-        - log_kt_H2O
-    )
+    return log_acfs["H"] + log_acfs["OH"] - log_aH2O + log_ks_H2O - log_kt_H2O
 
 
-def Gibbs_HSO4(log_kt_HSO4, solutes, log_activity_coefficients, *args):
+def Gibbs_HSO4(log_kt_HSO4, log_ks_HSO4, log_acfs, log_aH2O):
     """Evaluate the Gibbs energy for the bisulfate-sulfate equilibrium."""
-    m, log_acf = solutes, log_activity_coefficients
     return (
-        log_acf["H"]
-        + np.log(m["H"])
-        + log_acf["SO4"]
-        + np.log(m["SO4"])
-        - log_acf["HSO4"]
-        - np.log(m["HSO4"])
-        - log_kt_HSO4
+        log_acfs["H"] + log_acfs["SO4"] - log_acfs["HSO4"] + log_ks_HSO4 - log_kt_HSO4
     )
 
 
-def Gibbs_HF(log_kt_HF, solutes, log_activity_coefficients, *args):
-    """Evaluate the Gibbs energy of the hydrogen fluoride equilibrium."""
-    m, log_acf = solutes, log_activity_coefficients
-    return (
-        log_acf["H"]
-        + np.log(m["H"])
-        + log_acf["F"]
-        + np.log(m["F"])
-        - log_acf["HF"]
-        - np.log(m["HF"])
-        - log_kt_HF
-    )
+def Gibbs_HF(log_kt_HF, log_ks_HF, log_acfs, log_aH2O):
+    """Evaluate the Gibbs energy of hydrogen fluoride dissociation."""
+    return log_acfs["H"] + log_acfs["F"] - log_acfs["HF"] + log_ks_HF - log_kt_HF
 
 
-def Gibbs_MgOH(log_kt_MgOH, solutes, log_activity_coefficients, *args):
+def Gibbs_MgOH(log_kt_MgOH, log_ks_MgOH, log_acfs, log_aH2O):
     """Evaluate the Gibbs energy for the magnesium-MgOH+ equilibrium."""
-    m, log_acf = solutes, log_activity_coefficients
     return (
-        log_acf["Mg"]
-        + np.log(m["Mg"])
-        + log_acf["OH"]
-        + np.log(m["OH"])
-        - log_acf["MgOH"]
-        - np.log(m["MgOH"])
-        + log_kt_MgOH
+        log_acfs["Mg"] + log_acfs["OH"] - log_acfs["MgOH"] - log_ks_MgOH + log_kt_MgOH
     )
 
 
-def Gibbs_trisH(log_kt_trisH, solutes, log_activity_coefficients, *args):
+def Gibbs_trisH(log_kt_trisH, log_ks_trisH, log_acfs, log_aH2O):
     """Evaluate the Gibbs energy for the tris-trisH+ equilibrium."""
-    m, log_acf = solutes, log_activity_coefficients
     return (
-        log_acf["tris"]
-        + np.log(m["tris"])
-        - log_acf["trisH"]
-        - np.log(m["trisH"])
-        + log_acf["H"]
-        + np.log(m["H"])
+        log_acfs["tris"]
+        + log_acfs["H"]
+        - log_acfs["trisH"]
+        + log_ks_trisH
         - log_kt_trisH
     )
 
 
-def Gibbs_H2CO3(log_kt_H2CO3, solutes, log_activity_coefficients, log_activity_water):
+def Gibbs_H2CO3(log_kt_H2CO3, log_ks_H2CO3, log_acfs, log_aH2O):
     """Evaluate the Gibbs energy for the H2CO3-bicarbonate equilibrium."""
-    m, log_acf = solutes, log_activity_coefficients
     return (
-        log_acf["H"]
-        + np.log(m["H"])
-        + log_acf["HCO3"]
-        + np.log(m["HCO3"])
-        - log_acf["CO2"]
-        - np.log(m["CO2"])
-        - log_activity_water
+        log_acfs["H"]
+        + log_acfs["HCO3"]
+        - log_acfs["CO2"]
+        - log_aH2O
+        + log_ks_H2CO3
         - log_kt_H2CO3
     )
 
 
-def Gibbs_HCO3(log_kt_HCO3, solutes, log_activity_coefficients, *args):
+def Gibbs_HCO3(log_kt_HCO3, log_ks_HCO3, log_acfs, log_aH2O):
     """Evaluate the Gibbs energy for the bicarbonate-carbonate equilibrium."""
-    m, log_acf = solutes, log_activity_coefficients
     return (
-        log_acf["H"]
-        + np.log(m["H"])
-        + log_acf["CO3"]
-        + np.log(m["CO3"])
-        - log_acf["HCO3"]
-        - np.log(m["HCO3"])
-        - log_kt_HCO3
+        log_acfs["H"] + log_acfs["CO3"] - log_acfs["HCO3"] + log_ks_HCO3 - log_kt_HCO3
     )
 
 
-def Gibbs_BOH3(log_kt_BOH3, solutes, log_activity_coefficients, log_activity_water):
+def Gibbs_BOH3(log_kt_BOH3, log_ks_BOH4, log_acfs, log_aH2O):
     """Evaluate the Gibbs energy for the boric acid equilibrium."""
-    m, log_acf = solutes, log_activity_coefficients
     return (
-        log_acf["BOH4"]
-        + np.log(m["BOH4"])
-        + log_acf["H"]
-        + np.log(m["H"])
-        - log_acf["BOH3"]
-        - np.log(m["BOH3"])
-        - log_activity_water
+        log_acfs["BOH4"]
+        + log_acfs["H"]
+        - log_acfs["BOH3"]
+        - log_aH2O
+        + log_ks_BOH3
         - log_kt_BOH3
     )
 
@@ -157,7 +110,9 @@ def get_Gibbs_equilibria(
     for rxn in log_kt_constants.keys():
         Gibbs_equilibria = np.append(
             Gibbs_equilibria,
-            all_reactions[rxn](log_kt_constants[rxn], solutes, log_acfs, log_aw),
+            Gibbs_HSO4(
+                log_kt_constants[rxn], np.log(all_ks_constants[rxn]), log_acfs, log_aw
+            ),
         )
     return Gibbs_equilibria
 

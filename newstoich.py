@@ -1,4 +1,3 @@
-from collections import OrderedDict
 from jax import numpy as np
 import pytzer as pz
 import PyCO2SYS as pyco2
@@ -56,7 +55,7 @@ for y, z in pyco2_to_pytzer.items():
 
 
 pfixed = pz.equilibrate.stoichiometric.guess_pfixed(totals, ["H", "F", "CO3", "PO4"])
-fixed = OrderedDict((k, 10.0 ** -v) for k, v in pfixed.items())
+fixed = pz.odict((k, 10.0 ** -v) for k, v in pfixed.items())
 pfixed_values = np.array([v for v in pfixed.values()])
 
 solutes = pz.equilibrate.components.get_solutes(fixed, totals, ks_constants)
@@ -67,7 +66,7 @@ sjac = pz.equilibrate.stoichiometric.solver_jac(
     pfixed_values, pfixed, totals, ks_constants
 )
 ssolve = pz.solve_stoichiometric(pfixed, totals, ks_constants)
-equilibria_to_solve = ["H2O", "HF", "H2CO3", "HCO3", "BOH3", "MgOH"]
+equilibria_to_solve = ["H2O", "HF", "H2CO3", "HCO3", "BOH3", "MgOH", "HSO4"]
 params = pz.libraries.Seawater.get_parameters(
     solutes, temperature=temperature, verbose=False
 )
