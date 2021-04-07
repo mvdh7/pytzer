@@ -7,11 +7,11 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-Pitzer model for chemical activities and other properties of aqueous solutions.  Undergoing beta testing and development.
+Pytzer is a Python implementation of the Pitzer model for chemical activities in aqueous solutions [[P91](https://pytzer.readthedocs.io/en/jax/refs/#p)] plus solvers to determine the equilibrium state of the system.
 
 ## Installation
 
-Due to its dependency on JAX, Pytzer can only be installed on Unix systems, although it does work on Windows via [WSL](https://docs.microsoft.com/en-us/windows/wsl/).
+Due to its dependency on [JAX](https://github.com/google/jax), Pytzer can only be installed on Unix systems, although it does work on Windows via [WSL](https://docs.microsoft.com/en-us/windows/wsl/).
 
 ### For development
 

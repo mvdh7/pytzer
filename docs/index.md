@@ -7,7 +7,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-Pytzer is a Python implementation of the Pitzer model for chemical activities in aqueous solutions [[P91](refs/#p)].
+Pytzer is a Python implementation of the Pitzer model for chemical activities in aqueous solutions [[P91](refs/#p)] plus solvers to determine the equilibrium state of the system.
 
 ## Installation
 
