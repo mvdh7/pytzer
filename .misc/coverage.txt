@@ -5,10 +5,10 @@ pytzer/constants.py                             14      0   100%
 pytzer/convert.py                               12      3    75%
 pytzer/debyehueckel.py                          69     33    52%
 pytzer/dissociation.py                          86     48    44%
-pytzer/equilibrate/__init__.py                  14      8    43%
+pytzer/equilibrate/__init__.py                  15      9    40%
 pytzer/equilibrate/components.py               216    175    19%
 pytzer/equilibrate/stoichiometric.py            94     75    20%
-pytzer/equilibrate/thermodynamic.py             59     37    37%
+pytzer/equilibrate/thermodynamic.py             51     29    43%
 pytzer/libraries/Clegg94.py                     11      0   100%
 pytzer/libraries/Greenberg89.py                 25      0   100%
 pytzer/libraries/Harvie84.py                   259      0   100%
@@ -22,7 +22,7 @@ pytzer/libraries/Waters13.py                    95      0   100%
 pytzer/libraries/Waters13_MarChemSpec25.py      11      0   100%
 pytzer/libraries/__init__.py                    21      0   100%
 pytzer/meta.py                                   9      3    67%
-pytzer/model.py                                168     47    72%
+pytzer/model.py                                111      2    98%
 pytzer/parameters.py                          6269   5168    18%
 pytzer/prepare.py                               40     32    20%
 pytzer/properties.py                            31     21    32%
@@ -34,4 +34,4 @@ tests/test_jax_settings.py                       4      0   100%
 tests/test_model.py                             41      0   100%
 tests/test_unsymmetrical.py                     33      0   100%
 ----------------------------------------------------------------
-TOTAL                                         8234   5684    31%
+TOTAL                                         8170   5632    31%
