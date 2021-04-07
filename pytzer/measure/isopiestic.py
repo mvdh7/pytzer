@@ -11,6 +11,6 @@ def osmR2osmS(totS, totR, nS, nR, osmR):
 
 def getosmS(totS, totR, eleS, eleR, tempK, pres, prmlib):
     """"""
-    ions = properties.getallions([eleS, eleR], [])
+    ions = properties.get_all_ions([eleS, eleR], [])
     #    matrix.assemble(ions, tempK, pres, prmlib)
     return ions

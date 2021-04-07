@@ -57,7 +57,7 @@ def _bC_plot(ax, xtype, tots, mols, ele, ions, tempK, pres, prmlib_base, varout)
 def bC_pres(
     ax, tot, ele, tempK, pres0, pres1, prmlib_base=libraries.Seawater, varout="osm"
 ):
-    ions, nus = properties._ele2ions[ele]
+    ions, nus = properties.ele_to_ions[ele]
     pres = linspace(pres0, pres1, 100)
     tots = full_like(pres, tot)
     mols = array([tots * nus[0], tots * nus[1]])
@@ -69,7 +69,7 @@ def bC_pres(
 def bC_tempK(
     ax, tot, ele, tempK0, tempK1, pres, prmlib_base=libraries.Seawater, varout="osm"
 ):
-    ions, nus = properties._ele2ions[ele]
+    ions, nus = properties.ele_to_ions[ele]
     tempK = linspace(tempK0, tempK1, 100)
     tots = full_like(tempK, tot)
     mols = array([tots * nus[0], tots * nus[1]])
@@ -83,7 +83,7 @@ def bC_tempK(
 def bC_tot(
     ax, tot0, tot1, ele, tempK, pres, prmlib_base=libraries.Seawater, varout="osm"
 ):
-    ions, nus = properties._ele2ions[ele]
+    ions, nus = properties.ele_to_ions[ele]
     tots = linspace(sqrt(tot0), sqrt(tot1), 100) ** 2
     mols = array([tots * nus[0], tots * nus[1]])
     tempK = full_like(tots, tempK)

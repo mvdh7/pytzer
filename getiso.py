@@ -16,7 +16,7 @@ prmlib.bC["K-Cl"] = pz.parameters.bC_K_Cl_GM89
 prmlib.lnk["HSO4"] = pz.dissociation.HSO4_CRP94
 
 # Read in isopiestic data
-e2i = pz.properties._ele2ions
+e2i = pz.properties.ele_to_ions
 filename = "../pytzer-support/datasets/isonew.xlsx"
 isonew = read_excel(filename, skiprows=2)
 isobase = isonew[["src", "tempK", "pres"]]

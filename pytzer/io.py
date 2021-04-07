@@ -13,7 +13,7 @@ from autograd.numpy import (
     vstack,
 )
 from autograd.numpy import sum as np_sum
-from .properties import _ele2ionmass, _ion2mass
+from .properties import ele_to_ion_mass, ion_to_mass
 
 
 def getmols(filename, delimiter=",", skip_top=0):
@@ -105,8 +105,8 @@ def _u2v(mols, ions, tots, eles):
     """Get approximate conversion factor for molinity (mol/kg-solution) to
     molality (mol/kg-H2O).
     """
-    ionmasses = array([_ion2mass[ion] for ion in ions]) * mols.ravel()
-    elemasses = array([_ion2mass[_ele2ionmass[ele]] for ele in eles]) * tots.ravel()
+    ionmasses = array([ion_to_mass[ion] for ion in ions]) * mols.ravel()
+    elemasses = array([ion_to_mass[ele_to_ion_mass[ele]] for ele in eles]) * tots.ravel()
     totalsalts = (np_sum(ionmasses) + np_sum(elemasses)) * 1e-3  # kg
     u2v = 1 + totalsalts
     return u2v

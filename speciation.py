@@ -55,13 +55,13 @@ mMgOH = allmols[allions == "MgOH"][0][0]
 
 #%%
 # tots, fixmols, eles, fixions, tempK, pres = pz.io.gettots(filename)
-# allions = pz.properties.getallions(eles, fixions)
+# allions = pz.properties.get_all_ions(eles, fixions)
 # prmlib = deepcopy(pz.libraries.MIAMI)
 # prmlib.add_zeros(allions) # just in case
 ## Solve for equilibria
 # q = 0
 # for ele in eles:
-#    q += len(pz.properties._eq2ions[ele]) - 1
+#    q += len(pz.properties.eq_to_ions[ele]) - 1
 # eqstate_guess = [0.0 for _ in range(q)]
 # if q == 0:
 #    eqstate_guess = [30.0]
@@ -179,7 +179,7 @@ mMgOH = allmols[allions == "MgOH"][0][0]
 ##filename = 'testfiles/CRP94 Table 8.csv'
 ### Import test dataset
 ##tots, fixmols, eles, fixions, tempK, pres = pz.io.gettots(filename)
-##allions = pz.properties.getallions(eles, fixions)
+##allions = pz.properties.get_all_ions(eles, fixions)
 ##prmlib = deepcopy(pz.libraries.MIAMI)
 ##prmlib.add_zeros(allions) # just in case
 ##prmlib.lnk['HSO4'] = pz.dissociation.HSO4_CRP94

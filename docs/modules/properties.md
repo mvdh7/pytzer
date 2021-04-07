@@ -27,14 +27,14 @@ zs, cations, anions, neutrals = pz.properties.charges(ions)
   * `anions` - array of anion names;
   * `neutrals` - array of neutral species names.
 
-## `getallions` - get ions in each electrolyte
+## `get_all_ions` - get ions in each electrolyte
 
-Determine the component ions in an input list of electrolytes and append to an existing list of ions. Hydrogen and hydroxide ions are also added. The ions in each electrolyte are defined in the `_ele2ions` dict also in this module.
+Determine the component ions in an input list of electrolytes and append to an existing list of ions. Hydrogen and hydroxide ions are also added. The ions in each electrolyte are defined in the `ele_to_ions` dict also in this module.
 
 **Syntax:**
 
 ```python
-allions = getallions(eles, fixions)
+allions = get_all_ions(eles, fixions)
 ```
 
 **Inputs:**

@@ -4,7 +4,7 @@
 from . import convert
 from autograd.numpy import concatenate, float_, unique, vstack
 
-_ion2name = {
+ion_to_name = {
     "Ag": "silver",
     "Aljjj": "aluminium(III)",
     "AsO4": "arsenate",
@@ -97,7 +97,7 @@ _ion2name = {
 }
 
 # Define general electrolyte to ions conversion dict
-_ele2ions = {
+ele_to_ions = {
     "Ba(NO3)2": (("Ba", "NO3"), (1, 2)),
     "CaCl2": (("Ca", "Cl"), (1, 2)),
     "Cd(NO3)2": (("Cdjj", "NO3"), (1, 2)),
@@ -158,7 +158,7 @@ _ele2ions = {
 }
 
 # Define electrolyte to ions conversion dict for equilibria
-_eq2ions = {
+eq_to_ions = {
     "t_H2CO3": ("CO2", "HCO3", "CO3"),
     "t_HSO4": ("HSO4", "SO4"),
     "t_Mg": ("Mg", "MgOH"),
@@ -167,7 +167,7 @@ _eq2ions = {
 }
 
 # Relative ionic masses in g/mol
-_ion2mass = {
+ion_to_mass = {
     "H": 1.00794,
     "Li": 6.941,
     "Na": 22.98977,
@@ -213,7 +213,7 @@ _ion2mass = {
 }
 
 # Select which ionic mass to use for molinity to molality conversion of eles
-_ele2ionmass = {
+ele_to_ion_mass = {
     "t_HSO4": "SO4",
     "t_trisH": "tris",
     "t_Mg": "Mg",
@@ -237,7 +237,7 @@ def charges(ions):
     return zs, cations, anions, neutrals
 
 
-def getallions(eles, fixions):
+def get_all_ions(eles, fixions):
     """Get all ions given list of electrolytes for equilibria."""
     if len(eles) == 0:
         allions = concatenate([fixions, ["H", "OH"]])
@@ -245,7 +245,7 @@ def getallions(eles, fixions):
         allions = concatenate(
             [
                 fixions,
-                concatenate([_eq2ions[ele] for ele in eles]),
+                concatenate([eq_to_ions[ele] for ele in eles]),
                 ["H", "OH"],
             ]
         )

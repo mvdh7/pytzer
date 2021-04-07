@@ -117,13 +117,13 @@ say_hello = hello
 #     """
 #     # Import test dataset
 #     tots, fixmols, eles, fixions, tempK, pres = io.gettots(filename)
-#     allions = properties.getallions(eles, fixions)
+#     allions = properties.get_all_ions(eles, fixions)
 #     prmlib = deepcopy(prmlib)
 #     prmlib.add_zeros(allions) # just in case
 #     # Solve for equilibria
 #     q = 0
 #     for ele in eles:
-#         q += len(properties._eq2ions[ele]) - 1
+#         q += len(properties.eq_to_ions[ele]) - 1
 #     eqstate_guess = [0.0 for _ in range(q)]
 #     if q == 0:
 #         eqstate_guess = [30.0,]
