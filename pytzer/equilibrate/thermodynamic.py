@@ -64,7 +64,7 @@ def Gibbs_HCO3(log_kt_HCO3, log_ks_HCO3, log_acfs, log_aH2O):
     )
 
 
-def Gibbs_BOH3(log_kt_BOH3, log_ks_BOH4, log_acfs, log_aH2O):
+def Gibbs_BOH3(log_kt_BOH3, log_ks_BOH3, log_acfs, log_aH2O):
     """Evaluate the Gibbs energy for the boric acid equilibrium."""
     return (
         log_acfs["BOH4"]
