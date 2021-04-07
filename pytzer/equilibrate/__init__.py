@@ -19,4 +19,5 @@ def solve(equilibria_to_solve, pfixed_initial, totals, ks_constants, params):
     ks_constants = thermodynamic.update_ks_constants(
         ks_constants, optresult_thermodynamic
     )
-    return _solve(pfixed_initial, totals, ks_constants)
+    solutes, ks_constants = _solve(pfixed_initial, totals, ks_constants)
+    return solutes, ks_constants
