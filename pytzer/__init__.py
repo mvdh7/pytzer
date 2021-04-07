@@ -51,6 +51,7 @@ from .model import (
     log_activity_water,
     osmotic_coefficient,
 )
+from collections import OrderedDict as odict
 
 __version__ = meta.version
 __author__ = "Matthew P. Humphreys"
