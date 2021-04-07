@@ -29,7 +29,9 @@ print(-np.log10(ks_constants["HSO4"]))
 solver_x = pz.equilibrate.stoichiometric.solve(solver_x, totals, ks_constants, *targets)
 print(solver_x)
 solver_molalities = [10.0 ** -x for x in solver_x]
-solutes = pz.equilibrate.components.get_solutes(*solver_molalities, totals, ks_constants)
+solutes = pz.equilibrate.components.get_solutes(
+    *solver_molalities, totals, ks_constants
+)
 
 #%%
 params = pz.libraries.Seawater.get_parameters(solutes, verbose=False)
