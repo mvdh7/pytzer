@@ -25,20 +25,6 @@ def split_solute_types(values, charges):
     return cations, anions, neutrals
 
 
-def get_pytzer_args(solute_molalities):
-    solutes, molalities, charges = expand_solute_molalities(solute_molalities)
-    m_cats, m_anis, m_neus = split_solute_types(molalities, charges)
-    z_cats, z_anis = split_solute_types(charges, charges)[:2]
-    pytzer_args = (m_cats, m_anis, m_neus, z_cats, z_anis)
-    solutes_split = {}
-    (
-        solutes_split["cations"],
-        solutes_split["anions"],
-        solutes_split["neutrals"],
-    ) = split_solute_types(solutes, charges)
-    return pytzer_args, solutes_split
-
-
 def salinity_to_molalities_MZF93(salinity, MgOH=False):
     """Convert salinity (g/kg-sw) to molality for typical seawater, simplified
     for the WM13 tris buffer model, following MZF93.
