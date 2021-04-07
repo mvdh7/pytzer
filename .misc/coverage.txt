@@ -30,7 +30,7 @@ pytzer/teos10.py                                40     10    75%
 pytzer/unsymmetrical.py                         46      1    98%
 tests/__init__.py                                0      0   100%
 tests/test_jax_settings.py                       4      0   100%
-tests/test_model.py                             29      0   100%
+tests/test_model.py                             41      0   100%
 tests/test_unsymmetrical.py                     33      0   100%
 ----------------------------------------------------------------
-TOTAL                                         8359   5869    30%
+TOTAL                                         8371   5869    30%
