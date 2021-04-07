@@ -10,10 +10,11 @@ import pytzer as pz
 
 ## Arguments
 
-All the main functions in `pytzer.model` have the same syntax, for example:
+All the main functions in `pytzer.model` have the same syntax, and they are all aliased at the top level, for example:
 
 ```python
 Gibbs_nRT = pz.model.Gibbs_nRT(solutes, **params)
+Gibbs_nRT = pz.Gibbs_nRT(solutes, **params)
 ```
 
   * The argument `solutes` is an [`OrderedDict`](https://docs.python.org/3/library/collections.html#collections.OrderedDict) containing the molality (in mol/kg) of each solute in the solution.  Each molality must be a single scalar value.
@@ -31,7 +32,7 @@ The properties that can be calculated using the syntax above are:
 Excess Gibbs energy of the solution.
 
 ```python
-Gibbs_nRT = pz.model.Gibbs_nRT(solutes, **params)
+Gibbs_nRT = pz.Gibbs_nRT(solutes, **params)
 ```
 
 ### Solute activity coefficients
@@ -39,8 +40,8 @@ Gibbs_nRT = pz.model.Gibbs_nRT(solutes, **params)
 Chemical activity coefficients for every solute or their natural logarithms.
 
 ```python
-activity_coefficients = pz.model.activity_coefficients(solutes, **params)
-log_activity_coefficients = pz.model.log_activity_coefficients(solutes, **params)
+activity_coefficients = pz.activity_coefficients(solutes, **params)
+log_activity_coefficients = pz.log_activity_coefficients(solutes, **params)
 ```
 
 ### Water activity
@@ -48,8 +49,8 @@ log_activity_coefficients = pz.model.log_activity_coefficients(solutes, **params
 Chemical activity of the solvent (water) or its natural logarithm.
 
 ```python
-activity_water = pz.model.activity_water(solutes, **params)
-log_activity_water = pz.model.log_activity_water(solutes, **params)
+activity_water = pz.activity_water(solutes, **params)
+log_activity_water = pz.log_activity_water(solutes, **params)
 ```
 
 ### Osmotic coefficient
@@ -57,7 +58,7 @@ log_activity_water = pz.model.log_activity_water(solutes, **params)
 Osmotic coefficient of the solution.
 
 ```python
-osmotic_coefficient = pz.model.osmotic_coefficient(solutes, **params)
+osmotic_coefficient = pz.osmotic_coefficient(solutes, **params)
 ```
 
 <!--
