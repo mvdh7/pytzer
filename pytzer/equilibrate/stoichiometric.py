@@ -171,7 +171,7 @@ def solver_func(pfixed_values, pfixed, totals, ks_constants):
         (k, 10.0 ** -pfixed_values[i]) for i, k in enumerate(pfixed.keys())
     )
     total_targets = get_total_targets(totals, pfixed)
-    solutes = components.get_all(fixed, totals, ks_constants)
+    solutes = components.get_solutes(fixed, totals, ks_constants)
     solute_targets = get_solute_targets(solutes, pfixed)
     targets = np.array([total_targets[pf] - solute_targets[pf] for pf in pfixed.keys()])
     return targets

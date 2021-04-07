@@ -240,7 +240,7 @@ def get_SrCO3(co3, totals, ks_constants):
 
 
 @jax.jit
-def get_all(fixed, totals, ks_constants):
+def get_solutes(fixed, totals, ks_constants):
     solutes = OrderedDict()
     solutes.update(totals)
     solutes["H"] = h = fixed["H"]  # H must always be fixed (for now)

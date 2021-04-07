@@ -14,7 +14,6 @@ totals["H2S"] = 3e-6
 totals["PO4"] = 5e-6
 totals["H4SiO4"] = 50e-6
 
-
 ks_constants = pz.dissociation.assemble(
     temperature=temperature
 )  # Needs to be replaced with PyCO2SYS - made a start below:
@@ -60,7 +59,7 @@ pfixed = pz.equilibrate.stoichiometric.guess_pfixed(totals, ["H", "F", "CO3", "P
 fixed = OrderedDict((k, 10.0 ** -v) for k, v in pfixed.items())
 pfixed_values = np.array([v for v in pfixed.values()])
 
-solutes = pz.equilibrate.components.get_all(fixed, totals, ks_constants)
+solutes = pz.equilibrate.components.get_solutes(fixed, totals, ks_constants)
 sfunc = pz.equilibrate.stoichiometric.solver_func(
     pfixed_values, pfixed, totals, ks_constants
 )

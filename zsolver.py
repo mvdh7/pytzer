@@ -19,7 +19,7 @@ pm_initial = pz.equilibrate.stoichiometric.guess_pm_initial(totals, which_pms)
 total_targets = pz.equilibrate.stoichiometric.get_total_targets(totals, which_pms)
 pm_initial = pz.solve_stoichiometric(pm_initial, totals, ks_constants, total_targets)
 m_initial = 10.0 ** -pm_initial
-solutes_initial = pz.equilibrate.components.get_all(*m_initial, totals, ks_constants)
+solutes_initial = pz.equilibrate.components.get_solutes(*m_initial, totals, ks_constants)
 
 params = pz.libraries.Seawater.get_parameters(
     solutes_initial, temperature=temperature, verbose=False
@@ -56,6 +56,6 @@ for eq in equilibria_to_solve:
 #     pm_initial, totals, ks_constants, *targets
 # )
 # m_final = 10.0 ** -pm_final
-# solutes_final = pz.equilibrate.components.get_all(
+# solutes_final = pz.equilibrate.components.get_solutes(
 #     *m_final, totals, ks_constants
 # )

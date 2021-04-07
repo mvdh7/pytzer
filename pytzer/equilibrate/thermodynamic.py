@@ -149,7 +149,7 @@ def get_Gibbs_equilibria(
     # Solve for pH
     pfixed_initial = stoichiometric.solve(pfixed_initial, totals, all_ks_constants)
     fixed_initial = OrderedDict((k, 10.0 ** -v) for k, v in pfixed_initial.items())
-    solutes = components.get_all(fixed_initial, totals, all_ks_constants)
+    solutes = components.get_solutes(fixed_initial, totals, all_ks_constants)
     log_aw = model.log_activity_water(solutes, **params)
     log_acfs = model.log_activity_coefficients(solutes, **params)
     # Get equilibria
