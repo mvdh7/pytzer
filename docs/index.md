@@ -2,6 +2,8 @@
 
 # Pytzer v0.4.3
 
+***May 2021: a totally new version is in development!  If you want to use Pytzer, I advise you to wait for that.***
+
 **Pytzer** is a Python 3.6+ implementation of the Pitzer model for chemical activities in aqueous solutions [[P91](references/#P91)].
 
 ## Installation
@@ -45,6 +47,10 @@ The remaining modules will only be of interest to more advanced users:
 ## Citation
 
 A manuscript describing Pytzer is in preparation for publication. Please check back here or [get in touch](https://mvdh.xyz/contact) to find out how to cite Pytzer in your work.
+
+For the currently released v0.4.3 you can use:
+
+> Humphreys, Matthew P. (2019).  Pytzer: the Pitzer model for chemical activities in aqueous solutions in Python (beta).  Version 0.4.3.  *Zenodo.* [doi:10.5281/zenodo.3404907](https://doi.org/10.5281/zenodo.3404907).
 
 ## Acknowledgements
 
