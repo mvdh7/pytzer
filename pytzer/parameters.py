@@ -2046,8 +2046,8 @@ def bC_Sm_Cl_PM73(T, P):
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
-def bC_Eu_Cl_PM73(T, P):
-    """"c-a: europium chloride [PM73]."""
+def bC_Eujjj_Cl_PM73(T, P):
+    """"c-a: europium (III) chloride [PM73]."""
     # Coefficients from PM73 Table VIII
     b0 = 0.937 * 2 / 3
     b1 = 8.385 * 2 / 3

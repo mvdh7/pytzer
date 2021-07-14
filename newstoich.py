@@ -2,7 +2,7 @@ from jax import numpy as np
 import pytzer as pz
 import PyCO2SYS as pyco2
 
-temperature = 298.15
+temperature = 273.15
 pressure = 10.10325
 salinity = 35
 
@@ -71,7 +71,7 @@ sjac = pz.equilibrate.stoichiometric.solver_jac(
 )
 ssolve = pz.solve_stoichiometric(totals, ks_constants)
 # equilibria_to_solve = ["H2O", "HF", "H2CO3", "HCO3", "BOH3", "MgOH", "HSO4"]
-equilibria_to_solve = pz.libraries.Seawater.get_equilibria()
+equilibria_to_solve = pz.libraries.Seawater.get_equilibria(temperature=temperature)
 
 # These ones not coded in to pytzer.thermodynamic yet:
 equilibria_to_solve.pop("H3PO4")
