@@ -240,6 +240,64 @@ def get_SrCO3(co3, totals, ks_constants):
 
 
 @jax.jit
+def get_solutes__H(totals, ks_constants, pfixed):
+    """Get solutes when pfixed contains only 'H'."""
+    # Initial preparations
+    fixed = OrderedDict((k, 10.0 ** -v) for k, v in pfixed.items())
+    solutes = OrderedDict()
+    solutes.update(totals)
+    solutes["H"] = h = fixed["H"]
+    # Deal with other absent pfixed variables
+    if "F" in totals:
+        assert "HF" in ks_constants
+        solutes["F"] = f = get_F(h, totals, ks_constants)
+        solutes["HF"] = get_HF(h, f, ks_constants)
+    if "CO2" in totals:
+        assert "H2CO3" in ks_constants
+        assert "HCO3" in ks_constants
+        solutes["CO3"] = co3 = get_CO3(h, totals, ks_constants)
+        solutes["HCO3"] = get_HCO3(h, co3, ks_constants)
+        solutes["CO2"] = get_CO2(h, co3, ks_constants)
+    if "PO4" in totals:
+        assert "H3PO4" in ks_constants
+        assert "H2PO4" in ks_constants
+        assert "HPO4" in ks_constants
+        solutes["PO4"] = po4 = get_PO4(h, totals, ks_constants)
+        solutes["HPO4"] = get_HPO4(h, po4, ks_constants)
+        solutes["H2PO4"] = get_H2PO4(h, po4, ks_constants)
+        solutes["H3PO4"] = get_H3PO4(h, po4, ks_constants)
+    # Add other standard H-equilibria
+    if "H2O" in ks_constants:
+        solutes["OH"] = get_OH(h, ks_constants)
+    if "SO4" in totals:
+        assert "HSO4" in ks_constants
+        solutes["HSO4"] = get_HSO4(h, totals, ks_constants)
+        solutes["SO4"] = get_HSO4(h, totals, ks_constants)
+    if "H2S" in totals:
+        assert "H2S" in ks_constants
+        solutes["H2S"] = get_H2S(h, totals, ks_constants)
+        solutes["HS"] = get_HS(h, totals, ks_constants)
+    if "BOH3" in totals:
+        assert "BOH3" in ks_constants
+        solutes["BOH3"] = get_BOH3(h, totals, ks_constants)
+        solutes["BOH4"] = get_BOH4(h, totals, ks_constants)
+    if "NH3" in totals:
+        assert "NH4" in ks_constants
+        solutes["NH3"] = get_NH3(h, totals, ks_constants)
+        solutes["NH4"] = get_NH4(h, totals, ks_constants)
+    if "H4SiO4" in totals:
+        assert "H4SiO4" in ks_constants
+        solutes["H4SiO4"] = get_H4SiO4(h, totals, ks_constants)
+        solutes["H3SiO4"] = get_H3SiO4(h, totals, ks_constants)
+    if "NO2" in totals:
+        assert "HNO2" in ks_constants
+        solutes["HNO2"] = get_HNO2(h, totals, ks_constants)
+        solutes["NO2"] = get_NO2(h, totals, ks_constants)
+    # what about MgOH......
+    return solutes
+
+
+@jax.jit
 def get_solutes(totals, ks_constants, pfixed):
     fixed = OrderedDict((k, 10.0 ** -v) for k, v in pfixed.items())
     solutes = OrderedDict()

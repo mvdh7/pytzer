@@ -9,7 +9,7 @@ pressure = 10.10325
 # Calculate total molalities
 salinity = 35
 totals = {
-    "Mg": 0.25,
+    "Ca": 0.25,
     "CO2": 0.34,
 }
 
@@ -18,9 +18,9 @@ ks_constants = pz.dissociation.assemble(
     temperature=temperature,
     totals=totals,
 )
-# ks_constants = OrderedDict(
-#     (k, v) for k, v in ks_constants.items() if k in ["H2O", "H2CO3", "HCO3", "CaCO3"]
-# )
+ks_constants = OrderedDict(
+    (k, v) for k, v in ks_constants.items() if k in ["H2O", "H2CO3", "HCO3", "CaCO3"]
+)
 
 # Get the array of molalities that are the solver targets (H, CO3, F, PO4)
 pfixed = pz.equilibrate.stoichiometric.create_pfixed(totals=totals)
@@ -45,8 +45,9 @@ params = pz.libraries.Seawater.get_parameters(
 solutes_final, ks_constants_final = pz.solve(equilibria, totals, ks_constants, params)
 
 # Get K0
-results = pyco2.sys(temperature=temperature - 273.15, salinity=salinity,
-                    pressure=pressure - 10.10325)
+results = pyco2.sys(
+    temperature=temperature - 273.15, salinity=salinity, pressure=pressure - 10.10325
+)
 K0 = results["k_CO2"]
 
 # Display results
