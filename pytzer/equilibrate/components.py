@@ -248,7 +248,10 @@ def get_solutes(totals, ks_constants, pfixed):
     if "F" in fixed:
         solutes["F"] = f = fixed["F"]
     else:
-        solutes["F"] = f = get_F(h, totals, ks_constants)
+        if "F" in totals:
+            solutes["F"] = f = get_F(h, totals, ks_constants)
+        else:
+            f = 0.0
     if "CO3" in fixed:
         solutes["CO3"] = co3 = fixed["CO3"]
     else:
@@ -256,8 +259,10 @@ def get_solutes(totals, ks_constants, pfixed):
     if "PO4" in fixed:
         solutes["PO4"] = po4 = fixed["PO4"]
     else:
-        solutes["PO4"] = po4 = get_PO4(h, totals, ks_constants)
-
+        if "PO4" in totals:
+            solutes["PO4"] = po4 = get_PO4(h, totals, ks_constants)
+        else:
+            po4 = 0.0
     if "H2O" in ks_constants:
         solutes["OH"] = get_OH(h, ks_constants)
     if "SO4" in totals and "HSO4" in ks_constants:
