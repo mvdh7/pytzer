@@ -1,3 +1,7 @@
+# Pytzer: Pitzer model for chemical activities in aqueous solutions.
+# Copyright (C) 2019--2021  Matthew P. Humphreys  (GNU GPLv3)
+"""Solve for stoichiometric equilibrium."""
+
 from collections import OrderedDict
 import jax
 from jax import lax, numpy as np
@@ -5,35 +9,53 @@ from . import components
 
 
 @jax.jit
-def guess_pfixed(pfixed, totals=None):
-    """Update pfixed with vaguely sensible first guesses for the stoichiometric solver."""
-    assert isinstance(pfixed, OrderedDict)
-    for s in pfixed:
+def guess_ptargets(ptargets, totals):
+    """Update ptargets with vaguely sensible first guesses for the stoichiometric
+    solver.
+    """
+    assert isinstance(ptargets, OrderedDict)
+    for s in ptargets:
         if s == "H":
-            pfixed["H"] = 8.0
+            ptargets["H"] = 8.0
         elif s == "F":
             assert "F" in totals
-            pfixed["F"] = -np.log10(totals["F"] / 2)
+            ptargets["F"] = -np.log10(totals["F"] / 2)
         elif s == "CO3":
             assert "CO2" in totals
-            pfixed["CO3"] = -np.log10(totals["CO2"] / 10)
+            ptargets["CO3"] = -np.log10(totals["CO2"] / 10)
         elif s == "PO4":
             assert "PO4" in totals
-            pfixed["PO4"] = -np.log10(totals["PO4"] / 2)
-    return pfixed
+            ptargets["PO4"] = -np.log10(totals["PO4"] / 2)
+    return ptargets
 
 
 @jax.jit
-def create_pfixed(totals=None):
-    """Generate pfixed with first-guess solver values."""
-    pfixed = OrderedDict()
-    pfixed["H"] = 0.0
-    if totals is not None:
-        for s, t in {"F": "F", "CO3": "CO2", "PO4": "PO4"}.items():
-            if t in totals:
-                pfixed[s] = 0.0
-    pfixed = guess_pfixed(pfixed, totals=totals)
-    return pfixed
+def create_ptargets(totals, ks_constants):
+    """Generate ptargets with first-guess solver values."""
+    ptargets = OrderedDict()
+    ptargets["H"] = 0.0
+    if "F" in totals:
+        if "MgF" in ks_constants or "CaF" in ks_constants:
+            ptargets["F"] = 0.0
+    if "CO2" in totals:
+        if (
+            "MgCO3" in ks_constants
+            or "CaCO3" in ks_constants
+            or "SrCO3" in ks_constants
+        ):
+            ptargets["CO3"] = 0.0
+    if "PO4" in totals:
+        if (
+            "MgH2PO4" in ks_constants
+            or "MgHPO4" in ks_constants
+            or "MgPO4" in ks_constants
+            or "CaH2PO4" in ks_constants
+            or "CaHPO4" in ks_constants
+            or "CaPO4" in ks_constants
+        ):
+            ptargets["PO4"] = 0.0
+    ptargets = guess_ptargets(ptargets, totals)
+    return ptargets
 
 
 def get_alkalinity(solutes):
@@ -152,8 +174,8 @@ all_total_targets = {
 }
 
 
-def get_total_targets(totals, pfixed):
-    return OrderedDict((pf, all_total_targets[pf](totals)) for pf in pfixed)
+def get_total_targets(totals, ptargets):
+    return OrderedDict((pf, all_total_targets[pf](totals)) for pf in ptargets)
 
 
 all_solute_targets = {
@@ -164,16 +186,20 @@ all_solute_targets = {
 }
 
 
-def get_solute_targets(solutes, pfixed):
-    return OrderedDict((pf, all_solute_targets[pf](solutes)) for pf in pfixed)
+def get_solute_targets(solutes, ptargets):
+    return OrderedDict((pf, all_solute_targets[pf](solutes)) for pf in ptargets)
 
 
-def solver_func(pfixed_values, pfixed, totals, ks_constants):
-    pfixed = OrderedDict((k, pfixed_values[i]) for i, k in enumerate(pfixed.keys()))
-    total_targets = get_total_targets(totals, pfixed)
-    solutes = components.get_solutes(totals, ks_constants, pfixed)
-    solute_targets = get_solute_targets(solutes, pfixed)
-    targets = np.array([total_targets[pf] - solute_targets[pf] for pf in pfixed.keys()])
+def solver_func(ptargets_values, ptargets, totals, ks_constants):
+    ptargets = OrderedDict(
+        (k, ptargets_values[i]) for i, k in enumerate(ptargets.keys())
+    )
+    total_targets = get_total_targets(totals, ptargets)
+    solutes = components.get_solutes(totals, ks_constants, ptargets)
+    solute_targets = get_solute_targets(solutes, ptargets)
+    targets = np.array(
+        [total_targets[pf] - solute_targets[pf] for pf in ptargets.keys()]
+    )
     return targets
 
 
@@ -181,24 +207,24 @@ solver_jac = jax.jit(jax.jacfwd(solver_func))
 
 
 @jax.jit
-def solve(totals, ks_constants, pfixed=None):
-    def cond(pfixed_values):
-        target = solver_func(pfixed_values, pfixed, totals, ks_constants)
+def solve(totals, ks_constants, ptargets=None):
+    def cond(ptargets_values):
+        target = solver_func(ptargets_values, ptargets, totals, ks_constants)
         return np.any(np.abs(target) > 1e-9)
 
-    def body(pfixed_values):
-        target = -solver_func(pfixed_values, pfixed, totals, ks_constants)
-        jac = solver_jac(pfixed_values, pfixed, totals, ks_constants)
+    def body(ptargets_values):
+        target = -solver_func(ptargets_values, ptargets, totals, ks_constants)
+        jac = solver_jac(ptargets_values, ptargets, totals, ks_constants)
         p_diff = np.linalg.solve(jac, target)
         p_diff = np.where(p_diff > 1, 1, p_diff)
         p_diff = np.where(p_diff < -1, -1, p_diff)
-        return pfixed_values + p_diff
+        return ptargets_values + p_diff
 
-    if pfixed is None:
-        pfixed = create_pfixed(totals=totals)
-    pfixed_values = np.array([v for v in pfixed.values()])
-    pfixed_values = lax.while_loop(cond, body, pfixed_values)
-    pfixed_final = OrderedDict(
-        (k, pfixed_values[i]) for i, k in enumerate(pfixed.keys())
+    if ptargets is None:
+        ptargets = create_ptargets(totals, ks_constants)
+    ptargets_values = np.array([v for v in ptargets.values()])
+    ptargets_values = lax.while_loop(cond, body, ptargets_values)
+    ptargets_final = OrderedDict(
+        (k, ptargets_values[i]) for i, k in enumerate(ptargets.keys())
     )
-    return pfixed_final
+    return ptargets_final

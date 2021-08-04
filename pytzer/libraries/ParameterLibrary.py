@@ -1,8 +1,10 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019--2021  Matthew P. Humphreys  (GNU GPLv3)
+from copy import deepcopy
 from collections import OrderedDict
 import numpy as np
 from .. import debyehueckel as dh, parameters as prm, convert
+from ..equilibrate import thermodynamic
 from ..meta import update_func_J
 
 
@@ -141,7 +143,9 @@ class ParameterLibrary(dict):
         pressure=10.1023,
         verbose=True,
     ):
-        """Evaluate all interaction parameters under specific conditions."""
+        """Evaluate all interaction parameters under specific conditions for
+        non-equilibrating calculations.
+        """
         if verbose:
             missing_coeffs = []
 
@@ -283,9 +287,36 @@ class ParameterLibrary(dict):
                 parameters["nnn"][n1] = nnn
         return parameters
 
-    def get_equilibria(self, temperature=298.15):
-        equilibria = OrderedDict()
+    def get_equilibria(self, solutes=None, temperature=298.15):
+        log_kt_constants = OrderedDict()
         if "equilibria" in self:
             for eq, eqf in self["equilibria"].items():
-                equilibria[eq] = eqf(T=temperature)
-        return equilibria
+                include_here = True
+                if solutes is not None:
+                    for s in thermodynamic.solutes_required[eq]:
+                        include_here = include_here and s in solutes
+                if include_here:
+                    log_kt_constants[eq] = eqf(T=temperature)
+        return log_kt_constants
+
+    def get_parameters_equilibria(
+        self,
+        solutes=None,
+        temperature=298.15,
+        pressure=10.1023,
+        verbose=True,
+    ):
+        """Calculate Pitzer model parameters and thermodynamic equilibrium constants
+        as log_kt_constants for equilibrating calculations.
+        """
+        parameters = self.get_parameters(
+            solutes=solutes,
+            temperature=temperature,
+            pressure=pressure,
+            verbose=verbose,
+        )
+        log_kt_constants = self.get_equilibria(solutes=solutes, temperature=temperature)
+        return parameters, log_kt_constants
+
+    def copy(self):
+        return deepcopy(self)

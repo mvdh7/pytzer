@@ -13,12 +13,13 @@ totals["H2S"] = 3e-6
 totals["PO4"] = 5e-6
 totals["H4SiO4"] = 50e-6
 
-ks_constants_v1 = pz.dissociation.assemble_v1(
-    temperature=temperature
-)  # Needs to be replaced with PyCO2SYS - made a start below:
+# ks_constants_v1 = pz.dissociation.assemble_v1(
+#     temperature=temperature
+# )  # Needs to be replaced with PyCO2SYS - made a start below:
 
 ks_constants = pz.dissociation.assemble(
-    temperature=temperature
+    temperature=temperature,
+    totals=totals,
 )  # Needs to be replaced with PyCO2SYS - made a start below:
 # Also need to add HNO2 equilibrium
 WhichKs = 16
@@ -58,36 +59,32 @@ for y, z in pyco2_to_pytzer.items():
     ks_constants.update({z: ks_pyco2[y]})
 
 
-pfixed = pz.equilibrate.stoichiometric.create_pfixed(totals=totals)
-fixed = pz.odict((k, 10.0 ** -v) for k, v in pfixed.items())
-pfixed_values = np.array([v for v in pfixed.values()])
+ptargets = pz.equilibrate.stoichiometric.create_ptargets(totals, ks_constants)
+targets = pz.odict((k, 10.0 ** -v) for k, v in ptargets.items())
+ptargets_values = np.array([v for v in ptargets.values()])
 
-solutes = pz.equilibrate.components.get_solutes(totals, ks_constants, pfixed)
+solutes = pz.equilibrate.components.get_solutes(totals, ks_constants, ptargets)
 sfunc = pz.equilibrate.stoichiometric.solver_func(
-    pfixed_values, pfixed, totals, ks_constants
+    ptargets_values, ptargets, totals, ks_constants
 )
 sjac = pz.equilibrate.stoichiometric.solver_jac(
-    pfixed_values, pfixed, totals, ks_constants
+    ptargets_values, ptargets, totals, ks_constants
 )
 ssolve = pz.solve_stoichiometric(totals, ks_constants)
 # equilibria_to_solve = ["H2O", "HF", "H2CO3", "HCO3", "BOH3", "MgOH", "HSO4"]
 equilibria_to_solve = pz.libraries.Seawater.get_equilibria(temperature=temperature)
 
 # These ones not coded in to pytzer.thermodynamic yet:
-equilibria_to_solve.pop("H3PO4")
-equilibria_to_solve.pop("H2PO4")
-equilibria_to_solve.pop("HPO4")
-equilibria_to_solve.pop("H2S")
 equilibria_to_solve.pop("NH4")
 
 params = pz.libraries.Seawater.get_parameters(
     solutes, temperature=temperature, verbose=False
 )
-tsolve = pz.solve_thermodynamic(equilibria_to_solve, totals, ks_constants, params)
+tsolve = pz.solve_thermodynamic(totals, ks_constants, params, equilibria_to_solve)
 
 # This one is all that's really needed!
-solutes_final, ks_constants_final = pz.solve(
-    equilibria_to_solve, totals, ks_constants, params
+solutes_final, ks_constants_final = pz.solve_manual(
+    totals, ks_constants, params, equilibria_to_solve
 )
 
 # Display results

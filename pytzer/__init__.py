@@ -20,7 +20,7 @@ from . import (
     debyehueckel,
     dissociation,
     equilibrate,
-    # io,
+    io,
     libraries,
     # measure,
     meta,
@@ -38,9 +38,11 @@ from .convert import (
     log_activities_to_mean,
     osmotic_to_activity,
 )
-from .equilibrate import solve
+from .equilibrate import solve, solve_manual
+from .equilibrate.components import find_solutes
 from .equilibrate.stoichiometric import solve as solve_stoichiometric
 from .equilibrate.thermodynamic import solve as solve_thermodynamic
+from .io import solve_df
 from .libraries import ParameterLibrary
 from .meta import update_func_J
 from .model import (

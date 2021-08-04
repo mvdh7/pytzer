@@ -1,130 +1,49 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019--2021  Matthew P. Humphreys  (GNU GPLv3)
 """Import solution composition data, and export the results."""
-from autograd.numpy import (
-    array,
-    concatenate,
-    genfromtxt,
-    logical_and,
-    nan_to_num,
-    savetxt,
-    shape,
-    transpose,
-    vstack,
-)
-from autograd.numpy import sum as np_sum
-from .properties import ele_to_ion_mass, ion_to_mass
+
+from collections import OrderedDict
+import numpy as np
+from . import convert, dissociation, equilibrate as eq
+from .libraries import Seawater
 
 
-def getmols(filename, delimiter=",", skip_top=0):
-    """Import molality, temperature and pressure data from a CSV file, where
-    all ionic concentrations are defined (i.e. no equilibration)."""
-    data = genfromtxt(filename, delimiter=delimiter, skip_header=skip_top + 1)
-    if len(shape(data)) == 1:
-        data = array(
-            [
-                data,
-            ]
+def solve_df(df, inplace=True, library=Seawater, verbose=False):
+    """Solve all rows in a DataFrame for thermodynamic equilibrium."""
+    if not inplace:
+        df = df.copy()
+    total_cols = {c: 0.0 for c in df.columns if c in convert.solute_to_charge}
+    # Add empty rows to df to save results
+    _ks_constants = dissociation.assemble(totals=total_cols)
+    solutes = eq.components.find_solutes(total_cols, _ks_constants)
+    for solute in solutes:
+        if solute not in df:
+            df[solute] = np.nan
+    for ks_constant in _ks_constants:
+        pks_constant = "pks_{}".format(ks_constant)
+        if pks_constant not in df:
+            df[pks_constant] = np.nan
+    for i, row in df.iterrows():
+        totals = OrderedDict(row[total_cols])
+        if "temperature" in row:
+            temperature = row.temperature
+        else:
+            temperature = 298.15
+        if "pressure" in row:
+            pressure = row.pressure
+        else:
+            pressure = 10.10325
+        solutes, pks_constants = eq.solve(
+            totals,
+            library=library,
+            temperature=temperature,
+            pressure=pressure,
+            verbose=verbose,
         )
-    head = genfromtxt(
-        filename,
-        delimiter=delimiter,
-        dtype="U",
-        skip_header=skip_top,
-        skip_footer=shape(data)[0],
-    )
-    nan_to_num(data, copy=False)
-    TL = head == "tempK"
-    PL = head == "pres"
-    mols = transpose(data[:, logical_and(~TL, ~PL)])
-    ions = head[logical_and(~TL, ~PL)]
-    tempK = data[:, TL].ravel()
-    pres = data[:, PL].ravel()
-    return mols, ions, tempK, pres
-
-
-def gettots(filename, delimiter=",", skip_top=0):
-    """Import molality, temperature and pressure data from a CSV file, where
-    some total concentrations are defined (i.e. with equilibration)."""
-    data = genfromtxt(filename, delimiter=delimiter, skip_header=skip_top + 1)
-    if len(shape(data)) == 1:
-        data = array(
-            [
-                data,
-            ]
-        )
-    head = genfromtxt(
-        filename,
-        delimiter=delimiter,
-        dtype="U",
-        skip_header=skip_top,
-        skip_footer=shape(data)[0],
-    )
-    nan_to_num(data, copy=False)
-    TL = head == "tempK"
-    PL = head == "pres"
-    tempK = data[:, TL].ravel()
-    pres = data[:, PL].ravel()
-    data = data[:, logical_and(~TL, ~PL)].transpose()
-    head = head[logical_and(~TL, ~PL)]
-    eles = array([ele for ele in head if "t_" in ele])
-    ions = array([ion for ion in head if "t_" not in ion])
-    tots = array([tot for i, tot in enumerate(data) if "t_" in head[i]])
-    mols = array([mol for i, mol in enumerate(data) if "t_" not in head[i]])
-    return tots, mols, eles, ions, tempK, pres
-
-
-def saveall(filename, mols, ions, tempK, pres, osm, aw, acfs):
-    """Save molality, temperature, pressure, and calculated activity data
-    to a CSV file.
-    """
-    savetxt(
-        filename,
-        concatenate(
-            (
-                vstack(tempK),
-                vstack(pres),
-                transpose(mols),
-                vstack(osm),
-                vstack(aw),
-                transpose(acfs),
-            ),
-            axis=1,
-        ),
-        delimiter=",",
-        header=",".join(
-            concatenate(
-                (["tempK", "pres"], ions, ["osm", "aw"], ["g" + ion for ion in ions])
-            )
-        ),
-        comments="",
-    )
-
-
-def _u2v(mols, ions, tots, eles):
-    """Get approximate conversion factor for molinity (mol/kg-solution) to
-    molality (mol/kg-H2O).
-    """
-    ionmasses = array([ion_to_mass[ion] for ion in ions]) * mols.ravel()
-    elemasses = (
-        array([ion_to_mass[ele_to_ion_mass[ele]] for ele in eles]) * tots.ravel()
-    )
-    totalsalts = (np_sum(ionmasses) + np_sum(elemasses)) * 1e-3  # kg
-    u2v = 1 + totalsalts
-    return u2v
-
-
-def solution2solvent(mols, ions, tots, eles):
-    """Roughly convert molinity (mol/kg-solution) to molality (mol/kg-H2O)."""
-    u2v = _u2v(mols, ions, tots, eles)
-    mols = mols * u2v
-    tots = tots * u2v
-    return mols, tots
-
-
-def solvent2solution(mols, ions, tots, eles):
-    """Roughly convert molality (mol/kg-H2O) to molinity (mol/kg-solution)."""
-    u2v = _u2v(mols, ions, tots, eles)
-    mols = mols / u2v
-    tots = tots / u2v
-    return mols, tots
+        # Put results in df
+        for solute, m_solute in solutes.items():
+            df.loc[i, solute] = m_solute.item()
+        for pks_constant, pks_value in pks_constants.items():
+            df.loc[i, "pks_{}".format(pks_constant)] = pks_value
+    if not inplace:
+        return df
