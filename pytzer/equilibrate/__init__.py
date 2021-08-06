@@ -75,7 +75,6 @@ def solve(
             if eq in log_kt_constants:
                 log_kt_constants.pop(eq)
     # Solve for thermodynamic equilibrium
-    totals = prepare_totals(totals, ks_constants_pz)
     ptargets = stoichiometric.create_ptargets(totals, ks_constants_pz)
     optresult_thermodynamic = thermodynamic.solve(
         totals, ks_constants_pz, params, log_kt_constants, ptargets=ptargets
