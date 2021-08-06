@@ -10,17 +10,18 @@ pressure = 10.10325
 # Calculate total molalities
 salinity = 35
 totals = {
-    "Mg": 0.25,
-    "CO2": 0.25,
-    "PO4": 0.001,
+    # "Mg": 0.25,
+    # "CO2": 0.25,
+    # "PO4": 0.001,
+    "HSO4": 1.0,
 }
 
 # Shortcut approach
 print("Running shortcut approach...")
 solutes_short, ks_constants_short = pz.solve(
     totals,
-    ks_constants={"MgCO3": 10.0 ** -5.4},
-    ks_only=["MgCO3"],
+    # ks_constants={"MgCO3": 10.0 ** -5.4},
+    # ks_only=["MgCO3"],
     temperature=temperature,
     pressure=pressure,
 )

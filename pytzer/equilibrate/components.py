@@ -295,7 +295,9 @@ def find_solutes(totals, ks_constants, ptargets=None):
             solutes.append("PO4")
     if "H2O" in ks_constants:
         solutes.append("OH")
-    if "SO4" in totals and "HSO4" in ks_constants:
+    if (
+        "H2SO4" in totals or "HSO4" in totals or "SO4" in totals
+    ) and "HSO4" in ks_constants:
         solutes.append("HSO4")
         solutes.append("SO4")
     if "H2S" in totals and "H2S" in ks_constants:
@@ -371,6 +373,7 @@ def find_solutes(totals, ks_constants, ptargets=None):
 def get_solutes(totals, ks_constants, ptargets):
     targets = OrderedDict((k, 10.0 ** -v) for k, v in ptargets.items())
     solutes = OrderedDict()
+    totals = totals.copy()
     solutes.update(totals)
     solutes["H"] = h = targets["H"]  # H must always be a target (for now)
     if "F" in targets:
