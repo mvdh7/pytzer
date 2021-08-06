@@ -7,10 +7,6 @@ with open("README.md", "r") as f:
     long_description = f.read()
 with open("requirements.txt", "r") as f:
     requirements = f.read().splitlines()
-requirements = [
-    "autograd @ {}".format(r) if r.startswith("git") and "autograd" in r else r
-    for r in requirements
-]
 setuptools.setup(
     name="Pytzer",
     version=__version__,

@@ -100,7 +100,7 @@ def salinity_to_totals_MFWM08(salinity=35):
     return total_molalities
 
 
-salt_to_solutes = {                 # used for conversions in subsequent functions
+salt_to_solutes = {  # used for conversions in subsequent functions
     "BaCl2": dict(Ba=1, Cl=2),
     "CaCl2": dict(Ca=1, Cl=2),
     "CsCl": dict(Cs=1, Cl=1),
@@ -146,7 +146,7 @@ def salinity_to_totals_RRV93(salinity=35):
             "MgCl2": 0.05474,
             "CaCl2": 0.01075,
             "Na2CO3": 0.001,
-            "NaHCO3": 0.001
+            "NaHCO3": 0.001,
         }
     )
 
@@ -156,7 +156,7 @@ def salinity_to_totals_RRV93(salinity=35):
         for k, v in salt_to_solutes[salt].items():
             if k not in total_molalities.keys():
                 total_molalities[k] = 0
-            total_molalities[k] += (v * mol)
+            total_molalities[k] += v * mol
 
     # Convert to required salinity
     total_molalities = OrderedDict(
@@ -169,7 +169,9 @@ def salinity_to_totals_RRV93(salinity=35):
 def salinity_to_totals_GP89(salinity=35):
     """Convert salinity (g/kg-sw) to total molality for synthetic seawater following GP89."""
     global salt_to_solutes
-    gravimetric_salts = OrderedDict() # Concentrations given in g/kg solution in the paper
+    gravimetric_salts = (
+        OrderedDict()
+    )  # Concentrations given in g/kg solution in the paper
     gravimetric_salts.update(
         {
             "NaCl": 23.926,
@@ -177,18 +179,14 @@ def salinity_to_totals_GP89(salinity=35):
             "KCl": 0.677,
             "KBr": 0.098,
             "NaF": 0.003,
-            "Na2CO3": 0.106
+            "Na2CO3": 0.106,
         }
     )
 
-    volumetric_salts = OrderedDict() # Concentrations given in mol/kg solution in the paper
-    volumetric_salts.update(
-        {
-            "MgCl2": 0.05327,
-            "CaCl2": 0.01033,
-            "SrCl2": 9E-05
-        }
-    )
+    volumetric_salts = (
+        OrderedDict()
+    )  # Concentrations given in mol/kg solution in the paper
+    volumetric_salts.update({"MgCl2": 0.05327, "CaCl2": 0.01033, "SrCl2": 9e-05})
 
     # Formula weights are provided in the paper for the gravimetric salts, the rest are taken from PubChem
     formula_weights = OrderedDict()
@@ -202,7 +200,7 @@ def salinity_to_totals_GP89(salinity=35):
             "Na2CO3": 105.99,
             "MgCl2": 95.21,
             "CaCl2": 110.98,
-            "SrCl2": 158.5
+            "SrCl2": 158.5,
         }
     )
 
@@ -222,15 +220,12 @@ def salinity_to_totals_GP89(salinity=35):
         }
     )
 
-    h2o = 1 - sum(gravimetric_salts.values()) / 1000 # fraction of H2O in solution
+    h2o = 1 - sum(gravimetric_salts.values()) / 1000  # fraction of H2O in solution
 
     # Convert mol/kg-solution to mol/kg-solvent (molal)
     salt_molalities = OrderedDict()
     salt_molalities.update(
-        {
-            key: volumetric_salts[key] / h2o
-            for key in volumetric_salts.keys()
-        }
+        {key: volumetric_salts[key] / h2o for key in volumetric_salts.keys()}
     )
 
     # Convert salts to ions
@@ -239,7 +234,7 @@ def salinity_to_totals_GP89(salinity=35):
         for k, v in salt_to_solutes[salt].items():
             if k not in total_molalities.keys():
                 total_molalities[k] = 0
-            total_molalities[k] += (v * mol)
+            total_molalities[k] += v * mol
 
     # Convert to required salinity
     total_molalities = OrderedDict(
@@ -251,35 +246,26 @@ def salinity_to_totals_GP89(salinity=35):
 
 def salinity_to_totals_H73a(salinity=35):
     """Convert salinity (g/kg-sw) to total molality for synthetic seawater following H73a."""
-    ion_concentrations = OrderedDict(   # given in mMol/kg of solution in the paper
-        {
-            'Na': 478,
-            'Mg': 54,
-            'Ca': 10,
-            'Cl': 550,
-            'SO4': 28,
-            'HCO3': 1.3,
-            'CO3': 0.7
-        }
+    ion_concentrations = OrderedDict(  # given in mMol/kg of solution in the paper
+        {"Na": 478, "Mg": 54, "Ca": 10, "Cl": 550, "SO4": 28, "HCO3": 1.3, "CO3": 0.7}
     )
 
     # Convert to mol/kg of solution
     ion_concentrations.update(
-        (key, value / 1000)
-        for key, value in ion_concentrations.items()
+        (key, value / 1000) for key, value in ion_concentrations.items()
     )
 
     # Formula weights
     formula_weights = OrderedDict()
     formula_weights.update(
         {
-            'Na': 22.98976928,
-            'Mg': 24.3039,
-            'Ca': 40.077,
-            'Cl': 35.454,
-            'SO4': 96.064,
-            'HCO3': 61.0168,
-            'CO3': 60.009
+            "Na": 22.98976928,
+            "Mg": 24.3039,
+            "Ca": 40.077,
+            "Cl": 35.454,
+            "SO4": 96.064,
+            "HCO3": 61.0168,
+            "CO3": 60.009,
         }
     )
 
@@ -294,16 +280,13 @@ def salinity_to_totals_H73a(salinity=35):
     # Convert mol/kg-solution to mol/kg-solvent (molal)
     total_molalities = OrderedDict()
     total_molalities.update(
-        {
-            key: ion_concentrations[key] / h2o
-            for key in ion_concentrations.keys()
-        }
+        {key: ion_concentrations[key] / h2o for key in ion_concentrations.keys()}
     )
 
     # Replace individual carbonates with total CO2
-    total_molalities['CO2'] = total_molalities['CO3'] + total_molalities['HCO3']
-    del total_molalities['CO3']
-    del total_molalities['HCO3']
+    total_molalities["CO2"] = total_molalities["CO3"] + total_molalities["HCO3"]
+    del total_molalities["CO3"]
+    del total_molalities["HCO3"]
 
     # Convert to required salinity
     total_molalities = OrderedDict(
@@ -323,7 +306,7 @@ def salinity_to_totals_D90a(salinity=35):
             "Na2SO4": 0.02927,
             "KCl": 0.01058,
             "MgCl2": 0.05474,
-            "CaCl2": 0.01075
+            "CaCl2": 0.01075,
         }
     )
 
@@ -333,7 +316,7 @@ def salinity_to_totals_D90a(salinity=35):
         for k, v in salt_to_solutes[salt].items():
             if k not in total_molalities.keys():
                 total_molalities[k] = 0
-            total_molalities[k] += (v * mol)
+            total_molalities[k] += v * mol
 
     # Convert to required salinity
     total_molalities = OrderedDict(
@@ -353,7 +336,7 @@ def salinity_to_totals_KRCB77(salinity=35):
             "Na2SO4": 0.02926,
             "KCl": 0.01058,
             "MgCl2": 0.05518,
-            "CaCl2": 0.01077
+            "CaCl2": 0.01077,
         }
     )
 
@@ -363,7 +346,7 @@ def salinity_to_totals_KRCB77(salinity=35):
         for k, v in salt_to_solutes[salt].items():
             if k not in total_molalities.keys():
                 total_molalities[k] = 0
-            total_molalities[k] += (v * mol)
+            total_molalities[k] += v * mol
 
     # Convert to required salinity
     total_molalities = OrderedDict(
@@ -379,15 +362,15 @@ def salinity_to_totals_DR79(salinity=35):
     total_molalities = OrderedDict()
     total_molalities.update(
         {
-            'Na': 0.67284,
-            'Mg': 0.07577,
-            'Ca': 0.01474,
-            'K': 0.01464,
-            'Sr': 0.00012,
-            'Cl': 0.78642,
-            'SO4': 0.04051,
-            'Br': 0.0012,
-            'F': 0.0001
+            "Na": 0.67284,
+            "Mg": 0.07577,
+            "Ca": 0.01474,
+            "K": 0.01464,
+            "Sr": 0.00012,
+            "Cl": 0.78642,
+            "SO4": 0.04051,
+            "Br": 0.0012,
+            "F": 0.0001,
         }
     )
 
