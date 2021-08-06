@@ -44,7 +44,7 @@ from .equilibrate.stoichiometric import solve as solve_stoichiometric
 from .equilibrate.thermodynamic import solve as solve_thermodynamic
 from .io import solve_df
 from .libraries import ParameterLibrary
-from .meta import update_func_J
+from .meta import hello, update_func_J
 from .model import (
     activity_coefficients,
     activity_water,
@@ -56,12 +56,7 @@ from .model import (
 from collections import OrderedDict as odict
 
 __version__ = meta.version
-__author__ = "Matthew P. Humphreys"
-
-
-def hello():
-    print("This is Pytzer v{}.".format(__version__))
-
+__author__ = "Matthew P. Humphreys and Abigail J. Schiller"
 
 say_hello = hello
 
