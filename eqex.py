@@ -18,7 +18,11 @@ totals = {
 # Shortcut approach
 print("Running shortcut approach...")
 solutes_short, ks_constants_short = pz.solve(
-    totals, temperature=temperature, pressure=pressure
+    totals,
+    ks_constants={"MgCO3": 10.0 ** -5.4},
+    ks_only=["MgCO3"],
+    temperature=temperature,
+    pressure=pressure,
 )
 print("Shortcut done!")
 

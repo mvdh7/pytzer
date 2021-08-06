@@ -296,7 +296,7 @@ all_log_ks = {
 }
 
 
-def assemble(temperature=298.15, totals=None):
+def assemble(temperature=298.15, exclude_equilibria=None, totals=None):
     """Evaluate all thermodynamic equilibrium constants."""
     kt_constants = OrderedDict()
     kt_constants["H2O"] = np.exp(H2O_M88(T=temperature))
@@ -338,4 +338,8 @@ def assemble(temperature=298.15, totals=None):
             kt_constants["CaPO4"] = np.exp(CaPO4_MP98_MR97(T=temperature))
     if "Sr" in totals and "CO2" in totals:
         kt_constants["SrCO3"] = np.exp(SrCO3_MP98_MR97(T=temperature))
+    if exclude_equilibria is not None:
+        for eq in exclude_equilibria:
+            if eq in kt_constants:
+                kt_constants.pop(eq)
     return kt_constants

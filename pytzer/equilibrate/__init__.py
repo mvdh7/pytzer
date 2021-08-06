@@ -35,7 +35,9 @@ def solve_manual(totals, ks_constants, params, log_kt_constants, ptargets=None):
 
 def solve(
     totals,
+    exclude_equilibria=None,
     ks_constants=None,
+    ks_only=None,
     library=Seawater,
     pressure=10.10325,
     temperature=298.15,
@@ -60,6 +62,18 @@ def solve(
         pressure=pressure,
         verbose=verbose,
     )
+    # Don't solve ks_only constants thermodynamically
+    if ks_only is not None:
+        for ks in ks_only:
+            if ks in log_kt_constants:
+                log_kt_constants.pop(ks)
+    # Exclude some equilibria altogether
+    if exclude_equilibria is not None:
+        for eq in exclude_equilibria:
+            if eq in ks_constants_pz:
+                ks_constants_pz.pop(eq)
+            if eq in log_kt_constants:
+                log_kt_constants.pop(eq)
     # Solve for thermodynamic equilibrium
     ptargets = stoichiometric.create_ptargets(totals, ks_constants_pz)
     optresult_thermodynamic = thermodynamic.solve(
