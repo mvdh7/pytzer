@@ -11083,6 +11083,91 @@ def mu_tris_tris_tris_MarChemSpec25(T, P):
     return mu, valid
 
 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Clegg et al. (2021) ~~~~~
+def bC_trisH_Cl_CHW21(T, P):
+    """c-a: trisH+ chloride [CHW21]."""
+    b0 = 0.03468
+    b1 = 0.12802
+    b2 = 0
+    C0 = -9.366e-4
+    C1 = 0.09269
+    alph1 = 2
+    alph2 = -9
+    omega = 2.5
+    valid = np.isclose(T, 298.15, **temperature_tol)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_trisH_SO4_CHW21(T, P):
+    """c-a: trisH+ sulfate [CHW21]."""
+    b0 = 9.52294e-2
+    b1 = 0.585908
+    b2 = 0
+    C0 = -1.59883e-3
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def lambd_tris_Ca_CHW21(T, P):
+    """n-c: tris calcium [CHW21]."""
+    lambd = -0.2686
+    valid = np.isclose(T, 298.15, **temperature_tol)
+    return lambd, valid
+
+
+def lambd_tris_K_CHW21(T, P):
+    """n-c: tris potassium [CHW21]."""
+    lambd = 0.03394
+    valid = np.isclose(T, 298.15, **temperature_tol)
+    return lambd, valid
+
+
+def lambd_tris_Mg_CHW21(T, P):
+    """n-c: tris magnesium [CHW21]."""
+    lambd = -0.1176
+    valid = np.isclose(T, 298.15, **temperature_tol)
+    return lambd, valid
+
+
+def lambd_tris_Na_CHW21(T, P):
+    """n-c: tris sodium [CHW21]."""
+    lambd = 0.02632
+    valid = np.isclose(T, 298.15, **temperature_tol)
+    return lambd, valid
+
+
+def lambd_tris_trisH_LTA21(T, P):
+    """n-c: tris trisH+ [LTA21]."""
+    lambd = -0.01241
+    valid = np.isclose(T, 298.15, **temperature_tol)
+    return lambd, valid
+
+
+def lambd_tris_SO4_LTA21(T, P):
+    """n-a: tris sulfate [LTA21]."""
+    lambd = 0.08245
+    valid = np.isclose(T, 298.15, **temperature_tol)
+    return lambd, valid
+
+
+def lambd_tris_tris_LTA21(T, P):
+    """n-n: tris tris [LTA21]."""
+    lambd = -0.0051635
+    valid = np.isclose(T, 298.15, **temperature_tol)
+    return lambd, valid
+
+
+def mu_tris_tris_tris_LTA21(T, P):
+    """n-n-n: tris tris tris [LTA21]."""
+    mu = 0.000703
+    valid = np.isclose(T, 298.15, **temperature_tol)
+    return mu, valid
+
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ JESS ~~~~~
 # Ref. JESS = parameters obtained from http://jess.murdoch.edu.au/vewbel.shtml
 def JESS_eq(T, P, j):

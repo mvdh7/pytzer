@@ -69,6 +69,11 @@
 ??? citation "JESS: May et al. (2011) *J. Chem. Eng. Data*"
     May, P. M., Rowland, D., Hefter, G., and Königsbeger, E. (2011). A Generic and Updatable Pitzer Characterization of Aqueous Binary Electrolyte Solutions at 1 bar and 25 °C. *Journal of Chemical & Engineering Data* 56(12), 5066–5077. [doi:10.1021/je2009329](https://doi.org/10.1021/je2009329)<br />See also: <a href="http://jess.murdoch.edu.au/vewbel.shtml">jess.murdoch.edu.au/vewbel.shtml</a>
 
+### L
+
+??? citation "LTA21: Lodeiro et al. (2021) *J. Chem. Eng. Data*"
+    Lodeiro, P., Turner, D. R., Achterberg, E. P., Gregson, F. K. A., Reid, J. P., and Simon L. Clegg (2021). Solid–Liquid Equilibria in Aqueous Solutions of Tris, Tris-NaCl, Tris-TrisHCl, and Tris-(TrisH)<sub>2</sub>SO<sub>4</sub> at Temperatures from 5 to 45 °C. *Journal of Chemical & Engineering Data* 66(1), 437–455. [doi:10.1021/acs.jced.0c00744](https://doi.org/10.1021/acs.jced.0c00744).
+
 ### M
 
 ??? citation "M79: Millero (1979) *Geochim. Cosmochim. Acta*"
