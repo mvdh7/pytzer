@@ -8,7 +8,6 @@ pz = pzlib.set_func_J(pz)
 # Import and solve
 crp94 = pd.read_csv("tests/data/CRP94 Table 8.csv")
 crp94["t_SO4"] = crp94.SO4
-crp94.rename(columns={"SO4": "H2SO4"}, inplace=True)
 pz.solve_df(crp94, library=pzlib)
 
 # Compare
