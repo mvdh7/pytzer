@@ -2,7 +2,6 @@
 # Copyright (C) 2019--2021  Matthew P. Humphreys  (GNU GPLv3)
 """Define solute properties."""
 from . import convert
-from autograd.numpy import concatenate, float_, unique, vstack
 
 ion_to_name = {
     "Ag": "silver",
@@ -157,15 +156,6 @@ ele_to_ions = {
     "Zn(NO3)2": (("Znjj", "NO3"), (1, 2)),
 }
 
-# Define electrolyte to ions conversion dict for equilibria
-eq_to_ions = {
-    "t_H2CO3": ("CO2", "HCO3", "CO3"),
-    "t_HSO4": ("HSO4", "SO4"),
-    "t_Mg": ("Mg", "MgOH"),
-    "t_trisH": ("trisH", "tris"),
-    "t_BOH3": ("BOH3", "BOH4"),
-}
-
 # Relative ionic masses in g/mol
 ion_to_mass = {
     "H": 1.00794,
@@ -211,49 +201,3 @@ ion_to_mass = {
     "CaCO3": 100.0869,
     "SrCO3": 147.6289,
 }
-
-# Select which ionic mass to use for molinity to molality conversion of eles
-ele_to_ion_mass = {
-    "t_HSO4": "SO4",
-    "t_trisH": "tris",
-    "t_Mg": "Mg",
-    "t_BOH3": "BOH3",
-    "t_H2CO3": "HCO3",
-}
-
-
-def charges(ions):
-    """Find the charges on each of a list of ions."""
-    if len(ions) == 0:
-        zs = float_([])
-        cations = []
-        anions = []
-        neutrals = []
-    else:
-        zs = vstack([float_(convert.solute_to_charge[ion]) for ion in ions])
-        cations = [ion for ion in ions if convert.solute_to_charge[ion] > 0]
-        anions = [ion for ion in ions if convert.solute_to_charge[ion] < 0]
-        neutrals = [ion for ion in ions if convert.solute_to_charge[ion] == 0]
-    return zs, cations, anions, neutrals
-
-
-def get_all_ions(eles, fixions):
-    """Get all ions given list of electrolytes for equilibria."""
-    if len(eles) == 0:
-        allions = concatenate([fixions, ["H", "OH"]])
-    else:
-        allions = concatenate(
-            [
-                fixions,
-                concatenate([eq_to_ions[ele] for ele in eles]),
-                ["H", "OH"],
-            ]
-        )
-    if len(unique(allions)) < len(allions):
-        allions = list(allions)
-        allions.reverse()
-        seen = set()
-        seen_add = seen.add
-        allions = [ion for ion in allions if not (ion in seen or seen_add(ion))]
-        allions.reverse()
-    return allions
