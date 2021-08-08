@@ -3,9 +3,8 @@
 """Define package metadata."""
 import importlib
 
-# from . import parameters
-
 version = "0.5.0"
+author = "Matthew P. Humphreys and Abigail J. Schiller"
 
 
 def update_func_J(pytzer, func_J):

@@ -53,6 +53,6 @@ from .model import (
 from collections import OrderedDict as odict
 
 __version__ = meta.version
-__author__ = "Matthew P. Humphreys and Abigail J. Schiller"
+__author__ = meta.author
 
 say_hello = hello
