@@ -56,7 +56,7 @@ Seawater.update_ca("Sr", "BOH4", prm.bC_Sr_BOH4_MP98)
 Seawater.update_ca("Na", "I", prm.bC_Na_I_MP98)
 Seawater.update_ca("Na", "Br", prm.bC_Na_Br_JESS)
 Seawater.update_ca("Na", "F", prm.bC_Na_F_MP98)
-Seawater.update_ca("K", "Br", prm.bC_K_Br_MP98)
+Seawater.update_ca("K", "Br", prm.bC_K_Br_JESS)
 Seawater.update_ca("K", "F", prm.bC_K_F_MP98)
 Seawater.update_ca("K", "OH", prm.bC_K_OH_JESS)
 Seawater.update_ca("K", "I", prm.bC_K_I_MP98)
@@ -232,7 +232,7 @@ Seawater.update_cca("H", "Na", "SO4", prm.psi_H_Na_SO4_PMR97)
 Seawater.update_cca("H", "Na", "Br", prm.psi_H_Na_Br_PK74)
 Seawater.update_cca("H", "K", "Cl", prm.psi_H_K_Cl_HMW84)
 Seawater.update_cca("H", "K", "SO4", prm.psi_H_K_SO4_HMW84)
-Seawater.update_cca("H", "K", "Br", prm.psi_H_K_Br_JESS)
+Seawater.update_cca("H", "K", "Br", prm.psi_H_K_Br_MP98)
 Seawater.update_cca(
     "H", "Mg", "Br", prm.psi_H_Mg_Br_MP98
 )  # Couldn't find in PK74 as cited.
