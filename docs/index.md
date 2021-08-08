@@ -21,6 +21,10 @@ Pytzer is in beta.  Tests of the accuracy of its parameters and equations are un
 
 A manuscript describing Pytzer is in preparation.  Please check back here or [get in touch](https://mvdh.xyz/contact) to find out how to cite Pytzer in your work.
 
+For the currently released v0.4.3 you can use:
+
+> Humphreys, Matthew P. (2019).  Pytzer: the Pitzer model for chemical activities in aqueous solutions in Python (beta).  Version 0.4.3.  *Zenodo.* [doi:10.5281/zenodo.3404907](https://doi.org/10.5281/zenodo.3404907).
+
 ## Acknowledgements
 
 Pytzer is maintained by [Dr Matthew P. Humphreys](https://www.nioz.nl/en/about/organisation/staff/matthew-humphreys) at the NIOZ Royal Netherlands Institute for Sea Research (Texel, the Netherlands).  Its initial development at the University of East Anglia was funded indirectly by the Natural Environment Research Council (NERC, UK).

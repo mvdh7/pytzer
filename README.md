@@ -9,6 +9,8 @@
 
 Pytzer is a Python implementation of the Pitzer model for chemical activities in aqueous solutions [[P91](https://pytzer.readthedocs.io/en/jax/refs/#p)] plus solvers to determine the equilibrium state of the system.
 
+**Pytzer is in beta!  Use at your own peril.**
+
 - [Pytzer](#pytzer)
   - [Installation](#installation)
     - [For general use](#for-general-use)
