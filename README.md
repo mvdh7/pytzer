@@ -46,7 +46,7 @@ A work in progress at [pytzer.readthedocs.io/en/jax/](https://pytzer.readthedocs
 
 ## Citation
 
-Pytzer is maintained by [Dr Matthew P. Humphreys](https://mvdh.xyz) at the [NIOZ Royal Netherlands Institute for Sea Research](https://www.nioz.nl/en) (Texel, the Netherlands).
+Pytzer is maintained by [Dr Matthew P. Humphreys](https://humphreys.science) at the [NIOZ Royal Netherlands Institute for Sea Research](https://www.nioz.nl/en) (Texel, the Netherlands).
 
 For now, the appropriate citation is:
 
