@@ -64,7 +64,7 @@ def mu_none(T, P):
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Pitzer & Margoya (1973) ~~~~~
 def bC_H_Cl_PM73(T, P):
-    """"c-a: hydrogen chloride [PM73]."""
+    """ "c-a: hydrogen chloride [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.1775
     b1 = 0.2945
@@ -80,7 +80,7 @@ def bC_H_Cl_PM73(T, P):
 
 
 def bC_H_Br_PM73(T, P):
-    """"c-a: hydrogen bromide [PM73]."""
+    """ "c-a: hydrogen bromide [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.196
     b1 = 0.3564
@@ -96,7 +96,7 @@ def bC_H_Br_PM73(T, P):
 
 
 def bC_H_I_PM73(T, P):
-    """"c-a: hydrogen iodide [PM73]."""
+    """ "c-a: hydrogen iodide [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.2362
     b1 = 0.392
@@ -112,7 +112,7 @@ def bC_H_I_PM73(T, P):
 
 
 def bC_H_ClO4_PM73(T, P):
-    """"c-a: hydrogen perchlorate [PM73]."""
+    """ "c-a: hydrogen perchlorate [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.1747
     b1 = 0.2931
@@ -128,7 +128,7 @@ def bC_H_ClO4_PM73(T, P):
 
 
 def bC_H_NO3_PM73(T, P):
-    """"c-a: hydrogen nitrate [PM73]."""
+    """ "c-a: hydrogen nitrate [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.1119
     b1 = 0.3206
@@ -144,7 +144,7 @@ def bC_H_NO3_PM73(T, P):
 
 
 def bC_Li_Cl_PM73(T, P):
-    """"c-a: lithium chloride [PM73]."""
+    """ "c-a: lithium chloride [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.1494
     b1 = 0.3074
@@ -160,7 +160,7 @@ def bC_Li_Cl_PM73(T, P):
 
 
 def bC_Li_Br_PM73(T, P):
-    """"c-a: lithium bromide [PM73]."""
+    """ "c-a: lithium bromide [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.1748
     b1 = 0.2547
@@ -176,7 +176,7 @@ def bC_Li_Br_PM73(T, P):
 
 
 def bC_Li_I_PM73(T, P):
-    """"c-a: lithium iodide [PM73]."""
+    """ "c-a: lithium iodide [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.2104
     b1 = 0.373
@@ -192,7 +192,7 @@ def bC_Li_I_PM73(T, P):
 
 
 def bC_Li_OH_PM73(T, P):
-    """"c-a: lithium hydroxide [PM73]."""
+    """ "c-a: lithium hydroxide [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.015
     b1 = 0.14
@@ -208,7 +208,7 @@ def bC_Li_OH_PM73(T, P):
 
 
 def bC_Li_ClO4_PM73(T, P):
-    """"c-a: lithium perchlorate [PM73]."""
+    """ "c-a: lithium perchlorate [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.1973
     b1 = 0.3996
@@ -224,7 +224,7 @@ def bC_Li_ClO4_PM73(T, P):
 
 
 def bC_Li_NO2_PM73(T, P):
-    """"c-a: lithium nitrite [PM73]."""
+    """ "c-a: lithium nitrite [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.1336
     b1 = 0.325
@@ -240,7 +240,7 @@ def bC_Li_NO2_PM73(T, P):
 
 
 def bC_Li_NO3_PM73(T, P):
-    """"c-a: lithium nitrate [PM73]."""
+    """ "c-a: lithium nitrate [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.142
     b1 = 0.278
@@ -256,7 +256,7 @@ def bC_Li_NO3_PM73(T, P):
 
 
 def bC_Na_F_PM73(T, P):
-    """"c-a: sodium fluoride [PM73]."""
+    """ "c-a: sodium fluoride [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.0215
     b1 = 0.2107
@@ -271,7 +271,7 @@ def bC_Na_F_PM73(T, P):
 
 
 def bC_Na_Cl_PM73(T, P):
-    """"c-a: sodium chloride [PM73]."""
+    """ "c-a: sodium chloride [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.0765
     b1 = 0.2664
@@ -287,7 +287,7 @@ def bC_Na_Cl_PM73(T, P):
 
 
 def bC_Na_Br_PM73(T, P):
-    """"c-a: sodium bromide [PM73]."""
+    """ "c-a: sodium bromide [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.0973
     b1 = 0.2791
@@ -303,7 +303,7 @@ def bC_Na_Br_PM73(T, P):
 
 
 def bC_Na_I_PM73(T, P):
-    """"c-a: sodium iodide [PM73]."""
+    """ "c-a: sodium iodide [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.1195
     b1 = 0.3439
@@ -319,7 +319,7 @@ def bC_Na_I_PM73(T, P):
 
 
 def bC_Na_OH_PM73(T, P):
-    """"c-a: sodium hydroxide [PM73]."""
+    """ "c-a: sodium hydroxide [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.0864
     b1 = 0.253
@@ -335,7 +335,7 @@ def bC_Na_OH_PM73(T, P):
 
 
 def bC_Na_ClO3_PM73(T, P):
-    """"c-a: sodium chlorate [PM73]."""
+    """ "c-a: sodium chlorate [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.0249
     b1 = 0.2455
@@ -351,7 +351,7 @@ def bC_Na_ClO3_PM73(T, P):
 
 
 def bC_Na_ClO4_PM73(T, P):
-    """"c-a: sodium perchlorate [PM73]."""
+    """ "c-a: sodium perchlorate [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.0554
     b1 = 0.2755
@@ -367,7 +367,7 @@ def bC_Na_ClO4_PM73(T, P):
 
 
 def bC_Na_BrO3_PM73(T, P):
-    """"c-a: sodium bromate [PM73]."""
+    """ "c-a: sodium bromate [PM73]."""
     # Coefficients from PM73 Table I
     b0 = -0.0205
     b1 = 0.191
@@ -383,7 +383,7 @@ def bC_Na_BrO3_PM73(T, P):
 
 
 def bC_Na_SCN_PM73(T, P):
-    """"c-a: sodium thiocyanate [PM73]."""
+    """ "c-a: sodium thiocyanate [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.1005
     b1 = 0.3582
@@ -399,7 +399,7 @@ def bC_Na_SCN_PM73(T, P):
 
 
 def bC_Na_NO2_PM73(T, P):
-    """"c-a: sodium nitrite [PM73]."""
+    """ "c-a: sodium nitrite [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.0641
     b1 = 0.1015
@@ -415,7 +415,7 @@ def bC_Na_NO2_PM73(T, P):
 
 
 def bC_Na_NO3_PM73(T, P):
-    """"c-a: sodium nitrate [PM73]."""
+    """ "c-a: sodium nitrate [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.0068
     b1 = 0.1783
@@ -431,7 +431,7 @@ def bC_Na_NO3_PM73(T, P):
 
 
 def bC_Na_H2PO4_PM73(T, P):
-    """"c-a: sodium dihydrogen-phosphate [PM73]."""
+    """ "c-a: sodium dihydrogen-phosphate [PM73]."""
     # Coefficients from PM73 Table I
     b0 = -0.0533
     b1 = 0.0396
@@ -447,7 +447,7 @@ def bC_Na_H2PO4_PM73(T, P):
 
 
 def bC_Na_H2AsO4_PM73(T, P):
-    """"c-a: sodium dihydrogen-arsenate [PM73]."""
+    """ "c-a: sodium dihydrogen-arsenate [PM73]."""
     # Coefficients from PM73 Table I
     b0 = -0.0442
     b1 = 0.2895
@@ -463,7 +463,7 @@ def bC_Na_H2AsO4_PM73(T, P):
 
 
 def bC_Na_BO2_PM73(T, P):
-    """"c-a: sodium oxido(oxo)borane [PM73]."""
+    """ "c-a: sodium oxido(oxo)borane [PM73]."""
     # Coefficients from PM73 Table I
     b0 = -0.0526
     b1 = 0.1104
@@ -479,7 +479,7 @@ def bC_Na_BO2_PM73(T, P):
 
 
 def bC_Na_BF4_PM73(T, P):
-    """"c-a: sodium tetrafluoroborate [PM73]."""
+    """ "c-a: sodium tetrafluoroborate [PM73]."""
     # Coefficients from PM73 Table I
     b0 = -0.0252
     b1 = 0.1824
@@ -495,7 +495,7 @@ def bC_Na_BF4_PM73(T, P):
 
 
 def bC_K_F_PM73(T, P):
-    """"c-a: potassium fluoride [PM73]."""
+    """ "c-a: potassium fluoride [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.08089
     b1 = 0.2021
@@ -511,7 +511,7 @@ def bC_K_F_PM73(T, P):
 
 
 def bC_K_Cl_PM73(T, P):
-    """"c-a: potassium chloride [PM73]."""
+    """ "c-a: potassium chloride [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.04835
     b1 = 0.2122
@@ -527,7 +527,7 @@ def bC_K_Cl_PM73(T, P):
 
 
 def bC_K_Br_PM73(T, P):
-    """"c-a: potassium bromide [PM73]."""
+    """ "c-a: potassium bromide [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.0569
     b1 = 0.2212
@@ -543,7 +543,7 @@ def bC_K_Br_PM73(T, P):
 
 
 def bC_K_I_PM73(T, P):
-    """"c-a: potassium iodide [PM73]."""
+    """ "c-a: potassium iodide [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.0746
     b1 = 0.2517
@@ -559,7 +559,7 @@ def bC_K_I_PM73(T, P):
 
 
 def bC_K_OH_PM73(T, P):
-    """"c-a: potassium hydroxide [PM73]."""
+    """ "c-a: potassium hydroxide [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.1298
     b1 = 0.32
@@ -575,7 +575,7 @@ def bC_K_OH_PM73(T, P):
 
 
 def bC_K_ClO3_PM73(T, P):
-    """"c-a: potassium chlorate [PM73]."""
+    """ "c-a: potassium chlorate [PM73]."""
     # Coefficients from PM73 Table I
     b0 = -0.096
     b1 = 0.2481
@@ -591,7 +591,7 @@ def bC_K_ClO3_PM73(T, P):
 
 
 def bC_K_BrO3_PM73(T, P):
-    """"c-a: potassium bromate [PM73]."""
+    """ "c-a: potassium bromate [PM73]."""
     # Coefficients from PM73 Table I
     b0 = -0.129
     b1 = 0.2565
@@ -607,7 +607,7 @@ def bC_K_BrO3_PM73(T, P):
 
 
 def bC_K_SCN_PM73(T, P):
-    """"c-a: potassium thiocyanate [PM73]."""
+    """ "c-a: potassium thiocyanate [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.0416
     b1 = 0.2302
@@ -623,7 +623,7 @@ def bC_K_SCN_PM73(T, P):
 
 
 def bC_K_NO2_PM73(T, P):
-    """"c-a: potassium nitrite [PM73]."""
+    """ "c-a: potassium nitrite [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.0151
     b1 = 0.015
@@ -639,7 +639,7 @@ def bC_K_NO2_PM73(T, P):
 
 
 def bC_K_NO3_PM73(T, P):
-    """"c-a: potassium nitrate [PM73]."""
+    """ "c-a: potassium nitrate [PM73]."""
     # Coefficients from PM73 Table I
     b0 = -0.0816
     b1 = 0.0494
@@ -655,7 +655,7 @@ def bC_K_NO3_PM73(T, P):
 
 
 def bC_K_H2PO4_PM73(T, P):
-    """"c-a: potassium dihydrogen-phosphate [PM73]."""
+    """ "c-a: potassium dihydrogen-phosphate [PM73]."""
     # Coefficients from PM73 Table I
     b0 = -0.0678
     b1 = -0.1042
@@ -671,7 +671,7 @@ def bC_K_H2PO4_PM73(T, P):
 
 
 def bC_K_H2AsO4_PM73(T, P):
-    """"c-a: potassium dihydrogen-arsenate [PM73]."""
+    """ "c-a: potassium dihydrogen-arsenate [PM73]."""
     # Coefficients from PM73 Table I
     b0 = -0.0584
     b1 = 0.0626
@@ -687,7 +687,7 @@ def bC_K_H2AsO4_PM73(T, P):
 
 
 def bC_K_PtF6_PM73(T, P):
-    """"c-a: potassium platinum-hexafluoride [PM73]."""
+    """ "c-a: potassium platinum-hexafluoride [PM73]."""
     # Coefficients from PM73 Table I
     b0 = -0.163
     b1 = -0.282
@@ -703,7 +703,7 @@ def bC_K_PtF6_PM73(T, P):
 
 
 def bC_Rb_F_PM73(T, P):
-    """"c-a: rubidium fluoride [PM73]."""
+    """ "c-a: rubidium fluoride [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.1141
     b1 = 0.2842
@@ -719,7 +719,7 @@ def bC_Rb_F_PM73(T, P):
 
 
 def bC_Rb_Cl_PM73(T, P):
-    """"c-a: rubidium chloride [PM73]."""
+    """ "c-a: rubidium chloride [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.0441
     b1 = 0.1483
@@ -735,7 +735,7 @@ def bC_Rb_Cl_PM73(T, P):
 
 
 def bC_Rb_Br_PM73(T, P):
-    """"c-a: rubidium bromide [PM73]."""
+    """ "c-a: rubidium bromide [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.0396
     b1 = 0.153
@@ -751,7 +751,7 @@ def bC_Rb_Br_PM73(T, P):
 
 
 def bC_Rb_I_PM73(T, P):
-    """"c-a: rubidium iodide [PM73]."""
+    """ "c-a: rubidium iodide [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.0397
     b1 = 0.133
@@ -767,7 +767,7 @@ def bC_Rb_I_PM73(T, P):
 
 
 def bC_Rb_NO2_PM73(T, P):
-    """"c-a: rubidium nitrite [PM73]."""
+    """ "c-a: rubidium nitrite [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.0269
     b1 = -0.1553
@@ -783,7 +783,7 @@ def bC_Rb_NO2_PM73(T, P):
 
 
 def bC_Rb_NO3_PM73(T, P):
-    """"c-a: rubidium nitrate [PM73]."""
+    """ "c-a: rubidium nitrate [PM73]."""
     # Coefficients from PM73 Table I
     b0 = -0.0789
     b1 = -0.0172
@@ -799,7 +799,7 @@ def bC_Rb_NO3_PM73(T, P):
 
 
 def bC_Cs_F_PM73(T, P):
-    """"c-a: caesium fluoride [PM73]."""
+    """ "c-a: caesium fluoride [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.1306
     b1 = 0.257
@@ -815,7 +815,7 @@ def bC_Cs_F_PM73(T, P):
 
 
 def bC_Cs_Cl_PM73(T, P):
-    """"c-a: caesium chloride [PM73]."""
+    """ "c-a: caesium chloride [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.03
     b1 = 0.0558
@@ -831,7 +831,7 @@ def bC_Cs_Cl_PM73(T, P):
 
 
 def bC_Cs_Br_PM73(T, P):
-    """"c-a: caesium bromide [PM73]."""
+    """ "c-a: caesium bromide [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.0279
     b1 = 0.0139
@@ -847,7 +847,7 @@ def bC_Cs_Br_PM73(T, P):
 
 
 def bC_Cs_I_PM73(T, P):
-    """"c-a: caesium iodide [PM73]."""
+    """ "c-a: caesium iodide [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.0244
     b1 = 0.0262
@@ -863,7 +863,7 @@ def bC_Cs_I_PM73(T, P):
 
 
 def bC_Cs_OH_PM73(T, P):
-    """"c-a: caesium hydroxide [PM73]."""
+    """ "c-a: caesium hydroxide [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.15
     b1 = 0.3
@@ -879,7 +879,7 @@ def bC_Cs_OH_PM73(T, P):
 
 
 def bC_Cs_NO3_PM73(T, P):
-    """"c-a: caesium nitrate [PM73]."""
+    """ "c-a: caesium nitrate [PM73]."""
     # Coefficients from PM73 Table I
     b0 = -0.0758
     b1 = -0.0669
@@ -895,7 +895,7 @@ def bC_Cs_NO3_PM73(T, P):
 
 
 def bC_Cs_NO2_PM73(T, P):
-    """"c-a: caesium nitrite [PM73]."""
+    """ "c-a: caesium nitrite [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.0427
     b1 = 0.06
@@ -911,7 +911,7 @@ def bC_Cs_NO2_PM73(T, P):
 
 
 def bC_Ag_NO3_PM73(T, P):
-    """"c-a: silver nitrate [PM73]."""
+    """ "c-a: silver nitrate [PM73]."""
     # Coefficients from PM73 Table I
     b0 = -0.0856
     b1 = 0.0025
@@ -927,7 +927,7 @@ def bC_Ag_NO3_PM73(T, P):
 
 
 def bC_Tl_ClO4_PM73(T, P):
-    """"c-a: thallium perchlorate [PM73]."""
+    """ "c-a: thallium perchlorate [PM73]."""
     # Coefficients from PM73 Table I
     b0 = -0.087
     b1 = -0.023
@@ -943,7 +943,7 @@ def bC_Tl_ClO4_PM73(T, P):
 
 
 def bC_Tl_NO3_PM73(T, P):
-    """"c-a: thallium nitrate [PM73]."""
+    """ "c-a: thallium nitrate [PM73]."""
     # Coefficients from PM73 Table I
     b0 = -0.105
     b1 = -0.378
@@ -959,7 +959,7 @@ def bC_Tl_NO3_PM73(T, P):
 
 
 def bC_NH4_Cl_PM73(T, P):
-    """"c-a: ammonium chloride [PM73]."""
+    """ "c-a: ammonium chloride [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.0522
     b1 = 0.1918
@@ -975,7 +975,7 @@ def bC_NH4_Cl_PM73(T, P):
 
 
 def bC_NH4_Br_PM73(T, P):
-    """"c-a: ammonium bromide [PM73]."""
+    """ "c-a: ammonium bromide [PM73]."""
     # Coefficients from PM73 Table I
     b0 = 0.0624
     b1 = 0.1947
@@ -991,7 +991,7 @@ def bC_NH4_Br_PM73(T, P):
 
 
 def bC_NH4_ClO4_PM73(T, P):
-    """"c-a: ammonium perchlorate [PM73]."""
+    """ "c-a: ammonium perchlorate [PM73]."""
     # Coefficients from PM73 Table I
     b0 = -0.0103
     b1 = -0.0194
@@ -1007,7 +1007,7 @@ def bC_NH4_ClO4_PM73(T, P):
 
 
 def bC_NH4_NO3_PM73(T, P):
-    """"c-a: ammonium nitrate [PM73]."""
+    """ "c-a: ammonium nitrate [PM73]."""
     # Coefficients from PM73 Table I
     b0 = -0.0154
     b1 = 0.112
@@ -1023,7 +1023,7 @@ def bC_NH4_NO3_PM73(T, P):
 
 
 def bC_Mg_Cl_PM73(T, P):
-    """"c-a: magnesium chloride [PM73]."""
+    """ "c-a: magnesium chloride [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.4698 * 3 / 4
     b1 = 2.242 * 3 / 4
@@ -1039,7 +1039,7 @@ def bC_Mg_Cl_PM73(T, P):
 
 
 def bC_Mg_Br_PM73(T, P):
-    """"c-a: magnesium bromide [PM73]."""
+    """ "c-a: magnesium bromide [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.5769 * 3 / 4
     b1 = 2.337 * 3 / 4
@@ -1055,7 +1055,7 @@ def bC_Mg_Br_PM73(T, P):
 
 
 def bC_Mg_I_PM73(T, P):
-    """"c-a: magnesium iodide [PM73]."""
+    """ "c-a: magnesium iodide [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.6536 * 3 / 4
     b1 = 2.4055 * 3 / 4
@@ -1071,7 +1071,7 @@ def bC_Mg_I_PM73(T, P):
 
 
 def bC_Mg_ClO4_PM73(T, P):
-    """"c-a: magnesium perchlorate [PM73]."""
+    """ "c-a: magnesium perchlorate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.6615 * 3 / 4
     b1 = 2.678 * 3 / 4
@@ -1087,7 +1087,7 @@ def bC_Mg_ClO4_PM73(T, P):
 
 
 def bC_Mg_NO3_PM73(T, P):
-    """"c-a: magnesium nitrate [PM73]."""
+    """ "c-a: magnesium nitrate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.4895 * 3 / 4
     b1 = 2.113 * 3 / 4
@@ -1103,7 +1103,7 @@ def bC_Mg_NO3_PM73(T, P):
 
 
 def bC_Ca_Cl_PM73(T, P):
-    """"c-a: calcium chloride [PM73]."""
+    """ "c-a: calcium chloride [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.4212 * 3 / 4
     b1 = 2.152 * 3 / 4
@@ -1119,7 +1119,7 @@ def bC_Ca_Cl_PM73(T, P):
 
 
 def bC_Ca_Br_PM73(T, P):
-    """"c-a: calcium bromide [PM73]."""
+    """ "c-a: calcium bromide [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.5088 * 3 / 4
     b1 = 2.151 * 3 / 4
@@ -1135,7 +1135,7 @@ def bC_Ca_Br_PM73(T, P):
 
 
 def bC_Ca_I_PM73(T, P):
-    """"c-a: calcium iodide [PM73]."""
+    """ "c-a: calcium iodide [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.5839 * 3 / 4
     b1 = 2.409 * 3 / 4
@@ -1151,7 +1151,7 @@ def bC_Ca_I_PM73(T, P):
 
 
 def bC_Ca_ClO4_PM73(T, P):
-    """"c-a: calcium perchlorate [PM73]."""
+    """ "c-a: calcium perchlorate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.6015 * 3 / 4
     b1 = 2.342 * 3 / 4
@@ -1167,7 +1167,7 @@ def bC_Ca_ClO4_PM73(T, P):
 
 
 def bC_Ca_NO3_PM73(T, P):
-    """"c-a: calcium nitrate [PM73]."""
+    """ "c-a: calcium nitrate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.2811 * 3 / 4
     b1 = 1.879 * 3 / 4
@@ -1183,7 +1183,7 @@ def bC_Ca_NO3_PM73(T, P):
 
 
 def bC_Sr_Cl_PM73(T, P):
-    """"c-a: strontium chloride [PM73]."""
+    """ "c-a: strontium chloride [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.381 * 3 / 4
     b1 = 2.223 * 3 / 4
@@ -1199,7 +1199,7 @@ def bC_Sr_Cl_PM73(T, P):
 
 
 def bC_Sr_Br_PM73(T, P):
-    """"c-a: strontium bromide [PM73]."""
+    """ "c-a: strontium bromide [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.4415 * 3 / 4
     b1 = 2.282 * 3 / 4
@@ -1215,7 +1215,7 @@ def bC_Sr_Br_PM73(T, P):
 
 
 def bC_Sr_I_PM73(T, P):
-    """"c-a: strontium iodide [PM73]."""
+    """ "c-a: strontium iodide [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.535 * 3 / 4
     b1 = 2.48 * 3 / 4
@@ -1231,7 +1231,7 @@ def bC_Sr_I_PM73(T, P):
 
 
 def bC_Sr_ClO4_PM73(T, P):
-    """"c-a: strontium perchlorate [PM73]."""
+    """ "c-a: strontium perchlorate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.5692 * 3 / 4
     b1 = 2.089 * 3 / 4
@@ -1247,7 +1247,7 @@ def bC_Sr_ClO4_PM73(T, P):
 
 
 def bC_Sr_NO3_PM73(T, P):
-    """"c-a: strontium nitrate [PM73]."""
+    """ "c-a: strontium nitrate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.1795 * 3 / 4
     b1 = 1.84 * 3 / 4
@@ -1263,7 +1263,7 @@ def bC_Sr_NO3_PM73(T, P):
 
 
 def bC_Ba_Cl_PM73(T, P):
-    """"c-a: barium chloride [PM73]."""
+    """ "c-a: barium chloride [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.3504 * 3 / 4
     b1 = 1.995 * 3 / 4
@@ -1279,7 +1279,7 @@ def bC_Ba_Cl_PM73(T, P):
 
 
 def bC_Ba_Br_PM73(T, P):
-    """"c-a: barium bromide [PM73]."""
+    """ "c-a: barium bromide [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.4194 * 3 / 4
     b1 = 2.093 * 3 / 4
@@ -1295,7 +1295,7 @@ def bC_Ba_Br_PM73(T, P):
 
 
 def bC_Ba_I_PM73(T, P):
-    """"c-a: barium iodide [PM73]."""
+    """ "c-a: barium iodide [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.5625 * 3 / 4
     b1 = 2.249 * 3 / 4
@@ -1311,7 +1311,7 @@ def bC_Ba_I_PM73(T, P):
 
 
 def bC_Ba_OH_PM73(T, P):
-    """"c-a: barium hydroxide [PM73]."""
+    """ "c-a: barium hydroxide [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.229 * 3 / 4
     b1 = 1.6 * 3 / 4
@@ -1327,7 +1327,7 @@ def bC_Ba_OH_PM73(T, P):
 
 
 def bC_Ba_ClO4_PM73(T, P):
-    """"c-a: barium perchlorate [PM73]."""
+    """ "c-a: barium perchlorate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.4819 * 3 / 4
     b1 = 2.101 * 3 / 4
@@ -1343,7 +1343,7 @@ def bC_Ba_ClO4_PM73(T, P):
 
 
 def bC_Ba_NO3_PM73(T, P):
-    """"c-a: barium nitrate [PM73]."""
+    """ "c-a: barium nitrate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = -0.043 * 3 / 4
     b1 = 1.07 * 3 / 4
@@ -1359,7 +1359,7 @@ def bC_Ba_NO3_PM73(T, P):
 
 
 def bC_Mnjj_Cl_PM73(T, P):
-    """"c-a: manganese(II) chloride [PM73]."""
+    """ "c-a: manganese(II) chloride [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.1363 * 3 / 4
     b1 = 2.067 * 3 / 4
@@ -1375,7 +1375,7 @@ def bC_Mnjj_Cl_PM73(T, P):
 
 
 def bC_Fejj_Cl_PM73(T, P):
-    """"c-a: iron(II) chloride [PM73]."""
+    """ "c-a: iron(II) chloride [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.4479 * 3 / 4
     b1 = 2.043 * 3 / 4
@@ -1391,7 +1391,7 @@ def bC_Fejj_Cl_PM73(T, P):
 
 
 def bC_Cojj_Cl_PM73(T, P):
-    """"c-a: cobalt(II) chloride [PM73]."""
+    """ "c-a: cobalt(II) chloride [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.4857 * 3 / 4
     b1 = 1.936 * 3 / 4
@@ -1407,7 +1407,7 @@ def bC_Cojj_Cl_PM73(T, P):
 
 
 def bC_Cojj_Br_PM73(T, P):
-    """"c-a: cobalt(II) bromide [PM73]."""
+    """ "c-a: cobalt(II) bromide [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.5693 * 3 / 4
     b1 = 2.213 * 3 / 4
@@ -1423,7 +1423,7 @@ def bC_Cojj_Br_PM73(T, P):
 
 
 def bC_Cojj_I_PM73(T, P):
-    """"c-a: cobalt(II) iodide [PM73]."""
+    """ "c-a: cobalt(II) iodide [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.695 * 3 / 4
     b1 = 2.23 * 3 / 4
@@ -1439,7 +1439,7 @@ def bC_Cojj_I_PM73(T, P):
 
 
 def bC_Cojj_NO3_PM73(T, P):
-    """"c-a: cobalt(II) nitrate [PM73]."""
+    """ "c-a: cobalt(II) nitrate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.4159 * 3 / 4
     b1 = 2.254 * 3 / 4
@@ -1455,7 +1455,7 @@ def bC_Cojj_NO3_PM73(T, P):
 
 
 def bC_Nijj_Cl_PM73(T, P):
-    """"c-a: nickel(II) chloride [PM73]."""
+    """ "c-a: nickel(II) chloride [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.4639 * 3 / 4
     b1 = 2.108 * 3 / 4
@@ -1471,7 +1471,7 @@ def bC_Nijj_Cl_PM73(T, P):
 
 
 def bC_Cujj_Cl_PM73(T, P):
-    """"c-a: copper(II) chloride [PM73]."""
+    """ "c-a: copper(II) chloride [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.4107 * 3 / 4
     b1 = 1.835 * 3 / 4
@@ -1487,7 +1487,7 @@ def bC_Cujj_Cl_PM73(T, P):
 
 
 def bC_Cujj_NO3_PM73(T, P):
-    """"c-a: copper(II) nitrate [PM73]."""
+    """ "c-a: copper(II) nitrate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.4224 * 3 / 4
     b1 = 1.907 * 3 / 4
@@ -1503,7 +1503,7 @@ def bC_Cujj_NO3_PM73(T, P):
 
 
 def bC_Znjj_Cl_PM73(T, P):
-    """"c-a: zinc(II) chloride [PM73]."""
+    """ "c-a: zinc(II) chloride [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.3469 * 3 / 4
     b1 = 2.19 * 3 / 4
@@ -1519,7 +1519,7 @@ def bC_Znjj_Cl_PM73(T, P):
 
 
 def bC_Znjj_Br_PM73(T, P):
-    """"c-a: zinc(II) bromide [PM73]."""
+    """ "c-a: zinc(II) bromide [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.6213 * 3 / 4
     b1 = 2.179 * 3 / 4
@@ -1535,7 +1535,7 @@ def bC_Znjj_Br_PM73(T, P):
 
 
 def bC_Znjj_I_PM73(T, P):
-    """"c-a: zinc(II) iodide [PM73]."""
+    """ "c-a: zinc(II) iodide [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.6428 * 3 / 4
     b1 = 2.594 * 3 / 4
@@ -1551,7 +1551,7 @@ def bC_Znjj_I_PM73(T, P):
 
 
 def bC_Znjj_ClO4_PM73(T, P):
-    """"c-a: zinc(II) perchlorate [PM73]."""
+    """ "c-a: zinc(II) perchlorate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.6747 * 3 / 4
     b1 = 2.396 * 3 / 4
@@ -1567,7 +1567,7 @@ def bC_Znjj_ClO4_PM73(T, P):
 
 
 def bC_Znjj_NO3_PM73(T, P):
-    """"c-a: zinc(II) nitrate [PM73]."""
+    """ "c-a: zinc(II) nitrate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.4641 * 3 / 4
     b1 = 2.255 * 3 / 4
@@ -1583,7 +1583,7 @@ def bC_Znjj_NO3_PM73(T, P):
 
 
 def bC_Cdjj_NO3_PM73(T, P):
-    """"c-a: cadmium(II) nitrate [PM73]."""
+    """ "c-a: cadmium(II) nitrate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.382 * 3 / 4
     b1 = 2.224 * 3 / 4
@@ -1599,7 +1599,7 @@ def bC_Cdjj_NO3_PM73(T, P):
 
 
 def bC_Pbjj_ClO4_PM73(T, P):
-    """"c-a: lead(II) perchlorate [PM73]."""
+    """ "c-a: lead(II) perchlorate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.4443 * 3 / 4
     b1 = 2.296 * 3 / 4
@@ -1615,7 +1615,7 @@ def bC_Pbjj_ClO4_PM73(T, P):
 
 
 def bC_Pbjj_NO3_PM73(T, P):
-    """"c-a: lead(II) nitrate [PM73]."""
+    """ "c-a: lead(II) nitrate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = -0.0482 * 3 / 4
     b1 = 0.38 * 3 / 4
@@ -1631,7 +1631,7 @@ def bC_Pbjj_NO3_PM73(T, P):
 
 
 def bC_UO2_Cl_PM73(T, P):
-    """"c-a: uranium-dioxide chloride [PM73]."""
+    """ "c-a: uranium-dioxide chloride [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.5698 * 3 / 4
     b1 = 2.192 * 3 / 4
@@ -1647,7 +1647,7 @@ def bC_UO2_Cl_PM73(T, P):
 
 
 def bC_UO2_ClO4_PM73(T, P):
-    """"c-a: uranium-dioxide perchlorate [PM73]."""
+    """ "c-a: uranium-dioxide perchlorate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.8151 * 3 / 4
     b1 = 2.859 * 3 / 4
@@ -1663,7 +1663,7 @@ def bC_UO2_ClO4_PM73(T, P):
 
 
 def bC_UO2_NO3_PM73(T, P):
-    """"c-a: uranium-dioxide nitrate [PM73]."""
+    """ "c-a: uranium-dioxide nitrate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.6143 * 3 / 4
     b1 = 2.151 * 3 / 4
@@ -1679,7 +1679,7 @@ def bC_UO2_NO3_PM73(T, P):
 
 
 def bC_Li_SO4_PM73(T, P):
-    """"c-a: lithium sulfate [PM73]."""
+    """ "c-a: lithium sulfate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.1817 * 3 / 4
     b1 = 1.694 * 3 / 4
@@ -1695,7 +1695,7 @@ def bC_Li_SO4_PM73(T, P):
 
 
 def bC_Na_SO4_PM73(T, P):
-    """"c-a: sodium sulfate [PM73]."""
+    """ "c-a: sodium sulfate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.0261 * 3 / 4
     b1 = 1.484 * 3 / 4
@@ -1711,7 +1711,7 @@ def bC_Na_SO4_PM73(T, P):
 
 
 def bC_Na_S2O3_PM73(T, P):
-    """"c-a: sodium thiosulfate [PM73]."""
+    """ "c-a: sodium thiosulfate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.0882 * 3 / 4
     b1 = 1.701 * 3 / 4
@@ -1727,7 +1727,7 @@ def bC_Na_S2O3_PM73(T, P):
 
 
 def bC_Na_CrO4_PM73(T, P):
-    """"c-a: sodium chromate [PM73]."""
+    """ "c-a: sodium chromate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.125 * 3 / 4
     b1 = 1.826 * 3 / 4
@@ -1743,7 +1743,7 @@ def bC_Na_CrO4_PM73(T, P):
 
 
 def bC_Na_CO3_PM73(T, P):
-    """"c-a: sodium carbonate [PM73]."""
+    """ "c-a: sodium carbonate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.253 * 3 / 4
     b1 = 1.128 * 3 / 4
@@ -1759,7 +1759,7 @@ def bC_Na_CO3_PM73(T, P):
 
 
 def bC_Na_HPO4_PM73(T, P):
-    """"c-a: sodium hydrogen-phosphate [PM73]."""
+    """ "c-a: sodium hydrogen-phosphate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = -0.0777 * 3 / 4
     b1 = 1.954 * 3 / 4
@@ -1775,7 +1775,7 @@ def bC_Na_HPO4_PM73(T, P):
 
 
 def bC_Na_HAsO4_PM73(T, P):
-    """"c-a: sodium hydrogen-arsenate [PM73]."""
+    """ "c-a: sodium hydrogen-arsenate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.0407 * 3 / 4
     b1 = 2.173 * 3 / 4
@@ -1791,7 +1791,7 @@ def bC_Na_HAsO4_PM73(T, P):
 
 
 def bC_K_SO4_PM73(T, P):
-    """"c-a: potassium sulfate [PM73]."""
+    """ "c-a: potassium sulfate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.0666 * 3 / 4
     b1 = 1.039 * 3 / 4
@@ -1807,7 +1807,7 @@ def bC_K_SO4_PM73(T, P):
 
 
 def bC_K_CrO4_PM73(T, P):
-    """"c-a: potassium chromate [PM73]."""
+    """ "c-a: potassium chromate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.1011 * 3 / 4
     b1 = 1.652 * 3 / 4
@@ -1823,7 +1823,7 @@ def bC_K_CrO4_PM73(T, P):
 
 
 def bC_K_PtCN4_PM73(T, P):
-    """"c-a: potassium platinocyanide [PM73]."""
+    """ "c-a: potassium platinocyanide [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.0881 * 3 / 4
     b1 = 3.164 * 3 / 4
@@ -1839,7 +1839,7 @@ def bC_K_PtCN4_PM73(T, P):
 
 
 def bC_K_HPO4_PM73(T, P):
-    """"c-a: potassium hydrogen-phosphate [PM73]."""
+    """ "c-a: potassium hydrogen-phosphate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.033 * 3 / 4
     b1 = 1.699 * 3 / 4
@@ -1855,7 +1855,7 @@ def bC_K_HPO4_PM73(T, P):
 
 
 def bC_K_HAsO4_PM73(T, P):
-    """"c-a: potassium hydrogen-arsenate [PM73]."""
+    """ "c-a: potassium hydrogen-arsenate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.1728 * 3 / 4
     b1 = 2.198 * 3 / 4
@@ -1871,7 +1871,7 @@ def bC_K_HAsO4_PM73(T, P):
 
 
 def bC_Rb_SO4_PM73(T, P):
-    """"c-a: rubidium sulfate [PM73]."""
+    """ "c-a: rubidium sulfate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.0772 * 3 / 4
     b1 = 1.481 * 3 / 4
@@ -1887,7 +1887,7 @@ def bC_Rb_SO4_PM73(T, P):
 
 
 def bC_Cs_SO4_PM73(T, P):
-    """"c-a: caesium sulfate [PM73]."""
+    """ "c-a: caesium sulfate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.1184 * 3 / 4
     b1 = 1.481 * 3 / 4
@@ -1903,7 +1903,7 @@ def bC_Cs_SO4_PM73(T, P):
 
 
 def bC_NH4_SO4_PM73(T, P):
-    """"c-a: ammonium sulfate [PM73]."""
+    """ "c-a: ammonium sulfate [PM73]."""
     # Coefficients from PM73 Table VI
     b0 = 0.0545 * 3 / 4
     b1 = 0.878 * 3 / 4
@@ -1919,7 +1919,7 @@ def bC_NH4_SO4_PM73(T, P):
 
 
 def bC_Aljjj_Cl_PM73(T, P):
-    """"c-a: aluminium(III) chloride [PM73]."""
+    """ "c-a: aluminium(III) chloride [PM73]."""
     # Coefficients from PM73 Table VIII
     b0 = 1.049 * 2 / 3
     b1 = 8.767 * 2 / 3
@@ -1935,7 +1935,7 @@ def bC_Aljjj_Cl_PM73(T, P):
 
 
 def bC_Srjjj_Cl_PM73(T, P):
-    """"c-a: strontium(III) chloride [PM73]."""
+    """ "c-a: strontium(III) chloride [PM73]."""
     # Coefficients from PM73 Table VIII
     b0 = 1.05 * 2 / 3
     b1 = 7.978 * 2 / 3
@@ -1951,7 +1951,7 @@ def bC_Srjjj_Cl_PM73(T, P):
 
 
 def bC_Y_Cl_PM73(T, P):
-    """"c-a: yttrium chloride [PM73]."""
+    """ "c-a: yttrium chloride [PM73]."""
     # Coefficients from PM73 Table VIII
     b0 = 0.9599 * 2 / 3
     b1 = 8.166 * 2 / 3
@@ -1967,7 +1967,7 @@ def bC_Y_Cl_PM73(T, P):
 
 
 def bC_La_Cl_PM73(T, P):
-    """"c-a: lanthanum chloride [PM73]."""
+    """ "c-a: lanthanum chloride [PM73]."""
     # Coefficients from PM73 Table VIII
     b0 = 0.9158 * 2 / 3
     b1 = 8.231 * 2 / 3
@@ -1983,7 +1983,7 @@ def bC_La_Cl_PM73(T, P):
 
 
 def bC_Ce_Cl_PM73(T, P):
-    """"c-a: cerium chloride [PM73]."""
+    """ "c-a: cerium chloride [PM73]."""
     # Coefficients from PM73 Table VIII
     b0 = 0.9187 * 2 / 3
     b1 = 8.227 * 2 / 3
@@ -1999,7 +1999,7 @@ def bC_Ce_Cl_PM73(T, P):
 
 
 def bC_Pr_Cl_PM73(T, P):
-    """"c-a: praeseodymium chloride [PM73]."""
+    """ "c-a: praeseodymium chloride [PM73]."""
     # Coefficients from PM73 Table VIII
     b0 = 0.903 * 2 / 3
     b1 = 8.181 * 2 / 3
@@ -2015,7 +2015,7 @@ def bC_Pr_Cl_PM73(T, P):
 
 
 def bC_Nd_Cl_PM73(T, P):
-    """"c-a: neodymium chloride [PM73]."""
+    """ "c-a: neodymium chloride [PM73]."""
     # Coefficients from PM73 Table VIII
     b0 = 0.9175 * 2 / 3
     b1 = 8.104 * 2 / 3
@@ -2031,7 +2031,7 @@ def bC_Nd_Cl_PM73(T, P):
 
 
 def bC_Sm_Cl_PM73(T, P):
-    """"c-a: samarium chloride [PM73]."""
+    """ "c-a: samarium chloride [PM73]."""
     # Coefficients from PM73 Table VIII
     b0 = 0.933 * 2 / 3
     b1 = 8.273 * 2 / 3
@@ -2047,7 +2047,7 @@ def bC_Sm_Cl_PM73(T, P):
 
 
 def bC_Eujjj_Cl_PM73(T, P):
-    """"c-a: europium (III) chloride [PM73]."""
+    """ "c-a: europium (III) chloride [PM73]."""
     # Coefficients from PM73 Table VIII
     b0 = 0.937 * 2 / 3
     b1 = 8.385 * 2 / 3
@@ -2063,7 +2063,7 @@ def bC_Eujjj_Cl_PM73(T, P):
 
 
 def bC_Cr_Cl_PM73(T, P):
-    """"c-a: chromium chloride [PM73]."""
+    """ "c-a: chromium chloride [PM73]."""
     # Coefficients from PM73 Table VIII
     b0 = 1.1046 * 2 / 3
     b1 = 7.883 * 2 / 3
@@ -2079,7 +2079,7 @@ def bC_Cr_Cl_PM73(T, P):
 
 
 def bC_Cr_NO3_PM73(T, P):
-    """"c-a: chromium nitrate [PM73]."""
+    """ "c-a: chromium nitrate [PM73]."""
     # Coefficients from PM73 Table VIII
     b0 = 1.056 * 2 / 3
     b1 = 7.777 * 2 / 3
@@ -2095,7 +2095,7 @@ def bC_Cr_NO3_PM73(T, P):
 
 
 def bC_Ga_ClO4_PM73(T, P):
-    """"c-a: gallium perchlorate [PM73]."""
+    """ "c-a: gallium perchlorate [PM73]."""
     # Coefficients from PM73 Table VIII
     b0 = 1.2381 * 2 / 3
     b1 = 9.794 * 2 / 3
@@ -2111,7 +2111,7 @@ def bC_Ga_ClO4_PM73(T, P):
 
 
 def bC_In_Cl_PM73(T, P):
-    """"c-a: indium chloride [PM73]."""
+    """ "c-a: indium chloride [PM73]."""
     # Coefficients from PM73 Table VIII
     b0 = -1.68 * 2 / 3
     b1 = -3.85 * 2 / 3
@@ -2127,7 +2127,7 @@ def bC_In_Cl_PM73(T, P):
 
 
 def bC_Na_PO4_PM73(T, P):
-    """"c-a: sodium phosphate [PM73]."""
+    """ "c-a: sodium phosphate [PM73]."""
     # Coefficients from PM73 Table VIII
     b0 = 0.2672 * 2 / 3
     b1 = 5.777 * 2 / 3
@@ -2143,7 +2143,7 @@ def bC_Na_PO4_PM73(T, P):
 
 
 def bC_Na_AsO4_PM73(T, P):
-    """"c-a: sodium arsenate [PM73]."""
+    """ "c-a: sodium arsenate [PM73]."""
     # Coefficients from PM73 Table VIII
     b0 = 0.3582 * 2 / 3
     b1 = 5.895 * 2 / 3
@@ -2159,7 +2159,7 @@ def bC_Na_AsO4_PM73(T, P):
 
 
 def bC_K_PO4_PM73(T, P):
-    """"c-a: potassium phosphate [PM73]."""
+    """ "c-a: potassium phosphate [PM73]."""
     # Coefficients from PM73 Table VIII
     b0 = 0.5594 * 2 / 3
     b1 = 5.958 * 2 / 3
@@ -2175,7 +2175,7 @@ def bC_K_PO4_PM73(T, P):
 
 
 def bC_K_P3O9_PM73(T, P):
-    """"c-a: potassium trimetaphosphate [PM73]."""
+    """ "c-a: potassium trimetaphosphate [PM73]."""
     # Coefficients from PM73 Table VIII
     b0 = 0.4867 * 2 / 3
     b1 = 8.349 * 2 / 3
@@ -2191,7 +2191,7 @@ def bC_K_P3O9_PM73(T, P):
 
 
 def bC_K_AsO4_PM73(T, P):
-    """"c-a: potassium arsenate [PM73]."""
+    """ "c-a: potassium arsenate [PM73]."""
     # Coefficients from PM73 Table VIII
     b0 = 0.7491 * 2 / 3
     b1 = 6.511 * 2 / 3
@@ -2207,7 +2207,7 @@ def bC_K_AsO4_PM73(T, P):
 
 
 def bC_K_FejjjCN6_PM73(T, P):
-    """"c-a: potassium ferricyanide [PM73]."""
+    """ "c-a: potassium ferricyanide [PM73]."""
     # Coefficients from PM73 Table VIII
     b0 = 0.5035 * 2 / 3
     b1 = 7.121 * 2 / 3
@@ -2223,7 +2223,7 @@ def bC_K_FejjjCN6_PM73(T, P):
 
 
 def bC_K_CoCN6_PM73(T, P):
-    """"c-a: potassium Co(CN)6 [PM73]."""
+    """ "c-a: potassium Co(CN)6 [PM73]."""
     # Coefficients from PM73 Table VIII
     b0 = 0.5603 * 2 / 3
     b1 = 5.815 * 2 / 3
@@ -2239,7 +2239,7 @@ def bC_K_CoCN6_PM73(T, P):
 
 
 def bC_Coen3_Cl_PM73(T, P):
-    """"c-a: tris(ethylenediamine)cobalt(III) chloride [PM73]."""
+    """ "c-a: tris(ethylenediamine)cobalt(III) chloride [PM73]."""
     # Coefficients from PM73 Table VIII
     b0 = 0.2603 * 2 / 3
     b1 = 3.563 * 2 / 3
@@ -2255,7 +2255,7 @@ def bC_Coen3_Cl_PM73(T, P):
 
 
 def bC_Coen3_NO3_PM73(T, P):
-    """"c-a: tris(ethylenediamine)cobalt(III) nitrate [PM73]."""
+    """ "c-a: tris(ethylenediamine)cobalt(III) nitrate [PM73]."""
     # Coefficients from PM73 Table VIII
     b0 = 0.1882 * 2 / 3
     b1 = 3.935 * 2 / 3
@@ -2271,7 +2271,7 @@ def bC_Coen3_NO3_PM73(T, P):
 
 
 def bC_Coen3_ClO4_PM73(T, P):
-    """"c-a: tris(ethylenediamine)cobalt(III) perchlorate [PM73]."""
+    """ "c-a: tris(ethylenediamine)cobalt(III) perchlorate [PM73]."""
     # Coefficients from PM73 Table VIII
     b0 = 0.1619 * 2 / 3
     b1 = 5.395 * 2 / 3
@@ -2287,7 +2287,7 @@ def bC_Coen3_ClO4_PM73(T, P):
 
 
 def bC_Copn3_ClO4_PM73(T, P):
-    """"c-a: Copn3 perchlorate [PM73]."""
+    """ "c-a: Copn3 perchlorate [PM73]."""
     # Coefficients from PM73 Table VIII
     b0 = 0.2022 * 2 / 3
     b1 = 3.976 * 2 / 3
@@ -2303,7 +2303,7 @@ def bC_Copn3_ClO4_PM73(T, P):
 
 
 def bC_Th_Cl_PM73(T, P):
-    """"c-a: thorium chloride [PM73]."""
+    """ "c-a: thorium chloride [PM73]."""
     # Coefficients from PM73 Table IX
     b0 = 1.622 * 2 / 3
     b1 = 21.33 * 2 / 3
@@ -2319,7 +2319,7 @@ def bC_Th_Cl_PM73(T, P):
 
 
 def bC_Th_NO3_PM73(T, P):
-    """"c-a: thorium nitrate [PM73]."""
+    """ "c-a: thorium nitrate [PM73]."""
     # Coefficients from PM73 Table IX
     b0 = 1.546 * 2 / 3
     b1 = 18.22 * 2 / 3
@@ -2335,7 +2335,7 @@ def bC_Th_NO3_PM73(T, P):
 
 
 def bC_Na_P2O7_PM73(T, P):
-    """"c-a: sodium diphosphate [PM73]."""
+    """ "c-a: sodium diphosphate [PM73]."""
     # Coefficients from PM73 Table IX
     b0 = 0.699 * 5 / 8
     b1 = 17.16 * 5 / 8
@@ -2351,7 +2351,7 @@ def bC_Na_P2O7_PM73(T, P):
 
 
 def bC_K_P2O7_PM73(T, P):
-    """"c-a: potassium diphosphate [PM73]."""
+    """ "c-a: potassium diphosphate [PM73]."""
     # Coefficients from PM73 Table IX
     b0 = 0.977 * 5 / 8
     b1 = 17.88 * 5 / 8
@@ -2367,7 +2367,7 @@ def bC_K_P2O7_PM73(T, P):
 
 
 def bC_K_FejjCN6_PM73(T, P):
-    """"c-a: potassium ferrocyanide [PM73]."""
+    """ "c-a: potassium ferrocyanide [PM73]."""
     # Coefficients from PM73 Table IX
     b0 = 1.021 * 5 / 8
     b1 = 16.23 * 5 / 8
@@ -2383,7 +2383,7 @@ def bC_K_FejjCN6_PM73(T, P):
 
 
 def bC_K_MoCN8_PM73(T, P):
-    """"c-a: potassium Mo(CN)8 [PM73]."""
+    """ "c-a: potassium Mo(CN)8 [PM73]."""
     # Coefficients from PM73 Table IX
     b0 = 0.854 * 5 / 8
     b1 = 18.53 * 5 / 8
@@ -2399,7 +2399,7 @@ def bC_K_MoCN8_PM73(T, P):
 
 
 def bC_K_WCN8_PM73(T, P):
-    """"c-a: potassium W(CN)8 [PM73]."""
+    """ "c-a: potassium W(CN)8 [PM73]."""
     # Coefficients from PM73 Table IX
     b0 = 1.032 * 5 / 8
     b1 = 18.49 * 5 / 8
@@ -2415,7 +2415,7 @@ def bC_K_WCN8_PM73(T, P):
 
 
 def bC_MeN_MoCN8_PM73(T, P):
-    """"c-a: MeN Mo(CN)8 [PM73]."""
+    """ "c-a: MeN Mo(CN)8 [PM73]."""
     # Coefficients from PM73 Table IX
     b0 = 0.938 * 5 / 8
     b1 = 15.91 * 5 / 8
@@ -2431,7 +2431,7 @@ def bC_MeN_MoCN8_PM73(T, P):
 
 
 def bC_Na_P3O10_PM73(T, P):
-    """"c-a: sodium triphosphate-pentaanion [PM73]."""
+    """ "c-a: sodium triphosphate-pentaanion [PM73]."""
     # Coefficients from PM73 Table IX
     b0 = 1.869 * 3 / 5
     b1 = 36.1 * 3 / 5
@@ -2447,7 +2447,7 @@ def bC_Na_P3O10_PM73(T, P):
 
 
 def bC_K_P3O10_PM73(T, P):
-    """"c-a: potassium triphosphate-pentaanion [PM73]."""
+    """ "c-a: potassium triphosphate-pentaanion [PM73]."""
     # Coefficients from PM73 Table IX
     b0 = 1.939 * 3 / 5
     b1 = 39.64 * 3 / 5
@@ -3188,7 +3188,7 @@ def psi_Na_Sr_Cl_MWRB78(T, P):
 #  - Inherit 298.15 K value from PM73;
 #  - Add temperature derivative correction from SP78.
 def bC_H_Cl_SP78(T, P):
-    """"c-a: hydrogen chloride [SP78]."""
+    """ "c-a: hydrogen chloride [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_H_Cl_PM73(T, P)
     b0 = b0 + (T - 298.15) * -3.081e-4
@@ -3200,7 +3200,7 @@ def bC_H_Cl_SP78(T, P):
 
 
 def bC_H_Br_SP78(T, P):
-    """"c-a: hydrogen bromide [SP78]."""
+    """ "c-a: hydrogen bromide [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_H_Br_PM73(T, P)
     b0 = b0 + (T - 298.15) * -2.049e-4
@@ -3212,7 +3212,7 @@ def bC_H_Br_SP78(T, P):
 
 
 def bC_H_I_SP78(T, P):
-    """"c-a: hydrogen iodide [SP78]."""
+    """ "c-a: hydrogen iodide [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_H_I_PM73(T, P)
     b0 = b0 + (T - 298.15) * -0.23e-4
@@ -3224,7 +3224,7 @@ def bC_H_I_SP78(T, P):
 
 
 def bC_H_ClO4_SP78(T, P):
-    """"c-a: hydrogen perchlorate [SP78]."""
+    """ "c-a: hydrogen perchlorate [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_H_ClO4_PM73(T, P)
     b0 = b0 + (T - 298.15) * 4.905e-4
@@ -3236,7 +3236,7 @@ def bC_H_ClO4_SP78(T, P):
 
 
 def bC_Li_Cl_SP78(T, P):
-    """"c-a: lithium chloride [SP78]."""
+    """ "c-a: lithium chloride [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Li_Cl_PM73(T, P)
     b0 = b0 + (T - 298.15) * -1.685e-4
@@ -3248,7 +3248,7 @@ def bC_Li_Cl_SP78(T, P):
 
 
 def bC_Li_Br_SP78(T, P):
-    """"c-a: lithium bromide [SP78]."""
+    """ "c-a: lithium bromide [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Li_Br_PM73(T, P)
     b0 = b0 + (T - 298.15) * -1.819e-4
@@ -3260,7 +3260,7 @@ def bC_Li_Br_SP78(T, P):
 
 
 def bC_Li_ClO4_SP78(T, P):
-    """"c-a: lithium perchlorate [SP78]."""
+    """ "c-a: lithium perchlorate [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Li_ClO4_PM73(T, P)
     b0 = b0 + (T - 298.15) * 0.386e-4
@@ -3272,7 +3272,7 @@ def bC_Li_ClO4_SP78(T, P):
 
 
 def bC_Na_F_SP78(T, P):
-    """"c-a: sodium fluoride [SP78]."""
+    """ "c-a: sodium fluoride [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Na_F_PM73(T, P)
     b0 = b0 + (T - 298.15) * 5.361e-4
@@ -3283,7 +3283,7 @@ def bC_Na_F_SP78(T, P):
 
 
 def bC_Na_Cl_SP78(T, P):
-    """"c-a: sodium chloride [SP78]."""
+    """ "c-a: sodium chloride [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Na_Cl_PM73(T, P)
     b0 = b0 + (T - 298.15) * 7.159e-4
@@ -3295,7 +3295,7 @@ def bC_Na_Cl_SP78(T, P):
 
 
 def bC_Na_Br_SP78(T, P):
-    """"c-a: sodium bromide [SP78]."""
+    """ "c-a: sodium bromide [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Na_Br_PM73(T, P)
     b0 = b0 + (T - 298.15) * 7.692e-4
@@ -3307,7 +3307,7 @@ def bC_Na_Br_SP78(T, P):
 
 
 def bC_Na_I_SP78(T, P):
-    """"c-a: sodium iodide [SP78]."""
+    """ "c-a: sodium iodide [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Na_I_PM73(T, P)
     b0 = b0 + (T - 298.15) * 8.355e-4
@@ -3319,7 +3319,7 @@ def bC_Na_I_SP78(T, P):
 
 
 def bC_Na_OH_SP78(T, P):
-    """"c-a: sodium hydroxide [SP78]."""
+    """ "c-a: sodium hydroxide [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Na_OH_PM73(T, P)
     b0 = b0 + (T - 298.15) * 7.0e-4
@@ -3331,7 +3331,7 @@ def bC_Na_OH_SP78(T, P):
 
 
 def bC_Na_ClO3_SP78(T, P):
-    """"c-a: sodium chlorate [SP78]."""
+    """ "c-a: sodium chlorate [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Na_ClO3_PM73(T, P)
     b0 = b0 + (T - 298.15) * 10.35e-4
@@ -3343,7 +3343,7 @@ def bC_Na_ClO3_SP78(T, P):
 
 
 def bC_Na_ClO4_SP78(T, P):
-    """"c-a: sodium perchlorate [SP78]."""
+    """ "c-a: sodium perchlorate [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Na_ClO4_PM73(T, P)
     b0 = b0 + (T - 298.15) * 12.96e-4
@@ -3355,7 +3355,7 @@ def bC_Na_ClO4_SP78(T, P):
 
 
 def bC_Na_BrO3_SP78(T, P):
-    """"c-a: sodium bromate [SP78]."""
+    """ "c-a: sodium bromate [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Na_BrO3_PM73(T, P)
     b0 = b0 + (T - 298.15) * 5.59e-4
@@ -3369,7 +3369,7 @@ def bC_Na_BrO3_SP78(T, P):
 
 
 def bC_Na_SCN_SP78(T, P):
-    """"c-a: sodium thiocyanate [SP78]."""
+    """ "c-a: sodium thiocyanate [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Na_SCN_PM73(T, P)
     b0 = b0 + (T - 298.15) * 7.8e-4
@@ -3380,7 +3380,7 @@ def bC_Na_SCN_SP78(T, P):
 
 
 def bC_Na_NO3_SP78(T, P):
-    """"c-a: sodium nitrate [SP78]."""
+    """ "c-a: sodium nitrate [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Na_NO3_PM73(T, P)
     b0 = b0 + (T - 298.15) * 12.66e-4
@@ -3392,7 +3392,7 @@ def bC_Na_NO3_SP78(T, P):
 
 
 def bC_K_F_SP78(T, P):
-    """"c-a: potassium fluoride [SP78]."""
+    """ "c-a: potassium fluoride [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_K_F_PM73(T, P)
     b0 = b0 + (T - 298.15) * 2.14e-4
@@ -3404,7 +3404,7 @@ def bC_K_F_SP78(T, P):
 
 
 def bC_K_Cl_SP78(T, P):
-    """"c-a: potassium chloride [SP78]."""
+    """ "c-a: potassium chloride [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_K_Cl_PM73(T, P)
     b0 = b0 + (T - 298.15) * 5.794e-4
@@ -3416,7 +3416,7 @@ def bC_K_Cl_SP78(T, P):
 
 
 def bC_K_Br_SP78(T, P):
-    """"c-a: potassium bromide [SP78]."""
+    """ "c-a: potassium bromide [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_K_Br_PM73(T, P)
     b0 = b0 + (T - 298.15) * 7.39e-4
@@ -3428,7 +3428,7 @@ def bC_K_Br_SP78(T, P):
 
 
 def bC_K_I_SP78(T, P):
-    """"c-a: potassium iodide [SP78]."""
+    """ "c-a: potassium iodide [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_K_I_PM73(T, P)
     b0 = b0 + (T - 298.15) * 9.914e-4
@@ -3440,7 +3440,7 @@ def bC_K_I_SP78(T, P):
 
 
 def bC_K_ClO3_SP78(T, P):
-    """"c-a: potassium chlorate [SP78]."""
+    """ "c-a: potassium chlorate [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_K_ClO3_PM73(T, P)
     b0 = b0 + (T - 298.15) * 19.87e-4
@@ -3454,7 +3454,7 @@ def bC_K_ClO3_SP78(T, P):
 
 
 def bC_K_SCN_SP78(T, P):
-    """"c-a: potassium thiocyanate [SP78]."""
+    """ "c-a: potassium thiocyanate [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_K_SCN_PM73(T, P)
     b0 = b0 + (T - 298.15) * 6.87e-4
@@ -3466,7 +3466,7 @@ def bC_K_SCN_SP78(T, P):
 
 
 def bC_K_NO3_SP78(T, P):
-    """"c-a: potassium nitrate [SP78]."""
+    """ "c-a: potassium nitrate [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_K_NO3_PM73(T, P)
     b0 = b0 + (T - 298.15) * 2.06e-4
@@ -3478,7 +3478,7 @@ def bC_K_NO3_SP78(T, P):
 
 
 def bC_K_H2PO4_SP78(T, P):
-    """"c-a: potassium dihydrogen-phosphate [SP78]."""
+    """ "c-a: potassium dihydrogen-phosphate [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_K_H2PO4_PM73(T, P)
     b0 = b0 + (T - 298.15) * 6.045e-4
@@ -3490,7 +3490,7 @@ def bC_K_H2PO4_SP78(T, P):
 
 
 def bC_Rb_F_SP78(T, P):
-    """"c-a: rubidium fluoride [SP78]."""
+    """ "c-a: rubidium fluoride [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Rb_F_PM73(T, P)
     b0 = b0 + (T - 298.15) * -0.76e-4
@@ -3501,7 +3501,7 @@ def bC_Rb_F_SP78(T, P):
 
 
 def bC_Rb_Cl_SP78(T, P):
-    """"c-a: rubidium chloride [SP78]."""
+    """ "c-a: rubidium chloride [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Rb_Cl_PM73(T, P)
     b0 = b0 + (T - 298.15) * 5.522e-4
@@ -3512,7 +3512,7 @@ def bC_Rb_Cl_SP78(T, P):
 
 
 def bC_Rb_Br_SP78(T, P):
-    """"c-a: rubidium bromide [SP78]."""
+    """ "c-a: rubidium bromide [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Rb_Br_PM73(T, P)
     b0 = b0 + (T - 298.15) * 6.78e-4
@@ -3523,7 +3523,7 @@ def bC_Rb_Br_SP78(T, P):
 
 
 def bC_Rb_I_SP78(T, P):
-    """"c-a: rubidium iodide [SP78]."""
+    """ "c-a: rubidium iodide [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Rb_I_PM73(T, P)
     b0 = b0 + (T - 298.15) * 8.578e-4
@@ -3534,7 +3534,7 @@ def bC_Rb_I_SP78(T, P):
 
 
 def bC_Cs_F_SP78(T, P):
-    """"c-a: caesium fluoride [SP78]."""
+    """ "c-a: caesium fluoride [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Cs_F_PM73(T, P)
     b0 = b0 + (T - 298.15) * 0.95e-4
@@ -3545,7 +3545,7 @@ def bC_Cs_F_SP78(T, P):
 
 
 def bC_Cs_Cl_SP78(T, P):
-    """"c-a: caesium chloride [SP78]."""
+    """ "c-a: caesium chloride [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Cs_Cl_PM73(T, P)
     b0 = b0 + (T - 298.15) * 8.28e-4
@@ -3557,7 +3557,7 @@ def bC_Cs_Cl_SP78(T, P):
 
 
 def bC_Cs_Br_SP78(T, P):
-    """"c-a: caesium bromide [SP78]."""
+    """ "c-a: caesium bromide [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Cs_Br_PM73(T, P)
     b0 = b0 + (T - 298.15) * 7.8e-4
@@ -3568,7 +3568,7 @@ def bC_Cs_Br_SP78(T, P):
 
 
 def bC_Cs_I_SP78(T, P):
-    """"c-a: caesium iodide [SP78]."""
+    """ "c-a: caesium iodide [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Cs_I_PM73(T, P)
     b0 = b0 + (T - 298.15) * 9.75e-4
@@ -3579,7 +3579,7 @@ def bC_Cs_I_SP78(T, P):
 
 
 def bC_NH4_Cl_SP78(T, P):
-    """"c-a: ammonium chloride [SP78]."""
+    """ "c-a: ammonium chloride [SP78]."""
     # Coefficients from SP78 Table I
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_NH4_Cl_PM73(T, P)
     b0 = b0 + (T - 298.15) * 0.779e-4
@@ -3612,7 +3612,7 @@ def bC_NH4_Cl_SP78(T, P):
 
 
 def bC_Mg_Cl_SP78(T, P):
-    """"c-a: magnesium chloride [SP78]."""
+    """ "c-a: magnesium chloride [SP78]."""
     # Coefficients from SP78 Table II
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Mg_Cl_PM73(T, P)
     b0 = b0 + (T - 298.15) * -0.259e-3 * 3 / 4
@@ -3626,7 +3626,7 @@ def bC_Mg_Cl_SP78(T, P):
 
 
 def bC_Mg_Br_SP78(T, P):
-    """"c-a: magnesium bromide [SP78]."""
+    """ "c-a: magnesium bromide [SP78]."""
     # Coefficients from SP78 Table II
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Mg_Br_PM73(T, P)
     b0 = b0 + (T - 298.15) * -0.075e-3 * 3 / 4
@@ -3637,7 +3637,7 @@ def bC_Mg_Br_SP78(T, P):
 
 
 def bC_Mg_ClO4_SP78(T, P):
-    """"c-a: magnesium perchlorate [SP78]."""
+    """ "c-a: magnesium perchlorate [SP78]."""
     # Coefficients from SP78 Table II
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Mg_ClO4_PM73(T, P)
     b0 = b0 + (T - 298.15) * 0.697e-3 * 3 / 4
@@ -3651,7 +3651,7 @@ def bC_Mg_ClO4_SP78(T, P):
 
 
 def bC_Mg_NO3_SP78(T, P):
-    """"c-a: magnesium nitrate [SP78]."""
+    """ "c-a: magnesium nitrate [SP78]."""
     # Coefficients from SP78 Table II
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Mg_NO3_PM73(T, P)
     b0 = b0 + (T - 298.15) * 0.687e-3 * 3 / 4
@@ -3662,7 +3662,7 @@ def bC_Mg_NO3_SP78(T, P):
 
 
 def bC_Ca_Cl_SP78(T, P):
-    """"c-a: calcium chloride [SP78]."""
+    """ "c-a: calcium chloride [SP78]."""
     # Coefficients from SP78 Table II
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Ca_Cl_PM73(T, P)
     b0 = b0 + (T - 298.15) * -0.23e-3 * 3 / 4
@@ -3673,7 +3673,7 @@ def bC_Ca_Cl_SP78(T, P):
 
 
 def bC_Ca_Br_SP78(T, P):
-    """"c-a: calcium bromide [SP78]."""
+    """ "c-a: calcium bromide [SP78]."""
     # Coefficients from SP78 Table II
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Ca_Br_PM73(T, P)
     b0 = b0 + (T - 298.15) * -0.697e-3 * 3 / 4
@@ -3684,7 +3684,7 @@ def bC_Ca_Br_SP78(T, P):
 
 
 def bC_Ca_NO3_SP78(T, P):
-    """"c-a: calcium nitrate [SP78]."""
+    """ "c-a: calcium nitrate [SP78]."""
     # Coefficients from SP78 Table II
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Ca_NO3_PM73(T, P)
     b0 = b0 + (T - 298.15) * 0.706e-3 * 3 / 4
@@ -3695,7 +3695,7 @@ def bC_Ca_NO3_SP78(T, P):
 
 
 def bC_Ca_ClO4_SP78(T, P):
-    """"c-a: calcium perchlorate [SP78]."""
+    """ "c-a: calcium perchlorate [SP78]."""
     # Coefficients from SP78 Table II
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Ca_ClO4_PM73(T, P)
     b0 = b0 + (T - 298.15) * 1.106e-3 * 3 / 4
@@ -3709,7 +3709,7 @@ def bC_Ca_ClO4_SP78(T, P):
 
 
 def bC_Sr_Cl_SP78(T, P):
-    """"c-a: strontium chloride [SP78]."""
+    """ "c-a: strontium chloride [SP78]."""
     # Coefficients from SP78 Table II
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Sr_Cl_PM73(T, P)
     b0 = b0 + (T - 298.15) * 0.956e-3 * 3 / 4
@@ -3720,7 +3720,7 @@ def bC_Sr_Cl_SP78(T, P):
 
 
 def bC_Sr_Br_SP78(T, P):
-    """"c-a: strontium bromide [SP78]."""
+    """ "c-a: strontium bromide [SP78]."""
     # Coefficients from SP78 Table II
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Sr_Br_PM73(T, P)
     b0 = b0 + (T - 298.15) * -0.437e-3 * 3 / 4
@@ -3731,7 +3731,7 @@ def bC_Sr_Br_SP78(T, P):
 
 
 def bC_Sr_NO3_SP78(T, P):
-    """"c-a: strontium nitrate [SP78]."""
+    """ "c-a: strontium nitrate [SP78]."""
     # Coefficients from SP78 Table II
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Sr_NO3_PM73(T, P)
     b0 = b0 + (T - 298.15) * 0.236e-3 * 3 / 4
@@ -3742,7 +3742,7 @@ def bC_Sr_NO3_SP78(T, P):
 
 
 def bC_Sr_ClO4_SP78(T, P):
-    """"c-a: strontium perchlorate [SP78]."""
+    """ "c-a: strontium perchlorate [SP78]."""
     # Coefficients from SP78 Table II
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Sr_ClO4_PM73(T, P)
     b0 = b0 + (T - 298.15) * 1.524e-3 * 3 / 4
@@ -3756,7 +3756,7 @@ def bC_Sr_ClO4_SP78(T, P):
 
 
 def bC_Ba_Cl_SP78(T, P):
-    """"c-a: barium chloride [SP78]."""
+    """ "c-a: barium chloride [SP78]."""
     # Coefficients from SP78 Table II
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Ba_Cl_PM73(T, P)
     b0 = b0 + (T - 298.15) * 0.854e-3 * 3 / 4
@@ -3770,7 +3770,7 @@ def bC_Ba_Cl_SP78(T, P):
 
 
 def bC_Ba_Br_SP78(T, P):
-    """"c-a: barium bromide [SP78]."""
+    """ "c-a: barium bromide [SP78]."""
     # Coefficients from SP78 Table II
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Ba_Br_PM73(T, P)
     b0 = b0 + (T - 298.15) * -0.451e-3 * 3 / 4
@@ -3781,7 +3781,7 @@ def bC_Ba_Br_SP78(T, P):
 
 
 def bC_Ba_NO3_SP78(T, P):
-    """"c-a: barium nitrate [SP78]."""
+    """ "c-a: barium nitrate [SP78]."""
     # Coefficients from SP78 Table II
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Ba_NO3_PM73(T, P)
     b0 = b0 + (T - 298.15) * -3.88e-3 * 3 / 4
@@ -3797,7 +3797,7 @@ def bC_Ba_NO3_SP78(T, P):
 
 
 def bC_Cujj_Cl_SP78(T, P):
-    """"c-a: copper(II) chloride [SP78]."""
+    """ "c-a: copper(II) chloride [SP78]."""
     # Coefficients from SP78 Table II
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Cujj_Cl_PM73(T, P)
     b0 = b0 + (T - 298.15) * -3.62e-3 * 3 / 4
@@ -3808,7 +3808,7 @@ def bC_Cujj_Cl_SP78(T, P):
 
 
 def bC_Znjj_ClO4_SP78(T, P):
-    """"c-a: zinc(II) perchlorate [SP78]."""
+    """ "c-a: zinc(II) perchlorate [SP78]."""
     # Coefficients from SP78 Table II
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Znjj_ClO4_PM73(T, P)
     b0 = b0 + (T - 298.15) * 0.795e-3 * 3 / 4
@@ -3822,7 +3822,7 @@ def bC_Znjj_ClO4_SP78(T, P):
 
 
 def bC_Li_SO4_SP78(T, P):
-    """"c-a: lithium sulfate [SP78]."""
+    """ "c-a: lithium sulfate [SP78]."""
     # Coefficients from SP78 Table II
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Li_SO4_PM73(T, P)
     b0 = b0 + (T - 298.15) * 0.674e-3 * 3 / 4
@@ -3836,7 +3836,7 @@ def bC_Li_SO4_SP78(T, P):
 
 
 def bC_Na_SO4_SP78(T, P):
-    """"c-a: sodium sulfate [SP78]."""
+    """ "c-a: sodium sulfate [SP78]."""
     # Coefficients from SP78 Table II
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Na_SO4_PM73(T, P)
     b0 = b0 + (T - 298.15) * 3.156e-3 * 3 / 4
@@ -3850,7 +3850,7 @@ def bC_Na_SO4_SP78(T, P):
 
 
 def bC_K_SO4_SP78(T, P):
-    """"c-a: potassium sulfate [SP78]."""
+    """ "c-a: potassium sulfate [SP78]."""
     # Coefficients from SP78 Table II
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_K_SO4_PM73(T, P)
     b0 = b0 + (T - 298.15) * 1.92e-3 * 3 / 4
@@ -3861,7 +3861,7 @@ def bC_K_SO4_SP78(T, P):
 
 
 def bC_Rb_SO4_SP78(T, P):
-    """"c-a: rubidium sulfate [SP78]."""
+    """ "c-a: rubidium sulfate [SP78]."""
     # Coefficients from SP78 Table II
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Rb_SO4_PM73(T, P)
     b0 = b0 + (T - 298.15) * 1.25e-3 * 3 / 4
@@ -3872,7 +3872,7 @@ def bC_Rb_SO4_SP78(T, P):
 
 
 def bC_Cs_SO4_SP78(T, P):
-    """"c-a: caesium sulfate [SP78]."""
+    """ "c-a: caesium sulfate [SP78]."""
     # Coefficients from SP78 Table II
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_Cs_SO4_PM73(T, P)
     b0 = b0 + (T - 298.15) * -1.19e-3 * 3 / 4
@@ -3883,7 +3883,7 @@ def bC_Cs_SO4_SP78(T, P):
 
 
 def bC_La_Cl_SP78(T, P):
-    """"c-a: lanthanum chloride [SP78]."""
+    """ "c-a: lanthanum chloride [SP78]."""
     # Coefficients from SP78 Table III
     b0, b1, b2, C0, C1, alph1, alph2, omega, _ = bC_La_Cl_PM73(T, P)
     b0 = b0 + (T - 298.15) * 0.253e-3

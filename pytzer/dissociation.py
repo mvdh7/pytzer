@@ -61,7 +61,7 @@ def rhow_K75(T=298.15):
 
 
 def H2O_M79(T=298.15):
-    """ Water dissociation following M79."""
+    """Water dissociation following M79."""
     # MP98 says this is HO58 refitted by M79
     return 148.9802 - 13847.26 / T - 23.6521 * np.log(T)
 

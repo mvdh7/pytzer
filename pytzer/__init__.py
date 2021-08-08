@@ -26,6 +26,7 @@ from . import (
     model,
     parameters,
     prepare,
+    properties,
     teos10,
     unsymmetrical,
 )
