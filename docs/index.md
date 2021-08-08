@@ -24,6 +24,13 @@ A manuscript describing Pytzer is in preparation.  In the meantime, please cite:
 
 > Humphreys, Matthew P. and Schiller, Abigail J. (2021).  Pytzer: the Pitzer model for chemical activities and equilibria in aqueous solutions in Python (beta).  *Zenodo.* [doi:10.5281/zenodo.2637914](https://doi.org/10.5281/zenodo.2637914).
 
+Please report the version you are using.  You can find this in Python with:
+
+```python
+import pytzer as pz
+pz.hello()
+```
+
 ## Acknowledgements
 
 Pytzer is maintained by [Dr Matthew P. Humphreys](https://humphreys.science) at the NIOZ Royal Netherlands Institute for Sea Research (Texel, the Netherlands).  Its initial development at the University of East Anglia was funded indirectly by the Natural Environment Research Council (NERC, UK).
