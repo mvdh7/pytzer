@@ -2,7 +2,7 @@ import pandas as pd
 import pytzer as pz
 
 # Update unsymmetrical mixing function
-pzlib = pz.libraries.Clegg94.copy()
+pzlib = pz.libraries.Clegg94
 pz = pzlib.set_func_J(pz)
 
 # Import and solve

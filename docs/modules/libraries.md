@@ -58,11 +58,10 @@ A few handy methods are provided as part of the `ParameterLibrary` class. Brief 
 ```python
 import pytzer as pz
 import numpy as np
-from copy import deepcopy
 
-prmlib = deepcopy(pz.libraries.M88) # copy a pre-defined prmlib
-prmlib.get_contents() # get ions within it
-prmlib.ions = np.append(prmlib.ions, 'K') # add a new ion into the mix
+prmlib = pz.libraries.M88  # get a pre-defined prmlib
+prmlib.get_contents()  # get ions within it
+prmlib.ions = np.append(prmlib.ions, 'K')  # add a new ion into the mix
 # Add zero-functions for interactions with the new ion:
 prmlib.add_zeros(prmlib.ions)
 prmlib.name = 'M88-modified' # update prmlib name to show we've changed it

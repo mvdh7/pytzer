@@ -317,6 +317,3 @@ class ParameterLibrary(dict):
         )
         log_kt_constants = self.get_equilibria(solutes=solutes, temperature=temperature)
         return parameters, log_kt_constants
-
-    def copy(self):
-        return deepcopy(self)
