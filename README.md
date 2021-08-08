@@ -14,6 +14,7 @@ Pytzer is a Python implementation of the Pitzer model for chemical activities in
     - [For general use](#for-general-use)
     - [For development](#for-development)
   - [Documentation](#documentation)
+  - [Citation](#citation)
 
 ## Installation
 
@@ -43,4 +44,17 @@ Then, fork and/or clone this repo to somewhere that your Python can see it.
 
 A work in progress at [pytzer.readthedocs.io/en/jax/](https://pytzer.readthedocs.io/en/jax/).
 
+## Citation
+
 Pytzer is maintained by [Dr Matthew P. Humphreys](https://mvdh.xyz) at the [NIOZ Royal Netherlands Institute for Sea Research](https://www.nioz.nl/en) (Texel, the Netherlands).
+
+For now, the appropriate citation is:
+
+> Humphreys, Matthew P. and Schiller, Abigail J. (2021). Pytzer: the Pitzer model for chemical activities and equilibria in aqueous solutions in Python (beta).  *Zenodo.*  [doi:10.5281/zenodo.2637914](https://doi.org/10.5281/zenodo.2637914).
+
+Please report which version of Pytzer you are using.  You can find this in Python with:
+
+```python
+import pytzer as pz
+pz.hello()
+```
