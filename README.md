@@ -9,9 +9,27 @@
 
 Pytzer is a Python implementation of the Pitzer model for chemical activities in aqueous solutions [[P91](https://pytzer.readthedocs.io/en/jax/refs/#p)] plus solvers to determine the equilibrium state of the system.
 
+- [Pytzer](#pytzer)
+  - [Installation](#installation)
+    - [For general use](#for-general-use)
+    - [For development](#for-development)
+  - [Documentation](#documentation)
+
 ## Installation
 
 Due to its dependency on [JAX](https://github.com/google/jax), Pytzer can only be installed on Unix systems, although it does work on Windows via [WSL](https://docs.microsoft.com/en-us/windows/wsl/).
+
+### For general use
+
+Install with pip:
+
+    pip install pytzer
+
+Note that you should also install the dependencies (especially NumPy) using pip, not conda, for best performance.  This happens automatically with the above command if the dependencies are not already installed.
+
+Once installed, you will need to set the environment variable `JAX_ENABLE_X64=True`.  For example, using conda:
+
+    conda env config vars set JAX_ENABLE_X64=True
 
 ### For development
 
@@ -19,19 +37,7 @@ Use the [environment.yml](https://github.com/mvdh7/pytzer/blob/jax/environment.y
 
     conda env create -f environment.yml
 
-If you want to run this environment in Spyder v5, you will also need to upgrade `spyder-kernels` (the default version is suitable for Spyder v4):
-
-    conda update -n pytzer -c conda-forge spyder-kernels
-
-Finally, fork and/or clone this repo to somewhere that your Python can see it.
-
-### For general use
-
-At present only up to v0.4.3 is available for installation with `pip` using:
-
-    pip install pytzer
-
-Once v0.5+ is available via `pip`, you will also need to set the environment variable `JAX_ENABLE_X64=True`, unless you have built the environment using the environment.yml file from the section above.
+Then, fork and/or clone this repo to somewhere that your Python can see it.
 
 ## Documentation
 
