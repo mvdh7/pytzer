@@ -1,0 +1,15 @@
+{
+    "title": "Pytzer: the Pitzer model for chemical activities in aqueous solutions in Python (beta)", 
+    "license": "GPL-3.0-only", 
+    "creators": [
+        {
+            "affiliation": "NIOZ Royal Netherlands Institute for Sea Research, Texel, the Netherlands", 
+            "name": "Humphreys, Matthew P.",
+            "orcid": "0000-0002-9371-7128"
+        },
+        {
+            "affiliation": "Vrije Universiteit Amsterdam, the Netherlands", 
+            "name": "Schiller, Abigail J."
+        }
+    ]
+}
