@@ -4,6 +4,11 @@
 
 Switches from Autograd to [JAX](https://jax.readthedocs.io/en/latest/) for faster automatic differentiation and JIT compilation.
 
+## 0.5.1 (forthcoming)
+
+!!! new-version "Changes in v0.5.1"
+    * ...
+
 ## 0.5.0 (9 Aug 2021)
 
 !!! new-version "Changes in v0.5.0"
