@@ -45,7 +45,7 @@ Then, fork and/or clone this repo to somewhere that your Python can see it.
 
 ## Documentation
 
-A work in progress at [pytzer.readthedocs.io/en/jax/](https://pytzer.readthedocs.io/en/latest/).
+A work in progress at [pytzer.readthedocs.io](https://pytzer.readthedocs.io/en/latest/).
 
 ## Citation
 
