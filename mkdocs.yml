@@ -1,33 +1,72 @@
 site_name: Pytzer
 site_author: Matthew P. Humphreys
-site_description: Pitzer model for chemical activities in aqueous solutions
-copyright: Copyright &copy; 2019 Matthew P. Humphreys (GNU GPLv3).
+site_description: "Pytzer: the Pitzer model for chemical activities in aqueous solutions in Python"
+copyright: Copyright &copy; 2019–2021 Matthew P. Humphreys (GNU GPLv3).
 repo_url: https://github.com/mvdh7/pytzer
+repo_name: mvdh7/pytzer
 
 theme:
-    name: readthedocs
+  name: material
+  language: en
+  palette:
+    scheme: default
+    primary: blue grey
+    accent: teal
+  font:
+    text: Roboto Slab
+    code: Roboto Mono
+  features:
+    - navigation.instant
+    - navigation.expand
+    - navigation.top
+  icon:
+    repo: fontawesome/brands/github-alt
+
+plugins:
+  - search
 
 nav:
   - Overview: index.md
-  - Quick-start guide: quick-start.md
-  - Example workflows: workflows.md
-  - Conventions: name-conventions.md
-  - Main Pytzer modules:
-    - .io – import and export data: modules/io.md
-    - .model – the Pitzer model: modules/model.md
-    - .equilibrate - equilibrium solvers: modules/equilibrate.md
-  - Behind the scenes:
-    - .libraries – parameter libraries: modules/libraries.md
-    - .parameters – interaction parameter functions: modules/parameters.md
-    - .tables - parameter tables: modules/tables.md
-    - .debyehueckel – Debye-Hückel limiting slopes: modules/debyehueckel.md
-    - .unsymmetrical – unsymmetrical mixing terms: modules/unsymmetrical.md
-    - .properties – solute properties: modules/properties.md
-    - .constants – physical constants: modules/constants.md
-    - .teos10 - TEOS-10 properties: modules/teos10.md
-    - .matrix - matrix model: modules/matrix.md
-    - .dissociation - thermodynamic equilibrium constants: modules/dissociation.md
-    - .potentials - standard chemical potentials: module/potentials.md
-    - .meta - package metadata: modules/meta.md
-  - References: references.md
-  - Version history: version-history.md
+  - Model parameters: params.md
+  - The Pitzer model: model.md
+  - Solving equilibria: equilibrate.md
+  - References: refs.md
+  - Version history: versions.md
+  # - Quick-start guide: quick-start.md
+  # - Example workflows: workflows.md
+  # - Conventions: name-conventions.md
+  # - Main Pytzer modules:
+  #   - .io – import and export data: modules/io.md
+  #   - .model – the Pitzer model: modules/model.md
+  #   - .equilibrate - equilibrium solvers: modules/equilibrate.md
+  # - Behind the scenes:
+  #   - .libraries – parameter libraries: modules/libraries.md
+  #   - .parameters – interaction parameter functions: modules/parameters.md
+  #   - .tables - parameter tables: modules/tables.md
+  #   - .debyehueckel – Debye-Hückel limiting slopes: modules/debyehueckel.md
+  #   - .unsymmetrical – unsymmetrical mixing terms: modules/unsymmetrical.md
+  #   - .properties – solute properties: modules/properties.md
+  #   - .constants – physical constants: modules/constants.md
+  #   - .teos10 - TEOS-10 properties: modules/teos10.md
+  #   - .matrix - matrix model: modules/matrix.md
+  #   - .dissociation - thermodynamic equilibrium constants: modules/dissociation.md
+  #   - .potentials - standard chemical potentials: module/potentials.md
+  #   - .meta - package metadata: modules/meta.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - footnotes
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_javascript:
+  - javascripts/config.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+extra_css:
+  - stylesheets/extra.css

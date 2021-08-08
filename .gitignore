@@ -114,3 +114,9 @@ testfiles/threeway/*
 # MATLAB
 *.asv
 *.mat
+
+# VSCodium
+.vscode/*
+
+# Testing
+junit.xml
