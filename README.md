@@ -1,9 +1,10 @@
 # Pytzer
 
 ![Tests](https://github.com/mvdh7/pytzer/workflows/Tests/badge.svg)
-[![Coverage](https://github.com/mvdh7/pytzer/blob/jax/.misc/coverage.svg)](https://github.com/mvdh7/pytzer/blob/jax/.misc/coverage.txt)
+[![Coverage](https://github.com/mvdh7/pytzer/blob/master/.misc/coverage.svg)](https://github.com/mvdh7/pytzer/blob/master/.misc/coverage.txt)
 [![pypi badge](https://img.shields.io/pypi/v/pytzer.svg?style=popout)](https://pypi.org/project/pytzer/)
-[![Docs](https://readthedocs.org/projects/pytzer/badge/?version=jax&style=flat)](https://pytzer.readthedocs.io/en/jax/)
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.2637914-informational)](https://doi.org/10.5281/zenodo.2637914)
+[![Docs](https://readthedocs.org/projects/pytzer/badge/?version=latest&style=flat)](https://pytzer.readthedocs.io/en/latest/)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
@@ -36,7 +37,7 @@ Once installed, you will need to set the environment variable `JAX_ENABLE_X64=Tr
 
 ### For development
 
-Use the [environment.yml](https://github.com/mvdh7/pytzer/blob/jax/environment.yml) file to create a new environment with Conda:
+Use the [environment.yml](https://github.com/mvdh7/pytzer/blob/master/environment.yml) file to create a new environment with Conda:
 
     conda env create -f environment.yml
 
@@ -44,7 +45,7 @@ Then, fork and/or clone this repo to somewhere that your Python can see it.
 
 ## Documentation
 
-A work in progress at [pytzer.readthedocs.io/en/jax/](https://pytzer.readthedocs.io/en/jax/).
+A work in progress at [pytzer.readthedocs.io/en/jax/](https://pytzer.readthedocs.io/en/latest/).
 
 ## Citation
 
