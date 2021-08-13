@@ -114,6 +114,16 @@ def solvent_to_solution(molalities, pks):
     pks - ordered dict of pK values computed for the solution in molal (e.g. as returned by pytzer.solve).
     Returns molinities (mol/kg-solution), pKs in mol/kg-solution."""
 
+
+    # Replace any NaNs with 0s
+    for key in molalities.keys():
+        if np.isnan(molalities[key]):
+            molalities[key] = 0
+
+    for key in pks.keys():
+        if np.isnan(pks[key]):
+            pks[key] = 0
+
     # Molacular weights (g/mol) of various ions, taken from PubChem (https://pubchem.ncbi.nlm.nih.gov/)
     MW = OrderedDict(
         {
@@ -177,6 +187,7 @@ def solvent_to_solution(molalities, pks):
     )
 
     # Convert pKs
+
     ks = OrderedDict(
                     (key, 10 ** (- pks[key]))
                     for key in pks.keys()
