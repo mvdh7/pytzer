@@ -246,7 +246,7 @@ def get_constants(
     Currently enabled equilibria: H2CO3, HCO3.
     """
     # Add missing components
-    for s in ["CO2", "HCO3", "CO3"]:
+    for s in ["CO2", "HCO3", "CO3", "HF", "F"]:
         if s not in solutes:
             solutes[s] = 0.0
     # Evaluate Pitzer model parameters and thermodynamic equilibrium constants
@@ -271,5 +271,9 @@ def get_constants(
         if "HCO3" in which_constants:
             eq_out["HCO3"] = (
                 np.exp(equilibria["HCO3"]) * acfs["HCO3"] / (acfs["CO3"] * acfs["H"])
+            )
+        if "HF" in which_constants:
+            eq_out["HF"] = (
+                np.exp(equilibria["HF"]) * acfs["HF"] / (acfs["H"] * acfs["F"])
             )
     return eq_out
