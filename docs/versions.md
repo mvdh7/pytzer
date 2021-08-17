@@ -7,7 +7,7 @@ Switches from Autograd to [JAX](https://jax.readthedocs.io/en/latest/) for faste
 ## 0.5.1 (forthcoming)
 
 !!! new-version "Changes in v0.5.1"
-    * ...
+    * Fixed `convert.solvent_to_solution` to take and return pK values instead of K values, and to replace any NaNs in the input with 0.
 
 ## 0.5.0 (9 Aug 2021)
 
