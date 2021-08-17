@@ -4,7 +4,7 @@
 
 Switches from Autograd to [JAX](https://jax.readthedocs.io/en/latest/) for faster automatic differentiation and JIT compilation.
 
-## 0.5.1 (forthcoming)
+## 0.5.1 (17 Aug 2021)
 
 !!! new-version "Changes in v0.5.1"
     * Fixed `pz.convert.solvent_to_solution` to take and return p*K* values instead of *K* values, and to replace any NaNs in the input with 0.
