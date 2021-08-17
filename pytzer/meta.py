@@ -3,7 +3,7 @@
 """Define package metadata."""
 import importlib
 
-version = "0.5.0"
+version = "0.5.1"
 author = "Matthew P. Humphreys and Abigail J. Schiller"
 
 

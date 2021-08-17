@@ -2,13 +2,13 @@ Name                                         Stmts   Miss  Cover
 ----------------------------------------------------------------
 pytzer/__init__.py                              15      0   100%
 pytzer/constants.py                             14      0   100%
-pytzer/convert.py                               20      9    55%
+pytzer/convert.py                               28     17    39%
 pytzer/debyehueckel.py                          69      9    87%
-pytzer/dissociation.py                         152     83    45%
+pytzer/dissociation.py                         152     70    54%
 pytzer/equilibrate/__init__.py                  41     15    63%
-pytzer/equilibrate/components.py               352    158    55%
-pytzer/equilibrate/stoichiometric.py            98      0   100%
-pytzer/equilibrate/thermodynamic.py             83     24    71%
+pytzer/equilibrate/components.py               352    140    60%
+pytzer/equilibrate/stoichiometric.py           118      1    99%
+pytzer/equilibrate/thermodynamic.py             83     17    80%
 pytzer/io.py                                    37      5    86%
 pytzer/libraries/Clegg94.py                     11      0   100%
 pytzer/libraries/Greenberg89.py                 25      0   100%
@@ -17,14 +17,14 @@ pytzer/libraries/MarChemSpec.py                111      0   100%
 pytzer/libraries/MarChemSpec25.py              107      0   100%
 pytzer/libraries/Millero98.py                  255      0   100%
 pytzer/libraries/Moller88.py                    17      0   100%
-pytzer/libraries/ParameterLibrary.py           247     14    94%
+pytzer/libraries/ParameterLibrary.py           247     13    95%
 pytzer/libraries/Seawater.py                   257      0   100%
 pytzer/libraries/Waters13.py                    95      0   100%
 pytzer/libraries/Waters13_MarChemSpec25.py      95      0   100%
 pytzer/libraries/__init__.py                    21      0   100%
 pytzer/meta.py                                  12      1    92%
 pytzer/model.py                                111      2    98%
-pytzer/parameters.py                          6323   5188    18%
+pytzer/parameters.py                          6323   5012    21%
 pytzer/prepare.py                              113     98    13%
 pytzer/properties.py                             5      0   100%
 pytzer/teos10.py                                41     10    76%
@@ -34,7 +34,7 @@ tests/test_CRP94.py                             11      0   100%
 tests/test_M88.py                               16      0   100%
 tests/test_jax_settings.py                       4      0   100%
 tests/test_model.py                             41      0   100%
-tests/test_stoichiometric.py                   111      0   100%
+tests/test_stoichiometric.py                   130      0   100%
 tests/test_unsymmetrical.py                     33      0   100%
 ----------------------------------------------------------------
-TOTAL                                         9248   5617    39%
+TOTAL                                         9295   5411    42%

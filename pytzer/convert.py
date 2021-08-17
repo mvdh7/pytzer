@@ -108,13 +108,27 @@ all_anions = set([s for s, c in solute_to_charge.items() if c < 0])
 all_neutrals = set([s for s, c in solute_to_charge.items() if c == 0])
 
 
-def solvent_to_solution(molalities, ks):
-    """Calculates the fraction of H2O in a seawater solution of known composition and molalities. Converts concentrations and equilibrium constants (Ks) from molal to mol/kg-solution.
-    molalities - ordered dict of the molalities of all seawater constituents (e.g. as returned by pytzer.solve).
-    ks - ordered dict of K values computed for the solution in molal (e.g. as returned by pytzer.solve).
-    Returns concentrations in mol/kg-solution, Ks in mol/kg-solution."""
+def solvent_to_solution(molalities, pks):
+    """Converts concentrations and equilibrium constants (pKs) from molality
+    (mol/kg-solvent) to molinity (mol/kg-solution).
+    molalities - ordered dict of the molalities of all seawater constituents
+    (e.g. as returned by pytzer.solve).
+    pks - ordered dict of pK values computed for the solution in molal
+    (e.g. as returned by pytzer.solve).
+    Returns molinities (mol/kg-solution), pKs in mol/kg-solution.
+    """
 
-    # Molacular weights (g/mol) of various ions, taken from PubChem (https://pubchem.ncbi.nlm.nih.gov/)
+    # Replace any NaNs with 0s
+    for key in molalities.keys():
+        if np.isnan(molalities[key]):
+            molalities[key] = 0
+
+    for key in pks.keys():
+        if np.isnan(pks[key]):
+            pks[key] = 0
+
+    # Molecular weights (g/mol) of various ions, taken from PubChem
+    # (https://pubchem.ncbi.nlm.nih.gov/)
     MW = OrderedDict(
         {
             "Na": 22.9897693,  # Na(+)
@@ -168,11 +182,11 @@ def solvent_to_solution(molalities, ks):
     h2o = 1 / (sum(gkg.values()) + 1)
 
     # Convert concentrations
-    concentrations = OrderedDict(
-        (key, molalities[key] * h2o) for key in molalities.keys()
-    )
+    molinities = OrderedDict((key, molalities[key] * h2o) for key in molalities.keys())
 
-    # Convert Ks
+    # Convert pKs
+    ks = OrderedDict((key, 10 ** (-pks[key])) for key in pks.keys())
     ks_out = OrderedDict((key, ks[key] * h2o) for key in ks.keys())
+    pks_out = OrderedDict((key, -np.log10(ks_out[key])) for key in ks_out.keys())
 
-    return concentrations, ks_out
+    return molinities, pks_out

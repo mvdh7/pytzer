@@ -213,6 +213,39 @@ def test_all_ptargets():
     assert np.isclose(solutes["H"] * solutes["OH"], ks_constants["H2O"], **tol)
 
 
+def test_get_constants():
+    """Does the get_constants function agree with the full thermodynamic solver for
+    non-zero total molalities?
+    """
+    totals = pz.odict(Na=4.0, Cl=4.0, CO2=0.1, PO4=0.5, F=1.0)
+    solutes, pks_constants = pz.solve(totals)
+    which_constants = ["H2CO3", "HCO3", "HF"]
+    f_ks_constants = eq.stoichiometric.get_constants(
+        solutes, which_constants=which_constants
+    )
+    f_pks_constants = {k: -np.log10(v) for k, v in f_ks_constants.items()}
+    for c in which_constants:
+        assert np.isclose(pks_constants[c], f_pks_constants[c], rtol=0, atol=1e-8)
+
+
+def test_get_constants_zero():
+    """Can we retrieve the carbonic acid  and HF stoichiometric equilibrium constants
+    when the total dissolved inorganic carbon and fluoride are zero?
+    """
+    # Solve without DIC and HF
+    totals = pz.odict(Na=1.5, Cl=3.5)
+    ks_constants = {"H2O": 10 ** -14}
+    ptargets = eq.stoichiometric.solve(totals, ks_constants)
+    solutes = eq.components.get_solutes(totals, ks_constants, ptargets)
+    # Get DIC and HF equilibria
+    which_constants = ["H2CO3", "HCO3", "HF"]
+    dic_eq = eq.stoichiometric.get_constants(solutes, which_constants=which_constants)
+    assert len(dic_eq) == len(which_constants)
+    for c in which_constants:
+        assert c in dic_eq
+        assert isinstance(dic_eq[c].item(), float)
+
+
 # test_pure_water()
 # test_NaCl()
 # test_NaCl_HCl()
@@ -222,3 +255,5 @@ def test_all_ptargets():
 # test_CaCl_H2CO3()
 # test_CaCl_H2CO3_CaCO3()
 # test_all_ptargets()
+# test_get_constants()
+# test_get_constants_zero()
