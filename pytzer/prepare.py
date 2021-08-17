@@ -244,8 +244,8 @@ def salinity_to_totals_GP89(salinity=35):
     return total_molalities
 
 
-def salinity_to_totals_H73a(salinity=35):
-    """Convert salinity (g/kg-sw) to total molality for synthetic seawater following H73a."""
+def salinity_to_totals_H73(salinity=35):
+    """Convert salinity (g/kg-sw) to total molality for synthetic seawater following H73."""
     ion_concentrations = OrderedDict(  # given in mMol/kg of solution in the paper
         {"Na": 478, "Mg": 54, "Ca": 10, "Cl": 550, "SO4": 28, "HCO3": 1.3, "CO3": 0.7}
     )
@@ -296,8 +296,8 @@ def salinity_to_totals_H73a(salinity=35):
     return total_molalities
 
 
-def salinity_to_totals_D90a(salinity=35):
-    """Convert salinity (g/kg-sw) to total molality for synthetic seawater following D90a."""
+def salinity_to_totals_D90(salinity=35):
+    """Convert salinity (g/kg-sw) to total molality for synthetic seawater following D90."""
     global salt_to_solutes
     salt_molalities = OrderedDict()
     salt_molalities.update(
