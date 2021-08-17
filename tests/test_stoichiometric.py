@@ -213,6 +213,24 @@ def test_all_ptargets():
     assert np.isclose(solutes["H"] * solutes["OH"], ks_constants["H2O"], **tol)
 
 
+def test_get_constants():
+    """Can we retrieve the carbonic acid stoichiometric equilibrium constants when the
+    total dissolved inorganic carbon is zero?
+    """
+    # Solve without DIC
+    totals = pz.odict(Na=1.5, Cl=3.5)
+    ks_constants = {"H2O": 10 ** -14}
+    ptargets = eq.stoichiometric.solve(totals, ks_constants)
+    solutes = eq.components.get_solutes(totals, ks_constants, ptargets)
+    # Get DIC equilibria
+    which_constants = ["H2CO3", "HCO3"]
+    dic_eq = eq.stoichiometric.get_constants(solutes, which_constants=which_constants)
+    assert len(dic_eq) == len(which_constants)
+    for c in which_constants:
+        assert c in dic_eq
+        assert isinstance(dic_eq[c].item(), float)
+
+
 # test_pure_water()
 # test_NaCl()
 # test_NaCl_HCl()
@@ -222,3 +240,4 @@ def test_all_ptargets():
 # test_CaCl_H2CO3()
 # test_CaCl_H2CO3_CaCO3()
 # test_all_ptargets()
+# test_get_constants()

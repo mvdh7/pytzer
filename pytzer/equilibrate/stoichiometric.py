@@ -5,6 +5,8 @@
 from collections import OrderedDict
 import jax
 from jax import lax, numpy as np
+from .. import model
+from ..libraries import Seawater
 from . import components
 
 
@@ -228,3 +230,46 @@ def solve(totals, ks_constants, ptargets=None):
         (k, ptargets_values[i]) for i, k in enumerate(ptargets.keys())
     )
     return ptargets_final
+
+
+def get_constants(
+    solutes,
+    which_constants=None,
+    library=Seawater,
+    temperature=298.15,
+    pressure=10.10325,
+    verbose=False,
+):
+    """Get stoichiometric equilibrium constants for specific reactions given an
+    OrderedDict of equilibrated solute molalities.
+
+    Currently enabled equilibria: H2CO3, HCO3.
+    """
+    # Add missing components
+    for s in ["CO2", "HCO3", "CO3"]:
+        if s not in solutes:
+            solutes[s] = 0.0
+    # Evaluate Pitzer model parameters and thermodynamic equilibrium constants
+    parameters, equilibria = library.get_parameters_equilibria(
+        solutes=solutes, temperature=temperature, pressure=pressure, verbose=verbose
+    )
+    eq_out = {}
+    if which_constants is not None:
+        # Calculate activity coefficients
+        aH2O = model.activity_water(solutes, **parameters)
+        acfs = model.activity_coefficients(solutes, **parameters)
+        # Calculate stoichiometric equilibrium constants
+        if isinstance(which_constants, str):
+            which_constants = [which_constants]
+        if "H2CO3" in which_constants:
+            eq_out["H2CO3"] = (
+                np.exp(equilibria["H2CO3"])
+                * acfs["CO2"]
+                * aH2O
+                / (acfs["HCO3"] * acfs["H"])
+            )
+        if "HCO3" in which_constants:
+            eq_out["HCO3"] = (
+                np.exp(equilibria["HCO3"]) * acfs["HCO3"] / (acfs["CO3"] * acfs["H"])
+            )
+    return eq_out

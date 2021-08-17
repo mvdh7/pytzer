@@ -7,7 +7,7 @@ Switches from Autograd to [JAX](https://jax.readthedocs.io/en/latest/) for faste
 ## 0.5.1 (forthcoming)
 
 !!! new-version "Changes in v0.5.1"
-    * ...
+    * Added `pytzer.equilibrate.stoichiometric.get_constants()` to calculate stoichiometric equilibrium constants for the carbonic acid equilibria when total dissolved inorganic carbon is zero.
 
 ## 0.5.0 (9 Aug 2021)
 
