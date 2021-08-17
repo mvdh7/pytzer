@@ -243,7 +243,7 @@ def get_constants(
     """Get stoichiometric equilibrium constants for specific reactions given an
     OrderedDict of equilibrated solute molalities.
 
-    Currently enabled equilibria: H2CO3, HCO3.
+    Currently enabled equilibria: H2CO3, HCO3, HF.
     """
     # Add missing components
     for s in ["CO2", "HCO3", "CO3", "HF", "F"]:
