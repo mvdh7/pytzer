@@ -2,7 +2,7 @@
 # Copyright (C) 2019--2021  Matthew P. Humphreys  (GNU GPLv3)
 from collections import OrderedDict
 from jax import numpy as np
-from . import constants
+from . import constants, properties
 
 
 def osmotic_to_activity(molalities, osmotic_coefficient):
@@ -122,71 +122,77 @@ def solvent_to_solution(molalities, pks):
     for key in molalities.keys():
         if np.isnan(molalities[key]):
             molalities[key] = 0
-
     for key in pks.keys():
         if np.isnan(pks[key]):
             pks[key] = 0
 
-    # Molecular weights (g/mol) of various ions, taken from PubChem
-    # (https://pubchem.ncbi.nlm.nih.gov/)
-    MW = OrderedDict(
-        {
-            "Na": 22.9897693,  # Na(+)
-            "Mg": 24.305,  # Mg(2+)
-            "Ca": 40.08,  # Ca(2+)
-            "K": 39.098,  # K(+)
-            "Sr": 87.6,  # Sr(2+)
-            "Cl": 35.45,  # Cl(-)
-            "SO4": 96.07,  # SO4(2-)
-            "CO2": 44.009,  # CO2
-            "Br": 79.90,  # Br(-)
-            "BOH3": 61.84,  # B(OH)3
-            "F": 18.99840316,  # F(-)
-            "NH3": 17.031,  # NH3
-            "NO2": 46.006,  # NO2
-            "H2S": 34.08,  # H2S
-            "PO4": 94.971,  # PO4(3-)
-            "H4SiO4": 96.11,  # H4SiO4
-            "H": 1.008,  # H(+)
-            "CO3": 60.009,  # CO3(2-)
-            "OH": 17.007,  # OH(-)
-            "HSO4": 97.07,  # HSO4(-)
-            "HS": 33.08,  # HS(-)
-            "BOH4": 78.84,  # B(OH)4(-)
-            "NH4": 18.039,  # NH4(+)
-            "H3SiO4": 95.11,  # H3SiO4(-)
-            "CaF": 59.08,  # CaF(+)
-            "MgF": 43.304,  # MgF(+)
-            "HF": 20.006,  # HF
-            "MgCO3": 84.31,  # MgCO3
-            "CaCO3": 100.09,  # CaCO3
-            "SrCO3": 147.6,  # SrCO3
-            "HCO3": 61.017,  # HCO3(-)
-            "HPO4": 95.979,  # HPO4(-)
-            "H2PO4": 96.987,  # H2PO4(-)
-            "H3PO4": 97.995,  # H3PO4
-            "MgH2PO4": 121.3018,  # MgH2PO4(+) (this value from pwb.com)
-            "MgHPO4": 120.28,  # MgHPO4
-            "MgPO4": 119.28,  # MgPO4(-)
-            "CaH2PO4": 137.07,  # CaH2PO4(+)
-            "CaHPO4": 136.06,  # CaHPO4
-            "CaPO4": 135.05,  # CaPO4(-)
-            "MgOH": 41.313,  # MgOH(+)
-        }
-    )
+    # # Molecular weights (g/mol) of various ions, taken from PubChem
+    # # (https://pubchem.ncbi.nlm.nih.gov/)
+    # MW = OrderedDict(
+    #     {
+    #         "Na": 22.9897693,  # Na(+)
+    #         "Mg": 24.305,  # Mg(2+)
+    #         "Ca": 40.08,  # Ca(2+)
+    #         "K": 39.098,  # K(+)
+    #         "Sr": 87.6,  # Sr(2+)
+    #         "Cl": 35.45,  # Cl(-)
+    #         "SO4": 96.07,  # SO4(2-)
+    #         "CO2": 44.009,  # CO2
+    #         "Br": 79.90,  # Br(-)
+    #         "BOH3": 61.84,  # B(OH)3
+    #         "F": 18.99840316,  # F(-)
+    #         "NH3": 17.031,  # NH3
+    #         "NO2": 46.006,  # NO2
+    #         "H2S": 34.08,  # H2S
+    #         "PO4": 94.971,  # PO4(3-)
+    #         "H4SiO4": 96.11,  # H4SiO4
+    #         "H": 1.008,  # H(+)
+    #         "CO3": 60.009,  # CO3(2-)
+    #         "OH": 17.007,  # OH(-)
+    #         "HSO4": 97.07,  # HSO4(-)
+    #         "HS": 33.08,  # HS(-)
+    #         "BOH4": 78.84,  # B(OH)4(-)
+    #         "NH4": 18.039,  # NH4(+)
+    #         "H3SiO4": 95.11,  # H3SiO4(-)
+    #         "CaF": 59.08,  # CaF(+)
+    #         "MgF": 43.304,  # MgF(+)
+    #         "HF": 20.006,  # HF
+    #         "MgCO3": 84.31,  # MgCO3
+    #         "CaCO3": 100.09,  # CaCO3
+    #         "SrCO3": 147.6,  # SrCO3
+    #         "HCO3": 61.017,  # HCO3(-)
+    #         "HPO4": 95.979,  # HPO4(-)
+    #         "H2PO4": 96.987,  # H2PO4(-)
+    #         "H3PO4": 97.995,  # H3PO4
+    #         "MgH2PO4": 121.3018,  # MgH2PO4(+) (this value from pwb.com)
+    #         "MgHPO4": 120.28,  # MgHPO4
+    #         "MgPO4": 119.28,  # MgPO4(-)
+    #         "CaH2PO4": 137.07,  # CaH2PO4(+)
+    #         "CaHPO4": 136.06,  # CaHPO4
+    #         "CaPO4": 135.05,  # CaPO4(-)
+    #         "MgOH": 41.313,  # MgOH(+)
+    #     }
+    # )
 
     # Dict of weight concentrations (g/kg)
-    gkg = OrderedDict((key, molalities[key] * MW[key]) for key in molalities.keys())
+    gkg = OrderedDict(
+        (key, mol * properties.ion_to_mass[key]) for key, mol in molalities.items()
+    )
 
     # Get H2O fraction: 1 kg H2O / ((sum weights in 1 kg H2O) + 1 kg H2O)
-    h2o = 1 / (sum(gkg.values()) + 1)
+    h2o = 1000 / (sum(gkg.values()) + 1000)
 
     # Convert concentrations
-    molinities = OrderedDict((key, molalities[key] * h2o) for key in molalities.keys())
+    molinities = OrderedDict((key, mol * h2o) for key, mol in molalities.items())
 
     # Convert pKs
-    ks = OrderedDict((key, 10 ** (-pks[key])) for key in pks.keys())
-    ks_out = OrderedDict((key, ks[key] * h2o) for key in ks.keys())
-    pks_out = OrderedDict((key, -np.log10(ks_out[key])) for key in ks_out.keys())
+    eq_power = {
+        "H2O": 2,
+        "H2CO3": 1,
+        "HCO3": 1,
+    }
+    ks = OrderedDict((key, 10 ** (-pk)) for key, pk in pks.items())
+    ks_out = OrderedDict((key, k * h2o ** eq_power[key]) for key, k in ks.items())
+    pks_out = OrderedDict((key, -np.log10(k)) for key, k in ks_out.items())
 
     return molinities, pks_out
