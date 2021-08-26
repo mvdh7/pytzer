@@ -7,7 +7,8 @@ Switches from Autograd to [JAX](https://jax.readthedocs.io/en/latest/) for faste
 ### 0.5.2 (forthcoming)
 
 !!! new-version "Changes in v0.5.2"
-    ...
+    * Fixed calculation error in `convert.solvent_to_solution`.
+    * Added more ions in `properties.ion_to_mass.`
 
 ### 0.5.1 (17 Aug 2021)
 
