@@ -24,3 +24,18 @@ pks_H2O_molality = 14
 ks_H2O_molality = 10 ** -pks_H2O_molality * mol_kg ** 2
 ks_H2O_content = ks_H2O_molality * mass_H2O ** 2 / mass_total ** 2
 pks_H2O_content = -np.log10(ks_H2O_content / mol_kg ** 2).magnitude
+
+
+def test_molinity_conversion():
+    """Is the molality-to-molinity conversion function consistent with manual?"""
+    assert np.isclose(content_NaCl.magnitude, molinities["Na"])
+    assert np.isclose(content_NaCl.magnitude, molinities["Cl"])
+
+
+def test_pK_conversions():
+    """Is the pK conversion function consistent with manual?"""
+    assert np.isclose(pks_H2O_content, pks_out["H2O"])
+
+
+# test_molinity_conversion()
+# test_pK_conversions()
