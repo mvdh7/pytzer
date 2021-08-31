@@ -108,7 +108,7 @@ all_anions = set([s for s, c in solute_to_charge.items() if c < 0])
 all_neutrals = set([s for s, c in solute_to_charge.items() if c == 0])
 
 
-def solvent_to_solution(molalities, pks):
+def solvent_to_solution(molalities, pks_constants=None):
     """Converts concentrations and equilibrium constants (pKs) from molality
     (mol/kg-solvent) to molinity (mol/kg-solution).
     molalities - ordered dict of the molalities of all seawater constituents
@@ -122,9 +122,6 @@ def solvent_to_solution(molalities, pks):
     for key in molalities.keys():
         if np.isnan(molalities[key]):
             molalities[key] = 0
-    for key in pks.keys():
-        if np.isnan(pks[key]):
-            pks[key] = 0
 
     # Dict of weight concentrations (g/kg)
     gkg = OrderedDict(
@@ -134,7 +131,7 @@ def solvent_to_solution(molalities, pks):
     # Get H2O fraction: 1 kg H2O / ((sum weights in 1 kg H2O) + 1 kg H2O)
     h2o = 1000 / (sum(gkg.values()) + 1000)
 
-    # Convert concentrations
+    # Convert molalities
     molinities = OrderedDict((key, mol * h2o) for key, mol in molalities.items())
 
     # Convert pKs
@@ -161,11 +158,17 @@ def solvent_to_solution(molalities, pks):
         "CaH2PO4": 1,
         "CaHPO4": 1,
         "CaPO4": 1,
-        "SrCO3": 1
+        "SrCO3": 1,
     }
-
-    ks = OrderedDict((key, 10 ** (-pk)) for key, pk in pks.items())
-    ks_out = OrderedDict((key, k * h2o ** eq_power[key]) for key, k in ks.items())
-    pks_out = OrderedDict((key, -np.log10(k)) for key, k in ks_out.items())
-
-    return molinities, pks_out
+    if pks_constants is not None:
+        for key in pks_constants.keys():
+            if np.isnan(pks_constants[key]):
+                pks_constants[key] = 0
+        ks = OrderedDict((key, 10 ** (-pk)) for key, pk in pks_constants.items())
+        ks_out = OrderedDict((key, k * h2o ** eq_power[key]) for key, k in ks.items())
+        pks_constants_out = OrderedDict(
+            (key, -np.log10(k)) for key, k in ks_out.items()
+        )
+    else:
+        pks_constants_out = None
+    return molinities, pks_constants_out
