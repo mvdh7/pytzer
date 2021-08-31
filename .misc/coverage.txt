@@ -2,7 +2,7 @@ Name                                         Stmts   Miss  Cover
 ----------------------------------------------------------------
 pytzer/__init__.py                              15      0   100%
 pytzer/constants.py                             14      0   100%
-pytzer/convert.py                               28     17    39%
+pytzer/convert.py                               30      6    80%
 pytzer/debyehueckel.py                          69      9    87%
 pytzer/dissociation.py                         152     70    54%
 pytzer/equilibrate/__init__.py                  41     15    63%
@@ -32,9 +32,10 @@ pytzer/unsymmetrical.py                         46      1    98%
 tests/__init__.py                                0      0   100%
 tests/test_CRP94.py                             11      0   100%
 tests/test_M88.py                               16      0   100%
+tests/test_convert.py                           25      0   100%
 tests/test_jax_settings.py                       4      0   100%
 tests/test_model.py                             41      0   100%
 tests/test_stoichiometric.py                   130      0   100%
 tests/test_unsymmetrical.py                     33      0   100%
 ----------------------------------------------------------------
-TOTAL                                         9295   5411    42%
+TOTAL                                         9322   5400    42%
