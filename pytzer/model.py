@@ -77,6 +77,7 @@ def Gibbs_nRT_fori(solutes, params):
     sqrt_I = np.sqrt(I)
     Gibbs = Gibbs_DH(params["Aphi"], I)
 
+
 @jax.jit
 def Gibbs_nRT(
     solutes,
