@@ -52,6 +52,6 @@ def test_CRP94_Aphi():
     assert Aphi_00 == 0.376_421_452
 
 
-test_CRP94_table7()
+# test_CRP94_table7()
 # test_CRP94_table8()
 # test_CRP94_Aphi()
