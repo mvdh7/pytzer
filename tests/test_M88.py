@@ -11,7 +11,7 @@ params = Moller88.get_parameters(solutes=m_cols, temperature=383.15)
 
 def get_activity_water(data_row):
     dr = pz.odict(data_row[m_cols])
-    return np.round(pz.activity_water(dr, **params).item(), decimals=4)
+    return pz.activity_water(dr, **params).item()
 
 
 data["a_H2O_pytzer"] = data.apply(get_activity_water, axis=1)
