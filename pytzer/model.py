@@ -63,6 +63,22 @@ func_J = unsymmetrical.Harvie
 
 
 @jax.jit
+def Gibbs_nRT_fori(solutes, params):
+    # Evaluate terms dependent on overall ionic strength
+    I = (
+        np.sum(
+            np.array([m * convert.solute_to_charge[s] ** 2 for s, m in solutes.items()])
+        )
+        / 2
+    )
+    Z = np.sum(
+        np.abs(np.array([m * convert.solute_to_charge[s] for s, m in solutes.items()]))
+    )
+    sqrt_I = np.sqrt(I)
+    Gibbs = Gibbs_DH(params["Aphi"], I)
+
+
+@jax.jit
 def Gibbs_nRT(
     solutes,
     Aphi=None,

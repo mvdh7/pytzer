@@ -43,8 +43,8 @@ def solve(
     temperature=298.15,
     verbose=False,
 ):
-    """Solve for thermodynamic equilibrium to return solute molalities and stoichiometric
-    equilibrium constants.
+    """Solve for thermodynamic equilibrium to return solute molalities and
+    stoichiometric equilibrium constants.
     """
     # Make first estimates of all stoichiometric dissociation constants
     ks_constants_pz = dissociation.assemble(
