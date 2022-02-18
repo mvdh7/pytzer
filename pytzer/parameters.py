@@ -11083,7 +11083,7 @@ def mu_tris_tris_tris_MarChemSpec25(T, P):
     return mu, valid
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Clegg et al. (2021) ~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Clegg et al. (2022) ~~~~~
 def bC_trisH_Cl_CHW21(T, P):
     """c-a: trisH+ chloride [CHW21]."""
     b0 = 0.03468
@@ -12132,3 +12132,10 @@ def psi_K_Mg_Cl_A15(T, P):
     psi = -0.022 - 14.27 * (1 / T - 1 / 298.15)
     valid = (273.15 <= T) & (T <= 473.15)
     return psi, valid
+
+
+def theta_H_Na_HCW22(T, P):
+    """c-c': hydrogen sodium [HCW22]."""
+    theta = 0.0306 - 0.000418 * (T - 298.15)
+    valid = (T >= 278.15) & (T <= 318.15)
+    return theta, valid

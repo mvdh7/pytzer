@@ -109,3 +109,7 @@ Waters13.update_cca("K", "Mg", "HSO4", prm.psi_K_Mg_HSO4_WM13)  # agrees with HM
 Waters13.update_cca("Ca", "K", "Cl", prm.psi_Ca_K_Cl_HMW84)
 Waters13.update_cca("Ca", "K", "SO4", prm.psi_Ca_K_SO4_WM13)  # agrees with HMW84
 Waters13.update_cca("Ca", "K", "HSO4", prm.psi_Ca_K_HSO4_WM13)  # agrees with HMW84
+# Add equilibria
+Waters13.update_equilibrium("HSO4", k.HSO4_CRP94)
+Waters13.update_equilibrium("MgOH", k.MgOH_CW91_ln)
+Waters13.update_equilibrium("H2O", k.H2O_M79)

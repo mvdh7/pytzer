@@ -224,7 +224,7 @@ def get_MgOH(h, f, co3, po4, totals, ks_constants):
     Mg = get_Mg(h, f, co3, po4, totals, ks_constants)
     OH = get_OH(h, ks_constants)
     k = ks_constants
-    return k["MgOH"] * Mg * OH
+    return Mg * OH / k["MgOH"]
 
 
 def get_MgF(h, f, co3, po4, totals, ks_constants):

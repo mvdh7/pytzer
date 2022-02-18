@@ -11,6 +11,8 @@ from .Millero98 import Millero98
 from .Moller88 import Moller88
 from .Seawater import Seawater
 from .Waters13 import Waters13
+from .Waters13_Humphreys22 import Waters13_Humphreys22
+from .Waters13_Clegg22 import Waters13_Clegg22
 from .Waters13_MarChemSpec25 import Waters13_MarChemSpec25
 
 # Aliases for convenience
@@ -22,6 +24,8 @@ MCS25 = MarChemSpec25
 MP98 = MIAMI = Millero98
 M88 = Moller88
 WM13 = Waters13
+WM13_C22 = Waters13_Clegg22
+WM13_H22 = Waters13_Humphreys22
 WM13_MCS25 = Waters13_MarChemSpec25
 
 # solutes_MarChemSpec = np.array(
