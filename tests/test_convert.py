@@ -21,9 +21,9 @@ content_NaCl_value = content_NaCl.magnitude  # mol / kg-solution
 # Manual approach - pks_constants
 mol_kg = unit.mol / unit.kg
 pks_H2O_molality = 14
-ks_H2O_molality = 10 ** -pks_H2O_molality * mol_kg ** 2
-ks_H2O_content = ks_H2O_molality * mass_H2O ** 2 / mass_total ** 2
-pks_H2O_content = -np.log10(ks_H2O_content / mol_kg ** 2).magnitude
+ks_H2O_molality = 10**-pks_H2O_molality * mol_kg**2
+ks_H2O_content = ks_H2O_molality * mass_H2O**2 / mass_total**2
+pks_H2O_content = -np.log10(ks_H2O_content / mol_kg**2).magnitude
 
 
 def test_molinity_conversion():

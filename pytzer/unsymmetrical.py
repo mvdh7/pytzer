@@ -47,7 +47,7 @@ def P75_eq46(x):
     Jsum = np.zeros_like(x)
     for k in range(6):
         Jsum = Jsum + C[k] * x ** -(k + 1)
-    return -(x ** 2) * np.log(x) * np.exp(-10 * x ** 2) / 6 + 1 / Jsum
+    return -(x**2) * np.log(x) * np.exp(-10 * x**2) / 6 + 1 / Jsum
 
 
 @jax.jit
@@ -124,10 +124,10 @@ def _Harvie_raw(x):
     x_vec = np.full_like(akI, x)
     ak = np.where(x_vec < 1, akI, akII)
     z = np.where(
-        x < 1, 4 * x ** 0.2 - 2, 40 / 9 * x ** -0.1 - 22 / 9  # Eq. (B-21)  # Eq. (B-25)
+        x < 1, 4 * x**0.2 - 2, 40 / 9 * x**-0.1 - 22 / 9  # Eq. (B-21)  # Eq. (B-25)
     )
     dz_dx = np.where(
-        x < 1, 4 * x ** -0.8 / 5, -4 * x ** -1.1 / 9  # Eq. (B-22)  # Eq. (B-26)
+        x < 1, 4 * x**-0.8 / 5, -4 * x**-1.1 / 9  # Eq. (B-22)  # Eq. (B-26)
     )
     b2, b1, b0 = 0.0, 0.0, 0.0
     d2, d1, d0 = 0.0, 0.0, 0.0

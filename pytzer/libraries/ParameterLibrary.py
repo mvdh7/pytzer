@@ -3,6 +3,7 @@
 from copy import deepcopy
 from collections import OrderedDict
 import numpy as np
+from scipy.special import comb
 from .. import debyehueckel as dh, parameters as prm, convert
 from ..equilibrate import thermodynamic
 from ..meta import update_func_J
@@ -317,3 +318,163 @@ class ParameterLibrary(dict):
         )
         log_kt_constants = self.get_equilibria(solutes=solutes, temperature=temperature)
         return parameters, log_kt_constants
+
+    def get_matrices(
+        self,
+        solutes,
+        temperature=298.15,
+        pressure=10.1023,
+        verbose=True,
+    ):
+        """Assemble parameter matrices for the matrix model."""
+        if verbose:
+            missing_coeffs = []
+
+        def report_missing_coeffs(*solutes):
+            if verbose:
+                solutes_list = list(solutes)
+                solutes_list.sort()
+                if solutes_list not in missing_coeffs:
+                    print(
+                        (
+                            "{} has no interaction coefficients for "
+                            + "-".join(["{}"] * len(solutes))
+                            + "; using zero."
+                        ).format(self["name"], *solutes)
+                    )
+                    missing_coeffs.append(solutes_list)
+
+        cations = [s for s in solutes if s in convert.all_cations]
+        anions = [s for s in solutes if s in convert.all_anions]
+        neutrals = [s for s in solutes if s in convert.all_neutrals]
+        # Set up parameters dict
+        parameters = {"temperature": temperature, "pressure": pressure}
+        TP = (temperature, pressure)
+        if "Aphi" in self:
+            parameters.update({"Aphi": self["Aphi"](*TP)[0]})
+        else:
+            if verbose:
+                print(
+                    "{} has no Aphi function; no value returned.".format(self["name"])
+                )
+        # Preallocate empty matrices
+        for p in [
+            "beta0_ca",
+            "beta1_ca",
+            "beta2_ca",
+            "c0_ca",
+            "c1_ca",
+            "theta_xx",
+            "lambda_nx",
+        ]:
+            parameters[p] = np.zeros((len(solutes), len(solutes)))
+        for p in ["alpha1_ca", "alpha2_ca", "omega_ca"]:
+            parameters[p] = np.full((len(solutes), len(solutes)), -9.0)
+        for p in ["psi_cca", "psi_caa"]:
+            parameters[p] = np.zeros((int(comb(len(cations), 2)), len(anions)))
+        parameters["zeta_nca"] = np.zeros((len(neutrals), len(cations) * len(anions)))
+        parameters["mu_nnn"] = np.zeros((len(neutrals), 1))
+        # Fill the matrices with coefficients: ca, ii and nx interactions
+        for x, solute_x in enumerate(solutes):
+            for y, solute_y in enumerate(solutes):
+                try:
+                    params_ca = self["ca"][solute_x][solute_y](*TP)[:-1]
+                    (
+                        parameters["beta0_ca"][x, y],
+                        parameters["beta1_ca"][x, y],
+                        parameters["beta2_ca"][x, y],
+                        parameters["c0_ca"][x, y],
+                        parameters["c1_ca"][x, y],
+                        parameters["alpha1_ca"][x, y],
+                        parameters["alpha2_ca"][x, y],
+                        parameters["omega_ca"][x, y],
+                    ) = (
+                        parameters["beta0_ca"][y, x],
+                        parameters["beta1_ca"][y, x],
+                        parameters["beta2_ca"][y, x],
+                        parameters["c0_ca"][y, x],
+                        parameters["c1_ca"][y, x],
+                        parameters["alpha1_ca"][y, x],
+                        parameters["alpha2_ca"][y, x],
+                        parameters["omega_ca"][y, x],
+                    ) = params_ca
+                except KeyError:
+                    if (
+                        solute_x in convert.all_cations
+                        and solute_y in convert.all_anions
+                    ):
+                        report_missing_coeffs(solute_x, solute_y)
+                try:
+                    param_theta = self["cc"][solute_x][solute_y](*TP)[0]
+                    parameters["theta_xx"][x, y] = parameters["theta_xx"][
+                        y, x
+                    ] = param_theta
+                except KeyError:
+                    if solute_x != solute_y:
+                        if (
+                            solute_x in convert.all_cations
+                            and solute_y in convert.all_cations
+                        ):
+                            report_missing_coeffs(solute_x, solute_y)
+                try:
+                    param_theta = self["aa"][solute_x][solute_y](*TP)[0]
+                    parameters["theta_xx"][x, y] = parameters["theta_xx"][
+                        y, x
+                    ] = param_theta
+                except KeyError:
+                    if solute_x != solute_y:
+                        if (
+                            solute_x in convert.all_anions
+                            and solute_y in convert.all_anions
+                        ):
+                            report_missing_coeffs(solute_x, solute_y)
+                try:
+                    param_lambda = self["nc"][solute_x][solute_y](*TP)[0]
+                    parameters["lambda_nx"][x, y] = parameters["lambda_nx"][
+                        x, y
+                    ] = param_lambda
+                except KeyError:
+                    if solute_x in convert.all_neutrals:
+                        report_missing_coeffs(solute_x, solute_y)
+                try:
+                    param_lambda = self["na"][solute_x][solute_y](*TP)[0]
+                    parameters["lambda_nx"][x, y] = parameters["lambda_nx"][
+                        x, y
+                    ] = param_lambda
+                except KeyError:
+                    if solute_x in convert.all_neutrals:
+                        report_missing_coeffs(solute_x, solute_y)
+                try:
+                    param_lambda = self["nn"][solute_x][solute_y](*TP)[0]
+                    parameters["lambda_nx"][x, y] = parameters["lambda_nx"][
+                        x, y
+                    ] = param_lambda
+                except KeyError:
+                    if solute_x in convert.all_neutrals:
+                        report_missing_coeffs(solute_x, solute_y)
+        # Fill the matrices with coefficients: cca and caa interactions
+        CC = 0
+        for CX, cationx in enumerate(cations):
+            for xCY, cationy in enumerate(cations[CX + 1 :]):
+                for A, anion in enumerate(anions):
+                    parameters["psi_cca"][CC, A] = self["cca"][cationx][cationy][anion](
+                        *TP
+                    )[0]
+                CC = CC + 1
+        AA = 0
+        for AX, anionx in enumerate(anions):
+            for xAY, aniony in enumerate(anions[AX + 1 :]):
+                for C, cation in enumerate(cations):
+                    parameters["psi_caa"][AA, C] = self["caa"][cation][anionx][aniony](
+                        *TP
+                    )[0]
+                AA = AA + 1
+        # Fill the matrices with coefficients: nca and nnn interactions
+        for N, neutral in enumerate(neutrals):
+            parameters["mu_nnn"][N, 0] = self["nnn"][neutral](*TP)[0]
+            for C, cation in enumerate(cations):
+                for A, anion in enumerate(anions):
+                    parameters["zeta_nca"][N, C * len(anions) + A] = self["nca"][
+                        neutral
+                    ][cation][anion](*TP)[0]
+        return parameters

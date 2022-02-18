@@ -1,8 +1,8 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2021  Matthew P. Humphreys  (GNU GPLv3)
+# Copyright (C) 2019  Matthew Paul Humphreys  (GNU GPLv3)
 """Calculate properties of pure water."""
-import jax
-from jax import numpy as np
+from autograd.numpy import sqrt
+from autograd import elementwise_grad as egrad
 
 # Properties of pure water
 # Source: http://www.teos-10.org/pubs/IAPWS-2009-Supplementary.pdf
@@ -10,7 +10,6 @@ from jax import numpy as np
 # Seawater available from http://www.teos-10.org/pubs/IAPWS-08.pdf
 
 
-@jax.jit
 def Gibbs(tempK, presPa):
     """Gibbs energy function."""
     # Coefficients of the Gibbs function as defined in Table 2:
@@ -70,11 +69,11 @@ def Gibbs(tempK, presPa):
 
 
 # Get differentials
-gt = jax.grad(Gibbs, argnums=0)
-gp = jax.grad(Gibbs, argnums=1)
-gtt = jax.grad(gt, argnums=0)
-gtp = jax.grad(gt, argnums=1)
-gpp = jax.grad(gp, argnums=1)
+gt = egrad(Gibbs, argnum=0)
+gp = egrad(Gibbs, argnum=1)
+gtt = egrad(gt, argnum=0)
+gtp = egrad(gt, argnum=1)
+gpp = egrad(gp, argnum=1)
 
 # Define functions for solution properties
 def rho(tempK, presPa):
@@ -142,7 +141,7 @@ def ks(tempK, presPa):
 def w(tempK, presPa):
     """Speed of sound in m/s."""
     # Table 3, Eq. (14)
-    return gp(tempK, presPa) * np.sqrt(
+    return gp(tempK, presPa) * sqrt(
         gtt(tempK, presPa)
         / (gtp(tempK, presPa) ** 2 - gtt(tempK, presPa) * gpp(tempK, presPa))
     )

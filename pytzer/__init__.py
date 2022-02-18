@@ -22,6 +22,7 @@ from . import (
     equilibrate,
     io,
     libraries,
+    matrix,
     meta,
     model,
     parameters,

@@ -42,7 +42,7 @@ def get_CO3(h, totals, ks_constants):
         t["CO2"]
         * k["H2CO3"]
         * k["HCO3"]
-        / (h ** 2 + k["H2CO3"] * h + k["H2CO3"] * k["HCO3"])
+        / (h**2 + k["H2CO3"] * h + k["H2CO3"] * k["HCO3"])
     )
 
 
@@ -53,7 +53,7 @@ def get_HCO3(h, co3, ks_constants):
 
 def get_CO2(h, co3, ks_constants):
     k = ks_constants
-    return co3 * h ** 2 / (k["H2CO3"] * k["HCO3"])
+    return co3 * h**2 / (k["H2CO3"] * k["HCO3"])
 
 
 def get_PO4(h, totals, ks_constants):
@@ -64,8 +64,8 @@ def get_PO4(h, totals, ks_constants):
         * k["H2PO4"]
         * k["HPO4"]
         / (
-            h ** 3
-            + k["H3PO4"] * h ** 2
+            h**3
+            + k["H3PO4"] * h**2
             + k["H3PO4"] * k["H2PO4"] * h
             + k["H3PO4"] * k["H2PO4"] * k["HPO4"]
         )
@@ -81,12 +81,12 @@ def get_HPO4(h, po4, ks_constants):
 @get_wrap
 def get_H2PO4(h, po4, ks_constants):
     k = ks_constants
-    return po4 * h ** 2 / (k["H2PO4"] * k["HPO4"])
+    return po4 * h**2 / (k["H2PO4"] * k["HPO4"])
 
 
 def get_H3PO4(h, po4, ks_constants):
     k = ks_constants
-    return po4 * h ** 3 / (k["H3PO4"] * k["H2PO4"] * k["HPO4"])
+    return po4 * h**3 / (k["H3PO4"] * k["H2PO4"] * k["HPO4"])
 
 
 def get_SO4(h, totals, ks_constants):
@@ -371,7 +371,7 @@ def find_solutes(totals, ks_constants, ptargets=None):
 
 @jax.jit
 def get_solutes(totals, ks_constants, ptargets):
-    targets = OrderedDict((k, 10.0 ** -v) for k, v in ptargets.items())
+    targets = OrderedDict((k, 10.0**-v) for k, v in ptargets.items())
     solutes = OrderedDict()
     totals = totals.copy()
     solutes.update(totals)
