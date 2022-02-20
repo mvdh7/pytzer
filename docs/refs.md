@@ -11,6 +11,11 @@
 ??? citation "AW90: Archer & Wang (1990) *J. Phys. Chem. Ref. Data*"
     Archer, D. G., and Wang, P. (1990). The Dielectric Constant of Water and Debye‐Hückel Limiting Law Slopes. *Journal of Physical and Chemical Reference Data* 19, 371–411. [doi:10.1063/1.555853](https://doi.org/10.1063/1.555853)
 
+### B
+
+??? citation "BH61: Bates & Hetzer (1961) *J. Phys. Chem.*"
+    Bates, R. G., and Hetzer, H. B. (1961). Dissociation constant of the protonated acid form of 2-amino-2-(hydroxymethyl)-1, 3-propanediol \[tris-hydroxymethyl\]-aminomethane and related thermodynamic quantities from 0 to 50°.  *Journal of Physical Chemistry* 65(4), 667–671.  [doi:10.1021/j100822a017](https://doi.org/10.1021/j100822a017)
+
 ### C
 
 ??? citation "CB90: Clegg & Brimblecombe (1989) *J. Phys. Chem.*"
@@ -24,13 +29,13 @@
 
 ### D
 
-??? note "D90: Dickson (1990) *J. Chem. Thermodyn.*"
+??? citation "D90: Dickson (1990) *J. Chem. Thermodyn.*"
     Dickson, A. G. (1990). Standard potential of the reaction: AgCl(s) + 0.5 H<sub>2</sub>(g) = Ag(s) + HCl(aq), and the standard acidity constant of the ion HSO<sub>4</sub><sup>−</sup> in synthetic sea water from 273.15 to 318.15 K. *Journal of Chemical Thermodynamics* 22, 113–127. <a href='https://doi.org/10.1016/0021-9614(90)90074-Z'>doi:10.1016/0021-9614(90)90074-Z</a>.
 
 ??? citation "dLP83: de Lima & Pitzer (1983) *J. Solution Chem.*"
     de Lima, M. C. P., and Pitzer, K. S. (1983). Thermodynamics of saturated electrolyte mixtures of NaCl with Na<sub>2</sub>SO<sub>4</sub> and with MgCl<sub>2</sub>. *Journal of Solution Chemistry* 12, 187–199. [doi:10.1007/BF00648056](https://doi.org/10.1007/BF00648056)
 
-??? note "DR79: Dickson & Riley (1979) *Mar. Chem.*"
+??? citation "DR79: Dickson & Riley (1979) *Mar. Chem.*"
     Dickson, A. G., and Riley, J. P. (1979). The estimation of acid dissociation constants in sea-water media from potentiometric titrations with strong base. II. The dissociation of phosphoric acid. *Marine Chemistry* 7, 101–109. <a href='https://doi.org/10.1016/0304-4203(79)90002-1'>doi:10.1016/0304-4203(79)90002-1</a>.
 
 ### F
@@ -44,7 +49,7 @@
 ??? citation "GM89: Greenberg & Møller (1989) *Geochim. Cosmochim. Acta*"
     Greenberg, J. P., and Møller, N. (1989). The prediction of mineral solubilities in natural waters: A chemical equilibrium model for the Na-K-Ca-Cl-SO<sub>4</sub>-H<sub>2</sub>O system to high concentration from 0 to 250°C. *Geochimica et Cosmochimica Acta* 53, 2503–2518. [doi:10.1016/0016-7037(89)90124-5](https://doi.org/10.1016/0016-7037(89)90124-5)
 
-??? note "GP89: Goyet & Poisson (1989) *Deep-Sea Res. Pt. A*"
+??? citation "GP89: Goyet & Poisson (1989) *Deep-Sea Res. Pt. A*"
     Goyet, C., and Poisson, A. (1989). New determination of carbonic acid dissociation constants in seawater as a function of temperature and salinity. *Deep-Sea Research Part A* 36, 1635–1654. <a href='https://doi.org/10.1016/0198-0149(89)90064-2'>doi:10.1016/0198-0149(89)90064-2</a>.
 
 ??? citation "GT17: Gallego-Urrea & Turner (2017) *Mar. Chem.*"
@@ -52,7 +57,7 @@
 
 ### H
 
-??? note "H73: Hansson (1973) *Deep-Sea Res.*"
+??? citation "H73: Hansson (1973) *Deep-Sea Res.*"
     Hansson, I. (1973). A new set of acidity constants for carbonic acid and boric acid in sea water. *Deep-Sea Research* 20, 461–478. <a href='https://doi.org/10.1016/0011-7471(73)90100-9'>doi:10.1016/0011-7471(73)90100-9</a>.
 
 ??? citation "HFM89: Hershey et al. (1989) *J. Solution Chem.*"
@@ -83,7 +88,7 @@
 
 ### K
 
-??? note "KRCB77: Khoo et al. (1977) *Anal. Chem.*"
+??? citation "KRCB77: Khoo et al. (1977) *Anal. Chem.*"
     Khoo, K. H., Ramette, R. W., Culberson, C. H., and Bates, R. G. (1977). Determination of hydrogen ion concentrations in seawater from 5 to 40C: standard potentials at salinities from 20 to 45 per mille. *Analytical Chemistry* 49, 29–34. [doi:10.1021/ac50009a016](https://doi.org/10.1021/ac50009a016).
 
 ### L
@@ -157,7 +162,7 @@
 ??? citation "RM81i: Rard & Miller (1981) *J. Chem. Eng. Data*"
     Rard, J. A., and Miller, D. G. (1981). Isopiestic Determination of the Osmotic Coefficients of Aqueous Na<sub>2</sub>SO<sub>4</sub>, MgSO<sub>4</sub>, and Na<sub>2</sub>SO<sub>4</sub>-MgSO<sub>4</sub> at 25 °C. *Journal of Chemical & Engineering Data* 26, 33–38. [doi:10.1021/je00023a013](https://doi.org/10.1021/je00023a013)
 
-??? note "RRV93: Roy et al. (1993) *Mar. Chem.*"
+??? citation "RRV93: Roy et al. (1993) *Mar. Chem.*"
     Roy, R. N., Roy, L. N., Vogel, K. M., Porter-Moore, C., Pearson, T., Good, C. E., et al. (1993). The dissociation constants of carbonic acid in seawater at salinities 5 to 45 and temperatures 0 to 45°C. *Marine Chemistry* 44, 249–267. <a href='https://doi.org/10.1016/0304-4203(93)90207-5'>doi:10.1016/0304-4203(93)90207-5</a>.
 
 ??? citation "RZM91: Roy et al. (1991) *J. Solution Chem.*"

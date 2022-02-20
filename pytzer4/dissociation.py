@@ -33,8 +33,8 @@ def HSO4_CRP94(tempK):
     return lnkHSO4
 
 
-def trisH_BH64(tempK):
-    """TrisH+ dissociation following BH64 Eq. (3)."""
+def trisH_BH61(tempK):
+    """TrisH+ dissociation following BH61 Eq. (3)."""
     # Matches Clegg's model [2019-07-02]
     log10ktrisH = -(2981.4 / tempK - 3.5888 + 0.005571 * tempK)
     lnktrisH = log10ktrisH * log(10)

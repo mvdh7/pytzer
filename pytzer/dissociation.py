@@ -36,8 +36,8 @@ def HSO4_CRP94(T=298.15):
     return lnkHSO4
 
 
-def trisH_BH64(T=298.15):
-    """TrisH+ dissociation following BH64 Eq. (3)."""
+def trisH_BH61(T=298.15):
+    """TrisH+ dissociation following BH61 Eq. (3)."""
     # Matches Clegg's model [2019-07-02]
     log10ktrisH = -(2981.4 / T - 3.5888 + 0.005571 * T)
     lnktrisH = log10ktrisH * ln10
@@ -292,7 +292,7 @@ all_log_ks = {
     "HSO4": HSO4_CRP94,
     # "MgOH": lambda T=298.15: np.log(10.0 ** -pK_MgOH(T)),
     "MgOH": MgOH_MP98,
-    "trisH": trisH_BH64,
+    "trisH": trisH_BH61,
 }
 
 
@@ -338,6 +338,8 @@ def assemble(temperature=298.15, exclude_equilibria=None, totals=None):
             kt_constants["CaPO4"] = np.exp(CaPO4_MP98_MR97(T=temperature))
     if "Sr" in totals and "CO2" in totals:
         kt_constants["SrCO3"] = np.exp(SrCO3_MP98_MR97(T=temperature))
+    if "tris" in totals:
+        kt_constants["trisH"] = np.exp(trisH_BH61(T=temperature))
     if exclude_equilibria is not None:
         for eq in exclude_equilibria:
             if eq in kt_constants:

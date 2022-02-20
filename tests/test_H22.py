@@ -10,7 +10,7 @@ totals["Ca"] = 0.01075004
 totals["K"] = 0.01058004
 totals["Cl"] = 0.5692021
 totals["SO4"] = 0.02927011
-totals["tris"] = 0.04
+# totals["tris"] = 0.04
 
 solutes, pks = pz.solve(totals, library=prmlib, temperature=278.15)
 params = prmlib.get_parameters(solutes, temperature=278.15, verbose=False)
@@ -20,6 +20,9 @@ aw = pz.activity_water(solutes, **params)
 waterk = (solutes["H"] * solutes["OH"] * acfs["H"] * acfs["OH"] / aw).item()
 waterk_paper = 8.2481e-8 * 5.0620e-8 * 0.76188 * 0.57223 / 0.98142
 waterk_official = np.exp(prmlib["equilibria"]["H2O"](278.15))
+
+# trisk = (solutes["tris"] * solutes["H"] / solutes["trisH"]).item()
+# trisk_official = np.exp(prmlib["equilibria"]["trisH"](278.15))
 
 sulfk = (
     solutes["H"]
@@ -40,7 +43,7 @@ mgk = (
 ).item()
 mgk_paper = 0.05474 * 0.22054 * 5.062e-8 * 0.57223 / (4.5149e-8 * 0.90276)
 mgk_official = np.exp(prmlib["equilibria"]["MgOH"](278.15))
-# this was upside down - and all the other formation constants probably are too!
+# this was upside down - and all the other formation constants might be too!
 # need to change in both pz.components (rearrange get_X equations)
 # AND in pz.thermodynamic (swap signs of log_kt and log_ks terms)
 

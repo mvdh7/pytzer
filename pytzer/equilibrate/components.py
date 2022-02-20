@@ -149,6 +149,16 @@ def get_BOH3(h, totals, ks_constants):
     return h * t["BOH3"] / (h + k["BOH3"])
 
 
+def get_tris(h, totals, ks_constants):
+    t, k = totals, ks_constants
+    return k["trisH"] * t["tris"] / (h + k["trisH"])
+
+
+def get_trisH(h, totals, ks_constants):
+    t, k = totals, ks_constants
+    return h * t["tris"] / (h + k["trisH"])
+
+
 def get_Ca(h, f, co3, po4, totals, ks_constants):
     H2PO4 = get_H2PO4(h, po4, ks_constants)
     HPO4 = get_HPO4(h, po4, ks_constants)
@@ -206,7 +216,7 @@ def get_Mg(h, f, co3, po4, totals, ks_constants):
     t, k = totals, ks_constants
     denom = 1.0
     if "MgOH" in k:
-        denom = denom + k["MgOH"] * OH
+        denom = denom + OH / k["MgOH"]
     if "MgF" in k:
         denom = denom + k["MgF"] * f
     if "MgCO3" in k:
@@ -315,6 +325,9 @@ def find_solutes(totals, ks_constants, ptargets=None):
     if "NO2" in totals and "HNO2" in ks_constants:
         solutes.append("HNO2")
         solutes.append("NO2")
+    if "tris" in totals and "trisH" in ks_constants:
+        solutes.append("tris")
+        solutes.append("trisH")
     if "F" in targets and "F" in totals:
         if "Ca" in totals and "CaF" in ks_constants:
             solutes.append("CaF")
@@ -417,6 +430,9 @@ def get_solutes(totals, ks_constants, ptargets):
     if "NO2" in totals and "HNO2" in ks_constants:
         solutes["HNO2"] = get_HNO2(h, totals, ks_constants)
         solutes["NO2"] = get_NO2(h, totals, ks_constants)
+    if "tris" in totals and "trisH" in ks_constants:
+        solutes["tris"] = get_tris(h, totals, ks_constants)
+        solutes["trisH"] = get_trisH(h, totals, ks_constants)
     if "F" in targets and "F" in totals:
         if "Ca" in totals and "CaF" in ks_constants:
             solutes["CaF"] = get_CaF(h, f, co3, po4, totals, ks_constants)
