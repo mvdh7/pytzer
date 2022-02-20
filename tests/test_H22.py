@@ -8,11 +8,11 @@ totals["Na"] = 0.4861818 #- 0.04
 totals["Mg"] = 0.0547402
 totals["Ca"] = 0.01075004
 totals["K"] = 0.01058004
-totals["Cl"] = 0.5692021 #+ 0.04
+totals["Cl"] = 0.5692021 #+ 0.02
 totals["SO4"] = 0.02927011
 # totals["tris"] = 0.04
 
-solutes, pks = pz.solve(totals, library=prmlib, temperature=278.15)
+solutes, pks = pz.solve(totals, library=prmlib, temperature=298.15)
 pH = -np.log10(solutes["H"])
 params = prmlib.get_parameters(solutes, temperature=278.15, verbose=False)
 acfs = pz.activity_coefficients(solutes, **params)
