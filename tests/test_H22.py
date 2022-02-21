@@ -4,11 +4,11 @@ import pytzer as pz, pytzer4 as pz4
 prmlib = pz.libraries.Waters13_Clegg22
 
 totals = pz.odict()
-totals["Na"] = 0.4861818 #- 0.04
+totals["Na"] = 0.4861818  # - 0.04
 totals["Mg"] = 0.0547402
 totals["Ca"] = 0.01075004
 totals["K"] = 0.01058004
-totals["Cl"] = 0.5692021 #+ 0.02
+totals["Cl"] = 0.5692021  # + 0.02
 totals["SO4"] = 0.02927011
 # totals["tris"] = 0.04
 
