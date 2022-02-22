@@ -60,6 +60,9 @@
 ??? citation "H73: Hansson (1973) *Deep-Sea Res.*"
     Hansson, I. (1973). A new set of acidity constants for carbonic acid and boric acid in sea water. *Deep-Sea Research* 20, 461–478. <a href='https://doi.org/10.1016/0011-7471(73)90100-9'>doi:10.1016/0011-7471(73)90100-9</a>.
 
+??? citation "HBS87: Holmes et al. (1987) *J. Chem. Thermodyn.*"
+    Holmes, H. F., Busey, R. H., Simonson, J. M., Mesmer, R. E., Archer, D. G., and Wood, R. H. (1987).  The enthalpy of dilution of HCl(aq) to 648 K and 40 MPa thermodynamic properties.  *Journal of Chemical Thermodynamics* 19(8), 863-890.  [doi:10.1016/0021-9614(87)90033-4](https://doi.org/10.1016/0021-9614(87)90033-4)
+
 ??? citation "HFM89: Hershey et al. (1989) *J. Solution Chem.*"
     Hershey, J. P., Fernandez, M., and Millero, F. J. (1989). The dissociation of phosphoric acid in NaCl and NaMgCl solutions at 25°C. *Journal of Solution Chemistry* 18(9), 875–891. [doi:10.1007/BF00685063](https://doi.org/10.1007/BF00685063)
 
@@ -74,6 +77,12 @@
 
 ??? citation "HM86: Holmes & Mesmer (1986) *J. Solution Chem.*"
     Holmes, H. F., and Mesmer, R. E. (1986). Thermodynamics of aqueous solutions of the alkali metal sulfates. *Journal of Solution Chemistry* 15, 495–517. [doi:10.1007/BF00644892](https://doi.org/10.1007/BF00644892)
+
+??? citation "HM92: Holmes & Mesmer (1992) *J. Chem. Thermodyn.*"
+    Holmes, H. F., and Mesmer, R. E. (1992).  Isopiestic studies of H2SO4(aq) at elevated temperatures: Thermodynamic properties.  *Journal of Chemical Thermodynamics* 24(3), 317-328.  [doi:10.1016/S0021-9614(05)80072-2](https://doi.org/10.1016/S0021-9614(05)80072-2)
+
+??? citation "HM93: He & Morse (1993) *Geochim. Cosmochim. Acta*"
+    He, S., and Morse, J. W. (1993). The carbonic acid system and calcite solubility in aqueous Na-K-Ca-Mg-Cl-SO<sub>4</sub> solutions from 0 to 90°C.  *Geochimica et Cosmochimica Acta* 57(15), 3533-3554.  [doi:10.1016/0016-7037(93)90137-L](https://doi.org/10.1016/0016-7037(93)90137-L)
 
 ??? citation "HPM88: Hershey et al. (1988) *Geochim. Cosmochim. Acta*"
     Hershey, J. P., Plese, T., and Millero, F. J. (1988). The p*K*<sub>1</sub><sup>\*</sup> for the dissociation of H<sub>2</sub>S in various ionic media. *Geochimica et Cosmochimica Acta* 52, 2047–2051. [doi:10.1016/0016-7037(88)90183-4](https://doi.org/10.1016/0016-7037(88)90183-4)
@@ -130,6 +139,9 @@
 ??? citation "P91: Pitzer (1991) *Activity Coefficients in Electrolyte Solutions*"
     Pitzer, K. S. (1991). “Ion Interaction Approach: Theory and Data Correlation,” in *Activity Coefficients in Electrolyte Solutions, 2nd Edition*, ed. K. S. Pitzer (CRC Press, Florida, USA), 75–153.
 
+??? citation "PB82: Plummer & Busenberg (1982) *Geochim. Cosmochim. Acta*"
+    Plummer, L. N., and Busenberg, E. (1982).  The solubilities of calcite, aragonite and vaterite in CO<sub>2</sub>-H<sub>2</sub>O solutions between 0 and 90°C, and an evaluation of the aqueous model for the system CaCO<sub>3</sub>-CO<sub>2</sub>-H<sub>2</sub>O.  *Geochimica et Cosmochimica Acta* 46(6), 1011-1040.  [doi:10.1016/0016-7037(82)90056-4](https://doi.org/10.1016/0016-7037(82)90056-4)
+
 ??? citation "PMR97: Pierrot et al. (1997) *J. Solution Chem.*"
     Pierrot, D., Millero, F. J., Roy, L. N., Roy, R. N., Doneski, A., and Niederschmidt, J. (1997). The activity coefficients of HCl in HCl−Na<sub>2</sub>SO<sub>4</sub> solutions from 0 to 50°C and ionic strengths up to 6 molal. *Journal of Solution Chemistry* 26(1), 31–45. [doi:10.1007/BF02439442](https://doi.org/10.1007/BF02439442)
 
@@ -169,6 +181,9 @@
     Roy, R. N., Zhang, J.-Z., and Millero, F. J. (1991). The ionization of sulfurous acid in Na−Mg−Cl solutions at 25°C. *Journal of Solution Chemistry* 20(4), 361–373. [doi:10.1007/BF00650763](https://doi.org/10.1007/BF00650763)
 
 ### S
+
+??? citation "SMW90: Spencer et al. (1990) *Geochim. Cosmochim. Acta*"
+    Spencer, R. J., Møller, N., and Weare, J. H. (1990).  The prediction of mineral solubilities in natural waters: A chemical equilibrium model for the Na-K-Ca-Mg-Cl-SO<sub>4</sub>-H<sub>2</sub>O system at temperatures below 25°C.  *Geochimica et Cosmochimica Acta* 54(3), 575-590.  [doi:10.1016/0016-7037(90)90354-N](https://doi.org/10.1016/0016-7037(90)90354-N)
 
 ??? citation "SRG87: Simonson et al. (1987) *J. Chem. Eng. Data*"
     Simonson, J. M., Roy, R. N., and Gibbons, J. J. (1987). Thermodynamics of Aqueous Mixed Potassium Carbonate, Bicarbonate, and Chloride Solutions to 368 K. *Journal of Chemical & Engineering Data* 32(1), 41–45. [doi:10.1021/je00047a011](https://doi.org/10.1021/je00047a011)

@@ -2,6 +2,7 @@ import numpy as np
 import pytzer as pz, pytzer4 as pz4
 
 prmlib = pz.libraries.Waters13_Clegg22
+# prmlib = pz.libraries.HeMorse93
 
 totals = pz.odict()
 totals["Na"] = 0.4861818  # - 0.04

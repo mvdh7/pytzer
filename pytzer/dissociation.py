@@ -148,6 +148,29 @@ def HCO3_MP98(T=298.15):
     return _MP98_eq23(T, A=207.6548, B=-11843.79, C=-33.6485)
 
 
+def _PB82_eq(T, A, B, C, D, E):
+    """Returns log10(K)."""
+    return A + B * T + C / T + D * np.log10(T) + E / T**2
+
+
+def H2CO3_PB82(T=298.15):
+    """H2CO3 dissociation [PB82]."""
+    log10_kH2CO3 = _PB82_eq(T, -356.3094, -0.06091964, 21834.37, 126.8339, -1684915)
+    return ln10 * log10_kH2CO3
+
+
+def HCO3_PB82(T=298.15):
+    """HCO3 dissociation [PB82]."""
+    log10_kHCO3 = _PB82_eq(T, -107.8871, -0.03252849, 5151.79, 38.9256, -563713.9)
+    return ln10 * log10_kHCO3
+
+
+def CO2_PB82(T=298.15):
+    """CO2 solubility (Henry's law constant) [PB82]."""
+    log10_kCO2 = _PB82_eq(T, 108.3865, 0.01985076, -6919.53, -40.4515, 669365)
+    return ln10 * log10_kCO2
+
+
 def H3PO4_MP98(T=298.15):
     """H3PO4 dissociation [MP98 following B51]."""
     return _MP98_eq23(T, A=115.54, B=-4576.7518, C=-18.453)
