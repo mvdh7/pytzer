@@ -1,6 +1,8 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019--2021  Matthew P. Humphreys  (GNU GPLv3)
-"""Evaluate thermodynamic equilibrium constants."""
+"""Evaluate thermodynamic equilibrium constants.
+All functions return ln(K) values.
+"""
 from collections import OrderedDict
 from jax import numpy as np
 
@@ -199,6 +201,26 @@ def MgF_MP98_MR97(T=298.15):
 def CaF_MP98_MR97(T=298.15):
     """CaF+ formation [MP98 following MR97]."""
     return -_MP98_eq24(T, A=3.014, B=-501.6) * ln10
+
+
+def MgCO3_PPFD88(T=298.15):
+    """MgCO3 formation [PPFD88 table 1]."""
+    log10_kMgCO3 = -32.225 + 1093.486 / T + 12.72433 * np.log10(T)
+    return log10_kMgCO3 * ln10
+
+
+def CaCO3_PB82(T=298.15):
+    """CaCO3 formation [PB82 eq. (53)] between 5 and 80 °C.
+    PB82 eq. (44): K(CaCO3) = a(CaCO3) / (a(Ca) * a(CO3)).
+    """
+    log10_kCaCO3 = -1228.732 - 0.299444 * T + 35512.75 / T + 485.818 * np.log10(T)
+    return log10_kCaCO3 * ln10
+
+
+def CaCO3_PPFD88(T=298.15):
+    """CaCO3 formation [PPFD88].  Slightly different from PB82."""
+    log10_kCaCO3 = -1228.806 - 0.299440 * T + 35512.75 / T + 485.818 * np.log10(T)
+    return log10_kCaCO3 * ln10
 
 
 def MgCO3_MP98_MR97(T=298.15):

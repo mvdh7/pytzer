@@ -142,6 +142,9 @@
 ??? citation "PB82: Plummer & Busenberg (1982) *Geochim. Cosmochim. Acta*"
     Plummer, L. N., and Busenberg, E. (1982).  The solubilities of calcite, aragonite and vaterite in CO<sub>2</sub>-H<sub>2</sub>O solutions between 0 and 90°C, and an evaluation of the aqueous model for the system CaCO<sub>3</sub>-CO<sub>2</sub>-H<sub>2</sub>O.  *Geochimica et Cosmochimica Acta* 46(6), 1011-1040.  [doi:10.1016/0016-7037(82)90056-4](https://doi.org/10.1016/0016-7037(82)90056-4)
 
+??? citation "PPFD88: Plummer et al. (1988) *PHRQPITZ manual*"
+    Plummer, L. N., Parkhurst, D. L., Fleming, G. W., and Dunkle, S. A. (1988).  A computer program incorporating Pitzer's equations for calculation of geochemical reactions in brines.  Water-Resources Investigations Report 88-4153, U.S. Geological Survey.  pp. 309.  [doi:10.3133/wri884153](https://doi.org/10.3133/wri884153)
+
 ??? citation "PMR97: Pierrot et al. (1997) *J. Solution Chem.*"
     Pierrot, D., Millero, F. J., Roy, L. N., Roy, R. N., Doneski, A., and Niederschmidt, J. (1997). The activity coefficients of HCl in HCl−Na<sub>2</sub>SO<sub>4</sub> solutions from 0 to 50°C and ionic strengths up to 6 molal. *Journal of Solution Chemistry* 26(1), 31–45. [doi:10.1007/BF02439442](https://doi.org/10.1007/BF02439442)
 

@@ -279,3 +279,7 @@ HeMorse93.update_nca("CO2", "K", "SO4", prm.zeta_CO2_K_SO4_HM93)
 HeMorse93.update_nca("CO2", "Mg", "SO4", prm.zeta_CO2_Mg_SO4_HM93)
 # Equilibria
 HeMorse93.update_equilibrium("H2O", k.H2O_MF)
+HeMorse93.update_equilibrium("H2CO3", k.H2CO3_PB82)
+HeMorse93.update_equilibrium("HCO3", k.HCO3_PB82)
+HeMorse93.update_equilibrium("MgCO3", k.MgCO3_PPFD88)
+HeMorse93.update_equilibrium("CaCO3", k.CaCO3_PPFD88)
