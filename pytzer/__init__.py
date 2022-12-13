@@ -20,7 +20,7 @@ from . import (
     debyehueckel,
     dissociation,
     equilibrate,
-    io,
+    get,
     libraries,
     matrix,
     meta,
@@ -40,7 +40,7 @@ from .equilibrate import solve, solve_manual
 from .equilibrate.components import find_solutes
 from .equilibrate.stoichiometric import solve as solve_stoichiometric
 from .equilibrate.thermodynamic import solve as solve_thermodynamic
-from .io import solve_df
+from .get import solve_df
 from .libraries import ParameterLibrary
 from .meta import hello, update_func_J
 from .model import (
