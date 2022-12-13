@@ -1,5 +1,5 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2021  Matthew P. Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2022  Matthew P. Humphreys  (GNU GPLv3)
 """Waters & Millero (2013).
 *Marine Chemistry* 149, 8--22.
 doi:10.1016/j.marchem.2012.11.003

@@ -1,5 +1,5 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2021  Matthew P. Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2022  Matthew P. Humphreys  (GNU GPLv3)
 """Calculate Debye-Hueckel limiting slopes."""
 from jax import numpy as np
 from . import teos10
