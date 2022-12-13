@@ -6,6 +6,7 @@ from .Clegg94 import Clegg94
 from .Greenberg89 import Greenberg89
 from .Harvie84 import Harvie84
 from .HeMorse93 import HeMorse93
+from .Humphreys22 import Humphreys22
 from .MarChemSpec import MarChemSpec
 from .MarChemSpec25 import MarChemSpec25
 from .Millero98 import Millero98
@@ -22,6 +23,7 @@ CRP94 = Clegg94
 GM89 = Greenberg89
 HMW84 = Harvie84
 HM93 = HeMorse93
+HWT22 = Humphreys22
 myMCS = MyMarChemSpecCO2
 MCS = MarChemSpec
 MCS25 = MarChemSpec25

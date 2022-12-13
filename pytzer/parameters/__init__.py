@@ -11806,3 +11806,79 @@ def theta_H_Na_HCW22(T, P):
     theta = 0.0306 - 0.000418 * (T - 298.15)
     valid = (T >= 278.15) & (T <= 318.15)
     return theta, valid
+
+
+def HWT22_eqS5_7(T, q):
+    return (
+        q[0]
+        + q[1] / T
+        + q[2] * np.log(T)
+        + q[3] * T
+        + q[4] * T**2
+        + q[5] / (T - 227)
+        + q[6] / (647 - T)
+    )
+
+
+def bC_Na_OH_HWT22(T, P):
+    """c-a: sodium hydroxide [HWT22]."""
+    # This is PP87i but with P set to 1 bar and then the coefficients rounded off
+    b0 = HWT22_eqS5_7(
+        T,
+        [
+            2.76821967e2,
+            -7.37517417e3,
+            -4.93599700e1,
+            1.09458239e-1,
+            -4.02243907e-5,
+            1.19311220e1,
+            2.47767456,
+        ],
+    )
+    b1 = HWT22_eqS5_7(
+        T,
+        [
+            4.62869770e2,
+            -1.02941810e4,
+            -8.59605810e1,
+            2.39059690e-1,
+            -1.0795894e-4,
+            0,
+            0,
+        ],
+    )
+    b2 = 0
+    Cphi = HWT22_eqS5_7(
+        T,
+        [
+            -1.66864917e1,
+            4.53597896e2,
+            2.96807720,
+            -6.51722200e-3,
+            2.37747753e-6,
+            -6.89238990e-1,
+            -8.1156286e-2,
+        ],
+    )
+    C0 = Cphi / (2 * np.sqrt(np.abs(i2c["Na"] * i2c["OH"])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(P, 1, **pressure_tol)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def theta_H_K_HWT22(T, P):
+    """c-c': hydrogen potassium [HWT22]."""
+    # assuming CMR93's lowercase t means temperature minus 298.15 K
+    theta = 0.005 - 0.0002275 * (T - 298.15)
+    valid = (T >= 273.15) & (T <= 328.15)
+    return theta, valid
+
+
+def theta_H_Na_HWT22(T, P):
+    """c-c': hydrogen sodium [HWT22]."""
+    theta = 0.0306 - 4.18e-4 * (T - 298.15)
+    valid = (T >= 273.15) & (T <= 328.15)
+    return theta, valid
