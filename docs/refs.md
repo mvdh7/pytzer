@@ -90,6 +90,9 @@
 ??? citation "HPR93: Hovey et al. (1993) *J. Chem. Thermodyn.*"
     Hovey, J. K., Pitzer, K. S., and Rard, J. A. (1993). Thermodynamics of Na<sub>2</sub>SO<sub>4</sub>(aq) at temperatures *T* from 273 K to 373 K and of {(1-*y*)H<sub>2</sub>SO<sub>4</sub>+*y*Na<sub>2</sub>SO<sub>4</sub>}(aq) at *T* = 298.15 K. *Journal of Chemical Thermodynamics* 25(1), 173–192. [doi:10.1006/jcht.1993.1016](https://doi.org/10.1006/jcht.1993.1016)
 
+??? citation "HWT22: Humphreys et al. (2022) *Mar. Chem.*"
+    Humphreys, M. P., Waters, J. F., Turner, D. R., Dickson, A. G., and Clegg, S. L. (2022).  Chemical speciation models based upon the Pitzer activity coefficient equations, including the propagation of uncertainties. I. Artificial seawater from 0 to 45 °C.  *Marine Chemistry* 244, 104095.  [doi:10.1016/j.marchem.2022.104095](https://doi.org/10.1016/j.marchem.2022.104095)
+
 ### J
 
 ??? citation "JESS: May et al. (2011) *J. Chem. Eng. Data*"

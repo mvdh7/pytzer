@@ -4,6 +4,12 @@
 
 Switches from Autograd to [JAX](https://jax.readthedocs.io/en/latest/) for faster automatic differentiation and JIT compilation.
 
+### 0.5.3 (forthcoming)
+
+!!! new-version "Changes in v0.5.3"
+    * Created new `Humphreys22` parameter library and validated its calculations against [HWT22](../refs/#h).
+    * Renamed `io` module to `get`.
+
 ### 0.5.2 (31 Aug 2021)
 
 !!! new-version "Changes in v0.5.2"

@@ -1,7 +1,7 @@
 site_name: Pytzer
 site_author: Matthew P. Humphreys
 site_description: "Pytzer: the Pitzer model for chemical activities in aqueous solutions in Python"
-copyright: Copyright &copy; 2019–2021 Matthew P. Humphreys (GNU GPLv3).
+copyright: Copyright &copy; 2019–2022 Matthew P. Humphreys (GNU GPLv3).
 repo_url: https://github.com/mvdh7/pytzer
 repo_name: mvdh7/pytzer
 
@@ -10,7 +10,7 @@ theme:
   language: en
   palette:
     scheme: default
-    primary: blue grey
+    primary: pink
     accent: teal
   font:
     text: Roboto Slab
@@ -36,7 +36,7 @@ nav:
   # - Example workflows: workflows.md
   # - Conventions: name-conventions.md
   # - Main Pytzer modules:
-  #   - .io – import and export data: modules/io.md
+  #   - .get – import and export data: modules/io.md
   #   - .model – the Pitzer model: modules/model.md
   #   - .equilibrate - equilibrium solvers: modules/equilibrate.md
   # - Behind the scenes:
