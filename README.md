@@ -1,7 +1,7 @@
 # Pytzer
 
 ![Tests](https://github.com/mvdh7/pytzer/workflows/Tests/badge.svg)
-[![Coverage](https://github.com/mvdh7/pytzer/blob/master/.misc/coverage.svg)](https://github.com/mvdh7/pytzer/blob/master/.misc/coverage.txt)
+[![Coverage](https://github.com/mvdh7/pytzer/blob/main/.misc/coverage.svg)](https://github.com/mvdh7/pytzer/blob/main/.misc/coverage.txt)
 [![pypi badge](https://img.shields.io/pypi/v/pytzer.svg?style=popout)](https://pypi.org/project/pytzer/)
 [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.2637914-informational)](https://doi.org/10.5281/zenodo.2637914)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
@@ -36,7 +36,7 @@ Once installed, you will need to set the environment variable `JAX_ENABLE_X64=Tr
 
 ### For development
 
-Use the [environment.yml](https://github.com/mvdh7/pytzer/blob/master/environment.yml) file to create a new environment with Conda:
+Use the [environment.yml](https://github.com/mvdh7/pytzer/blob/main/environment.yml) file to create a new environment with Conda:
 
     conda env create -f environment.yml
 
