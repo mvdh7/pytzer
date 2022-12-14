@@ -199,6 +199,6 @@ def test_thermodynamic_Ks():
     assert (data_eq_pz.lnkMgOH_diff == 0).all()
 
 
-test_data_ns()
-test_data_eq()
-test_thermodynamic_Ks()
+# test_data_ns()
+# test_data_eq()
+# test_thermodynamic_Ks()
