@@ -148,22 +148,29 @@ cc25_test.loc[l1, "SO4"] = cc25_pz.loc[l1, "SO4"] - cc25.loc[l1, "SO4"]
 
 
 def test_ca5():
+    """Does Pytzer reproduce the same betas and Cs as HWT22 at 5 °C?"""
     assert (ca5_test[ca_cols] == 0).all().all()
 
 
 def test_ca25():
+    """Does Pytzer reproduce the same betas and Cs as HWT22 at 25 °C?"""
     assert (ca25_test[ca_cols] == 0).all().all()
 
 
 def test_cc5():
+    """Does Pytzer reproduce the same cc thetas and cca psis as HWT22 at 5 °C?"""
     assert (cc5_test[cc_cols] == 0).all().all()
 
 
 def test_cc25():
+    """Does Pytzer reproduce the same cc thetas and cca psis as HWT22 at 25 °C?"""
     assert (cc25_test[cc_cols] == 0).all().all()
 
 
 def test_aa():
+    """Does Pytzer reproduce the same aa thetas and caa psis as HWT22?  These are all
+    independent of temperature.
+    """
     assert (aa_test[aa_cols] == 0).all().all()
 
 
