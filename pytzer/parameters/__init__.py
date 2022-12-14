@@ -10751,8 +10751,8 @@ def mu_tris_tris_tris_MarChemSpec25(T, P):
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Clegg et al. (2022) ~~~~~
-def bC_trisH_Cl_CHW21(T, P):
-    """c-a: trisH+ chloride [CHW21]."""
+def bC_trisH_Cl_CHW22(T, P):
+    """c-a: trisH+ chloride [CHW22]."""
     b0 = 0.03468
     b1 = 0.12802
     b2 = 0
@@ -10765,8 +10765,8 @@ def bC_trisH_Cl_CHW21(T, P):
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
-def bC_trisH_SO4_CHW21(T, P):
-    """c-a: trisH+ sulfate [CHW21]."""
+def bC_trisH_SO4_CHW22(T, P):
+    """c-a: trisH+ sulfate [CHW22]."""
     b0 = 9.52294e-2
     b1 = 0.585908
     b2 = 0
@@ -10779,29 +10779,29 @@ def bC_trisH_SO4_CHW21(T, P):
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
-def lambd_tris_Ca_CHW21(T, P):
-    """n-c: tris calcium [CHW21]."""
+def lambd_tris_Ca_CHW22(T, P):
+    """n-c: tris calcium [CHW22]."""
     lambd = -0.2686
     valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
-def lambd_tris_K_CHW21(T, P):
-    """n-c: tris potassium [CHW21]."""
+def lambd_tris_K_CHW22(T, P):
+    """n-c: tris potassium [CHW22]."""
     lambd = 0.03394
     valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
-def lambd_tris_Mg_CHW21(T, P):
-    """n-c: tris magnesium [CHW21]."""
+def lambd_tris_Mg_CHW22(T, P):
+    """n-c: tris magnesium [CHW22]."""
     lambd = -0.1176
     valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
-def lambd_tris_Na_CHW21(T, P):
-    """n-c: tris sodium [CHW21]."""
+def lambd_tris_Na_CHW22(T, P):
+    """n-c: tris sodium [CHW22]."""
     lambd = 0.02632
     valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid

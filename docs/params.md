@@ -14,6 +14,7 @@ from pytzer.libraries import Seawater
 
 The options are:
 
+  * `Clegg22`: [CHW22](../refs/#c)
   * `Clegg94`: [CRP94](../refs/#c)
   * `Greenberg89`: [GM89](../refs/#m)
   * `Harvie84`: [HMW84](../refs/#h)

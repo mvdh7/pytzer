@@ -21,6 +21,9 @@
 ??? citation "CB90: Clegg & Brimblecombe (1989) *J. Phys. Chem.*"
     Clegg, S. L., and Brimblecombe, P. (1989). Solubility of Ammonia in Pure Aqueous and Multicomponent Solutions. *Journal of Physical Chemistry* 93(20), 7237-7248. [doi:10.1021/j100357a041](https://doi.org/10.1021/j100357a041)
 
+??? citation "CHW22: Clegg et al. (2022) *Mar. Chem.*"
+    Clegg, S. L., Humphreys, M. P., Waters, J. F., Turner, D. R., and Dickson, A. G. (2022).  Chemical speciation models based upon the Pitzer activity coefficient equations, including the propagation of uncertainties. II. Tris buffers in artificial seawater at 25 °C, and an assessment of the seawater ‘Total’ pH scale.  *Marine Chemistry* 244, 104096.  [doi:10.1016/j.marchem.2022.104096](https://doi.org/10.1016/j.marchem.2022.104096)
+
 ??? citation "CMR93: Campbell et al. (1993) *Mar. Chem.*"
     Campbell, D. M., Millero, F. J., Roy, R., Roy, L., Lawson, M., Vogel, K. M., et al. (1993). The standard potential for the hydrogen-silver, silver chloride electrode in synthetic seawater. *Marine Chemistry* 44, 221–233. [doi:10.1016/0304-4203(93)90204-2](https://doi.org/10.1016/0304-4203(93)90204-2)
 
