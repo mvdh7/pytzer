@@ -11,7 +11,7 @@ Humphreys22.assign_func_J(unsymmetrical.P75_eq47)
 Humphreys22.update_Aphi(debyehueckel.Aosm_M88)
 Humphreys22.update_equilibrium("H2O", k.H2O_MF)
 Humphreys22.update_equilibrium("HSO4", k.HSO4_CRP94)
-Humphreys22.update_equilibrium("MgOH", k.MgOH_CW91)
+Humphreys22.update_equilibrium("MgOH", k.MgOH_CW91_ln)
 
 # Tables S7-S11 (beta and C coefficients)
 Humphreys22.update_ca("Ca", "Cl", prm.bC_Ca_Cl_GM89)
