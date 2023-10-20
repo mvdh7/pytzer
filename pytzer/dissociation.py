@@ -238,6 +238,12 @@ def SrCO3_MP98_MR97(T=298.15):
     return -_MP98_eq24(T, A=1.028, C=0.0066154) * ln10
 
 
+def SrCO3_CWTF23(T=298.15):
+    """SrCO3 formation [CWTF23]."""
+    # Copies CaCO3 of MP98/MR97
+    return -_MP98_eq24(T, A=1.178, C=0.0066154) * ln10
+
+
 def MgH2PO4_MP98_MR97(T=298.15):
     """MgH2PO4+ formation [MP98 following MR97]."""
     return -1.13 * ln10

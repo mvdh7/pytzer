@@ -3954,6 +3954,7 @@ def bC_La_Cl_SP78(T, P):
 # bC_Znjj_SO4_SP78: no corresponding PM73 function
 # bC_Cdjj_SO4_SP78: no corresponding PM73 function
 
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Roy et al. (1980) ~~~~~
 def theta_H_Mg_RGB80(T, P):
     """c-c': hydrogen magnesium [RGB80]."""
@@ -8857,7 +8858,7 @@ def bC_K_Br_MP98(T, P):
     b1 = MP98_eq15(
         T,
         [
-            0.2122,
+            0.2122,  # 0.2212 in CWTD23
             -0.762,
             1.74,
         ],
@@ -11882,3 +11883,223 @@ def theta_H_Na_HWT22(T, P):
     theta = 0.0306 - 4.18e-4 * (T - 298.15)
     valid = (T >= 273.15) & (T <= 328.15)
     return theta, valid
+
+
+# Extras from CWTD23
+
+
+def bC_Ca_SO4_HEW82(T, P):
+    """c-a: calcium sulfate [HEW82]."""
+    # Values taken from CWTD23 (SI6)
+    b0 = 0.2  # HW80 is cited for beta0 only
+    b1 = 3.1973 + 0.0546 * (T - 298.15)
+    b2 = -54.24 - 0.516 * (T - 298.15)
+    C0 = 0
+    C1 = 0
+    alph1 = 1.4
+    alph2 = 12.0
+    omega = -9
+    valid = np.isclose(P, 1, **pressure_tol)  # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_CaF_Cl_PM16(T, P):
+    """c-a: calcium-fluoride chloride [PM16]."""
+    # Values taken from CWTD23 (SI6)
+    b0 = 0.14047
+    b1 = 0.3022
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2.0
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_K_Br_CWTD23(T, P):
+    """c-a: potassium bromide [CWTD23]."""
+    b0 = MP98_eq15(
+        T,
+        [
+            0.0569,
+            -1.43,
+            7.39,
+        ],
+    )
+    b1 = MP98_eq15(
+        T,
+        [
+            0.2212,  # 0.2122 in MP98 (my function, at least)
+            -0.762,
+            1.74,
+        ],
+    )
+    b2 = 0
+    Cphi = MP98_eq15(
+        T,
+        [
+            -0.0018,
+            0.216,
+            -0.7004,
+        ],
+    )
+    C0 = Cphi / (2 * np.sqrt(np.abs(i2c["K"] * i2c["Br"])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_K_CO3_CWTD23(T, P):
+    """c-a: potassium carbonate [CWTD23]."""
+    b0 = 0.1288 + 1.1e-3 * (T - 298.15) - 5.1e-6 * (T - 298.15) ** 2
+    b1 = 1.433 + 4.36e-3 * (T - 298.15) + 2.07e-5 * (T - 298.15) ** 2
+    b2 = 0
+    # CWTD23 declare Cphi = 0.0005, like MP98, but I can't find that anywhere in SRG87
+    Cphi = 0.0005
+    C0 = Cphi / (2 * np.sqrt(np.abs(i2c["K"] * i2c["CO3"])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_K_F_CWTD23(T, P):
+    """c-a: potassium fluoride [CWTD23]."""
+    Tr = 298.15
+    b0 = (
+        0.08089
+        + (-1.39e-5 * Tr**3 / 3 - 2.14e-4 * Tr**2) * (1 / T - 1 / Tr)
+        - (1.39e-5 / 6) * (T**2 - Tr**2)
+    )
+    b1 = 0.2021 - 5.44e-4 * Tr**2 * (1 / T - 1 / Tr)
+    b2 = 0
+    C0 = 0.5 * (0.00093 + 0.595e-4 * Tr**2 * (1 / T - 1 / Tr))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_K_HCO3_RGW84(T, P):
+    """c-a: potassium carbonate [RGW84]."""
+    # Values from CWTD23 SI6
+    Tr = 298.15
+    b0 = -0.0107 + 1.0e-3 * (T - Tr)
+    b1 = 0.0478 + 1.1e-3 * (T - Tr)
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_MgF_Cl_PM16(T, P):
+    """c-a: magnesium-fluoride chloride [PM16]."""
+    # Values taken from CWTD23 (SI6)
+    b0 = 0.2871
+    b1 = 0.4538
+    b2 = 0
+    Cphi = -0.037
+    C0 = Cphi / (2 * np.sqrt(np.abs(i2c["MgF"] * i2c["Cl"])))
+    C1 = 0
+    alph1 = 2.0
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_Na_CO3_CWTD23(T, P):
+    """c-a: sodium carbonate [CWTD23]."""
+    # Like MP98 but with corrections for errors there (see CWTD23's SI6)
+    b0 = 0.0362 + 1.437193e-2 * (T - 298.15) - 2.11e-5 * (T - 298.15) ** 2
+    b1 = 1.51 + 0.0521392 * (T - 298.15) - 8.4e-5 * (T - 298.15) ** 2
+    b2 = 0
+    Cphi = 0.0052
+    C0 = Cphi / (2 * np.sqrt(np.abs(i2c["Na"] * i2c["CO3"])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_Na_HCO3_CWTD23(T, P):
+    """c-a: sodium bicarbonate [CWTD23]."""
+    # Like MP98 but with corrections for errors there (see CWTD23's SI6)
+    b0 = 0.028 + 0.0087519 * (T - 298.15) - 1.3e-5 * (T - 298.15) ** 2
+    b1 = 0.044 + 0.01392045 * (T - 298.15) - 2.15e-5 * (T - 298.15) ** 2
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_Na_F_CWTD23(T, P):
+    """c-a: sodium fluoride [CWTD23]."""
+    Tr = 298.15
+    b0 = (
+        0.0215
+        + (-2.37e-5 * Tr**3 / 3 - 5.361e-4 * Tr**2) * (1 / T - 1 / Tr)
+        + (-2.37e-5 / 6) * (T**2 - Tr**2)
+    )
+    b1 = 0.2107 + (-8.7e-4 * Tr**2) * (1 / T - 1 / Tr)
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_Na_HSO4_CWTD23(T, P):
+    """c-a: sodium bisulfate [CWTD23]."""
+    b0 = 0.02634 + 0.001324 * (T - 298.15) - 1.852e-5 * (T - 298.15) ** 2
+    b1 = 0.9159 - 0.007161 * (T - 298.15)
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_Sr_Cl_CWTD23(T, P):
+    """c-a: strontium chloride [CWTD23]."""
+    Tr = 298.15
+    beta0 = (
+        0.28575
+        + (-0.18367e-5 * Tr**3 / 3 - 9.56e-4 * 0.75 * Tr**2) * (1 / T - 1 / Tr)
+        + (-0.18367e-5 / 6) * (T**2 - Tr**2)
+    )
+    beta1 = 1.66725 - 0.00379 * 0.75 * Tr**2 * (1 / T - 1 / Tr)
+    b2 = 0
+    Cphi = -0.0013
+    C0 = Cphi / (2 * np.sqrt(np.abs(i2c["Sr"] * i2c["Cl"])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid

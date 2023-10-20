@@ -66,6 +66,9 @@
 ??? citation "HBS87: Holmes et al. (1987) *J. Chem. Thermodyn.*"
     Holmes, H. F., Busey, R. H., Simonson, J. M., Mesmer, R. E., Archer, D. G., and Wood, R. H. (1987).  The enthalpy of dilution of HCl(aq) to 648 K and 40 MPa thermodynamic properties.  *Journal of Chemical Thermodynamics* 19(8), 863-890.  [doi:10.1016/0021-9614(87)90033-4](https://doi.org/10.1016/0021-9614(87)90033-4)
 
+??? citation "HEW82: Harvie et al. (1982) *Geochim. Cosmochim. Acta*"
+    Harvie, C. E., Eugster, H. P., and Weare, J. H. (1982). Mineral equilibria in the 6-component sea-water system, Na-K-Mg-Ca-SO<sub>4</sub>-Cl-H<sub>2</sub>O at 25°C. 2. Compositions of the saturated solutions. *Geochimica et Cosmochimica Acta* 46, 1603-1618.
+
 ??? citation "HFM89: Hershey et al. (1989) *J. Solution Chem.*"
     Hershey, J. P., Fernandez, M., and Millero, F. J. (1989). The dissociation of phosphoric acid in NaCl and NaMgCl solutions at 25°C. *Journal of Solution Chemistry* 18(9), 875–891. [doi:10.1007/BF00685063](https://doi.org/10.1007/BF00685063)
 
@@ -92,6 +95,9 @@
 
 ??? citation "HPR93: Hovey et al. (1993) *J. Chem. Thermodyn.*"
     Hovey, J. K., Pitzer, K. S., and Rard, J. A. (1993). Thermodynamics of Na<sub>2</sub>SO<sub>4</sub>(aq) at temperatures *T* from 273 K to 373 K and of {(1-*y*)H<sub>2</sub>SO<sub>4</sub>+*y*Na<sub>2</sub>SO<sub>4</sub>}(aq) at *T* = 298.15 K. *Journal of Chemical Thermodynamics* 25(1), 173–192. [doi:10.1006/jcht.1993.1016](https://doi.org/10.1006/jcht.1993.1016)
+
+??? citation "HW80: Harvie & Weare (1980) *Geochim. Cosmochim. Acta*"
+    Harvie, C. E., and Weare, J. H. (1980). The prediction of mineral solubilities in natural-waters - the Na-K-Mg-Ca-Cl-SO<sub>4</sub>-H<sub>2</sub>O system from zero to high-concentration at 25°C. *Geochimica et Cosmochimica Acta* 44, 981-997.
 
 ??? citation "HWT22: Humphreys et al. (2022) *Mar. Chem.*"
     Humphreys, M. P., Waters, J. F., Turner, D. R., Dickson, A. G., and Clegg, S. L. (2022).  Chemical speciation models based upon the Pitzer activity coefficient equations, including the propagation of uncertainties. I. Artificial seawater from 0 to 45 °C.  *Marine Chemistry* 244, 104095.  [doi:10.1016/j.marchem.2022.104095](https://doi.org/10.1016/j.marchem.2022.104095)
