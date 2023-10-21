@@ -12112,3 +12112,27 @@ def theta_BOH4_Cl_CWTD23(T, P):
     theta = -0.0323 + (T - 298.15) * -0.4233e-4 + (T - 298.15) ** 2 * -21.926e-6
     valid = (T >= 273.15) & (T <= 318.15)
     return theta, valid
+
+
+def psi_Na_Cl_F_CWTD23(T, P):
+    """c-a-a': sodium chloride fluoride [CWTD23]."""
+    # From 88CB (not checked).  Similar to MP98 but with an extra 3 at the end
+    psi = 0.00233
+    valid = np.isclose(T, 298.15, **temperature_tol)
+    return psi, valid
+
+
+def theta_Cl_OH_CWTD23(T, P):
+    """a-a': chloride hydroxide [CWTD23]."""
+    # 02P cited
+    theta = -0.05 + 0.0003125 * (T - 298.15) - 0.000008362 * (T - 298.15) ** 2
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown
+    return theta, valid
+
+
+def lambd_MgCO3_Na_CWTD23(T, P):
+    """n-c: magnesium-carbonate sodium [CWTD23]."""
+    # CWTD23 cite 83MT
+    lambd = 0.0745
+    valid = np.isclose(T, 298.15, **temperature_tol)
+    return lambd, valid
