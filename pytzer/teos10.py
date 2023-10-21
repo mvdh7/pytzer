@@ -76,6 +76,7 @@ gtt = jax.grad(gt, argnums=0)
 gtp = jax.grad(gt, argnums=1)
 gpp = jax.grad(gp, argnums=1)
 
+
 # Define functions for solution properties
 def rho(tempK, presPa):
     """Density in kg/m**3."""
