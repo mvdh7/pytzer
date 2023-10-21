@@ -26,7 +26,9 @@ Clegg23.update_equilibrium("SrCO3", k.SrCO3_CWTF23)
 Clegg23.update_ca("Ca", "Br", prm.bC_Ca_Br_SP78)
 Clegg23.update_ca("Ca", "BOH4", prm.bC_Ca_BOH4_SRM87)
 Clegg23.update_ca("Ca", "Cl", prm.bC_Ca_Cl_GM89)  # CWTD23 cite M88 but uses GM89
-Clegg23.update_ca("Ca", "HCO3", prm.bC_Ca_HCO3_HM93)
+Clegg23.update_ca(
+    "Ca", "HCO3", prm.bC_Ca_HCO3_CWTD23
+)  # CWTD23 cite HM93 but it's not - it's POS85 with a digit missing
 Clegg23.update_ca("Ca", "HSO4", prm.bC_Ca_HSO4_HMW84)
 Clegg23.update_ca("Ca", "OH", prm.bC_Ca_OH_HMW84)
 Clegg23.update_ca("Ca", "SO4", prm.bC_Ca_SO4_HEW82)
@@ -36,7 +38,7 @@ Clegg23.update_ca("H", "Cl", prm.bC_H_Cl_CMR93)
 Clegg23.update_ca("H", "HSO4", prm.bC_H_HSO4_CRP94)
 Clegg23.update_ca("H", "SO4", prm.bC_H_SO4_CRP94)
 Clegg23.update_ca("K", "Br", prm.bC_K_Br_CWTD23)
-Clegg23.update_ca("K", "BOH4", prm.bC_K_BOH4_SRRJ87)
+Clegg23.update_ca("K", "BOH4", prm.bC_K_BOH4_CWTD23)  # CWTD23 cite SRRJ87 but it's not
 Clegg23.update_ca("K", "Cl", prm.bC_K_Cl_GM89)
 Clegg23.update_ca("K", "CO3", prm.bC_K_CO3_CWTD23)  # CWTD23 cite SRG87 but it's not
 Clegg23.update_ca("K", "F", prm.bC_K_F_CWTD23)  # CWTD cite PM73 + SP78
@@ -47,24 +49,28 @@ Clegg23.update_ca("K", "SO4", prm.bC_K_SO4_GM89)
 Clegg23.update_ca("Mg", "Br", prm.bC_Mg_Br_SP78)
 Clegg23.update_ca("Mg", "BOH4", prm.bC_Mg_BOH4_SRM87)  # CWTD23 cite 88SR, numbers agree
 Clegg23.update_ca("Mg", "Cl", prm.bC_Mg_Cl_PP87i)
-Clegg23.update_ca("Mg", "HCO3", prm.bC_Mg_HCO3_POS85)
+Clegg23.update_ca("Mg", "HCO3", prm.bC_Mg_HCO3_CWTD23)  # CWTD23 cite POS85 but it's not
 Clegg23.update_ca("Mg", "HSO4", prm.bC_Mg_HSO4_HMW84)
 Clegg23.update_ca("Mg", "SO4", prm.bC_Mg_SO4_PP86ii)
 Clegg23.update_ca("MgF", "Cl", prm.bC_MgF_Cl_PM16)
 Clegg23.update_ca("MgOH", "Cl", prm.bC_MgOH_Cl_HMW84)
-Clegg23.update_ca("Na", "Br", prm.bC_Na_Br_MP98)  # CWTD23 cite 73PM, numbers agree
-Clegg23.update_ca("Na", "BOH4", prm.bC_Na_BOH4_SRRJ87)  # TODO check vs MP98 function
+Clegg23.update_ca("Na", "Br", prm.bC_Na_Br_CWTD23)  # CWTD23 cite 73PM
+Clegg23.update_ca("Na", "BOH4", prm.bC_Na_BOH4_CWTD23)  # TODO check vs MP98 function
 Clegg23.update_ca("Na", "Cl", prm.bC_Na_Cl_M88)
-Clegg23.update_ca("Na", "CO3", prm.bC_Na_CO3_CWTD23)
+Clegg23.update_ca(
+    "Na", "CO3", prm.bC_Na_CO3_CWTD23b
+)  # TODO check code vs table (see functions)
 Clegg23.update_ca("Na", "F", prm.bC_Na_F_CWTD23)
-Clegg23.update_ca("Na", "HCO3", prm.bC_Na_HCO3_CWTD23)
+Clegg23.update_ca(
+    "Na", "HCO3", prm.bC_Na_HCO3_CWTD23b
+)  # TODO check code vs table (see functions)
 Clegg23.update_ca("Na", "HSO4", prm.bC_Na_HSO4_CWTD23)
 Clegg23.update_ca("Na", "OH", prm.bC_Na_OH_PP87i)
 Clegg23.update_ca("Na", "SO4", prm.bC_Na_SO4_M88)
 Clegg23.update_ca("Sr", "Br", prm.bC_Sr_Br_SP78)
 Clegg23.update_ca("Sr", "BOH4", prm.bC_Ca_BOH4_SRM87)  # CWTD23 use Ca function
 Clegg23.update_ca("Sr", "Cl", prm.bC_Sr_Cl_CWTD23)
-Clegg23.update_ca("Sr", "HCO3", prm.bC_Ca_HCO3_HM93)  # CWTD23 use Ca function
+Clegg23.update_ca("Sr", "HCO3", prm.bC_Ca_HCO3_CWTD23)  # CWTD23 use Ca function
 Clegg23.update_ca("Sr", "HSO4", prm.bC_Ca_HSO4_HMW84)  # CWTD23 use Ca function
 Clegg23.update_ca("Sr", "OH", prm.bC_Ca_OH_HMW84)  # CWTD23 use Ca function
 Clegg23.update_ca("Sr", "SO4", prm.bC_Ca_SO4_HEW82)  # CWTD23 use Ca function

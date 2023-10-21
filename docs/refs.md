@@ -154,6 +154,9 @@
 ??? citation "PB82: Plummer & Busenberg (1982) *Geochim. Cosmochim. Acta*"
     Plummer, L. N., and Busenberg, E. (1982).  The solubilities of calcite, aragonite and vaterite in CO<sub>2</sub>-H<sub>2</sub>O solutions between 0 and 90°C, and an evaluation of the aqueous model for the system CaCO<sub>3</sub>-CO<sub>2</sub>-H<sub>2</sub>O.  *Geochimica et Cosmochimica Acta* 46(6), 1011-1040.  [doi:10.1016/0016-7037(82)90056-4](https://doi.org/10.1016/0016-7037(82)90056-4)
 
+??? citation "POS85: Pitzer et al. (1985) *J. Chem. Eng. Data*"
+    Pitzer, K. S., Olsen, J., Simonson, J. M., Roy, R. N., Gibbons, J. J., and Rowe, L. (1985). Thermodynamics of aqueous magnesium and calcium bicarbonates and mixtures with chloride. *Journal of Chemical and Engineering Data* 30, 14-17. [doi:10.1021/je00039a005](https://doi.org/10.1021/je00039a005)
+
 ??? citation "PPFD88: Plummer et al. (1988) *PHRQPITZ manual*"
     Plummer, L. N., Parkhurst, D. L., Fleming, G. W., and Dunkle, S. A. (1988).  A computer program incorporating Pitzer's equations for calculation of geochemical reactions in brines.  Water-Resources Investigations Report 88-4153, U.S. Geological Survey.  pp. 309.  [doi:10.3133/wri884153](https://doi.org/10.3133/wri884153)
 

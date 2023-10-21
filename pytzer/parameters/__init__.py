@@ -7165,7 +7165,7 @@ def bC_Na_BOH4_SRRJ87(T, P):
             T,
             [
                 14.98,
-                -15.7,
+                -15.7,  # TODO check this term
                 0,
             ],
         )
@@ -11928,13 +11928,20 @@ def bC_K_Br_CWTD23(T, P):
             7.39,
         ],
     )
-    b1 = MP98_eq15(
-        T,
-        [
-            0.2212,  # 0.2122 in MP98 (my function, at least)
-            -0.762,
-            1.74,
-        ],
+    # b1 = MP98_eq15(
+    #     T,
+    #     [
+    #         0.2212,  # 0.2122 in MP98 (my function, at least)
+    #         -0.762,
+    #         1.74,
+    #     ],
+    # )
+    # TODO not sure why above is incorrect, equation below is from CWTD23 code
+    Tr = 298.15
+    b1 = (
+        0.2212
+        + (0.762e-5 * Tr**3 / 3 - 17.4e-4 * Tr**2) * (1 / T - 1 / Tr)
+        + (0.762e-5 / 6) * (T**2 - Tr**2)
     )
     b2 = 0
     Cphi = MP98_eq15(
@@ -12021,9 +12028,10 @@ def bC_MgF_Cl_PM16(T, P):
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
-def bC_Na_CO3_CWTD23(T, P):
+def bC_Na_CO3_CWTD23a(T, P):
     """c-a: sodium carbonate [CWTD23]."""
     # Like MP98 but with corrections for errors there (see CWTD23's SI6)
+    # This version follows the SI6 table but it's different from the SI7 code
     b0 = 0.0362 + 1.437193e-2 * (T - 298.15) - 2.11e-5 * (T - 298.15) ** 2
     b1 = 1.51 + 0.0521392 * (T - 298.15) - 8.4e-5 * (T - 298.15) ** 2
     b2 = 0
@@ -12037,11 +12045,63 @@ def bC_Na_CO3_CWTD23(T, P):
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
-def bC_Na_HCO3_CWTD23(T, P):
+def bC_Na_CO3_CWTD23b(T, P):
+    """c-a: sodium carbonate [CWTD23]."""
+    # Like MP98 but with corrections for errors there (see CWTD23's SI6)
+    # This version follows the SI7 code but it's different from the SI6 table
+    Tr = 298.15
+    b0 = (
+        0.0362
+        + (T - Tr) * (1.79e-3 - Tr * (-4.22e-5))
+        + 0.5 * (-4.22e-5) * (T**2 - Tr**2)
+    )
+    b1 = (
+        1.51
+        + (T - Tr) * (2.05e-3 - Tr * (-16.8e-5))
+        + 0.5 * (-16.8e-5) * (T**2 - Tr**2)
+    )
+    b2 = 0
+    Cphi = 0.0052
+    C0 = Cphi / (2 * np.sqrt(np.abs(i2c["Na"] * i2c["CO3"])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_Na_HCO3_CWTD23a(T, P):
     """c-a: sodium bicarbonate [CWTD23]."""
     # Like MP98 but with corrections for errors there (see CWTD23's SI6)
+    # This version follows the SI6 table but it's different from the SI7 code
     b0 = 0.028 + 0.0087519 * (T - 298.15) - 1.3e-5 * (T - 298.15) ** 2
     b1 = 0.044 + 0.01392045 * (T - 298.15) - 2.15e-5 * (T - 298.15) ** 2
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_Na_HCO3_CWTD23b(T, P):
+    """c-a: sodium bicarbonate [CWTD23]."""
+    # Like MP98 but with corrections for errors there (see CWTD23's SI6)
+    # This version follows the SI7 code but it's different from the SI6 table
+    Tr = 298.15
+    b0 = (
+        0.028
+        + (T - Tr) * (0.001 - Tr * (-2.6e-5))
+        + 0.5 * (-2.6e-5) * (T**2 - Tr**2)
+    )
+    b1 = (
+        0.044
+        + (T - Tr) * (0.0011 - Tr * (-4.3e-5))
+        + 0.5 * (-4.3e-5) * (T**2 - Tr**2)
+    )
     b2 = 0
     C0 = 0
     C1 = 0
@@ -12088,12 +12148,12 @@ def bC_Na_HSO4_CWTD23(T, P):
 def bC_Sr_Cl_CWTD23(T, P):
     """c-a: strontium chloride [CWTD23]."""
     Tr = 298.15
-    beta0 = (
+    b0 = (
         0.28575
         + (-0.18367e-5 * Tr**3 / 3 - 9.56e-4 * 0.75 * Tr**2) * (1 / T - 1 / Tr)
         + (-0.18367e-5 / 6) * (T**2 - Tr**2)
     )
-    beta1 = 1.66725 - 0.00379 * 0.75 * Tr**2 * (1 / T - 1 / Tr)
+    b1 = 1.66725 - 0.00379 * 0.75 * Tr**2 * (1 / T - 1 / Tr)
     b2 = 0
     Cphi = -0.0013
     C0 = Cphi / (2 * np.sqrt(np.abs(i2c["Sr"] * i2c["Cl"])))
@@ -12136,3 +12196,129 @@ def lambd_MgCO3_Na_CWTD23(T, P):
     lambd = 0.0745
     valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
+
+
+def bC_Mg_HCO3_CWTD23(T, P):
+    """c-a: magnesium bicarbonate [CWTD23]."""
+    # Like POS85 but skipping the final digit (without rounding)
+    b0 = 0.03
+    b1 = 0.8
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_Ca_HCO3_CWTD23(T, P):
+    """c-a: calcium bicarbonate [CWTD23]."""
+    # Like POS85 but skipping the final digit (without rounding)
+    b0 = 0.2
+    b1 = 0.3
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_Na_Br_CWTD23(T, P):
+    """c-a: sodium bromide [CWTD23]."""
+    b0 = MP98_eq15(
+        T,
+        [
+            0.0973,
+            -1.3,
+            7.692,
+        ],
+    )
+    b1 = MP98_eq15(
+        T,
+        [
+            0.2791,
+            -1.06,
+            10.79,
+        ],
+    )
+    b2 = 0
+    Cphi = MP98_eq15(
+        T,
+        [
+            0.00116,
+            0.116,
+            -0.93,
+        ],
+    )
+    C0 = Cphi / (2 * np.sqrt(np.abs(i2c["Na"] * i2c["Br"])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = (T >= 273.15) & (T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_Na_BOH4_CWTD23(T, P):
+    """c-a: sodium borate [CWTD23]."""
+    # Like SRRJ87 but with different C0, not sure why, TODO need to figure this out
+    b0 = SRRJ87_eq7(
+        T,
+        [
+            -0.0510,
+            5.264,
+            0,
+        ],
+    )
+    b1 = SRRJ87_eq7(
+        T,
+        [
+            0.0961,
+            -10.68,
+            0,
+        ],
+    )
+    b2 = 0
+    Cphi = 14.98e-3 - 1.57e-3 * (T - 298.15)
+    C0 = Cphi / (2 * np.sqrt(np.abs(i2c["Na"] * i2c["BOH4"])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = (T >= 278.15) & (T <= 328.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_K_BOH4_CWTD23(T, P):
+    """c-a: potassium borate [CWTD23]."""
+    # TODO not sure why C0 doesn't match the paper
+    b0 = SRRJ87_eq7(
+        T,
+        [
+            0.1469,
+            2.881,
+            0,
+        ],
+    )
+    b1 = SRRJ87_eq7(
+        T,
+        [
+            -0.0989,
+            -6.876,
+            0,
+        ],
+    )
+    b2 = 0
+    Cphi = -0.05643 - 9.56e-4 * (T - 298.15)
+    C0 = Cphi / (2 * np.sqrt(np.abs(i2c["K"] * i2c["BOH4"])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = (T >= 278.15) & (T <= 328.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
