@@ -3,6 +3,7 @@
 """Assemble parameter libraries."""
 from .ParameterLibrary import ParameterLibrary
 from .Clegg22 import Clegg22
+from .Clegg23 import Clegg23
 from .Clegg94 import Clegg94
 from .Greenberg89 import Greenberg89
 from .Harvie84 import Harvie84
@@ -21,6 +22,7 @@ from .Waters13_MarChemSpec25 import Waters13_MarChemSpec25
 
 # Aliases for convenience
 CHW22 = Clegg22
+CWTD23 = Clegg23
 CRP94 = Clegg94
 GM89 = Greenberg89
 HMW84 = Harvie84
