@@ -69,45 +69,48 @@ Clegg23.update_ca("Sr", "HSO4", prm.bC_Ca_HSO4_HMW84)  # CWTD23 use Ca function
 Clegg23.update_ca("Sr", "OH", prm.bC_Ca_OH_HMW84)  # CWTD23 use Ca function
 Clegg23.update_ca("Sr", "SO4", prm.bC_Ca_SO4_HEW82)  # CWTD23 use Ca function
 
-
-# ALL GOOD ABOVE HERE 2023-10-20 --- still need to do below! ===========================
-
-
-# Table S12 (cc theta and psi coefficients)
+# Table S19 (cc theta and psi coefficients)
 Clegg23.update_cc("Ca", "H", prm.theta_Ca_H_RGO81)
-Clegg23.update_cca("Ca", "H", "Cl", prm.psi_Ca_H_Cl_HMW84)
-Clegg23.update_cc("Ca", "K", prm.theta_Ca_K_HMW84)
-Clegg23.update_cca("Ca", "K", "Cl", prm.psi_Ca_K_Cl_HMW84)
-Clegg23.update_cc("Ca", "Mg", prm.theta_Ca_Mg_HMW84)
-Clegg23.update_cca("Ca", "Mg", "Cl", prm.psi_Ca_Mg_Cl_HMW84)
-Clegg23.update_cca("Ca", "Mg", "SO4", prm.psi_Ca_Mg_SO4_HMW84)
-Clegg23.update_cc("Ca", "Na", prm.theta_Ca_Na_HMW84)
-Clegg23.update_cca("Ca", "Na", "Cl", prm.psi_Ca_Na_Cl_HMW84)
+Clegg23.update_cca("Ca", "H", "Cl", prm.psi_Ca_H_Cl_RGO81)
+Clegg23.update_cc("Ca", "K", prm.theta_Ca_K_GM89)
+Clegg23.update_cca("Ca", "K", "Cl", prm.psi_Ca_K_Cl_GM89)
+Clegg23.update_cc("Ca", "Mg", prm.theta_Ca_Mg_HMW84)  # CWTD23 cite HW80
+Clegg23.update_cca("Ca", "Mg", "Cl", prm.psi_Ca_Mg_Cl_HMW84)  # CWTD23 cite HW80
+Clegg23.update_cca("Ca", "Mg", "SO4", prm.psi_Ca_Mg_SO4_HMW84)  # CWTD23 cite HEW82
+Clegg23.update_cc("Ca", "Na", prm.theta_Ca_Na_M88)
+Clegg23.update_cca("Ca", "Na", "Cl", prm.psi_Ca_Na_Cl_M88)
 Clegg23.update_cca("Ca", "Na", "SO4", prm.psi_Ca_Na_SO4_HMW84)
-Clegg23.update_cc("H", "K", prm.theta_H_K_HWT22)
+Clegg23.update_cc("H", "K", prm.theta_H_K_HWT22)  # CWTD23 cite CMR93
+Clegg23.update_cca("H", "K", "Br", prm.psi_H_K_Br_PK74)
 Clegg23.update_cca("H", "K", "Cl", prm.psi_H_K_Cl_HMW84)
-Clegg23.update_cca("H", "K", "HSO4", prm.psi_H_K_HSO4_HMW84)
 Clegg23.update_cca("H", "K", "SO4", prm.psi_H_K_SO4_HMW84)
+Clegg23.update_cca("H", "K", "HSO4", prm.psi_H_K_HSO4_HMW84)
 Clegg23.update_cc("H", "Mg", prm.theta_H_Mg_RGB80)
-Clegg23.update_cca("H", "Mg", "Cl", prm.psi_H_Mg_Cl_HMW84)
-Clegg23.update_cca("H", "Mg", "HSO4", prm.psi_H_Mg_HSO4_RC99)
-Clegg23.update_cca("H", "Mg", "SO4", prm.psi_H_Mg_SO4_RC99)
+Clegg23.update_cca("H", "Mg", "Cl", prm.psi_H_Mg_Cl_RGB80)
 Clegg23.update_cc("H", "Na", prm.theta_H_Na_HWT22)
-Clegg23.update_cca("H", "Na", "Cl", prm.psi_H_Na_Cl_HMW84)
-Clegg23.update_cca("H", "Na", "HSO4", prm.psi_H_Na_HSO4_HMW84)
-Clegg23.update_cc("K", "Mg", prm.theta_K_Mg_HMW84)
-Clegg23.update_cca("K", "Mg", "Cl", prm.psi_K_Mg_Cl_HMW84)
-Clegg23.update_cca("K", "Mg", "SO4", prm.psi_K_Mg_SO4_HMW84)
-Clegg23.update_cc("K", "Na", prm.theta_K_Na_HMW84)
-Clegg23.update_cca("K", "Na", "Cl", prm.psi_K_Na_Cl_HMW84)
-Clegg23.update_cca("K", "Na", "SO4", prm.psi_K_Na_SO4_HMW84)
-Clegg23.update_cc("Mg", "MgOH", prm.theta_Mg_MgOH_HMW84)
+Clegg23.update_cca("H", "Na", "Br", prm.psi_H_Na_Br_PK74)
+Clegg23.update_cca("H", "Na", "Cl", prm.psi_H_Na_Cl_PK74)
+Clegg23.update_cc("H", "Sr", prm.theta_H_Sr_RGRG86)
+Clegg23.update_cca("H", "Sr", "Cl", prm.psi_H_Sr_Cl_RGRG86)
+Clegg23.update_cca("K", "Mg", "Cl", prm.psi_K_Mg_Cl_PP87ii)
+Clegg23.update_cca("K", "Mg", "SO4", prm.psi_K_Mg_SO4_HMW84)  # CWTD23 cite HW80
+Clegg23.update_cca("K", "Mg", "HSO4", prm.psi_K_Mg_HSO4_HMW84)
+Clegg23.update_cc("K", "Na", prm.theta_K_Na_GM89)
+Clegg23.update_cca("K", "Na", "Br", prm.psi_K_Na_Br_PK74)
+Clegg23.update_cca("K", "Na", "Cl", prm.psi_K_Na_Cl_GM89)
+Clegg23.update_cca("K", "Na", "SO4", prm.psi_K_Na_SO4_GM89)
+Clegg23.update_cc("K", "Sr", prm.theta_Na_Sr_MP98)  # CWTD23 use Na-Sr function
+Clegg23.update_cca("K", "Sr", "Cl", prm.psi_Na_Sr_Cl_MP98)  # CWTD23 use Na-Sr function
 Clegg23.update_cca("Mg", "MgOH", "Cl", prm.psi_Mg_MgOH_Cl_HMW84)
-Clegg23.update_cc("Mg", "Na", prm.theta_Mg_Na_HMW84)
-Clegg23.update_cca("Mg", "Na", "Cl", prm.psi_Mg_Na_Cl_HMW84)
-Clegg23.update_cca("Mg", "Na", "SO4", prm.psi_Mg_Na_SO4_HMW84)
+Clegg23.update_cc("Mg", "Na", prm.theta_Mg_Na_HMW84)  # CWTD23 cite P75
+Clegg23.update_cca("Mg", "Na", "Cl", prm.psi_Mg_Na_Cl_PP87ii)
+Clegg23.update_cca("Mg", "Na", "SO4", prm.psi_Mg_Na_SO4_HMW84)  # CWTD23 cite HW80
+Clegg23.update_cc("Na", "Sr", prm.theta_Na_Sr_MP98)
+Clegg23.update_cca("Na", "Sr", "Cl", prm.psi_Na_Sr_Cl_MP98)
 
-# Table S13 (aa theta and psi coefficients)
+# Table S20 (aa theta and psi coefficients)
+Clegg23.update_aa("BOH4", "Cl", prm.theta_BOH4_Cl_CWTD23)
+# ALL GOOD ABOVE HERE 2023-10-21 --- still need to do below! ===========================
 Clegg23.update_aa("Cl", "HSO4", prm.theta_Cl_HSO4_HMW84)
 Clegg23.update_caa("Na", "Cl", "HSO4", prm.psi_Na_Cl_HSO4_HMW84)
 Clegg23.update_caa("H", "Cl", "HSO4", prm.psi_H_Cl_HSO4_HMW84)

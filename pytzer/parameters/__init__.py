@@ -12103,3 +12103,12 @@ def bC_Sr_Cl_CWTD23(T, P):
     omega = -9
     valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def theta_BOH4_Cl_CWTD23(T, P):
+    """a-a': borate chloride [CWTD23]."""
+    # Like the MP98 function but with one fewer digit on the -0.4233e-4 term
+    # CWTD23 cite 02P for this
+    theta = -0.0323 + (T - 298.15) * -0.4233e-4 + (T - 298.15) ** 2 * -21.926e-6
+    valid = (T >= 273.15) & (T <= 318.15)
+    return theta, valid
