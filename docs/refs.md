@@ -30,6 +30,9 @@
 ??? citation "CRP94: Clegg et al. (1994) *J. Chem. Soc., Faraday Trans.*"
     Clegg, S. L., Rard, J. A., and Pitzer, K. S. (1994). Thermodynamic properties of 0–6 mol kg<sup>–1</sup> aqueous sulfuric acid from 273.15 to 328.15 K. *Journal of the Chemical Society, Faraday Transactions* 90, 1875–1894. [doi:10.1039/FT9949001875](https://doi.org/10.1039/FT9949001875)
 
+??? citation "CWTD23: Clegg et al. (2023) *Mar. Chem.*"
+    Clegg, S. L., Waters, J., F., Turner, D. R., and Dickson, A. G. (2023). Chemical speciation models based upon the Pitzer activity coefficient equations, including the propagation of uncertainties. III. Seawater from the freezing point to 45 °C, including acid-base equilibria. *Marine Chemistry* 250, 104196. [doi:10.1016/j.marchem.2022.104196](https://doi.org/10.1016/j.marchem.2022.104196)
+
 ### D
 
 ??? citation "D90: Dickson (1990) *J. Chem. Thermodyn.*"
