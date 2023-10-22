@@ -34,4 +34,4 @@ classifiers = [
 dynamic = ["version"]
 
 [tool.setuptools.dynamic]
-version = {attr = "pytzer.meta.__version__"}
+version = {attr = "pytzer.meta.version"}
