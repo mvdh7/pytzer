@@ -6893,7 +6893,7 @@ def theta_H_Sr_RGRG86(T, P):
 
 def psi_H_Sr_Cl_RGRG86(T, P):
     """c-c'-a: hydrogen strontium chloride [RGRG86]."""
-    psi = 0.0054 + (T - 298.15) * 0.00021
+    psi = 0.0054 - (T - 298.15) * 0.00021
     valid = (T >= 278.15) & (T <= 318.15)
     return psi, valid
 

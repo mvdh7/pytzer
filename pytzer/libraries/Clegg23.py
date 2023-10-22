@@ -93,6 +93,7 @@ Clegg23.update_cca("H", "K", "SO4", prm.psi_H_K_SO4_HMW84)
 Clegg23.update_cca("H", "K", "HSO4", prm.psi_H_K_HSO4_HMW84)
 Clegg23.update_cc("H", "Mg", prm.theta_H_Mg_RGB80)
 Clegg23.update_cca("H", "Mg", "Cl", prm.psi_H_Mg_Cl_RGB80)
+Clegg23.update_cca("H", "Mg", "HSO4", prm.psi_H_Mg_HSO4_HMW84)  # not cited, but in code
 Clegg23.update_cc("H", "Na", prm.theta_H_Na_HWT22)
 Clegg23.update_cca("H", "Na", "Br", prm.psi_H_Na_Br_PK74)
 Clegg23.update_cca("H", "Na", "Cl", prm.psi_H_Na_Cl_PK74)
@@ -139,7 +140,7 @@ Clegg23.update_caa("K", "Cl", "OH", prm.psi_K_Cl_OH_HMW84)
 Clegg23.update_caa("Na", "Cl", "OH", prm.psi_Na_Cl_OH_PK74)
 Clegg23.update_aa("Cl", "SO4", prm.theta_Cl_SO4_M88)
 Clegg23.update_caa("Ca", "Cl", "SO4", prm.psi_Ca_Cl_SO4_HMW84)  # CWTD23 cite 82HE/80HW
-Clegg23.update_caa("K", "Cl", "SO4", prm.psi_Ca_Cl_SO4_M88)
+Clegg23.update_caa("K", "Cl", "SO4", prm.psi_K_Cl_SO4_GM89)  # CWTD23 cite M88
 Clegg23.update_caa("Mg", "Cl", "SO4", prm.psi_Mg_Cl_SO4_HMW84)  # CWTD23 cite 82HE/80HW
 Clegg23.update_caa("Na", "Cl", "SO4", prm.psi_Na_Cl_SO4_M88)
 Clegg23.update_aa("CO3", "SO4", prm.theta_CO3_SO4_HMW84)
