@@ -195,12 +195,14 @@ def _MP98_eq24(T, A=0, B=0, C=0):
 
 def MgF_MP98_MR97(T=298.15):
     """MgF+ formation [MP98 following MR97]."""
-    return -_MP98_eq24(T, A=3.504, B=-501.6) * ln10
+    # Sign inverted to make CWTD23 solver agree 2023-10-22
+    return _MP98_eq24(T, A=3.504, B=-501.6) * ln10
 
 
 def CaF_MP98_MR97(T=298.15):
     """CaF+ formation [MP98 following MR97]."""
-    return -_MP98_eq24(T, A=3.014, B=-501.6) * ln10
+    # Sign inverted to make CWTD23 solver agree 2023-10-22
+    return _MP98_eq24(T, A=3.014, B=-501.6) * ln10
 
 
 def MgCO3_PPFD88(T=298.15):
@@ -225,23 +227,27 @@ def CaCO3_PPFD88(T=298.15):
 
 def MgCO3_MP98_MR97(T=298.15):
     """MgCO3 formation [MP98 following MR97]."""
-    return -_MP98_eq24(T, A=1.028, C=0.0066154) * ln10
+    # Sign inverted to make CWTD23 solver agree 2023-10-22
+    return _MP98_eq24(T, A=1.028, C=0.0066154) * ln10
 
 
 def CaCO3_MP98_MR97(T=298.15):
     """CaCO3 formation [MP98 following MR97]."""
-    return -_MP98_eq24(T, A=1.178, C=0.0066154) * ln10
+    # Sign inverted to make CWTD23 solver agree 2023-10-22
+    return _MP98_eq24(T, A=1.178, C=0.0066154) * ln10
 
 
 def SrCO3_MP98_MR97(T=298.15):
     """SrCO3 formation [MP98 following MR97]."""
-    return -_MP98_eq24(T, A=1.028, C=0.0066154) * ln10
+    # Sign inverted to make CWTD23 solver agree 2023-10-22
+    return _MP98_eq24(T, A=1.028, C=0.0066154) * ln10
 
 
 def SrCO3_CWTF23(T=298.15):
     """SrCO3 formation [CWTF23]."""
     # Copies CaCO3 of MP98/MR97
-    return -_MP98_eq24(T, A=1.178, C=0.0066154) * ln10
+    # Sign inverted to make CWTD23 solver agree 2023-10-22
+    return _MP98_eq24(T, A=1.178, C=0.0066154) * ln10
 
 
 def MgH2PO4_MP98_MR97(T=298.15):
@@ -332,19 +338,6 @@ def pK_MgPO4(T=298.15):
 def pK_CaPO4(T=298.15):
     """CaPO4- formation [MP98 following MR97]."""
     return 7.1
-
-
-all_log_ks = {
-    "BOH3": BOH3_M79,
-    "H2CO3": H2CO3_MP98,
-    "H2O": H2O_M88,
-    "HCO3": HCO3_MP98,
-    "HF": HF_MP98,
-    "HSO4": HSO4_CRP94,
-    # "MgOH": lambda T=298.15: np.log(10.0 ** -pK_MgOH(T)),
-    "MgOH": MgOH_MP98,
-    "trisH": trisH_BH61,
-}
 
 
 def assemble(temperature=298.15, exclude_equilibria=None, totals=None):
