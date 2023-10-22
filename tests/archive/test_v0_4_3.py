@@ -17,7 +17,7 @@ for i, row in v4.iterrows():
     print(i)
     solutes = OrderedDict(
         (k, v)
-        for k, v in row.iteritems()
+        for k, v in row.items()
         if k not in ["tempK", "pres", "aw", "osm"] and not k.startswith("g")
     )
     params = plib.get_parameters(

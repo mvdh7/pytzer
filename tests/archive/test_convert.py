@@ -37,5 +37,5 @@ def test_pK_conversions():
     assert np.isclose(pks_H2O_content, pks_out["H2O"])
 
 
-# test_molinity_conversion()
-# test_pK_conversions()
+test_molinity_conversion()
+test_pK_conversions()

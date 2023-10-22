@@ -52,7 +52,7 @@ Pytzer is maintained by [Dr Matthew P. Humphreys](https://seaco2.group) at the [
 
 For now, the appropriate citation is:
 
-> Humphreys, Matthew P. and Schiller, Abigail J. (2021). Pytzer: the Pitzer model for chemical activities and equilibria in aqueous solutions in Python (beta).  *Zenodo.*  [doi:10.5281/zenodo.2637914](https://doi.org/10.5281/zenodo.2637914).
+> Humphreys, Matthew P. and Schiller, Abigail J. (2023). Pytzer: the Pitzer model for chemical activities and equilibria in aqueous solutions in Python (beta).  *Zenodo.*  [doi:10.5281/zenodo.2637914](https://doi.org/10.5281/zenodo.2637914).
 
 Please report which version of Pytzer you are using.  You can find this in Python with:
 

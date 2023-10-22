@@ -166,7 +166,9 @@ data_ns_test.loc[l, "gMgOH"] = np.round(
 test_cols_ns = [
     c
     for c in data.columns
-    if c not in ["number", "temperature"] and not c.startswith("m")
+    if c not in ["number", "temperature"]
+    and not c.startswith("m")
+    and not c.startswith("lnk")
 ]
 test_cols_eq = [c for c in data.columns if c.startswith("m")]
 

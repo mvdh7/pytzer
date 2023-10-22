@@ -26,7 +26,7 @@ def hello():
   / /     \__, / \__/  /___/\___//_/     
   \/     /____/        
   
-   M.P. Humphreys & A.J. Schiller (2021)
+   M.P. Humphreys & A.J. Schiller (2023)
     v{version} | doi:{doi}
 """.format(
             version=version, doi="10.5281/zenodo.2637914"

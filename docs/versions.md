@@ -9,6 +9,7 @@ Switches from Autograd to [JAX](https://jax.readthedocs.io/en/latest/) for faste
 !!! new-version "Changes in v0.5.3"
     * Created new `Humphreys22` parameter library and validated its calculations against [HWT22](../refs/#h).
     * Created new `Clegg22` parameter library and validated its calculations against [CHW22](../refs/#c).
+    * Created new `Clegg23` parameter library and validated its calculations against [CWTD23](../refs/#c).
     * Renamed `io` module as `get`.
 
 ### 0.5.2 (31 Aug 2021)

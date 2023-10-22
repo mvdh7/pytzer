@@ -41,7 +41,7 @@ def solve_df(
     # Solve for thermodynamic equilibrium
     for i, row in df.iterrows():
         # Get thermodynamic solver inputs
-        totals = OrderedDict(row[total_cols])
+        totals = OrderedDict(row[list(total_cols.keys())])
         if "temperature" in row:
             temperature = row.temperature
         else:
