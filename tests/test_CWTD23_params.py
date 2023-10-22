@@ -3,8 +3,103 @@ import pandas as pd
 
 prmlib = pz.libraries.Clegg23
 
-chart8_1 = pd.read_fwf("tests/data/CWTD23 SI Chart 8 part 1.txt")  # 25 °C
-chart9_1 = pd.read_fwf("tests/data/CWTD23 SI Chart 9 part 1.txt")  # 5 °C
+# Get sets of all ions
+cations = {k for k in prmlib["ca"].keys()}
+anions = []
+for c in cations:
+    for a in prmlib["ca"][c].keys():
+        anions.append(a)
+anions = set(anions)
+
+# Chart 8 all at 25 °C
+chart8_1 = pd.read_fwf("tests/data/CWTD23 SI Chart 8 part 1.txt")
+chart8_2 = pd.read_csv("tests/data/CWTD23 SI Chart 8 part 2.csv")
+
+# Chart 9 all at 5 °C
+chart9_1 = pd.read_fwf("tests/data/CWTD23 SI Chart 9 part 1.txt")
+chart9_2 = pd.read_csv("tests/data/CWTD23 SI Chart 9 part 2.csv")
+
+
+def test_theta():
+    """Do all thetas agree, including ones not in the Chart (should all be zero)?"""
+    # At 25 °C
+    for c1 in cations:
+        for c2 in cations:
+            if c1 != c2:
+                try:
+                    theta = "{:11.5e}".format(prmlib["cc"][c1][c2](298.15, 10)[0])
+                except KeyError:
+                    theta = "0.00000e+00"
+                L = ~chart8_2.theta_cc.isnull() & (
+                    ((chart8_2.cca_c1 == c1) & (chart8_2.cca_c2 == c2))
+                    | ((chart8_2.cca_c1 == c2) & (chart8_2.cca_c2 == c1))
+                )
+                if sum(L) == 1:
+                    theta_chart = "{:11.5e}".format(chart8_2.theta_cc[L].values[0])
+                else:
+                    assert sum(L) == 0
+                    theta_chart = "0.00000e+00"
+                assert theta.upper() == theta_chart.upper(), "theta {} {} {} {}".format(
+                    c1, c2, theta, theta_chart
+                )
+    for a1 in anions:
+        for a2 in anions:
+            if a1 != a2:
+                try:
+                    theta = "{:11.5e}".format(prmlib["aa"][a1][a2](298.15, 10)[0])
+                except KeyError:
+                    theta = "0.00000e+00"
+                L = ~chart8_2.theta_aa.isnull() & (
+                    ((chart8_2.caa_a1 == a1) & (chart8_2.caa_a2 == a2))
+                    | ((chart8_2.caa_a1 == a2) & (chart8_2.caa_a2 == a1))
+                )
+                if sum(L) == 1:
+                    theta_chart = "{:11.5e}".format(chart8_2.theta_aa[L].values[0])
+                else:
+                    assert sum(L) == 0
+                    theta_chart = "0.00000e+00"
+                assert theta.upper() == theta_chart.upper(), "theta {} {} {} {}".format(
+                    a1, a2, theta, theta_chart
+                )
+    # At 5 °C
+    for c1 in cations:
+        for c2 in cations:
+            if c1 != c2:
+                try:
+                    theta = "{:11.5e}".format(prmlib["cc"][c1][c2](278.15, 10)[0])
+                except KeyError:
+                    theta = "0.00000e+00"
+                L = ~chart9_2.theta_cc.isnull() & (
+                    ((chart9_2.cca_c1 == c1) & (chart9_2.cca_c2 == c2))
+                    | ((chart9_2.cca_c1 == c2) & (chart9_2.cca_c2 == c1))
+                )
+                if sum(L) == 1:
+                    theta_chart = "{:11.5e}".format(chart9_2.theta_cc[L].values[0])
+                else:
+                    assert sum(L) == 0
+                    theta_chart = "0.00000e+00"
+                assert theta.upper() == theta_chart.upper(), "theta {} {} {} {}".format(
+                    c1, c2, theta, theta_chart
+                )
+    for a1 in anions:
+        for a2 in anions:
+            if a1 != a2:
+                try:
+                    theta = "{:11.5e}".format(prmlib["aa"][a1][a2](278.15, 10)[0])
+                except KeyError:
+                    theta = "0.00000e+00"
+                L = ~chart9_2.theta_aa.isnull() & (
+                    ((chart9_2.caa_a1 == a1) & (chart9_2.caa_a2 == a2))
+                    | ((chart9_2.caa_a1 == a2) & (chart9_2.caa_a2 == a1))
+                )
+                if sum(L) == 1:
+                    theta_chart = "{:11.5e}".format(chart9_2.theta_aa[L].values[0])
+                else:
+                    assert sum(L) == 0
+                    theta_chart = "0.00000e+00"
+                assert theta.upper() == theta_chart.upper(), "theta {} {} {} {}".format(
+                    a1, a2, theta, theta_chart
+                )
 
 
 def test_ca():
@@ -110,3 +205,4 @@ def test_ca():
 
 
 # test_ca()
+# test_theta()
