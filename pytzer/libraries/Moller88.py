@@ -1,5 +1,5 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2022  Matthew P. Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2023  Matthew P. Humphreys  (GNU GPLv3)
 """Møller (1988).  System: Na-Ca-Cl-SO4.
 *Geochimica et Cosmochimica Acta* 52, 821--837.
 doi:10.1016/0016-7037(88)90354-7

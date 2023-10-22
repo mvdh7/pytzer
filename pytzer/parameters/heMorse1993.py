@@ -1,5 +1,5 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2022  Matthew P. Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2023  Matthew P. Humphreys  (GNU GPLv3)
 """HM93: He & Morse (1993) Geochim. Cosmochim. Acta 57(15), 3533-3554.
 https://doi.org/10.1016/0016-7037(93)90137-L
 """

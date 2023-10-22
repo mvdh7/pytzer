@@ -1,5 +1,5 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2022  Matthew P. Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2023  Matthew P. Humphreys  (GNU GPLv3)
 """HM92: Holmes & Mesmer (1992) J. Chem. Thermodyn. 24(3), 317-328.
 https://doi.org/10.1016/S0021-9614(05)80072-2
 """
