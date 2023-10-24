@@ -9,7 +9,7 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "Calkulate"
+name = "pytzer"
 description = "The Pitzer model for chemical activities and equilibria in aqueous solutions in Python"
 readme = "README.md"
 dependencies = [
