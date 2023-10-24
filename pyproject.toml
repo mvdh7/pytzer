@@ -3,6 +3,7 @@ requires = [
     "setuptools",
     "pytzer",
     "jax",
+    "jaxlib",
     "numpy",
     "scipy",
 ]
@@ -15,6 +16,7 @@ readme = "README.md"
 dependencies = [
     "pytzer",
     "jax",
+    "jaxlib",
     "numpy",
     "scipy",
 ]
