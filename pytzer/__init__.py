@@ -13,7 +13,12 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Pitzer model for chemical activities in aqueous solutions."""
+"""
+Pytzer
+======
+Pytzer is an implementation of the Pitzer model for chemical activities in aqueous
+solutions in Python, including an equilibrium solver.
+"""
 from . import (
     constants,
     convert,

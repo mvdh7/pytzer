@@ -37,7 +37,7 @@ pytzer/parameters/heMorse1993.py               165     70    58%
 pytzer/parameters/holmesMesmer1992.py           33     26    21%
 pytzer/parameters/pabalanPitzer1987.py          57     33    42%
 pytzer/parameters/spencer1990.py                33     26    21%
-pytzer/prepare.py                              113     98    13%
+pytzer/prepare.py                              113     94    17%
 pytzer/properties.py                             5      0   100%
 pytzer/teos10.py                                41     10    76%
 pytzer/unsymmetrical.py                         46      1    98%
@@ -50,7 +50,8 @@ tests/test_HWT22_solver.py                     104      0   100%
 tests/test_M88.py                               14      0   100%
 tests/test_jax_settings.py                       4      0   100%
 tests/test_model.py                             41      0   100%
+tests/test_pKs.py                               13      0   100%
 tests/test_stoichiometric.py                   130      0   100%
 tests/test_unsymmetrical.py                     33      0   100%
 ----------------------------------------------------------------
-TOTAL                                        11224   5017    55%
+TOTAL                                        11237   5013    55%

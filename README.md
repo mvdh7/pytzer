@@ -34,14 +34,6 @@ Once installed, you will need to set the environment variable `JAX_ENABLE_X64=Tr
 
     conda env config vars set JAX_ENABLE_X64=True
 
-### For development
-
-Use the [environment.yml](https://github.com/mvdh7/pytzer/blob/main/environment.yml) file to create a new environment with Conda:
-
-    conda env create -f environment.yml
-
-Then, fork and/or clone this repo to somewhere that your Python can see it.
-
 ## Documentation
 
 A work in progress at [mvdh.xyz/pytzer](https://mvdh.xyz/pytzer).

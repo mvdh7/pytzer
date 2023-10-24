@@ -7,7 +7,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) -->
 
-Pytzer is a Python implementation of the Pitzer model for chemical activities in aqueous solutions [[P91]](refs/#p) plus solvers to determine the equilibrium state of the system.
+Pytzer is a Python implementation of the Pitzer model for chemical activities in aqueous solutions ([P91](refs/#p)) plus an equilibrium solver.
 
 ## Installation
 
@@ -21,7 +21,7 @@ Pytzer is in beta.  Tests of the accuracy of its parameters and equations are un
 
 A manuscript describing Pytzer is in preparation.  In the meantime, please cite:
 
-> Humphreys, Matthew P. and Schiller, Abigail J. (2021).  Pytzer: the Pitzer model for chemical activities and equilibria in aqueous solutions in Python (beta).  *Zenodo.* [doi:10.5281/zenodo.2637914](https://doi.org/10.5281/zenodo.2637914).
+> Humphreys, Matthew P. and Schiller, Abigail J. (2023).  Pytzer: the Pitzer model for chemical activities and equilibria in aqueous solutions in Python (beta).  *Zenodo.* [doi:10.5281/zenodo.2637914](https://doi.org/10.5281/zenodo.2637914).
 
 Please report the version you are using.  You can find this in Python with:
 

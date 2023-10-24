@@ -1,6 +1,6 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019--2023  Matthew P. Humphreys  (GNU GPLv3)
-"""Define package metadata."""
+"""Pytzer package metadata."""
 import importlib
 
 version = "0.5.3"
@@ -18,7 +18,7 @@ def update_func_J(pytzer, func_J):
 
 def hello():
     print(
-        """
+        r"""
       ____          __                   
      / __ \ __  __ / /_ ____  ___   _____
     / /_/ // / / // __//_  / / _ \ / ___/
