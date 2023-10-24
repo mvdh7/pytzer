@@ -4,7 +4,9 @@ There are two 'layers' of solver in Pytzer: stoichiometric and thermodynamic.
 
 The stoichiometric solver determines the molality of each solute given a set of total molalities and fixed stoichiometric equilibrium constants.  It uses a Newton-Raphson iterative method that is fully compatible with JAX.
 
-The thermodynamic solver wraps the stoichiometric solver and adjusts the stoichiometric equilibrium constants to agree with thermodynamic constraints.  Because it uses [`scipy.optimize.root`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.root.html), it cannot be differentiated or compiled with JAX.
+The thermodynamic solver wraps the stoichiometric solver and adjusts the stoichiometric equilibrium constants to agree with thermodynamic constraints.  Because it uses [`scipy.optimize.root`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.root.html), it cannot be yet[^1] differentiated or compiled with JAX.
+
+[^1]: We are planning to merge the two solvers together, making the entire program grad-able and jit-able by JAX, in a future release.
 
 You can solve equilibria using the following functions.  Lower-level approaches with more fine control are possible, but not yet documented.
 

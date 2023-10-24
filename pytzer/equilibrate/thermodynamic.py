@@ -1,5 +1,5 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2021  Matthew P. Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2023  Matthew P. Humphreys  (GNU GPLv3)
 """Solve for thermodynamic equilibrium."""
 
 import copy
@@ -59,7 +59,7 @@ def Gibbs_HF(log_kt_HF, log_ks_HF, log_acfs, log_aH2O):
 def Gibbs_MgOH(log_kt_MgOH, log_ks_MgOH, log_acfs, log_aH2O):
     """Evaluate the Gibbs energy for the magnesium-MgOH+ equilibrium."""
     return (
-        log_acfs["Mg"] + log_acfs["OH"] - log_acfs["MgOH"] - log_ks_MgOH + log_kt_MgOH
+        log_acfs["Mg"] + log_acfs["OH"] - log_acfs["MgOH"] + log_ks_MgOH - log_kt_MgOH
     )
 
 

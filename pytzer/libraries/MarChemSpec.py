@@ -1,5 +1,5 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2021  Matthew P. Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2023  Matthew P. Humphreys  (GNU GPLv3)
 from . import ParameterLibrary
 from .. import debyehueckel, dissociation as k, parameters as prm, unsymmetrical
 
@@ -129,4 +129,4 @@ MarChemSpec.update_nnn("tris", prm.mu_tris_tris_tris_MarChemSpec25)
 MarChemSpec.update_equilibrium("H2O", k.H2O_MF)
 MarChemSpec.update_equilibrium("HSO4", k.HSO4_CRP94)
 MarChemSpec.update_equilibrium("MgOH", k.MgOH_CW91)
-MarChemSpec.update_equilibrium("trisH", k.trisH_BH64)
+MarChemSpec.update_equilibrium("trisH", k.trisH_BH61)

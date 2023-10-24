@@ -1,5 +1,5 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2021  Matthew P. Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2023  Matthew P. Humphreys  (GNU GPLv3)
 """Calculate Debye-Hueckel limiting slopes."""
 from jax import numpy as np
 from . import teos10
@@ -146,9 +146,9 @@ def _gm1drho(tempK, presMPa):
         + b[4] / (tempK - 215) ** 0.25
         + np.exp(
             b[5] / tempK
-            + b[6] / tempK ** 2
+            + b[6] / tempK**2
             + b[7] * presMPa / tempK
-            + b[8] * presMPa / tempK ** 2
+            + b[8] * presMPa / tempK**2
         )
     )
     return gm1drho
@@ -168,14 +168,14 @@ def _D(tempK, presMPa, rho):
     k = 1.380658e-16
     mu = 1.84e-18
     A = (
-        (al + _g(tempK, presMPa, rho) * mu ** 2 / (3 * k * tempK))
+        (al + _g(tempK, presMPa, rho) * mu**2 / (3 * k * tempK))
         * 4
         * np.pi
         * NA
         * rho
         / (3 * Mw)
     )
-    return (1 + 9 * A + 3 * np.sqrt(9 * A ** 2 + 2 * A + 1)) / 4
+    return (1 + 9 * A + 3 * np.sqrt(9 * A**2 + 2 * A + 1)) / 4
 
 
 def Aosm_AW90(tempK, pres):
@@ -190,7 +190,7 @@ def Aosm_AW90(tempK, pres):
     rho = teos10.rho(tempK, presPa) * 1e-3
     Aosm = (
         np.sqrt(2e-3 * np.pi * rho * NA)
-        * (100 * e ** 2 / (4 * np.pi * _D(tempK, presMPa, rho) * E0 * k * tempK)) ** 1.5
+        * (100 * e**2 / (4 * np.pi * _D(tempK, presMPa, rho) * E0 * k * tempK)) ** 1.5
         / 3
     )
     valid = np.logical_and(

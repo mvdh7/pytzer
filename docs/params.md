@@ -14,9 +14,11 @@ from pytzer.libraries import Seawater
 
 The options are:
 
+  * `Clegg22`: [CHW22](../refs/#c)
   * `Clegg94`: [CRP94](../refs/#c)
   * `Greenberg89`: [GM89](../refs/#m)
   * `Harvie84`: [HMW84](../refs/#h)
+  * `Humphreys22`: [HWT22](../refs/#h)
   * `MarChemSpec`
   * `MarChemSpec25`
   * `Millero98`: [MP98](../refs/#m), a.k.a. MIAMI

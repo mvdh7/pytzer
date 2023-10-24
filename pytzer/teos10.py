@@ -1,5 +1,5 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2021  Matthew P. Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2023  Matthew P. Humphreys  (GNU GPLv3)
 """Calculate properties of pure water."""
 import jax
 from jax import numpy as np
@@ -65,7 +65,7 @@ def Gibbs(tempK, presPa):
     for j in range(8):
         for k in range(7):
             if (j, k) in Gdict.keys():
-                Gsum = Gsum + Gdict[(j, k)] * ctau ** j * cpi ** k
+                Gsum = Gsum + Gdict[(j, k)] * ctau**j * cpi**k
     return Gsum
 
 
@@ -75,6 +75,7 @@ gp = jax.grad(Gibbs, argnums=1)
 gtt = jax.grad(gt, argnums=0)
 gtp = jax.grad(gt, argnums=1)
 gpp = jax.grad(gp, argnums=1)
+
 
 # Define functions for solution properties
 def rho(tempK, presPa):

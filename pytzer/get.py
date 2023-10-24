@@ -1,5 +1,5 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2021  Matthew P. Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2023  Matthew P. Humphreys  (GNU GPLv3)
 """Import solution composition data, and export the results."""
 
 from collections import OrderedDict
@@ -41,7 +41,7 @@ def solve_df(
     # Solve for thermodynamic equilibrium
     for i, row in df.iterrows():
         # Get thermodynamic solver inputs
-        totals = OrderedDict(row[total_cols])
+        totals = OrderedDict(row[list(total_cols.keys())])
         if "temperature" in row:
             temperature = row.temperature
         else:

@@ -1,5 +1,5 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2021  Matthew P. Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2023  Matthew P. Humphreys  (GNU GPLv3)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,15 +13,21 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
-"""Pitzer model for chemical activities in aqueous solutions."""
+"""
+Pytzer
+======
+Pytzer is an implementation of the Pitzer model for chemical activities in aqueous
+solutions in Python, including an equilibrium solver.
+"""
 from . import (
     constants,
     convert,
     debyehueckel,
     dissociation,
     equilibrate,
-    io,
+    get,
     libraries,
+    matrix,
     meta,
     model,
     parameters,
@@ -39,7 +45,7 @@ from .equilibrate import solve, solve_manual
 from .equilibrate.components import find_solutes
 from .equilibrate.stoichiometric import solve as solve_stoichiometric
 from .equilibrate.thermodynamic import solve as solve_thermodynamic
-from .io import solve_df
+from .get import solve_df
 from .libraries import ParameterLibrary
 from .meta import hello, update_func_J
 from .model import (

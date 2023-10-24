@@ -1,5 +1,5 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2021  Matthew P. Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2023  Matthew P. Humphreys  (GNU GPLv3)
 """Define solute properties."""
 from . import convert
 
@@ -188,6 +188,7 @@ ion_to_mass = {
     "NO3": 62.00490,
     "OH": 17.00734,
     "HSO4": 97.07054,
+    "HS": 33.08,
     "SO4": 96.06260,
     "HCO3": 61.01684,
     "CO3": 60.00890,

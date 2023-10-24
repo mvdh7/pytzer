@@ -1,6 +1,8 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2021  Matthew P. Humphreys  (GNU GPLv3)
-"""Evaluate thermodynamic equilibrium constants."""
+# Copyright (C) 2019--2023  Matthew P. Humphreys  (GNU GPLv3)
+"""Evaluate thermodynamic equilibrium constants.
+All functions return ln(K) values.
+"""
 from collections import OrderedDict
 from jax import numpy as np
 
@@ -14,7 +16,7 @@ def HSO4_CRP94_extra(T=298.15):
     log10kHSO4 = (
         562.694864456
         - 102.5154 * np.log(T)
-        - 1.117033e-4 * T ** 2
+        - 1.117033e-4 * T**2
         + 0.2477538 * T
         - 13273.75 / T
     )
@@ -28,7 +30,7 @@ def HSO4_CRP94(T=298.15):
     log10kHSO4 = (
         562.69486
         - 102.5154 * np.log(T)
-        - 1.117033e-4 * T ** 2
+        - 1.117033e-4 * T**2
         + 0.2477538 * T
         - 13273.75 / T
     )
@@ -36,8 +38,8 @@ def HSO4_CRP94(T=298.15):
     return lnkHSO4
 
 
-def trisH_BH64(T=298.15):
-    """TrisH+ dissociation following BH64 Eq. (3)."""
+def trisH_BH61(T=298.15):
+    """TrisH+ dissociation following BH61 Eq. (3)."""
     # Matches Clegg's model [2019-07-02]
     log10ktrisH = -(2981.4 / T - 3.5888 + 0.005571 * T)
     lnktrisH = log10ktrisH * ln10
@@ -53,10 +55,10 @@ def rhow_K75(T=298.15):
     return (
         0.99983952
         + 16.945176e-3 * tempC
-        - 7.9870401e-6 * tempC ** 2
-        - 46.170461e-9 * tempC ** 3
-        + 105.56302e-12 * tempC ** 4
-        - 280.54253e-15 * tempC ** 5
+        - 7.9870401e-6 * tempC**2
+        - 46.170461e-9 * tempC**3
+        + 105.56302e-12 * tempC**4
+        - 280.54253e-15 * tempC**5
     ) / (1 + 16.879850e-3 * tempC)
 
 
@@ -74,7 +76,7 @@ def H2O_M88(T=298.15):
         - 3.26224352e4 / T
         - 1.90877133e2 * np.log(T)
         - 5.35204850e-1 / (T - 263)
-        - 2.32009393e-4 * T ** 2
+        - 2.32009393e-4 * T**2
         + 5.20549183e1 / (680 - T)
     )
 
@@ -85,9 +87,9 @@ def H2O_MF(T=298.15):
     log10kH2O = (
         -4.098
         - 3.2452e3 / T
-        + 2.2362e5 / T ** 2
-        - 3.984e7 / T ** 3
-        + (1.3957e1 - 1.2623e3 / T + 8.5641e5 / T ** 2) * np.log10(rhow_K75(T))
+        + 2.2362e5 / T**2
+        - 3.984e7 / T**3
+        + (1.3957e1 - 1.2623e3 / T + 8.5641e5 / T**2) * np.log10(rhow_K75(T))
     )
     lnkH2O = log10kH2O * ln10
     return lnkH2O
@@ -148,6 +150,29 @@ def HCO3_MP98(T=298.15):
     return _MP98_eq23(T, A=207.6548, B=-11843.79, C=-33.6485)
 
 
+def _PB82_eq(T, A, B, C, D, E):
+    """Returns log10(K)."""
+    return A + B * T + C / T + D * np.log10(T) + E / T**2
+
+
+def H2CO3_PB82(T=298.15):
+    """H2CO3 dissociation [PB82]."""
+    log10_kH2CO3 = _PB82_eq(T, -356.3094, -0.06091964, 21834.37, 126.8339, -1684915)
+    return ln10 * log10_kH2CO3
+
+
+def HCO3_PB82(T=298.15):
+    """HCO3 dissociation [PB82]."""
+    log10_kHCO3 = _PB82_eq(T, -107.8871, -0.03252849, 5151.79, 38.9256, -563713.9)
+    return ln10 * log10_kHCO3
+
+
+def CO2_PB82(T=298.15):
+    """CO2 solubility (Henry's law constant) [PB82]."""
+    log10_kCO2 = _PB82_eq(T, 108.3865, 0.01985076, -6919.53, -40.4515, 669365)
+    return ln10 * log10_kCO2
+
+
 def H3PO4_MP98(T=298.15):
     """H3PO4 dissociation [MP98 following B51]."""
     return _MP98_eq23(T, A=115.54, B=-4576.7518, C=-18.453)
@@ -170,27 +195,59 @@ def _MP98_eq24(T, A=0, B=0, C=0):
 
 def MgF_MP98_MR97(T=298.15):
     """MgF+ formation [MP98 following MR97]."""
-    return -_MP98_eq24(T, A=3.504, B=-501.6) * ln10
+    # Sign inverted to make CWTD23 solver agree 2023-10-22
+    return _MP98_eq24(T, A=3.504, B=-501.6) * ln10
 
 
 def CaF_MP98_MR97(T=298.15):
     """CaF+ formation [MP98 following MR97]."""
-    return -_MP98_eq24(T, A=3.014, B=-501.6) * ln10
+    # Sign inverted to make CWTD23 solver agree 2023-10-22
+    return _MP98_eq24(T, A=3.014, B=-501.6) * ln10
+
+
+def MgCO3_PPFD88(T=298.15):
+    """MgCO3 formation [PPFD88 table 1]."""
+    log10_kMgCO3 = -32.225 + 1093.486 / T + 12.72433 * np.log10(T)
+    return log10_kMgCO3 * ln10
+
+
+def CaCO3_PB82(T=298.15):
+    """CaCO3 formation [PB82 eq. (53)] between 5 and 80 °C.
+    PB82 eq. (44): K(CaCO3) = a(CaCO3) / (a(Ca) * a(CO3)).
+    """
+    log10_kCaCO3 = -1228.732 - 0.299444 * T + 35512.75 / T + 485.818 * np.log10(T)
+    return log10_kCaCO3 * ln10
+
+
+def CaCO3_PPFD88(T=298.15):
+    """CaCO3 formation [PPFD88].  Slightly different from PB82."""
+    log10_kCaCO3 = -1228.806 - 0.299440 * T + 35512.75 / T + 485.818 * np.log10(T)
+    return log10_kCaCO3 * ln10
 
 
 def MgCO3_MP98_MR97(T=298.15):
     """MgCO3 formation [MP98 following MR97]."""
-    return -_MP98_eq24(T, A=1.028, C=0.0066154) * ln10
+    # Sign inverted to make CWTD23 solver agree 2023-10-22
+    return _MP98_eq24(T, A=1.028, C=0.0066154) * ln10
 
 
 def CaCO3_MP98_MR97(T=298.15):
     """CaCO3 formation [MP98 following MR97]."""
-    return -_MP98_eq24(T, A=1.178, C=0.0066154) * ln10
+    # Sign inverted to make CWTD23 solver agree 2023-10-22
+    return _MP98_eq24(T, A=1.178, C=0.0066154) * ln10
 
 
 def SrCO3_MP98_MR97(T=298.15):
     """SrCO3 formation [MP98 following MR97]."""
-    return -_MP98_eq24(T, A=1.028, C=0.0066154) * ln10
+    # Sign inverted to make CWTD23 solver agree 2023-10-22
+    return _MP98_eq24(T, A=1.028, C=0.0066154) * ln10
+
+
+def SrCO3_CWTF23(T=298.15):
+    """SrCO3 formation [CWTF23]."""
+    # Copies CaCO3 of MP98/MR97
+    # Sign inverted to make CWTD23 solver agree 2023-10-22
+    return _MP98_eq24(T, A=1.178, C=0.0066154) * ln10
 
 
 def MgH2PO4_MP98_MR97(T=298.15):
@@ -283,19 +340,6 @@ def pK_CaPO4(T=298.15):
     return 7.1
 
 
-all_log_ks = {
-    "BOH3": BOH3_M79,
-    "H2CO3": H2CO3_MP98,
-    "H2O": H2O_M88,
-    "HCO3": HCO3_MP98,
-    "HF": HF_MP98,
-    "HSO4": HSO4_CRP94,
-    # "MgOH": lambda T=298.15: np.log(10.0 ** -pK_MgOH(T)),
-    "MgOH": MgOH_MP98,
-    "trisH": trisH_BH64,
-}
-
-
 def assemble(temperature=298.15, exclude_equilibria=None, totals=None):
     """Evaluate all thermodynamic equilibrium constants."""
     kt_constants = OrderedDict()
@@ -338,6 +382,8 @@ def assemble(temperature=298.15, exclude_equilibria=None, totals=None):
             kt_constants["CaPO4"] = np.exp(CaPO4_MP98_MR97(T=temperature))
     if "Sr" in totals and "CO2" in totals:
         kt_constants["SrCO3"] = np.exp(SrCO3_MP98_MR97(T=temperature))
+    if "tris" in totals:
+        kt_constants["trisH"] = np.exp(trisH_BH61(T=temperature))
     if exclude_equilibria is not None:
         for eq in exclude_equilibria:
             if eq in kt_constants:

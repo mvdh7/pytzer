@@ -1,5 +1,5 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2021  Matthew P. Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2023  Matthew P. Humphreys  (GNU GPLv3)
 from collections import OrderedDict
 import numpy as np
 from . import convert
@@ -76,7 +76,9 @@ def salinity_to_molalities_MFWM08(salinity=35):
 
 
 def salinity_to_totals_MFWM08(salinity=35):
-    """Convert salinity (g/kg-sw) to total molality for standard seawater following MFWM08."""
+    """Convert salinity (g/kg-sw) to total molality for standard seawater following
+    MFWM08.
+    """
     total_molalities = OrderedDict()
     total_molalities.update(
         {
@@ -135,7 +137,9 @@ salt_to_solutes = {  # used for conversions in subsequent functions
 
 
 def salinity_to_totals_RRV93(salinity=35):
-    """Convert salinity (g/kg-sw) to total molality for synthetic seawater following RRV93."""
+    """Convert salinity (g/kg-sw) to total molality for synthetic seawater following
+    RRV93.
+    """
     global salt_to_solutes
     salt_molalities = OrderedDict()
     salt_molalities.update(
@@ -167,7 +171,9 @@ def salinity_to_totals_RRV93(salinity=35):
 
 
 def salinity_to_totals_GP89(salinity=35):
-    """Convert salinity (g/kg-sw) to total molality for synthetic seawater following GP89."""
+    """Convert salinity (g/kg-sw) to total molality for synthetic seawater following
+    GP89.
+    """
     global salt_to_solutes
     gravimetric_salts = (
         OrderedDict()
@@ -188,7 +194,8 @@ def salinity_to_totals_GP89(salinity=35):
     )  # Concentrations given in mol/kg solution in the paper
     volumetric_salts.update({"MgCl2": 0.05327, "CaCl2": 0.01033, "SrCl2": 9e-05})
 
-    # Formula weights are provided in the paper for the gravimetric salts, the rest are taken from PubChem
+    # Formula weights are provided in the paper for the gravimetric salts, the rest are
+    # taken from PubChem
     formula_weights = OrderedDict()
     formula_weights.update(
         {
@@ -245,7 +252,9 @@ def salinity_to_totals_GP89(salinity=35):
 
 
 def salinity_to_totals_H73(salinity=35):
-    """Convert salinity (g/kg-sw) to total molality for synthetic seawater following H73."""
+    """Convert salinity (g/kg-sw) to total molality for synthetic seawater following
+    H73.
+    """
     ion_concentrations = OrderedDict(  # given in mMol/kg of solution in the paper
         {"Na": 478, "Mg": 54, "Ca": 10, "Cl": 550, "SO4": 28, "HCO3": 1.3, "CO3": 0.7}
     )
@@ -297,7 +306,9 @@ def salinity_to_totals_H73(salinity=35):
 
 
 def salinity_to_totals_D90(salinity=35):
-    """Convert salinity (g/kg-sw) to total molality for synthetic seawater following D90."""
+    """Convert salinity (g/kg-sw) to total molality for synthetic seawater following
+    D90.
+    """
     global salt_to_solutes
     salt_molalities = OrderedDict()
     salt_molalities.update(
@@ -327,7 +338,9 @@ def salinity_to_totals_D90(salinity=35):
 
 
 def salinity_to_totals_KRCB77(salinity=35):
-    """Convert salinity (g/kg-sw) to total molality for synthetic seawater following KRCB77."""
+    """Convert salinity (g/kg-sw) to total molality for synthetic seawater following
+    KRCB77.
+    """
     global salt_to_solutes
     salt_molalities = OrderedDict()
     salt_molalities.update(
@@ -357,7 +370,9 @@ def salinity_to_totals_KRCB77(salinity=35):
 
 
 def salinity_to_totals_DR79(salinity=35):
-    """Convert salinity (g/kg-sw) to total molality for synthetic seawater following DR79."""
+    """Convert salinity (g/kg-sw) to total molality for synthetic seawater following
+    DR79.
+    """
 
     total_molalities = OrderedDict()
     total_molalities.update(

@@ -1,5 +1,5 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2021  Matthew P. Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2023  Matthew P. Humphreys  (GNU GPLv3)
 """Solve for equilibrium."""
 
 from collections import OrderedDict
@@ -43,8 +43,8 @@ def solve(
     temperature=298.15,
     verbose=False,
 ):
-    """Solve for thermodynamic equilibrium to return solute molalities and stoichiometric
-    equilibrium constants.
+    """Solve for thermodynamic equilibrium to return solute molalities and
+    stoichiometric equilibrium constants.
     """
     # Make first estimates of all stoichiometric dissociation constants
     ks_constants_pz = dissociation.assemble(

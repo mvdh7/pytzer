@@ -1,5 +1,5 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2021  Matthew P. Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2023  Matthew P. Humphreys  (GNU GPLv3)
 """Calculate solution properties using the Pitzer model."""
 import itertools, jax
 from collections import OrderedDict
@@ -10,20 +10,31 @@ from . import convert, properties, unsymmetrical
 
 
 def Gibbs_DH(Aphi, I):
-    """The Debye-Hueckel component of the excess Gibbs energy,
-    following CRP94 Eq. (AI1).
+    """The Debye-Hueckel component of the excess Gibbs energy following CRP94 eq. (AI1).
+
+    Parameters
+    ----------
+    Aphi : float
+        Debye-Hueckel limiting slope for the osmotic coefficient.
+    I : float
+        Ionic strength of the solution in mol/kg.
+
+    Returns
+    -------
+    float
+        Debye-Hueckel component of the excess Gibbs energy.
     """
     return -4 * Aphi * I * np.log(1 + b * np.sqrt(I)) / b
 
 
 def g(x):
     """g function, following CRP94 Eq. (AI13)."""
-    return 2 * (1 - (1 + x) * np.exp(-x)) / x ** 2
+    return 2 * (1 - (1 + x) * np.exp(-x)) / x**2
 
 
 def h(x):
     """h function, following CRP94 Eq. (AI15)."""
-    return (6 - (6 + x * (6 + 3 * x + x ** 2)) * np.exp(-x)) / x ** 4
+    return (6 - (6 + x * (6 + 3 * x + x**2)) * np.exp(-x)) / x**4
 
 
 def B(sqrt_I, b0, b1, b2, alph1, alph2):
@@ -51,7 +62,7 @@ def etheta(Aphi, I, z0, z1, func_J=unsymmetrical.Harvie):
 
 def ionic_strength(molalities, charges):
     """Ionic strength."""
-    return 0.5 * np.sum(molalities * charges ** 2)
+    return 0.5 * np.sum(molalities * charges**2)
 
 
 def ionic_z(molalities, charges):
@@ -60,6 +71,22 @@ def ionic_z(molalities, charges):
 
 
 func_J = unsymmetrical.Harvie
+
+
+@jax.jit
+def Gibbs_nRT_fori(solutes, params):
+    # Evaluate terms dependent on overall ionic strength
+    I = (
+        np.sum(
+            np.array([m * convert.solute_to_charge[s] ** 2 for s, m in solutes.items()])
+        )
+        / 2
+    )
+    Z = np.sum(
+        np.abs(np.array([m * convert.solute_to_charge[s] for s, m in solutes.items()]))
+    )
+    sqrt_I = np.sqrt(I)
+    Gibbs = Gibbs_DH(params["Aphi"], I)
 
 
 @jax.jit

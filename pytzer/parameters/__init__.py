@@ -1,9 +1,58 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2021  Matthew P. Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2023  Matthew P. Humphreys  (GNU GPLv3)
 """Evaluate Pitzer model interaction parameters."""
 from jax import numpy as np
-from .constants import Tzero
-from .convert import solute_to_charge as i2c
+from ..constants import Tzero
+from ..convert import solute_to_charge as i2c
+from .heMorse1993 import (
+    bC_Ca_CO3_HM93,
+    bC_Ca_HCO3_HM93,
+    bC_K_CO3_HM93,
+    bC_K_HCO3_HM93,
+    bC_Mg_CO3_HM93,
+    bC_Mg_HCO3_HM93,
+    bC_Na_CO3_HM93,
+    bC_Na_HCO3_HM93,
+    psi_Mg_Cl_SO4_HM93,
+    lambd_CO2_Ca_HM93,
+    lambd_CO2_Cl_HM93,
+    lambd_CO2_H_HM93,
+    lambd_CO2_K_HM93,
+    lambd_CO2_Mg_HM93,
+    lambd_CO2_Na_HM93,
+    lambd_CO2_SO4_HM93,
+    zeta_CO2_Ca_Cl_HM93,
+    zeta_CO2_H_Cl_HM93,
+    zeta_CO2_H_SO4_HM93,
+    zeta_CO2_K_Cl_HM93,
+    zeta_CO2_K_SO4_HM93,
+    zeta_CO2_Mg_Cl_HM93,
+    zeta_CO2_Mg_SO4_HM93,
+    zeta_CO2_Na_Cl_HM93,
+    zeta_CO2_Na_SO4_HM93,
+)
+from .holmesMesmer1992 import bC_H_HSO4_HM92, bC_H_SO4_HM92, theta_HSO4_SO4_HM92
+from .pabalanPitzer1987 import (
+    theta_K_Na_PP87ii,
+    theta_Mg_Na_PP87ii,
+    theta_K_Mg_PP87ii,
+    theta_Cl_SO4_PP87ii,
+    theta_Cl_OH_PP87ii,
+    theta_OH_SO4_PP87ii,
+    psi_K_Na_Cl_PP87ii,
+    psi_Mg_Na_Cl_PP87ii,
+    psi_K_Mg_Cl_PP87ii,
+    psi_Na_Cl_SO4_PP87ii,
+    psi_K_Cl_SO4_PP87ii,
+    psi_Mg_Cl_SO4_PP87ii,
+    psi_Na_Cl_OH_PP87ii,
+    psi_Na_OH_SO4_PP87ii,
+)
+from .spencer1990 import (
+    bC_Mg_Cl_SMW90,
+    bC_Mg_SO4_SMW90,
+    psi_Mg_Cl_SO4_SMW90,
+)
 
 # Tolerances for np.isclose() assessment of temperature/pressure validity
 temperature_tol = dict(atol=1e-8, rtol=0)  # K
@@ -3905,6 +3954,7 @@ def bC_La_Cl_SP78(T, P):
 # bC_Znjj_SO4_SP78: no corresponding PM73 function
 # bC_Cdjj_SO4_SP78: no corresponding PM73 function
 
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Roy et al. (1980) ~~~~~
 def theta_H_Mg_RGB80(T, P):
     """c-c': hydrogen magnesium [RGB80]."""
@@ -4058,10 +4108,10 @@ def psi_Na_CO3_Cl_TM82(T, P):
 def bC_Mg_Cl_dLP83(T, P):
     """c-a: magnesium chloride [dLP83]."""
     # dLP83 Eq. (11)
-    b0 = 5.93915e-7 * T ** 2 - 9.31654e-4 * T + 0.576066
-    b1 = 2.60169e-5 * T ** 2 - 1.09438e-2 * T + 2.60135
+    b0 = 5.93915e-7 * T**2 - 9.31654e-4 * T + 0.576066
+    b1 = 2.60169e-5 * T**2 - 1.09438e-2 * T + 2.60135
     b2 = 0
-    Cphi = 3.01823e-7 * T ** 2 - 2.89125e-4 * T + 6.57867e-2
+    Cphi = 3.01823e-7 * T**2 - 2.89125e-4 * T + 6.57867e-2
     C0 = Cphi / (2 * np.sqrt(np.abs(i2c["Mg"] * i2c["Cl"])))
     C1 = 0
     alph1 = 2
@@ -4080,7 +4130,7 @@ def HM83_eq25(T, a):
         + a[1] * (1 / T - 1 / TR)
         + a[2] * np.log(T / TR)
         + a[3] * (T - TR)
-        + a[4] * (T ** 2 - TR ** 2)
+        + a[4] * (T**2 - TR**2)
         + a[5] * np.log(T - 260)
     )
 
@@ -4979,7 +5029,7 @@ def theta_Cl_HCO3_HMW84(T, P):
 
 def psi_Na_Cl_HCO3_HMW84(T, P):
     """c-a-a': sodium chloride bicarbonate [HMW84]."""
-    psi = -0.15
+    psi = -0.015
     valid = np.isclose(T, 298.15, **temperature_tol)
     return psi, valid
 
@@ -6626,12 +6676,12 @@ def PP86ii_eq28(T, q):
     """PP86ii equation 28."""
     Tr = PP86ii_Tr
     return (
-        (T ** 2 - Tr ** 2) * q[0] / 2
-        + (T ** 3 - Tr ** 3) * q[1] / 3
-        + (T ** 4 - Tr ** 4) * q[2] / 4
-        + (T ** 5 - Tr ** 5) * q[3] / 5
-        + Tr ** 2 * q[4]
-    ) / T ** 2
+        (T**2 - Tr**2) * q[0] / 2
+        + (T**3 - Tr**3) * q[1] / 3
+        + (T**4 - Tr**4) * q[2] / 4
+        + (T**5 - Tr**5) * q[3] / 5
+        + Tr**2 * q[4]
+    ) / T**2
 
 
 def PP86ii_eq29(T, q):
@@ -6649,11 +6699,11 @@ def PP86ii_eq29(T, q):
     # Original fourth line was:
     #  + q[3] * (T**4/20 + Tr**5/(5*T) - Tr**4/4)
     return (
-        q[0] * (T / 2 + Tr ** 2 / (2 * T) - Tr)
-        + q[1] * (T ** 2 / 6 + Tr ** 3 / (3 * T) - Tr ** 2 / 2)
-        + q[2] * (T ** 3 / 12 + Tr ** 4 / (4 * T) - Tr ** 3 / 3)
-        + q[3] * (t ** 5 + 4 - 5 * t) * Tr ** 5 / (20 * T)
-        + q[4] * (Tr - Tr ** 2 / T)
+        q[0] * (T / 2 + Tr**2 / (2 * T) - Tr)
+        + q[1] * (T**2 / 6 + Tr**3 / (3 * T) - Tr**2 / 2)
+        + q[2] * (T**3 / 12 + Tr**4 / (4 * T) - Tr**3 / 3)
+        + q[3] * (t**5 + 4 - 5 * t) * Tr**5 / (20 * T)
+        + q[4] * (Tr - Tr**2 / T)
         + q[5]
     )
 
@@ -6718,12 +6768,12 @@ def HM86_eq8(T, a):
     # Typo in a[5] term in HM86 has been corrected here
     return (
         a[0]
-        + a[1] * (TR - TR ** 2 / T)
-        + a[2] * (T ** 2 + 2 * TR ** 3 / T - 3 * TR ** 2)
-        + a[3] * (T + TR ** 2 / T - 2 * TR)
+        + a[1] * (TR - TR**2 / T)
+        + a[2] * (T**2 + 2 * TR**3 / T - 3 * TR**2)
+        + a[3] * (T + TR**2 / T - 2 * TR)
         + a[4] * (np.log(T / TR) + TR / T - 1)
-        + a[5] * (1 / (T - 263) + (263 * T - TR ** 2) / (T * (TR - 263) ** 2))
-        + a[6] * (1 / (680 - T) + (TR ** 2 - 680 * T) / (T * (680 - TR) ** 2))
+        + a[5] * (1 / (T - 263) + (263 * T - TR**2) / (T * (TR - 263) ** 2))
+        + a[6] * (1 / (680 - T) + (TR**2 - 680 * T) / (T * (680 - TR) ** 2))
     )
 
 
@@ -6843,7 +6893,7 @@ def theta_H_Sr_RGRG86(T, P):
 
 def psi_H_Sr_Cl_RGRG86(T, P):
     """c-c'-a: hydrogen strontium chloride [RGRG86]."""
-    psi = 0.0054 + (T - 298.15) * 0.00021
+    psi = 0.0054 - (T - 298.15) * 0.00021
     valid = (T >= 278.15) & (T <= 318.15)
     return psi, valid
 
@@ -6863,8 +6913,8 @@ def PP87i_eqNaOH(T, P, a):
         + a[4] * np.log(T)
         + a[5] * T
         + a[6] * T * P
-        + a[7] * T ** 2
-        + a[8] * T ** 2 * P
+        + a[7] * T**2
+        + a[8] * T**2 * P
         + a[9] / (T - 227)
         + a[10] / (647 - T)
         + a[11] * P / (647 - T)
@@ -6941,123 +6991,10 @@ def bC_Na_OH_PP87i(T, P):
 def bC_Mg_Cl_PP87i(T, P):
     """c-a: magnesium chloride [PP87i]."""
     b0, b1, b2, _, C1, alph1, alph2, omega, _ = bC_Mg_Cl_dLP83(T, P)
-    Cphi = 2.41831e-7 * T ** 2 - 2.49949e-4 * T + 5.95320e-2
+    Cphi = 2.41831e-7 * T**2 - 2.49949e-4 * T + 5.95320e-2
     C0 = Cphi / (2 * np.sqrt(np.abs(i2c["Mg"] * i2c["Cl"])))
     valid = (T >= 298.15) & (T <= 473.15)
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Pabalan and Pitzer (1987ii) ~~~~~
-def theta_K_Na_PP87ii(T, P):
-    """c-c': potassium sodium [PP87ii]."""
-    theta = -0.012
-    # Validity range declared by MP98 for theta(Na, Mg) from this study
-    valid = (T >= 298.15) & (T <= 523.25)
-    return theta, valid
-
-
-def theta_Mg_Na_PP87ii(T, P):
-    """c-c': magnesium sodium [PP87ii]."""
-    theta = 0.07
-    # Validity range declared by MP98 for theta(Na, Mg) from this study
-    valid = (T >= 298.15) & (T <= 523.25)
-    return theta, valid
-
-
-def theta_K_Mg_PP87ii(T, P):
-    """c-c': potassium magnesium [PP87ii]."""
-    theta = 0
-    # Validity range declared by MP98 for theta(Na, Mg) from this study
-    valid = (T >= 298.15) & (T <= 523.25)
-    return theta, valid
-
-
-def theta_Cl_SO4_PP87ii(T, P):
-    """a-a': chloride sulfate [PP87ii]."""
-    theta = 0.030
-    # Validity range declared by MP98 for theta(Na, Mg) from this study
-    valid = (T >= 298.15) & (T <= 523.25)
-    return theta, valid
-
-
-def theta_Cl_OH_PP87ii(T, P):
-    """a-a': chloride hydroxide [PP87ii]."""
-    theta = -0.050
-    # Validity range declared by MP98 for theta(Na, Mg) from this study
-    valid = (T >= 298.15) & (T <= 523.25)
-    return theta, valid
-
-
-def theta_OH_SO4_PP87ii(T, P):
-    """a-a': hydroxide sulfate [PP87ii]."""
-    theta = -0.013
-    # Validity range declared by MP98 for theta(Na, Mg) from this study
-    valid = (T >= 298.15) & (T <= 523.25)
-    return theta, valid
-
-
-def psi_K_Na_Cl_PP87ii(T, P):
-    """c-c'-a: potassium sodium chloride [PP87ii]."""
-    psi = -6.81e-3 + 1.68e-5 * T
-    # Validity range declared by MP98 for theta(Na, Mg) from this study
-    valid = (T >= 298.15) & (T <= 523.25)
-    return psi, valid
-
-
-def psi_Mg_Na_Cl_PP87ii(T, P):
-    """c-c'-a: magnesium sodium chloride [PP87ii]."""
-    psi = 1.99e-2 - 9.51 / T
-    # Validity range declared by MP98 for theta(Na, Mg) from this study
-    valid = (T >= 298.15) & (T <= 523.25)
-    return psi, valid
-
-
-def psi_K_Mg_Cl_PP87ii(T, P):
-    """c-c'-a: potassium magnesium chloride [PP87ii]."""
-    psi = 2.586e-2 - 14.27 / T
-    # Validity range declared by MP98 for theta(Na, Mg) from this study
-    valid = (T >= 298.15) & (T <= 523.25)
-    return psi, valid
-
-
-def psi_Na_Cl_SO4_PP87ii(T, P):
-    """c-a-a': sodium chloride sulfate [PP87ii]."""
-    psi = 0
-    # Validity range declared by MP98 for theta(Na, Mg) from this study
-    valid = (T >= 298.15) & (T <= 523.25)
-    return psi, valid
-
-
-def psi_K_Cl_SO4_PP87ii(T, P):
-    """c-a-a': potassium chloride sulfate [PP87ii]."""
-    psi = -5e-3
-    # Validity range declared by MP98 for theta(Na, Mg) from this study
-    valid = (T >= 298.15) & (T <= 523.25)
-    return psi, valid
-
-
-def psi_Mg_Cl_SO4_PP87ii(T, P):
-    """c-a-a': magnesium chloride sulfate [PP87ii]."""
-    psi = -1.174e-1 + 32.63 / T
-    # Validity range declared by MP98 for theta(Na, Mg) from this study
-    valid = (T >= 298.15) & (T <= 523.25)
-    return psi, valid
-
-
-def psi_Na_Cl_OH_PP87ii(T, P):
-    """c-a-a': sodium chloride hydroxide [PP87ii]."""
-    psi = 2.73e-2 - 9.93 / T
-    # Validity range declared by MP98 for theta(Na, Mg) from this study
-    valid = (T >= 298.15) & (T <= 523.25)
-    return psi, valid
-
-
-def psi_Na_OH_SO4_PP87ii(T, P):
-    """c-a-a': sodium hydroxide sulfate [PP87ii]."""
-    psi = 3.02e-2 - 11.69 / T
-    # Validity range declared by MP98 for theta(Na, Mg) from this study
-    valid = (T >= 298.15) & (T <= 523.25)
-    return psi, valid
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Simonson, Roy & Gibbons (1987) ~~~~~
@@ -7228,7 +7165,7 @@ def bC_Na_BOH4_SRRJ87(T, P):
             T,
             [
                 14.98,
-                -15.7,
+                -15.7,  # TODO check this term
                 0,
             ],
         )
@@ -7410,7 +7347,7 @@ def M88_eq13(T, a):
         + a[2] / T
         + a[3] * np.log(T)
         + a[4] / (T - 263)
-        + a[5] * T ** 2
+        + a[5] * T**2
         + a[6] / (680 - T)
         + a[7] / (T - 227)
     )
@@ -7655,7 +7592,7 @@ def psi_Na_Cl_SO4_M88(T, P):
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Clegg & Brimblecombe (1989) ~~~~~
 def lambd_NH3_NH3_CB89(T, P):
     """n-n: ammonia ammonia [CB89]."""
-    lambd = 0.033161 - 21.12816 / T + 4665.1461 / T ** 2
+    lambd = 0.033161 - 21.12816 / T + 4665.1461 / T**2
     valid = (T >= 273.15) & (T <= 313.15)
     return lambd, valid
 
@@ -8324,28 +8261,28 @@ def A92ii_eq36(T, P, a):
     # a[5] and a[6] multipliers are corrected for typos in A92ii
     return (
         a[0]
-        + a[1] * 10 ** -3 * T
-        + a[2] * 4e-6 * T ** 2
+        + a[1] * 10**-3 * T
+        + a[2] * 4e-6 * T**2
         + a[3] * 1 / (T - 200)
         + a[4] * 1 / T
         + a[5] * 100 / (T - 200) ** 2
-        + a[6] * 200 / T ** 2
-        + a[7] * 8e-9 * T ** 3
+        + a[6] * 200 / T**2
+        + a[7] * 8e-9 * T**3
         + a[8] * 1 / (650 - T) ** 0.5
-        + a[9] * 10 ** -5 * P
+        + a[9] * 10**-5 * P
         + a[10] * 2e-4 * P / (T - 225)
         + a[11] * 100 * P / (650 - T) ** 3
         + a[12] * 2e-8 * P * T
         + a[13] * 2e-4 * P / (650 - T)
-        + a[14] * 10 ** -7 * P ** 2
-        + a[15] * 2e-6 * P ** 2 / (T - 225)
-        + a[16] * P ** 2 / (650 - T) ** 3
-        + a[17] * 2e-10 * P ** 2 * T
-        + a[18] * 4e-13 * P ** 2 * T ** 2
+        + a[14] * 10**-7 * P**2
+        + a[15] * 2e-6 * P**2 / (T - 225)
+        + a[16] * P**2 / (650 - T) ** 3
+        + a[17] * 2e-10 * P**2 * T
+        + a[18] * 4e-13 * P**2 * T**2
         + a[19] * 0.04 * P / (T - 225) ** 2
-        + a[20] * 4e-11 * P * T ** 2
-        + a[21] * 2e-8 * P ** 3 / (T - 225)
-        + a[22] * 0.01 * P ** 3 / (650 - T) ** 3
+        + a[20] * 4e-11 * P * T**2
+        + a[21] * 2e-8 * P**3 / (T - 225)
+        + a[22] * 0.01 * P**3 / (650 - T) ** 3
         + a[23] * 200 / (650 - T) ** 3
     )
 
@@ -8570,275 +8507,6 @@ def psi_H_Na_Cl_CMR93(T, P):
     return psi, valid
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ He & Morse (1993) ~~~~~
-# Note that HM93 also contains beta/C equations for Na, K, Mg and Ca
-# interactions with HCO3 and CO3 (not yet coded here)
-def HM93_eq(T, A, B, C, D, E):
-    """HM93 parameter equation from p. 3548."""
-    return A + B * T + C * T ** 2 + D / T + E * np.log(T)
-
-
-def lambd_CO2_H_HM93(T, P):
-    """n-c: carbon-dioxide hydrogen [HM93]."""
-    lambd = 0
-    valid = (T >= 273.15) & (T <= 363.15)
-    return lambd, valid
-
-
-def lambd_CO2_Na_HM93(T, P):
-    """n-c: carbon-dioxide sodium [HM93]."""
-    lambd = HM93_eq(
-        T,
-        -5496.38465,
-        -3.326566,
-        0.0017532,
-        109399.341,
-        1047.021567,
-    )
-    valid = (T >= 273.15) & (T <= 363.15)
-    return lambd, valid
-
-
-def lambd_CO2_K_HM93(T, P):
-    """n-c: carbon-dioxide potassium [HM93]."""
-    lambd = HM93_eq(
-        T,
-        2856.528099,
-        1.7670079,
-        -0.0009487,
-        -55954.1929,
-        -546.074467,
-    )
-    valid = (T >= 273.15) & (T <= 363.15)
-    return lambd, valid
-
-
-def lambd_CO2_Ca_HM93(T, P):
-    """n-c: carbon-dioxide calcium [HM93]."""
-    lambd = HM93_eq(
-        T,
-        -12774.6472,
-        -8.101555,
-        0.00442472,
-        245541.5435,
-        2452.509720,
-    )
-    valid = (T >= 273.15) & (T <= 363.15)
-    return lambd, valid
-
-
-def lambd_CO2_Mg_HM93(T, P):
-    """n-c: carbon-dioxide magnesium [HM93]."""
-    lambd = HM93_eq(
-        T,
-        -479.362533,
-        -0.541843,
-        0.00038812,
-        3589.474052,
-        104.3452732,
-    )
-    valid = (T >= 273.15) & (T <= 363.15)
-    return lambd, valid
-
-
-def lambd_CO2_Cl_HM93(T, P):
-    """n-a: carbon-dioxide chloride [HM93]."""
-    lambd = HM93_eq(T, 1659.944942, 0.9964326, -0.00052122, -33159.6177, -315.827883)
-    valid = (T >= 273.15) & (T <= 363.15)
-    return lambd, valid
-
-
-def lambd_CO2_SO4_HM93(T, P):
-    """n-a: carbon-dioxide sulfate [HM93]."""
-    lambd = HM93_eq(
-        T,
-        2274.656591,
-        1.8270948,
-        -0.00114272,
-        -33927.7625,
-        -457.015738,
-    )
-    valid = (T >= 273.15) & (T <= 363.15)
-    return lambd, valid
-
-
-def zeta_CO2_H_Cl_HM93(T, P):
-    """n-c-a: carbon-dioxide hydrogen chloride [HM93]."""
-    zeta = HM93_eq(T, -804.121738, -0.470474, 0.000240526, 16334.38917, 152.3838752)
-    valid = (T >= 273.15) & (T <= 363.15)
-    return zeta, valid
-
-
-def zeta_CO2_Na_Cl_HM93(T, P):
-    """n-c-a: carbon-dioxide sodium chloride [HM93]."""
-    zeta = HM93_eq(T, -379.459185, -0.258005, 0.000147823, 6879.030871, 73.74511574)
-    valid = (T >= 273.15) & (T <= 363.15)
-    return zeta, valid
-
-
-def zeta_CO2_K_Cl_HM93(T, P):
-    """n-c-a: carbon-dioxide potassium chloride [HM93]."""
-    zeta = HM93_eq(T, -379.686097, -0.257891, 0.000147333, 6853.264129, 73.79977116)
-    valid = (T >= 273.15) & (T <= 363.15)
-    return zeta, valid
-
-
-def zeta_CO2_Ca_Cl_HM93(T, P):
-    """n-c-a: carbon-dioxide calcium chloride [HM93]."""
-    zeta = HM93_eq(T, -166.065290, -0.018002, -2.47349e-5, 5256.844332, 27.377452415)
-    valid = (T >= 273.15) & (T <= 363.15)
-    return zeta, valid
-
-
-def zeta_CO2_Mg_Cl_HM93(T, P):
-    """n-c-a: carbon-dioxide magnesium chloride [HM93]."""
-    zeta = HM93_eq(T, -1342.60256, -0.772286, 0.000391603, 27726.80974, 253.62319406)
-    valid = (T >= 273.15) & (T <= 363.15)
-    return zeta, valid
-
-
-def zeta_CO2_H_SO4_HM93(T, P):
-    """n-c-a: carbon-dioxide hydrogen sulfate [HM93]."""
-    zeta = 0
-    valid = (T >= 273.15) & (T <= 363.15)
-    return zeta, valid
-
-
-def zeta_CO2_Na_SO4_HM93(T, P):
-    """n-c-a: carbon-dioxide sodium sulfate [HM93]."""
-    zeta = HM93_eq(T, 67030.02482, 37.930519, -0.01894730, -1399082.37, -12630.27457)
-    valid = (T >= 273.15) & (T <= 363.15)
-    return zeta, valid
-
-
-def zeta_CO2_K_SO4_HM93(T, P):
-    """n-c-a: carbon-dioxide potassium sulfate [HM93]."""
-    zeta = HM93_eq(T, -2907.03326, -2.860763, 0.001951086, 30756.86749, 611.37560512)
-    valid = (T >= 273.15) & (T <= 363.15)
-    return zeta, valid
-
-
-def zeta_CO2_Mg_SO4_HM93(T, P):
-    """n-c-a: carbon-dioxide magnesium sulfate [HM93]."""
-    zeta = HM93_eq(T, -7374.24392, -4.608331, 0.002489207, 143162.6076, 1412.302898)
-    valid = (T >= 273.15) & (T <= 363.15)
-    return zeta, valid
-
-
-def bC_Na_HCO3_HM93(T, P):
-    """c-a: sodium bicarbonate [HM93]."""
-    b0 = HM93_eq(T, -37.2624193, -0.01445932, 0, 682.885977, 6.8995857)
-    b1 = HM93_eq(T, -61.4635193, -0.02446734, 0, 1129.389146, 11.4108589)
-    b2 = 0
-    C0 = 0
-    C1 = 0
-    alph1 = 2
-    alph2 = -9
-    omega = -9
-    valid = (T >= 273.15) & (T <= 363.15)
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
-
-def bC_K_HCO3_HM93(T, P):
-    """c-a: potassium bicarbonate [HM93]."""
-    b0 = HM93_eq(T, -0.3088232, 0.001, 0, -0.00069869, -4.701488e-6)
-    b1 = HM93_eq(T, -0.2802, 0.00109999, 0, 0.000936932, 6.15660566e-6)
-    b2 = 0
-    C0 = 0
-    C1 = 0
-    alph1 = 2
-    alph2 = -9
-    omega = -9
-    valid = (T >= 273.15) & (T <= 363.15)
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
-
-def bC_Mg_HCO3_HM93(T, P):
-    """c-a: magnesium bicarbonate [HM93]."""
-    b0 = HM93_eq(T, 13697.10, 8.250840, -0.00434, -273406.1716, -2607.115202)
-    b1 = HM93_eq(T, -157839.8351, -92.7779354, 0.0477642, 3203209.6948, 29927.151503)
-    b2 = 0
-    C0 = 0
-    C1 = 0
-    alph1 = 2
-    alph2 = -9
-    omega = -9
-    valid = (T >= 273.15) & (T <= 363.15)
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
-
-def bC_Ca_HCO3_HM93(T, P):
-    """c-a: calcium bicarbonate [HM93]."""
-    b0 = HM93_eq(T, 29576.53405, 18.447305, -0.009989, -576520.5185, -5661.1237)
-    b1 = HM93_eq(T, -1028.8510522, -0.3725876718, 8.9691e-5, 26492.240303, 183.13155672)
-    b2 = 0
-    C0 = 0
-    C1 = 0
-    alph1 = 2
-    alph2 = -9
-    omega = -9
-    valid = (T >= 273.15) & (T <= 363.15)
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
-
-def bC_Na_CO3_HM93(T, P):
-    """c-a: sodium carbonate [HM93]."""
-    b0 = HM93_eq(T, -60.5387702, -0.023301655, 0, 1108.3760518, 11.19855531)
-    b1 = HM93_eq(T, -237.5156616, -0.09989121, 0, 4412.511973, 44.5820703)
-    b2 = 0
-    Cphi = 0.0052
-    C0 = Cphi / (2 * np.sqrt(np.abs(i2c["Na"] * i2c["CO3"])))
-    C1 = 0
-    alph1 = 2
-    alph2 = -9
-    omega = -9
-    valid = (T >= 273.15) & (T <= 363.15)
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
-
-def bC_K_CO3_HM93(T, P):
-    """c-a: potassium carbonate [HM93]."""
-    b0 = HM93_eq(T, -0.1991649, 0.00110, 0, 1.8063362e-5, 0)
-    b1 = HM93_eq(T, 0.1330579, 0.00436, 0, 0.0011899, 0)
-    b2 = 0
-    Cphi = 0.0005
-    C0 = Cphi / (2 * np.sqrt(np.abs(i2c["K"] * i2c["CO3"])))
-    C1 = 0
-    alph1 = 2
-    alph2 = -9
-    omega = -9
-    valid = (T >= 273.15) & (T <= 363.15)
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
-
-def bC_Mg_CO3_HM93(T, P):
-    """c-a: magnesium carbonate [HM93]."""
-    b0 = 0
-    b1 = 0
-    b2 = 0
-    C0 = 0
-    C1 = 0
-    alph1 = -9
-    alph2 = -9
-    omega = -9
-    valid = (T >= 273.15) & (T <= 363.15)
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
-
-def bC_Ca_CO3_HM93(T, P):
-    """c-a: calcium carbonate [HM93]."""
-    b0 = 0
-    b1 = 0
-    b2 = 0
-    C0 = 0
-    C1 = 0
-    alph1 = -9
-    alph2 = -9
-    omega = -9
-    valid = (T >= 273.15) & (T <= 363.15)
-    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
-
-
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Hovey et al. (1993) ~~~~~
 def HPR93_eq36(T, a):
     """HPR93 equation 36."""
@@ -8916,38 +8584,38 @@ def bC_H_HSO4_CRP94(T, P):
     b0 = CRP94_eq24(
         T,
         [
-            0.227784933,
-            -3.78667718,
-            -0.124645729,
-            -0.00235747806,
+            0.227_784_933,
+            -3.786_677_18,
+            -0.124_645_729,
+            -0.002_357_478_06,
         ],
     )
     b1 = CRP94_eq24(
         T,
         [
-            0.372293409,
+            0.372_293_409,
             1.50,
-            0.207494846,
-            0.00448526492,
+            0.207_494_846,
+            0.004_485_264_92,
         ],
     )
     b2 = 0
     C0 = CRP94_eq24(
         T,
         [
-            -0.00280032520,
-            0.216200279,
-            0.0101500824,
-            0.000208682230,
+            -0.002_800_325_20,
+            0.216_200_279,
+            0.010_150_082_4,
+            0.000_208_682_230,
         ],
     )
     C1 = CRP94_eq24(
         T,
         [
             -0.025,
-            18.1728946,
-            0.382383535,
-            0.0025,
+            18.172_894_6,
+            0.382_383_535,
+            0.002_5,
         ],
     )
     alph1 = 2
@@ -9064,8 +8732,8 @@ def MP98_eq15(T, q):
     BLR = q[2] * 1e-4
     return (
         BR
-        + (BJ * (Tr ** 3 / 3) - Tr ** 2 * BLR) * (1 / T - 1 / Tr)
-        + (BJ / 6) * (T ** 2 - Tr ** 2)
+        + (BJ * (Tr**3 / 3) - Tr**2 * BLR) * (1 / T - 1 / Tr)
+        + (BJ / 6) * (T**2 - Tr**2)
     )
 
 
@@ -9128,7 +8796,7 @@ def bC_Na_Br_MP98(T, P):
         T,
         [
             0.00116,
-            0.058 * 2 ** 1.5,
+            0.058 * 2**1.5,
             -0.93,
         ],  # more accurate following PM16 model
     )
@@ -9190,7 +8858,7 @@ def bC_K_Br_MP98(T, P):
     b1 = MP98_eq15(
         T,
         [
-            0.2122,
+            0.2122,  # 0.2212 in CWTD23
             -0.762,
             1.74,
         ],
@@ -10879,7 +10547,7 @@ def ZD17_eq8(T, P, b):
         + b[3] / (T - 215)
         + b[4] * 1e4 / (T - 215) ** 3
         + b[5] * 1e2 / (T - 215) ** 2
-        + b[6] * 2e2 / T ** 2
+        + b[6] * 2e2 / T**2
         + b[7] * (T / 500) ** 3
         + b[8] / (650 - T) ** 0.5
         + b[9] * 1e-5 * P
@@ -10887,15 +10555,15 @@ def ZD17_eq8(T, P, b):
         + b[11] * 1e2 * P / (650 - T) ** 3
         + b[12] * 1e-5 * P * T / 500
         + b[13] * 2e-4 * P / (650 - T)
-        + b[14] * 1e-7 * P ** 2
-        + b[15] * 2e-6 * P ** 2 / (T - 225)
-        + b[16] * P ** 2 / (650 - T) ** 3
-        + b[17] * 1e-7 * P ** 2 * T / 500
-        + b[18] * 1e-7 * P ** 2 * (T / 500) ** 2
+        + b[14] * 1e-7 * P**2
+        + b[15] * 2e-6 * P**2 / (T - 225)
+        + b[16] * P**2 / (650 - T) ** 3
+        + b[17] * 1e-7 * P**2 * T / 500
+        + b[18] * 1e-7 * P**2 * (T / 500) ** 2
         + b[19] * 4e-2 * P / (T - 225) ** 2
         + b[20] * 1e-5 * P * (T / 500) ** 2
-        + b[21] * 2e-8 * P ** 3 / (T - 225)
-        + b[22] * 1e-2 * P ** 3 / (650 - T) ** 3
+        + b[21] * 2e-8 * P**3 / (T - 225)
+        + b[22] * 1e-2 * P**3 / (650 - T) ** 3
         + b[23] * 2e2 / (650 - T) ** 3
     )
 
@@ -11083,9 +10751,9 @@ def mu_tris_tris_tris_MarChemSpec25(T, P):
     return mu, valid
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Clegg et al. (2021) ~~~~~
-def bC_trisH_Cl_CHW21(T, P):
-    """c-a: trisH+ chloride [CHW21]."""
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Clegg et al. (2022) ~~~~~
+def bC_trisH_Cl_CHW22(T, P):
+    """c-a: trisH+ chloride [CHW22]."""
     b0 = 0.03468
     b1 = 0.12802
     b2 = 0
@@ -11098,8 +10766,8 @@ def bC_trisH_Cl_CHW21(T, P):
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
-def bC_trisH_SO4_CHW21(T, P):
-    """c-a: trisH+ sulfate [CHW21]."""
+def bC_trisH_SO4_CHW22(T, P):
+    """c-a: trisH+ sulfate [CHW22]."""
     b0 = 9.52294e-2
     b1 = 0.585908
     b2 = 0
@@ -11112,29 +10780,29 @@ def bC_trisH_SO4_CHW21(T, P):
     return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
 
 
-def lambd_tris_Ca_CHW21(T, P):
-    """n-c: tris calcium [CHW21]."""
+def lambd_tris_Ca_CHW22(T, P):
+    """n-c: tris calcium [CHW22]."""
     lambd = -0.2686
     valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
-def lambd_tris_K_CHW21(T, P):
-    """n-c: tris potassium [CHW21]."""
+def lambd_tris_K_CHW22(T, P):
+    """n-c: tris potassium [CHW22]."""
     lambd = 0.03394
     valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
-def lambd_tris_Mg_CHW21(T, P):
-    """n-c: tris magnesium [CHW21]."""
+def lambd_tris_Mg_CHW22(T, P):
+    """n-c: tris magnesium [CHW22]."""
     lambd = -0.1176
     valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
 
 
-def lambd_tris_Na_CHW21(T, P):
-    """n-c: tris sodium [CHW21]."""
+def lambd_tris_Na_CHW22(T, P):
+    """n-c: tris sodium [CHW22]."""
     lambd = 0.02632
     valid = np.isclose(T, 298.15, **temperature_tol)
     return lambd, valid
@@ -12132,3 +11800,525 @@ def psi_K_Mg_Cl_A15(T, P):
     psi = -0.022 - 14.27 * (1 / T - 1 / 298.15)
     valid = (273.15 <= T) & (T <= 473.15)
     return psi, valid
+
+
+def theta_H_Na_HCW22(T, P):
+    """c-c': hydrogen sodium [HCW22]."""
+    theta = 0.0306 - 0.000418 * (T - 298.15)
+    valid = (T >= 278.15) & (T <= 318.15)
+    return theta, valid
+
+
+def HWT22_eqS5_7(T, q):
+    return (
+        q[0]
+        + q[1] / T
+        + q[2] * np.log(T)
+        + q[3] * T
+        + q[4] * T**2
+        + q[5] / (T - 227)
+        + q[6] / (647 - T)
+    )
+
+
+def bC_Na_OH_HWT22(T, P):
+    """c-a: sodium hydroxide [HWT22]."""
+    # This is PP87i but with P set to 1 bar and then the coefficients rounded off
+    b0 = HWT22_eqS5_7(
+        T,
+        [
+            2.76821967e2,
+            -7.37517417e3,
+            -4.93599700e1,
+            1.09458239e-1,
+            -4.02243907e-5,
+            1.19311220e1,
+            2.47767456,
+        ],
+    )
+    b1 = HWT22_eqS5_7(
+        T,
+        [
+            4.62869770e2,
+            -1.02941810e4,
+            -8.59605810e1,
+            2.39059690e-1,
+            -1.0795894e-4,
+            0,
+            0,
+        ],
+    )
+    b2 = 0
+    Cphi = HWT22_eqS5_7(
+        T,
+        [
+            -1.66864917e1,
+            4.53597896e2,
+            2.96807720,
+            -6.51722200e-3,
+            2.37747753e-6,
+            -6.89238990e-1,
+            -8.1156286e-2,
+        ],
+    )
+    C0 = Cphi / (2 * np.sqrt(np.abs(i2c["Na"] * i2c["OH"])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(P, 1, **pressure_tol)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def theta_H_K_HWT22(T, P):
+    """c-c': hydrogen potassium [HWT22]."""
+    # assuming CMR93's lowercase t means temperature minus 298.15 K
+    theta = 0.005 - 0.0002275 * (T - 298.15)
+    valid = (T >= 273.15) & (T <= 328.15)
+    return theta, valid
+
+
+def theta_H_Na_HWT22(T, P):
+    """c-c': hydrogen sodium [HWT22]."""
+    theta = 0.0306 - 4.18e-4 * (T - 298.15)
+    valid = (T >= 273.15) & (T <= 328.15)
+    return theta, valid
+
+
+# Extras from CWTD23
+
+
+def bC_Ca_SO4_HEW82(T, P):
+    """c-a: calcium sulfate [HEW82]."""
+    # Values taken from CWTD23 (SI6)
+    b0 = 0.2  # HW80 is cited for beta0 only
+    b1 = 3.1973 + 0.0546 * (T - 298.15)
+    b2 = -54.24 - 0.516 * (T - 298.15)
+    C0 = 0
+    C1 = 0
+    alph1 = 1.4
+    alph2 = 12.0
+    omega = -9
+    valid = np.isclose(P, 1, **pressure_tol)  # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_CaF_Cl_PM16(T, P):
+    """c-a: calcium-fluoride chloride [PM16]."""
+    # Values taken from CWTD23 (SI6)
+    b0 = 0.14047
+    b1 = 0.3022
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2.0
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_K_Br_CWTD23(T, P):
+    """c-a: potassium bromide [CWTD23]."""
+    b0 = MP98_eq15(
+        T,
+        [
+            0.0569,
+            -1.43,
+            7.39,
+        ],
+    )
+    # b1 = MP98_eq15(
+    #     T,
+    #     [
+    #         0.2212,  # 0.2122 in MP98 (my function, at least)
+    #         -0.762,
+    #         1.74,
+    #     ],
+    # )
+    # TODO not sure why above is incorrect, equation below is from CWTD23 code
+    Tr = 298.15
+    b1 = (
+        0.2212
+        + (0.762e-5 * Tr**3 / 3 - 17.4e-4 * Tr**2) * (1 / T - 1 / Tr)
+        + (0.762e-5 / 6) * (T**2 - Tr**2)
+    )
+    b2 = 0
+    Cphi = MP98_eq15(
+        T,
+        [
+            -0.0018,
+            0.216,
+            -0.7004,
+        ],
+    )
+    C0 = Cphi / (2 * np.sqrt(np.abs(i2c["K"] * i2c["Br"])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_K_CO3_CWTD23(T, P):
+    """c-a: potassium carbonate [CWTD23]."""
+    b0 = 0.1288 + 1.1e-3 * (T - 298.15) - 5.1e-6 * (T - 298.15) ** 2
+    b1 = 1.433 + 4.36e-3 * (T - 298.15) + 2.07e-5 * (T - 298.15) ** 2
+    b2 = 0
+    # CWTD23 declare Cphi = 0.0005, like MP98, but I can't find that anywhere in SRG87
+    Cphi = 0.0005
+    C0 = Cphi / (2 * np.sqrt(np.abs(i2c["K"] * i2c["CO3"])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_K_F_CWTD23(T, P):
+    """c-a: potassium fluoride [CWTD23]."""
+    Tr = 298.15
+    b0 = (
+        0.08089
+        + (-1.39e-5 * Tr**3 / 3 - 2.14e-4 * Tr**2) * (1 / T - 1 / Tr)
+        - (1.39e-5 / 6) * (T**2 - Tr**2)
+    )
+    b1 = 0.2021 - 5.44e-4 * Tr**2 * (1 / T - 1 / Tr)
+    b2 = 0
+    C0 = 0.5 * (0.00093 + 0.595e-4 * Tr**2 * (1 / T - 1 / Tr))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_K_HCO3_RGW84(T, P):
+    """c-a: potassium carbonate [RGW84]."""
+    # Values from CWTD23 SI6
+    Tr = 298.15
+    b0 = -0.0107 + 1.0e-3 * (T - Tr)
+    b1 = 0.0478 + 1.1e-3 * (T - Tr)
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_MgF_Cl_PM16(T, P):
+    """c-a: magnesium-fluoride chloride [PM16]."""
+    # Values taken from CWTD23 (SI6)
+    b0 = 0.2871
+    b1 = 0.4538
+    b2 = 0
+    Cphi = -0.037
+    C0 = Cphi / (2 * np.sqrt(np.abs(i2c["MgF"] * i2c["Cl"])))
+    C1 = 0
+    alph1 = 2.0
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_Na_CO3_CWTD23a(T, P):
+    """c-a: sodium carbonate [CWTD23]."""
+    # Like MP98 but with corrections for errors there (see CWTD23's SI6)
+    # This version follows the SI6 table but it's different from the SI7 code
+    b0 = 0.0362 + 1.437193e-2 * (T - 298.15) - 2.11e-5 * (T - 298.15) ** 2
+    b1 = 1.51 + 0.0521392 * (T - 298.15) - 8.4e-5 * (T - 298.15) ** 2
+    b2 = 0
+    Cphi = 0.0052
+    C0 = Cphi / (2 * np.sqrt(np.abs(i2c["Na"] * i2c["CO3"])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_Na_CO3_CWTD23b(T, P):
+    """c-a: sodium carbonate [CWTD23]."""
+    # Like MP98 but with corrections for errors there (see CWTD23's SI6)
+    # This version follows the SI7 code but it's different from the SI6 table
+    Tr = 298.15
+    b0 = (
+        0.0362
+        + (T - Tr) * (1.79e-3 - Tr * (-4.22e-5))
+        + 0.5 * (-4.22e-5) * (T**2 - Tr**2)
+    )
+    b1 = (
+        1.51
+        + (T - Tr) * (2.05e-3 - Tr * (-16.8e-5))
+        + 0.5 * (-16.8e-5) * (T**2 - Tr**2)
+    )
+    b2 = 0
+    Cphi = 0.0052
+    C0 = Cphi / (2 * np.sqrt(np.abs(i2c["Na"] * i2c["CO3"])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_Na_HCO3_CWTD23a(T, P):
+    """c-a: sodium bicarbonate [CWTD23]."""
+    # Like MP98 but with corrections for errors there (see CWTD23's SI6)
+    # This version follows the SI6 table but it's different from the SI7 code
+    b0 = 0.028 + 0.0087519 * (T - 298.15) - 1.3e-5 * (T - 298.15) ** 2
+    b1 = 0.044 + 0.01392045 * (T - 298.15) - 2.15e-5 * (T - 298.15) ** 2
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_Na_HCO3_CWTD23b(T, P):
+    """c-a: sodium bicarbonate [CWTD23]."""
+    # Like MP98 but with corrections for errors there (see CWTD23's SI6)
+    # This version follows the SI7 code but it's different from the SI6 table
+    Tr = 298.15
+    b0 = (
+        0.028
+        + (T - Tr) * (0.001 - Tr * (-2.6e-5))
+        + 0.5 * (-2.6e-5) * (T**2 - Tr**2)
+    )
+    b1 = (
+        0.044
+        + (T - Tr) * (0.0011 - Tr * (-4.3e-5))
+        + 0.5 * (-4.3e-5) * (T**2 - Tr**2)
+    )
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_Na_F_CWTD23(T, P):
+    """c-a: sodium fluoride [CWTD23]."""
+    Tr = 298.15
+    b0 = (
+        0.0215
+        + (-2.37e-5 * Tr**3 / 3 - 5.361e-4 * Tr**2) * (1 / T - 1 / Tr)
+        + (-2.37e-5 / 6) * (T**2 - Tr**2)
+    )
+    b1 = 0.2107 + (-8.7e-4 * Tr**2) * (1 / T - 1 / Tr)
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_Na_HSO4_CWTD23(T, P):
+    """c-a: sodium bisulfate [CWTD23]."""
+    b0 = 0.02634 + 0.001324 * (T - 298.15) - 1.852e-5 * (T - 298.15) ** 2
+    b1 = 0.9159 - 0.007161 * (T - 298.15)
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_Sr_Cl_CWTD23(T, P):
+    """c-a: strontium chloride [CWTD23]."""
+    Tr = 298.15
+    b0 = (
+        0.28575
+        + (-0.18367e-5 * Tr**3 / 3 - 9.56e-4 * 0.75 * Tr**2) * (1 / T - 1 / Tr)
+        + (-0.18367e-5 / 6) * (T**2 - Tr**2)
+    )
+    b1 = 1.66725 - 0.00379 * 0.75 * Tr**2 * (1 / T - 1 / Tr)
+    b2 = 0
+    Cphi = -0.0013
+    C0 = Cphi / (2 * np.sqrt(np.abs(i2c["Sr"] * i2c["Cl"])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown validity
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def theta_BOH4_Cl_CWTD23(T, P):
+    """a-a': borate chloride [CWTD23]."""
+    # Like the MP98 function but with one fewer digit on the -0.4233e-4 term
+    # CWTD23 cite 02P for this
+    theta = -0.0323 + (T - 298.15) * -0.4233e-4 + (T - 298.15) ** 2 * -21.926e-6
+    valid = (T >= 273.15) & (T <= 318.15)
+    return theta, valid
+
+
+def psi_Na_Cl_F_CWTD23(T, P):
+    """c-a-a': sodium chloride fluoride [CWTD23]."""
+    # From 88CB (not checked).  Similar to MP98 but with an extra 3 at the end
+    psi = 0.00233
+    valid = np.isclose(T, 298.15, **temperature_tol)
+    return psi, valid
+
+
+def theta_Cl_OH_CWTD23(T, P):
+    """a-a': chloride hydroxide [CWTD23]."""
+    # 02P cited
+    theta = -0.05 + 0.0003125 * (T - 298.15) - 0.000008362 * (T - 298.15) ** 2
+    valid = np.isclose(T, 298.15, **temperature_tol)  # unknown
+    return theta, valid
+
+
+def lambd_MgCO3_Na_CWTD23(T, P):
+    """n-c: magnesium-carbonate sodium [CWTD23]."""
+    # CWTD23 cite 83MT
+    lambd = 0.0745
+    valid = np.isclose(T, 298.15, **temperature_tol)
+    return lambd, valid
+
+
+def bC_Mg_HCO3_CWTD23(T, P):
+    """c-a: magnesium bicarbonate [CWTD23]."""
+    # Like POS85 but skipping the final digit (without rounding)
+    b0 = 0.03
+    b1 = 0.8
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_Ca_HCO3_CWTD23(T, P):
+    """c-a: calcium bicarbonate [CWTD23]."""
+    # Like POS85 but skipping the final digit (without rounding)
+    b0 = 0.2
+    b1 = 0.3
+    b2 = 0
+    C0 = 0
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = np.isclose(T, 298.15, **temperature_tol)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_Na_Br_CWTD23(T, P):
+    """c-a: sodium bromide [CWTD23]."""
+    b0 = MP98_eq15(
+        T,
+        [
+            0.0973,
+            -1.3,
+            7.692,
+        ],
+    )
+    b1 = MP98_eq15(
+        T,
+        [
+            0.2791,
+            -1.06,
+            10.79,
+        ],
+    )
+    b2 = 0
+    Cphi = MP98_eq15(
+        T,
+        [
+            0.00116,
+            0.116,
+            -0.93,
+        ],
+    )
+    C0 = Cphi / (2 * np.sqrt(np.abs(i2c["Na"] * i2c["Br"])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = (T >= 273.15) & (T <= 323.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_Na_BOH4_CWTD23(T, P):
+    """c-a: sodium borate [CWTD23]."""
+    # Like SRRJ87 but with different C0, not sure why, TODO need to figure this out
+    b0 = SRRJ87_eq7(
+        T,
+        [
+            -0.0510,
+            5.264,
+            0,
+        ],
+    )
+    b1 = SRRJ87_eq7(
+        T,
+        [
+            0.0961,
+            -10.68,
+            0,
+        ],
+    )
+    b2 = 0
+    Cphi = 14.98e-3 - 1.57e-3 * (T - 298.15)
+    C0 = Cphi / (2 * np.sqrt(np.abs(i2c["Na"] * i2c["BOH4"])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = (T >= 278.15) & (T <= 328.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid
+
+
+def bC_K_BOH4_CWTD23(T, P):
+    """c-a: potassium borate [CWTD23]."""
+    # TODO not sure why C0 doesn't match the paper
+    b0 = SRRJ87_eq7(
+        T,
+        [
+            0.1469,
+            2.881,
+            0,
+        ],
+    )
+    b1 = SRRJ87_eq7(
+        T,
+        [
+            -0.0989,
+            -6.876,
+            0,
+        ],
+    )
+    b2 = 0
+    Cphi = -0.05643 - 9.56e-4 * (T - 298.15)
+    C0 = Cphi / (2 * np.sqrt(np.abs(i2c["K"] * i2c["BOH4"])))
+    C1 = 0
+    alph1 = 2
+    alph2 = -9
+    omega = -9
+    valid = (T >= 278.15) & (T <= 328.15)
+    return b0, b1, b2, C0, C1, alph1, alph2, omega, valid

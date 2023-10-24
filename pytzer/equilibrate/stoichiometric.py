@@ -1,5 +1,5 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2021  Matthew P. Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2023  Matthew P. Humphreys  (GNU GPLv3)
 """Solve for stoichiometric equilibrium."""
 
 from collections import OrderedDict
@@ -92,6 +92,7 @@ def get_alkalinity(solutes):
         + add_if_in("NH3")
         + add_if_in("H3SiO4")
         - add_if_in("HNO2")
+        + add_if_in("tris")
     )
 
 
@@ -117,6 +118,7 @@ def get_explicit_alkalinity(totals):
         - add_if_in("SO4") * 2
         + add_if_in("NH3")
         - add_if_in("NO2")
+        + add_if_in("tris")
     )
 
 

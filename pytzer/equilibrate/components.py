@@ -1,5 +1,5 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2021  Matthew P. Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2023  Matthew P. Humphreys  (GNU GPLv3)
 """Calculate molality of each solution component."""
 
 from collections import OrderedDict
@@ -42,7 +42,7 @@ def get_CO3(h, totals, ks_constants):
         t["CO2"]
         * k["H2CO3"]
         * k["HCO3"]
-        / (h ** 2 + k["H2CO3"] * h + k["H2CO3"] * k["HCO3"])
+        / (h**2 + k["H2CO3"] * h + k["H2CO3"] * k["HCO3"])
     )
 
 
@@ -53,7 +53,7 @@ def get_HCO3(h, co3, ks_constants):
 
 def get_CO2(h, co3, ks_constants):
     k = ks_constants
-    return co3 * h ** 2 / (k["H2CO3"] * k["HCO3"])
+    return co3 * h**2 / (k["H2CO3"] * k["HCO3"])
 
 
 def get_PO4(h, totals, ks_constants):
@@ -64,8 +64,8 @@ def get_PO4(h, totals, ks_constants):
         * k["H2PO4"]
         * k["HPO4"]
         / (
-            h ** 3
-            + k["H3PO4"] * h ** 2
+            h**3
+            + k["H3PO4"] * h**2
             + k["H3PO4"] * k["H2PO4"] * h
             + k["H3PO4"] * k["H2PO4"] * k["HPO4"]
         )
@@ -81,12 +81,12 @@ def get_HPO4(h, po4, ks_constants):
 @get_wrap
 def get_H2PO4(h, po4, ks_constants):
     k = ks_constants
-    return po4 * h ** 2 / (k["H2PO4"] * k["HPO4"])
+    return po4 * h**2 / (k["H2PO4"] * k["HPO4"])
 
 
 def get_H3PO4(h, po4, ks_constants):
     k = ks_constants
-    return po4 * h ** 3 / (k["H3PO4"] * k["H2PO4"] * k["HPO4"])
+    return po4 * h**3 / (k["H3PO4"] * k["H2PO4"] * k["HPO4"])
 
 
 def get_SO4(h, totals, ks_constants):
@@ -149,6 +149,16 @@ def get_BOH3(h, totals, ks_constants):
     return h * t["BOH3"] / (h + k["BOH3"])
 
 
+def get_tris(h, totals, ks_constants):
+    t, k = totals, ks_constants
+    return k["trisH"] * t["tris"] / (h + k["trisH"])
+
+
+def get_trisH(h, totals, ks_constants):
+    t, k = totals, ks_constants
+    return h * t["tris"] / (h + k["trisH"])
+
+
 def get_Ca(h, f, co3, po4, totals, ks_constants):
     H2PO4 = get_H2PO4(h, po4, ks_constants)
     HPO4 = get_HPO4(h, po4, ks_constants)
@@ -206,7 +216,7 @@ def get_Mg(h, f, co3, po4, totals, ks_constants):
     t, k = totals, ks_constants
     denom = 1.0
     if "MgOH" in k:
-        denom = denom + k["MgOH"] * OH
+        denom = denom + OH / k["MgOH"]
     if "MgF" in k:
         denom = denom + k["MgF"] * f
     if "MgCO3" in k:
@@ -224,7 +234,7 @@ def get_MgOH(h, f, co3, po4, totals, ks_constants):
     Mg = get_Mg(h, f, co3, po4, totals, ks_constants)
     OH = get_OH(h, ks_constants)
     k = ks_constants
-    return k["MgOH"] * Mg * OH
+    return Mg * OH / k["MgOH"]
 
 
 def get_MgF(h, f, co3, po4, totals, ks_constants):
@@ -315,6 +325,9 @@ def find_solutes(totals, ks_constants, ptargets=None):
     if "NO2" in totals and "HNO2" in ks_constants:
         solutes.append("HNO2")
         solutes.append("NO2")
+    if "tris" in totals and "trisH" in ks_constants:
+        solutes.append("tris")
+        solutes.append("trisH")
     if "F" in targets and "F" in totals:
         if "Ca" in totals and "CaF" in ks_constants:
             solutes.append("CaF")
@@ -371,7 +384,7 @@ def find_solutes(totals, ks_constants, ptargets=None):
 
 @jax.jit
 def get_solutes(totals, ks_constants, ptargets):
-    targets = OrderedDict((k, 10.0 ** -v) for k, v in ptargets.items())
+    targets = OrderedDict((k, 10.0**-v) for k, v in ptargets.items())
     solutes = OrderedDict()
     totals = totals.copy()
     solutes.update(totals)
@@ -417,6 +430,9 @@ def get_solutes(totals, ks_constants, ptargets):
     if "NO2" in totals and "HNO2" in ks_constants:
         solutes["HNO2"] = get_HNO2(h, totals, ks_constants)
         solutes["NO2"] = get_NO2(h, totals, ks_constants)
+    if "tris" in totals and "trisH" in ks_constants:
+        solutes["tris"] = get_tris(h, totals, ks_constants)
+        solutes["trisH"] = get_trisH(h, totals, ks_constants)
     if "F" in targets and "F" in totals:
         if "Ca" in totals and "CaF" in ks_constants:
             solutes["CaF"] = get_CaF(h, f, co3, po4, totals, ks_constants)
