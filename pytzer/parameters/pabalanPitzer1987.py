@@ -1,5 +1,5 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2023  Matthew P. Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2024  Matthew P. Humphreys  (GNU GPLv3)
 """PP87ii: Pabalan & Pitzer (1987) Geochim. Cosmochim. Acta 51(9), 2429-2443.
 https://doi.org/10.1016/0016-7037(87)90295-X
 """

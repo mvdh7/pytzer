@@ -1,3 +1,5 @@
+# Pytzer: Pitzer model for chemical activities in aqueous solutions.
+# Copyright (C) 2019--2024  Matthew P. Humphreys  (GNU GPLv3)
 import jax
 from jax import numpy as np
 from . import convert, model
