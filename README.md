@@ -20,15 +20,17 @@ Pytzer is a Python implementation of the Pitzer model for chemical activities in
 
 ## Installation
 
-Due to its dependency on [JAX](https://github.com/google/jax), Pytzer can only be installed on Unix systems, although it does work on Windows via [WSL](https://docs.microsoft.com/en-us/windows/wsl/).
-
 ### For general use
 
-Install with pip:
+Install with pip (any OS):
 
     pip install pytzer
 
-Note that you should also install the dependencies (especially NumPy) using pip, not conda, for best performance.  This happens automatically with the above command if the dependencies are not already installed.
+On Mac or Linux, you can alternatively install from conda-forge:
+
+    conda install conda-forge::pytzer
+
+However, the above will not work on Windows, because jax is not on conda-forge for Windows - so use pip instead.
 
 Once installed, you will need to set the environment variable `JAX_ENABLE_X64=True`.  For example, using conda:
 
