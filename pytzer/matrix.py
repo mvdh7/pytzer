@@ -155,24 +155,29 @@ def Gibbs_nRT(
     Z = ionic_z(molalities, charges)
     m_cats_cats = np.array([(np.transpose(m_cats) @ m_cats)[n_cats_triu]])
     m_anis_anis = np.array([(np.transpose(m_anis) @ m_anis)[n_anis_triu]])
-    Gibbs_nRT = model.Gibbs_DH(Aphi, I) + molalities @ (
-        sum_B_CT(
-            I,
-            Z,
-            beta0_ca,
-            beta1_ca,
-            beta2_ca,
-            alpha1_ca,
-            alpha2_ca,
-            c0_ca,
-            c1_ca,
-            omega_ca,
+    Gibbs_nRT = (
+        model.Gibbs_DH(Aphi, I)
+        + molalities
+        @ (
+            sum_B_CT(
+                I,
+                Z,
+                beta0_ca,
+                beta1_ca,
+                beta2_ca,
+                alpha1_ca,
+                alpha2_ca,
+                c0_ca,
+                c1_ca,
+                omega_ca,
+            )
+            + theta_xx
+            + lambda_nx
         )
-        + theta_xx
-        + lambda_nx
-    ) @ np.transpose(molalities)
-    +m_cats @ etheta(Aphi, I, z_cats) @ np.transpose(m_cats)
-    +m_anis @ etheta(Aphi, I, z_anis) @ np.transpose(m_anis)
+        @ np.transpose(molalities)
+        + m_cats @ etheta(Aphi, I, z_cats) @ np.transpose(m_cats)
+        + m_anis @ etheta(Aphi, I, z_anis) @ np.transpose(m_anis)
+    )
     if psi_cca.size > 0:
         Gibbs_nRT = Gibbs_nRT + m_cats_cats @ psi_cca @ np.transpose(m_anis)
     if psi_caa.size > 0:
