@@ -406,9 +406,9 @@ class ParameterLibrary(dict):
                         report_missing_coeffs(solute_x, solute_y)
                 try:
                     param_theta = self["cc"][solute_x][solute_y](*TP)[0]
-                    parameters["theta_xx"][x, y] = parameters["theta_xx"][
-                        y, x
-                    ] = param_theta
+                    parameters["theta_xx"][x, y] = parameters["theta_xx"][y, x] = (
+                        param_theta
+                    )
                 except KeyError:
                     if solute_x != solute_y:
                         if (
@@ -418,9 +418,9 @@ class ParameterLibrary(dict):
                             report_missing_coeffs(solute_x, solute_y)
                 try:
                     param_theta = self["aa"][solute_x][solute_y](*TP)[0]
-                    parameters["theta_xx"][x, y] = parameters["theta_xx"][
-                        y, x
-                    ] = param_theta
+                    parameters["theta_xx"][x, y] = parameters["theta_xx"][y, x] = (
+                        param_theta
+                    )
                 except KeyError:
                     if solute_x != solute_y:
                         if (
@@ -430,25 +430,25 @@ class ParameterLibrary(dict):
                             report_missing_coeffs(solute_x, solute_y)
                 try:
                     param_lambda = self["nc"][solute_x][solute_y](*TP)[0]
-                    parameters["lambda_nx"][x, y] = parameters["lambda_nx"][
-                        x, y
-                    ] = param_lambda
+                    parameters["lambda_nx"][x, y] = parameters["lambda_nx"][x, y] = (
+                        param_lambda
+                    )
                 except KeyError:
                     if solute_x in convert.all_neutrals:
                         report_missing_coeffs(solute_x, solute_y)
                 try:
                     param_lambda = self["na"][solute_x][solute_y](*TP)[0]
-                    parameters["lambda_nx"][x, y] = parameters["lambda_nx"][
-                        x, y
-                    ] = param_lambda
+                    parameters["lambda_nx"][x, y] = parameters["lambda_nx"][x, y] = (
+                        param_lambda
+                    )
                 except KeyError:
                     if solute_x in convert.all_neutrals:
                         report_missing_coeffs(solute_x, solute_y)
                 try:
                     param_lambda = self["nn"][solute_x][solute_y](*TP)[0]
-                    parameters["lambda_nx"][x, y] = parameters["lambda_nx"][
-                        x, y
-                    ] = param_lambda
+                    parameters["lambda_nx"][x, y] = parameters["lambda_nx"][x, y] = (
+                        param_lambda
+                    )
                 except KeyError:
                     if solute_x in convert.all_neutrals:
                         report_missing_coeffs(solute_x, solute_y)

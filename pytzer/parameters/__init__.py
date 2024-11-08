@@ -12092,16 +12092,8 @@ def bC_Na_HCO3_CWTD23b(T, P):
     # Like MP98 but with corrections for errors there (see CWTD23's SI6)
     # This version follows the SI7 code but it's different from the SI6 table
     Tr = 298.15
-    b0 = (
-        0.028
-        + (T - Tr) * (0.001 - Tr * (-2.6e-5))
-        + 0.5 * (-2.6e-5) * (T**2 - Tr**2)
-    )
-    b1 = (
-        0.044
-        + (T - Tr) * (0.0011 - Tr * (-4.3e-5))
-        + 0.5 * (-4.3e-5) * (T**2 - Tr**2)
-    )
+    b0 = 0.028 + (T - Tr) * (0.001 - Tr * (-2.6e-5)) + 0.5 * (-2.6e-5) * (T**2 - Tr**2)
+    b1 = 0.044 + (T - Tr) * (0.0011 - Tr * (-4.3e-5)) + 0.5 * (-4.3e-5) * (T**2 - Tr**2)
     b2 = 0
     C0 = 0
     C1 = 0
