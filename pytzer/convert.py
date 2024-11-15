@@ -52,7 +52,7 @@ salt_to_solute = {
 
 
 def from_salt_get_solutes(salt, molality):
-    solutes = pz.odict()
+    solutes = OrderedDict()
     if salt in salt_to_solute:
         for k, v in salt_to_solute[salt].items():
             solutes[k] = molality * v
