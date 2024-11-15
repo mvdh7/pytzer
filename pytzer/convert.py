@@ -20,6 +20,74 @@ def log_activities_to_mean(log_acf_M, log_acf_X, n_M, n_X):
     return (n_M * log_acf_M + n_X * log_acf_X) / (n_M + n_X)
 
 
+# Salts to their solutes
+salt_to_solute = {
+    "BaBr2": dict(Ba=1, Br=2),
+    "BaCl2": dict(Ba=1, Cl=2),
+    "CaBr2": dict(Ca=1, Br=2),
+    "CaCl2": dict(Ca=1, Cl=2),
+    "CaI2": dict(Ca=1, I=1),
+    "CsBr": dict(Cs=1, Br=1),
+    "CsCl": dict(Cs=1, Cl=1),
+    "CsI": dict(Cs=1, I=1),
+    "H2SO4": dict(H=2, SO4=1),
+    "KBr": dict(K=1, Br=1),
+    "KCl": dict(K=1, Cl=1),
+    "KI": dict(K=1, I=1),
+    "KSCN": dict(K=1, SCN=1),
+    "LiCl": dict(Li=1, Cl=1),
+    "LiNO3": dict(Li=1, NO3=1),
+    "MgCl2": dict(Mg=1, Cl=2),
+    "NH4NO3": dict(NH4=1, NO3=1),
+    "Na2SO4": dict(Na=2, SO4=1),
+    "NaBr": dict(Na=1, Br=1),
+    "NaCl": dict(Na=1, Cl=1),
+    "NaI": dict(Na=1, I=1),
+    "NaOH": dict(Na=1, OH=1),
+    "RbCl": dict(Rb=1, Cl=1),
+    "SrBr2": dict(Sr=1, Br=2),
+    "SrCl2": dict(Sr=1, Cl=2),
+    "SrI2": dict(Sr=1, I=2),
+}
+
+
+def from_salt_get_solutes(salt, molality):
+    solutes = pz.odict()
+    if salt in salt_to_solute:
+        for k, v in salt_to_solute[salt].items():
+            solutes[k] = molality * v
+    return solutes
+
+
+salt_format = {
+    "BaBr2": "BaBr$_2$",
+    "BaCl2": "BaCl$_2$",
+    "CaBr2": "CaBr$_2$",
+    "CaCl2": "CaCl$_2$",
+    "CaI2": "CaI$_2$",
+    "CsBr": "CsBr",
+    "CsCl": "CsCl",
+    "CsI": "CsI",
+    "H2SO4": "H$_2$SO$_4$",
+    "KBr": "KBr",
+    "KCl": "KCl",
+    "KI": "KI",
+    "LiCl": "LiCl",
+    "LiNO3": "LiNO$_3$",
+    "MgCl2": "MgCl$_2$",
+    "NH4NO3": "NH4NO3",
+    "Na2SO4": "Na$_2$SO$_4$",
+    "NaBr": "NaBr",
+    "NaCl": "NaCl",
+    "NaI": "NaI",
+    "NaOH": "NaOH",
+    "RbCl": "RbCl",
+    "KSCN": "KSCN",
+    "SrBr2": "SrBr$_2$",
+    "SrCl2": "SrCl$_2$",
+    "SrI2": "SrI$_2$",
+}
+
 # Define dict of charges.
 # Order: neutrals, cations, then anions, and alphabetical within each group.
 solute_to_charge = {
