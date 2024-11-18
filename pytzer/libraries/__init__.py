@@ -38,6 +38,42 @@ WM13_C22 = Waters13_Clegg22
 WM13_H22 = Waters13_Humphreys22
 WM13_MCS25 = Waters13_MarChemSpec25
 
-# solutes_MarChemSpec = np.array(
-#     ["H", "Na", "Mg", "Ca", "K", "MgOH", "trisH", "Cl", "SO4", "HSO4", "OH", "tris"]
-# )
+# And a dict for even more convenience
+libraries = {
+    k.lower(): v
+    for k, v in {
+        "Clegg22": Clegg22,
+        "CHW22": Clegg22,
+        "Clegg23": Clegg23,
+        "CWTD23": Clegg23,
+        "Clegg94": Clegg94,
+        "CRP94": Clegg94,
+        "Greenberg89": Greenberg89,
+        "GM89": Greenberg89,
+        "Harvie84": Harvie84,
+        "HMW84": Harvie84,
+        "HeMorse93": HeMorse93,
+        "HM93": HeMorse93,
+        "Humphreys22": Humphreys22,
+        "HWT22": Humphreys22,
+        "MyMarChemSpecCO2": MyMarChemSpecCO2,
+        "myMCS": MyMarChemSpecCO2,
+        "MarChemSpec": MarChemSpec,
+        "MCS": MarChemSpec,
+        "MarChemSpec25": MarChemSpec25,
+        "MCS25": MarChemSpec25,
+        "Millero98": Millero98,
+        "MP98": Millero98,
+        "Moller88": Moller88,
+        "M88": Moller88,
+        "Seawater": Seawater,
+        "Waters13": Waters13,
+        "WM13": Waters13,
+        "Waters13_Clegg22": Waters13_Clegg22,
+        "WM13_C22": Waters13_Clegg22,
+        "Waters13_Humphreys22": Waters13_Humphreys22,
+        "WM13_H22": Waters13_Humphreys22,
+        "Waters13_MarChemSpec25": Waters13_MarChemSpec25,
+        "WM13_MCS25": Waters13_MarChemSpec25,
+    }.items()
+}

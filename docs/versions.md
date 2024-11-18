@@ -1,5 +1,14 @@
 # Version history
 
+## 0.6 [beta]
+
+Increases the range of properties that can be computed, especially those requiring temperature and pressure derivatives.
+
+!!! new-version "Changes in v0.6.0"
+    * Rewrote central `pz.model.Gibbs_nRT` function so it is differentiable with respect to temperature and pressure.
+    * New function is also somewhat faster (30-100% depending on which derivative is taken).
+    * Mechanism for switching between different parameter libraries updated.
+
 ## 0.5 [beta]
 
 Switches from Autograd to [JAX](https://jax.readthedocs.io/en/latest/) for faster automatic differentiation and JIT compilation.

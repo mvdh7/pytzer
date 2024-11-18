@@ -30,6 +30,7 @@ from . import (
     matrix,
     meta,
     model,
+    model_old,
     parameters,
     prepare,
     properties,
@@ -47,7 +48,7 @@ from .equilibrate.stoichiometric import solve as solve_stoichiometric
 from .equilibrate.thermodynamic import solve as solve_thermodynamic
 from .get import solve_df
 from .libraries import ParameterLibrary
-from .meta import hello, update_func_J
+from .meta import hello, update_func_J, update_library
 from .model import (
     activity_coefficients,
     activity_water,
