@@ -32,7 +32,7 @@ pz.hello()
 
 ## Acknowledgements
 
-Pytzer is maintained by [Dr Matthew P. Humphreys](https://seaco2.group) at the NIOZ Royal Netherlands Institute for Sea Research (Texel, the Netherlands).  Its initial development at the University of East Anglia was funded indirectly by the Natural Environment Research Council (NERC, UK).
+Pytzer is maintained by [Dr Matthew P. Humphreys](https://hseao3.group) at the NIOZ Royal Netherlands Institute for Sea Research (Texel, the Netherlands).  Its initial development at the University of East Anglia was funded indirectly by the Natural Environment Research Council (NERC, UK).
 
 Pytzer contains many functions and coefficients representing the effects of different solute interactions on solution properties that have been empirically determined from painstaking experiments and data compilations by hundreds of researchers over the course at least a century.  We have done our best to list the small selection of this enormous body of work brought together here in the [references](refs).
 
