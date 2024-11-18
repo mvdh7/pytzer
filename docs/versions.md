@@ -4,6 +4,8 @@
 
 Increases the range of properties that can be computed, especially those requiring temperature and pressure derivatives.
 
+### 0.6.0 (forthcoming)
+
 !!! new-version "Changes in v0.6.0"
     * Rewrote central `pz.model.Gibbs_nRT` function so it is differentiable with respect to temperature and pressure.
     * New function is also somewhat faster (30-100% depending on which derivative is taken).
