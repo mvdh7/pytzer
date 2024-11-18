@@ -1,5 +1,5 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2024  Matthew P. Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2024  M.P. Humphreys  (GNU GPLv3)
 """Clegg et al. (1994).  System: H-HSO4-SO4.
 *Journal of the Chemical Society, Faraday Transactions* 90, 1875--1894.
 doi:10.1039/FT9949001875
