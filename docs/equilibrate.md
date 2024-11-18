@@ -45,7 +45,7 @@ solutes, pks_constants = pz.solve(
   * `exclude_equilibria` allows you to list equilibria that will not be included in the model.
   * `ks_constants` allows you to provide your own initial-guess values of the stoichiometric equilibrium constants, as a `dict`.
   * `ks_only` allows you to list equilibria for which the thermodyamic constants are not used (i.e. the initial stoichiometric constants are kept constant).
-  * `library` is the [`ParameterLibrary`](../params/#parameter-libraries) that you want to use.
+  * `library` is the [`ParameterLibrary`](../libraries/#parameter-libraries) that you want to use.
   * `pressure` is the pressure in dbar.
   * `temperature` is the temperature in K.
   * `verbose` controls how much information is sent to stdout.

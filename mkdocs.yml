@@ -27,7 +27,7 @@ plugins:
 
 nav:
   - Overview: index.md
-  - Model parameters: params.md
+  - Model parameters: libraries.md
   - The Pitzer model: model.md
   - Solving equilibria: equilibrate.md
   - References: refs.md
