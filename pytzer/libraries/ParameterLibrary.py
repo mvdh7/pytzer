@@ -136,6 +136,10 @@ class ParameterLibrary(dict):
         if "equilibria" not in self:
             self["equilibria"] = OrderedDict()
         self["equilibria"][equilibrium] = func
+        self.get_equilibria_all()
+
+    def get_equilibria_all(self):
+        self["equilibria_all"] = list(self["equilibria"].keys())
 
     def get_parameters(
         self,

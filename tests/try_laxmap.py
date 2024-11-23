@@ -48,13 +48,20 @@ print(Gl)
 
 
 # %% Solver
+equilibria_all = ["H2O", "H2CO3", "HCO3"]  # TODO to be removed eventually
+
+
 def alkalinity_from_pH_ks(stoich, totals, thermo):
     pH = stoich[0]
     h = 10**-pH
-    lnks_H2O, lnks_H2CO3, lnks_HCO3 = thermo
-    ks_H2O, ks_H2CO3, ks_HCO3 = np.exp(thermo)
+    equilibria = equilibria_all
+    # TODO replace above with:
+    # equilibria = pz.model.library["equilibria_all"]
+    ks_H2O = np.exp(thermo[equilibria.index("H2O")])
     alkalinity = ks_H2O / h + h
     if "CO2" in totals:
+        ks_H2CO3 = np.exp(thermo[equilibria.index("H2CO3")])
+        ks_HCO3 = np.exp(thermo[equilibria.index("HCO3")])
         alkalinity = alkalinity + (
             totals["CO2"]
             * ks_H2CO3
@@ -71,8 +78,15 @@ def get_stoich_error(stoich, totals, thermo, stoich_targets):
 def get_thermo_error(thermo, totals, temperature, pressure, stoich, thermo_targets):
     pH = stoich[0]
     h = 10**-pH
-    lnks_H2O, lnks_H2CO3, lnks_HCO3 = thermo
-    ks_H2O, ks_H2CO3, ks_HCO3 = np.exp(thermo)
+    equilibria = equilibria_all
+    # TODO replace above with:
+    # equilibria = pz.model.library["equilibria_all"]
+    lnks_H2O = thermo[equilibria.index("H2O")]
+    lnks_H2CO3 = thermo[equilibria.index("H2CO3")]
+    lnks_HCO3 = thermo[equilibria.index("HCO3")]
+    ks_H2O = np.exp(lnks_H2O)
+    ks_H2CO3 = np.exp(lnks_H2CO3)
+    ks_HCO3 = np.exp(lnks_HCO3)
     # Get shots at the targets
     solutes = totals.copy()
     solutes["H"] = h
@@ -87,16 +101,19 @@ def get_thermo_error(thermo, totals, temperature, pressure, stoich, thermo_targe
     solutes["CO3"] = total_CO2 * ks_H2CO3 * ks_HCO3 / co2_denom
     ln_acfs = pz.log_activity_coefficients(solutes, temperature, pressure)
     ln_aw = pz.log_activity_water(solutes, temperature, pressure)
-    lnk_H2O = lnks_H2O + ln_acfs["H"] + ln_acfs["OH"] - ln_aw
-    lnk_H2CO3 = lnks_H2CO3 + ln_acfs["HCO3"] + ln_acfs["H"] - ln_acfs["CO2"] - ln_aw
-    lnk_HCO3 = lnks_HCO3 + ln_acfs["CO3"] + ln_acfs["H"] - ln_acfs["HCO3"]
-    thermo_attempt = np.array(
-        [
-            lnk_H2O,
-            lnk_H2CO3,
-            lnk_HCO3,
-        ]
-    )
+    lnk = {}
+    if "H2O" in equilibria:
+        lnk["H2O"] = lnks_H2O + ln_acfs["H"] + ln_acfs["OH"] - ln_aw
+    if "H2CO3" in equilibria:
+        lnk["H2CO3"] = (
+            lnks_H2CO3 + ln_acfs["HCO3"] + ln_acfs["H"] - ln_acfs["CO2"] - ln_aw
+        )
+    if "HCO3" in equilibria:
+        lnk["HCO3"] = lnks_HCO3 + ln_acfs["CO3"] + ln_acfs["H"] - ln_acfs["HCO3"]
+    thermo_attempt = []
+    for eq in equilibria:
+        thermo_attempt.append(lnk[eq])
+    thermo_attempt = np.array(thermo_attempt)
     thermo_error = thermo_attempt - thermo_targets
     return thermo_error
 
@@ -146,12 +163,11 @@ def solve_combined(
             pz.equilibrate.stoichiometric.get_explicit_alkalinity(totals),
         ]
     )
+    equilibria = equilibria_all
+    # TODO replace above with:
+    # equilibria = pz.model.library["equilibria_all"]
     thermo_targets = np.array(
-        [
-            pz.model.library["equilibria"]["H2O"](temperature),
-            pz.model.library["equilibria"]["H2CO3"](temperature),
-            pz.model.library["equilibria"]["HCO3"](temperature),
-        ]
+        [pz.model.library["equilibria"][eq](temperature) for eq in equilibria]
     )  # these are ln(k)
     if stoich is None:
         stoich = np.array([8.0])  # TODO improve this
@@ -179,12 +195,13 @@ def solve_combined(
         )
         thermo_adjust = np.linalg.solve(-thermo_error_jac, thermo_error)
         thermo = thermo + thermo_adjust
+        # TODO return thermo as a dict using `equilibria` for its order (stoich too?)
     return stoich, thermo
 
 
 # %%
 totals = {
-    "CO2": 0.000,
+    "CO2": 0.002,
     "Na": 0.5023,
     "K": 0.2,
     "Cl": 0.7,
@@ -203,19 +220,27 @@ coeffs = np.array([lnks_H2O_guess, lnks_H2CO3_guess, lnks_HCO3_guess])
 thermo = coeffs
 stoich = np.array([pH_guess])
 pH, coeffs_final = solve_combined(totals, temperature, pressure, stoich=stoich)
-print(pH_guess)
+print(stoich)
 print(pH)
 print(coeffs)
 print(coeffs_final)
+# [8.]
+# [8.80790987]
+# [-32.22023869 -14.62482355 -23.78504939]
+# [-31.56800073 -13.74433547 -22.05412728]
 
 
 # %%
 def solve_combined_CO2(total_CO2, totals, temperature, pressure):
     totals["CO2"] = total_CO2
-    return solve_combined(totals, temperature, pressure)
+    return solve_combined(totals, temperature, pressure)[0][0]
 
 
-# ^ this can be gradded w.r.t. total_CO2
+# ^ this can be gradded w.r.t. total_CO2:
+scgrad = jax.jacfwd(solve_combined_CO2)(0.002, totals, temperature, pressure)
+tgrad = jax.jacfwd(
+    lambda temperature: solve_combined(totals, temperature, pressure)[0][0]
+)(298.15)
 
 # %% pH solver (jax)
 # pH_lnks = np.array([pH_guess, *coeffs])
