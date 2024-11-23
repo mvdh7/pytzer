@@ -115,8 +115,8 @@ def solve_combined(
     totals,
     temperature,
     pressure,
-    stoich,
-    thermo,
+    stoich=None,
+    thermo=None,
     iter_thermo=5,
     iter_stoich_per_thermo=3,
 ):
@@ -130,14 +130,14 @@ def solve_combined(
         Temperature in K.
     pressure : float
         Pressure in dbar.
-    stoich : float
+    stoich : array-like, optional
         First guess for pH.
-    thermo : array-like
+    thermo : array-like, optional
         First guesses for the natural logarithms of the stoichiometric equilibrium
         constants.
-    iter_thermo : int
+    iter_thermo : int, optional
         How many times to iterate the thermo part of the solver, by default 5.
-    iter_pH_per_thermo : int
+    iter_pH_per_thermo : int, optional
         How many times to iterate the stoich part of the solver per thermo loop, by
         default 3.
 
@@ -161,6 +161,10 @@ def solve_combined(
             pz.model.library["equilibria"]["H2O"](temperature),
         ]
     )  # these are ln(k)
+    if stoich is None:
+        stoich = np.array([8.0])  # TODO improve this
+    if thermo is None:
+        thermo = thermo_targets.copy()
     # Solve!
     for _ in range(iter_thermo):
         for _ in range(iter_stoich_per_thermo):
@@ -185,7 +189,7 @@ def solve_combined(
 
 thermo = coeffs
 stoich = np.array([pH_guess])
-pH, coeffs_final = solve_combined(totals, temperature, pressure, stoich, thermo)
+pH, coeffs_final = solve_combined(totals, temperature, pressure)
 print(pH_guess)
 print(pH)
 print(coeffs)
@@ -193,9 +197,9 @@ print(coeffs_final)
 
 
 # %%
-def solve_combined_CO2(total_CO2, totals, temperature, pressure, stoich, thermo):
+def solve_combined_CO2(total_CO2, totals, temperature, pressure):
     totals["CO2"] = total_CO2
-    return solve_combined(totals, temperature, pressure, stoich, thermo)
+    return solve_combined(totals, temperature, pressure)
 
 
 # ^ this can be gradded w.r.t. total_CO2
