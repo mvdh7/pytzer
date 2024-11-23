@@ -5,7 +5,7 @@
 from collections import OrderedDict
 import jax
 from jax import lax, numpy as np
-from .. import model
+from .. import model_old as model
 from ..libraries import Seawater
 from . import components
 
@@ -231,6 +231,8 @@ def solve(totals, ks_constants, ptargets=None):
     ptargets_final = OrderedDict(
         (k, ptargets_values[i]) for i, k in enumerate(ptargets.keys())
     )
+    target = -solver_func(ptargets_values, ptargets, totals, ks_constants)
+    jac = solver_jac(ptargets_values, ptargets, totals, ks_constants)
     return ptargets_final
 
 

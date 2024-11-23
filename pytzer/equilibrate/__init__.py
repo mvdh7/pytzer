@@ -6,7 +6,7 @@ from collections import OrderedDict
 import jax
 import numpy as np
 from .. import dissociation
-from . import components, stoichiometric, thermodynamic
+from . import components, stoichiometric, thermodynamic, new
 from ..libraries import Seawater
 
 

@@ -23,11 +23,11 @@ for i, row in data.iterrows():
     params = prmlib.get_parameters(
         solutes=solutes, temperature=273.15 + row.temperature, verbose=False
     )
-    aH2O = pz.activity_water(solutes, **params)
+    aH2O = pz.model_old.activity_water(solutes, **params)
     data.loc[i, "aH2O_pz"] = aH2O
-    osm = pz.osmotic_coefficient(solutes, **params)
+    osm = pz.model_old.osmotic_coefficient(solutes, **params)
     data.loc[i, "osm_pz"] = osm
-    acfs = pz.activity_coefficients(solutes, **params)
+    acfs = pz.model_old.activity_coefficients(solutes, **params)
     for s, v in acfs.items():
         data.loc[i, "y" + s + "_pz"] = v
         data_diff.loc[i, "y" + s] = 100 * (v - row["y" + s]) / row["y" + s]

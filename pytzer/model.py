@@ -99,10 +99,14 @@ def _Gibbs_nRT(solutes, temperature, pressure):
         Z = np.sum(m_cations * z_cations) - np.sum(m_anions * z_anions)
         for c, cation in enumerate(n_cations):
             for a, anion in enumerate(n_anions):
-                ca = library["ca"][cation][anion](*tp)
-                Gibbs = Gibbs + m_cations[c] * m_anions[a] * (
-                    2 * B(sqrt_I, *ca[:3], *ca[5:7]) + Z * CT(sqrt_I, *ca[3:5], ca[7])
-                )
+                try:
+                    ca = library["ca"][cation][anion](*tp)
+                    Gibbs = Gibbs + m_cations[c] * m_anions[a] * (
+                        2 * B(sqrt_I, *ca[:3], *ca[5:7])
+                        + Z * CT(sqrt_I, *ca[3:5], ca[7])
+                    )
+                except KeyError:
+                    pass
                 if len(n_neutrals) > 0:
                     for n, neutral in enumerate(n_neutrals):
                         try:

@@ -1,4 +1,5 @@
 import jax
+from jax import numpy as np
 import pytzer as pz
 
 
@@ -44,6 +45,271 @@ Gl = pz.model.Gibbs_nRT(*Gargs)
 print(G)
 print(G_old)
 print(Gl)
+
+# %% Solver
+totals = {"CO2": 0.002, "Na": 0.7023, "Cl": 0.7}
+# k_constants = {
+#     "H2CO3": prmlib["equilibria"]["H2CO3"](temperature),
+#     "HCO3": prmlib["equilibria"]["HCO3"](temperature),
+#     "H2O": prmlib["equilibria"]["H2O"](temperature),
+# }  # these are ln(k)
+
+
+def alkalinity_from_pH_ks(coeffs, totals):
+    pH, lnks_H2CO3, lnks_HCO3, lnks_H2O = coeffs
+    h = 10**-pH
+    ks_H2CO3 = np.exp(lnks_H2CO3)
+    ks_HCO3 = np.exp(lnks_HCO3)
+    ks_H2O = np.exp(lnks_H2O)
+    alkalinity = (
+        totals["CO2"]
+        * ks_H2CO3
+        * (h + 2 * ks_HCO3)
+        / (h**2 + ks_H2CO3 * h + ks_H2CO3 * ks_HCO3)
+        + ks_H2O / h
+        + h
+    )
+    return alkalinity
+
+
+def alkalinity_from_totals(totals):
+    return totals["Na"] - totals["Cl"]
+
+
+def get_shot_alkalinity(pH, lnks_H2CO3, lnks_HCO3, lnks_H2O, totals, alkalinity_ec):
+    return (
+        alkalinity_from_pH_ks((pH, lnks_H2CO3, lnks_HCO3, lnks_H2O), totals)
+        - alkalinity_ec
+    )
+
+
+def get_thermo_error(thermo, totals, temperature, pressure, stoich, thermo_targets):
+    lnks_H2CO3_guess, lnks_HCO3_guess, lnks_H2O_guess = thermo
+    h_guess = 10**-stoich
+    # Get shots at the targets
+    solutes = {
+        "Na": totals["Na"],
+        "Cl": totals["Cl"],
+        "H": h_guess,
+        "OH": np.exp(lnks_H2O_guess) / h_guess,
+        "CO2": totals["CO2"]
+        * h_guess**2
+        / (
+            h_guess**2
+            + h_guess * np.exp(lnks_H2CO3_guess)
+            + np.exp(lnks_H2CO3_guess) * np.exp(lnks_HCO3_guess)
+        ),
+        "HCO3": totals["CO2"]
+        * np.exp(lnks_H2CO3_guess)
+        * h_guess
+        / (
+            h_guess**2
+            + h_guess * np.exp(lnks_H2CO3_guess)
+            + np.exp(lnks_H2CO3_guess) * np.exp(lnks_HCO3_guess)
+        ),
+        "CO3": totals["CO2"]
+        * np.exp(lnks_H2CO3_guess)
+        * np.exp(lnks_HCO3_guess)
+        / (
+            h_guess**2
+            + h_guess * np.exp(lnks_H2CO3_guess)
+            + np.exp(lnks_H2CO3_guess) * np.exp(lnks_HCO3_guess)
+        ),
+    }
+    ln_acfs = pz.log_activity_coefficients(solutes, temperature, pressure)
+    ln_aw = pz.log_activity_water(solutes, temperature, pressure)
+    lnk_H2CO3_guess = (
+        lnks_H2CO3_guess + ln_acfs["HCO3"] + ln_acfs["H"] - ln_acfs["CO2"] - ln_aw
+    )
+    lnk_HCO3_guess = lnks_HCO3_guess + ln_acfs["CO3"] + ln_acfs["H"] - ln_acfs["HCO3"]
+    lnk_H2O_guess = lnks_H2O_guess + ln_acfs["H"] + ln_acfs["OH"] - ln_aw
+    thermo_attempt = np.array([lnk_H2CO3_guess, lnk_HCO3_guess, lnk_H2O_guess])
+    thermo_error = thermo_attempt - thermo_targets
+    return thermo_error
+
+
+# %% RESET
+pH_guess = 8.0
+_k_constants = {
+    "H2CO3": pz.model.library["equilibria"]["H2CO3"](temperature),
+    "HCO3": pz.model.library["equilibria"]["HCO3"](temperature),
+    "H2O": pz.model.library["equilibria"]["H2O"](temperature),
+}
+lnks_H2CO3_guess = _k_constants["H2CO3"]
+lnks_HCO3_guess = _k_constants["HCO3"]
+lnks_H2O_guess = _k_constants["H2O"]
+coeffs = np.array([lnks_H2CO3_guess, lnks_HCO3_guess, lnks_H2O_guess])
+
+
+# Combined solver (manual)---THIS IS THE WAY!
+@jax.jit
+def solve_combined(
+    totals, temperature, pressure, stoich, thermo, iter_thermo=5, iter_pH_per_thermo=3
+):
+    # Solver targets --- known from the start
+    alkalinity_ec = alkalinity_from_totals(totals)
+    thermo_targets = np.array(
+        [
+            pz.model.library["equilibria"]["H2CO3"](temperature),
+            pz.model.library["equilibria"]["HCO3"](temperature),
+            pz.model.library["equilibria"]["H2O"](temperature),
+        ]
+    )  # these are ln(k)
+    # Solve!
+    for _ in range(iter_thermo):
+        for _ in range(iter_pH_per_thermo):
+            stoich_error = get_shot_alkalinity(stoich, *thermo, totals, alkalinity_ec)
+            stoich_error_grad = jax.grad(get_shot_alkalinity)(
+                stoich, *thermo, totals, alkalinity_ec
+            )
+            stoich_adjust = -stoich_error / stoich_error_grad
+            stoich = stoich + stoich_adjust
+        thermo_error = get_thermo_error(
+            thermo, totals, temperature, pressure, stoich, thermo_targets
+        )
+        thermo_error_jac = np.array(
+            jax.jacfwd(get_thermo_error)(
+                thermo, totals, temperature, pressure, stoich, thermo_targets
+            )
+        )
+        thermo_adjust = np.linalg.solve(-thermo_error_jac, thermo_error)
+        thermo = thermo + thermo_adjust
+    return stoich, thermo
+
+
+pH, coeffs_final = solve_combined(totals, temperature, pressure, pH_guess, coeffs)
+print(pH_guess)
+print(pH)
+print(coeffs)
+print(coeffs_final)
+
+
+# %%
+def solve_combined_CO2(
+    # *args,
+    total_CO2,
+    totals,
+    k_constants,
+    pH_guess,
+    coeffs,
+    # iter_thermo=5,
+    # iter_pH_per_thermo=3,
+):
+    totals["CO2"] = total_CO2
+    return solve_combined(
+        # *args
+        totals,
+        k_constants,
+        pH_guess,
+        coeffs,
+        # iter_thermo=iter_thermo,
+        # iter_pH_per_thermo=3,
+    )
+
+
+# %% pH solver (jax)
+# pH_lnks = np.array([pH_guess, *coeffs])
+
+# def cond_pH(pH):
+#     return np.abs(get_shot_alkalinity(pH, *coeffs, totals["CO2"])) > 1e-12
+
+
+# def body_pH(pH):
+#     missed_alk = get_shot_alkalinity(pH, *coeffs, totals["CO2"])
+#     missed_alk_grad = jax.grad(get_shot_alkalinity)(pH, *coeffs, totals["CO2"])
+#     adjust_alk = -missed_alk / missed_alk_grad
+#     return pH + adjust_alk
+
+
+# def solve_pH(pH):
+#     return jax.lax.while_loop(cond_pH, body_pH, pH)
+
+
+# # thermo solver (jax)
+# def cond_thermo(lnks):
+#     return np.any(np.abs(get_shots(lnks, pH_guess, totals["CO2"])) > 1e-12)
+
+
+# def body_thermo(lnks):
+#     missed_by = get_shots(lnks, pH_guess, totals["CO2"])
+#     missed_jac = np.array(jax.jacfwd(get_shots)(lnks, pH_guess, totals["CO2"]))
+#     adjust_aim = np.linalg.solve(-missed_jac, missed_by)
+#     return lnks + adjust_aim
+
+
+# @jax.jit
+# def solve_thermo(lnks):
+#     return jax.lax.while_loop(cond_thermo, body_thermo, lnks)
+
+
+# # %% combined solver (jax)
+# def cond_combo(pH_lnks):
+#     cond_pH = np.abs(get_shot_alkalinity(*pH_lnks, totals["CO2"])) > 1e-8
+#     # pH more sensitive to thermo than thermo is to pH => don't need cond_thermo?
+#     cond_thermo = np.abs(get_shots(pH_lnks[1:], pH_lnks[0], totals["CO2"])) > 1e-8
+#     cond = np.array([cond_pH, *cond_thermo])
+#     return np.any(cond)
+
+
+# def body_combo(pH_lnks):
+#     pH = pH_lnks[0]
+#     lnks = pH_lnks[1:]
+#     # pH part
+#     missed_alk = get_shot_alkalinity(pH, *lnks, totals["CO2"])
+#     missed_alk_grad = jax.grad(get_shot_alkalinity)(pH, *lnks, totals["CO2"])
+#     adjust_alk = -missed_alk / missed_alk_grad
+#     # lnks part
+#     missed_by = get_shots(lnks, pH_guess, totals["CO2"])
+#     missed_jac = np.array(jax.jacfwd(get_shots)(lnks, pH_guess, totals["CO2"]))
+#     adjust_aim = np.linalg.solve(-missed_jac, missed_by)
+#     return np.array([pH + adjust_alk, *(lnks + adjust_aim)])
+
+
+# def solve_combo(pH_lnks):
+#     # -- SUPER SLOW, doesn't work
+#     return jax.lax.while_loop(cond_combo, body_combo, pH_lnks)
+
+# %%
+# print(pH_lnks)
+# pH_lnks = solve_combo(pH_lnks)
+# print(pH_lnks)
+
+# # %%
+# print(pH_guess)
+# pH_guess = solve_pH(pH_guess)
+# print(pH_guess)
+# print(coeffs)
+# coeffs = solve_thermo(coeffs)
+# print(coeffs)
+
+
+# %% pH solver (manual)
+
+# missed_alk = get_shot_alkalinity(pH_guess, *coeffs, totals["CO2"])
+# missed_alk_grad = jax.grad(get_shot_alkalinity)(pH_guess, *coeffs, totals["CO2"])
+# adjust_alk = -missed_alk / missed_alk_grad
+
+# print(pH_guess, missed_alk * 1e6)
+# pH_guess += adjust_alk
+# print(pH_guess, missed_alk * 1e6)
+
+# # %% thermo solver (manual)
+# # coeffs = test.x
+
+# missed_by = get_shots(coeffs, pH_guess, totals["CO2"])
+# missed_jac = np.array(jax.jacfwd(get_shots)(coeffs, pH_guess, totals["CO2"]))
+# adjust_aim = np.linalg.solve(-missed_jac, missed_by)
+# # adjust_aim = np.where(adjust_aim > 0.5, 0.5, adjust_aim)
+# # adjust_aim = np.where(adjust_aim < -0.5, -0.5, adjust_aim)
+
+# print(coeffs)
+# coeffs += adjust_aim
+# print(coeffs)
+
+# # %%
+# from jax.scipy import optimize
+
+# test = optimize.minimize(get_shots, coeffs, args=(totals["CO2"],), method="BFGS")
 
 # %%
 # solutes = {"Na": 2.0, "Mg": 1.0, "Cl": 4.0}

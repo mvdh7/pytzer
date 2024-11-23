@@ -7,7 +7,7 @@ from collections import OrderedDict
 from scipy import optimize
 import jax
 from jax import numpy as np
-from .. import dissociation, model
+from .. import dissociation, model_old as model
 from . import components, stoichiometric
 
 
