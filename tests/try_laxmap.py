@@ -50,19 +50,17 @@ print(Gl)
 # %% Solver
 def alkalinity_from_pH_ks(stoich, totals, thermo):
     pH = stoich[0]
-    lnks_H2CO3, lnks_HCO3, lnks_H2O = thermo
     h = 10**-pH
-    ks_H2CO3 = np.exp(lnks_H2CO3)
-    ks_HCO3 = np.exp(lnks_HCO3)
-    ks_H2O = np.exp(lnks_H2O)
-    alkalinity = (
-        totals["CO2"]
-        * ks_H2CO3
-        * (h + 2 * ks_HCO3)
-        / (h**2 + ks_H2CO3 * h + ks_H2CO3 * ks_HCO3)
-        + ks_H2O / h
-        + h
-    )
+    lnks_H2O, lnks_H2CO3, lnks_HCO3 = thermo
+    ks_H2O, ks_H2CO3, ks_HCO3 = np.exp(thermo)
+    alkalinity = ks_H2O / h + h
+    if "CO2" in totals:
+        alkalinity = alkalinity + (
+            totals["CO2"]
+            * ks_H2CO3
+            * (h + 2 * ks_HCO3)
+            / (h**2 + ks_H2CO3 * h + ks_H2CO3 * ks_HCO3)
+        )
     return alkalinity
 
 
@@ -73,43 +71,37 @@ def get_stoich_error(stoich, totals, thermo, stoich_targets):
 def get_thermo_error(thermo, totals, temperature, pressure, stoich, thermo_targets):
     pH = stoich[0]
     h = 10**-pH
-    lnks_H2CO3, lnks_HCO3, lnks_H2O = thermo
-    ks_H2CO3, ks_HCO3, ks_H2O = np.exp(thermo)
+    lnks_H2O, lnks_H2CO3, lnks_HCO3 = thermo
+    ks_H2O, ks_H2CO3, ks_HCO3 = np.exp(thermo)
     # Get shots at the targets
+    solutes = totals.copy()
+    solutes["H"] = h
+    solutes["OH"] = ks_H2O / h
+    if "CO2" in totals:
+        total_CO2 = totals["CO2"]
+    else:
+        total_CO2 = 0.0
     co2_denom = h**2 + h * ks_H2CO3 + ks_H2CO3 * ks_HCO3
-    solutes = {
-        "Na": totals["Na"],
-        "Cl": totals["Cl"],
-        "H": h,
-        "OH": ks_H2O / h,
-        "CO2": totals["CO2"] * h**2 / co2_denom,
-        "HCO3": totals["CO2"] * ks_H2CO3 * h / co2_denom,
-        "CO3": totals["CO2"] * ks_H2CO3 * ks_HCO3 / co2_denom,
-    }
+    solutes["CO2"] = total_CO2 * h**2 / co2_denom
+    solutes["HCO3"] = total_CO2 * ks_H2CO3 * h / co2_denom
+    solutes["CO3"] = total_CO2 * ks_H2CO3 * ks_HCO3 / co2_denom
     ln_acfs = pz.log_activity_coefficients(solutes, temperature, pressure)
     ln_aw = pz.log_activity_water(solutes, temperature, pressure)
+    lnk_H2O = lnks_H2O + ln_acfs["H"] + ln_acfs["OH"] - ln_aw
     lnk_H2CO3 = lnks_H2CO3 + ln_acfs["HCO3"] + ln_acfs["H"] - ln_acfs["CO2"] - ln_aw
     lnk_HCO3 = lnks_HCO3 + ln_acfs["CO3"] + ln_acfs["H"] - ln_acfs["HCO3"]
-    lnk_H2O = lnks_H2O + ln_acfs["H"] + ln_acfs["OH"] - ln_aw
-    thermo_attempt = np.array([lnk_H2CO3, lnk_HCO3, lnk_H2O])
+    thermo_attempt = np.array(
+        [
+            lnk_H2O,
+            lnk_H2CO3,
+            lnk_HCO3,
+        ]
+    )
     thermo_error = thermo_attempt - thermo_targets
     return thermo_error
 
 
 # %% RESET
-totals = {"CO2": 0.002, "Na": 0.7023, "Cl": 0.7}
-pH_guess = 8.0
-_k_constants = {
-    "H2CO3": pz.model.library["equilibria"]["H2CO3"](temperature),
-    "HCO3": pz.model.library["equilibria"]["HCO3"](temperature),
-    "H2O": pz.model.library["equilibria"]["H2O"](temperature),
-}
-lnks_H2CO3_guess = _k_constants["H2CO3"]
-lnks_HCO3_guess = _k_constants["HCO3"]
-lnks_H2O_guess = _k_constants["H2O"]
-coeffs = np.array([lnks_H2CO3_guess, lnks_HCO3_guess, lnks_H2O_guess])
-
-
 @jax.jit
 def solve_combined(
     totals,
@@ -156,9 +148,9 @@ def solve_combined(
     )
     thermo_targets = np.array(
         [
+            pz.model.library["equilibria"]["H2O"](temperature),
             pz.model.library["equilibria"]["H2CO3"](temperature),
             pz.model.library["equilibria"]["HCO3"](temperature),
-            pz.model.library["equilibria"]["H2O"](temperature),
         ]
     )  # these are ln(k)
     if stoich is None:
@@ -173,6 +165,9 @@ def solve_combined(
                 stoich, totals, thermo, stoich_targets
             )
             stoich_adjust = np.linalg.solve(-stoich_error_jac, stoich_error)
+            stoich_adjust = np.where(
+                np.abs(stoich_adjust) > 1, np.sign(stoich_adjust), stoich_adjust
+            )
             stoich = stoich + stoich_adjust
         thermo_error = get_thermo_error(
             thermo, totals, temperature, pressure, stoich, thermo_targets
@@ -187,9 +182,27 @@ def solve_combined(
     return stoich, thermo
 
 
+# %%
+totals = {
+    "CO2": 0.000,
+    "Na": 0.5023,
+    "K": 0.2,
+    "Cl": 0.7,
+}
+pH_guess = 8.0
+_k_constants = {
+    "H2O": pz.model.library["equilibria"]["H2O"](temperature),
+    "H2CO3": pz.model.library["equilibria"]["H2CO3"](temperature),
+    "HCO3": pz.model.library["equilibria"]["HCO3"](temperature),
+}
+lnks_H2O_guess = _k_constants["H2O"]
+lnks_H2CO3_guess = _k_constants["H2CO3"]
+lnks_HCO3_guess = _k_constants["HCO3"]
+coeffs = np.array([lnks_H2O_guess, lnks_H2CO3_guess, lnks_HCO3_guess])
+
 thermo = coeffs
 stoich = np.array([pH_guess])
-pH, coeffs_final = solve_combined(totals, temperature, pressure)
+pH, coeffs_final = solve_combined(totals, temperature, pressure, stoich=stoich)
 print(pH_guess)
 print(pH)
 print(coeffs)
