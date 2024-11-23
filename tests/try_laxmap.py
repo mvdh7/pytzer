@@ -48,21 +48,44 @@ print(Gl)
 
 
 # %% Solver
-equilibria_all = ["H2O", "H2CO3", "HCO3"]
+equilibria = ("H2O", "H2CO3", "HCO3")
+targets = ("H",)
 # TODO ^ to be removed eventually, once all reactions have been added below
 
 
+
 def alkalinity_from_pH_ks(stoich, totals, thermo):
-    equilibria = equilibria_all
-    # TODO replace above with:
+    # TODO uncomment below:
     # equilibria = pz.model.library["equilibria_all"]
+    # targets = pz.model.library["solver_targets"]
     exp_thermo = np.exp(thermo)
-    pH = stoich[0]
-    # Possible new (well, old) version:
-    ks = {eq: exp_thermo[equilibria.index(eq)] for eq in equilibria}
-    ptargets = {"H": pH}
-    solutes = pz.equilibrate.components.get_solutes(totals, ks, ptargets)
-    alkalinity = pz.equilibrate.stoichiometric.get_alkalinity(solutes)
+    
+    # Old (well, new) version:
+    pH = stoich[targets.index("H")]
+    h = 10**-pH
+    alkalinity = 0.0
+    if "H2O" in equilibria:
+        ks_H2O = exp_thermo[equilibria.index("H2O")]
+        alkalinity = alkalinity + ks_H2O / h - h
+    if "CO2" in totals:
+        ks_H2CO3 = np.exp(thermo[equilibria.index("H2CO3")])
+        ks_HCO3 = np.exp(thermo[equilibria.index("HCO3")])
+        alkalinity = alkalinity + (
+            totals["CO2"]
+            * ks_H2CO3
+            * (h + 2 * ks_HCO3)
+            / (h**2 + ks_H2CO3 * h + ks_H2CO3 * ks_HCO3)
+        )
+    if "BOH3" in totals and "BOH3" in equilibria:
+        ks_BOH3 = np.exp(thermo[equilibria.index("BOH3")])
+        alkalinity = alkalinity + ks_BOH3 * totals["BOH3"] / (h + ks_BOH3)
+    
+    # # Possible new (well, old) version:
+    # # But this breaks the temperature grad!  Go back to the old (well, new) approach
+    # ks = {eq: exp_thermo[equilibria.index(eq)] for eq in equilibria}
+    # ptargets = {t: stoich[targets.index(t)] for t in targets}
+    # solutes = pz.equilibrate.components.get_solutes(totals, ks, ptargets)
+    # alkalinity = pz.equilibrate.stoichiometric.get_alkalinity(solutes)
     return alkalinity
 
 
@@ -71,11 +94,11 @@ def get_stoich_error(stoich, totals, thermo, stoich_targets):
 
 
 def get_thermo_error(thermo, totals, temperature, pressure, stoich, thermo_targets):
+    # TODO uncomment below:
+    # equilibria = pz.model.library["equilibria_all"]
+    # targets = pz.model.library["solver_targets"]
     pH = stoich[0]
     h = 10**-pH
-    equilibria = equilibria_all
-    # TODO replace above with:
-    # equilibria = pz.model.library["equilibria_all"]
     lnks = {}
     if "H2O" in equilibria:
         lnks["H2O"] = thermo[equilibria.index("H2O")]
@@ -164,7 +187,6 @@ def solve_combined(
             pz.equilibrate.stoichiometric.get_explicit_alkalinity(totals),
         ]
     )
-    equilibria = equilibria_all
     # TODO replace above with:
     # equilibria = pz.model.library["equilibria_all"]
     thermo_targets = np.array(
@@ -244,7 +266,7 @@ def solve_combined_CO2(total_CO2, totals, temperature, pressure):
 # ^ this can be gradded w.r.t. total_CO2:
 scgrad = jax.jacfwd(solve_combined_CO2)(0.002, totals, temperature, pressure)
 # Can probably just grad the solve_combined function too to get a dict out,  not tried
-# These also work, but again slow to compile:
+# These also work, but again slow to compile:  (NO LONGER WORKS WITH OLD/NEW ALKALINITY)
 tgrad = jax.jacfwd(
     lambda temperature: solve_combined(totals, temperature, pressure)[0][0]
 )(temperature)
