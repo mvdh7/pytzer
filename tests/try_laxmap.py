@@ -46,17 +46,11 @@ print(G)
 print(G_old)
 print(Gl)
 
+
 # %% Solver
-totals = {"CO2": 0.002, "Na": 0.7023, "Cl": 0.7}
-# k_constants = {
-#     "H2CO3": prmlib["equilibria"]["H2CO3"](temperature),
-#     "HCO3": prmlib["equilibria"]["HCO3"](temperature),
-#     "H2O": prmlib["equilibria"]["H2O"](temperature),
-# }  # these are ln(k)
-
-
-def alkalinity_from_pH_ks(coeffs, totals):
-    pH, lnks_H2CO3, lnks_HCO3, lnks_H2O = coeffs
+def alkalinity_from_pH_ks(stoich, totals, thermo):
+    pH = stoich
+    lnks_H2CO3, lnks_HCO3, lnks_H2O = thermo
     h = 10**-pH
     ks_H2CO3 = np.exp(lnks_H2CO3)
     ks_HCO3 = np.exp(lnks_HCO3)
@@ -76,16 +70,14 @@ def alkalinity_from_totals(totals):
     return totals["Na"] - totals["Cl"]
 
 
-def get_shot_alkalinity(pH, lnks_H2CO3, lnks_HCO3, lnks_H2O, totals, alkalinity_ec):
-    return (
-        alkalinity_from_pH_ks((pH, lnks_H2CO3, lnks_HCO3, lnks_H2O), totals)
-        - alkalinity_ec
-    )
+def get_stoich_error(stoich, totals, thermo, stoich_targets):
+    return alkalinity_from_pH_ks(stoich, totals, thermo) - stoich_targets
 
 
 def get_thermo_error(thermo, totals, temperature, pressure, stoich, thermo_targets):
+    pH = stoich
+    h_guess = 10**-pH
     lnks_H2CO3_guess, lnks_HCO3_guess, lnks_H2O_guess = thermo
-    h_guess = 10**-stoich
     # Get shots at the targets
     solutes = {
         "Na": totals["Na"],
@@ -129,6 +121,7 @@ def get_thermo_error(thermo, totals, temperature, pressure, stoich, thermo_targe
 
 
 # %% RESET
+totals = {"CO2": 0.002, "Na": 0.7023, "Cl": 0.7}
 pH_guess = 8.0
 _k_constants = {
     "H2CO3": pz.model.library["equilibria"]["H2CO3"](temperature),
@@ -141,13 +134,45 @@ lnks_H2O_guess = _k_constants["H2O"]
 coeffs = np.array([lnks_H2CO3_guess, lnks_HCO3_guess, lnks_H2O_guess])
 
 
-# Combined solver (manual)---THIS IS THE WAY!
 @jax.jit
 def solve_combined(
-    totals, temperature, pressure, stoich, thermo, iter_thermo=5, iter_pH_per_thermo=3
+    totals,
+    temperature,
+    pressure,
+    stoich,
+    thermo,
+    iter_thermo=5,
+    iter_stoich_per_thermo=3,
 ):
-    # Solver targets --- known from the start
-    alkalinity_ec = alkalinity_from_totals(totals)
+    """Solve for equilibrium.
+
+    Parameters
+    ----------
+    totals : dict
+        The total molality of each solute or solute system.
+    temperature : float
+        Temperature in K.
+    pressure : float
+        Pressure in dbar.
+    stoich : float
+        First guess for pH.
+    thermo : array-like
+        First guesses for the stoichiometric equilibrium constants.
+    iter_thermo : int
+        How many times to iterate the thermo part of the solver, by default 5.
+    iter_pH_per_thermo : int
+        How many times to iterate the stoich part of the solver per thermo loop, by
+        default 3.
+
+    Returns
+    -------
+    stoich : float
+        Final pH.
+    thermo : array-like
+        Final stoichiometric equilibrium constants.
+    """
+    # Solver targets---known from the start
+    stoich_targets = alkalinity_from_totals(totals)
     thermo_targets = np.array(
         [
             pz.model.library["equilibria"]["H2CO3"](temperature),
@@ -157,10 +182,10 @@ def solve_combined(
     )  # these are ln(k)
     # Solve!
     for _ in range(iter_thermo):
-        for _ in range(iter_pH_per_thermo):
-            stoich_error = get_shot_alkalinity(stoich, *thermo, totals, alkalinity_ec)
-            stoich_error_grad = jax.grad(get_shot_alkalinity)(
-                stoich, *thermo, totals, alkalinity_ec
+        for _ in range(iter_stoich_per_thermo):
+            stoich_error = get_stoich_error(stoich, totals, thermo, stoich_targets)
+            stoich_error_grad = jax.grad(get_stoich_error)(
+                stoich, totals, thermo, stoich_targets
             )
             stoich_adjust = -stoich_error / stoich_error_grad
             stoich = stoich + stoich_adjust
