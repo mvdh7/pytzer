@@ -49,7 +49,7 @@ print(Gl)
 
 # %% Solver
 def alkalinity_from_pH_ks(stoich, totals, thermo):
-    pH = stoich
+    pH = stoich[0]
     lnks_H2CO3, lnks_HCO3, lnks_H2O = thermo
     h = 10**-pH
     ks_H2CO3 = np.exp(lnks_H2CO3)
@@ -71,11 +71,11 @@ def alkalinity_from_totals(totals):
 
 
 def get_stoich_error(stoich, totals, thermo, stoich_targets):
-    return alkalinity_from_pH_ks(stoich, totals, thermo) - stoich_targets
+    return np.array([alkalinity_from_pH_ks(stoich, totals, thermo)]) - stoich_targets
 
 
 def get_thermo_error(thermo, totals, temperature, pressure, stoich, thermo_targets):
-    pH = stoich
+    pH = stoich[0]
     h_guess = 10**-pH
     lnks_H2CO3_guess, lnks_HCO3_guess, lnks_H2O_guess = thermo
     # Get shots at the targets
@@ -172,7 +172,7 @@ def solve_combined(
         Final stoichiometric equilibrium constants.
     """
     # Solver targets---known from the start
-    stoich_targets = alkalinity_from_totals(totals)
+    stoich_targets = np.array([alkalinity_from_totals(totals)])
     thermo_targets = np.array(
         [
             pz.model.library["equilibria"]["H2CO3"](temperature),
@@ -184,10 +184,11 @@ def solve_combined(
     for _ in range(iter_thermo):
         for _ in range(iter_stoich_per_thermo):
             stoich_error = get_stoich_error(stoich, totals, thermo, stoich_targets)
-            stoich_error_grad = jax.grad(get_stoich_error)(
+            stoich_error_jac = jax.jacfwd(get_stoich_error)(
                 stoich, totals, thermo, stoich_targets
             )
-            stoich_adjust = -stoich_error / stoich_error_grad
+            stoich_adjust = np.linalg.solve(-stoich_error_jac, stoich_error)
+            # stoich_adjust = -stoich_error / stoich_error_grad
             stoich = stoich + stoich_adjust
         thermo_error = get_thermo_error(
             thermo, totals, temperature, pressure, stoich, thermo_targets
@@ -202,7 +203,9 @@ def solve_combined(
     return stoich, thermo
 
 
-pH, coeffs_final = solve_combined(totals, temperature, pressure, pH_guess, coeffs)
+thermo = coeffs
+stoich = np.array([pH_guess])
+pH, coeffs_final = solve_combined(totals, temperature, pressure, stoich, thermo)
 print(pH_guess)
 print(pH)
 print(coeffs)
