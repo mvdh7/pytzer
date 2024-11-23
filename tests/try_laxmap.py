@@ -48,26 +48,21 @@ print(Gl)
 
 
 # %% Solver
-equilibria_all = ["H2O", "H2CO3", "HCO3"]  # TODO to be removed eventually
+equilibria_all = ["H2O", "H2CO3", "HCO3"]
+# TODO ^ to be removed eventually, once all reactions have been added below
 
 
 def alkalinity_from_pH_ks(stoich, totals, thermo):
-    pH = stoich[0]
-    h = 10**-pH
     equilibria = equilibria_all
     # TODO replace above with:
     # equilibria = pz.model.library["equilibria_all"]
-    ks_H2O = np.exp(thermo[equilibria.index("H2O")])
-    alkalinity = ks_H2O / h + h
-    if "CO2" in totals:
-        ks_H2CO3 = np.exp(thermo[equilibria.index("H2CO3")])
-        ks_HCO3 = np.exp(thermo[equilibria.index("HCO3")])
-        alkalinity = alkalinity + (
-            totals["CO2"]
-            * ks_H2CO3
-            * (h + 2 * ks_HCO3)
-            / (h**2 + ks_H2CO3 * h + ks_H2CO3 * ks_HCO3)
-        )
+    exp_thermo = np.exp(thermo)
+    pH = stoich[0]
+    # Possible new (well, old) version:
+    ks = {eq: exp_thermo[equilibria.index(eq)] for eq in equilibria}
+    ptargets = {"H": pH}
+    solutes = pz.equilibrate.components.get_solutes(totals, ks, ptargets)
+    alkalinity = pz.equilibrate.stoichiometric.get_alkalinity(solutes)
     return alkalinity
 
 
@@ -235,12 +230,12 @@ print(pH)
 print(coeffs)
 print(coeffs_final)
 # [8.]
-# [8.80790987]
+# [8.80791499]
 # [-32.22023869 -14.62482355 -23.78504939]
-# [-31.56800073 -13.74433547 -22.05412728]
+# [-31.56800072 -13.74433547 -22.05412727]
 
 
-# %% SLOW!
+# %% SLOW to compile, then fast
 def solve_combined_CO2(total_CO2, totals, temperature, pressure):
     totals["CO2"] = total_CO2
     return solve_combined(totals, temperature, pressure)[0][0]
@@ -248,7 +243,8 @@ def solve_combined_CO2(total_CO2, totals, temperature, pressure):
 
 # ^ this can be gradded w.r.t. total_CO2:
 scgrad = jax.jacfwd(solve_combined_CO2)(0.002, totals, temperature, pressure)
-# Not sure if the below will work:
+# Can probably just grad the solve_combined function too to get a dict out,  not tried
+# These also work, but again slow to compile:
 tgrad = jax.jacfwd(
     lambda temperature: solve_combined(totals, temperature, pressure)[0][0]
 )(temperature)
