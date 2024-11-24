@@ -60,30 +60,15 @@ def alkalinity_from_pH_ks(stoich, totals, thermo):
     # equilibria = pz.model.library["equilibria_all"]
     # targets = pz.model.library["solver_targets"]
     exp_thermo = np.exp(thermo)
+    ks = {eq: exp_thermo[equilibria.index(eq)] for eq in equilibria}
 
     # Old (well, new) version:
     pH = stoich[targets.index("H")]
     h = 10**-pH
-    alkalinity = 0.0
-    ks_H2O = exp_thermo[equilibria.index("H2O")]
-    alkalinity = alkalinity + ks_H2O / h - h
-    ks_H2CO3 = np.exp(thermo[equilibria.index("H2CO3")])
-    ks_HCO3 = np.exp(thermo[equilibria.index("HCO3")])
-    alkalinity = alkalinity + (
-        totals["CO2"]
-        * ks_H2CO3
-        * (h + 2 * ks_HCO3)
-        / (h**2 + ks_H2CO3 * h + ks_H2CO3 * ks_HCO3)
-    )
-    # ks_BOH3 = np.exp(thermo[equilibria.index("BOH3")])
-    # alkalinity = alkalinity + ks_BOH3 * totals["BOH3"] / (h + ks_BOH3)
-
-    # # Possible new (well, old) version:
-    # # But this breaks the temperature grad!  Go back to the old (well, new) approach
-    # ks = {eq: exp_thermo[equilibria.index(eq)] for eq in equilibria}
-    # ptargets = {t: stoich[targets.index(t)] for t in targets}
-    # solutes = pz.equilibrate.components.get_solutes(totals, ks, ptargets)
-    # alkalinity = pz.equilibrate.stoichiometric.get_alkalinity(solutes)
+    c = pz.equilibrate.components
+    tk = (totals, ks)
+    co3 = c.get_CO3(h, *tk)
+    alkalinity = c.get_OH(h, ks) - h + c.get_HCO3(h, co3, ks) + 2 * co3
     return alkalinity
 
 
@@ -95,47 +80,30 @@ def get_thermo_error(thermo, totals, temperature, pressure, stoich, thermo_targe
     # TODO uncomment below:
     # equilibria = pz.model.library["equilibria_all"]
     # targets = pz.model.library["solver_targets"]
-    pH = stoich[0]
+    pH = stoich[targets.index("H")]
     h = 10**-pH
-    lnks = {}
-    if "H2O" in equilibria:
-        lnks["H2O"] = thermo[equilibria.index("H2O")]
-    if "H2CO3" in equilibria:
-        lnks["H2CO3"] = thermo[equilibria.index("H2CO3")]
-    if "HCO3" in equilibria:
-        lnks["HCO3"] = thermo[equilibria.index("HCO3")]
-    ks = {k: np.exp(v) for k, v in lnks.items()}
+    exp_thermo = np.exp(thermo)
+    lnks = {eq: thermo[equilibria.index(eq)] for eq in equilibria}
+    ks = {eq: exp_thermo[equilibria.index(eq)] for eq in equilibria}
+    c = pz.equilibrate.components
+    tk = (totals, ks)
     # Get shots at the targets
     solutes = totals.copy()
-    if "H2O" in equilibria:
-        solutes["H"] = h
-        solutes["OH"] = ks["H2O"] / h
-    if "CO2" in totals:
-        total_CO2 = totals["CO2"]
-    else:
-        total_CO2 = 0.0
-    if "H2CO3" in equilibria and "HCO3" in equilibria:
-        # If only one of them is present, then the calculation below needs to change
-        # accordingly
-        co2_denom = h**2 + h * ks["H2CO3"] + ks["H2CO3"] * ks["HCO3"]
-        solutes["CO2"] = total_CO2 * h**2 / co2_denom
-        solutes["HCO3"] = total_CO2 * ks["H2CO3"] * h / co2_denom
-        solutes["CO3"] = total_CO2 * ks["H2CO3"] * ks["HCO3"] / co2_denom
+    solutes["H"] = h
+    solutes["OH"] = c.get_OH(h, ks)
+    solutes["CO3"] = c.get_CO3(h, *tk)
+    solutes["HCO3"] = c.get_HCO3(h, solutes["CO3"], ks)
+    solutes["CO2"] = c.get_CO2(h, solutes["CO2"], ks)
     ln_acfs = pz.log_activity_coefficients(solutes, temperature, pressure)
     ln_aw = pz.log_activity_water(solutes, temperature, pressure)
-    lnk = {}
-    if "H2O" in equilibria:
-        lnk["H2O"] = lnks["H2O"] + ln_acfs["H"] + ln_acfs["OH"] - ln_aw
-    if "H2CO3" in equilibria:
-        lnk["H2CO3"] = (
-            lnks["H2CO3"] + ln_acfs["HCO3"] + ln_acfs["H"] - ln_acfs["CO2"] - ln_aw
-        )
-    if "HCO3" in equilibria:
-        lnk["HCO3"] = lnks["HCO3"] + ln_acfs["CO3"] + ln_acfs["H"] - ln_acfs["HCO3"]
-    thermo_attempt = []
-    for eq in equilibria:
-        thermo_attempt.append(lnk[eq])
-    thermo_attempt = np.array(thermo_attempt)
+    # Calculate what the log(K)s apparently are with these stoich/thermo values
+    lnk_here = {}
+    lnk_here["H2O"] = lnks["H2O"] + ln_acfs["H"] + ln_acfs["OH"] - ln_aw
+    lnk_here["H2CO3"] = (
+        lnks["H2CO3"] + ln_acfs["HCO3"] + ln_acfs["H"] - ln_acfs["CO2"] - ln_aw
+    )
+    lnk_here["HCO3"] = lnks["HCO3"] + ln_acfs["CO3"] + ln_acfs["H"] - ln_acfs["HCO3"]
+    thermo_attempt = np.array([lnk_here[eq] for eq in equilibria])
     thermo_error = thermo_attempt - thermo_targets
     return thermo_error
 
@@ -293,9 +261,9 @@ print(pH)
 print(coeffs)
 print(coeffs_final)
 # [8.]
-# [8.80791499]
+# [8.80791498]
 # [-32.22023869 -14.62482355 -23.78504939]
-# [-31.56800072 -13.74433547 -22.05412727]
+# [-31.56800097 -13.74433571 -22.05412722]
 
 
 # %% SLOW to compile, then fast
