@@ -48,14 +48,19 @@ print(Gl)
 
 
 # %% Solver
-equilibria = ("H2O", "H2CO3", "HCO3", "BOH3", "HSO4", "HF")
-targets = ("H",)
+equilibria = ("H2O", "H2CO3", "HCO3", "BOH3", "HSO4", "HF", "CaCO3")
+targets = ("H", "CO3")
 # TODO ^ to be removed eventually, once all reactions have been added below
 
 
 # TODO this function will be defined explicitly for each ParameterLibrary
+# @jax.jit
+# def alkalinity_from_pH_ks(stoich, totals, thermo):
+#     return alkalinity
+
+
 @jax.jit
-def alkalinity_from_pH_ks(stoich, totals, thermo):
+def get_stoich_error(stoich, totals, thermo, stoich_targets):
     # Prepare inputs for calculations
     # TODO uncomment below:
     # equilibria = pz.model.library["equilibria_all"]
@@ -65,24 +70,26 @@ def alkalinity_from_pH_ks(stoich, totals, thermo):
     pH = stoich[targets.index("H")]
     h = 10**-pH
     c = pz.equilibrate.components
-    co3 = c.get_CO3(h, totals, ks)
+    co3 = 10 ** -stoich[targets.index("CO3")]
+    hco3 = c.get_HCO3(h, co3, ks)
     f = c.get_F(h, totals, ks)
+    po4 = 0.0
+    caco3 = c.get_CaCO3(h, f, co3, po4, totals, ks)
     # Calculate alkalinity
     alkalinity = (
         c.get_OH(h, ks)
         - h
-        + c.get_HCO3(h, co3, ks)
+        + hco3
         + 2 * co3
+        + 2 * caco3
         + c.get_BOH4(h, totals, ks)
         - c.get_HSO4(h, totals, ks)
         - c.get_HF(h, f, ks)
     )
-    return alkalinity
-
-
-@jax.jit
-def get_stoich_error(stoich, totals, thermo, stoich_targets):
-    return np.array([alkalinity_from_pH_ks(stoich, totals, thermo)]) - stoich_targets
+    # Calculate other totals
+    co2 = c.get_CO2(h, co3, ks)
+    total_CO2 = co2 + hco3 + co3 + caco3
+    return np.array([alkalinity, total_CO2]) - stoich_targets
 
 
 @jax.jit
@@ -98,7 +105,8 @@ def get_thermo_error(thermo, totals, temperature, pressure, stoich, thermo_targe
     ks = {eq: exp_thermo[equilibria.index(eq)] for eq in equilibria}
     c = pz.equilibrate.components
     f = c.get_F(h, totals, ks)
-    co3 = c.get_CO3(h, totals, ks)
+    co3 = 10 ** -stoich[targets.index("CO3")]
+    po4 = 0.0
     # Calculate speciation
     solutes = totals.copy()
     solutes["H"] = h
@@ -106,6 +114,8 @@ def get_thermo_error(thermo, totals, temperature, pressure, stoich, thermo_targe
     solutes["CO3"] = co3
     solutes["HCO3"] = c.get_HCO3(h, co3, ks)
     solutes["CO2"] = c.get_CO2(h, co3, ks)
+    solutes["Ca"] = c.get_Ca(h, f, co3, po4, totals, ks)
+    solutes["CaCO3"] = c.get_CaCO3(h, f, co3, po4, totals, ks)
     solutes["BOH3"] = c.get_BOH3(h, totals, ks)
     solutes["BOH4"] = c.get_BOH4(h, totals, ks)
     solutes["HSO4"] = c.get_HSO4(h, totals, ks)
@@ -138,7 +148,7 @@ def solve_combined(
     pressure,
     stoich=None,
     thermo=None,
-    iter_thermo=5,
+    iter_thermo=6,
     iter_stoich_per_thermo=3,
 ):
     """Solve for equilibrium.
@@ -157,7 +167,7 @@ def solve_combined(
         First guesses for the natural logarithms of the stoichiometric equilibrium
         constants.
     iter_thermo : int, optional
-        How many times to iterate the thermo part of the solver, by default 5.
+        How many times to iterate the thermo part of the solver, by default 6.
     iter_pH_per_thermo : int, optional
         How many times to iterate the stoich part of the solver per thermo loop, by
         default 3.
@@ -176,13 +186,14 @@ def solve_combined(
     stoich_targets = np.array(
         [
             pz.equilibrate.stoichiometric.get_explicit_alkalinity(totals),
+            totals["CO2"],
         ]
     )
     thermo_targets = np.array(
         [pz.model.library["equilibria"][eq](temperature) for eq in equilibria]
     )  # these are ln(k)
     if stoich is None:
-        stoich = np.array([8.0])  # TODO improve this
+        stoich = np.array([8.0, -np.log10(totals["CO2"] / 2)])  # TODO improve this
     if thermo is None:
         thermo = thermo_targets.copy()
     # Solve!
@@ -197,6 +208,7 @@ def solve_combined(
             stoich_adjust = np.where(
                 np.abs(stoich_adjust) > 1, np.sign(stoich_adjust), stoich_adjust
             )
+            # print(stoich_adjust)
             stoich = stoich + stoich_adjust
         # print("Getting thermo_error...")
         thermo_error = get_thermo_error(
@@ -210,6 +222,7 @@ def solve_combined(
         )
         # print("Getting thermo_adjust...")
         thermo_adjust = np.linalg.solve(-thermo_error_jac, thermo_error)
+        # print(thermo_adjust)
         thermo = thermo + thermo_adjust
     # TODO return thermo as a dict using `equilibria` for its order (stoich too?)
     # TODO return results as a named tuple also including the final xxx_adjust values
@@ -254,7 +267,7 @@ all_solutes = {
     "Na",
     "SO4",
     "Sr",
-    # "SrCO3",
+    "SrCO3",
     # "SrF",
 }
 
@@ -270,31 +283,23 @@ totals = {
 }
 totals.update({t: 0.0 for t in all_totals if t not in totals})
 
-# This stuff is obsolete but still just useful for printing results
-pH_guess = 8.0
-_k_constants = {
-    "H2O": pz.model.library["equilibria"]["H2O"](temperature),
-    "H2CO3": pz.model.library["equilibria"]["H2CO3"](temperature),
-    "HCO3": pz.model.library["equilibria"]["HCO3"](temperature),
-}
-lnks_H2O_guess = _k_constants["H2O"]
-lnks_H2CO3_guess = _k_constants["H2CO3"]
-lnks_HCO3_guess = _k_constants["HCO3"]
-coeffs = np.array([lnks_H2O_guess, lnks_H2CO3_guess, lnks_HCO3_guess])
-thermo = coeffs
-stoich = np.array([pH_guess])
+# This stuff is useful for printing results
+stoich = np.array([8.0, -np.log10(totals["CO2"] / 2)])  # TODO improve this
+thermo = np.array(
+    [pz.model.library["equilibria"][eq](temperature) for eq in equilibria]
+)
 
 # Solve!
-pH, coeffs_final = solve_combined(totals, temperature, pressure)
 print(stoich)
-print(pH)
-print(coeffs)
-print(coeffs_final)
-# [8.]
-# [8.47589781]
-# [-32.22023869 -14.62482355 -23.78504939]
+print(thermo)
+stoich, thermo = solve_combined(
+    totals, temperature, pressure, stoich=stoich, thermo=thermo
+)
+print(stoich)
+print(thermo)
+# [8.47589781 3.76401471]
 # [-31.48468427 -13.73159014 -21.87573932 -20.28079657  -2.42368661
-#   -6.53874544]
+#   -6.53874544   3.53556697]
 
 
 # %% SLOW to compile, then fast
