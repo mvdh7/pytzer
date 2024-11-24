@@ -48,7 +48,18 @@ print(Gl)
 
 
 # %% Solver
-equilibria = ("H2O", "H2CO3", "HCO3", "BOH3", "HSO4", "HF", "CaCO3", "MgCO3", "SrCO3")
+equilibria = (
+    "H2O",
+    "H2CO3",
+    "HCO3",
+    "BOH3",
+    "HSO4",
+    "HF",
+    "CaCO3",
+    "MgCO3",
+    "SrCO3",
+    "MgOH",
+)
 targets = ("H", "CO3")
 # TODO ^ to be removed eventually, once all reactions have been added below
 
@@ -89,6 +100,7 @@ def get_stoich_error(stoich, totals, thermo, stoich_targets):
         + c.get_BOH4(h, totals, ks)
         - c.get_HSO4(h, totals, ks)
         - c.get_HF(h, f, ks)
+        + c.get_MgOH(h, f, co3, po4, totals, ks)
     )
     # Calculate other totals
     co2 = c.get_CO2(h, co3, ks)
@@ -130,6 +142,7 @@ def get_thermo_error(thermo, totals, temperature, pressure, stoich, thermo_targe
     solutes["SO4"] = c.get_SO4(h, totals, ks)
     solutes["F"] = f
     solutes["HF"] = c.get_HF(h, f, ks)
+    solutes["MgOH"] = c.get_MgOH(h, f, co3, po4, totals, ks)
     # Calculate solute and water activities
     ln_acfs = pz.log_activity_coefficients(solutes, temperature, pressure)
     ln_aw = pz.log_activity_water(solutes, temperature, pressure)
@@ -191,6 +204,7 @@ def solve_combined(
     # TODO uncomment below:
     # equilibria = pz.model.library["equilibria_all"]
     # targets = pz.model.library["solver_targets"]  # and use this!
+    totals.update({t: 0.0 for t in all_totals if t not in totals})
     stoich_targets = np.array(
         [
             pz.equilibrate.stoichiometric.get_explicit_alkalinity(totals),
@@ -271,7 +285,7 @@ all_solutes = {
     "Mg",
     "MgCO3",
     # "MgF",
-    # "MgOH",
+    "MgOH",
     "Na",
     "SO4",
     "Sr",
@@ -289,7 +303,6 @@ totals = {
     "F": 0.001,
     "Sr": 0.02,
 }
-totals.update({t: 0.0 for t in all_totals if t not in totals})
 
 # This stuff is useful for printing results
 stoich = np.array([8.0, -np.log10(totals["CO2"] / 2)])  # TODO improve this
@@ -305,9 +318,9 @@ stoich, thermo = solve_combined(
 )
 print(stoich)
 print(thermo)
-# [8.3703398  3.87547951]
-# [-31.48475663 -13.73167281 -21.87588504 -20.28085819  -2.42379649
-#   -6.53881764   3.53595074   3.19604825   3.14849288]
+# [8.37045773 3.87553018]
+# [-31.48490879 -13.73160454 -21.87627349 -20.28119342  -2.4239057
+#   -6.5389275    3.53635291   3.19644608   3.14889391  -3.03226206]
 
 
 # %% SLOW to compile, then fast
