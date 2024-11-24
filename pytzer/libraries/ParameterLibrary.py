@@ -139,7 +139,7 @@ class ParameterLibrary(dict):
         self.get_equilibria_all()
 
     def get_equilibria_all(self):
-        self["equilibria_all"] = list(self["equilibria"].keys())
+        self["equilibria_all"] = tuple(self["equilibria"].keys())
 
     def get_parameters(
         self,

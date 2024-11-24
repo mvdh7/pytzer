@@ -53,33 +53,31 @@ targets = ("H",)
 # TODO ^ to be removed eventually, once all reactions have been added below
 
 
-
+# TODO just define this function explicitly for each ParameterLibrary, so I don't need
+# to make it so flexible with all the if statements?
 def alkalinity_from_pH_ks(stoich, totals, thermo):
     # TODO uncomment below:
     # equilibria = pz.model.library["equilibria_all"]
     # targets = pz.model.library["solver_targets"]
     exp_thermo = np.exp(thermo)
-    
+
     # Old (well, new) version:
     pH = stoich[targets.index("H")]
     h = 10**-pH
     alkalinity = 0.0
-    if "H2O" in equilibria:
-        ks_H2O = exp_thermo[equilibria.index("H2O")]
-        alkalinity = alkalinity + ks_H2O / h - h
-    if "CO2" in totals:
-        ks_H2CO3 = np.exp(thermo[equilibria.index("H2CO3")])
-        ks_HCO3 = np.exp(thermo[equilibria.index("HCO3")])
-        alkalinity = alkalinity + (
-            totals["CO2"]
-            * ks_H2CO3
-            * (h + 2 * ks_HCO3)
-            / (h**2 + ks_H2CO3 * h + ks_H2CO3 * ks_HCO3)
-        )
-    if "BOH3" in totals and "BOH3" in equilibria:
-        ks_BOH3 = np.exp(thermo[equilibria.index("BOH3")])
-        alkalinity = alkalinity + ks_BOH3 * totals["BOH3"] / (h + ks_BOH3)
-    
+    ks_H2O = exp_thermo[equilibria.index("H2O")]
+    alkalinity = alkalinity + ks_H2O / h - h
+    ks_H2CO3 = np.exp(thermo[equilibria.index("H2CO3")])
+    ks_HCO3 = np.exp(thermo[equilibria.index("HCO3")])
+    alkalinity = alkalinity + (
+        totals["CO2"]
+        * ks_H2CO3
+        * (h + 2 * ks_HCO3)
+        / (h**2 + ks_H2CO3 * h + ks_H2CO3 * ks_HCO3)
+    )
+    # ks_BOH3 = np.exp(thermo[equilibria.index("BOH3")])
+    # alkalinity = alkalinity + ks_BOH3 * totals["BOH3"] / (h + ks_BOH3)
+
     # # Possible new (well, old) version:
     # # But this breaks the temperature grad!  Go back to the old (well, new) approach
     # ks = {eq: exp_thermo[equilibria.index(eq)] for eq in equilibria}
@@ -182,13 +180,14 @@ def solve_combined(
         Final natural logarithms of the stoichiometric equilibrium constants.
     """
     # Solver targets---known from the start
+    # TODO uncomment below:
+    # equilibria = pz.model.library["equilibria_all"]
+    # targets = pz.model.library["solver_targets"]  # and use this!
     stoich_targets = np.array(
         [
             pz.equilibrate.stoichiometric.get_explicit_alkalinity(totals),
         ]
     )
-    # TODO replace above with:
-    # equilibria = pz.model.library["equilibria_all"]
     thermo_targets = np.array(
         [pz.model.library["equilibria"][eq](temperature) for eq in equilibria]
     )  # these are ln(k)
@@ -224,12 +223,54 @@ def solve_combined(
 
 
 # %%
+all_totals = {
+    # Equilibrating
+    # "BOH3",
+    "Ca",
+    "CO2",
+    # "F",
+    "Mg",
+    "Sr",
+    # "SO4",
+    # Non-equilibrating
+    "Br",
+    "Cl",
+    "K",
+    "Na",
+}
+all_solutes = {
+    # "BOH3",
+    # "BOH4",
+    "Br",
+    "Ca",
+    # "CaCO3",
+    # "CaF",
+    "Cl",
+    "CO2",
+    "CO3",
+    # "F",
+    "HCO3",
+    # "HF",
+    # "HSO4",
+    "K",
+    "Mg",
+    # "MgCO3",
+    # "MgF",
+    # "MgOH",
+    "Na",
+    # "SO4",
+    "Sr",
+    # "SrCO3",
+    # "SrF",
+}
+
 totals = {
     "CO2": 0.002,
     "Na": 0.5023,
     "K": 0.2,
     "Cl": 0.7,
 }
+totals.update({t: 0.0 for t in all_totals if t not in totals})
 
 # This stuff is obsolete but still just useful for printing results
 pH_guess = 8.0
