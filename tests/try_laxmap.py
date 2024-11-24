@@ -48,7 +48,7 @@ print(Gl)
 
 
 # %% Solver
-equilibria = ("H2O", "H2CO3", "HCO3", "BOH3", "HSO4", "HF", "CaCO3")
+equilibria = ("H2O", "H2CO3", "HCO3", "BOH3", "HSO4", "HF", "CaCO3", "MgCO3", "SrCO3")
 targets = ("H", "CO3")
 # TODO ^ to be removed eventually, once all reactions have been added below
 
@@ -75,6 +75,8 @@ def get_stoich_error(stoich, totals, thermo, stoich_targets):
     f = c.get_F(h, totals, ks)
     po4 = 0.0
     caco3 = c.get_CaCO3(h, f, co3, po4, totals, ks)
+    mgco3 = c.get_MgCO3(h, f, co3, po4, totals, ks)
+    srco3 = c.get_SrCO3(co3, totals, ks)
     # Calculate alkalinity
     alkalinity = (
         c.get_OH(h, ks)
@@ -82,13 +84,15 @@ def get_stoich_error(stoich, totals, thermo, stoich_targets):
         + hco3
         + 2 * co3
         + 2 * caco3
+        + 2 * mgco3
+        + 2 * srco3
         + c.get_BOH4(h, totals, ks)
         - c.get_HSO4(h, totals, ks)
         - c.get_HF(h, f, ks)
     )
     # Calculate other totals
     co2 = c.get_CO2(h, co3, ks)
-    total_CO2 = co2 + hco3 + co3 + caco3
+    total_CO2 = co2 + hco3 + co3 + caco3 + mgco3 + srco3
     return np.array([alkalinity, total_CO2]) - stoich_targets
 
 
@@ -115,7 +119,11 @@ def get_thermo_error(thermo, totals, temperature, pressure, stoich, thermo_targe
     solutes["HCO3"] = c.get_HCO3(h, co3, ks)
     solutes["CO2"] = c.get_CO2(h, co3, ks)
     solutes["Ca"] = c.get_Ca(h, f, co3, po4, totals, ks)
+    solutes["Mg"] = c.get_Mg(h, f, co3, po4, totals, ks)
+    solutes["Sr"] = c.get_Sr(co3, totals, ks)
     solutes["CaCO3"] = c.get_CaCO3(h, f, co3, po4, totals, ks)
+    solutes["MgCO3"] = c.get_MgCO3(h, f, co3, po4, totals, ks)
+    solutes["SrCO3"] = c.get_SrCO3(co3, totals, ks)
     solutes["BOH3"] = c.get_BOH3(h, totals, ks)
     solutes["BOH4"] = c.get_BOH4(h, totals, ks)
     solutes["HSO4"] = c.get_HSO4(h, totals, ks)
@@ -199,7 +207,7 @@ def solve_combined(
     # Solve!
     for _t in range(iter_thermo):
         for _s in range(iter_stoich_per_thermo):
-            # print(_t, _s)
+            print(_t, _s)
             stoich_error = get_stoich_error(stoich, totals, thermo, stoich_targets)
             stoich_error_jac = get_stoich_error_jac(
                 stoich, totals, thermo, stoich_targets
@@ -210,11 +218,11 @@ def solve_combined(
             )
             # print(stoich_adjust)
             stoich = stoich + stoich_adjust
-        # print("Getting thermo_error...")
+        print("Getting thermo_error...")
         thermo_error = get_thermo_error(
             thermo, totals, temperature, pressure, stoich, thermo_targets
         )
-        # print("Getting thermo_error_jac...")
+        print("Getting thermo_error_jac...")
         thermo_error_jac = np.array(
             get_thermo_error_jac(
                 thermo, totals, temperature, pressure, stoich, thermo_targets
@@ -250,7 +258,7 @@ all_solutes = {
     "BOH4",
     "Br",
     "Ca",
-    # "CaCO3",
+    "CaCO3",
     # "CaF",
     "Cl",
     "CO2",
@@ -261,7 +269,7 @@ all_solutes = {
     "HSO4",
     "K",
     "Mg",
-    # "MgCO3",
+    "MgCO3",
     # "MgF",
     # "MgOH",
     "Na",
@@ -297,9 +305,9 @@ stoich, thermo = solve_combined(
 )
 print(stoich)
 print(thermo)
-# [8.47589781 3.76401471]
-# [-31.48468427 -13.73159014 -21.87573932 -20.28079657  -2.42368661
-#   -6.53874544   3.53556697]
+# [8.3703398  3.87547951]
+# [-31.48475663 -13.73167281 -21.87588504 -20.28085819  -2.42379649
+#   -6.53881764   3.53595074   3.19604825   3.14849288]
 
 
 # %% SLOW to compile, then fast
