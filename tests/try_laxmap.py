@@ -48,13 +48,12 @@ print(Gl)
 
 
 # %% Solver
-equilibria = ("H2O", "H2CO3", "HCO3")
+equilibria = ("H2O", "H2CO3", "HCO3", "BOH3")
 targets = ("H",)
 # TODO ^ to be removed eventually, once all reactions have been added below
 
 
-# TODO just define this function explicitly for each ParameterLibrary, so I don't need
-# to make it so flexible with all the if statements?
+# TODO this function will be defined explicitly for each ParameterLibrary
 def alkalinity_from_pH_ks(stoich, totals, thermo):
     # Prepare inputs for calculations
     # TODO uncomment below:
@@ -65,10 +64,15 @@ def alkalinity_from_pH_ks(stoich, totals, thermo):
     pH = stoich[targets.index("H")]
     h = 10**-pH
     c = pz.equilibrate.components
-    tk = (totals, ks)
-    co3 = c.get_CO3(h, *tk)
+    co3 = c.get_CO3(h, totals, ks)
     # Calculate alkalinity
-    alkalinity = c.get_OH(h, ks) - h + c.get_HCO3(h, co3, ks) + 2 * co3
+    alkalinity = (
+        c.get_OH(h, ks)
+        - h
+        + c.get_HCO3(h, co3, ks)
+        + 2 * co3
+        + c.get_BOH4(h, totals, ks)
+    )
     return alkalinity
 
 
@@ -94,6 +98,8 @@ def get_thermo_error(thermo, totals, temperature, pressure, stoich, thermo_targe
     solutes["CO3"] = c.get_CO3(h, totals, ks)
     solutes["HCO3"] = c.get_HCO3(h, solutes["CO3"], ks)
     solutes["CO2"] = c.get_CO2(h, solutes["CO2"], ks)
+    solutes["BOH3"] = c.get_BOH3(h, totals, ks)
+    solutes["BOH4"] = c.get_BOH4(h, totals, ks)
     # Calculate solute and water activities
     ln_acfs = pz.log_activity_coefficients(solutes, temperature, pressure)
     ln_aw = pz.log_activity_water(solutes, temperature, pressure)
@@ -193,7 +199,7 @@ def solve_combined(
 # %%
 all_totals = {
     # Equilibrating
-    # "BOH3",
+    "BOH3",
     "Ca",
     "CO2",
     # "F",
@@ -207,8 +213,8 @@ all_totals = {
     "Na",
 }
 all_solutes = {
-    # "BOH3",
-    # "BOH4",
+    "BOH3",
+    "BOH4",
     "Br",
     "Ca",
     # "CaCO3",
