@@ -56,18 +56,18 @@ targets = ("H",)
 # TODO just define this function explicitly for each ParameterLibrary, so I don't need
 # to make it so flexible with all the if statements?
 def alkalinity_from_pH_ks(stoich, totals, thermo):
+    # Prepare inputs for calculations
     # TODO uncomment below:
     # equilibria = pz.model.library["equilibria_all"]
     # targets = pz.model.library["solver_targets"]
     exp_thermo = np.exp(thermo)
     ks = {eq: exp_thermo[equilibria.index(eq)] for eq in equilibria}
-
-    # Old (well, new) version:
     pH = stoich[targets.index("H")]
     h = 10**-pH
     c = pz.equilibrate.components
     tk = (totals, ks)
     co3 = c.get_CO3(h, *tk)
+    # Calculate alkalinity
     alkalinity = c.get_OH(h, ks) - h + c.get_HCO3(h, co3, ks) + 2 * co3
     return alkalinity
 
@@ -77,6 +77,7 @@ def get_stoich_error(stoich, totals, thermo, stoich_targets):
 
 
 def get_thermo_error(thermo, totals, temperature, pressure, stoich, thermo_targets):
+    # Prepare inputs for calculations
     # TODO uncomment below:
     # equilibria = pz.model.library["equilibria_all"]
     # targets = pz.model.library["solver_targets"]
@@ -86,25 +87,24 @@ def get_thermo_error(thermo, totals, temperature, pressure, stoich, thermo_targe
     lnks = {eq: thermo[equilibria.index(eq)] for eq in equilibria}
     ks = {eq: exp_thermo[equilibria.index(eq)] for eq in equilibria}
     c = pz.equilibrate.components
-    tk = (totals, ks)
-    # Get shots at the targets
+    # Calculate speciation
     solutes = totals.copy()
     solutes["H"] = h
     solutes["OH"] = c.get_OH(h, ks)
-    solutes["CO3"] = c.get_CO3(h, *tk)
+    solutes["CO3"] = c.get_CO3(h, totals, ks)
     solutes["HCO3"] = c.get_HCO3(h, solutes["CO3"], ks)
     solutes["CO2"] = c.get_CO2(h, solutes["CO2"], ks)
+    # Calculate solute and water activities
     ln_acfs = pz.log_activity_coefficients(solutes, temperature, pressure)
     ln_aw = pz.log_activity_water(solutes, temperature, pressure)
     # Calculate what the log(K)s apparently are with these stoich/thermo values
-    lnk_here = {}
-    lnk_here["H2O"] = lnks["H2O"] + ln_acfs["H"] + ln_acfs["OH"] - ln_aw
-    lnk_here["H2CO3"] = (
-        lnks["H2CO3"] + ln_acfs["HCO3"] + ln_acfs["H"] - ln_acfs["CO2"] - ln_aw
-    )
-    lnk_here["HCO3"] = lnks["HCO3"] + ln_acfs["CO3"] + ln_acfs["H"] - ln_acfs["HCO3"]
-    thermo_attempt = np.array([lnk_here[eq] for eq in equilibria])
-    thermo_error = thermo_attempt - thermo_targets
+    lnk_error = {
+        eq: pz.equilibrate.thermodynamic.all_reactions[eq](
+            thermo_targets[equilibria.index(eq)], lnks[eq], ln_acfs, ln_aw
+        )
+        for eq in equilibria
+    }
+    thermo_error = np.array([lnk_error[eq] for eq in equilibria])
     return thermo_error
 
 
