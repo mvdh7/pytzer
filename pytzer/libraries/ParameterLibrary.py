@@ -48,6 +48,42 @@ class ParameterLibrary(dict):
         self["aa"][anion1].update({anion2: func})
         self["aa"][anion2].update({anion1: func})
 
+    def add_zero_cc(self):
+        for s0 in self["solutes_all"]:
+            if convert.solute_to_charge[s0] > 0:
+                for s1 in self["solutes_all"]:
+                    if (
+                        s0 != s1
+                        and convert.solute_to_charge[s1] > 0
+                        and convert.solute_to_charge[s0] != convert.solute_to_charge[s1]
+                    ):
+                        if s0 not in self["cc"]:
+                            self["cc"][s0] = {}
+                        if s1 not in self["cc"]:
+                            self["cc"][s1] = {}
+                        if s1 not in self["cc"][s0]:
+                            self["cc"][s0][s1] = prm.theta_none
+                        if s0 not in self["cc"][s1]:
+                            self["cc"][s1][s0] = prm.theta_none
+
+    def add_zero_aa(self):
+        for s0 in self["solutes_all"]:
+            if convert.solute_to_charge[s0] < 0:
+                for s1 in self["solutes_all"]:
+                    if (
+                        s0 != s1
+                        and convert.solute_to_charge[s1] < 0
+                        and convert.solute_to_charge[s0] != convert.solute_to_charge[s1]
+                    ):
+                        if s0 not in self["aa"]:
+                            self["aa"][s0] = {}
+                        if s1 not in self["aa"]:
+                            self["aa"][s1] = {}
+                        if s1 not in self["aa"][s0]:
+                            self["aa"][s0][s1] = prm.theta_none
+                        if s0 not in self["aa"][s1]:
+                            self["aa"][s1][s0] = prm.theta_none
+
     def update_cca(self, cation1, cation2, anion, func=prm.psi_none):
         """Add or update a cation-cation-anion interaction parameter function."""
         if "cca" not in self:

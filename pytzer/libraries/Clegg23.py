@@ -212,6 +212,7 @@ Clegg23["solutes_all"] = {
     "CO2",
     "CO3",
     "F",
+    "H",
     "HCO3",
     "HF",
     "HSO4",
@@ -222,10 +223,15 @@ Clegg23["solutes_all"] = {
     "MgOH",
     "MgOH",
     "Na",
+    "OH",
     "SO4",
     "Sr",
     "SrCO3",
 }
+Clegg23.add_zero_cc()
+Clegg23.add_zero_aa()
+Clegg23["nn"] = {}
+Clegg23["nnn"] = {}
 
 
 # Equilibration functions

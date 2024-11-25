@@ -3,6 +3,7 @@
 import pandas as pd
 import pytzer as pz
 import numpy as np
+from datetime import datetime
 
 # Select parameter library
 prmlib = pz.libraries.Clegg23
@@ -19,6 +20,7 @@ for c in data.columns:
         data_diff["y" + c[1:]] = np.nan
 data_diff.drop(columns="temperature", inplace=True)
 for i, row in data.iterrows():
+    start = datetime.now()
 
     # # Old version
     # solutes = pz.odict((s[1:], v) for s, v in row.items() if s.startswith("m"))
@@ -41,6 +43,7 @@ for i, row in data.iterrows():
     data.loc[i, "osm_pz"] = osm
     acfs = pz.model.activity_coefficients(solutes, temperature, pressure)
 
+    print(i, datetime.now() - start)
     for s, v in acfs.items():
         data.loc[i, "y" + s + "_pz"] = v
         data_diff.loc[i, "y" + s] = 100 * (v - row["y" + s]) / row["y" + s]

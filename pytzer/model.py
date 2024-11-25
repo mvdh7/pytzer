@@ -254,130 +254,109 @@ def _Gibbs_nRT_wow(solutes, temperature, pressure):
     tp = (temperature, pressure)
     Aphi = library["Aphi"](*tp)[0]
     Gibbs = Gibbs_DH(Aphi, I)
+    charges = {s: convert.solute_to_charge[s] for s in solutes}
     # === Add (neutral-)cation-anion interactions ======================================
     if len(n_cations) > 0 and len(n_anions) > 0:
         Z = np.sum(m_cations * z_cations) - np.sum(m_anions * z_anions)
-        for c, cation in enumerate(n_cations):
-            for a, anion in enumerate(n_anions):
-                try:
-                    ca = library["ca"][cation][anion](*tp)
-                    Gibbs = Gibbs + m_cations[c] * m_anions[a] * (
-                        2 * B(sqrt_I, *ca[:3], *ca[5:7])
-                        + Z * CT(sqrt_I, *ca[3:5], ca[7])
-                    )
-                except KeyError:
-                    pass
-                if len(n_neutrals) > 0:
-                    for n, neutral in enumerate(n_neutrals):
-                        try:
-                            Gibbs = (
-                                Gibbs
-                                + m_neutrals[n]
-                                * m_cations[c]
-                                * m_anions[a]
-                                * library["nca"][neutral][cation][anion](*tp)[0]
-                            )
-                        except KeyError:
-                            pass
-    # === Add cation-cation(-anion) interactions =======================================
-    if len(n_cations) > 1:
-        for c0, cation0 in enumerate(n_cations):
-            for _c1, cation1 in enumerate(n_cations[(c0 + 1) :]):
-                c1 = c0 + _c1 + 1
-                try:
-                    theta = library["cc"][cation0][cation1](*tp)[0]
-                except KeyError:
-                    theta = 0.0
-                Gibbs = Gibbs + 2 * m_cations[c0] * m_cations[c1] * (
-                    theta
-                    + etheta(
-                        Aphi,
-                        I,
-                        z_cations[c0],
-                        z_cations[c1],
-                        library["func_J"],
-                    )
+        for cation in library["ca"]:
+            for anion in library["ca"][cation]:
+                ca = library["ca"][cation][anion](*tp)
+                Gibbs = Gibbs + solutes[cation] * solutes[anion] * (
+                    2 * B(sqrt_I, *ca[:3], *ca[5:7]) + Z * CT(sqrt_I, *ca[3:5], ca[7])
                 )
-                for a, anion in enumerate(n_anions):
-                    try:
-                        Gibbs = (
-                            Gibbs
-                            + m_cations[c0]
-                            * m_cations[c1]
-                            * m_anions[a]
-                            * library["cca"][cation0][cation1][anion](*tp)[0]
-                        )
-                    except KeyError:
-                        pass
-    # === Add (cation-)anion-anion interactions ========================================
-    if len(n_anions) > 1:
-        for a0, anion0 in enumerate(n_anions):
-            for _a1, anion1 in enumerate(n_anions[(a0 + 1) :]):
-                a1 = a0 + _a1 + 1
-                try:
-                    theta = library["aa"][anion0][anion1](*tp)[0]
-                except KeyError:
-                    theta = 0.0
-                Gibbs = Gibbs + 2 * m_anions[a0] * m_anions[a1] * (
-                    theta
-                    + etheta(Aphi, I, z_anions[a0], z_anions[a1], library["func_J"])
-                )
-                for c, cation in enumerate(n_cations):
-                    try:
-                        Gibbs = (
-                            Gibbs
-                            + m_cations[c]
-                            * m_anions[a0]
-                            * m_anions[a1]
-                            * library["caa"][cation][anion0][anion1](*tp)[0]
-                        )
-                    except KeyError:
-                        pass
-    # === Add other neutral interactions ===============================================
-    if len(n_neutrals) > 0:
-        for n0, neutral0 in enumerate(n_neutrals):
-            # Neutral-neutral (can be the same or different neutrals)
-            for n1, neutral1 in enumerate(n_neutrals):
-                try:
+        for neutral in library["nca"]:
+            for cation in library["nca"][neutral]:
+                for anion in library["nca"][neutral][cation]:
                     Gibbs = (
                         Gibbs
-                        + m_neutrals[n0]
-                        * m_neutrals[n1]
-                        * library["nn"][neutral0][neutral1](*tp)[0]
+                        + solutes[neutral]
+                        * solutes[cation]
+                        * solutes[anion]
+                        * library["nca"][neutral][cation][anion](*tp)[0]
                     )
-                except KeyError:
-                    pass
-            # Neutral-neutral-neutral (always the same neutral 3 times)
-            try:
-                Gibbs = Gibbs + m_neutrals[n0] ** 3 * library["nnn"][neutral0](*tp)[0]
-            except KeyError:
-                pass
-            # Neutral-cation
-            if len(n_cations) > 0:
-                for c, cation in enumerate(n_cations):
-                    try:
-                        Gibbs = (
-                            Gibbs
-                            + 2
-                            * m_neutrals[n0]
-                            * m_cations[c]
-                            * library["nc"][neutral0][cation](*tp)[0]
-                        )
-                    except KeyError:
-                        pass
-            # Neutral-anion
-            if len(n_anions) > 0:
-                for a, anion in enumerate(n_anions):
-                    try:
-                        Gibbs = (
-                            Gibbs
-                            + 2
-                            * m_neutrals[n0]
-                            * m_anions[a]
-                            * library["na"][neutral0][anion](*tp)[0]
-                        )
-                    except KeyError:
-                        pass
+    # === Add cation-cation(-anion) interactions =======================================
+    for cation0 in library["cc"]:
+        for cation1 in library["cc"][cation0]:
+            theta = library["cc"][cation0][cation1](*tp)[0]
+            Gibbs = Gibbs + solutes[cation0] * solutes[cation1] * (
+                theta
+                + etheta(
+                    Aphi,
+                    I,
+                    charges[cation0],
+                    charges[cation1],
+                    library["func_J"],
+                )
+            )
+    for cation0 in library["cca"]:
+        for cation1 in library["cca"][cation0]:
+            for anion in library["cca"][cation0][cation1]:
+                Gibbs = (
+                    Gibbs
+                    + 0.5
+                    * solutes[cation0]
+                    * solutes[cation1]
+                    * solutes[anion]
+                    * library["cca"][cation0][cation1][anion](*tp)[0]
+                )
+    # # === Add (cation-)anion-anion interactions ========================================
+    for anion0 in library["aa"]:
+        for anion1 in library["aa"][anion0]:
+            theta = library["aa"][anion0][anion1](*tp)[0]
+            Gibbs = Gibbs + solutes[anion0] * solutes[anion1] * (
+                theta
+                + etheta(
+                    Aphi,
+                    I,
+                    charges[anion0],
+                    charges[anion1],
+                    library["func_J"],
+                )
+            )
+    for cation in library["caa"]:
+        for anion0 in library["caa"][cation]:
+            for anion1 in library["caa"][cation][anion0]:
+                Gibbs = (
+                    Gibbs
+                    + 0.5
+                    * solutes[cation]
+                    * solutes[anion0]
+                    * solutes[anion1]
+                    * library["caa"][cation][anion0][anion1](*tp)[0]
+                )
+    # # === Add other neutral interactions ===============================================
+    # Neutral-neutral (can be the same or different neutrals)
+    for neutral0 in library["nn"]:
+        for neutral1 in library["nn"][neutral0]:
+            Gibbs = (
+                Gibbs
+                + solutes[neutral0]
+                * solutes[neutral1]
+                * library["nn"][neutral0][neutral1](*tp)[0]
+            )
+    # Neutral-neutral-neutral (always the same neutral 3 times---for now)
+    for neutral in library["nnn"]:
+        Gibbs = Gibbs + m_neutrals[neutral] ** 3 * library["nnn"][neutral](*tp)[0]
+    # Neutral-cation
+    for neutral in library["nc"]:
+        for cation in library["nc"][neutral]:
+            Gibbs = (
+                Gibbs
+                + 2
+                * solutes[neutral]
+                * solutes[cation]
+                * library["nc"][neutral][cation](*tp)[0]
+            )
+    # Neutral-anion
+    for neutral in library["na"]:
+        for anion in library["na"][neutral]:
+            Gibbs = (
+                Gibbs
+                + 2
+                * solutes[neutral]
+                * solutes[anion]
+                * library["na"][neutral][anion](*tp)[0]
+            )
     return Gibbs
 
 
@@ -398,7 +377,7 @@ def Gibbs_nRT(solutes, temperature, pressure):
     float
         Gex/nRT.
     """
-    return _Gibbs_nRT(solutes, temperature, pressure)
+    return _Gibbs_nRT_wow(solutes, temperature, pressure)
 
 
 @jax.jit
