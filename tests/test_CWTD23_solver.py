@@ -8,7 +8,7 @@ import numpy as np
 prmlib = pz.libraries.Clegg23
 pz = prmlib.set_func_J(pz)
 
-# Solve and compare without equilibrating
+# %% Solve and compare without equilibrating
 data = pd.read_csv("tests/data/CWTD23 SI final table.csv")
 data["aH2O_pz"] = np.nan
 data["osm_pz"] = np.nan
@@ -19,15 +19,28 @@ for c in data.columns:
         data_diff["y" + c[1:]] = np.nan
 data_diff.drop(columns="temperature", inplace=True)
 for i, row in data.iterrows():
-    solutes = pz.odict((s[1:], v) for s, v in row.items() if s.startswith("m"))
-    params = prmlib.get_parameters(
-        solutes=solutes, temperature=273.15 + row.temperature, verbose=False
-    )
-    aH2O = pz.model_old.activity_water(solutes, **params)
+
+    # # Old version
+    # solutes = pz.odict((s[1:], v) for s, v in row.items() if s.startswith("m"))
+    # params = prmlib.get_parameters(
+    #     solutes=solutes, temperature=273.15 + row.temperature, verbose=False
+    # )
+    # aH2O = pz.model_old.activity_water(solutes, **params)
+    # data.loc[i, "aH2O_pz"] = aH2O
+    # osm = pz.model_old.osmotic_coefficient(solutes, **params)
+    # data.loc[i, "osm_pz"] = osm
+    # acfs = pz.model_old.activity_coefficients(solutes, **params)
+
+    # New version
+    solutes = {s[1:]: v for s, v in row.items() if s.startswith("m")}
+    temperature = 273.15 + row.temperature
+    pressure = 10.1325
+    aH2O = pz.model.activity_water(solutes, temperature, pressure)
     data.loc[i, "aH2O_pz"] = aH2O
-    osm = pz.model_old.osmotic_coefficient(solutes, **params)
+    osm = pz.model.osmotic_coefficient(solutes, temperature, pressure)
     data.loc[i, "osm_pz"] = osm
-    acfs = pz.model_old.activity_coefficients(solutes, **params)
+    acfs = pz.model.activity_coefficients(solutes, temperature, pressure)
+
     for s, v in acfs.items():
         data.loc[i, "y" + s + "_pz"] = v
         data_diff.loc[i, "y" + s] = 100 * (v - row["y" + s]) / row["y" + s]
@@ -35,7 +48,7 @@ dcols = list(data.columns)
 dcols.sort()
 data = data[dcols]
 
-# Now with the equilibrium solver
+# %% Now with the equilibrium solver
 data_eq = data.copy()
 for c in data_eq.columns:
     if c.startswith("m"):

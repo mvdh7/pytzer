@@ -125,18 +125,19 @@ def _Gibbs_nRT(solutes, temperature, pressure):
             for _c1, cation1 in enumerate(n_cations[(c0 + 1) :]):
                 c1 = c0 + _c1 + 1
                 try:
-                    Gibbs = Gibbs + 2 * m_cations[c0] * m_cations[c1] * (
-                        library["cc"][cation0][cation1](*tp)[0]
-                        + etheta(
-                            Aphi,
-                            I,
-                            z_cations[c0],
-                            z_cations[c1],
-                            library["func_J"],
-                        )
-                    )
+                    theta = library["cc"][cation0][cation1](*tp)[0]
                 except KeyError:
-                    pass
+                    theta = 0.0
+                Gibbs = Gibbs + 2 * m_cations[c0] * m_cations[c1] * (
+                    theta
+                    + etheta(
+                        Aphi,
+                        I,
+                        z_cations[c0],
+                        z_cations[c1],
+                        library["func_J"],
+                    )
+                )
                 for a, anion in enumerate(n_anions):
                     try:
                         Gibbs = (
@@ -154,12 +155,13 @@ def _Gibbs_nRT(solutes, temperature, pressure):
             for _a1, anion1 in enumerate(n_anions[(a0 + 1) :]):
                 a1 = a0 + _a1 + 1
                 try:
-                    Gibbs = Gibbs + 2 * m_anions[a0] * m_anions[a1] * (
-                        library["aa"][anion0][anion1](*tp)[0]
-                        + etheta(Aphi, I, z_anions[a0], z_anions[a1], library["func_J"])
-                    )
+                    theta = library["aa"][anion0][anion1](*tp)[0]
                 except KeyError:
-                    pass
+                    theta = 0.0
+                Gibbs = Gibbs + 2 * m_anions[a0] * m_anions[a1] * (
+                    theta
+                    + etheta(Aphi, I, z_anions[a0], z_anions[a1], library["func_J"])
+                )
                 for c, cation in enumerate(n_cations):
                     try:
                         Gibbs = (

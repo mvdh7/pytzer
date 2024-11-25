@@ -2,47 +2,93 @@ import jax
 from jax import numpy as np
 import pytzer as pz
 
-solutes = {
-    "Na": 1.5,
-    "Ca": 1.0,
-    "H": 1.0,
-    "Cl": 3.0,
-    "SO4": 0.75,
-    "CO2": 0.5,
-}
-temperature = 298.15
-pressure = 10.1
+# solutes = {
+#     "Na": 1.5,
+#     "Ca": 1.0,
+#     "H": 1.0,
+#     "Cl": 3.0,
+#     "SO4": 0.75,
+#     "CO2": 0.5,
+# }
+# temperature = 298.15
+# pressure = 10.1
 prmlib = pz.libraries.Clegg23
-prmlib.update_ca("Na", "Cl", pz.parameters.bC_Na_Cl_A92ii)  # for testing
-prmlib.update_nn("CO2", "CO2", pz.parameters.theta_BOH4_Cl_CWTD23)  # for testing
-prmlib.update_nnn("CO2", pz.parameters.mu_tris_tris_tris_LTA21)  # for testing
+# prmlib.update_ca("Na", "Cl", pz.parameters.bC_Na_Cl_A92ii)  # for testing
+# prmlib.update_nn("CO2", "CO2", pz.parameters.theta_BOH4_Cl_CWTD23)  # for testing
+# prmlib.update_nnn("CO2", pz.parameters.mu_tris_tris_tris_LTA21)  # for testing
 pz = prmlib.set_func_J(pz)
 
 
-Gargs = (solutes, temperature, pressure)
-Gex_nRT = pz.model.Gibbs_nRT
-G = Gex_nRT(*Gargs)
+# Gargs = (solutes, temperature, pressure)
+# Gex_nRT = pz.model.Gibbs_nRT
+# G = Gex_nRT(*Gargs)
 
-fGsj = pz.model.log_activity_coefficients
+# fGsj = pz.model.log_activity_coefficients
 
-Gs = jax.grad(Gex_nRT)(*Gargs)
-Gsj = fGsj(*Gargs)
-Gt = jax.grad(Gex_nRT, argnums=1)(*Gargs)
-Gp = jax.grad(Gex_nRT, argnums=2)(*Gargs)
+# Gs = jax.grad(Gex_nRT)(*Gargs)
+# Gsj = fGsj(*Gargs)
+# Gt = jax.grad(Gex_nRT, argnums=1)(*Gargs)
+# Gp = jax.grad(Gex_nRT, argnums=2)(*Gargs)
 
-osolutes = pz.odict(solutes)
-params = prmlib.get_parameters(
-    solutes=osolutes, temperature=temperature, pressure=pressure
-)
-G_old = pz.model_old.Gibbs_nRT(osolutes, **params)
-Gs_old = pz.model_old.log_activity_coefficients(osolutes, **params)
+# osolutes = pz.odict(solutes)
+# params = prmlib.get_parameters(
+#     solutes=osolutes, temperature=temperature, pressure=pressure
+# )
+# G_old = pz.model_old.Gibbs_nRT(osolutes, **params)
+# Gs_old = pz.model_old.log_activity_coefficients(osolutes, **params)
 
-pz.update_library(pz, "Seawater")
-Gl = pz.model.Gibbs_nRT(*Gargs)
-print(G)
-print(G_old)
-print(Gl)
-pz.update_library(pz, "Clegg23")
+# pz.update_library(pz, "Seawater")
+# Gl = pz.model.Gibbs_nRT(*Gargs)
+# print(G)
+# print(G_old)
+# print(Gl)
+# pz.update_library(pz, "Clegg23")
+# pz = prmlib.set_func_J(pz)
+
+# %%
+solutes = {
+    # -1 anions
+    "Cl": 1.0,
+    "HSO4": 1.0,
+    "OH": 1.0,
+    "Br": 1.0,
+    "HCO3": 1.0,
+    "BOH4": 1.0,
+    "F": 1.0,
+    # -2 anions
+    "SO4": 1.0,
+    "CO3": 1.0,
+    # +1 cations
+    "H": 1.0,
+    "Na": 1.0,
+    "K": 1.0,
+    "MgF": 1.0,
+    "CaF": 1.0,
+    "MgOH": 1.0,
+    # +2 cations
+    "Mg": 1.0,
+    "Ca": 1.0,
+    "Sr": 1.0,
+    # 0 neutrals
+    "BOH3": 1.0,
+    "CO2": 1.0,
+    "HF": 1.0,
+    "MgCO3": 1.0,
+    "CaCO3": 1.0,
+    "SrCO3": 1.0,
+}
+solutes_old = pz.odict(solutes)
+temperature = 278.15
+pressure = 10.1325
+
+params = prmlib.get_parameters(solutes_old, temperature=temperature, pressure=pressure)
+acfs_old = pz.model_old.activity_coefficients(solutes_old, **params)
+
+acfs = pz.model.activity_coefficients(solutes, temperature, pressure)
+
+acfs_diff = {k: (acfs[k] - acfs_old[k]).item() for k in acfs}
+for k, v in acfs_diff.items():
+    print(k, v)
 
 # %%
 totals = {

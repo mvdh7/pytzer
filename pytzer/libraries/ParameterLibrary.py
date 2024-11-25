@@ -145,7 +145,7 @@ class ParameterLibrary(dict):
         self,
         solutes=None,
         temperature=298.15,
-        pressure=10.1023,
+        pressure=10.1325,
         verbose=True,
     ):
         """Evaluate all interaction parameters under specific conditions for
@@ -308,7 +308,7 @@ class ParameterLibrary(dict):
         self,
         solutes=None,
         temperature=298.15,
-        pressure=10.1023,
+        pressure=10.1325,
         verbose=True,
     ):
         """Calculate Pitzer model parameters and thermodynamic equilibrium constants
@@ -327,7 +327,7 @@ class ParameterLibrary(dict):
         self,
         solutes,
         temperature=298.15,
-        pressure=10.1023,
+        pressure=10.1325,
         verbose=True,
     ):
         """Assemble parameter matrices for the matrix model."""

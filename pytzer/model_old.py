@@ -70,7 +70,8 @@ def ionic_z(molalities, charges):
     return np.sum(molalities * np.abs(charges))
 
 
-func_J = unsymmetrical.Harvie
+# func_J = unsymmetrical.Harvie
+func_J = unsymmetrical.P75_eq47
 
 
 @jax.jit
