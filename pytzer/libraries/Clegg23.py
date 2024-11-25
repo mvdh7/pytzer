@@ -21,7 +21,22 @@ Clegg23.update_equilibrium("MgCO3", k.MgCO3_MP98_MR97)  # CWTF23 cite 83MT + 88P
 Clegg23.update_equilibrium("MgF", k.MgF_MP98_MR97)  # CWTF23 cite 88CB
 Clegg23.update_equilibrium("MgOH", k.MgOH_CW91_ln)
 Clegg23.update_equilibrium("SrCO3", k.SrCO3_CWTF23)
-Clegg23["solver_targets"] = ("H",)
+Clegg23["solver_targets"] = ("H", "CO3", "F")
+Clegg23["totals_all"] = {
+    # Equilibrating
+    "BOH3",
+    "Ca",
+    "CO2",
+    "F",
+    "Mg",
+    "Sr",
+    "SO4",
+    # Non-equilibrating
+    "Br",
+    "Cl",
+    "K",
+    "Na",
+}
 
 # Tables S14-S18 (beta and C coefficients)
 Clegg23.update_ca("Ca", "Br", prm.bC_Ca_Br_SP78)

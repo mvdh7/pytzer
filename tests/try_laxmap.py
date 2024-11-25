@@ -1,7 +1,8 @@
 import jax
 from jax import numpy as np
 import pytzer as pz
-
+from collections import namedtuple
+import warnings
 
 solutes = {
     "Na": 1.5,
@@ -39,55 +40,35 @@ G_old = pz.model_old.Gibbs_nRT(osolutes, **params)
 Gs_old = pz.model_old.log_activity_coefficients(osolutes, **params)
 
 pz.update_library(pz, "Seawater")
-
 Gl = pz.model.Gibbs_nRT(*Gargs)
-
 print(G)
 print(G_old)
 print(Gl)
+pz.update_library(pz, "Clegg23")
 
 
 # %% Solver
-equilibria = (
-    "H2O",
-    "H2CO3",
-    "HCO3",
-    "BOH3",
-    "HSO4",
-    "HF",
-    "CaCO3",
-    "MgCO3",
-    "SrCO3",
-    "MgOH",
-)
-targets = ("H", "CO3")
-# TODO ^ to be removed eventually, once all reactions have been added below
-
-
-# TODO this function will be defined explicitly for each ParameterLibrary
-# @jax.jit
-# def alkalinity_from_pH_ks(stoich, totals, thermo):
-#     return alkalinity
-
-
+# TODO these functions will need to be defined explicitly for each ParameterLibrary
 @jax.jit
 def get_stoich_error(stoich, totals, thermo, stoich_targets):
     # Prepare inputs for calculations
-    # TODO uncomment below:
-    # equilibria = pz.model.library["equilibria_all"]
-    # targets = pz.model.library["solver_targets"]
     exp_thermo = np.exp(thermo)
-    ks = {eq: exp_thermo[equilibria.index(eq)] for eq in equilibria}
-    pH = stoich[targets.index("H")]
-    h = 10**-pH
+    ks = {
+        eq: exp_thermo[pz.model.library["equilibria_all"].index(eq)]
+        for eq in pz.model.library["equilibria_all"]
+    }
+    # Extract and convert stoich
+    h = 10 ** -stoich[pz.model.library["solver_targets"].index("H")]
+    co3 = 10 ** -stoich[pz.model.library["solver_targets"].index("CO3")]
+    f = 10 ** -stoich[pz.model.library["solver_targets"].index("F")]
+    po4 = 0.0  # no phosphate in this model
+    # Calculate components that will be used more than once
     c = pz.equilibrate.components
-    co3 = 10 ** -stoich[targets.index("CO3")]
     hco3 = c.get_HCO3(h, co3, ks)
-    f = c.get_F(h, totals, ks)
-    po4 = 0.0
     caco3 = c.get_CaCO3(h, f, co3, po4, totals, ks)
     mgco3 = c.get_MgCO3(h, f, co3, po4, totals, ks)
     srco3 = c.get_SrCO3(co3, totals, ks)
+    hf = c.get_HF(h, f, ks)
     # Calculate alkalinity
     alkalinity = (
         c.get_OH(h, ks)
@@ -99,31 +80,44 @@ def get_stoich_error(stoich, totals, thermo, stoich_targets):
         + 2 * srco3
         + c.get_BOH4(h, totals, ks)
         - c.get_HSO4(h, totals, ks)
-        - c.get_HF(h, f, ks)
+        - hf
         + c.get_MgOH(h, f, co3, po4, totals, ks)
+        # TODO (how) do MgF and CaF contribute to alkalinity?
     )
     # Calculate other totals
     co2 = c.get_CO2(h, co3, ks)
     total_CO2 = co2 + hco3 + co3 + caco3 + mgco3 + srco3
-    return np.array([alkalinity, total_CO2]) - stoich_targets
+    total_F = (
+        f
+        + hf
+        + c.get_CaF(h, f, co3, po4, totals, ks)
+        + c.get_MgF(h, f, co3, po4, totals, ks)
+    )
+    return np.array([alkalinity, total_CO2, total_F]) - stoich_targets
 
 
 @jax.jit
-def get_thermo_error(thermo, totals, temperature, pressure, stoich, thermo_targets):
-    # Prepare inputs for calculations
-    # TODO uncomment below:
-    # equilibria = pz.model.library["equilibria_all"]
-    # targets = pz.model.library["solver_targets"]
-    pH = stoich[targets.index("H")]
-    h = 10**-pH
+def get_ks_constants(thermo):
     exp_thermo = np.exp(thermo)
-    lnks = {eq: thermo[equilibria.index(eq)] for eq in equilibria}
-    ks = {eq: exp_thermo[equilibria.index(eq)] for eq in equilibria}
-    c = pz.equilibrate.components
-    f = c.get_F(h, totals, ks)
-    co3 = 10 ** -stoich[targets.index("CO3")]
-    po4 = 0.0
+    ks = {
+        eq: exp_thermo[pz.model.library["equilibria_all"].index(eq)]
+        for eq in pz.model.library["equilibria_all"]
+    }
+    return ks
+
+
+@jax.jit
+def get_solutes(totals, stoich, thermo):
+    ks = get_ks_constants(thermo)
+    # Extract and convert stoich
+    h = 10 ** -stoich[pz.model.library["solver_targets"].index("H")]
+    co3 = 10 ** -stoich[pz.model.library["solver_targets"].index("CO3")]
+    f = 10 ** -stoich[pz.model.library["solver_targets"].index("F")]
+    po4 = 0.0  # no phosphate in this model
     # Calculate speciation
+    c = pz.equilibrate.components
+    totals = totals.copy()
+    totals.update({t: 0.0 for t in pz.model.library["totals_all"] if t not in totals})
     solutes = totals.copy()
     solutes["H"] = h
     solutes["OH"] = c.get_OH(h, ks)
@@ -143,17 +137,36 @@ def get_thermo_error(thermo, totals, temperature, pressure, stoich, thermo_targe
     solutes["F"] = f
     solutes["HF"] = c.get_HF(h, f, ks)
     solutes["MgOH"] = c.get_MgOH(h, f, co3, po4, totals, ks)
+    solutes["CaF"] = c.get_CaF(h, f, co3, po4, totals, ks)
+    solutes["MgF"] = c.get_MgF(h, f, co3, po4, totals, ks)
+    return solutes
+
+
+@jax.jit
+def get_thermo_error(thermo, totals, temperature, pressure, stoich, thermo_targets):
+    # Prepare inputs for calculations
+    lnks = {
+        eq: thermo[pz.model.library["equilibria_all"].index(eq)]
+        for eq in pz.model.library["equilibria_all"]
+    }
+    # Calculate speciation
+    solutes = get_solutes(totals, stoich, thermo)
     # Calculate solute and water activities
     ln_acfs = pz.log_activity_coefficients(solutes, temperature, pressure)
     ln_aw = pz.log_activity_water(solutes, temperature, pressure)
     # Calculate what the log(K)s apparently are with these stoich/thermo values
     lnk_error = {
         eq: pz.equilibrate.thermodynamic.all_reactions[eq](
-            thermo_targets[equilibria.index(eq)], lnks[eq], ln_acfs, ln_aw
+            thermo_targets[pz.model.library["equilibria_all"].index(eq)],
+            lnks[eq],
+            ln_acfs,
+            ln_aw,
         )
-        for eq in equilibria
+        for eq in pz.model.library["equilibria_all"]
     }
-    thermo_error = np.array([lnk_error[eq] for eq in equilibria])
+    thermo_error = np.array(
+        [lnk_error[eq] for eq in pz.model.library["equilibria_all"]]
+    )
     return thermo_error
 
 
@@ -161,8 +174,48 @@ get_stoich_error_jac = jax.jit(jax.jacfwd(get_stoich_error))
 get_thermo_error_jac = jax.jit(jax.jacfwd(get_thermo_error))
 
 
-# %% RESET
-# @jax.jit  # --- might be better not to JIT this one, actually?
+@jax.jit
+def get_stoich_targets(totals):
+    return np.array(
+        [
+            pz.equilibrate.stoichiometric.get_explicit_alkalinity(totals),
+            totals["CO2"],
+            totals["F"],
+        ]
+    )
+
+
+@jax.jit
+def get_stoich_adjust(stoich, totals, thermo, stoich_targets):
+    stoich_error = get_stoich_error(stoich, totals, thermo, stoich_targets)
+    stoich_error_jac = get_stoich_error_jac(stoich, totals, thermo, stoich_targets)
+    stoich_adjust = np.linalg.solve(-stoich_error_jac, stoich_error)
+    stoich_adjust = np.where(
+        np.abs(stoich_adjust) > 1, np.sign(stoich_adjust), stoich_adjust
+    )
+    return stoich_adjust
+
+
+@jax.jit
+def get_thermo_adjust(thermo, totals, temperature, pressure, stoich, thermo_targets):
+    thermo_error = get_thermo_error(
+        thermo, totals, temperature, pressure, stoich, thermo_targets
+    )
+    thermo_error_jac = np.array(
+        get_thermo_error_jac(
+            thermo, totals, temperature, pressure, stoich, thermo_targets
+        )
+    )
+    thermo_adjust = np.linalg.solve(-thermo_error_jac, thermo_error)
+    return thermo_adjust
+
+
+# %%
+SolveCombinedResult = namedtuple(
+    "SolveCombinedResult", ["stoich", "thermo", "stoich_adjust", "thermo_adjust"]
+)
+
+
 def solve_combined(
     totals,
     temperature,
@@ -171,8 +224,13 @@ def solve_combined(
     thermo=None,
     iter_thermo=6,
     iter_stoich_per_thermo=3,
+    verbose=False,
+    warn_cutoff=1e-8,
 ):
     """Solve for equilibrium.
+
+    This function is not JIT-ed by default, because it takes a lot longer to compile,
+    but you can JIT it yourself to get a ~2x speedup.
 
     Parameters
     ----------
@@ -192,6 +250,11 @@ def solve_combined(
     iter_pH_per_thermo : int, optional
         How many times to iterate the stoich part of the solver per thermo loop, by
         default 3.
+    verbose : bool, optional
+        Whether to print solving progress, by default False.
+    warn_cutoff : float, optional
+        If any of the final rounds of adjustments for stoich or thermo are greater than
+        this value, print a convergence warning.
 
     Returns
     -------
@@ -201,144 +264,114 @@ def solve_combined(
         Final natural logarithms of the stoichiometric equilibrium constants.
     """
     # Solver targets---known from the start
-    # TODO uncomment below:
-    # equilibria = pz.model.library["equilibria_all"]
-    # targets = pz.model.library["solver_targets"]  # and use this!
-    totals.update({t: 0.0 for t in all_totals if t not in totals})
-    stoich_targets = np.array(
-        [
-            pz.equilibrate.stoichiometric.get_explicit_alkalinity(totals),
-            totals["CO2"],
-        ]
-    )
+    totals = totals.copy()
+    totals.update({t: 0.0 for t in pz.model.library["totals_all"] if t not in totals})
+    stoich_targets = get_stoich_targets(totals)
     thermo_targets = np.array(
-        [pz.model.library["equilibria"][eq](temperature) for eq in equilibria]
+        [
+            pz.model.library["equilibria"][eq](temperature)
+            for eq in pz.model.library["equilibria_all"]
+        ]
     )  # these are ln(k)
     if stoich is None:
-        stoich = np.array([8.0, -np.log10(totals["CO2"] / 2)])  # TODO improve this
+        stoich = np.array(
+            [
+                7.0,
+                -np.log10(totals["CO2"] / 2),
+                -np.log10(totals["F"] / 2),
+            ]
+        )
     if thermo is None:
         thermo = thermo_targets.copy()
     # Solve!
     for _t in range(iter_thermo):
         for _s in range(iter_stoich_per_thermo):
-            print(_t, _s)
-            stoich_error = get_stoich_error(stoich, totals, thermo, stoich_targets)
-            stoich_error_jac = get_stoich_error_jac(
-                stoich, totals, thermo, stoich_targets
-            )
-            stoich_adjust = np.linalg.solve(-stoich_error_jac, stoich_error)
-            stoich_adjust = np.where(
-                np.abs(stoich_adjust) > 1, np.sign(stoich_adjust), stoich_adjust
-            )
-            # print(stoich_adjust)
+            stoich_adjust = get_stoich_adjust(stoich, totals, thermo, stoich_targets)
+            if verbose:
+                print("STOICH", _t + 1, _s + 1)
+                print(stoich_adjust)
             stoich = stoich + stoich_adjust
-        print("Getting thermo_error...")
-        thermo_error = get_thermo_error(
+        thermo_adjust = get_thermo_adjust(
             thermo, totals, temperature, pressure, stoich, thermo_targets
         )
-        print("Getting thermo_error_jac...")
-        thermo_error_jac = np.array(
-            get_thermo_error_jac(
-                thermo, totals, temperature, pressure, stoich, thermo_targets
-            )
-        )
-        # print("Getting thermo_adjust...")
-        thermo_adjust = np.linalg.solve(-thermo_error_jac, thermo_error)
-        # print(thermo_adjust)
+        if verbose:
+            print("THERMO", _t + 1)
+            print(thermo_adjust)
         thermo = thermo + thermo_adjust
-    # TODO return thermo as a dict using `equilibria` for its order (stoich too?)
-    # TODO return results as a named tuple also including the final xxx_adjust values
-    return stoich, thermo
+    if np.any(np.abs(stoich_adjust) > warn_cutoff):
+        warnings.warn(
+            "Solver did not converge below `warn_cutoff` - "
+            + "try increasing `iter_stoich_per_thermo`."
+        )
+    if np.any(np.abs(thermo_adjust) > warn_cutoff):
+        warnings.warn(
+            "Solver did not converge below `warn_cutoff` - "
+            + "try increasing `iter_thermo`."
+        )
+    return SolveCombinedResult(stoich, thermo, stoich_adjust, thermo_adjust)
 
 
 # %%
-all_totals = {
-    # Equilibrating
-    "BOH3",
-    "Ca",
-    "CO2",
-    "F",
-    "Mg",
-    "Sr",
-    "SO4",
-    # Non-equilibrating
-    "Br",
-    "Cl",
-    "K",
-    "Na",
-}
-all_solutes = {
-    "BOH3",
-    "BOH4",
-    "Br",
-    "Ca",
-    "CaCO3",
-    # "CaF",
-    "Cl",
-    "CO2",
-    "CO3",
-    "F",
-    "HCO3",
-    "HF",
-    "HSO4",
-    "K",
-    "Mg",
-    "MgCO3",
-    # "MgF",
-    "MgOH",
-    "Na",
-    "SO4",
-    "Sr",
-    "SrCO3",
-    # "SrF",
-}
-
 totals = {
     "CO2": 0.002,
     "Na": 0.5023,
-    "K": 0.201,
-    "Cl": 0.7,
+    "K": 0.081,
+    "Cl": 0.6,
     "BOH3": 0.0004,
     "SO4": 0.02,
     "F": 0.001,
     "Sr": 0.02,
+    "Mg": 0.01,
+    "Ca": 0.05,
+    "Br": 0.1,
 }
 
-# This stuff is useful for printing results
-stoich = np.array([8.0, -np.log10(totals["CO2"] / 2)])  # TODO improve this
+# This stuff is useful for printing results, but not necessary
+stoich = np.array(
+    [
+        7.0,
+        -np.log10(totals["CO2"] / 2),
+        -np.log10(totals["F"] / 2),
+    ]
+)
 thermo = np.array(
-    [pz.model.library["equilibria"][eq](temperature) for eq in equilibria]
+    [
+        pz.model.library["equilibria"][eq](temperature)
+        for eq in pz.model.library["equilibria_all"]
+    ]
 )
 
 # Solve!
 print(stoich)
 print(thermo)
-stoich, thermo = solve_combined(
-    totals, temperature, pressure, stoich=stoich, thermo=thermo
-)
+scr = solve_combined(totals, temperature, pressure, stoich=stoich, thermo=thermo)
+stoich, thermo = scr[:2]
 print(stoich)
 print(thermo)
 # [8.37045773 3.87553018]
 # [-31.48490879 -13.73160454 -21.87627349 -20.28119342  -2.4239057
 #   -6.5389275    3.53635291   3.19644608   3.14889391  -3.03226206]
 
+solutes = get_solutes(totals, stoich, thermo)
+ks_constants = get_ks_constants(thermo)
+
 
 # %% SLOW to compile, then fast
 def solve_combined_CO2(total_CO2, totals, temperature, pressure):
     totals["CO2"] = total_CO2
-    return solve_combined(totals, temperature, pressure)[0][0]
+    return solve_combined(totals, temperature, pressure).stoich[0]
 
 
-# ^ this can be gradded w.r.t. total_CO2:
-scgrad = jax.jacfwd(solve_combined_CO2)(0.002, totals, temperature, pressure)
-# Can probably just grad the solve_combined function too to get a dict out,  not tried
-# These also work, but again slow to compile:  (NO LONGER WORKS WITH OLD/NEW ALKALINITY)
-tgrad = jax.jacfwd(
-    lambda temperature: solve_combined(totals, temperature, pressure)[0][0]
-)(temperature)
-pgrad = jax.jacfwd(
-    lambda pressure: solve_combined(totals, temperature, pressure)[0][0]
-)(pressure)
+# # ^ this can be gradded w.r.t. total_CO2:
+# scgrad = jax.jacfwd(solve_combined_CO2)(0.002, totals, temperature, pressure)
+# # Can probably just grad the solve_combined function too to get a dict out,  not tried
+# # These also work, but again slow to compile:  (NO LONGER WORKS WITH OLD/NEW ALKALINITY)
+# tgrad = jax.jacfwd(
+#     lambda temperature: solve_combined(totals, temperature, pressure)[0][0]
+# )(temperature)
+# pgrad = jax.jacfwd(
+#     lambda pressure: solve_combined(totals, temperature, pressure)[0][0]
+# )(pressure)
 
 # %% pH solver (jax)
 # pH_lnks = np.array([pH_guess, *coeffs])
