@@ -11,6 +11,7 @@ from ..meta import update_func_J
 
 class ParameterLibrary(dict):
     def __init__(self, name="ParameterLibrary"):
+        super().__init__()
         self["name"] = name
 
     def update_Aphi(self, func=dh.Aosm_M88):

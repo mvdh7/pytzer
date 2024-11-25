@@ -200,6 +200,32 @@ Clegg23["totals_all"] = {
     "K",
     "Na",
 }
+# TODO automate generation of solutes_all
+Clegg23["solutes_all"] = {
+    "BOH3",
+    "BOH4",
+    "Br",
+    "Ca",
+    "CaCO3",
+    "CaF",
+    "Cl",
+    "CO2",
+    "CO3",
+    "F",
+    "HCO3",
+    "HF",
+    "HSO4",
+    "K",
+    "Mg",
+    "MgCO3",
+    "MgF",
+    "MgOH",
+    "MgOH",
+    "Na",
+    "SO4",
+    "Sr",
+    "SrCO3",
+}
 
 
 # Equilibration functions
