@@ -221,6 +221,11 @@ def _Gibbs_nRT(solutes, temperature, pressure):
     return Gibbs
 
 
+# This one aims to remove all the try/excepts by looping through the library
+# functions instead of all solutes.
+# It did mean we had to add theta_zero functions in for everything that didn't have
+# one assigned, because etheta still gets calculated if theta is zero for a c-c or a-a.
+# Try to lax.map this to speed up compilation?  Some hybrid approach...
 @jax.jit
 def _Gibbs_nRT_wow(solutes, temperature, pressure):
     # === Separate the names, molalities and charges of cations, anions and neutrals ===
