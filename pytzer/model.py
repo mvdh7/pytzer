@@ -382,7 +382,7 @@ def Gibbs_nRT(solutes, temperature, pressure):
     float
         Gex/nRT.
     """
-    return _Gibbs_nRT_wow(solutes, temperature, pressure)
+    return _Gibbs_nRT(solutes, temperature, pressure)
 
 
 @jax.jit

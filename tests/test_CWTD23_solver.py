@@ -20,30 +20,42 @@ for c in data.columns:
         data_diff["y" + c[1:]] = np.nan
 data_diff.drop(columns="temperature", inplace=True)
 for i, row in data.iterrows():
+
+    # Old version
+    solutes = pz.odict((s[1:], v) for s, v in row.items() if s.startswith("m"))
+    params = prmlib.get_parameters(
+        solutes=solutes, temperature=273.15 + row.temperature, verbose=False
+    )
     start = datetime.now()
-
-    # # Old version
-    # solutes = pz.odict((s[1:], v) for s, v in row.items() if s.startswith("m"))
-    # params = prmlib.get_parameters(
-    #     solutes=solutes, temperature=273.15 + row.temperature, verbose=False
-    # )
-    # aH2O = pz.model_old.activity_water(solutes, **params)
-    # data.loc[i, "aH2O_pz"] = aH2O
-    # osm = pz.model_old.osmotic_coefficient(solutes, **params)
-    # data.loc[i, "osm_pz"] = osm
-    # acfs = pz.model_old.activity_coefficients(solutes, **params)
-
-    # New version
-    solutes = {s[1:]: v for s, v in row.items() if s.startswith("m")}
-    temperature = 273.15 + row.temperature
-    pressure = 10.1325
-    aH2O = pz.model.activity_water(solutes, temperature, pressure)
+    aH2O = pz.model_old.activity_water(solutes, **params)
+    print("aH2O", datetime.now() - start)
     data.loc[i, "aH2O_pz"] = aH2O
-    osm = pz.model.osmotic_coefficient(solutes, temperature, pressure)
+    start = datetime.now()
+    osm = pz.model_old.osmotic_coefficient(solutes, **params)
     data.loc[i, "osm_pz"] = osm
-    acfs = pz.model.activity_coefficients(solutes, temperature, pressure)
+    print("osm", datetime.now() - start)
+    start = datetime.now()
+    acfs = pz.model_old.activity_coefficients(solutes, **params)
+    print("acfs", datetime.now() - start)
 
-    print(i, datetime.now() - start)
+    # # New version
+    # solutes = {s[1:]: v for s, v in row.items() if s.startswith("m")}
+    # temperature = 273.15 + row.temperature
+    # pressure = 10.1325
+
+    # start = datetime.now()
+    # aH2O = pz.model.activity_water(solutes, temperature, pressure)
+    # print("aH2O", datetime.now() - start)
+    # data.loc[i, "aH2O_pz"] = aH2O
+    # start = datetime.now()
+    # osm = pz.model.osmotic_coefficient(solutes, temperature, pressure)
+    # print("osm", datetime.now() - start)
+    # data.loc[i, "osm_pz"] = osm
+    # start = datetime.now()
+    # acfs = pz.model.activity_coefficients(solutes, temperature, pressure)
+    # print("acfs", datetime.now() - start)
+
+    # print(i, datetime.now() - start)
     for s, v in acfs.items():
         data.loc[i, "y" + s + "_pz"] = v
         data_diff.loc[i, "y" + s] = 100 * (v - row["y" + s]) / row["y" + s]
