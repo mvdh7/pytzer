@@ -75,19 +75,19 @@ class Library:
         self.Aphi = None
         self.func_J = None
         self.ca = {}
-        self.ca_combos = None
+        self.ca_combos = []
         self.get_ca_values = None
         self.cc = {}
-        self.cc_combos = None
+        self.cc_combos = []
         self.get_cc_values = None
         self.cca = {}
-        self.cca_combos = None
+        self.cca_combos = []
         self.get_cca_values = None
         self.aa = {}
-        self.aa_combos = None
+        self.aa_combos = []
         self.get_aa_values = None
         self.caa = {}
-        self.caa_combos = None
+        self.caa_combos = []
         self.get_caa_values = None
 
     def update_Aphi(self, func):
@@ -191,73 +191,66 @@ class Library:
         self._get_caa_values_func()
 
     def _get_ca_combos(self):
-        self.ca_combos = None
+        self.ca_combos = []
         for cation in self.ca:
             c = self.cations.index(cation)
             for anion in self.ca[cation]:
                 a = self.anions.index(anion)
-                if self.ca_combos is None:
-                    self.ca_combos = np.array([[c, a]])
-                else:
-                    self.ca_combos = np.append(
-                        self.ca_combos, np.array([[c, a]]), axis=0
-                    )
+                self.ca_combos.append([c, a])
+        self.ca_combos = np.array(self.ca_combos)
 
     def _get_cc_combos(self):
-        self.cc_combos = None
-        for cation0 in self.cc:
-            c0 = self.cations.index(cation0)
-            for cation1 in self.cc[cation0]:
-                c1 = self.cations.index(cation1)
-                if self.cc_combos is None:
-                    self.cc_combos = np.array([[c0, c1]])
-                else:
-                    self.cc_combos = np.append(
-                        self.cc_combos, np.array([[c0, c1]]), axis=0
-                    )
+        # This works differently because we still need to include the combo even if
+        # there is no theta term in the library, because etheta still gets added
+        self.cc_combos = []
+        for cation0 in self.cations:
+            for cation1 in self.cations:
+                if cation0 != cation1:
+                    cations = [cation0, cation1]
+                    cations.sort()
+                    c0 = self.cations.index(cations[0])
+                    c1 = self.cations.index(cations[1])
+                    if [c0, c1] not in self.cc_combos:
+                        self.cc_combos.append([c0, c1])
+        self.cc_combos = np.array(self.cc_combos)
 
     def _get_cca_combos(self):
-        self.cca_combos = None
+        self.cca_combos = []
         for cation0 in self.cca:
             c0 = self.cations.index(cation0)
             for cation1 in self.cca[cation0]:
                 c1 = self.cations.index(cation1)
                 for anion in self.cca[cation0][cation1]:
                     a = self.anions.index(anion)
-                    if self.cca_combos is None:
-                        self.cca_combos = np.array([[c0, c1, a]])
-                    else:
-                        self.cca_combos = np.append(
-                            self.cca_combos, np.array([[c0, c1, a]]), axis=0
-                        )
+                    self.cca_combos.append([c0, c1, a])
+        self.cca_combos = np.array(self.cca_combos)
 
     def _get_aa_combos(self):
-        self.aa_combos = None
-        for anion0 in self.aa:
-            a0 = self.anions.index(anion0)
-            for anion1 in self.aa[anion0]:
-                a1 = self.anions.index(anion1)
-                if self.aa_combos is None:
-                    self.aa_combos = np.array([[a0, a1]])
-                else:
-                    self.aa_combos = np.append(
-                        self.aa_combos, np.array([[a0, a1]]), axis=0
-                    )
+        # This works differently because we still need to include the combo even if
+        # there is no theta term in the library, because the etheta term still gets
+        # added if charges are different
+        self.aa_combos = []
+        for anion0 in self.anions:
+            for anion1 in self.anions:
+                if anion0 != anion1:
+                    anions = [anion0, anion1]
+                    anions.sort()
+                    a0 = self.anions.index(anions[0])
+                    a1 = self.anions.index(anions[1])
+                    if [a0, a1] not in self.aa_combos:
+                        self.aa_combos.append([a0, a1])
+        self.aa_combos = np.array(self.aa_combos)
 
     def _get_caa_combos(self):
-        self.caa_combos = None
+        self.caa_combos = []
         for cation in self.caa:
             c = self.cations.index(cation)
             for anion0 in self.caa[cation]:
                 a0 = self.anions.index(anion0)
                 for anion1 in self.caa[cation][anion0]:
                     a1 = self.anions.index(anion1)
-                    if self.caa_combos is None:
-                        self.caa_combos = np.array([[c, a0, a1]])
-                    else:
-                        self.caa_combos = np.append(
-                            self.caa_combos, np.array([[c, a0, a1]]), axis=0
-                        )
+                    self.caa_combos.append([c, a0, a1])
+        self.caa_combos = np.array(self.caa_combos)
 
     def _get_ca_values_func(self):
         self.get_ca_values = lambda temperature, pressure: np.array(
@@ -561,33 +554,38 @@ def Gibbs_nRT(solutes, temperature, pressure):
     Aphi = library.Aphi(*tp)[0]
     gibbs = Gibbs_DH(Aphi, I)
 
-    if library.ca_combos is not None:
+    if len(library.ca_combos) > 0:
         ca = library.get_ca_values(*tp)
         gibbs = gibbs + np.sum(jax.lax.map(add_ca, library.ca_combos))
-    if library.cc_combos is not None:
+    if len(library.cc_combos) > 0:
         cc = library.get_cc_values(*tp)
         gibbs = gibbs + np.sum(jax.lax.map(add_cc, library.cc_combos))
-    if library.cca_combos is not None:
+    if len(library.cca_combos) > 0:
         cca = library.get_cca_values(*tp)
         gibbs = gibbs + np.sum(jax.lax.map(add_cca, library.cca_combos))
-    if library.aa_combos is not None:
+    if len(library.aa_combos) > 0:
         aa = library.get_aa_values(*tp)
         gibbs = gibbs + np.sum(jax.lax.map(add_aa, library.aa_combos))
-    if library.caa_combos is not None:
+    if len(library.caa_combos) > 0:
         caa = library.get_caa_values(*tp)
         gibbs = gibbs + np.sum(jax.lax.map(add_caa, library.caa_combos))
 
     return gibbs
 
 
+# %%
 solutes = {
-    # "Na": 0.5,
+    "Na": 0.5,
     "K": 0.5,
-    # "Cl": 0.5,
-    # "Ca": 0.5,
+    "Cl": 0.5,
+    "Ca": 0.5,
     "Mg": 0.5,
+    "OH": 0.5,
+    "SO4": 0.5,
+    "CO3": 0.5,
+    "CaF": 0.5,
+    # "CO2": 0.5,
 }
-# there's a problem with the Mg-K combination
 library.expand_solutes(solutes)
 
 temperature, pressure = 298.15, 10.1325
