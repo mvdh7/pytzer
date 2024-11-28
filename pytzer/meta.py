@@ -18,14 +18,18 @@ def update_func_J(pytzer, func_J):
     return pytzer
 
 
-def update_library(pytzer, library):
-    """Update the parameter library."""
+def set_library(pytzer, library):
+    """Set the parameter library."""
     if isinstance(library, str):
-        library = libraries.libraries[library.lower()]
+        assert (
+            library.upper() in libraries.libraries_all
+        ), "Library must be in pz.libraries_all!"
+        library = libraries.libraries_all[library.upper()]
     if pytzer.model.library is not library:
         pytzer.model = importlib.reload(pytzer.model)
-        pytzer = importlib.reload(pytzer)
         pytzer.model.library = library
+        pytzer.equilibrate.new = importlib.reload(pytzer.equilibrate.new)
+        pytzer = importlib.reload(pytzer)
     return pytzer
 
 

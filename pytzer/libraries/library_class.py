@@ -6,7 +6,8 @@ from ..convert import solute_to_charge
 
 
 class Library:
-    def __init__(self):
+    def __init__(self, name=""):
+        self.name = name
         self.cations = tuple()
         self.anions = tuple()
         self.neutrals = tuple()
@@ -55,6 +56,7 @@ class Library:
         self.get_stoich_targets = None
         self.get_stoich_error_jac = None
         self.get_stoich_adjust = None
+        self.stoich_init = np.array([])
 
     def get_solutes(self, sanity_check=True, **solutes):
         if sanity_check:

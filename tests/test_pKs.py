@@ -4,7 +4,7 @@ import numpy as np
 import pytzer as pz
 
 totals = pz.prepare.salinity_to_totals_MFWM08(35)
-totals = pz.model.library.get_totals(**totals)
+totals = pz.get_totals(**totals)
 scr = pz.equilibrate.new.solve_combined(totals, 298.15, 10.1325)
 pks_per_kgH2O = {
     pz.model.library.equilibria_all[i]: v
@@ -15,7 +15,7 @@ totals_g_per_kgH2O = np.sum(
 )
 kgH2O_per_kg = 1000 / (1000 + totals_g_per_kgH2O)
 
-solutes_per_kgH2O = pz.model.library.totals_to_solutes(totals, scr.stoich, scr.thermo)
+solutes_per_kgH2O = pz.totals_to_solutes(totals, scr.stoich, scr.thermo)
 solutes = {k: v * kgH2O_per_kg for k, v in solutes_per_kgH2O.items()}
 
 # K1 = [HCO3] * [H] / [CO2]

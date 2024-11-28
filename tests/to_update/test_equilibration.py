@@ -18,5 +18,5 @@ totals.update(
 )
 
 
-sc = pz.equilibrate.new.solve_combined(totals, 298.15, 10.1325)
-solutes = pz.model.library.totals_to_solutes(totals, sc.stoich, sc.thermo)
+scr = pz.equilibrate.new.solve_combined(totals, 298.15, 10.1325)
+solutes = pz.model.library.totals_to_solutes(totals, scr.stoich, scr.thermo)

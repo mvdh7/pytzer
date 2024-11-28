@@ -48,7 +48,7 @@ from .equilibrate.stoichiometric import solve as solve_stoichiometric
 from .equilibrate.thermodynamic import solve as solve_thermodynamic
 from .get import solve_df
 from .libraries import ParameterLibrary, Library
-from .meta import hello, update_func_J, update_library
+from .meta import hello, update_func_J, set_library
 from .model import (
     activity_coefficients,
     activity_water,
@@ -59,5 +59,13 @@ from .model import (
 )
 from collections import OrderedDict as odict
 
+# Assign shortcuts
+libraries_all = list(libraries.libraries_all.keys())
+library = model.library
+get_solutes = library.get_solutes
+get_totals = library.get_totals
+totals_to_solutes = library.totals_to_solutes
+
+# General package info
 __version__ = meta.version
 __author__ = meta.author

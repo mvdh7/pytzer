@@ -12,7 +12,7 @@ from .. import (
 from . import Library
 
 # Initialise
-library = Library()
+library = Library(name="CWTD23")
 library.update_Aphi(debyehueckel.Aosm_M88)  # From Table S13
 library.update_func_J(unsymmetrical.P75_eq47)
 
@@ -201,6 +201,13 @@ library.totals_all = {
     "K",
     "Na",
 }
+library.stoich_init = lambda totals: np.array(
+    [
+        7.0,
+        -np.log10(totals["CO2"] / 2),
+        -np.log10(totals["F"] / 2),
+    ]
+)
 
 
 # Equilibration functions

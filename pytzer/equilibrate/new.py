@@ -114,13 +114,7 @@ def solve_combined(
         ]
     )  # these are ln(k)
     if stoich is None:
-        stoich = np.array(
-            [
-                7.0,
-                -np.log10(totals["CO2"] / 2),
-                -np.log10(totals["F"] / 2),
-            ]
-        )
+        stoich = model.library.stoich_init(totals)
     if thermo is None:
         thermo = thermo_targets.copy()
     # Solve!

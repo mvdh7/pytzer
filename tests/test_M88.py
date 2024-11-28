@@ -3,15 +3,14 @@ import pytzer as pz
 from pytzer.libraries import Moller88
 
 # Import data and prepare for tests
-pz = Moller88.set_func_J(pz)
+pz.set_library(pz, "M88")
 data = pd.read_csv("tests/data/M88 Table 4.csv").set_index("point")
 m_cols = ["Na", "Ca", "Cl", "SO4"]
-params = Moller88.get_parameters(solutes=m_cols, temperature=383.15)
 
 
 def get_activity_water(data_row):
-    dr = pz.odict(data_row[m_cols])
-    return pz.activity_water(dr, **params).item()
+    solutes = pz.get_solutes(**dict(data_row[m_cols]))
+    return pz.activity_water(solutes, 383.15, 10.1325).item()
 
 
 data["a_H2O_pytzer"] = data.apply(get_activity_water, axis=1)

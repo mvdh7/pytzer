@@ -4,6 +4,9 @@ import pandas as pd
 import pytzer as pz
 import numpy as np
 
+# Select parameter library
+pz.set_library(pz, "CWTD23")
+
 # Solve and compare without equilibrating
 data = pd.read_csv("tests/data/CWTD23 SI final table.csv")
 data["aH2O_pz"] = np.nan
@@ -15,15 +18,15 @@ for c in data.columns:
         data_diff["y" + c[1:]] = np.nan
 data_diff.drop(columns="temperature", inplace=True)
 for i, row in data.iterrows():
-    solutes = pz.model.library.get_solutes()
+    solutes = pz.get_solutes()
     solutes.update({s[1:]: v for s, v in row.items() if s.startswith("m")})
     temperature = 273.15 + row.temperature
     pressure = 10.1325
-    aH2O = pz.model.activity_water(solutes, temperature, pressure)
+    aH2O = pz.activity_water(solutes, temperature, pressure)
     data.loc[i, "aH2O_pz"] = aH2O
-    osm = pz.model.osmotic_coefficient(solutes, temperature, pressure)
+    osm = pz.osmotic_coefficient(solutes, temperature, pressure)
     data.loc[i, "osm_pz"] = osm
-    acfs = pz.model.activity_coefficients(solutes, temperature, pressure)
+    acfs = pz.activity_coefficients(solutes, temperature, pressure)
     for s, v in acfs.items():
         data.loc[i, "y" + s + "_pz"] = v
         data_diff.loc[i, "y" + s] = 100 * (v - row["y" + s]) / row["y" + s]
@@ -37,7 +40,7 @@ for c in data_eq.columns:
     if c.startswith("m"):
         data_eq[c + "_eq"] = np.nan
 for i, row in data_eq.iterrows():
-    totals = pz.model.library.get_totals()
+    totals = pz.get_totals()
     totals.update(
         {
             "BOH3": row.mBOH3 + row.mBOH4,
@@ -54,11 +57,10 @@ for i, row in data_eq.iterrows():
         }
     )
     scr = pz.equilibrate.new.solve_combined(totals, 273.15 + row.temperature, 10.1325)
-    solutes_eq = pz.model.library.totals_to_solutes(totals, scr.stoich, scr.thermo)
+    solutes_eq = pz.totals_to_solutes(totals, scr.stoich, scr.thermo)
     for c in data_eq.columns:
         if c.endswith("_eq"):
             data_eq.loc[i, c] = solutes_eq[c[1:-3]]
-print(datetime.now() - start)
 data_eq["pH"] = -np.log10(data_eq["mH"])
 data_eq["pH_eq"] = -np.log10(data_eq["mH_eq"])
 # Reorder columns for easier visual inspection
