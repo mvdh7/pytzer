@@ -5,7 +5,6 @@
 from collections import OrderedDict
 import numpy as np
 from . import convert, dissociation, equilibrate as eq
-from .libraries import Seawater
 
 
 def solve_df(
@@ -13,7 +12,6 @@ def solve_df(
     exclude_equilibria=None,
     inplace=True,
     ks_only=None,
-    library=Seawater,
     verbose=False,
 ):
     """Solve all rows in a DataFrame for thermodynamic equilibrium."""
@@ -24,7 +22,7 @@ def solve_df(
     pks_cols = {
         c: c.split("_")[1]
         for c in df.columns
-        if c.startswith("pks_") and c.split("_")[1] in eq.thermodynamic.all_reactions
+        if c.startswith("pks_") and c.split("_")[1] in eq.thermodynamic.reactions_all
     }
     # Add empty columns to df to save results
     _ks_constants = dissociation.assemble(

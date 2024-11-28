@@ -2,42 +2,6 @@
 # Copyright (C) 2019--2024  M.P. Humphreys  (GNU GPLv3)
 """Solve for thermodynamic equilibrium."""
 
-import copy
-from collections import OrderedDict
-from scipy import optimize
-import jax
-from jax import numpy as np
-from .. import dissociation, model_old as model
-from . import components, stoichiometric
-
-
-solutes_required = {
-    "BOH3": ["BOH3", "BOH4", "H"],
-    "MgOH": ["Mg", "OH", "MgOH"],
-    "H2O": ["H", "OH"],
-    "H2CO3": ["H", "HCO3", "CO2"],
-    "HCO3": ["H", "CO3", "HCO3"],
-    "HF": ["H", "F", "HF"],
-    "HSO4": ["H", "HSO4", "SO4"],
-    "trisH": ["tris", "H", "trisH"],
-    "H3PO4": ["H3PO4", "H2PO4", "H"],
-    "H2PO4": ["H2PO4", "HPO4", "H"],
-    "HPO4": ["HPO4", "PO4", "H"],
-    "H2S": ["H2S", "HS", "H"],
-    "NH4": ["NH3", "NH4", "H"],
-    "CaCO3": ["Ca", "CO3", "CaCO3"],
-    "MgCO3": ["Mg", "CO3", "MgCO3"],
-    "SrCO3": ["Sr", "CO3", "SrCO3"],
-    "MgH2PO4": ["MgH2PO4", "H2PO4", "Mg"],
-    "MgHPO4": ["MgHPO4", "HPO4", "Mg"],
-    "MgPO4": ["MgPO4", "PO4", "Mg"],
-    "CaH2PO4": ["CaH2PO4", "H2PO4", "Ca"],
-    "CaHPO4": ["CaHPO4", "HPO4", "Ca"],
-    "CaPO4": ["CaPO4", "PO4", "Ca"],
-    "MgF": ["Mg", "F", "MgF"],
-    "CaF": ["Ca", "F", "CaF"],
-}
-
 
 def Gibbs_H2O(log_kt_H2O, log_ks_H2O, log_acfs, log_aH2O):
     """Evaluate the Gibbs energy for water dissocation."""
@@ -253,7 +217,7 @@ def Gibbs_NH4(log_kt_NH4, log_ks_NH4, log_acfs, log_aH2O):
     return log_acfs["H"] + log_acfs["NH4"] - log_acfs["NH4"] + log_ks_NH4 - log_kt_NH4
 
 
-all_reactions = {
+reactions_all = {
     "BOH3": Gibbs_BOH3,
     "H2CO3": Gibbs_H2CO3,
     "H2O": Gibbs_H2O,
@@ -279,65 +243,3 @@ all_reactions = {
     "CaPO4": Gibbs_CaPO4,
     "NH4": Gibbs_NH4,
 }
-
-
-@jax.jit
-def get_Gibbs_equilibria(
-    pks_constants_to_solve,
-    ptargets,
-    totals,
-    ks_constants,
-    params,
-    log_kt_constants,
-):
-    for i, rxn in enumerate(log_kt_constants.keys()):
-        ks_constants[rxn] = 10.0 ** -pks_constants_to_solve[i]
-    # Solve for pH
-    ptargets = stoichiometric.solve(totals, ks_constants, ptargets=ptargets)
-    solutes = components.get_solutes(totals, ks_constants, ptargets)
-    log_aw = model.log_activity_water(solutes, **params)
-    log_acfs = model.log_activity_coefficients(solutes, **params)
-    # Get equilibria
-    Gibbs_equilibria = np.array([])
-    for rxn in log_kt_constants.keys():
-        Gibbs_equilibria = np.append(
-            Gibbs_equilibria,
-            all_reactions[rxn](
-                log_kt_constants[rxn], np.log(ks_constants[rxn]), log_acfs, log_aw
-            ),
-        )
-    return Gibbs_equilibria
-
-
-jac_Gibbs_equilibria = jax.jit(jax.jacfwd(get_Gibbs_equilibria))
-
-
-def update_ks_constants(all_ks_constants, optresult_solve):
-    ks_constants = copy.deepcopy(all_ks_constants)
-    for i, rxn in enumerate(optresult_solve["equilibria"]):
-        ks_constants[rxn] = 10.0 ** -optresult_solve["x"][i]
-    return ks_constants
-
-
-def solve(totals, ks_constants, params, log_kt_constants, ptargets=None):
-    """Solve the reactions in log_kt_constants for thermodynamic equilibrium."""
-    if ptargets is None:
-        ptargets = stoichiometric.create_ptargets(totals, ks_constants)
-    pks_constants_to_solve = np.array(
-        [-np.log10(np.exp(log_kt)) for log_kt in log_kt_constants.values()]
-    )
-    optresult = optimize.root(
-        get_Gibbs_equilibria,
-        pks_constants_to_solve,
-        args=(
-            ptargets,
-            totals,
-            ks_constants,
-            params,
-            log_kt_constants,
-        ),
-        method="hybr",
-        jac=jac_Gibbs_equilibria,
-    )
-    optresult["equilibria"] = log_kt_constants
-    return optresult

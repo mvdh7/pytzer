@@ -2,8 +2,6 @@
 # Copyright (C) 2019--2024  M.P. Humphreys  (GNU GPLv3)
 """Assemble parameter libraries."""
 from .library_class import Library
-from .ParameterLibrary import ParameterLibrary
-from .Seawater import Seawater
 from . import (
     lib_CHW22,
     lib_CRP94,

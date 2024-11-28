@@ -3,7 +3,7 @@
 """Calculate solution properties using the Pitzer model."""
 import jax
 from jax import numpy as np
-from .constants import b, Mw
+from .constants import b_pitzer, mass_water
 from . import libraries, unsymmetrical
 
 library = libraries.lib_CWTD23.library
@@ -24,7 +24,7 @@ def Gibbs_DH(Aphi, I):
     float
         Debye-Hueckel component of the excess Gibbs energy.
     """
-    return -4 * Aphi * I * np.log(1 + b * np.sqrt(I)) / b
+    return -4 * Aphi * I * np.log(1 + b_pitzer * np.sqrt(I)) / b_pitzer
 
 
 def g(x):
@@ -290,7 +290,7 @@ def log_activity_water(solutes, temperature, pressure):
             )
         )(1.0)
         - np.sum(np.array([m for m in solutes.values()]))
-    ) * Mw
+    ) * mass_water
 
 
 @jax.jit

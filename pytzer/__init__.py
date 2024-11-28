@@ -27,10 +27,8 @@ from . import (
     equilibrate,
     get,
     libraries,
-    matrix,
     meta,
     model,
-    model_old,
     parameters,
     prepare,
     properties,
@@ -42,14 +40,10 @@ from .convert import (
     log_activities_to_mean,
     osmotic_to_activity,
 )
-from .equilibrate import solve as solve_old, solve_manual
-from .equilibrate.new import solve_combined as solve
-from .equilibrate.components import find_solutes
-from .equilibrate.stoichiometric import solve as solve_stoichiometric
-from .equilibrate.thermodynamic import solve as solve_thermodynamic
+from .equilibrate.solver import solve_combined as solve
 from .get import solve_df
-from .libraries import ParameterLibrary, Library
-from .meta import hello, update_func_J, set_library
+from .libraries import Library
+from .meta import hello, set_library
 from .model import (
     activity_coefficients,
     activity_water,
@@ -58,7 +52,6 @@ from .model import (
     log_activity_water,
     osmotic_coefficient,
 )
-from collections import OrderedDict as odict
 
 # Assign shortcuts
 libraries_all = list(libraries.libraries_all.keys())

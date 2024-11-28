@@ -38,7 +38,7 @@ def test_CRP94_table7():
     assert np.round(C1, decimals=8) == -0.323_662_60  # should be -0.323_662_605
     assert alph1 == 2
     assert omega == 2.5
-    k_HSO4 = np.exp(pz.equilibrate.dissociation.HSO4_CRP94(tp[0]).item())
+    k_HSO4 = np.exp(pz.dissociation.HSO4_CRP94(tp[0]).item())
     assert np.round(k_HSO4, decimals=4) == 0.0105
 
 

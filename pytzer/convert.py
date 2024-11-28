@@ -7,12 +7,12 @@ from . import constants, properties
 
 def osmotic_to_activity(molalities, osmotic_coefficient):
     """Convert osmotic coefficient to water activity."""
-    return np.exp(-osmotic_coefficient * constants.Mw * np.sum(molalities))
+    return np.exp(-osmotic_coefficient * constants.mass_water * np.sum(molalities))
 
 
 def activity_to_osmotic(molalities, activity_water):
     """Convert water activity to osmotic coefficient."""
-    return -np.log(activity_water) / (constants.Mw * np.sum(molalities))
+    return -np.log(activity_water) / (constants.mass_water * np.sum(molalities))
 
 
 def log_activities_to_mean(log_acf_M, log_acf_X, n_M, n_X):
@@ -169,11 +169,6 @@ solute_to_charge = {
     "SO3": -2,
     "SO4": -2,
 }
-
-
-all_cations = set([s for s, c in solute_to_charge.items() if c > 0])
-all_anions = set([s for s, c in solute_to_charge.items() if c < 0])
-all_neutrals = set([s for s, c in solute_to_charge.items() if c == 0])
 
 
 def solvent_to_solution(molalities, pks_constants=None):

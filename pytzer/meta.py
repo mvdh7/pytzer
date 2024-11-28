@@ -9,15 +9,6 @@ authors = ["Humphreys, M.P.", "Schiller, A.J."]
 author = " and ".join(authors)
 
 
-def update_func_J(pytzer, func_J):
-    """Update the unsymmetrical mixing function."""
-    if pytzer.model_old.func_J is not func_J:
-        pytzer.model_old = importlib.reload(pytzer.model_old)
-        pytzer = importlib.reload(pytzer)
-        pytzer.model_old.func_J = func_J
-    return pytzer
-
-
 def set_library(pytzer, library):
     """Set the parameter library."""
     if isinstance(library, str):
@@ -28,7 +19,7 @@ def set_library(pytzer, library):
     if pytzer.model.library is not library:
         pytzer.model = importlib.reload(pytzer.model)
         pytzer.model.library = library
-        pytzer.equilibrate.new = importlib.reload(pytzer.equilibrate.new)
+        pytzer.equilibrate.solver = importlib.reload(pytzer.equilibrate.solver)
         pytzer = importlib.reload(pytzer)
     return pytzer
 

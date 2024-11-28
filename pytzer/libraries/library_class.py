@@ -4,6 +4,55 @@ from jax import numpy as np
 from .. import parameters
 from ..convert import solute_to_charge
 
+# Equations for reference
+# =======================
+#
+# Buffer (Dickson) alkalinity:
+# ----------------------------
+#     return (
+#         add_if_in("OH")
+#         - add_if_in("H")
+#         + add_if_in("MgOH")
+#         - add_if_in("HF")
+#         + add_if_in("HCO3")
+#         + add_if_in("CO3") * 2
+#         + add_if_in("HPO4")
+#         + add_if_in("PO4") * 2
+#         - add_if_in("H3PO4")
+#         + add_if_in("MgCO3") * 2
+#         + add_if_in("CaCO3") * 2
+#         + add_if_in("SrCO3") * 2
+#         + add_if_in("MgHPO4")
+#         + add_if_in("MgPO4") * 2
+#         + add_if_in("CaHPO4")
+#         + add_if_in("CaPO4") * 2
+#         - add_if_in("HSO4")
+#         + add_if_in("HS")
+#         + add_if_in("BOH4")
+#         + add_if_in("NH3")
+#         + add_if_in("H3SiO4")
+#         - add_if_in("HNO2")
+#         + add_if_in("tris")
+#     )
+#
+# Explicit alkalinity:
+# --------------------
+#     return (
+#         add_if_in("Na")
+#         + add_if_in("K")
+#         - add_if_in("Cl")
+#         - add_if_in("Br")
+#         + add_if_in("Mg") * 2
+#         + add_if_in("Ca") * 2
+#         + add_if_in("Sr") * 2
+#         - add_if_in("F")
+#         - add_if_in("PO4")
+#         - add_if_in("SO4") * 2
+#         + add_if_in("NH3")
+#         - add_if_in("NO2")
+#         + add_if_in("tris")
+#     )
+
 
 class Library:
     def __init__(self, name=""):

@@ -2,7 +2,7 @@
 # Copyright (C) 2019--2024  M.P. Humphreys  (GNU GPLv3)
 """Evaluate Pitzer model interaction parameters."""
 from jax import numpy as np
-from ..constants import Tzero
+from ..constants import temperatureC_zero
 from ..convert import solute_to_charge as i2c
 from .heMorse1993 import (
     bC_Ca_CO3_HM93,
@@ -8480,7 +8480,7 @@ def bC_H_Cl_CMR93(T, P):
 def theta_H_K_CMR93(T, P):
     """c-c': hydrogen potassium [CMR93]."""
     # assuming CMR93's lowercase t means temperature in degC
-    theta = 0.005 - 0.0002275 * (T - Tzero)
+    theta = 0.005 - 0.0002275 * (T - temperatureC_zero)
     valid = (T >= 273.15) & (T <= 328.15)
     return theta, valid
 
@@ -8488,7 +8488,7 @@ def theta_H_K_CMR93(T, P):
 def theta_H_Na_CMR93(T, P):
     """c-c': hydrogen sodium [CMR93]."""
     # assuming CMR93's lowercase t means temperature in degC
-    theta = 0.0342 - 0.000209 * (T - Tzero)
+    theta = 0.0342 - 0.000209 * (T - temperatureC_zero)
     valid = (T >= 273.15) & (T <= 328.15)
     return theta, valid
 
@@ -9945,7 +9945,7 @@ def theta_H_K_MP98(T, P):
 def theta_H_Na_MP98(T, P):
     """c-c': hydrogen sodium [MP98]."""
     # Direct from Pierrot_2018_Interaction_Model.xlsm, conflicts with CMR93
-    theta = 0.03416 - 0.000209 * (T - Tzero)
+    theta = 0.03416 - 0.000209 * (T - temperatureC_zero)
     valid = (T >= 273.15) & (T <= 328.15)
     return theta, valid
 

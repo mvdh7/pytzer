@@ -35,7 +35,7 @@ def get_thermo_error(thermo, totals, temperature, pressure, stoich, thermo_targe
     ln_aw = model.log_activity_water(solutes, temperature, pressure)
     # Calculate what the log(K)s apparently are with these stoich/thermo values
     lnk_error = {
-        eq: thermodynamic.all_reactions[eq](
+        eq: thermodynamic.reactions_all[eq](
             thermo_targets[library.equilibria_all.index(eq)],
             lnks[eq],
             ln_acfs,

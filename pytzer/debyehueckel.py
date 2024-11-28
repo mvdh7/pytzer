@@ -4,7 +4,7 @@
 from jax import numpy as np
 from . import teos10
 from .parameters import M88_eq13
-from .constants import NA, dbar2Pa, dbar2MPa
+from .constants import n_avogadro, dbar_to_Pa, dbar_to_MPa
 
 
 def Aosm_M88(tempK, pres):
@@ -163,7 +163,7 @@ def _D(tempK, presMPa, rho):
     """Dielectric constant following Archer's DIEL()."""
     # Note that Archer's code uses different values from AW90 just in this
     # subroutine (so also different from in Aosm calculation below)
-    Mw = 18.0153
+    mass_water = 18.0153
     al = 1.444e-24
     k = 1.380658e-16
     mu = 1.84e-18
@@ -171,17 +171,17 @@ def _D(tempK, presMPa, rho):
         (al + _g(tempK, presMPa, rho) * mu**2 / (3 * k * tempK))
         * 4
         * np.pi
-        * NA
+        * n_avogadro
         * rho
-        / (3 * Mw)
+        / (3 * mass_water)
     )
     return (1 + 9 * A + 3 * np.sqrt(9 * A**2 + 2 * A + 1)) / 4
 
 
 def Aosm_AW90(tempK, pres):
     """D-H limiting slope for osmotic coefficient, following dhll.for."""
-    presPa = pres * dbar2Pa
-    presMPa = pres * dbar2MPa
+    presPa = pres * dbar_to_Pa
+    presMPa = pres * dbar_to_MPa
     # Constants from Table 1 footnote:
     e = 1.6021773e-19  # charge on an electron in C
     E0 = 8.8541878e-12  # permittivity of vacuum in C**2/(J*m)
@@ -189,7 +189,7 @@ def Aosm_AW90(tempK, pres):
     k = 1.380658e-23  # Boltzmann constant in J/K
     rho = teos10.rho(tempK, presPa) * 1e-3
     Aosm = (
-        np.sqrt(2e-3 * np.pi * rho * NA)
+        np.sqrt(2e-3 * np.pi * rho * n_avogadro)
         * (100 * e**2 / (4 * np.pi * _D(tempK, presMPa, rho) * E0 * k * tempK)) ** 1.5
         / 3
     )
