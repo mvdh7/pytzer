@@ -6,31 +6,44 @@ import jax
 from jax import numpy as np
 from . import thermodynamic
 from .. import model
+from ..model import library
+
+
+@jax.jit
+def get_stoich_adjust(stoich, totals, thermo, stoich_targets):
+    stoich_error = library.get_stoich_error(stoich, totals, thermo, stoich_targets)
+    stoich_error_jac = library.get_stoich_error_jac(
+        stoich, totals, thermo, stoich_targets
+    )
+    stoich_adjust = np.linalg.solve(-stoich_error_jac, stoich_error)
+    stoich_adjust = np.where(
+        np.abs(stoich_adjust) > 1, np.sign(stoich_adjust), stoich_adjust
+    )
+    return stoich_adjust
 
 
 @jax.jit
 def get_thermo_error(thermo, totals, temperature, pressure, stoich, thermo_targets):
     # Prepare inputs for calculations
     lnks = {
-        eq: thermo[model.library.equilibria_all.index(eq)]
-        for eq in model.library.equilibria_all
+        eq: thermo[library.equilibria_all.index(eq)] for eq in library.equilibria_all
     }
     # Calculate speciation
-    solutes = model.library.totals_to_solutes(totals, stoich, thermo)
+    solutes = library.totals_to_solutes(totals, stoich, thermo)
     # Calculate solute and water activities
     ln_acfs = model.log_activity_coefficients(solutes, temperature, pressure)
     ln_aw = model.log_activity_water(solutes, temperature, pressure)
     # Calculate what the log(K)s apparently are with these stoich/thermo values
     lnk_error = {
         eq: thermodynamic.all_reactions[eq](
-            thermo_targets[model.library.equilibria_all.index(eq)],
+            thermo_targets[library.equilibria_all.index(eq)],
             lnks[eq],
             ln_acfs,
             ln_aw,
         )
-        for eq in model.library.equilibria_all
+        for eq in library.equilibria_all
     }
-    thermo_error = np.array([lnk_error[eq] for eq in model.library.equilibria_all])
+    thermo_error = np.array([lnk_error[eq] for eq in library.equilibria_all])
     return thermo_error
 
 
@@ -105,24 +118,19 @@ def solve_combined(
     """
     # Solver targets---known from the start
     totals = totals.copy()
-    totals.update({t: 0.0 for t in model.library.totals_all if t not in totals})
-    stoich_targets = model.library.get_stoich_targets(totals)
+    totals.update({t: 0.0 for t in library.totals_all if t not in totals})
+    stoich_targets = library.get_stoich_targets(totals)
     thermo_targets = np.array(
-        [
-            model.library.equilibria[eq](temperature)
-            for eq in model.library.equilibria_all
-        ]
+        [library.equilibria[eq](temperature) for eq in library.equilibria_all]
     )  # these are ln(k)
     if stoich is None:
-        stoich = model.library.stoich_init(totals)
+        stoich = library.stoich_init(totals)
     if thermo is None:
         thermo = thermo_targets.copy()
     # Solve!
     for _t in range(iter_thermo):
         for _s in range(iter_stoich_per_thermo):
-            stoich_adjust = model.library.get_stoich_adjust(
-                stoich, totals, thermo, stoich_targets
-            )
+            stoich_adjust = get_stoich_adjust(stoich, totals, thermo, stoich_targets)
             if verbose:
                 print("STOICH", _t + 1, _s + 1)
                 print(stoich_adjust)

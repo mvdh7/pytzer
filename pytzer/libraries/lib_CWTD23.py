@@ -5,10 +5,10 @@ from jax import numpy as np
 from .. import (
     debyehueckel,
     dissociation as k,
-    equilibrate,
     unsymmetrical,
     parameters as p,
 )
+from ..equilibrate import components as c
 from . import Library
 
 # Initialise
@@ -230,7 +230,6 @@ def totals_to_solutes(totals, stoich, thermo):
     f = 10 ** -stoich[library.solver_targets.index("F")]
     po4 = 0.0  # no phosphate in this model
     # Calculate speciation
-    c = equilibrate.components
     totals = totals.copy()
     totals.update({t: 0.0 for t in library.totals_all if t not in totals})
     solutes = totals.copy()
@@ -271,13 +270,12 @@ def get_stoich_error(stoich, totals, thermo, stoich_targets):
     f = 10 ** -stoich[library.solver_targets.index("F")]
     po4 = 0.0  # no phosphate in this model
     # Calculate components that will be used more than once
-    c = equilibrate.components
     hco3 = c.get_HCO3(h, co3, ks)
     caco3 = c.get_CaCO3(h, f, co3, po4, totals, ks)
     mgco3 = c.get_MgCO3(h, f, co3, po4, totals, ks)
     srco3 = c.get_SrCO3(co3, totals, ks)
     hf = c.get_HF(h, f, ks)
-    # Calculate alkalinity
+    # Calculate buffer alkalinity
     alkalinity = (
         c.get_OH(h, ks)
         - h
@@ -307,31 +305,34 @@ def get_stoich_error(stoich, totals, thermo, stoich_targets):
 get_stoich_error_jac = jax.jit(jax.jacfwd(get_stoich_error))
 
 
+def get_alkalinity_explicit(totals):
+    return (
+        totals["Na"]
+        + totals["K"]
+        - totals["Cl"]
+        - totals["Br"]
+        + totals["Mg"] * 2
+        + totals["Ca"] * 2
+        + totals["Sr"] * 2
+        - totals["F"]
+        - totals["SO4"] * 2
+    )
+
+
 @jax.jit
 def get_stoich_targets(totals):
     return np.array(
         [
-            equilibrate.stoichiometric.get_explicit_alkalinity(totals),
+            get_alkalinity_explicit(totals),
             totals["CO2"],
             totals["F"],
         ]
     )
 
 
-@jax.jit
-def get_stoich_adjust(stoich, totals, thermo, stoich_targets):
-    stoich_error = get_stoich_error(stoich, totals, thermo, stoich_targets)
-    stoich_error_jac = get_stoich_error_jac(stoich, totals, thermo, stoich_targets)
-    stoich_adjust = np.linalg.solve(-stoich_error_jac, stoich_error)
-    stoich_adjust = np.where(
-        np.abs(stoich_adjust) > 1, np.sign(stoich_adjust), stoich_adjust
-    )
-    return stoich_adjust
-
-
 library.get_ks_constants = get_ks_constants
 library.totals_to_solutes = totals_to_solutes
+library.get_alkalinity_explicit = get_alkalinity_explicit
 library.get_stoich_error = get_stoich_error
 library.get_stoich_targets = get_stoich_targets
 library.get_stoich_error_jac = get_stoich_error_jac
-library.get_stoich_adjust = get_stoich_adjust

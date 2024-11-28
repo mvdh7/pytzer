@@ -5,7 +5,7 @@
 doi:10.1016/0016-7037(88)90354-7
 """
 from . import Library
-from .. import debyehueckel, dissociation as k, parameters as p, unsymmetrical
+from .. import debyehueckel, parameters as p, unsymmetrical
 
 library = Library(name="M88")
 library.update_Aphi(debyehueckel.Aosm_M88)

@@ -5,10 +5,10 @@ from jax import numpy as np
 from .. import (
     debyehueckel,
     dissociation as k,
-    equilibrate,
     unsymmetrical,
     parameters as p,
 )
+from ..equilibrate import components as c
 from . import Library
 
 # First section is a direct copy of the Humphreys22 library
@@ -154,7 +154,6 @@ def totals_to_solutes(totals, stoich, thermo):
     f = 0.0  # no fluoride in this model
     po4 = 0.0  # no phosphate in this model
     # Calculate speciation
-    c = equilibrate.components
     totals = totals.copy()
     totals.update({t: 0.0 for t in library.totals_all if t not in totals})
     solutes = totals.copy()
@@ -182,8 +181,7 @@ def get_stoich_error(stoich, totals, thermo, stoich_targets):
     co3 = 0.0  # no carbonate in this model
     f = 0.0  # no fluoride in this model
     po4 = 0.0  # no phosphate in this model
-    # Calculate alkalinity
-    c = equilibrate.components
+    # Calculate buffer alkalinity
     alkalinity = (
         c.get_OH(h, ks)
         - h
@@ -197,24 +195,21 @@ def get_stoich_error(stoich, totals, thermo, stoich_targets):
 get_stoich_error_jac = jax.jit(jax.jacfwd(get_stoich_error))
 
 
+def get_alkalinity_explicit(totals):
+    return (
+        totals["Na"]
+        + totals["K"]
+        - totals["Cl"]
+        + totals["Mg"] * 2
+        + totals["Ca"] * 2
+        - totals["SO4"] * 2
+        + totals["tris"]
+    )
+
+
 @jax.jit
 def get_stoich_targets(totals):
-    return np.array(
-        [
-            equilibrate.stoichiometric.get_explicit_alkalinity(totals),
-        ]
-    )
-
-
-@jax.jit
-def get_stoich_adjust(stoich, totals, thermo, stoich_targets):
-    stoich_error = get_stoich_error(stoich, totals, thermo, stoich_targets)
-    stoich_error_jac = get_stoich_error_jac(stoich, totals, thermo, stoich_targets)
-    stoich_adjust = np.linalg.solve(-stoich_error_jac, stoich_error)
-    stoich_adjust = np.where(
-        np.abs(stoich_adjust) > 1, np.sign(stoich_adjust), stoich_adjust
-    )
-    return stoich_adjust
+    return np.array([get_alkalinity_explicit(totals)])
 
 
 library.get_ks_constants = get_ks_constants
@@ -222,4 +217,3 @@ library.totals_to_solutes = totals_to_solutes
 library.get_stoich_error = get_stoich_error
 library.get_stoich_targets = get_stoich_targets
 library.get_stoich_error_jac = get_stoich_error_jac
-library.get_stoich_adjust = get_stoich_adjust

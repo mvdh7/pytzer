@@ -52,10 +52,10 @@ class Library:
         self.equilibria_all = tuple()
         self.get_ks_constants = None
         self.totals_to_solutes = None
+        self.get_alkalinity_explicit = None
         self.get_stoich_error = None
         self.get_stoich_targets = None
         self.get_stoich_error_jac = None
-        self.get_stoich_adjust = None
         self.stoich_init = np.array([])
 
     def get_solutes(self, sanity_check=True, **solutes):
