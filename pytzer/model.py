@@ -7,7 +7,8 @@ from jax import numpy as np, lax
 from .constants import b, Mw
 from . import convert, libraries, properties, unsymmetrical
 
-library = libraries.Clegg23
+library_prev = libraries.Clegg23
+library = libraries.lib_CWTD23.library
 
 
 def Gibbs_DH(Aphi, I):
@@ -53,12 +54,25 @@ def xij(Aphi, I, z0, z1):
     return 6 * z0 * z1 * Aphi * np.sqrt(I)
 
 
-def etheta(Aphi, I, z0, z1, func_J):
+def etheta_prev(Aphi, I, z0, z1, func_J):
     """etheta function for unsymmetrical mixing."""
     x00 = xij(Aphi, I, z0, z0)
     x01 = xij(Aphi, I, z0, z1)
     x11 = xij(Aphi, I, z1, z1)
     return z0 * z1 * (func_J(x01) - 0.5 * (func_J(x00) + func_J(x11))) / (4 * I)
+
+
+def etheta(Aphi, I, z0, z1):
+    """etheta function for unsymmetrical mixing."""
+    x00 = xij(Aphi, I, z0, z0)
+    x01 = xij(Aphi, I, z0, z1)
+    x11 = xij(Aphi, I, z1, z1)
+    return (
+        z0
+        * z1
+        * (library.func_J(x01) - 0.5 * (library.func_J(x00) + library.func_J(x11)))
+        / (4 * I)
+    )
 
 
 @jax.jit
@@ -92,7 +106,7 @@ def _Gibbs_nRT(solutes, temperature, pressure):
         I = 0.0
     sqrt_I = np.sqrt(I)
     tp = (temperature, pressure)
-    Aphi = library["Aphi"](*tp)[0]
+    Aphi = library_prev["Aphi"](*tp)[0]
     Gibbs = Gibbs_DH(Aphi, I)
     # === Add (neutral-)cation-anion interactions ======================================
     if len(n_cations) > 0 and len(n_anions) > 0:
@@ -100,7 +114,7 @@ def _Gibbs_nRT(solutes, temperature, pressure):
         for c, cation in enumerate(n_cations):
             for a, anion in enumerate(n_anions):
                 try:
-                    ca = library["ca"][cation][anion](*tp)
+                    ca = library_prev["ca"][cation][anion](*tp)
                     Gibbs = Gibbs + m_cations[c] * m_anions[a] * (
                         2 * B(sqrt_I, *ca[:3], *ca[5:7])
                         + Z * CT(sqrt_I, *ca[3:5], ca[7])
@@ -115,7 +129,7 @@ def _Gibbs_nRT(solutes, temperature, pressure):
                                 + m_neutrals[n]
                                 * m_cations[c]
                                 * m_anions[a]
-                                * library["nca"][neutral][cation][anion](*tp)[0]
+                                * library_prev["nca"][neutral][cation][anion](*tp)[0]
                             )
                         except KeyError:
                             pass
@@ -125,17 +139,17 @@ def _Gibbs_nRT(solutes, temperature, pressure):
             for _c1, cation1 in enumerate(n_cations[(c0 + 1) :]):
                 c1 = c0 + _c1 + 1
                 try:
-                    theta = library["cc"][cation0][cation1](*tp)[0]
+                    theta = library_prev["cc"][cation0][cation1](*tp)[0]
                 except KeyError:
                     theta = 0.0
                 Gibbs = Gibbs + 2 * m_cations[c0] * m_cations[c1] * (
                     theta
-                    + etheta(
+                    + etheta_prev(
                         Aphi,
                         I,
                         z_cations[c0],
                         z_cations[c1],
-                        library["func_J"],
+                        library_prev["func_J"],
                     )
                 )
                 for a, anion in enumerate(n_anions):
@@ -145,7 +159,7 @@ def _Gibbs_nRT(solutes, temperature, pressure):
                             + m_cations[c0]
                             * m_cations[c1]
                             * m_anions[a]
-                            * library["cca"][cation0][cation1][anion](*tp)[0]
+                            * library_prev["cca"][cation0][cation1][anion](*tp)[0]
                         )
                     except KeyError:
                         pass
@@ -155,12 +169,14 @@ def _Gibbs_nRT(solutes, temperature, pressure):
             for _a1, anion1 in enumerate(n_anions[(a0 + 1) :]):
                 a1 = a0 + _a1 + 1
                 try:
-                    theta = library["aa"][anion0][anion1](*tp)[0]
+                    theta = library_prev["aa"][anion0][anion1](*tp)[0]
                 except KeyError:
                     theta = 0.0
                 Gibbs = Gibbs + 2 * m_anions[a0] * m_anions[a1] * (
                     theta
-                    + etheta(Aphi, I, z_anions[a0], z_anions[a1], library["func_J"])
+                    + etheta_prev(
+                        Aphi, I, z_anions[a0], z_anions[a1], library_prev["func_J"]
+                    )
                 )
                 for c, cation in enumerate(n_cations):
                     try:
@@ -169,7 +185,7 @@ def _Gibbs_nRT(solutes, temperature, pressure):
                             + m_cations[c]
                             * m_anions[a0]
                             * m_anions[a1]
-                            * library["caa"][cation][anion0][anion1](*tp)[0]
+                            * library_prev["caa"][cation][anion0][anion1](*tp)[0]
                         )
                     except KeyError:
                         pass
@@ -183,13 +199,15 @@ def _Gibbs_nRT(solutes, temperature, pressure):
                         Gibbs
                         + m_neutrals[n0]
                         * m_neutrals[n1]
-                        * library["nn"][neutral0][neutral1](*tp)[0]
+                        * library_prev["nn"][neutral0][neutral1](*tp)[0]
                     )
                 except KeyError:
                     pass
             # Neutral-neutral-neutral (always the same neutral 3 times)
             try:
-                Gibbs = Gibbs + m_neutrals[n0] ** 3 * library["nnn"][neutral0](*tp)[0]
+                Gibbs = (
+                    Gibbs + m_neutrals[n0] ** 3 * library_prev["nnn"][neutral0](*tp)[0]
+                )
             except KeyError:
                 pass
             # Neutral-cation
@@ -201,7 +219,7 @@ def _Gibbs_nRT(solutes, temperature, pressure):
                             + 2
                             * m_neutrals[n0]
                             * m_cations[c]
-                            * library["nc"][neutral0][cation](*tp)[0]
+                            * library_prev["nc"][neutral0][cation](*tp)[0]
                         )
                     except KeyError:
                         pass
@@ -214,14 +232,14 @@ def _Gibbs_nRT(solutes, temperature, pressure):
                             + 2
                             * m_neutrals[n0]
                             * m_anions[a]
-                            * library["na"][neutral0][anion](*tp)[0]
+                            * library_prev["na"][neutral0][anion](*tp)[0]
                         )
                     except KeyError:
                         pass
     return Gibbs
 
 
-# This one aims to remove all the try/excepts by looping through the library
+# This one aims to remove all the try/excepts by looping through the library_prev
 # functions instead of all solutes.
 # It did mean we had to add theta_zero functions in for everything that didn't have
 # one assigned, because etheta still gets calculated if theta is zero for a c-c or a-a.
@@ -257,112 +275,224 @@ def _Gibbs_nRT_wow(solutes, temperature, pressure):
         I = 0.0
     sqrt_I = np.sqrt(I)
     tp = (temperature, pressure)
-    Aphi = library["Aphi"](*tp)[0]
+    Aphi = library_prev["Aphi"](*tp)[0]
     Gibbs = Gibbs_DH(Aphi, I)
     charges = {s: convert.solute_to_charge[s] for s in solutes}
     # === Add (neutral-)cation-anion interactions ======================================
     if len(n_cations) > 0 and len(n_anions) > 0:
         Z = np.sum(m_cations * z_cations) - np.sum(m_anions * z_anions)
-        for cation in library["ca"]:
-            for anion in library["ca"][cation]:
-                ca = library["ca"][cation][anion](*tp)
+        for cation in library_prev["ca"]:
+            for anion in library_prev["ca"][cation]:
+                ca = library_prev["ca"][cation][anion](*tp)
                 Gibbs = Gibbs + solutes[cation] * solutes[anion] * (
                     2 * B(sqrt_I, *ca[:3], *ca[5:7]) + Z * CT(sqrt_I, *ca[3:5], ca[7])
                 )
-        for neutral in library["nca"]:
-            for cation in library["nca"][neutral]:
-                for anion in library["nca"][neutral][cation]:
+        for neutral in library_prev["nca"]:
+            for cation in library_prev["nca"][neutral]:
+                for anion in library_prev["nca"][neutral][cation]:
                     Gibbs = (
                         Gibbs
                         + solutes[neutral]
                         * solutes[cation]
                         * solutes[anion]
-                        * library["nca"][neutral][cation][anion](*tp)[0]
+                        * library_prev["nca"][neutral][cation][anion](*tp)[0]
                     )
     # === Add cation-cation(-anion) interactions =======================================
-    for cation0 in library["cc"]:
-        for cation1 in library["cc"][cation0]:
-            theta = library["cc"][cation0][cation1](*tp)[0]
+    for cation0 in library_prev["cc"]:
+        for cation1 in library_prev["cc"][cation0]:
+            theta = library_prev["cc"][cation0][cation1](*tp)[0]
             Gibbs = Gibbs + solutes[cation0] * solutes[cation1] * (
                 theta
-                + etheta(
+                + etheta_prev(
                     Aphi,
                     I,
                     charges[cation0],
                     charges[cation1],
-                    library["func_J"],
+                    library_prev["func_J"],
                 )
             )
-    for cation0 in library["cca"]:
-        for cation1 in library["cca"][cation0]:
-            for anion in library["cca"][cation0][cation1]:
+    for cation0 in library_prev["cca"]:
+        for cation1 in library_prev["cca"][cation0]:
+            for anion in library_prev["cca"][cation0][cation1]:
                 Gibbs = (
                     Gibbs
                     + 0.5
                     * solutes[cation0]
                     * solutes[cation1]
                     * solutes[anion]
-                    * library["cca"][cation0][cation1][anion](*tp)[0]
+                    * library_prev["cca"][cation0][cation1][anion](*tp)[0]
                 )
     # # === Add (cation-)anion-anion interactions ========================================
-    for anion0 in library["aa"]:
-        for anion1 in library["aa"][anion0]:
-            theta = library["aa"][anion0][anion1](*tp)[0]
+    for anion0 in library_prev["aa"]:
+        for anion1 in library_prev["aa"][anion0]:
+            theta = library_prev["aa"][anion0][anion1](*tp)[0]
             Gibbs = Gibbs + solutes[anion0] * solutes[anion1] * (
                 theta
-                + etheta(
+                + etheta_prev(
                     Aphi,
                     I,
                     charges[anion0],
                     charges[anion1],
-                    library["func_J"],
+                    library_prev["func_J"],
                 )
             )
-    for cation in library["caa"]:
-        for anion0 in library["caa"][cation]:
-            for anion1 in library["caa"][cation][anion0]:
+    for cation in library_prev["caa"]:
+        for anion0 in library_prev["caa"][cation]:
+            for anion1 in library_prev["caa"][cation][anion0]:
                 Gibbs = (
                     Gibbs
                     + 0.5
                     * solutes[cation]
                     * solutes[anion0]
                     * solutes[anion1]
-                    * library["caa"][cation][anion0][anion1](*tp)[0]
+                    * library_prev["caa"][cation][anion0][anion1](*tp)[0]
                 )
     # # === Add other neutral interactions ===============================================
     # Neutral-neutral (can be the same or different neutrals)
-    for neutral0 in library["nn"]:
-        for neutral1 in library["nn"][neutral0]:
+    for neutral0 in library_prev["nn"]:
+        for neutral1 in library_prev["nn"][neutral0]:
             Gibbs = (
                 Gibbs
                 + solutes[neutral0]
                 * solutes[neutral1]
-                * library["nn"][neutral0][neutral1](*tp)[0]
+                * library_prev["nn"][neutral0][neutral1](*tp)[0]
             )
     # Neutral-neutral-neutral (always the same neutral 3 times---for now)
-    for neutral in library["nnn"]:
-        Gibbs = Gibbs + m_neutrals[neutral] ** 3 * library["nnn"][neutral](*tp)[0]
+    for neutral in library_prev["nnn"]:
+        Gibbs = Gibbs + m_neutrals[neutral] ** 3 * library_prev["nnn"][neutral](*tp)[0]
     # Neutral-cation
-    for neutral in library["nc"]:
-        for cation in library["nc"][neutral]:
+    for neutral in library_prev["nc"]:
+        for cation in library_prev["nc"][neutral]:
             Gibbs = (
                 Gibbs
                 + 2
                 * solutes[neutral]
                 * solutes[cation]
-                * library["nc"][neutral][cation](*tp)[0]
+                * library_prev["nc"][neutral][cation](*tp)[0]
             )
     # Neutral-anion
-    for neutral in library["na"]:
-        for anion in library["na"][neutral]:
+    for neutral in library_prev["na"]:
+        for anion in library_prev["na"][neutral]:
             Gibbs = (
                 Gibbs
                 + 2
                 * solutes[neutral]
                 * solutes[anion]
-                * library["na"][neutral][anion](*tp)[0]
+                * library_prev["na"][neutral][anion](*tp)[0]
             )
     return Gibbs
+
+
+@jax.jit
+def _Gibbs_nRT_v3(solutes, temperature, pressure):
+    def add_ca(combo):
+        c, a = combo
+        return (
+            m_cats[c]
+            * m_anis[a]
+            * (
+                2 * B(sqrt_I, *ca[c][a][:3], *ca[c][a][5:7])
+                + Z * CT(sqrt_I, *ca[c][a][3:5], ca[c][a][7])
+            )
+        )
+
+    def add_cc(combo):
+        c0, c1 = combo
+        return (
+            2
+            * m_cats[c0]
+            * m_cats[c1]
+            * (
+                cc[c0][c1]
+                + etheta(Aphi, I, library.charges_cat[c0], library.charges_cat[c1])
+            )
+        )
+
+    def add_cca(combo):
+        c0, c1, a = combo
+        return m_cats[c0] * m_cats[c1] * m_anis[a] * cca[c0][c1][a]
+
+    def add_aa(combo):
+        a0, a1 = combo
+        return (
+            2
+            * m_anis[a0]
+            * m_anis[a1]
+            * (
+                aa[a0][a1]
+                + etheta(Aphi, I, library.charges_ani[a0], library.charges_ani[a1])
+            )
+        )
+
+    def add_caa(combo):
+        c, a0, a1 = combo
+        return m_cats[c] * m_anis[a0] * m_anis[a1] * caa[c][a0][a1]
+
+    def add_nnn(n):
+        return m_neus[n] ** 3 * nnn[n]
+
+    def add_nn(combo):
+        n0, n1 = combo
+        return 2 * m_neus[n0] * m_neus[n1] * nn[n0][n1]
+
+    def add_nc(combo):
+        n, c = combo
+        return 2 * m_neus[n] * m_cats[c] * nc[n][c]
+
+    def add_na(combo):
+        n, a = combo
+        return 2 * m_neus[n] * m_anis[a] * na[n][a]
+
+    def add_nca(combo):
+        n, c, a = combo
+        return m_neus[n] * m_cats[c] * m_anis[a] * nca[n][c][a]
+
+    # Split up cations, anions and neutrals
+    m_cats = np.array([solutes[c] for c in library.cations])
+    m_anis = np.array([solutes[a] for a in library.anions])
+    m_neus = np.array([solutes[n] for n in library.neutrals])
+    # Calculate ionic-strength-dependent terms
+    I = 0.5 * (
+        np.sum(m_cats * library.charges_cat**2)
+        + np.sum(m_anis * library.charges_ani**2)
+    )
+    Z = np.sum(m_cats * library.charges_cat) - np.sum(m_anis * library.charges_ani)
+    sqrt_I = np.sqrt(I)
+    tp = (temperature, pressure)
+    Aphi = library.Aphi(*tp)[0]
+    gibbs = Gibbs_DH(Aphi, I)
+    # Add specific interactions
+    if len(library.ca_combos) > 0:
+        ca = library.get_ca_values(*tp)
+        gibbs = gibbs + np.sum(jax.lax.map(add_ca, library.ca_combos))
+    if len(library.cc_combos) > 0:
+        cc = library.get_cc_values(*tp)
+        gibbs = gibbs + np.sum(jax.lax.map(add_cc, library.cc_combos))
+    if len(library.cca_combos) > 0:
+        cca = library.get_cca_values(*tp)
+        gibbs = gibbs + np.sum(jax.lax.map(add_cca, library.cca_combos))
+    if len(library.aa_combos) > 0:
+        aa = library.get_aa_values(*tp)
+        gibbs = gibbs + np.sum(jax.lax.map(add_aa, library.aa_combos))
+    if len(library.caa_combos) > 0:
+        caa = library.get_caa_values(*tp)
+        gibbs = gibbs + np.sum(jax.lax.map(add_caa, library.caa_combos))
+    if len(library.nnn_combos) > 0:
+        nnn = library.get_nnn_values(*tp)
+        gibbs = gibbs + np.sum(jax.lax.map(add_nnn, library.nnn_combos))
+    if len(library.nn_combos) > 0:
+        nn = library.get_nn_values(*tp)
+        gibbs = gibbs + np.sum(jax.lax.map(add_nn, library.nn_combos))
+    if len(library.nc_combos) > 0:
+        nc = library.get_nc_values(*tp)
+        gibbs = gibbs + np.sum(jax.lax.map(add_nc, library.nc_combos))
+    if len(library.na_combos) > 0:
+        na = library.get_na_values(*tp)
+        gibbs = gibbs + np.sum(jax.lax.map(add_na, library.na_combos))
+    if len(library.nca_combos) > 0:
+        nca = library.get_nca_values(*tp)
+        gibbs = gibbs + np.sum(jax.lax.map(add_nca, library.nca_combos))
+    return gibbs
 
 
 def Gibbs_nRT(solutes, temperature, pressure):
@@ -382,7 +512,7 @@ def Gibbs_nRT(solutes, temperature, pressure):
     float
         Gex/nRT.
     """
-    return _Gibbs_nRT(solutes, temperature, pressure)
+    return _Gibbs_nRT_v3(solutes, temperature, pressure)
 
 
 @jax.jit
@@ -403,7 +533,7 @@ def log_activity_coefficients(solutes, temperature, pressure):
     dict
         Natural logs of the activity coefficients.
     """
-    return jax.grad(_Gibbs_nRT)(solutes, temperature, pressure)
+    return jax.grad(_Gibbs_nRT_v3)(solutes, temperature, pressure)
 
 
 @jax.jit
@@ -448,7 +578,7 @@ def osmotic_coefficient(solutes, temperature, pressure):
     """
     return 1 - jax.grad(
         lambda ww: ww
-        * _Gibbs_nRT({s: m / ww for s, m in solutes.items()}, temperature, pressure)
+        * _Gibbs_nRT_v3({s: m / ww for s, m in solutes.items()}, temperature, pressure)
     )(1.0) / np.sum(np.array([m for m in solutes.values()]))
 
 
@@ -473,7 +603,9 @@ def log_activity_water(solutes, temperature, pressure):
     return (
         jax.grad(
             lambda ww: ww
-            * _Gibbs_nRT({s: m / ww for s, m in solutes.items()}, temperature, pressure)
+            * _Gibbs_nRT_v3(
+                {s: m / ww for s, m in solutes.items()}, temperature, pressure
+            )
         )(1.0)
         - np.sum(np.array([m for m in solutes.values()]))
     ) * Mw

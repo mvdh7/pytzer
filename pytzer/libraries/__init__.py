@@ -20,6 +20,7 @@ from .Waters13 import Waters13
 from .Waters13_Humphreys22 import Waters13_Humphreys22
 from .Waters13_Clegg22 import Waters13_Clegg22
 from .Waters13_MarChemSpec25 import Waters13_MarChemSpec25
+from . import lib_CWTD23
 
 # Aliases for convenience
 CHW22 = Clegg22
