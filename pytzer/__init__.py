@@ -47,7 +47,7 @@ from .equilibrate.components import find_solutes
 from .equilibrate.stoichiometric import solve as solve_stoichiometric
 from .equilibrate.thermodynamic import solve as solve_thermodynamic
 from .get import solve_df
-from .libraries import ParameterLibrary
+from .libraries import ParameterLibrary, Library
 from .meta import hello, update_func_J, update_library
 from .model import (
     activity_coefficients,

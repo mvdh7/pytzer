@@ -64,302 +64,7 @@ def etheta(Aphi, I, z0, z1):
     )
 
 
-class Library:
-    def __init__(self):
-        self.cations = tuple()
-        self.anions = tuple()
-        self.neutrals = tuple()
-        self.charges = {}
-        self.charges_cat = np.array([])
-        self.charges_ani = np.array([])
-        self.Aphi = None
-        self.func_J = None
-        self.ca = {}
-        self.ca_combos = []
-        self.get_ca_values = None
-        self.cc = {}
-        self.cc_combos = []
-        self.get_cc_values = None
-        self.cca = {}
-        self.cca_combos = []
-        self.get_cca_values = None
-        self.aa = {}
-        self.aa_combos = []
-        self.get_aa_values = None
-        self.caa = {}
-        self.caa_combos = []
-        self.get_caa_values = None
-
-    def update_Aphi(self, func):
-        self.Aphi = func
-
-    def update_func_J(self, func):
-        self.func_J = func
-
-    def update_ca(self, cation, anion, func=p.bC_none):
-        # Add ions to tuples if needed
-        if cation not in self.cations:
-            self.cations = (*self.cations, cation)
-        if anion not in self.anions:
-            self.anions = (*self.anions, anion)
-        # Add bC function to ca dict
-        if cation not in self.ca:
-            self.ca[cation] = {}
-        self.ca[cation][anion] = func
-        # Add bC function to ca_combos array and get_ca_values function
-        self._update_all()
-
-    def update_cc(self, cation0, cation1, func=p.theta_none):
-        # Add ions to tuples if needed
-        if cation0 not in self.cations:
-            self.cations = (*self.cations, cation0)
-        if cation1 not in self.cations:
-            self.cations = (*self.cations, cation1)
-        # Add theta function to cc dict
-        cations = [cation0, cation1]
-        cations.sort()
-        if cations[0] not in self.cc:
-            self.cc[cations[0]] = {}
-        self.cc[cations[0]][cations[1]] = func
-        # Update all combos arrays and get_xxx_values functions
-        self._update_all()
-
-    def update_cca(self, cation0, cation1, anion, func=p.psi_none):
-        # Add ions to tuples if needed
-        if cation0 not in self.cations:
-            self.cations = (*self.cations, cation0)
-        if cation1 not in self.cations:
-            self.cations = (*self.cations, cation1)
-        if anion not in self.anions:
-            self.anions = (*self.anions, anion)
-        # Add theta function to cca dict
-        cations = [cation0, cation1]
-        cations.sort()
-        if cations[0] not in self.cca:
-            self.cca[cations[0]] = {}
-        if cations[1] not in self.cca[cations[0]]:
-            self.cca[cations[0]][cations[1]] = {}
-        self.cca[cations[0]][cations[1]][anion] = func
-        # Update all combos arrays and get_xxx_values functions
-        self._update_all()
-
-    def update_aa(self, anion0, anion1, func=p.theta_none):
-        # Add ions to tuples if needed
-        if anion0 not in self.anions:
-            self.anions = (*self.anions, anion0)
-        if anion1 not in self.anions:
-            self.anions = (*self.anions, anion1)
-        # Add theta function to aa dict
-        anions = [anion0, anion1]
-        anions.sort()
-        if anions[0] not in self.aa:
-            self.aa[anions[0]] = {}
-        self.aa[anions[0]][anions[1]] = func
-        # Update all combos arrays and get_xxx_values functions
-        self._update_all()
-
-    def update_caa(self, cation, anion0, anion1, func=p.psi_none):
-        # Add ions to tuples if needed
-        if cation not in self.cations:
-            self.cations = (*self.cations, cation)
-        if anion0 not in self.anions:
-            self.anions = (*self.anions, anion0)
-        if anion1 not in self.anions:
-            self.anions = (*self.anions, anion1)
-        # Add theta function to caa dict
-        anions = [anion0, anion1]
-        anions.sort()
-        if cation not in self.caa:
-            self.caa[cation] = {}
-        if anions[0] not in self.caa[cation]:
-            self.caa[cation][anions[0]] = {}
-        self.caa[cation][anions[0]][anions[1]] = func
-        # Update all combos arrays and get_xxx_values functions
-        self._update_all()
-
-    def _update_all(self):
-        self._get_charges()
-        self._get_ca_combos()
-        self._get_ca_values_func()
-        self._get_cc_combos()
-        self._get_cc_values_func()
-        self._get_cca_combos()
-        self._get_cca_values_func()
-        self._get_aa_combos()
-        self._get_aa_values_func()
-        self._get_caa_combos()
-        self._get_caa_values_func()
-
-    def _get_ca_combos(self):
-        self.ca_combos = []
-        for cation in self.ca:
-            c = self.cations.index(cation)
-            for anion in self.ca[cation]:
-                a = self.anions.index(anion)
-                self.ca_combos.append([c, a])
-        self.ca_combos = np.array(self.ca_combos)
-
-    def _get_cc_combos(self):
-        # This works differently because we still need to include the combo even if
-        # there is no theta term in the library, because etheta still gets added
-        self.cc_combos = []
-        for cation0 in self.cations:
-            for cation1 in self.cations:
-                if cation0 != cation1:
-                    cations = [cation0, cation1]
-                    cations.sort()
-                    c0 = self.cations.index(cations[0])
-                    c1 = self.cations.index(cations[1])
-                    if [c0, c1] not in self.cc_combos:
-                        self.cc_combos.append([c0, c1])
-        self.cc_combos = np.array(self.cc_combos)
-
-    def _get_cca_combos(self):
-        self.cca_combos = []
-        for cation0 in self.cca:
-            c0 = self.cations.index(cation0)
-            for cation1 in self.cca[cation0]:
-                c1 = self.cations.index(cation1)
-                for anion in self.cca[cation0][cation1]:
-                    a = self.anions.index(anion)
-                    self.cca_combos.append([c0, c1, a])
-        self.cca_combos = np.array(self.cca_combos)
-
-    def _get_aa_combos(self):
-        # This works differently because we still need to include the combo even if
-        # there is no theta term in the library, because the etheta term still gets
-        # added if charges are different
-        self.aa_combos = []
-        for anion0 in self.anions:
-            for anion1 in self.anions:
-                if anion0 != anion1:
-                    anions = [anion0, anion1]
-                    anions.sort()
-                    a0 = self.anions.index(anions[0])
-                    a1 = self.anions.index(anions[1])
-                    if [a0, a1] not in self.aa_combos:
-                        self.aa_combos.append([a0, a1])
-        self.aa_combos = np.array(self.aa_combos)
-
-    def _get_caa_combos(self):
-        self.caa_combos = []
-        for cation in self.caa:
-            c = self.cations.index(cation)
-            for anion0 in self.caa[cation]:
-                a0 = self.anions.index(anion0)
-                for anion1 in self.caa[cation][anion0]:
-                    a1 = self.anions.index(anion1)
-                    self.caa_combos.append([c, a0, a1])
-        self.caa_combos = np.array(self.caa_combos)
-
-    def _get_ca_values_func(self):
-        self.get_ca_values = lambda temperature, pressure: np.array(
-            [
-                [
-                    (
-                        self.ca[cation][anion](temperature, pressure)[:-1]
-                        if cation in self.ca and anion in self.ca[cation]
-                        else p.bC_none(temperature, pressure)[:-1]
-                    )
-                    for anion in self.anions
-                ]
-                for cation in self.cations
-            ]
-        )
-
-    def _get_cc_values_func(self):
-        self.get_cc_values = lambda temperature, pressure: np.array(
-            [
-                [
-                    (
-                        self.cc[cation0][cation1](temperature, pressure)[0]
-                        if cation0 in self.cc and cation1 in self.cc[cation0]
-                        else 0.0
-                    )
-                    for cation1 in self.cations
-                ]
-                for cation0 in self.cations
-            ]
-        )
-
-    def _get_cca_values_func(self):
-        self.get_cca_values = lambda temperature, pressure: np.array(
-            [
-                [
-                    [
-                        (
-                            self.cca[cation0][cation1][anion](temperature, pressure)[0]
-                            if cation0 in self.cca
-                            and cation1 in self.cca[cation0]
-                            and anion in self.cca[cation0][cation1]
-                            else 0.0
-                        )
-                        for anion in self.anions
-                    ]
-                    for cation1 in self.cations
-                ]
-                for cation0 in self.cations
-            ]
-        )
-
-    def _get_aa_values_func(self):
-        self.get_aa_values = lambda temperature, pressure: np.array(
-            [
-                [
-                    (
-                        self.aa[anion0][anion1](temperature, pressure)[0]
-                        if anion0 in self.aa and anion1 in self.aa[anion0]
-                        else 0.0
-                    )
-                    for anion1 in self.anions
-                ]
-                for anion0 in self.anions
-            ]
-        )
-
-    def _get_caa_values_func(self):
-        self.get_caa_values = lambda temperature, pressure: np.array(
-            [
-                [
-                    [
-                        (
-                            self.caa[cation][anion0][anion1](temperature, pressure)[0]
-                            if cation in self.caa
-                            and anion0 in self.caa[cation]
-                            and anion1 in self.caa[cation][anion0]
-                            else 0.0
-                        )
-                        for anion1 in self.anions
-                    ]
-                    for anion0 in self.anions
-                ]
-                for cation in self.cations
-            ]
-        )
-
-    def _get_charges(self):
-        self.charges = {}
-        self.charges.update({c: solute_to_charge[c] for c in self.cations})
-        self.charges.update({a: solute_to_charge[a] for a in self.anions})
-        self.charges_cat = np.array([self.charges[c] for c in self.cations])
-        self.charges_ani = np.array([self.charges[a] for a in self.anions])
-
-    def expand_solutes(self, solutes, inplace=True):
-        if not inplace:
-            solutes = solutes.copy()
-        for cation in self.cations:
-            if cation not in solutes:
-                solutes[cation] = 0.0
-        for anion in self.anions:
-            if anion not in solutes:
-                solutes[anion] = 0.0
-        for neutral in self.neutrals:
-            if neutral not in solutes:
-                solutes[neutral] = 0.0
-        return solutes
-
-
-library = Library()
+library = pz.Library()
 library.update_Aphi(debyehueckel.Aosm_M88)
 library.update_func_J(unsymmetrical.P75_eq47)
 # Tables S14-S18 (beta and C coefficients)
@@ -494,6 +199,29 @@ library.update_aa("OH", "SO4", p.theta_OH_SO4_HMW84)
 library.update_caa("K", "OH", "SO4", p.psi_K_OH_SO4_HMW84)
 library.update_caa("Na", "OH", "SO4", p.psi_Na_OH_SO4_HMW84)
 
+# Table S21 (lambda and zeta coefficients)
+library.update_na("BOH3", "Cl", p.lambd_BOH3_Cl_FW86)
+library.update_nc("BOH3", "K", p.lambd_BOH3_K_FW86)
+library.update_nc("BOH3", "Na", p.lambd_BOH3_Na_FW86)
+library.update_nca("BOH3", "Na", "SO4", p.zeta_BOH3_Na_SO4_FW86)
+library.update_na("BOH3", "SO4", p.lambd_BOH3_SO4_FW86)
+library.update_nc("CO2", "Ca", p.lambd_CO2_Ca_HM93)
+library.update_nca("CO2", "Ca", "Cl", p.zeta_CO2_Ca_Cl_HM93)
+library.update_na("CO2", "Cl", p.lambd_CO2_Cl_HM93)
+library.update_nca("CO2", "H", "Cl", p.zeta_CO2_H_Cl_HM93)
+library.update_nc("CO2", "K", p.lambd_CO2_K_HM93)
+library.update_nca("CO2", "K", "Cl", p.zeta_CO2_K_Cl_HM93)
+library.update_nca("CO2", "K", "SO4", p.zeta_CO2_K_SO4_HM93)
+library.update_nc("CO2", "Mg", p.lambd_CO2_Mg_HM93)
+library.update_nca("CO2", "Mg", "Cl", p.zeta_CO2_Mg_Cl_HM93)
+library.update_nca("CO2", "Mg", "SO4", p.zeta_CO2_Mg_SO4_HM93)
+library.update_nc("CO2", "Na", p.lambd_CO2_Na_HM93)
+library.update_nca("CO2", "Na", "Cl", p.zeta_CO2_Na_Cl_HM93)
+library.update_nca("CO2", "Na", "SO4", p.zeta_CO2_Na_SO4_HM93)
+library.update_na("CO2", "SO4", p.lambd_CO2_SO4_HM93)
+library.update_nc("HF", "Na", p.lambd_HF_Na_MP98)  # CWTD23 cite 88CB
+library.update_nc("MgCO3", "Na", p.lambd_MgCO3_Na_CWTD23)  # CWTD23 cite 83MT
+
 
 @jax.jit
 def Gibbs_nRT(solutes, temperature, pressure):
@@ -540,6 +268,25 @@ def Gibbs_nRT(solutes, temperature, pressure):
         c, a0, a1 = combo
         return m_cats[c] * m_anis[a0] * m_anis[a1] * caa[c][a0][a1]
 
+    def add_nnn(n):
+        return m_neus[n] ** 3 * nnn[n]
+
+    def add_nn(combo):
+        n0, n1 = combo
+        return 2 * m_neus[n0] * m_neus[n1] * nn[n0][n1]
+
+    def add_nc(combo):
+        n, c = combo
+        return 2 * m_neus[n] * m_cats[c] * nc[n][c]
+
+    def add_na(combo):
+        n, a = combo
+        return 2 * m_neus[n] * m_anis[a] * na[n][a]
+
+    def add_nca(combo):
+        n, c, a = combo
+        return m_neus[n] * m_cats[c] * m_anis[a] * nca[n][c][a]
+
     m_cats = np.array([solutes[c] for c in library.cations])
     m_anis = np.array([solutes[a] for a in library.anions])
     m_neus = np.array([solutes[n] for n in library.neutrals])
@@ -569,11 +316,33 @@ def Gibbs_nRT(solutes, temperature, pressure):
     if len(library.caa_combos) > 0:
         caa = library.get_caa_values(*tp)
         gibbs = gibbs + np.sum(jax.lax.map(add_caa, library.caa_combos))
+    if len(library.nnn_combos) > 0:
+        nnn = library.get_nnn_values(*tp)
+        gibbs = gibbs + np.sum(jax.lax.map(add_nnn, library.nnn_combos))
+    if len(library.nn_combos) > 0:
+        nn = library.get_nn_values(*tp)
+        gibbs = gibbs + np.sum(jax.lax.map(add_nn, library.nn_combos))
+    if len(library.nc_combos) > 0:
+        nc = library.get_nc_values(*tp)
+        gibbs = gibbs + np.sum(jax.lax.map(add_nc, library.nc_combos))
+    if len(library.na_combos) > 0:
+        na = library.get_na_values(*tp)
+        gibbs = gibbs + np.sum(jax.lax.map(add_na, library.na_combos))
+    if len(library.nca_combos) > 0:
+        nca = library.get_nca_values(*tp)
+        gibbs = gibbs + np.sum(jax.lax.map(add_nca, library.nca_combos))
 
     return gibbs
 
 
-# %%
+mylist = np.array([1, 2, 3])
+
+
+@jax.jit
+def get_pos(i):
+    return mylist[np.array(i)]
+
+
 solutes = {
     "Na": 0.5,
     "K": 0.5,
@@ -584,9 +353,12 @@ solutes = {
     "SO4": 0.5,
     "CO3": 0.5,
     "CaF": 0.5,
-    # "CO2": 0.5,
+    "CO2": 0.5,
+    "BOH3": 0.5,
+    "BOH4": 0.5,
 }
 library.expand_solutes(solutes)
+solutes = {k: 0.5 for k in solutes}
 
 temperature, pressure = 298.15, 10.1325
 gibbs = Gibbs_nRT(solutes, temperature, pressure)
@@ -595,152 +367,152 @@ print(gibbs)
 print(gibbs_old)
 
 # %%
-solutes = {
-    "Na": 1.1,
-    "Cl": 1.2,
-    "OH": 1.3,
-    "SO4": 1.4,
-    "Br": 1.5,
-    "Mg": 1.6,
-    "Ca": 1.7,
-    "K": 1.8,
-    "Sr": 1.9,
-}
-charges = {
-    "Na": 1,
-    "Cl": -1,
-    "OH": -1,
-    "SO4": -2,
-    "Br": -1,
-    "Mg": 2,
-    "Ca": 2,
-    "K": 1,
-    "Sr": 2,
-}
-solute_to_code = {k: i for i, k in enumerate(solutes)}
-code_to_solute = {i: k for k, i in solute_to_code.items()}
-temperature = 25.0
+# solutes = {
+#     "Na": 1.1,
+#     "Cl": 1.2,
+#     "OH": 1.3,
+#     "SO4": 1.4,
+#     "Br": 1.5,
+#     "Mg": 1.6,
+#     "Ca": 1.7,
+#     "K": 1.8,
+#     "Sr": 1.9,
+# }
+# charges = {
+#     "Na": 1,
+#     "Cl": -1,
+#     "OH": -1,
+#     "SO4": -2,
+#     "Br": -1,
+#     "Mg": 2,
+#     "Ca": 2,
+#     "K": 1,
+#     "Sr": 2,
+# }
+# solute_to_code = {k: i for i, k in enumerate(solutes)}
+# code_to_solute = {i: k for k, i in solute_to_code.items()}
+# temperature = 25.0
 
 
-def loop_1(solutes, temperature):
-    cations = [s for s in solutes if charges[s] > 0]
-    anions = [s for s in solutes if charges[s] < 1]
-    gibbs = 0.0
-    for cation in cations:
-        for anion in anions:
-            try:
-                gibbs = gibbs + solutes[cation] * solutes[anion] * library.ca[cation][
-                    anion
-                ](temperature)
-            except KeyError:
-                pass
-    return gibbs
+# def loop_1(solutes, temperature):
+#     cations = [s for s in solutes if charges[s] > 0]
+#     anions = [s for s in solutes if charges[s] < 1]
+#     gibbs = 0.0
+#     for cation in cations:
+#         for anion in anions:
+#             try:
+#                 gibbs = gibbs + solutes[cation] * solutes[anion] * library.ca[cation][
+#                     anion
+#                 ](temperature)
+#             except KeyError:
+#                 pass
+#     return gibbs
 
 
-def loop_2(solutes, temperature):
-    gibbs = 0.0
-    for cation in library.ca:
-        for anion in library.ca[cation]:
-            gibbs = gibbs + solutes[cation] * solutes[anion] * library.ca[cation][
-                anion
-            ](temperature)
-    return gibbs
+# def loop_2(solutes, temperature):
+#     gibbs = 0.0
+#     for cation in library.ca:
+#         for anion in library.ca[cation]:
+#             gibbs = gibbs + solutes[cation] * solutes[anion] * library.ca[cation][
+#                 anion
+#             ](temperature)
+#     return gibbs
 
 
-def map_1(solutes, temperature):
-    cations = [s for s in solutes if charges[s] > 0]
-    anions = [s for s in solutes if charges[s] < 1]
-    gibbs = 0.0
-    ca = itertools.product(cations, anions)
-    gibbs = gibbs + sum(
-        map(
-            lambda ca: solutes[ca[0]]
-            * solutes[ca[1]]
-            * library.ca[ca[0]][ca[1]](temperature),
-            ca,
-        )
-    )
-    return gibbs
+# def map_1(solutes, temperature):
+#     cations = [s for s in solutes if charges[s] > 0]
+#     anions = [s for s in solutes if charges[s] < 1]
+#     gibbs = 0.0
+#     ca = itertools.product(cations, anions)
+#     gibbs = gibbs + sum(
+#         map(
+#             lambda ca: solutes[ca[0]]
+#             * solutes[ca[1]]
+#             * library.ca[ca[0]][ca[1]](temperature),
+#             ca,
+#         )
+#     )
+#     return gibbs
 
 
-testscan = np.arange(10)
+# testscan = np.arange(10)
 
 
-def scan_1(solutes, temperature):
+# def scan_1(solutes, temperature):
 
-    def scan_func(carry, x):
-        y = testscan[x]
-        return carry + y, y
+#     def scan_func(carry, x):
+#         y = testscan[x]
+#         return carry + y, y
 
-    x = np.arange(10)
-    gibbs = jax.lax.scan(scan_func, 0.0, x)
-    return gibbs
-
-
-def map_2(solutes, temperature):
-    solutes_coded = np.array(
-        list(
-            map(
-                lambda k: solutes[k],
-                solutes.keys(),
-            )
-        )
-    )
-    c_codes = [solute_to_code[s] for s in solutes if charges[s] > 0]
-    a_codes = [solute_to_code[s] for s in solutes if charges[s] < 1]
-    gibbs = 0.0
-    ca = np.array(list(itertools.product(c_codes, a_codes)))
-    gibbs = gibbs + np.sum(
-        jax.lax.map(
-            lambda ca: solutes_coded[ca[0]]
-            * solutes_coded[ca[1]]
-            * library.ca_coded[ca[0]][ca[1]](temperature),
-            ca,
-        )
-    )
-    return gibbs
+#     x = np.arange(10)
+#     gibbs = jax.lax.scan(scan_func, 0.0, x)
+#     return gibbs
 
 
-#
-gibbs_loop_1 = loop_1(solutes, temperature)
-gibbs_loop_2 = loop_2(solutes, temperature)
-gibbs_map_1 = map_1(solutes, temperature)
-gibbs_scan_1 = scan_1(solutes, temperature)
-# gibbs_map_2 = map_2(solutes, temperature)
-print("loop_1", gibbs_loop_1)
-print("loop_2", gibbs_loop_2)
-print(" map_1", gibbs_map_1)
-# print("map_2 ", gibbs_map_2)
+# def map_2(solutes, temperature):
+#     solutes_coded = np.array(
+#         list(
+#             map(
+#                 lambda k: solutes[k],
+#                 solutes.keys(),
+#             )
+#         )
+#     )
+#     c_codes = [solute_to_code[s] for s in solutes if charges[s] > 0]
+#     a_codes = [solute_to_code[s] for s in solutes if charges[s] < 1]
+#     gibbs = 0.0
+#     ca = np.array(list(itertools.product(c_codes, a_codes)))
+#     gibbs = gibbs + np.sum(
+#         jax.lax.map(
+#             lambda ca: solutes_coded[ca[0]]
+#             * solutes_coded[ca[1]]
+#             * library.ca_coded[ca[0]][ca[1]](temperature),
+#             ca,
+#         )
+#     )
+#     return gibbs
 
-# %% Test compilation times
-start = dt.now()
-gibbs_loop_1 = jax.jit(loop_1)(solutes, temperature)
-print("Compile loop_1", dt.now() - start)
-start = dt.now()
-gibbs_loop_2 = jax.jit(loop_2)(solutes, temperature)
-print("Compile loop_2", dt.now() - start)
-start = dt.now()
-gibbs_map_1 = jax.jit(map_1)(solutes, temperature)
-print("Compile map_1", dt.now() - start)
 
-# Test grad times
-start = dt.now()
-grad_loop_1 = jax.grad(loop_1)(solutes, temperature)
-print("Grad loop_1", dt.now() - start)
-start = dt.now()
-grad_loop_2 = jax.grad(loop_2)(solutes, temperature)
-print("Grad loop_2", dt.now() - start)
-start = dt.now()
-grad_map_1 = jax.grad(map_1)(solutes, temperature)
-print("Grad map_1", dt.now() - start)
+# #
+# gibbs_loop_1 = loop_1(solutes, temperature)
+# gibbs_loop_2 = loop_2(solutes, temperature)
+# gibbs_map_1 = map_1(solutes, temperature)
+# gibbs_scan_1 = scan_1(solutes, temperature)
+# # gibbs_map_2 = map_2(solutes, temperature)
+# print("loop_1", gibbs_loop_1)
+# print("loop_2", gibbs_loop_2)
+# print(" map_1", gibbs_map_1)
+# # print("map_2 ", gibbs_map_2)
 
-# Test compile grad times
-start = dt.now()
-cgrad_loop_1 = jax.jit(jax.grad(loop_1))(solutes, temperature)
-print("Compile grad loop_1", dt.now() - start)
-start = dt.now()
-cgrad_loop_2 = jax.jit(jax.grad(loop_2))(solutes, temperature)
-print("Compile grad loop_2", dt.now() - start)
-start = dt.now()
-cgrad_map_1 = jax.jit(jax.grad(map_1))(solutes, temperature)
-print("Compile grad map_1", dt.now() - start)
+# # %% Test compilation times
+# start = dt.now()
+# gibbs_loop_1 = jax.jit(loop_1)(solutes, temperature)
+# print("Compile loop_1", dt.now() - start)
+# start = dt.now()
+# gibbs_loop_2 = jax.jit(loop_2)(solutes, temperature)
+# print("Compile loop_2", dt.now() - start)
+# start = dt.now()
+# gibbs_map_1 = jax.jit(map_1)(solutes, temperature)
+# print("Compile map_1", dt.now() - start)
+
+# # Test grad times
+# start = dt.now()
+# grad_loop_1 = jax.grad(loop_1)(solutes, temperature)
+# print("Grad loop_1", dt.now() - start)
+# start = dt.now()
+# grad_loop_2 = jax.grad(loop_2)(solutes, temperature)
+# print("Grad loop_2", dt.now() - start)
+# start = dt.now()
+# grad_map_1 = jax.grad(map_1)(solutes, temperature)
+# print("Grad map_1", dt.now() - start)
+
+# # Test compile grad times
+# start = dt.now()
+# cgrad_loop_1 = jax.jit(jax.grad(loop_1))(solutes, temperature)
+# print("Compile grad loop_1", dt.now() - start)
+# start = dt.now()
+# cgrad_loop_2 = jax.jit(jax.grad(loop_2))(solutes, temperature)
+# print("Compile grad loop_2", dt.now() - start)
+# start = dt.now()
+# cgrad_map_1 = jax.jit(jax.grad(map_1))(solutes, temperature)
+# print("Compile grad map_1", dt.now() - start)
