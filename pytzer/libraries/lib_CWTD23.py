@@ -1,9 +1,21 @@
-from .. import debyehueckel, unsymmetrical, parameters as p
+# Pytzer: Pitzer model for chemical activities in aqueous solutions.
+# Copyright (C) 2019--2024  M.P. Humphreys  (GNU GPLv3)
+import jax
+from jax import numpy as np
+from .. import (
+    debyehueckel,
+    dissociation as k,
+    equilibrate,
+    unsymmetrical,
+    parameters as p,
+)
 from . import Library
 
+# Initialise
 library = Library()
-library.update_Aphi(debyehueckel.Aosm_M88)
+library.update_Aphi(debyehueckel.Aosm_M88)  # From Table S13
 library.update_func_J(unsymmetrical.P75_eq47)
+
 # Tables S14-S18 (beta and C coefficients)
 library.update_ca("Ca", "Br", p.bC_Ca_Br_SP78)
 library.update_ca("Ca", "BOH4", p.bC_Ca_BOH4_SRM87)
@@ -158,3 +170,161 @@ library.update_nca("CO2", "Na", "SO4", p.zeta_CO2_Na_SO4_HM93)
 library.update_na("CO2", "SO4", p.lambd_CO2_SO4_HM93)
 library.update_nc("HF", "Na", p.lambd_HF_Na_MP98)  # CWTD23 cite 88CB
 library.update_nc("MgCO3", "Na", p.lambd_MgCO3_Na_CWTD23)  # CWTD23 cite 83MT
+
+# Table S13 (Aphi and equilibria)
+library.update_equilibrium("BOH3", k.BOH3_M79)
+library.update_equilibrium("CaCO3", k.CaCO3_MP98_MR97)  # CWTD23 cite 84HM + 88PP
+library.update_equilibrium("CaF", k.CaF_MP98_MR97)  # CWTF23 cite 82MS
+library.update_equilibrium("HCO3", k.HCO3_MP98)  # TODO SOMETHING WEIRD HERE IN CWTF23
+library.update_equilibrium("H2CO3", k.H2CO3_MP98)  # CWTF23 cite 79M
+library.update_equilibrium("HF", k.HF_MP98)  # CWTF23 cite DR79a
+library.update_equilibrium("HSO4", k.HSO4_CRP94)  # TODO sign differences wth CWTF23?
+library.update_equilibrium("H2O", k.H2O_M79)
+library.update_equilibrium("MgCO3", k.MgCO3_MP98_MR97)  # CWTF23 cite 83MT + 88PP
+library.update_equilibrium("MgF", k.MgF_MP98_MR97)  # CWTF23 cite 88CB
+library.update_equilibrium("MgOH", k.MgOH_CW91_ln)
+library.update_equilibrium("SrCO3", k.SrCO3_CWTF23)
+
+library.solver_targets = ("H", "CO3", "F")
+library.totals_all = {
+    # Equilibrating
+    "BOH3",
+    "Ca",
+    "CO2",
+    "F",
+    "Mg",
+    "Sr",
+    "SO4",
+    # Non-equilibrating
+    "Br",
+    "Cl",
+    "K",
+    "Na",
+}
+
+
+# Equilibration functions
+@jax.jit
+def get_ks_constants(thermo):
+    exp_thermo = np.exp(thermo)
+    ks = {
+        eq: exp_thermo[library.equilibria_all.index(eq)]
+        for eq in library.equilibria_all
+    }
+    return ks
+
+
+@jax.jit
+def totals_to_solutes(totals, stoich, thermo):
+    ks = get_ks_constants(thermo)
+    # Extract and convert stoich
+    h = 10 ** -stoich[library.solver_targets.index("H")]
+    co3 = 10 ** -stoich[library.solver_targets.index("CO3")]
+    f = 10 ** -stoich[library.solver_targets.index("F")]
+    po4 = 0.0  # no phosphate in this model
+    # Calculate speciation
+    c = equilibrate.components
+    totals = totals.copy()
+    totals.update({t: 0.0 for t in library.totals_all if t not in totals})
+    solutes = totals.copy()
+    solutes["H"] = h
+    solutes["OH"] = c.get_OH(h, ks)
+    solutes["CO3"] = co3
+    solutes["HCO3"] = c.get_HCO3(h, co3, ks)
+    solutes["CO2"] = c.get_CO2(h, co3, ks)
+    solutes["Ca"] = c.get_Ca(h, f, co3, po4, totals, ks)
+    solutes["Mg"] = c.get_Mg(h, f, co3, po4, totals, ks)
+    solutes["Sr"] = c.get_Sr(co3, totals, ks)
+    solutes["CaCO3"] = c.get_CaCO3(h, f, co3, po4, totals, ks)
+    solutes["MgCO3"] = c.get_MgCO3(h, f, co3, po4, totals, ks)
+    solutes["SrCO3"] = c.get_SrCO3(co3, totals, ks)
+    solutes["BOH3"] = c.get_BOH3(h, totals, ks)
+    solutes["BOH4"] = c.get_BOH4(h, totals, ks)
+    solutes["HSO4"] = c.get_HSO4(h, totals, ks)
+    solutes["SO4"] = c.get_SO4(h, totals, ks)
+    solutes["F"] = f
+    solutes["HF"] = c.get_HF(h, f, ks)
+    solutes["MgOH"] = c.get_MgOH(h, f, co3, po4, totals, ks)
+    solutes["CaF"] = c.get_CaF(h, f, co3, po4, totals, ks)
+    solutes["MgF"] = c.get_MgF(h, f, co3, po4, totals, ks)
+    return solutes
+
+
+@jax.jit
+def get_stoich_error(stoich, totals, thermo, stoich_targets):
+    # Prepare inputs for calculations
+    exp_thermo = np.exp(thermo)
+    ks = {
+        eq: exp_thermo[library.equilibria_all.index(eq)]
+        for eq in library.equilibria_all
+    }
+    # Extract and convert stoich
+    h = 10 ** -stoich[library.solver_targets.index("H")]
+    co3 = 10 ** -stoich[library.solver_targets.index("CO3")]
+    f = 10 ** -stoich[library.solver_targets.index("F")]
+    po4 = 0.0  # no phosphate in this model
+    # Calculate components that will be used more than once
+    c = equilibrate.components
+    hco3 = c.get_HCO3(h, co3, ks)
+    caco3 = c.get_CaCO3(h, f, co3, po4, totals, ks)
+    mgco3 = c.get_MgCO3(h, f, co3, po4, totals, ks)
+    srco3 = c.get_SrCO3(co3, totals, ks)
+    hf = c.get_HF(h, f, ks)
+    # Calculate alkalinity
+    alkalinity = (
+        c.get_OH(h, ks)
+        - h
+        + hco3
+        + 2 * co3
+        + 2 * caco3
+        + 2 * mgco3
+        + 2 * srco3
+        + c.get_BOH4(h, totals, ks)
+        - c.get_HSO4(h, totals, ks)
+        - hf
+        + c.get_MgOH(h, f, co3, po4, totals, ks)
+        # TODO (how) do MgF and CaF contribute to alkalinity?
+    )
+    # Calculate other totals
+    co2 = c.get_CO2(h, co3, ks)
+    total_CO2 = co2 + hco3 + co3 + caco3 + mgco3 + srco3
+    total_F = (
+        f
+        + hf
+        + c.get_CaF(h, f, co3, po4, totals, ks)
+        + c.get_MgF(h, f, co3, po4, totals, ks)
+    )
+    return np.array([alkalinity, total_CO2, total_F]) - stoich_targets
+
+
+get_stoich_error_jac = jax.jit(jax.jacfwd(get_stoich_error))
+
+
+@jax.jit
+def get_stoich_targets(totals):
+    return np.array(
+        [
+            equilibrate.stoichiometric.get_explicit_alkalinity(totals),
+            totals["CO2"],
+            totals["F"],
+        ]
+    )
+
+
+@jax.jit
+def get_stoich_adjust(stoich, totals, thermo, stoich_targets):
+    stoich_error = get_stoich_error(stoich, totals, thermo, stoich_targets)
+    stoich_error_jac = get_stoich_error_jac(stoich, totals, thermo, stoich_targets)
+    stoich_adjust = np.linalg.solve(-stoich_error_jac, stoich_error)
+    stoich_adjust = np.where(
+        np.abs(stoich_adjust) > 1, np.sign(stoich_adjust), stoich_adjust
+    )
+    return stoich_adjust
+
+
+library.get_ks_constants = get_ks_constants
+library.totals_to_solutes = totals_to_solutes
+library.get_stoich_error = get_stoich_error
+library.get_stoich_targets = get_stoich_targets
+library.get_stoich_error_jac = get_stoich_error_jac
+library.get_stoich_adjust = get_stoich_adjust

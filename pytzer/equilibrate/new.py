@@ -1,3 +1,5 @@
+# Pytzer: Pitzer model for chemical activities in aqueous solutions.
+# Copyright (C) 2019--2024  M.P. Humphreys  (GNU GPLv3)
 from collections import namedtuple
 import warnings
 import jax
@@ -10,25 +12,25 @@ from .. import model
 def get_thermo_error(thermo, totals, temperature, pressure, stoich, thermo_targets):
     # Prepare inputs for calculations
     lnks = {
-        eq: thermo[model.library["equilibria_all"].index(eq)]
-        for eq in model.library["equilibria_all"]
+        eq: thermo[model.library.equilibria_all.index(eq)]
+        for eq in model.library.equilibria_all
     }
     # Calculate speciation
-    solutes = model.library["funcs_eq"]["solutes"](totals, stoich, thermo)
+    solutes = model.library.totals_to_solutes(totals, stoich, thermo)
     # Calculate solute and water activities
     ln_acfs = model.log_activity_coefficients(solutes, temperature, pressure)
     ln_aw = model.log_activity_water(solutes, temperature, pressure)
     # Calculate what the log(K)s apparently are with these stoich/thermo values
     lnk_error = {
         eq: thermodynamic.all_reactions[eq](
-            thermo_targets[model.library["equilibria_all"].index(eq)],
+            thermo_targets[model.library.equilibria_all.index(eq)],
             lnks[eq],
             ln_acfs,
             ln_aw,
         )
-        for eq in model.library["equilibria_all"]
+        for eq in model.library.equilibria_all
     }
-    thermo_error = np.array([lnk_error[eq] for eq in model.library["equilibria_all"]])
+    thermo_error = np.array([lnk_error[eq] for eq in model.library.equilibria_all])
     return thermo_error
 
 
@@ -103,12 +105,12 @@ def solve_combined(
     """
     # Solver targets---known from the start
     totals = totals.copy()
-    totals.update({t: 0.0 for t in model.library["totals_all"] if t not in totals})
-    stoich_targets = model.library["funcs_eq"]["stoich_targets"](totals)
+    totals.update({t: 0.0 for t in model.library.totals_all if t not in totals})
+    stoich_targets = model.library.get_stoich_targets(totals)
     thermo_targets = np.array(
         [
-            model.library["equilibria"][eq](temperature)
-            for eq in model.library["equilibria_all"]
+            model.library.equilibria[eq](temperature)
+            for eq in model.library.equilibria_all
         ]
     )  # these are ln(k)
     if stoich is None:
@@ -124,7 +126,7 @@ def solve_combined(
     # Solve!
     for _t in range(iter_thermo):
         for _s in range(iter_stoich_per_thermo):
-            stoich_adjust = model.library["funcs_eq"]["stoich_adjust"](
+            stoich_adjust = model.library.get_stoich_adjust(
                 stoich, totals, thermo, stoich_targets
             )
             if verbose:

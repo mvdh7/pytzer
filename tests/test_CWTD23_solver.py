@@ -3,13 +3,8 @@
 import pandas as pd
 import pytzer as pz
 import numpy as np
-from datetime import datetime
 
-# Select parameter library
-prmlib = pz.libraries.Clegg23
-pz = prmlib.set_func_J(pz)
-
-# %% Solve and compare without equilibrating
+# Solve and compare without equilibrating
 data = pd.read_csv("tests/data/CWTD23 SI final table.csv")
 data["aH2O_pz"] = np.nan
 data["osm_pz"] = np.nan
@@ -20,42 +15,15 @@ for c in data.columns:
         data_diff["y" + c[1:]] = np.nan
 data_diff.drop(columns="temperature", inplace=True)
 for i, row in data.iterrows():
-
-    # # Old version
-    # solutes = pz.odict((s[1:], v) for s, v in row.items() if s.startswith("m"))
-    # params = prmlib.get_parameters(
-    #     solutes=solutes, temperature=273.15 + row.temperature, verbose=False
-    # )
-    # start = datetime.now()
-    # aH2O = pz.model_old.activity_water(solutes, **params)
-    # print("aH2O", datetime.now() - start)
-    # data.loc[i, "aH2O_pz"] = aH2O
-    # start = datetime.now()
-    # osm = pz.model_old.osmotic_coefficient(solutes, **params)
-    # data.loc[i, "osm_pz"] = osm
-    # print("osm", datetime.now() - start)
-    # start = datetime.now()
-    # acfs = pz.model_old.activity_coefficients(solutes, **params)
-    # print("acfs", datetime.now() - start)
-
-    # New version
     solutes = pz.model.library.get_solutes()
     solutes.update({s[1:]: v for s, v in row.items() if s.startswith("m")})
     temperature = 273.15 + row.temperature
     pressure = 10.1325
-    start = datetime.now()
     aH2O = pz.model.activity_water(solutes, temperature, pressure)
-    print("aH2O", datetime.now() - start)
     data.loc[i, "aH2O_pz"] = aH2O
-    start = datetime.now()
     osm = pz.model.osmotic_coefficient(solutes, temperature, pressure)
-    print("osm", datetime.now() - start)
     data.loc[i, "osm_pz"] = osm
-    start = datetime.now()
     acfs = pz.model.activity_coefficients(solutes, temperature, pressure)
-    print("acfs", datetime.now() - start)
-
-    # print(i, datetime.now() - start)
     for s, v in acfs.items():
         data.loc[i, "y" + s + "_pz"] = v
         data_diff.loc[i, "y" + s] = 100 * (v - row["y" + s]) / row["y" + s]
@@ -63,37 +31,41 @@ dcols = list(data.columns)
 dcols.sort()
 data = data[dcols]
 
-# %% Now with the equilibrium solver
+# Now with the equilibrium solver
 data_eq = data.copy()
 for c in data_eq.columns:
     if c.startswith("m"):
         data_eq[c + "_eq"] = np.nan
 for i, row in data_eq.iterrows():
-    totals = pz.odict(
-        (
-            ("BOH3", row.mBOH3 + row.mBOH4),
-            ("Br", row.mBr),
-            ("Ca", row.mCa + row.mCaCO3 + row.mCaF),
-            ("Cl", row.mCl),
-            ("CO2", row.mCO2 + row.mCO3 + row.mHCO3 + row.mCaCO3 + row.mMgCO3),
-            ("F", row.mCaF + row.mF + row.mHF + row.mMgF),
-            ("SO4", row.mHSO4 + row.mSO4),
-            ("K", row.mK),
-            ("Mg", row.mMg + row.mMgCO3 + row.mMgF + row.mMgOH),
-            ("Na", row.mNa),
-            ("Sr", row.mSr + row.mSrCO3),
-        )
+    totals = pz.model.library.get_totals()
+    totals.update(
+        {
+            "BOH3": row.mBOH3 + row.mBOH4,
+            "Br": row.mBr,
+            "Ca": row.mCa + row.mCaCO3 + row.mCaF,
+            "Cl": row.mCl,
+            "CO2": row.mCO2 + row.mCO3 + row.mHCO3 + row.mCaCO3 + row.mMgCO3,
+            "F": row.mCaF + row.mF + row.mHF + row.mMgF,
+            "SO4": row.mHSO4 + row.mSO4,
+            "K": row.mK,
+            "Mg": row.mMg + row.mMgCO3 + row.mMgF + row.mMgOH,
+            "Na": row.mNa,
+            "Sr": row.mSr + row.mSrCO3,
+        }
     )
-    solutes_eq, pks_constants = pz.solve(
-        totals,
-        library=prmlib,
-        temperature=273.15 + row.temperature,
-    )
+    scr = pz.equilibrate.new.solve_combined(totals, 273.15 + row.temperature, 10.1325)
+    solutes_eq = pz.model.library.totals_to_solutes(totals, scr.stoich, scr.thermo)
     for c in data_eq.columns:
         if c.endswith("_eq"):
             data_eq.loc[i, c] = solutes_eq[c[1:-3]]
+print(datetime.now() - start)
 data_eq["pH"] = -np.log10(data_eq["mH"])
 data_eq["pH_eq"] = -np.log10(data_eq["mH_eq"])
+# Reorder columns for easier visual inspection
+c = data_eq.columns
+c = list(data_eq.columns)
+c.sort()
+data_eq = data_eq[c]
 
 
 def compeq(solute):

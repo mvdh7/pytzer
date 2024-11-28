@@ -1,3 +1,5 @@
+# Pytzer: Pitzer model for chemical activities in aqueous solutions.
+# Copyright (C) 2019--2024  M.P. Humphreys  (GNU GPLv3)
 from jax import numpy as np
 from .. import parameters
 from ..convert import solute_to_charge
@@ -43,6 +45,16 @@ class Library:
         self.nca = {}
         self.nca_combos = np.array([])
         self.get_nca_values = None
+        self.solver_targets = tuple()
+        self.totals_all = set()
+        self.equilibria = {}
+        self.equilibria_all = tuple()
+        self.get_ks_constants = None
+        self.totals_to_solutes = None
+        self.get_stoich_error = None
+        self.get_stoich_targets = None
+        self.get_stoich_error_jac = None
+        self.get_stoich_adjust = None
 
     def get_solutes(self, sanity_check=True, **solutes):
         if sanity_check:
@@ -51,11 +63,11 @@ class Library:
                     k in self.cations or k in self.anions or k in self.neutrals
                 ), "Solute {} is not part of this Library!".format(k)
                 assert v >= 0, "All solute molalities must be >= 0."
-        self.expand_solutes(solutes)
+        self._expand_solutes(solutes)
         solutes = {k: float(v) for k, v in solutes.items()}
         return solutes
 
-    def expand_solutes(self, solutes, inplace=True):
+    def _expand_solutes(self, solutes, inplace=True):
         if not inplace:
             solutes = solutes.copy()
         for cation in self.cations:
@@ -68,6 +80,32 @@ class Library:
             if neutral not in solutes:
                 solutes[neutral] = 0.0
         return solutes
+
+    def get_totals(self, sanity_check=True, **totals):
+        if sanity_check:
+            for k, v in totals.items():
+                assert (
+                    k in self.totals_all
+                ), "Total {} is not part of this Library!".format(k)
+                assert v >= 0, "All total molalities must be >= 0."
+        self._expand_totals(totals)
+        totals = {k: float(v) for k, v in totals.items()}
+        return totals
+
+    def _expand_totals(self, totals, inplace=True):
+        if not inplace:
+            totals = totals.copy()
+        for total in self.totals_all:
+            if total not in totals:
+                totals[total] = 0.0
+        return totals
+
+    def _get_charges(self):
+        self.charges = {}
+        self.charges.update({c: solute_to_charge[c] for c in self.cations})
+        self.charges.update({a: solute_to_charge[a] for a in self.anions})
+        self.charges_cat = np.array([self.charges[c] for c in self.cations])
+        self.charges_ani = np.array([self.charges[a] for a in self.anions])
 
     def update_Aphi(self, func):
         self.Aphi = func
@@ -515,9 +553,10 @@ class Library:
             ]
         )
 
-    def _get_charges(self):
-        self.charges = {}
-        self.charges.update({c: solute_to_charge[c] for c in self.cations})
-        self.charges.update({a: solute_to_charge[a] for a in self.anions})
-        self.charges_cat = np.array([self.charges[c] for c in self.cations])
-        self.charges_ani = np.array([self.charges[a] for a in self.anions])
+    def update_equilibrium(self, equilibrium, func):
+        """Add or update the function for a thermodynamic equilibrium constant."""
+        self.equilibria[equilibrium] = func
+        self._get_equilibria_all()
+
+    def _get_equilibria_all(self):
+        self.equilibria_all = tuple(self.equilibria.keys())
