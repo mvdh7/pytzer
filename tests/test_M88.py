@@ -1,6 +1,6 @@
-import pandas as pd, numpy as np
+import pandas as pd
+import numpy as np
 import pytzer as pz
-from pytzer.libraries import Moller88
 
 # Import data and prepare for tests
 pz.set_library(pz, "M88")

@@ -131,6 +131,9 @@ def test_theta():
     for c1 in cations:
         for c2 in cations:
             if c1 != c2:
+                cats = [c1, c2]
+                cats.sort()
+                c1, c2 = cats
                 try:
                     theta = "{:11.5e}".format(pz.library.cc[c1][c2](298.15, 10)[0])
                 except KeyError:
@@ -150,6 +153,9 @@ def test_theta():
     for a1 in anions:
         for a2 in anions:
             if a1 != a2:
+                anis = [a1, a2]
+                anis.sort()
+                a1, a2 = anis
                 try:
                     theta = "{:11.5e}".format(pz.library.aa[a1][a2](298.15, 10)[0])
                 except KeyError:
@@ -170,6 +176,9 @@ def test_theta():
     for c1 in cations:
         for c2 in cations:
             if c1 != c2:
+                cats = [c1, c2]
+                cats.sort()
+                c1, c2 = cats
                 try:
                     theta = "{:11.5e}".format(pz.library.cc[c1][c2](278.15, 10)[0])
                 except KeyError:
@@ -189,6 +198,9 @@ def test_theta():
     for a1 in anions:
         for a2 in anions:
             if a1 != a2:
+                anis = [a1, a2]
+                anis.sort()
+                a1, a2 = anis
                 try:
                     theta = "{:11.5e}".format(pz.library.aa[a1][a2](278.15, 10)[0])
                 except KeyError:
@@ -213,6 +225,9 @@ def test_psi():
     for c1 in cations:
         for c2 in cations:
             if c1 != c2:
+                cats = [c1, c2]
+                cats.sort()
+                c1, c2 = cats
                 for a in anions:
                     try:
                         psi = "{:11.5e}".format(
@@ -239,6 +254,9 @@ def test_psi():
     for a1 in anions:
         for a2 in anions:
             if a1 != a2:
+                anis = [a1, a2]
+                anis.sort()
+                a1, a2 = anis
                 for c in cations:
                     try:
                         psi = "{:11.5e}".format(
@@ -266,6 +284,9 @@ def test_psi():
     for c1 in cations:
         for c2 in cations:
             if c1 != c2:
+                cats = [c1, c2]
+                cats.sort()
+                c1, c2 = cats
                 for a in anions:
                     try:
                         psi = "{:11.5e}".format(
@@ -292,6 +313,9 @@ def test_psi():
     for a1 in anions:
         for a2 in anions:
             if a1 != a2:
+                anis = [a1, a2]
+                anis.sort()
+                a1, a2 = anis
                 for c in cations:
                     try:
                         psi = "{:11.5e}".format(

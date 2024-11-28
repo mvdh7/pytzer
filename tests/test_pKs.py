@@ -3,6 +3,9 @@
 import numpy as np
 import pytzer as pz
 
+# Select parameter library
+pz.set_library(pz, "CWTD23")
+
 totals = pz.prepare.salinity_to_totals_MFWM08(35)
 totals = pz.get_totals(**totals)
 scr = pz.equilibrate.new.solve_combined(totals, 298.15, 10.1325)

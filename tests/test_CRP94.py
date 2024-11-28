@@ -1,14 +1,19 @@
 import pandas as pd, numpy as np
 import pytzer as pz
 
-# Update unsymmetrical mixing function
-pzlib = pz.libraries.Clegg94
-pz = pzlib.set_func_J(pz)
+# Update library
+pz.set_library(pz, "CRP94")
 
 # Import and solve
 crp94 = pd.read_csv("tests/data/CRP94 Table 8.csv")
-crp94["t_SO4"] = crp94.SO4
-pz.solve_df(crp94, library=pzlib)
+for i, row in crp94.iterrows():
+    totals = pz.get_totals(SO4=row.t_SO4)
+    scr = pz.equilibrate.new.solve_combined(
+        totals, row.temperature, row.pressure, iter_thermo=25
+    )
+    solutes = pz.totals_to_solutes(totals, scr.stoich, scr.thermo)
+    crp94.loc[i, "SO4"] = solutes["SO4"].item()
+    crp94.loc[i, "HSO4"] = solutes["HSO4"].item()
 
 # Compare
 crp94["alpha_pytzer"] = (crp94.SO4 / (crp94.SO4 + crp94.HSO4)).round(5)
