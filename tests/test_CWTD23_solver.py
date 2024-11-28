@@ -56,7 +56,7 @@ for i, row in data_eq.iterrows():
             "Sr": row.mSr + row.mSrCO3,
         }
     )
-    scr = pz.equilibrate.new.solve_combined(totals, 273.15 + row.temperature, 10.1325)
+    scr = pz.solve(totals, 273.15 + row.temperature, 10.1325)
     solutes_eq = pz.totals_to_solutes(totals, scr.stoich, scr.thermo)
     for c in data_eq.columns:
         if c.endswith("_eq"):

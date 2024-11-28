@@ -42,7 +42,8 @@ from .convert import (
     log_activities_to_mean,
     osmotic_to_activity,
 )
-from .equilibrate import solve, solve_manual
+from .equilibrate import solve as solve_old, solve_manual
+from .equilibrate.new import solve_combined as solve
 from .equilibrate.components import find_solutes
 from .equilibrate.stoichiometric import solve as solve_stoichiometric
 from .equilibrate.thermodynamic import solve as solve_thermodynamic

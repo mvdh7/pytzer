@@ -8,7 +8,7 @@ pz.set_library(pz, "CWTD23")
 
 totals = pz.prepare.salinity_to_totals_MFWM08(35)
 totals = pz.get_totals(**totals)
-scr = pz.equilibrate.new.solve_combined(totals, 298.15, 10.1325)
+scr = pz.solve(totals, 298.15, 10.1325)
 pks_per_kgH2O = {
     pz.model.library.equilibria_all[i]: v
     for i, v in enumerate(-np.log10(np.exp(scr.thermo)))

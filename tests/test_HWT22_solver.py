@@ -53,7 +53,7 @@ totals.update(
         "SO4": 0.02927011,
     }
 )
-scr = pz.equilibrate.new.solve_combined(totals, 278.15, 10.1325)
+scr = pz.solve(totals, 278.15, 10.1325)
 solutes_eq = pz.totals_to_solutes(totals, scr.stoich, scr.thermo)
 for s, v in solutes_eq.items():
     data_eq_pz.loc[0, "m" + s] = v
@@ -64,7 +64,7 @@ for s, v in solutes_eq.items():
     data_eq_test.loc[0, "m" + s] = np.round(v - data.loc[0, "m" + s], decimals=d)
     data_eq_pct.loc[0, "m" + s] = 100 * v / data.loc[0, "m" + s]
 # Number 2
-scr = pz.equilibrate.new.solve_combined(totals, 298.15, 10.1325)
+scr = pz.solve(totals, 298.15, 10.1325)
 solutes_eq = pz.totals_to_solutes(totals, scr.stoich, scr.thermo)
 for s, v in solutes_eq.items():
     data_eq_pz.loc[1, "m" + s] = v
@@ -86,7 +86,7 @@ totals.update(
         "SO4": 0.02927011,
     }
 )
-scr = pz.equilibrate.new.solve_combined(totals, 278.15, 10.1325)
+scr = pz.solve(totals, 278.15, 10.1325)
 solutes_eq = pz.totals_to_solutes(totals, scr.stoich, scr.thermo)
 for s, v in solutes_eq.items():
     data_eq_pz.loc[2, "m" + s] = v
@@ -99,7 +99,7 @@ for s, v in solutes_eq.items():
     data_eq_test.loc[2, "m" + s] = np.round(v - data.loc[2, "m" + s], decimals=d)
     data_eq_pct.loc[2, "m" + s] = 100 * v / data.loc[2, "m" + s]
 # Number 4
-scr = pz.equilibrate.new.solve_combined(totals, 298.15, 10.1325)
+scr = pz.solve(totals, 298.15, 10.1325)
 solutes_eq = pz.totals_to_solutes(totals, scr.stoich, scr.thermo)
 for s, v in solutes_eq.items():
     data_eq_pz.loc[3, "m" + s] = v
