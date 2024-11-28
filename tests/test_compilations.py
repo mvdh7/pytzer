@@ -343,21 +343,23 @@ def get_pos(i):
     return mylist[np.array(i)]
 
 
-solutes = {
-    "Na": 0.5,
-    "K": 0.5,
-    "Cl": 0.5,
-    "Ca": 0.5,
-    "Mg": 0.5,
-    "OH": 0.5,
-    "SO4": 0.5,
-    "CO3": 0.5,
-    "CaF": 0.5,
-    "CO2": 0.5,
-    "BOH3": 0.5,
-    "BOH4": 0.5,
-}
-library.expand_solutes(solutes)
+solutes = library.get_solutes()
+solutes.update(
+    {
+        "Na": 0.5,
+        "K": 0.5,
+        "Cl": 0.5,
+        "Ca": 0.5,
+        "Mg": 0.5,
+        "OH": 0.5,
+        "SO4": 0.5,
+        "CO3": 0.5,
+        "CaF": 0.5,
+        "CO2": 0.5,
+        "BOH3": 0.5,
+        "BOH4": 0.5,
+    }
+)
 solutes = {k: 0.5 for k in solutes}
 
 temperature, pressure = 298.15, 10.1325

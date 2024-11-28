@@ -44,6 +44,31 @@ class Library:
         self.nca_combos = np.array([])
         self.get_nca_values = None
 
+    def get_solutes(self, sanity_check=True, **solutes):
+        if sanity_check:
+            for k, v in solutes.items():
+                assert (
+                    k in self.cations or k in self.anions or k in self.neutrals
+                ), "Solute {} is not part of this Library!".format(k)
+                assert v >= 0, "All solute molalities must be >= 0."
+        self.expand_solutes(solutes)
+        solutes = {k: float(v) for k, v in solutes.items()}
+        return solutes
+
+    def expand_solutes(self, solutes, inplace=True):
+        if not inplace:
+            solutes = solutes.copy()
+        for cation in self.cations:
+            if cation not in solutes:
+                solutes[cation] = 0.0
+        for anion in self.anions:
+            if anion not in solutes:
+                solutes[anion] = 0.0
+        for neutral in self.neutrals:
+            if neutral not in solutes:
+                solutes[neutral] = 0.0
+        return solutes
+
     def update_Aphi(self, func):
         self.Aphi = func
 
@@ -496,17 +521,3 @@ class Library:
         self.charges.update({a: solute_to_charge[a] for a in self.anions})
         self.charges_cat = np.array([self.charges[c] for c in self.cations])
         self.charges_ani = np.array([self.charges[a] for a in self.anions])
-
-    def expand_solutes(self, solutes, inplace=True):
-        if not inplace:
-            solutes = solutes.copy()
-        for cation in self.cations:
-            if cation not in solutes:
-                solutes[cation] = 0.0
-        for anion in self.anions:
-            if anion not in solutes:
-                solutes[anion] = 0.0
-        for neutral in self.neutrals:
-            if neutral not in solutes:
-                solutes[neutral] = 0.0
-        return solutes
