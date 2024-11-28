@@ -4,10 +4,6 @@ There are two 'layers' of solver in Pytzer: stoichiometric and thermodynamic.
 
 The stoichiometric solver determines the molality of each solute given a set of total molalities and fixed stoichiometric equilibrium constants.  It uses a Newton-Raphson iterative method that is fully compatible with JAX.
 
-The thermodynamic solver wraps the stoichiometric solver and adjusts the stoichiometric equilibrium constants to agree with thermodynamic constraints.  Because it uses [`scipy.optimize.root`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.root.html), it cannot be yet[^1] differentiated or compiled with JAX.
-
-[^1]: We are planning to merge the two solvers together, making the entire program grad-able and jit-able by JAX, in a future release.
-
 You can solve equilibria using the following functions.  Lower-level approaches with more fine control are possible, but not yet documented.
 
 ## Solve a single solution
@@ -15,21 +11,16 @@ You can solve equilibria using the following functions.  Lower-level approaches 
 You can solve a single solution for equilibrium using `pz.solve`:
 
 ```python
-solutes, pks_constants = pz.solve(
+scr = pz.solve(
     totals,
-    exclude_equilibria=None,
-    ks_constants=None,
-    ks_only=None,
-    library=Seawater,
-    pressure=10.10325,
-    temperature=298.15,
-    verbose=False,
+    temperature,
+    pressure,
 )
 ```
 
 ### Arguments
 
-  * `totals` is an `OrderedDict` of the total molality of each group of components in the solution.  Non-equilibrating components are included too.  Equilibrating components are grouped as follows:
+  * `totals` is dict of the total molality of each group of components in the solution.  Non-equilibrating components are included too.  Equilibrating components are grouped as follows:
     * `totals["CO2"]` = sum of all carbonate species.
     * `totals["PO4"]` = sum of all phosphate species.
     * `totals["F"]` = sum of all fluoride species.
@@ -42,13 +33,8 @@ solutes, pks_constants = pz.solve(
     * `totals["Mg"]` = sum of all magnesium species.
     * `totals["Ca"]` = sum of all calcium species.
     * `totals["Sr"]` = sum of all strontium species.
-  * `exclude_equilibria` allows you to list equilibria that will not be included in the model.
-  * `ks_constants` allows you to provide your own initial-guess values of the stoichiometric equilibrium constants, as a `dict`.
-  * `ks_only` allows you to list equilibria for which the thermodyamic constants are not used (i.e. the initial stoichiometric constants are kept constant).
-  * `library` is the [`ParameterLibrary`](../libraries/#parameter-libraries) that you want to use.
-  * `pressure` is the pressure in dbar.
   * `temperature` is the temperature in K.
-  * `verbose` controls how much information is sent to stdout.
+  * `pressure` is the pressure in dbar.
 
 ### Results
 

@@ -1,6 +1,6 @@
 # The Pitzer model
 
-The functions in `pytzer.model` use the Pitzer model to calculate various solution properties for a fixed composition.
+The Pitzer model can be used to calculate various solution properties for a fixed composition.
 
 All examples use the import convention:
 
@@ -10,20 +10,19 @@ import pytzer as pz
 
 ## Arguments
 
-All the main functions in `pytzer.model` have the same syntax, and they are all aliased at the top level, for example:
+All the main Pitzer model functions have the same syntax, for example:
 
 ```python
-Gibbs_nRT = pz.model.Gibbs_nRT(solutes, temperature, pressure)
 Gibbs_nRT = pz.Gibbs_nRT(solutes, temperature, pressure)
 ```
 
-  * The argument `solutes` is an dict containing the molality (in mol/kg) of each solute in the solution.  Each molality must be a single scalar float.
+  * The argument `solutes` is an dict containing the molality (in mol/kg) of each solute in the solution.  Each molality must be a scalar float.
 
-  * Temperature is a single scalar float in kelvin (K).
+  * Temperature is a scalar float in kelvin (K).
 
-  * Pressure is a single scalar float in decibar (dbar).  It should include atmospheric pressure.
+  * Pressure is a scalar float in decibar (dbar).  It should include atmospheric pressure.
 
-The result is always either a single scalar value or a dict with the same keys as in the `solutes`.  
+The result is always either a scalar float or a dict of scalar floats with the same keys as in the `solutes`.  
 
 ## Functions
 

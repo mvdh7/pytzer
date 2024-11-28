@@ -1,44 +1,26 @@
 # Model parameters
 
-Functions that can calculate the parameters required to run a Pitzer model from temperature and pressure are compiled into `ParameterLibrary`s, which can be imported from `pytzer.libraries`.
+Functions that can calculate the parameters required to run a Pitzer model from temperature and pressure are compiled into parameter `Library`s.
 
 ## Parameter libraries
 
-### Import library
+### Select library
 
-Import the `ParameterLibrary` that you wish to use with (e.g.):
+Select the `Library` that you wish to use with (e.g.):
 
 ```python
 from pytzer.libraries import Seawater
+
+# Switch to the HWT22 library
+pz.set_library(pz, "HWT22")
 ```
 
-The options are:
+The options are
 
-  * `Clegg23`: [CHW23](../refs/#c) (**default**)
-  * `Clegg22`: [CHW22](../refs/#c)
-  * `Clegg94`: [CRP94](../refs/#c)
-  * `Greenberg89`: [GM89](../refs/#m)
-  * `Harvie84`: [HMW84](../refs/#h)
-  * `Humphreys22`: [HWT22](../refs/#h)
-  * `MarChemSpec`
-  * `MarChemSpec25`
-  * `Millero98`: [MP98](../refs/#m), a.k.a. MIAMI
-  * `Moller88`: [M88](../refs/#m)
-  * `Seawater`
-  * `Waters13`: [WM13](../refs/#w)
-  * `Waters13_MarChemSpec25`
+  * `CWTD23`: [CWTD23](../refs/#c) (**default**)
+  * `CHW22`: [CHW22](../refs/#c)
+  * `CRP94`: [CRP94](../refs/#c)
+  * `HWT22`: [HWT22](../refs/#h)
+  * `M88`: [M88](../refs/#m)
 
-### Update parameter library
-
-Changing or updating the parameter library has to be done using `pz.update_library`:
-
-```python
-import pytzer as pz
-from pytzer.libraries import Seawater
-
-# Changes can be made to the Seawater library here if needed
-
-pz.update_library(pz, Seawater)
-```
-
-This step can be a bit slow, as all the model functions must be recompiled afterwards.  It only needs to be repeated if the parameter library being used is changed.
+Switching to a different parameter library means that all the model functions will be recompiled the next time they are run.
