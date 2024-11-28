@@ -1,3 +1,5 @@
+"""Test against pK1 and pK2 values from PyCO2SYS."""
+
 import numpy as np
 import pytzer as pz
 
@@ -8,7 +10,6 @@ pks_per_kgH2O = {
     pz.model.library.equilibria_all[i]: v
     for i, v in enumerate(-np.log10(np.exp(scr.thermo)))
 }
-
 totals_g_per_kgH2O = np.sum(
     [pz.properties.ion_to_mass[k] * v for k, v in totals.items()]
 )
