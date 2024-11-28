@@ -38,8 +38,7 @@ scr = pz.solve(
 
 ### Results
 
-  * `solutes` is an `OrderedDict` of the molality of each component at thermodynamic equilibrium.
-  * `ks_constants` is a `dict` of the stoichiometric equilibrium constants at thermodynamic equilibrium.
+
 
 ## Solve a pandas DataFrame
 
