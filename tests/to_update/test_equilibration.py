@@ -1,6 +1,9 @@
 import pytzer as pz
 
-totals = pz.model.library.get_totals()
+# Select parameter library
+pz.set_library(pz, "CWTD23")
+
+totals = pz.get_totals()
 totals.update(
     {
         "CO2": 0.002,
@@ -19,4 +22,4 @@ totals.update(
 
 
 scr = pz.solve(totals, 298.15, 10.1325)
-solutes = pz.model.library.totals_to_solutes(totals, scr.stoich, scr.thermo)
+solutes = pz.totals_to_solutes(totals, scr.stoich, scr.thermo)

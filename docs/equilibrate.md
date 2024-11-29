@@ -2,20 +2,20 @@
 
 There are two 'layers' of solver in Pytzer: stoichiometric and thermodynamic.
 
-The stoichiometric solver determines the molality of each solute given a set of total molalities and fixed stoichiometric equilibrium constants.  It uses a Newton-Raphson iterative method that is fully compatible with JAX.
+The stoichiometric solver determines the molality of each solute for a given set of total molalities and fixed stoichiometric equilibrium constants.
+
+The thermodynamic solver determines the molality of each solute and stoichiometric equilibrium constants for a given set of total molalities and fixed thermodynamic equilibrium constants.
+
+Both solvers are fully compatible with Jax (JIT and grad).
 
 You can solve equilibria using the following functions.  Lower-level approaches with more fine control are possible, but not yet documented.
 
-## Solve a single solution
+## Thermodynamic solver
 
 You can solve a single solution for equilibrium using `pz.solve`:
 
 ```python
-scr = pz.solve(
-    totals,
-    temperature,
-    pressure,
-)
+scr = pz.solve(totals, temperature, pressure)
 ```
 
 ### Arguments
