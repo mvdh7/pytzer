@@ -64,12 +64,12 @@ def get_thermo_adjust(thermo, totals, temperature, pressure, stoich, thermo_targ
     return thermo_adjust
 
 
-SolveCombinedResult = namedtuple(
-    "SolveCombinedResult", ["stoich", "thermo", "stoich_adjust", "thermo_adjust"]
+SolveResult = namedtuple(
+    "SolveResult", ["stoich", "thermo", "stoich_adjust", "thermo_adjust"]
 )
 
 
-def solve_combined(
+def solve(
     totals,
     temperature,
     pressure,
@@ -152,4 +152,4 @@ def solve_combined(
             "Solver did not converge below `warn_cutoff` - "
             + "try increasing `iter_thermo`."
         )
-    return SolveCombinedResult(stoich, thermo, stoich_adjust, thermo_adjust)
+    return SolveResult(stoich, thermo, stoich_adjust, thermo_adjust)

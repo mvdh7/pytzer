@@ -26,10 +26,6 @@ scr = pz.solve(totals, temperature, pressure)
     * `totals["F"]` = sum of all fluoride species.
     * `totals["SO4"]` = sum of all sulfate species.
     * `totals["BOH3"]` = sum of all borate species.
-    * `totals["NH3"]` = sum of all ammonia species.
-    * `totals["H2S"]` = sum of all sulfide species.
-    * `totals["NO2"]` = sum of all nitrite species.
-    * `totals["H4SiO4"]` = sum of all silicate species.
     * `totals["Mg"]` = sum of all magnesium species.
     * `totals["Ca"]` = sum of all calcium species.
     * `totals["Sr"]` = sum of all strontium species.
@@ -38,19 +34,10 @@ scr = pz.solve(totals, temperature, pressure)
 
 ### Results
 
-
-
-## Solve a pandas DataFrame
-
-You can put the `totals` described above into columns of a pandas DataFrame (`df`), add columns for `"temperature"` (in K) and `"pressure"` (in dbar) if needed, and then solve all the rows in the DataFrame with `pz.solve_df`:
+The result `scr` is a `SolveResult` named tuple containing fields corresponding to the pH and other solver target concentrations and the stoichiometric equilibrium constants.  These can be converted into a more usable format with `pz.totals_to_solutes`:
 
 ```python
-pz.solve_df(
-    df,
-    exclude_equilibria=None,
-    inplace=True,
-    ks_only=None,
-    library=Seawater,
-    verbose=False,
-)
+solutes = pz.totals_to_solutes(scr)
 ```
+
+The output `solutes` is a dict ready to be used with the [Pitzer model functions](../model).
