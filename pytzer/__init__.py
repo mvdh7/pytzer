@@ -40,7 +40,7 @@ from .convert import (
     log_activities_to_mean,
     osmotic_to_activity,
 )
-from .equilibrate.solver import solve
+from .equilibrate.solver import solve, solve_scan
 from .get import solve_df
 from .libraries import Library
 from .meta import hello, set_library
