@@ -1,5 +1,7 @@
-import pytzer as pz
+# %%
 from datetime import datetime
+
+import pytzer as pz
 
 # Select parameter library
 pz.set_library(pz, "CWTD23")
@@ -32,11 +34,13 @@ solutes = pz.totals_to_solutes(totals, scr.stoich, scr.thermo)
 # scr_scan = pz.solve_scan(totals, 298.15, 10.1325)
 # print(datetime.now() - start)
 
-import jax
-from pytzer import library
-from pytzer.equilibrate.solver import get_stoich_adjust, get_thermo_adjust, SolveResult
-from jax import numpy as np
 import warnings
+
+import jax
+from jax import numpy as np
+
+from pytzer import library
+from pytzer.equilibrate.solver import SolveResult, get_stoich_adjust, get_thermo_adjust
 
 stoich = None
 thermo = None
