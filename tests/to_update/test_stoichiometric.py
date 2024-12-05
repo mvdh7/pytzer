@@ -60,7 +60,7 @@ def test_NaCl_SO4_only():
     assert np.isclose(
         solutes["H"] + solutes["Na"],
         solutes["OH"] + solutes["Cl"] + 2 * solutes["SO4"],
-        **tol
+        **tol,
     )
     assert np.isclose(solutes["H"] * solutes["OH"], ks_constants["H2O"], **tol)
     assert np.isclose(solutes["Na"], totals["Na"], **tol)
@@ -79,7 +79,7 @@ def test_NaCl_H2SO4():
     assert np.isclose(
         solutes["H"] + solutes["Na"],
         solutes["OH"] + solutes["Cl"] + 2 * solutes["SO4"] + solutes["HSO4"],
-        **tol
+        **tol,
     )
     assert np.isclose(solutes["H"] * solutes["OH"], ks_constants["H2O"], **tol)
     assert np.isclose(
@@ -105,7 +105,7 @@ def test_NaCl_H2CO3():
     assert np.isclose(
         solutes["H"] + solutes["Na"],
         solutes["OH"] + solutes["Cl"] + 2 * solutes["CO3"] + solutes["HCO3"],
-        **tol
+        **tol,
     )
     assert np.isclose(solutes["H"] * solutes["OH"], ks_constants["H2O"], **tol)
     assert np.isclose(
@@ -136,7 +136,7 @@ def test_CaCl_H2CO3():
     assert np.isclose(
         solutes["H"] + 2 * solutes["Ca"],
         solutes["OH"] + solutes["Cl"] + 2 * solutes["CO3"] + solutes["HCO3"],
-        **tol
+        **tol,
     )
     assert np.isclose(solutes["H"] * solutes["OH"], ks_constants["H2O"], **tol)
     assert np.isclose(
@@ -168,7 +168,7 @@ def test_CaCl_H2CO3_CaCO3():
     assert np.isclose(
         solutes["H"] + 2 * solutes["Ca"],
         solutes["OH"] + solutes["Cl"] + 2 * solutes["CO3"] + solutes["HCO3"],
-        **tol
+        **tol,
     )
     assert np.isclose(solutes["H"] * solutes["OH"], ks_constants["H2O"], **tol)
     assert np.isclose(
@@ -180,14 +180,14 @@ def test_CaCl_H2CO3_CaCO3():
     assert np.isclose(
         solutes["CaCO3"] / (solutes["Ca"] * solutes["CO3"]),
         ks_constants["CaCO3"],
-        **tol
+        **tol,
     )
     assert np.isclose(solutes["Ca"] + solutes["CaCO3"], totals["Ca"], **tol)
     assert np.isclose(solutes["Cl"], totals["Cl"], **tol)
     assert np.isclose(
         solutes["CO2"] + solutes["HCO3"] + solutes["CO3"] + solutes["CaCO3"],
         totals["CO2"],
-        **tol
+        **tol,
     )
 
 

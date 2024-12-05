@@ -19,6 +19,7 @@ Pytzer
 Pytzer is an implementation of the Pitzer model for chemical activities in aqueous
 solutions in Python, including an equilibrium solver.
 """
+
 from . import (
     constants,
     convert,

@@ -1,6 +1,7 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019--2024  M.P. Humphreys  (GNU GPLv3)
 """Evaluate Pitzer model interaction parameters."""
+
 from jax import numpy as np
 from ..constants import temperatureC_zero
 from ..convert import solute_to_charge as i2c

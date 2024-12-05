@@ -1,6 +1,7 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019--2024  M.P. Humphreys  (GNU GPLv3)
 """Calculate solution properties using the Pitzer model."""
+
 import jax
 from jax import numpy as np
 from .constants import b_pitzer, mass_water

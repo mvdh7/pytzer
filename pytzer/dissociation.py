@@ -1,7 +1,7 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019--2024  M.P. Humphreys  (GNU GPLv3)
-"""Evaluate thermodynamic equilibrium constants.  All functions return ln(K) values.
-"""
+"""Evaluate thermodynamic equilibrium constants.  All functions return ln(K) values."""
+
 from jax import numpy as np
 
 ln10 = np.log(10)

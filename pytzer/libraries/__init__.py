@@ -1,6 +1,7 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019--2024  M.P. Humphreys  (GNU GPLv3)
 """Assemble parameter libraries."""
+
 from .library_class import Library
 from . import (
     lib_CHW22,

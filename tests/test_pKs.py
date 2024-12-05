@@ -1,6 +1,7 @@
 """Test against pK1 and pK2 values from PyCO2SYS."""
 
 import numpy as np
+
 import pytzer as pz
 
 # Select parameter library

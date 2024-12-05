@@ -1,6 +1,7 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
 # Copyright (C) 2019--2024  M.P. Humphreys  (GNU GPLv3)
 """Package metadata and metatools."""
+
 import importlib
 from . import libraries
 
@@ -36,7 +37,5 @@ def hello():
   
    M.P. Humphreys & A.J. Schiller (2023)
     v{version} | doi:{doi}
-""".format(
-            version=version, doi="10.5281/zenodo.2637914"
-        )
+""".format(version=version, doi="10.5281/zenodo.2637914")
     )
