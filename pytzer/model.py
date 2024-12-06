@@ -4,8 +4,9 @@
 
 import jax
 from jax import numpy as np
+
+from . import libraries
 from .constants import b_pitzer, mass_water
-from . import libraries, unsymmetrical
 
 library = libraries.lib_CWTD23.library
 

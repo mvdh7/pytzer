@@ -2,8 +2,6 @@
 # Copyright (C) 2019--2024  M.P. Humphreys  (GNU GPLv3)
 """Define solute properties."""
 
-from . import convert
-
 ion_to_name = {
     "Ag": "silver",
     "Aljjj": "aluminium(III)",

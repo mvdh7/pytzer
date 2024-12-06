@@ -3,8 +3,11 @@
 """Import solution composition data, and export the results."""
 
 from collections import OrderedDict
+
 import numpy as np
-from . import convert, dissociation, equilibrate as eq
+
+from . import convert, dissociation
+from . import equilibrate as eq
 
 
 def solve_df(

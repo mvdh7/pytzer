@@ -1,4 +1,6 @@
-import pandas as pd, numpy as np
+import numpy as np
+import pandas as pd
+
 import pytzer as pz
 
 # Update library

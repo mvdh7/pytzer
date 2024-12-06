@@ -1,4 +1,6 @@
-import pandas as pd, numpy as np
+import numpy as np
+import pandas as pd
+
 import pytzer as pz
 
 # Select parameter library
@@ -127,15 +129,15 @@ aa_cols = ["theta", "Ca", "H", "K", "Mg", "Na"]
 # value - if you divide it by 2, then it agrees with Pytzer.  Testing of the data in
 # HWT22 Table S21 suggests that this is a fault only in Table S17 and thus that the
 # HWT22 model code does correctly convert it to C0.
-l = (ca25.cation == "Na") & (ca25.anion == "Cl")
-ca25.loc[l, "C0"] /= 2
-ca25_test.loc[l, "C0"] = np.round(ca25_pz.loc[l, "C0"] - ca25.loc[l, "C0"], decimals=6)
+L = (ca25.cation == "Na") & (ca25.anion == "Cl")
+ca25.loc[L, "C0"] /= 2
+ca25_test.loc[L, "C0"] = np.round(ca25_pz.loc[L, "C0"] - ca25.loc[L, "C0"], decimals=6)
 #
 # The final digit of the C0 value for H-SO4 at 25 °C in HWT22 Table S17 is one away from
 # the Pytzer value - we assume this is a rounding error.
-l = (ca25.cation == "H") & (ca25.anion == "SO4")
-ca25.loc[l, "C0"] -= 1e-7
-ca25_test.loc[l, "C0"] = ca25_pz.loc[l, "C0"] - ca25.loc[l, "C0"]
+L = (ca25.cation == "H") & (ca25.anion == "SO4")
+ca25.loc[L, "C0"] -= 1e-7
+ca25_test.loc[L, "C0"] = ca25_pz.loc[L, "C0"] - ca25.loc[L, "C0"]
 #
 # The psi value for Ca-Mg-SO4 is in the wrong place in HWT22 Table S19 - it is in the
 # spot for the Ca-H-SO4 value, which should be zero.

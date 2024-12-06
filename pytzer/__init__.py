@@ -46,9 +46,9 @@ from .get import solve_df
 from .libraries import Library
 from .meta import hello, set_library
 from .model import (
+    Gibbs_nRT,
     activity_coefficients,
     activity_water,
-    Gibbs_nRT,
     log_activity_coefficients,
     log_activity_water,
     osmotic_coefficient,

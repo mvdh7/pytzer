@@ -1,5 +1,6 @@
-import pytzer as pz
 import pandas as pd
+
+import pytzer as pz
 
 # Select parameter library
 pz.set_library(pz, "CWTD23")

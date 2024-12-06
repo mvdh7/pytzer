@@ -3,9 +3,10 @@
 """Calculate Debye-Hueckel limiting slopes."""
 
 from jax import numpy as np
+
 from . import teos10
+from .constants import dbar_to_MPa, dbar_to_Pa, n_avogadro
 from .parameters import M88_eq13
-from .constants import n_avogadro, dbar_to_Pa, dbar_to_MPa
 
 
 def Aosm_M88(tempK, pres):

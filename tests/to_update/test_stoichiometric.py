@@ -1,7 +1,7 @@
 import numpy as np
+
 import pytzer as pz
 from pytzer import equilibrate as eq
-
 
 # Set tolerances for np.isclose()
 tol = dict(atol=0, rtol=1e-4)

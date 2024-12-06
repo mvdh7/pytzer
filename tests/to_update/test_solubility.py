@@ -1,6 +1,7 @@
-import pytzer as pz
 import numpy as np
 from matplotlib import pyplot as plt
+
+import pytzer as pz
 
 # Prepare parameter library
 prmlib = pz.libraries.Clegg23
