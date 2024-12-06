@@ -11,7 +11,7 @@ from .constants import b_pitzer, mass_water
 library = libraries.lib_CWTD23.library
 
 
-def Gibbs_DH(Aphi, I):
+def Gibbs_DH(Aphi, ionic_strength):
     """The Debye-Hueckel component of the excess Gibbs energy following CRP94 eq. (AI1).
 
     Parameters
@@ -26,7 +26,13 @@ def Gibbs_DH(Aphi, I):
     float
         Debye-Hueckel component of the excess Gibbs energy.
     """
-    return -4 * Aphi * I * np.log(1 + b_pitzer * np.sqrt(I)) / b_pitzer
+    return (
+        -4
+        * Aphi
+        * ionic_strength
+        * np.log(1 + b_pitzer * np.sqrt(ionic_strength))
+        / b_pitzer
+    )
 
 
 def g(x):
@@ -49,21 +55,21 @@ def CT(sqrt_I, C0, C1, omega):
     return C0 + 4 * C1 * h(omega * sqrt_I)
 
 
-def xij(Aphi, I, z0, z1):
+def xij(Aphi, ionic_strength, z0, z1):
     """xij function for unsymmetrical mixing."""
-    return 6 * z0 * z1 * Aphi * np.sqrt(I)
+    return 6 * z0 * z1 * Aphi * np.sqrt(ionic_strength)
 
 
-def etheta(Aphi, I, z0, z1):
+def etheta(Aphi, ionic_strength, z0, z1):
     """etheta function for unsymmetrical mixing."""
-    x00 = xij(Aphi, I, z0, z0)
-    x01 = xij(Aphi, I, z0, z1)
-    x11 = xij(Aphi, I, z1, z1)
+    x00 = xij(Aphi, ionic_strength, z0, z0)
+    x01 = xij(Aphi, ionic_strength, z0, z1)
+    x11 = xij(Aphi, ionic_strength, z1, z1)
     return (
         z0
         * z1
         * (library.func_J(x01) - 0.5 * (library.func_J(x00) + library.func_J(x11)))
-        / (4 * I)
+        / (4 * ionic_strength)
     )
 
 
@@ -88,7 +94,12 @@ def _Gibbs_nRT_v3(solutes, temperature, pressure):
             * m_cats[c1]
             * (
                 cc[c0][c1]
-                + etheta(Aphi, I, library.charges_cat[c0], library.charges_cat[c1])
+                + etheta(
+                    Aphi,
+                    ionic_strength,
+                    library.charges_cat[c0],
+                    library.charges_cat[c1],
+                )
             )
         )
 
@@ -104,7 +115,12 @@ def _Gibbs_nRT_v3(solutes, temperature, pressure):
             * m_anis[a1]
             * (
                 aa[a0][a1]
-                + etheta(Aphi, I, library.charges_ani[a0], library.charges_ani[a1])
+                + etheta(
+                    Aphi,
+                    ionic_strength,
+                    library.charges_ani[a0],
+                    library.charges_ani[a1],
+                )
             )
         )
 
@@ -136,15 +152,15 @@ def _Gibbs_nRT_v3(solutes, temperature, pressure):
     m_anis = np.array([solutes[a] for a in library.anions])
     m_neus = np.array([solutes[n] for n in library.neutrals])
     # Calculate ionic-strength-dependent terms
-    I = 0.5 * (
+    ionic_strength = 0.5 * (
         np.sum(m_cats * library.charges_cat**2)
         + np.sum(m_anis * library.charges_ani**2)
     )
     Z = np.sum(m_cats * library.charges_cat) - np.sum(m_anis * library.charges_ani)
-    sqrt_I = np.sqrt(I)
+    sqrt_I = np.sqrt(ionic_strength)
     tp = (temperature, pressure)
     Aphi = library.Aphi(*tp)[0]
-    gibbs = Gibbs_DH(Aphi, I)
+    gibbs = Gibbs_DH(Aphi, ionic_strength)
     # Add specific interactions
     if len(library.ca_combos) > 0:
         ca = library.get_ca_values(*tp)
