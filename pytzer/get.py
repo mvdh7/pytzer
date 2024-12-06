@@ -6,7 +6,7 @@ from collections import OrderedDict
 
 import numpy as np
 
-from . import convert, dissociation
+from . import convert, dissociation, model
 from . import equilibrate as eq
 
 
@@ -61,7 +61,7 @@ def solve_df(
             exclude_equilibria=exclude_equilibria,
             ks_constants=ks_constants,
             ks_only=ks_only,
-            library=library,
+            library=model.library,
             temperature=temperature,
             pressure=pressure,
             verbose=verbose,
