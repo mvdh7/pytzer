@@ -20,6 +20,8 @@ Pytzer is an implementation of the Pitzer model for chemical activities in aqueo
 solutions in Python, including an equilibrium solver.
 """
 
+from jax import numpy as np
+
 from . import (
     constants,
     convert,
@@ -64,3 +66,14 @@ totals_to_solutes = library.totals_to_solutes
 # General package info
 __version__ = meta.version
 __author__ = meta.author
+
+
+def ks_to_thermo(ks_constants):
+    return np.log(
+        np.array(
+            [
+                ks_constants[k] if k in ks_constants else 1.0
+                for k in library.equilibria_all
+            ]
+        )
+    )

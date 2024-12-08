@@ -2,10 +2,15 @@
 # Copyright (C) 2019--2024  M.P. Humphreys  (GNU GPLv3)
 import jax
 from jax import numpy as np
+
 from .. import (
     debyehueckel,
-    dissociation as k,
     unsymmetrical,
+)
+from .. import (
+    dissociation as k,
+)
+from .. import (
     parameters as p,
 )
 from ..equilibrate import components as c
@@ -206,6 +211,8 @@ library.stoich_init = lambda totals: np.array(
         7.0,
         -np.log10(totals["CO2"] / 2),
         -np.log10(totals["F"] / 2),
+        # -np.log10(totals["CO2"] / 2) if totals["CO2"] > 0 else 0.0,
+        # -np.log10(totals["F"] / 2) if totals["F"] > 0 else 0.0,
     ]
 )
 

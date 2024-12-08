@@ -17,7 +17,7 @@ def get_stoich_adjust(stoich, totals, thermo, stoich_targets):
     stoich_error_jac = library.get_stoich_error_jac(
         stoich, totals, thermo, stoich_targets
     )
-    stoich_adjust = np.linalg.solve(-stoich_error_jac, stoich_error)
+    stoich_adjust = np.linalg.lstsq(-stoich_error_jac, stoich_error)[0]
     stoich_adjust = np.where(
         np.abs(stoich_adjust) > 1, np.sign(stoich_adjust), stoich_adjust
     )

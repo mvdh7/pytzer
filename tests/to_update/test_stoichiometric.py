@@ -1,81 +1,127 @@
-import numpy as np
+# %%
+import numpy as onp
+from jax import numpy as np
 
 import pytzer as pz
-from pytzer import equilibrate as eq
 
 # Set tolerances for np.isclose()
 tol = dict(atol=0, rtol=1e-4)
 
+totals = dict()
+temperature = 298.15
+pressure = 10.1325
+thermo = onp.ones(len(pz.library.equilibria_all))
+thermo[pz.library.equilibria_all.index("H2O")] = 1e-14
+thermo = np.log(thermo)
 
+pz.equilibrate.solver.solve_stoich(
+    totals,
+    temperature,
+    pressure,
+    thermo,
+    stoich=None,
+    iter_stoich=10,
+    verbose=False,
+    warn_cutoff=1e-8,
+)
+
+# %%
+stoich = None
+iter_stoich = 10
+verbose = True
+warn_cutoff = 1e-8
+
+totals.update({t: 0.0 for t in pz.library.totals_all if t not in totals})
+stoich_targets = pz.library.get_stoich_targets(totals)
+if stoich is None:
+    stoich = pz.library.stoich_init(totals)
+stoich = np.array([8.0, np.inf, np.inf])
+# Solve!
+if verbose:
+    print("STOICH", 0)
+    print(stoich)
+for _s in range(iter_stoich):
+    stoich_adjust = pz.equilibrate.solver.get_stoich_adjust(
+        stoich, totals, thermo, stoich_targets
+    )
+    if verbose:
+        print("STOICH", _s + 1)
+        print(stoich)
+        print(stoich_adjust)
+    stoich = stoich + stoich_adjust
+# if np.any(np.abs(stoich_adjust) > warn_cutoff):
+#     warnings.warn(
+#         "Solver did not converge below `warn_cutoff` - "
+#         + "try increasing `iter_stoich`."
+#     )
+
+
+# %%
 def test_pure_water():
     """Can we solve pure water?"""
-    totals = pz.odict()
-    ks_constants = {"H2O": 10**-14}
-    ptargets = eq.stoichiometric.solve(totals, ks_constants)
-    solutes = eq.components.get_solutes(totals, ks_constants, ptargets)
-    assert len(ptargets) == 1
-    assert len(solutes) == 2
+    totals = {}
+    ks_constants = {"H2O": 1e-14}
+    thermo = pz.ks_to_thermo(ks_constants)
+    ssr = pz.equilibrate.solver.solve_stoich(totals, temperature, pressure, thermo)
+    solutes = pz.totals_to_solutes(totals, ssr.stoich, thermo)
     assert np.isclose(solutes["H"], solutes["OH"], **tol)
     assert np.isclose(solutes["H"] * solutes["OH"], ks_constants["H2O"], **tol)
+    for solute, molality in solutes.items():
+        if solute not in ["H", "OH"]:
+            assert molality == 0.0
+        else:
+            assert molality > 0
 
 
 def test_NaCl():
     """Can we solve NaCl?"""
-    totals = pz.odict(Na=1.5, Cl=1.5)
-    ks_constants = {"H2O": 10**-14}
-    ptargets = eq.stoichiometric.solve(totals, ks_constants)
-    solutes = eq.components.get_solutes(totals, ks_constants, ptargets)
-    assert len(ptargets) == 1
-    assert len(solutes) == 4
+    totals = dict(Na=1.5, Cl=1.5)
+    ks_constants = {"H2O": 1e-14}
+    thermo = pz.ks_to_thermo(ks_constants)
+    ssr = pz.equilibrate.solver.solve_stoich(totals, temperature, pressure, thermo)
+    solutes = pz.totals_to_solutes(totals, ssr.stoich, thermo)
     assert np.isclose(solutes["H"], solutes["OH"], **tol)
     assert np.isclose(solutes["H"] * solutes["OH"], ks_constants["H2O"], **tol)
     assert np.isclose(solutes["Na"], totals["Na"], **tol)
     assert np.isclose(solutes["Cl"], totals["Cl"], **tol)
+    for solute, molality in solutes.items():
+        if solute not in ["H", "OH", "Na", "Cl"]:
+            assert molality == 0.0
+        else:
+            assert molality > 0
 
 
 def test_NaCl_HCl():
     """Can we solve NaCl + HCl?"""
-    totals = pz.odict(Na=1.5, Cl=3.5)
-    ks_constants = {"H2O": 10**-14}
-    ptargets = eq.stoichiometric.solve(totals, ks_constants)
-    solutes = eq.components.get_solutes(totals, ks_constants, ptargets)
-    assert len(ptargets) == 1
-    assert len(solutes) == 4
+    totals = dict(Na=1.5, Cl=3.5)
+    ks_constants = {"H2O": 1e-14}
+    thermo = pz.ks_to_thermo(ks_constants)
+    ssr = pz.equilibrate.solver.solve_stoich(
+        totals, temperature, pressure, thermo, iter_stoich=20
+    )
+    solutes = pz.totals_to_solutes(totals, ssr.stoich, thermo)
     assert np.isclose(
         solutes["H"] + solutes["Na"], solutes["OH"] + solutes["Cl"], **tol
     )
     assert np.isclose(solutes["H"] * solutes["OH"], ks_constants["H2O"], **tol)
     assert np.isclose(solutes["Na"], totals["Na"], **tol)
     assert np.isclose(solutes["Cl"], totals["Cl"], **tol)
+    for solute, molality in solutes.items():
+        if solute not in ["H", "OH", "Na", "Cl"]:
+            assert molality == 0.0
+        else:
+            assert molality > 0
 
 
-def test_NaCl_SO4_only():
-    """Can we solve NaCl + SO4 without the HSO4 equilibrium?"""
-    totals = pz.odict(Na=1.5, Cl=1.5, SO4=1.0)
-    ks_constants = {"H2O": 10**-14}
-    ptargets = eq.stoichiometric.solve(totals, ks_constants)
-    solutes = eq.components.get_solutes(totals, ks_constants, ptargets)
-    assert len(ptargets) == 1
-    assert len(solutes) == 5
-    assert np.isclose(
-        solutes["H"] + solutes["Na"],
-        solutes["OH"] + solutes["Cl"] + 2 * solutes["SO4"],
-        **tol,
-    )
-    assert np.isclose(solutes["H"] * solutes["OH"], ks_constants["H2O"], **tol)
-    assert np.isclose(solutes["Na"], totals["Na"], **tol)
-    assert np.isclose(solutes["Cl"], totals["Cl"], **tol)
-    assert np.isclose(solutes["SO4"], totals["SO4"], **tol)
-
-
-def test_NaCl_H2SO4():
+def test_NaCl_HSO4():
     """Can we solve NaCl + SO4 with the HSO4 equilibrium?"""
-    totals = pz.odict(Na=1.5, Cl=1.5, SO4=1.0)
-    ks_constants = {"H2O": 10**-14, "HSO4": 10**-1}
-    ptargets = eq.stoichiometric.solve(totals, ks_constants)
-    solutes = eq.components.get_solutes(totals, ks_constants, ptargets)
-    assert len(ptargets) == 1
-    assert len(solutes) == 6
+    totals = dict(Na=1.5, Cl=1.5, SO4=1.0)
+    ks_constants = {"H2O": 1e-14, "HSO4": 1e-1}
+    thermo = pz.ks_to_thermo(ks_constants)
+    ssr = pz.equilibrate.solver.solve_stoich(
+        totals, temperature, pressure, thermo, iter_stoich=20
+    )
+    solutes = pz.totals_to_solutes(totals, ssr.stoich, thermo)
     assert np.isclose(
         solutes["H"] + solutes["Na"],
         solutes["OH"] + solutes["Cl"] + 2 * solutes["SO4"] + solutes["HSO4"],
@@ -88,6 +134,11 @@ def test_NaCl_H2SO4():
     assert np.isclose(solutes["Na"], totals["Na"], **tol)
     assert np.isclose(solutes["Cl"], totals["Cl"], **tol)
     assert np.isclose(solutes["SO4"] + solutes["HSO4"], totals["SO4"], **tol)
+    for solute, molality in solutes.items():
+        if solute not in ["H", "OH", "Na", "Cl", "HSO4", "SO4"]:
+            assert molality == 0.0
+        else:
+            assert molality > 0
 
 
 def test_NaCl_H2CO3():
@@ -250,7 +301,7 @@ def test_get_constants_zero():
 # test_NaCl()
 # test_NaCl_HCl()
 # test_NaCl_SO4_only()
-# test_NaCl_H2SO4()
+# test_NaCl_HSO4()
 # test_NaCl_H2CO3()
 # test_CaCl_H2CO3()
 # test_CaCl_H2CO3_CaCO3()
