@@ -2,4 +2,4 @@
 # Copyright (C) 2019--2024  M.P. Humphreys  (GNU GPLv3)
 """Solve for equilibrium."""
 
-from . import components, solver, thermodynamic
+__all__ = ["components", "solver", "thermodynamic"]
