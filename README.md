@@ -1,7 +1,7 @@
 # Pytzer
 
 ![Tests](https://github.com/mvdh7/pytzer/workflows/Tests/badge.svg)
-[![Coverage](https://raw.githubusercontent.com/mvdh7/pytzer/develop/.misc/coverage.svg)](https://github.com/mvdh7/pytzer/blob/develop/.misc/coverage.txt)
+[![Coverage](https://raw.githubusercontent.com/mvdh7/pytzer/main/.misc/coverage.svg)](https://github.com/mvdh7/pytzer/blob/main/.misc/coverage.txt)
 [![pypi badge](https://img.shields.io/pypi/v/pytzer.svg?style=popout)](https://pypi.org/project/pytzer/)
 [![Conda Version](https://img.shields.io/conda/vn/conda-forge/pytzer.svg?style-popout)](https://anaconda.org/conda-forge/pytzer)
 [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.2637914-informational)](https://doi.org/10.5281/zenodo.2637914)
