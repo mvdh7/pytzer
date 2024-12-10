@@ -1,5 +1,6 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
+
 import pytzer as pz
 
 # Select parameter library
@@ -54,7 +55,7 @@ totals.update(
     }
 )
 scr = pz.solve(totals, 278.15, 10.1325)
-solutes_eq = pz.totals_to_solutes(totals, scr.stoich, scr.thermo)
+solutes_eq = scr.solutes
 for s, v in solutes_eq.items():
     data_eq_pz.loc[0, "m" + s] = v
     if s in ["OH", "HSO4", "MgOH", "H"]:
@@ -65,7 +66,7 @@ for s, v in solutes_eq.items():
     data_eq_pct.loc[0, "m" + s] = 100 * v / data.loc[0, "m" + s]
 # Number 2
 scr = pz.solve(totals, 298.15, 10.1325)
-solutes_eq = pz.totals_to_solutes(totals, scr.stoich, scr.thermo)
+solutes_eq = scr.solutes
 for s, v in solutes_eq.items():
     data_eq_pz.loc[1, "m" + s] = v
     if s in ["OH", "HSO4", "MgOH", "H"]:
@@ -87,7 +88,7 @@ totals.update(
     }
 )
 scr = pz.solve(totals, 278.15, 10.1325)
-solutes_eq = pz.totals_to_solutes(totals, scr.stoich, scr.thermo)
+solutes_eq = scr.solutes
 for s, v in solutes_eq.items():
     data_eq_pz.loc[2, "m" + s] = v
     if s in ["HSO4", "H"]:
@@ -100,7 +101,7 @@ for s, v in solutes_eq.items():
     data_eq_pct.loc[2, "m" + s] = 100 * v / data.loc[2, "m" + s]
 # Number 4
 scr = pz.solve(totals, 298.15, 10.1325)
-solutes_eq = pz.totals_to_solutes(totals, scr.stoich, scr.thermo)
+solutes_eq = scr.solutes
 for s, v in solutes_eq.items():
     data_eq_pz.loc[3, "m" + s] = v
     if s in ["HSO4", "H"]:

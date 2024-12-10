@@ -43,7 +43,7 @@ from .convert import (
     log_activities_to_mean,
     osmotic_to_activity,
 )
-from .equilibrate.solver import solve, solve_stoich
+from .equilibrate.solver import ks_to_thermo, solve, solve_stoich
 from .get import solve_df
 from .libraries import Library
 from .meta import hello, set_library
@@ -66,14 +66,3 @@ totals_to_solutes = library.totals_to_solutes
 # General package info
 __version__ = meta.version
 __author__ = meta.author
-
-
-def ks_to_thermo(ks_constants):
-    return np.log(
-        np.array(
-            [
-                ks_constants[k] if k in ks_constants else 1.0
-                for k in library.equilibria_all
-            ]
-        )
-    )

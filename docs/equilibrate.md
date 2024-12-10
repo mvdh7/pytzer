@@ -15,7 +15,7 @@ You can solve equilibria using the following functions.  Lower-level approaches 
 You can solve a single solution for equilibrium using `pz.solve`:
 
 ```python
-scr = pz.solve(totals, temperature, pressure)
+sr = pz.solve(totals, temperature, pressure)
 ```
 
 ### Arguments
@@ -34,10 +34,4 @@ scr = pz.solve(totals, temperature, pressure)
 
 ### Results
 
-The result `scr` is a `SolveResult` named tuple containing fields corresponding to the pH and other solver target concentrations and the stoichiometric equilibrium constants.  These can be converted into a more usable format with `pz.totals_to_solutes`:
-
-```python
-solutes = pz.totals_to_solutes(scr)
-```
-
-The output `solutes` is a dict ready to be used with the [Pitzer model functions](../model).
+The result `sr` is a `SolveResult` named tuple containing fields corresponding to the solute molalities at equilibria (`sr.solutes`, dict) and the natural logarithms of the stoichiometric equilibrium constants (`sr.lnks_constants`, dict).

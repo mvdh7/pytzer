@@ -58,7 +58,7 @@ for i, row in data_eq.iterrows():
         }
     )
     scr = pz.solve(totals, 273.15 + row.temperature, 10.1325)
-    solutes_eq = pz.totals_to_solutes(totals, scr.stoich, scr.thermo)
+    solutes_eq = scr.solutes
     for c in data_eq.columns:
         if c.endswith("_eq"):
             data_eq.loc[i, c] = solutes_eq[c[1:-3]]

@@ -10,8 +10,8 @@ pz.set_library(pz, "CRP94")
 crp94 = pd.read_csv("tests/data/CRP94 Table 8.csv")
 for i, row in crp94.iterrows():
     totals = pz.get_totals(SO4=row.t_SO4)
-    scr = pz.solve(totals, row.temperature, row.pressure, iter_thermo=25)
-    solutes = pz.totals_to_solutes(totals, scr.stoich, scr.thermo)
+    sr = pz.solve(totals, row.temperature, row.pressure, iter_thermo=25)
+    solutes = sr.solutes
     crp94.loc[i, "SO4"] = solutes["SO4"].item()
     crp94.loc[i, "HSO4"] = solutes["HSO4"].item()
 

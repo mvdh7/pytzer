@@ -17,6 +17,8 @@ def get_stoich_adjust(stoich, totals, thermo, stoich_targets):
     stoich_error_jac = library.get_stoich_error_jac(
         stoich, totals, thermo, stoich_targets
     )
+    # We need to use .lstsq here instead of .solve so that it still works when some
+    # of stoich are zero concentrations
     stoich_adjust = np.linalg.lstsq(-stoich_error_jac, stoich_error)[0]
     stoich_adjust = np.where(
         np.abs(stoich_adjust) > 1, np.sign(stoich_adjust), stoich_adjust
@@ -66,13 +68,14 @@ def get_thermo_adjust(thermo, totals, temperature, pressure, stoich, thermo_targ
     return thermo_adjust
 
 
-SolveResult = namedtuple(
-    "SolveResult", ["stoich", "thermo", "stoich_adjust", "thermo_adjust"]
+SolveResult = namedtuple("SolveResult", ["solutes", "lnks_constants"])
+SolveResultRaw = namedtuple(
+    "SolveResultRaw", ["stoich", "thermo", "stoich_adjust", "thermo_adjust"]
 )
-SolveStoichResult = namedtuple("SolveStoichResult", ["stoich", "stoich_adjust"])
+SolveStoichResultRaw = namedtuple("SolveStoichResultRaw", ["stoich", "stoich_adjust"])
 
 
-def solve(
+def _solve(
     totals,
     temperature,
     pressure,
@@ -114,7 +117,7 @@ def solve(
 
     Returns
     -------
-    SolveResult
+    SolveResultRaw
         A named tuple with the fields
             stoich : array-like
                 The final values of the molality solver targets.
@@ -162,7 +165,66 @@ def solve(
             "Solver did not converge below `warn_cutoff` - "
             + "try increasing `iter_thermo`."
         )
-    return SolveResult(stoich, thermo, stoich_adjust, thermo_adjust)
+    return SolveResultRaw(stoich, thermo, stoich_adjust, thermo_adjust)
+
+
+def solve(
+    totals,
+    temperature,
+    pressure,
+    iter_thermo=6,
+    iter_stoich_per_thermo=3,
+    verbose=False,
+    warn_cutoff=1e-8,
+):
+    """Solve for equilibrium.
+
+    This function is not JIT-ed by default, because it takes a lot longer to compile,
+    but you can JIT it yourself to get a ~2x speedup.
+
+    Parameters
+    ----------
+    totals : dict
+        The total molality of each solute or solute system.
+    temperature : float
+        Temperature in K.
+    pressure : float
+        Pressure in dbar.
+    iter_thermo : int, optional
+        How many times to iterate the thermo part of the solver, by default 6.
+    iter_stoich_per_thermo : int, optional
+        How many times to iterate the stoich part of the solver per thermo loop, by
+        default 3.
+    verbose : bool, optional
+        Whether to print solving progress, by default False.
+    warn_cutoff : float, optional
+        If any of the final rounds of adjustments for stoich or thermo are greater than
+        this value, print a convergence warning, by default 1e-8.
+
+    Returns
+    -------
+    SolveResult
+        A named tuple with the fields
+            solutes : dict
+                The molality of each solute in the solution.
+            lnks_constants : array-like
+                The final values of the natural logarithms of the stoichiometric
+                equilibrium constants.
+    """
+    srr = _solve(
+        totals,
+        temperature,
+        pressure,
+        stoich=None,
+        thermo=None,
+        iter_thermo=iter_thermo,
+        iter_stoich_per_thermo=iter_stoich_per_thermo,
+        verbose=verbose,
+        warn_cutoff=warn_cutoff,
+    )
+    solutes = library.totals_to_solutes(totals, srr.stoich, srr.thermo)
+    lnks_constants = {k: srr.thermo[i] for i, k in enumerate(library.equilibria_all)}
+    return SolveResult(solutes, lnks_constants)
 
 
 def solve_stoich(
@@ -199,7 +261,7 @@ def solve_stoich(
 
     Returns
     -------
-    SolveStoichResult
+    SolveStoichResultRaw
         A named tuple with the fields
             stoich : array-like
                 The final values of the molality solver targets.
@@ -224,4 +286,15 @@ def solve_stoich(
             "Solver did not converge below `warn_cutoff` - "
             + "try increasing `iter_stoich`."
         )
-    return SolveStoichResult(stoich, stoich_adjust)
+    return SolveStoichResultRaw(stoich, stoich_adjust)
+
+
+def ks_to_thermo(ks_constants):
+    return np.log(
+        np.array(
+            [
+                ks_constants[k] if k in ks_constants else 1.0
+                for k in library.equilibria_all
+            ]
+        )
+    )

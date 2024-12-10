@@ -7,9 +7,8 @@ Increases the range of properties that can be computed, especially those requiri
 ### 0.6.0 (forthcoming)
 
 !!! new-version "Changes in v0.6.0"
-    * Rewrote central `pz.Gibbs_nRT` function so it is differentiable with respect to temperature and pressure.
-    * New function is also somewhat faster (30-100% depending on which derivative is taken).
-    * Mechanism for switching between different parameter libraries updated.
+    * Rewrote central excess Gibbs energy and equilibrium solver functions so they are differentiable with respect to temperature and pressure.
+    * Structure of parameter libraries revised and mechanism for switching between them updated.
 
 ## 0.5 [beta]
 
