@@ -15,7 +15,6 @@ Pytzer is a Python implementation of the Pitzer model for chemical activities in
 - [Pytzer](#pytzer)
   - [Installation](#installation)
     - [For general use](#for-general-use)
-    - [For development](#for-development)
   - [Documentation](#documentation)
   - [Citation](#citation)
 
