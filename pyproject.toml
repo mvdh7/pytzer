@@ -5,14 +5,11 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pytzer"
+name = "Pytzer"
 description = "The Pitzer model for chemical activities and equilibria in aqueous solutions in Python"
 readme = "README.md"
 dependencies = [
-    "pytzer",
     "jax",
-    "numpy",
-    "scipy",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
