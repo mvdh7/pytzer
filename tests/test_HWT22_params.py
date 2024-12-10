@@ -1,8 +1,10 @@
-import pandas as pd, numpy as np
+import numpy as np
+import pandas as pd
+
 import pytzer as pz
 
 # Select parameter library
-prmlib = pz.libraries.Humphreys22
+pz.set_library(pz, "HWT22")
 
 
 def compare_ca(sheet_name, tempK):
@@ -16,7 +18,7 @@ def compare_ca(sheet_name, tempK):
     ca_test = ca.copy()
     for i, row in ca.iterrows():
         try:
-            res = prmlib["ca"][row.cation][row.anion](T=tempK, P=1)[:-1]
+            res = pz.library.ca[row.cation][row.anion](T=tempK, P=1)[:-1]
         except KeyError:
             print(row.cation, row.anion, "not found in prmlib")
             res = 0, 0, 0, 0, 0, -9, -9, -9
@@ -56,18 +58,18 @@ def compare_cc(sheet_name, tempK):
     cc_test = cc.copy()
     for i, row in cc.iterrows():
         try:
-            theta = prmlib["cc"][row.cation1][row.cation2](T=tempK, P=1)[0]
+            theta = pz.library.cc[row.cation1][row.cation2](T=tempK, P=1)[0]
         except KeyError:
             print(row.cation1, row.cation2, "not found in prmlib")
             theta = 0
-        psi_Cl = prmlib["cca"][row.cation1][row.cation2]["Cl"](T=tempK, P=1)[0]
+        psi_Cl = pz.library.cca[row.cation1][row.cation2]["Cl"](T=tempK, P=1)[0]
         try:
-            psi_HSO4 = prmlib["cca"][row.cation1][row.cation2]["HSO4"](T=tempK, P=1)[0]
+            psi_HSO4 = pz.library.cca[row.cation1][row.cation2]["HSO4"](T=tempK, P=1)[0]
         except KeyError:
             print(row.cation1, row.cation2, "HSO4", "not found in prmlib")
             psi_HSO4 = 0
         try:
-            psi_SO4 = prmlib["cca"][row.cation1][row.cation2]["SO4"](T=tempK, P=1)[0]
+            psi_SO4 = pz.library.cca[row.cation1][row.cation2]["SO4"](T=tempK, P=1)[0]
         except KeyError:
             print(row.cation1, row.cation2, "SO4", "not found in prmlib")
             psi_SO4 = 0
@@ -89,14 +91,14 @@ def compare_aa():
     aa_test = aa.copy()
     for i, row in aa.iterrows():
         try:
-            theta = prmlib["aa"][row.anion1][row.anion2](T=298.15, P=1)[0]
+            theta = pz.library.aa[row.anion1][row.anion2](T=298.15, P=1)[0]
         except KeyError:
             print(row.anion1, row.anion2, "not found in prmlib")
             theta = 0
         psi = {}
         for c in ["Ca", "H", "K", "Mg", "Na"]:
             try:
-                psi[c] = prmlib["caa"][c][row.anion1][row.anion2](T=298.15, P=1)[0]
+                psi[c] = pz.library.caa[c][row.anion1][row.anion2](T=298.15, P=1)[0]
             except KeyError:
                 print(c, row.anion1, row.anion2, "not found in prmlib")
                 psi[c] = 0
@@ -127,15 +129,15 @@ aa_cols = ["theta", "Ca", "H", "K", "Mg", "Na"]
 # value - if you divide it by 2, then it agrees with Pytzer.  Testing of the data in
 # HWT22 Table S21 suggests that this is a fault only in Table S17 and thus that the
 # HWT22 model code does correctly convert it to C0.
-l = (ca25.cation == "Na") & (ca25.anion == "Cl")
-ca25.loc[l, "C0"] /= 2
-ca25_test.loc[l, "C0"] = np.round(ca25_pz.loc[l, "C0"] - ca25.loc[l, "C0"], decimals=6)
+L = (ca25.cation == "Na") & (ca25.anion == "Cl")
+ca25.loc[L, "C0"] /= 2
+ca25_test.loc[L, "C0"] = np.round(ca25_pz.loc[L, "C0"] - ca25.loc[L, "C0"], decimals=6)
 #
 # The final digit of the C0 value for H-SO4 at 25 °C in HWT22 Table S17 is one away from
 # the Pytzer value - we assume this is a rounding error.
-l = (ca25.cation == "H") & (ca25.anion == "SO4")
-ca25.loc[l, "C0"] -= 1e-7
-ca25_test.loc[l, "C0"] = ca25_pz.loc[l, "C0"] - ca25.loc[l, "C0"]
+L = (ca25.cation == "H") & (ca25.anion == "SO4")
+ca25.loc[L, "C0"] -= 1e-7
+ca25_test.loc[L, "C0"] = ca25_pz.loc[L, "C0"] - ca25.loc[L, "C0"]
 #
 # The psi value for Ca-Mg-SO4 is in the wrong place in HWT22 Table S19 - it is in the
 # spot for the Ca-H-SO4 value, which should be zero.

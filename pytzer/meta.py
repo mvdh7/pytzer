@@ -1,18 +1,29 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2023  Matthew P. Humphreys  (GNU GPLv3)
-"""Pytzer package metadata."""
+# Copyright (C) 2019--2024  M.P. Humphreys  (GNU GPLv3)
+"""Package metadata and metatools."""
+
 import importlib
 
-version = "0.5.3"
-author = "Matthew P. Humphreys and Abigail J. Schiller"
+from . import libraries
+
+version = "0.6.0"
+year = 2024
+authors = ["Humphreys, M.P.", "Schiller, A.J."]
+author = " and ".join(authors)
 
 
-def update_func_J(pytzer, func_J):
-    """Update the unsymmetrical mixing function."""
-    if pytzer.model.func_J is not func_J:
+def set_library(pytzer, library):
+    """Set the parameter library."""
+    if isinstance(library, str):
+        assert (
+            library.upper() in libraries.libraries_all
+        ), "Library must be in pz.libraries_all!"
+        library = libraries.libraries_all[library.upper()]
+    if pytzer.model.library is not library:
         pytzer.model = importlib.reload(pytzer.model)
+        pytzer.model.library = library
+        pytzer.equilibrate.solver = importlib.reload(pytzer.equilibrate.solver)
         pytzer = importlib.reload(pytzer)
-        pytzer.model.func_J = func_J
     return pytzer
 
 
@@ -26,9 +37,7 @@ def hello():
   / /     \__, / \__/  /___/\___//_/     
   \/     /____/        
   
-   M.P. Humphreys & A.J. Schiller (2023)
+   M.P. Humphreys & A.J. Schiller ({year})
     v{version} | doi:{doi}
-""".format(
-            version=version, doi="10.5281/zenodo.2637914"
-        )
+""".format(year=year, version=version, doi="10.5281/zenodo.2637914")
     )

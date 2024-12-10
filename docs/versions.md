@@ -1,5 +1,15 @@
 # Version history
 
+## 0.6 [beta]
+
+Increases the range of properties that can be computed, especially those requiring temperature and pressure derivatives.
+
+### 0.6.0 (10 Dec 2024)
+
+!!! new-version "Changes in v0.6.0"
+    * Rewrote central excess Gibbs energy and equilibrium solver functions so they are differentiable with respect to temperature and pressure.
+    * Structure of parameter libraries revised and mechanism for switching between them updated.
+
 ## 0.5 [beta]
 
 Switches from Autograd to [JAX](https://jax.readthedocs.io/en/latest/) for faster automatic differentiation and JIT compilation.

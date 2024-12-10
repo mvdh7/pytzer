@@ -1,5 +1,5 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2023  Matthew P. Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2024  M.P. Humphreys  (GNU GPLv3)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,6 +19,9 @@ Pytzer
 Pytzer is an implementation of the Pitzer model for chemical activities in aqueous
 solutions in Python, including an equilibrium solver.
 """
+
+from jax import numpy as np
+
 from . import (
     constants,
     convert,
@@ -27,7 +30,6 @@ from . import (
     equilibrate,
     get,
     libraries,
-    matrix,
     meta,
     model,
     parameters,
@@ -41,24 +43,26 @@ from .convert import (
     log_activities_to_mean,
     osmotic_to_activity,
 )
-from .equilibrate import solve, solve_manual
-from .equilibrate.components import find_solutes
-from .equilibrate.stoichiometric import solve as solve_stoichiometric
-from .equilibrate.thermodynamic import solve as solve_thermodynamic
+from .equilibrate.solver import ks_to_thermo, solve, solve_stoich
 from .get import solve_df
-from .libraries import ParameterLibrary
-from .meta import hello, update_func_J
+from .libraries import Library
+from .meta import hello, set_library
 from .model import (
+    Gibbs_nRT,
     activity_coefficients,
     activity_water,
-    Gibbs_nRT,
     log_activity_coefficients,
     log_activity_water,
     osmotic_coefficient,
 )
-from collections import OrderedDict as odict
 
+# Assign shortcuts
+libraries_all = list(libraries.libraries_all.keys())
+library = model.library
+get_solutes = library.get_solutes
+get_totals = library.get_totals
+totals_to_solutes = library.totals_to_solutes
+
+# General package info
 __version__ = meta.version
 __author__ = meta.author
-
-say_hello = hello

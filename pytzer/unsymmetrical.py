@@ -1,6 +1,7 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2023  Matthew P. Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2024  M.P. Humphreys  (GNU GPLv3)
 """Unsymmetrical mixing functions."""
+
 import jax
 from jax import numpy as np
 
@@ -124,10 +125,14 @@ def _Harvie_raw(x):
     x_vec = np.full_like(akI, x)
     ak = np.where(x_vec < 1, akI, akII)
     z = np.where(
-        x < 1, 4 * x**0.2 - 2, 40 / 9 * x**-0.1 - 22 / 9  # Eq. (B-21)  # Eq. (B-25)
+        x < 1,
+        4 * x**0.2 - 2,
+        40 / 9 * x**-0.1 - 22 / 9,  # Eq. (B-21)  # Eq. (B-25)
     )
     dz_dx = np.where(
-        x < 1, 4 * x**-0.8 / 5, -4 * x**-1.1 / 9  # Eq. (B-22)  # Eq. (B-26)
+        x < 1,
+        4 * x**-0.8 / 5,
+        -4 * x**-1.1 / 9,  # Eq. (B-22)  # Eq. (B-26)
     )
     b2, b1, b0 = 0.0, 0.0, 0.0
     d2, d1, d0 = 0.0, 0.0, 0.0

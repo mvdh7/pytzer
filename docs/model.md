@@ -1,6 +1,6 @@
 # The Pitzer model
 
-The functions in `pytzer.model` use the Pitzer model to calculate various solution properties for a fixed composition.
+The Pitzer model can be used to calculate various solution properties for a fixed composition.
 
 All examples use the import convention:
 
@@ -10,18 +10,19 @@ import pytzer as pz
 
 ## Arguments
 
-All the main functions in `pytzer.model` have the same syntax, and they are all aliased at the top level, for example:
+All the main Pitzer model functions have the same syntax, for example:
 
 ```python
-Gibbs_nRT = pz.model.Gibbs_nRT(solutes, **params)
-Gibbs_nRT = pz.Gibbs_nRT(solutes, **params)
+Gibbs_nRT = pz.Gibbs_nRT(solutes, temperature, pressure)
 ```
 
-  * The argument `solutes` is an [`OrderedDict`](https://docs.python.org/3/library/collections.html#collections.OrderedDict) containing the molality (in mol/kg) of each solute in the solution.  Each molality must be a single scalar value.
+  * The argument `solutes` is an dict containing the molality (in mol/kg) of each solute in the solution.  Each molality must be a scalar float.
 
-  * The other kwargs contained in `params` can be generated for `solutes` using the `ParameterLibrary` method [`get_parameters()`](../params/#evaluate-parameters).
+  * Temperature is a scalar float in kelvin (K).
 
-The result is always either a single scalar value or an `OrderedDict` with the same keys as in the `solutes`.  
+  * Pressure is a scalar float in decibar (dbar).  It should include atmospheric pressure.
+
+The result is always either a scalar float or a dict of scalar floats with the same keys as in the `solutes`.  
 
 ## Functions
 
@@ -32,7 +33,7 @@ The properties that can be calculated using the syntax above are:
 Excess Gibbs energy of the solution.
 
 ```python
-Gibbs_nRT = pz.Gibbs_nRT(solutes, **params)
+Gibbs_nRT = pz.Gibbs_nRT(solutes, temperature, pressure)
 ```
 
 ### Solute activity coefficients
@@ -40,8 +41,8 @@ Gibbs_nRT = pz.Gibbs_nRT(solutes, **params)
 Chemical activity coefficients for every solute or their natural logarithms.
 
 ```python
-activity_coefficients = pz.activity_coefficients(solutes, **params)
-log_activity_coefficients = pz.log_activity_coefficients(solutes, **params)
+activity_coefficients = pz.activity_coefficients(solutes, temperature, pressure)
+log_activity_coefficients = pz.log_activity_coefficients(solutes, temperature, pressure)
 ```
 
 ### Water activity
@@ -49,8 +50,8 @@ log_activity_coefficients = pz.log_activity_coefficients(solutes, **params)
 Chemical activity of the solvent (water) or its natural logarithm.
 
 ```python
-activity_water = pz.activity_water(solutes, **params)
-log_activity_water = pz.log_activity_water(solutes, **params)
+activity_water = pz.activity_water(solutes, temperature, pressure)
+log_activity_water = pz.log_activity_water(solutes, temperature, pressure)
 ```
 
 ### Osmotic coefficient
@@ -58,7 +59,7 @@ log_activity_water = pz.log_activity_water(solutes, **params)
 Osmotic coefficient of the solution.
 
 ```python
-osmotic_coefficient = pz.osmotic_coefficient(solutes, **params)
+osmotic_coefficient = pz.osmotic_coefficient(solutes, temperature, pressure)
 ```
 
 <!--

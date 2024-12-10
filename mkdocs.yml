@@ -1,7 +1,7 @@
 site_name: Pytzer
-site_author: Matthew P. Humphreys
+site_author: M.P. Humphreys
 site_description: "Pytzer: the Pitzer model for chemical activities in aqueous solutions in Python"
-copyright: Copyright &copy; 2019–2022 Matthew P. Humphreys (GNU GPLv3).
+copyright: Copyright &copy; 2019-2024 M.P. Humphreys (GNU GPLv3).
 repo_url: https://github.com/mvdh7/pytzer
 repo_name: mvdh7/pytzer
 
@@ -27,7 +27,7 @@ plugins:
 
 nav:
   - Overview: index.md
-  - Model parameters: params.md
+  - Model parameters: libraries.md
   - The Pitzer model: model.md
   - Solving equilibria: equilibrate.md
   - References: refs.md
@@ -65,8 +65,6 @@ markdown_extensions:
 
 extra_javascript:
   - javascripts/config.js
-  - https://polyfill.io/v3/polyfill.min.js?features=es6
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
-
 extra_css:
   - stylesheets/extra.css

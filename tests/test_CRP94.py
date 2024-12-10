@@ -1,14 +1,19 @@
-import pandas as pd, numpy as np
+import numpy as np
+import pandas as pd
+
 import pytzer as pz
 
-# Update unsymmetrical mixing function
-pzlib = pz.libraries.Clegg94
-pz = pzlib.set_func_J(pz)
+# Update library
+pz.set_library(pz, "CRP94")
 
 # Import and solve
 crp94 = pd.read_csv("tests/data/CRP94 Table 8.csv")
-crp94["t_SO4"] = crp94.SO4
-pz.solve_df(crp94, library=pzlib)
+for i, row in crp94.iterrows():
+    totals = pz.get_totals(SO4=row.t_SO4)
+    sr = pz.solve(totals, row.temperature, row.pressure, iter_thermo=25)
+    solutes = sr.solutes
+    crp94.loc[i, "SO4"] = solutes["SO4"].item()
+    crp94.loc[i, "HSO4"] = solutes["HSO4"].item()
 
 # Compare
 crp94["alpha_pytzer"] = (crp94.SO4 / (crp94.SO4 + crp94.HSO4)).round(5)
@@ -35,7 +40,7 @@ def test_CRP94_table7():
     assert np.round(C1, decimals=8) == -0.323_662_60  # should be -0.323_662_605
     assert alph1 == 2
     assert omega == 2.5
-    k_HSO4 = np.exp(pz.equilibrate.dissociation.HSO4_CRP94(tp[0]).item())
+    k_HSO4 = np.exp(pz.dissociation.HSO4_CRP94(tp[0]).item())
     assert np.round(k_HSO4, decimals=4) == 0.0105
 
 

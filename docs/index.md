@@ -1,17 +1,22 @@
 # Pytzer
 
-<!-- ![Tests](https://github.com/mvdh7/pytzer/workflows/Tests/badge.svg)
-[![Coverage](img/coverage.svg)](https://github.com/mvdh7/pytzer/blob/main/.misc/coverage.txt)
-[![pypi badge](https://img.shields.io/pypi/v/pytzer.svg?style=popout)](https://pypi.org/project/pytzer/)
-[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.2637914-informational)](https://doi.org/10.5281/zenodo.2637914)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) -->
-
 Pytzer is a Python implementation of the Pitzer model for chemical activities in aqueous solutions ([P91](refs/#p)) plus an equilibrium solver.
 
 ## Installation
 
-Consult the [README.md on GitHub](https://github.com/mvdh7/pytzer/tree/main#pytzer) for up-to-date installation instructions.
+Install with pip (any OS):
+
+    pip install pytzer
+
+On Mac or Linux, you can alternatively install from conda-forge:
+
+    conda install conda-forge::pytzer
+
+However, the above will not work on Windows, because jax is not on conda-forge for Windows - so use pip instead.
+
+Once installed, you will need to set the environment variable `JAX_ENABLE_X64=True`.  For example, using conda:
+
+    conda env config vars set JAX_ENABLE_X64=True
 
 ## Development status
 
@@ -21,7 +26,7 @@ Pytzer is in beta.  Tests of the accuracy of its parameters and equations are un
 
 A manuscript describing Pytzer is in preparation.  In the meantime, please cite:
 
-> Humphreys, Matthew P. and Schiller, Abigail J. (2023).  Pytzer: the Pitzer model for chemical activities and equilibria in aqueous solutions in Python (beta).  *Zenodo.* [doi:10.5281/zenodo.2637914](https://doi.org/10.5281/zenodo.2637914).
+> Humphreys, Matthew P. and Schiller, Abigail J. (2024).  Pytzer: the Pitzer model for chemical activities and equilibria in aqueous solutions in Python (beta).  *Zenodo.* [doi:10.5281/zenodo.2637914](https://doi.org/10.5281/zenodo.2637914).
 
 Please report the version you are using.  You can find this in Python with:
 
@@ -32,7 +37,7 @@ pz.hello()
 
 ## Acknowledgements
 
-Pytzer is maintained by [Dr Matthew P. Humphreys](https://seaco2.group) at the NIOZ Royal Netherlands Institute for Sea Research (Texel, the Netherlands).  Its initial development at the University of East Anglia was funded indirectly by the Natural Environment Research Council (NERC, UK).
+Pytzer is maintained by [Dr Matthew P. Humphreys](https://hseao3.group) at the NIOZ Royal Netherlands Institute for Sea Research (Texel, the Netherlands).  Its initial development at the University of East Anglia was funded indirectly by the Natural Environment Research Council (NERC, UK).
 
 Pytzer contains many functions and coefficients representing the effects of different solute interactions on solution properties that have been empirically determined from painstaking experiments and data compilations by hundreds of researchers over the course at least a century.  We have done our best to list the small selection of this enormous body of work brought together here in the [references](refs).
 

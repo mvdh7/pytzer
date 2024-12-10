@@ -1,23 +1,23 @@
-from collections import OrderedDict
-import pandas as pd, numpy as np
+import numpy as np
+import pandas as pd
+
 import pytzer as pz
 
 # Select parameter library
-prmlib = pz.libraries.Humphreys22
-pz = prmlib.set_func_J(pz)
+pz.set_library(pz, "HWT22")
 
 # Import data and run comparison, first without the solver (just using concentrations
 # from in the table)
 data = pd.read_excel("tests/data/Humphreys22-SI21.xlsx")
-data["lnkHSO4_calc"] = prmlib["equilibria"]["HSO4"](
+data["lnkHSO4_calc"] = pz.library.equilibria["HSO4"](
     data.temperature.to_numpy() + 273.15
 )
 data["lnkHSO4_td"] = np.nan
 data["lnkHSO4_diff"] = np.nan
-data["lnkH2O_calc"] = prmlib["equilibria"]["H2O"](data.temperature.to_numpy() + 273.15)
+data["lnkH2O_calc"] = pz.library.equilibria["H2O"](data.temperature.to_numpy() + 273.15)
 data["lnkH2O_td"] = np.nan
 data["lnkH2O_diff"] = np.nan
-data["lnkMgOH_calc"] = prmlib["equilibria"]["MgOH"](
+data["lnkMgOH_calc"] = pz.library.equilibria["MgOH"](
     data.temperature.to_numpy() + 273.15
 )
 data["lnkMgOH_td"] = np.nan
@@ -28,38 +28,34 @@ data_eq_pz = data.copy()
 data_eq_test = data.copy()
 data_eq_pct = data.copy()
 for i, row in data.iterrows():
-    solutes = OrderedDict((s[1:], v) for s, v in row.items() if s.startswith("m"))
-    params = prmlib.get_parameters(
-        solutes=solutes, temperature=273.15 + row.temperature, verbose=False
-    )
-    aH2O = pz.activity_water(solutes, **params)
+    solutes = pz.get_solutes()
+    solutes.update({s[1:]: v for s, v in row.items() if s.startswith("m")})
+    aH2O = pz.activity_water(solutes, 273.15 + row.temperature, 10.1325)
     data_ns_pz.loc[i, "aH2O"] = aH2O
     data_ns_test.loc[i, "aH2O"] = np.round(aH2O - row.aH2O, decimals=5)
-    phi = pz.osmotic_coefficient(solutes, **params)
+    phi = pz.osmotic_coefficient(solutes, 273.15 + row.temperature, 10.1325)
     data_ns_pz.loc[i, "phi"] = phi
     data_ns_test.loc[i, "phi"] = np.round(phi - row.phi, decimals=5)
-    acfs = pz.activity_coefficients(solutes, **params)
+    acfs = pz.activity_coefficients(solutes, 273.15 + row.temperature, 10.1325)
     for s, v in acfs.items():
         data_ns_pz.loc[i, "g" + s] = v
         data_ns_test.loc[i, "g" + s] = np.round(v - row["g" + s], decimals=5)
 
 # Now do it again but with the equilibrium solver too
 # Number 1
-totals = OrderedDict(
-    (
-        ("Na", 0.4861818),
-        ("Mg", 0.05474020),
-        ("Ca", 0.01075004),
-        ("K", 0.01058004),
-        ("Cl", 0.5692021),
-        ("SO4", 0.02927011),
-    )
+totals = pz.get_totals()
+totals.update(
+    {
+        "Na": 0.4861818,
+        "Mg": 0.05474020,
+        "Ca": 0.01075004,
+        "K": 0.01058004,
+        "Cl": 0.5692021,
+        "SO4": 0.02927011,
+    }
 )
-solutes_eq, pks_constants = pz.solve(
-    totals,
-    library=prmlib,
-    temperature=278.15,
-)
+scr = pz.solve(totals, 278.15, 10.1325)
+solutes_eq = scr.solutes
 for s, v in solutes_eq.items():
     data_eq_pz.loc[0, "m" + s] = v
     if s in ["OH", "HSO4", "MgOH", "H"]:
@@ -69,11 +65,8 @@ for s, v in solutes_eq.items():
     data_eq_test.loc[0, "m" + s] = np.round(v - data.loc[0, "m" + s], decimals=d)
     data_eq_pct.loc[0, "m" + s] = 100 * v / data.loc[0, "m" + s]
 # Number 2
-solutes_eq, pks_constants = pz.solve(
-    totals,
-    library=prmlib,
-    temperature=298.15,
-)
+scr = pz.solve(totals, 298.15, 10.1325)
+solutes_eq = scr.solutes
 for s, v in solutes_eq.items():
     data_eq_pz.loc[1, "m" + s] = v
     if s in ["OH", "HSO4", "MgOH", "H"]:
@@ -83,21 +76,19 @@ for s, v in solutes_eq.items():
     data_eq_test.loc[1, "m" + s] = np.round(v - data.loc[1, "m" + s], decimals=d)
     data_eq_pct.loc[1, "m" + s] = 100 * v / data.loc[1, "m" + s]
 # Number 3
-totals = OrderedDict(
-    (
-        ("Na", 0.4861818 - 0.04),
-        ("Mg", 0.05474020),
-        ("Ca", 0.01075004),
-        ("K", 0.01058004),
-        ("Cl", 0.5692021),
-        ("SO4", 0.02927011),
-    )
+totals = pz.get_totals()
+totals.update(
+    {
+        "Na": 0.4861818 - 0.04,
+        "Mg": 0.05474020,
+        "Ca": 0.01075004,
+        "K": 0.01058004,
+        "Cl": 0.5692021,
+        "SO4": 0.02927011,
+    }
 )
-solutes_eq, pks_constants = pz.solve(
-    totals,
-    library=prmlib,
-    temperature=278.15,
-)
+scr = pz.solve(totals, 278.15, 10.1325)
+solutes_eq = scr.solutes
 for s, v in solutes_eq.items():
     data_eq_pz.loc[2, "m" + s] = v
     if s in ["HSO4", "H"]:
@@ -109,11 +100,8 @@ for s, v in solutes_eq.items():
     data_eq_test.loc[2, "m" + s] = np.round(v - data.loc[2, "m" + s], decimals=d)
     data_eq_pct.loc[2, "m" + s] = 100 * v / data.loc[2, "m" + s]
 # Number 4
-solutes_eq, pks_constants = pz.solve(
-    totals,
-    library=prmlib,
-    temperature=298.15,
-)
+scr = pz.solve(totals, 298.15, 10.1325)
+solutes_eq = scr.solutes
 for s, v in solutes_eq.items():
     data_eq_pz.loc[3, "m" + s] = v
     if s in ["HSO4", "H"]:
@@ -127,17 +115,15 @@ for s, v in solutes_eq.items():
 
 # Calculate activities and coefficients for equilibrated Pytzer data
 for i, row in data_eq_pz.iterrows():
-    solutes = OrderedDict((s[1:], v) for s, v in row.items() if s.startswith("m"))
-    params = prmlib.get_parameters(
-        solutes=solutes, temperature=273.15 + row.temperature, verbose=False
-    )
-    aH2O = pz.activity_water(solutes, **params)
+    solutes = pz.get_solutes()
+    solutes.update({s[1:]: v for s, v in row.items() if s.startswith("m")})
+    aH2O = pz.activity_water(solutes, 273.15 + row.temperature, 10.1325)
     data_eq_test.loc[i, "aH2O"] = np.round(aH2O - row.aH2O, decimals=5)
     data_eq_pz.loc[i, "aH2O"] = aH2O
-    phi = pz.osmotic_coefficient(solutes, **params)
+    phi = pz.osmotic_coefficient(solutes, 273.15 + row.temperature, 10.1325)
     data_eq_test.loc[i, "phi"] = np.round(phi - row.phi, decimals=5)
     data_eq_pz.loc[i, "phi"] = phi
-    acfs = pz.activity_coefficients(solutes, **params)
+    acfs = pz.activity_coefficients(solutes, 273.15 + row.temperature, 10.1325)
     for s, v in acfs.items():
         data_eq_test.loc[i, "g" + s] = np.round(v - row["g" + s], decimals=5)
         data_eq_pz.loc[i, "g" + s] = v
@@ -156,10 +142,10 @@ for df in [data, data_eq_pz]:
 #
 # The final digit of the gMgOH value at point 3 in HWT22 Table S21 is one away from
 # the Pytzer value - so we assume this is a rounding error.
-l = data.number == 3
-data.loc[l, "gMgOH"] -= 1e-5
-data_ns_test.loc[l, "gMgOH"] = np.round(
-    data_ns_pz.loc[l, "gMgOH"] - data.loc[l, "gMgOH"], decimals=5
+L = data.number == 3
+data.loc[L, "gMgOH"] -= 1e-5
+data_ns_test.loc[L, "gMgOH"] = np.round(
+    data_ns_pz.loc[L, "gMgOH"] - data.loc[L, "gMgOH"], decimals=5
 )
 
 # Identify columns to test

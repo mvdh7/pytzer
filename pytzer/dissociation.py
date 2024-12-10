@@ -1,9 +1,7 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2023  Matthew P. Humphreys  (GNU GPLv3)
-"""Evaluate thermodynamic equilibrium constants.
-All functions return ln(K) values.
-"""
-from collections import OrderedDict
+# Copyright (C) 2019--2024  M.P. Humphreys  (GNU GPLv3)
+"""Evaluate thermodynamic equilibrium constants.  All functions return ln(K) values."""
+
 from jax import numpy as np
 
 ln10 = np.log(10)
@@ -338,54 +336,3 @@ def pK_MgPO4(T=298.15):
 def pK_CaPO4(T=298.15):
     """CaPO4- formation [MP98 following MR97]."""
     return 7.1
-
-
-def assemble(temperature=298.15, exclude_equilibria=None, totals=None):
-    """Evaluate all thermodynamic equilibrium constants."""
-    kt_constants = OrderedDict()
-    kt_constants["H2O"] = np.exp(H2O_M88(T=temperature))
-    if "F" in totals:
-        kt_constants["HF"] = np.exp(HF_MP98(T=temperature))
-    if "H2S" in totals:
-        kt_constants["H2S"] = np.exp(H2S_MP98(T=temperature))
-    if "BOH3" in totals:
-        kt_constants["BOH3"] = np.exp(BOH3_M79(T=temperature))
-    if "SO4" in totals:
-        kt_constants["HSO4"] = np.exp(HSO4_CRP94(T=temperature))
-    if "NH3" in totals:
-        kt_constants["NH4"] = np.exp(NH4_MP98(T=temperature))
-    if "CO2" in totals:
-        kt_constants["H2CO3"] = np.exp(H2CO3_MP98(T=temperature))
-        kt_constants["HCO3"] = np.exp(HCO3_MP98(T=temperature))
-    if "PO4" in totals:
-        kt_constants["H3PO4"] = np.exp(H3PO4_MP98(T=temperature))
-        kt_constants["H2PO4"] = np.exp(H2PO4_MP98(T=temperature))
-        kt_constants["HPO4"] = np.exp(HPO4_MP98(T=temperature))
-    if "Mg" in totals:
-        kt_constants["MgOH"] = np.exp(MgOH_MP98(T=temperature))
-        if "F" in totals:
-            kt_constants["MgF"] = np.exp(MgF_MP98_MR97(T=temperature))
-        if "CO2" in totals:
-            kt_constants["MgCO3"] = np.exp(MgCO3_MP98_MR97(T=temperature))
-        if "PO4" in totals:
-            kt_constants["MgH2PO4"] = np.exp(MgH2PO4_MP98_MR97(T=temperature))
-            kt_constants["MgHPO4"] = np.exp(MgHPO4_MP98_MR97(T=temperature))
-            kt_constants["MgPO4"] = np.exp(MgPO4_MP98_MR97(T=temperature))
-    if "Ca" in totals:
-        if "F" in totals:
-            kt_constants["CaF"] = np.exp(CaF_MP98_MR97(T=temperature))
-        if "CO2" in totals:
-            kt_constants["CaCO3"] = np.exp(CaCO3_MP98_MR97(T=temperature))
-        if "PO4" in totals:
-            kt_constants["CaH2PO4"] = np.exp(CaH2PO4_MP98_MR97(T=temperature))
-            kt_constants["CaHPO4"] = np.exp(CaHPO4_MP98_MR97(T=temperature))
-            kt_constants["CaPO4"] = np.exp(CaPO4_MP98_MR97(T=temperature))
-    if "Sr" in totals and "CO2" in totals:
-        kt_constants["SrCO3"] = np.exp(SrCO3_MP98_MR97(T=temperature))
-    if "tris" in totals:
-        kt_constants["trisH"] = np.exp(trisH_BH61(T=temperature))
-    if exclude_equilibria is not None:
-        for eq in exclude_equilibria:
-            if eq in kt_constants:
-                kt_constants.pop(eq)
-    return kt_constants

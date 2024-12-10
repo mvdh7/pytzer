@@ -1,20 +1,14 @@
-import pytzer as pz
 import pandas as pd
 
-prmlib = pz.libraries.Clegg23
+import pytzer as pz
+
+# Select parameter library
+pz.set_library(pz, "CWTD23")
 
 # Get sets of all ions / neutrals
-cations = {k for k in prmlib["ca"].keys()}
-anions = []
-for c in cations:
-    for a in prmlib["ca"][c].keys():
-        anions.append(a)
-anions = set(anions)
-neutrals = []
-for nx in ["nc", "na", "nca"]:
-    for n in prmlib[nx].keys():
-        neutrals.append(n)
-neutrals = set(neutrals)
+cations = pz.library.cations
+anions = pz.library.anions
+neutrals = pz.library.neutrals
 
 # Chart 8 all at 25 °C
 chart8_1 = pd.read_fwf("tests/data/CWTD23 SI Chart 8 part 1.txt")
@@ -45,7 +39,7 @@ def test_ca():
                 p["alph2"],
                 p["omega"],
                 _,
-            ) = prmlib["ca"][row.cation][row.anion](
+            ) = pz.library.ca[row.cation][row.anion](
                 298.15, 10
             )  # Based on NaOH, appears that CWTD23 have evaluated at 1 bar
             if p["alph1"] == -9:
@@ -87,7 +81,7 @@ def test_ca():
                 p["alph2"],
                 p["omega"],
                 _,
-            ) = prmlib["ca"][row.cation][row.anion](
+            ) = pz.library.ca[row.cation][row.anion](
                 278.15, 10
             )  # Based on NaOH, appears that CWTD23 have evaluated at 1 bar
             if p["alph1"] == -9:
@@ -138,8 +132,11 @@ def test_theta():
     for c1 in cations:
         for c2 in cations:
             if c1 != c2:
+                cats = [c1, c2]
+                cats.sort()
+                c1, c2 = cats
                 try:
-                    theta = "{:11.5e}".format(prmlib["cc"][c1][c2](298.15, 10)[0])
+                    theta = "{:11.5e}".format(pz.library.cc[c1][c2](298.15, 10)[0])
                 except KeyError:
                     theta = "0.00000e+00"
                 L = ~chart8_2.theta_cc.isnull() & (
@@ -157,8 +154,11 @@ def test_theta():
     for a1 in anions:
         for a2 in anions:
             if a1 != a2:
+                anis = [a1, a2]
+                anis.sort()
+                a1, a2 = anis
                 try:
-                    theta = "{:11.5e}".format(prmlib["aa"][a1][a2](298.15, 10)[0])
+                    theta = "{:11.5e}".format(pz.library.aa[a1][a2](298.15, 10)[0])
                 except KeyError:
                     theta = "0.00000e+00"
                 L = ~chart8_2.theta_aa.isnull() & (
@@ -177,8 +177,11 @@ def test_theta():
     for c1 in cations:
         for c2 in cations:
             if c1 != c2:
+                cats = [c1, c2]
+                cats.sort()
+                c1, c2 = cats
                 try:
-                    theta = "{:11.5e}".format(prmlib["cc"][c1][c2](278.15, 10)[0])
+                    theta = "{:11.5e}".format(pz.library.cc[c1][c2](278.15, 10)[0])
                 except KeyError:
                     theta = "0.00000e+00"
                 L = ~chart9_2.theta_cc.isnull() & (
@@ -196,8 +199,11 @@ def test_theta():
     for a1 in anions:
         for a2 in anions:
             if a1 != a2:
+                anis = [a1, a2]
+                anis.sort()
+                a1, a2 = anis
                 try:
-                    theta = "{:11.5e}".format(prmlib["aa"][a1][a2](278.15, 10)[0])
+                    theta = "{:11.5e}".format(pz.library.aa[a1][a2](278.15, 10)[0])
                 except KeyError:
                     theta = "0.00000e+00"
                 L = ~chart9_2.theta_aa.isnull() & (
@@ -220,9 +226,14 @@ def test_psi():
     for c1 in cations:
         for c2 in cations:
             if c1 != c2:
+                cats = [c1, c2]
+                cats.sort()
+                c1, c2 = cats
                 for a in anions:
                     try:
-                        psi = "{:11.5e}".format(prmlib["cca"][c1][c2][a](298.15, 10)[0])
+                        psi = "{:11.5e}".format(
+                            pz.library.cca[c1][c2][a](298.15, 10)[0]
+                        )
                     except KeyError:
                         psi = "0.00000e+00"
                     L = (
@@ -244,9 +255,14 @@ def test_psi():
     for a1 in anions:
         for a2 in anions:
             if a1 != a2:
+                anis = [a1, a2]
+                anis.sort()
+                a1, a2 = anis
                 for c in cations:
                     try:
-                        psi = "{:11.5e}".format(prmlib["caa"][c][a1][a2](298.15, 10)[0])
+                        psi = "{:11.5e}".format(
+                            pz.library.caa[c][a1][a2](298.15, 10)[0]
+                        )
                     except KeyError:
                         psi = "0.00000e+00"
                     L = (
@@ -269,9 +285,14 @@ def test_psi():
     for c1 in cations:
         for c2 in cations:
             if c1 != c2:
+                cats = [c1, c2]
+                cats.sort()
+                c1, c2 = cats
                 for a in anions:
                     try:
-                        psi = "{:11.5e}".format(prmlib["cca"][c1][c2][a](278.15, 10)[0])
+                        psi = "{:11.5e}".format(
+                            pz.library.cca[c1][c2][a](278.15, 10)[0]
+                        )
                     except KeyError:
                         psi = "0.00000e+00"
                     L = (
@@ -293,9 +314,14 @@ def test_psi():
     for a1 in anions:
         for a2 in anions:
             if a1 != a2:
+                anis = [a1, a2]
+                anis.sort()
+                a1, a2 = anis
                 for c in cations:
                     try:
-                        psi = "{:11.5e}".format(prmlib["caa"][c][a1][a2](278.15, 10)[0])
+                        psi = "{:11.5e}".format(
+                            pz.library.caa[c][a1][a2](278.15, 10)[0]
+                        )
                     except KeyError:
                         psi = "0.00000e+00"
                     L = (
@@ -324,7 +350,7 @@ def test_lambda_zeta():
     for n in neutrals:
         for c in cations:
             try:
-                lambd = "{:11.5e}".format(prmlib["nc"][n][c](298.15, 10)[0])
+                lambd = "{:11.5e}".format(pz.library.nc[n][c](298.15, 10)[0])
             except KeyError:
                 lambd = "0.00000e+00"
             L = (chart8_3.n == n) & (chart8_3.ion == c)
@@ -338,7 +364,7 @@ def test_lambda_zeta():
             )
         for a in anions:
             try:
-                lambd = "{:11.5e}".format(prmlib["na"][n][a](298.15, 10)[0])
+                lambd = "{:11.5e}".format(pz.library.na[n][a](298.15, 10)[0])
             except KeyError:
                 lambd = "0.00000e+00"
             L = (chart8_3.n == n) & (chart8_3.ion == a)
@@ -352,7 +378,7 @@ def test_lambda_zeta():
             )
             for c in cations:
                 try:
-                    zeta = "{:11.5e}".format(prmlib["nca"][n][c][a](298.15, 10)[0])
+                    zeta = "{:11.5e}".format(pz.library.nca[n][c][a](298.15, 10)[0])
                 except KeyError:
                     zeta = "0.00000e+00"
                 L = (chart8_4.n == n) & (chart8_4.c == c) & (chart8_4.a == a)
@@ -368,7 +394,7 @@ def test_lambda_zeta():
     for n in neutrals:
         for c in cations:
             try:
-                lambd = "{:11.5e}".format(prmlib["nc"][n][c](278.15, 10)[0])
+                lambd = "{:11.5e}".format(pz.library.nc[n][c](278.15, 10)[0])
             except KeyError:
                 lambd = "0.00000e+00"
             L = (chart9_3.n == n) & (chart9_3.ion == c)
@@ -382,7 +408,7 @@ def test_lambda_zeta():
             )
         for a in anions:
             try:
-                lambd = "{:11.5e}".format(prmlib["na"][n][a](278.15, 10)[0])
+                lambd = "{:11.5e}".format(pz.library.na[n][a](278.15, 10)[0])
             except KeyError:
                 lambd = "0.00000e+00"
             L = (chart9_3.n == n) & (chart9_3.ion == a)
@@ -396,7 +422,7 @@ def test_lambda_zeta():
             )
             for c in cations:
                 try:
-                    zeta = "{:11.5e}".format(prmlib["nca"][n][c][a](278.15, 10)[0])
+                    zeta = "{:11.5e}".format(pz.library.nca[n][c][a](278.15, 10)[0])
                 except KeyError:
                     zeta = "0.00000e+00"
                 L = (chart9_4.n == n) & (chart9_4.c == c) & (chart9_4.a == a)

@@ -1,11 +1,13 @@
 # Pytzer: Pitzer model for chemical activities in aqueous solutions.
-# Copyright (C) 2019--2023  Matthew P. Humphreys  (GNU GPLv3)
+# Copyright (C) 2019--2024  M.P. Humphreys  (GNU GPLv3)
 """Import solution composition data, and export the results."""
 
 from collections import OrderedDict
+
 import numpy as np
-from . import convert, dissociation, equilibrate as eq
-from .libraries import Seawater
+
+from . import convert, dissociation, model
+from . import equilibrate as eq
 
 
 def solve_df(
@@ -13,7 +15,6 @@ def solve_df(
     exclude_equilibria=None,
     inplace=True,
     ks_only=None,
-    library=Seawater,
     verbose=False,
 ):
     """Solve all rows in a DataFrame for thermodynamic equilibrium."""
@@ -24,7 +25,7 @@ def solve_df(
     pks_cols = {
         c: c.split("_")[1]
         for c in df.columns
-        if c.startswith("pks_") and c.split("_")[1] in eq.thermodynamic.all_reactions
+        if c.startswith("pks_") and c.split("_")[1] in eq.thermodynamic.reactions_all
     }
     # Add empty columns to df to save results
     _ks_constants = dissociation.assemble(
@@ -60,7 +61,7 @@ def solve_df(
             exclude_equilibria=exclude_equilibria,
             ks_constants=ks_constants,
             ks_only=ks_only,
-            library=library,
+            library=model.library,
             temperature=temperature,
             pressure=pressure,
             verbose=verbose,
