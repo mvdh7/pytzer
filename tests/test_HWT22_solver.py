@@ -142,10 +142,10 @@ for df in [data, data_eq_pz]:
 #
 # The final digit of the gMgOH value at point 3 in HWT22 Table S21 is one away from
 # the Pytzer value - so we assume this is a rounding error.
-l = data.number == 3
-data.loc[l, "gMgOH"] -= 1e-5
-data_ns_test.loc[l, "gMgOH"] = np.round(
-    data_ns_pz.loc[l, "gMgOH"] - data.loc[l, "gMgOH"], decimals=5
+L = data.number == 3
+data.loc[L, "gMgOH"] -= 1e-5
+data_ns_test.loc[L, "gMgOH"] = np.round(
+    data_ns_pz.loc[L, "gMgOH"] - data.loc[L, "gMgOH"], decimals=5
 )
 
 # Identify columns to test
