@@ -6,7 +6,7 @@ import importlib
 
 from . import libraries
 
-version = "0.6.0"
+version = "0.6.1"
 year = 2024
 authors = ["Humphreys, M.P.", "Schiller, A.J."]
 author = " and ".join(authors)

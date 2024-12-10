@@ -4,6 +4,11 @@
 
 Increases the range of properties that can be computed, especially those requiring temperature and pressure derivatives.
 
+### 0.6.1 (forthcoming)
+
+!!! new-version "Changes in v0.6.1"
+    * ...
+
 ### 0.6.0 (10 Dec 2024)
 
 !!! new-version "Changes in v0.6.0"
