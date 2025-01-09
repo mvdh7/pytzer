@@ -8,6 +8,7 @@ build-backend = "setuptools.build_meta"
 name = "Pytzer"
 description = "The Pitzer model for chemical activities and equilibria in aqueous solutions in Python"
 readme = "README.md"
+requires-python = ">=3.10"
 dependencies = [
     "jax",
 ]
