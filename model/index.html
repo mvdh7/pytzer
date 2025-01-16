@@ -1,0 +1,920 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Pytzer: the Pitzer model for chemical activities in aqueous solutions in Python">
+      
+      
+        <meta name="author" content="M.P. Humphreys">
+      
+      
+      
+        <link rel="prev" href="../libraries/">
+      
+      
+        <link rel="next" href="../equilibrate/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
+    
+    
+      
+        <title>The Pitzer model - Pytzer</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.6f8fc17f.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto Slab";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="pink" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#the-pitzer-model" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Pytzer" class="md-header__button md-logo" aria-label="Pytzer" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pytzer
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              The Pitzer model
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/mvdh7/pytzer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1M480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2m-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3m-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1"/></svg>
+  </div>
+  <div class="md-source__repository">
+    mvdh7/pytzer
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Pytzer" class="md-nav__button md-logo" aria-label="Pytzer" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Pytzer
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/mvdh7/pytzer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1M480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2m-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3m-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1"/></svg>
+  </div>
+  <div class="md-source__repository">
+    mvdh7/pytzer
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../libraries/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Model parameters
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    The Pitzer model
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    The Pitzer model
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      Arguments
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#excess-gibbs-energy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Excess Gibbs energy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solute-activity-coefficients" class="md-nav__link">
+    <span class="md-ellipsis">
+      Solute activity coefficients
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#water-activity" class="md-nav__link">
+    <span class="md-ellipsis">
+      Water activity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#osmotic-coefficient" class="md-nav__link">
+    <span class="md-ellipsis">
+      Osmotic coefficient
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../equilibrate/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Solving equilibria
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../refs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    References
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../versions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version history
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#arguments" class="md-nav__link">
+    <span class="md-ellipsis">
+      Arguments
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#excess-gibbs-energy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Excess Gibbs energy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solute-activity-coefficients" class="md-nav__link">
+    <span class="md-ellipsis">
+      Solute activity coefficients
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#water-activity" class="md-nav__link">
+    <span class="md-ellipsis">
+      Water activity
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#osmotic-coefficient" class="md-nav__link">
+    <span class="md-ellipsis">
+      Osmotic coefficient
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="the-pitzer-model">The Pitzer model</h1>
+<p>The Pitzer model can be used to calculate various solution properties for a fixed composition.</p>
+<p>All examples use the import convention:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytzer</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pz</span>
+</code></pre></div>
+<h2 id="arguments">Arguments</h2>
+<p>All the main Pitzer model functions have the same syntax, for example:</p>
+<div class="highlight"><pre><span></span><code><span class="n">Gibbs_nRT</span> <span class="o">=</span> <span class="n">pz</span><span class="o">.</span><span class="n">Gibbs_nRT</span><span class="p">(</span><span class="n">solutes</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">pressure</span><span class="p">)</span>
+</code></pre></div>
+<ul>
+<li>
+<p>The argument <code>solutes</code> is an dict containing the molality (in mol/kg) of each solute in the solution.  Each molality must be a scalar float.</p>
+</li>
+<li>
+<p>Temperature is a scalar float in kelvin (K).</p>
+</li>
+<li>
+<p>Pressure is a scalar float in decibar (dbar).  It should include atmospheric pressure.</p>
+</li>
+</ul>
+<p>The result is always either a scalar float or a dict of scalar floats with the same keys as in the <code>solutes</code>.  </p>
+<h2 id="functions">Functions</h2>
+<p>The properties that can be calculated using the syntax above are:</p>
+<h3 id="excess-gibbs-energy">Excess Gibbs energy</h3>
+<p>Excess Gibbs energy of the solution.</p>
+<div class="highlight"><pre><span></span><code><span class="n">Gibbs_nRT</span> <span class="o">=</span> <span class="n">pz</span><span class="o">.</span><span class="n">Gibbs_nRT</span><span class="p">(</span><span class="n">solutes</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">pressure</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="solute-activity-coefficients">Solute activity coefficients</h3>
+<p>Chemical activity coefficients for every solute or their natural logarithms.</p>
+<div class="highlight"><pre><span></span><code><span class="n">activity_coefficients</span> <span class="o">=</span> <span class="n">pz</span><span class="o">.</span><span class="n">activity_coefficients</span><span class="p">(</span><span class="n">solutes</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">pressure</span><span class="p">)</span>
+<span class="n">log_activity_coefficients</span> <span class="o">=</span> <span class="n">pz</span><span class="o">.</span><span class="n">log_activity_coefficients</span><span class="p">(</span><span class="n">solutes</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">pressure</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="water-activity">Water activity</h3>
+<p>Chemical activity of the solvent (water) or its natural logarithm.</p>
+<div class="highlight"><pre><span></span><code><span class="n">activity_water</span> <span class="o">=</span> <span class="n">pz</span><span class="o">.</span><span class="n">activity_water</span><span class="p">(</span><span class="n">solutes</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">pressure</span><span class="p">)</span>
+<span class="n">log_activity_water</span> <span class="o">=</span> <span class="n">pz</span><span class="o">.</span><span class="n">log_activity_water</span><span class="p">(</span><span class="n">solutes</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">pressure</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="osmotic-coefficient">Osmotic coefficient</h3>
+<p>Osmotic coefficient of the solution.</p>
+<div class="highlight"><pre><span></span><code><span class="n">osmotic_coefficient</span> <span class="o">=</span> <span class="n">pz</span><span class="o">.</span><span class="n">osmotic_coefficient</span><span class="p">(</span><span class="n">solutes</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">pressure</span><span class="p">)</span>
+</code></pre></div>
+<!--
+
+## Excess Gibbs energy
+
+From a physicochemical perspective, the excess Gibbs energy of a solution ($G_{ex}$) is the master variable from which many other properties are — literally — derived. Following [P91](../../refs/#p), Eqs. (59) and (F-5), and [CRP94](../../refs/#c), Eq. (AI1):
+
+$$\frac{G_{ex}}{w_wRT} = f_G + 2 \sum_c \sum_a m_c m_a (B_{ca} + Z C_{ca}^{T})$$
+
+$$+ \sum_i \sum_{i'} m_i m_{i'} \Bigl( 2 \Theta_{ii'} + \sum_j m_j \psi_{ii'j} \Bigr)$$
+
+$$+ \sum_n m_n \Bigl(2 \sum_i m_i \lambda_{ni} + 2 \sum_{n'} m_{n'} \lambda_{nn'} + m_n \lambda_{nn} \Bigr)$$
+
+$$+ \sum_n \sum_c \sum_a m_n m_c m_a \zeta_{nca} + \sum_n m_n^3 \mu_{nnn} $$
+
+On the left hand side, we have the excess Gibbs energy ($G_{ex}$) divided by the universal gas constant ($R$ in J·mol·K<sup>−1</sup>, defined in [the 'constants' module](../constants)), temperature ($T$ in K), and mass of pure water ($w_w$ in kg, set to unity).
+
+The first term on the right ($f_G$) is the Debye-Hückel approximation, a function of ionic strength evaluated by the function `fG` ([see below](#fg)). It includes the Debye-Hückel limiting slope $A_\phi$, which is evaluated using an [interaction parameter function](../parameters).
+
+The Pitzer model then adds a series of corrections to this approximation for each dissolved cation ($c$), anion ($a$) and neutral component ($n$). In the equation above, $i$ refers to any ion and $j$ refers to an ion of the opposite sign charge. The term $i'$ refers to a different ion from $i$, but with the same sign charge. Similarly, $n'$ refers to a different neutral component from $n$.
+
+The $m_x$ terms indicate the molality of component $x$, in mol·kg<sup>−1</sup>.
+
+The $B_{ca}$ and $C_{ca}^T$ terms account for cation-anion interactions, and are evaluated by the functions `B` and `CT` ([see below](#b)). $B_{ca}$ depends on the empirical parameters $\beta_0$, $\beta_1$, $\beta_2$, $\alpha_1$ and $\alpha_2$, and $C_{ca}^{T}$ on $C_0$, $C_1$ and $\omega$. $Z$ is defined by [P91](../../refs/#p), Eq. (66):
+
+$$Z = \sum_i m_i |z_i|$$
+
+where $z_i$ is the charge on ion $i$.
+
+The $\Theta_{ii'}$ terms account for cation-cation and anion-anion interactions. As defined by [P91](../../refs/#p), Eq. (B-6):
+
+$$\Theta_{ii'} = \theta_{ii'} + ^E\theta_{ii'}$$
+
+where the $^E\theta_{ii'}$ term is a function of ionic strength, evaluated by `etheta` ([see below](#etheta)).
+
+Finally, the "Greek letter terms" ($\beta_0$, $\beta_1$, $\beta_2$, $\alpha_1$, $\alpha_2$, $C_0$, $C_1$, $\omega$, $\theta_{ii'}$, $\psi_{ii'j}$, $\lambda_{nx}$, $\zeta_{nca}$ and $\mu_{nnn}$) are empirical parameters, different for each combination of ions and neutral species, functions of temperature and sometimes pressure.
+
+In Pytzer, the excess Gibbs energy is the only physicochemical equation that is actually explicitly written out. All other properties are determined by taking the appropriate differential of the excess Gibbs energy. These differentials are determined automatically by [JAX](https://github.com/HIPS/autograd).
+
+### `.Gex_nRT` - excess Gibbs energy
+
+Evaluates $G_{ex}/w_wRT$, as defined above.
+
+**Syntax:**
+
+<div class="highlight"><pre><span></span><code><span class="n">Gex_nRT</span> <span class="o">=</span> <span class="n">pz</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">Gex_nRT</span><span class="p">(</span><span class="n">mols</span><span class="p">,</span> <span class="n">ions</span><span class="p">,</span> <span class="n">tempK</span><span class="p">,</span> <span class="n">pres</span><span class="p">,</span>
+    <span class="n">prmlib</span><span class="o">=</span><span class="n">pz</span><span class="o">.</span><span class="n">libraries</span><span class="o">.</span><span class="n">Seawater</span><span class="p">,</span> <span class="n">Izero</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</code></pre></div>
+
+---
+
+## Activity and osmotic coefficients
+
+The natural logarithm of the activity coefficient ($\ln \gamma_x$) of any dissolved component of a solution is the first differential of $G_{ex}/w_wRT$ with respect to the component's molality, following [P91](../../refs/#p), Eq. (34):
+
+$$\ln \gamma_x = \frac{\partial (G_{ex}/w_wRT)}{\partial m_x} $$
+
+The osmotic coefficient of a solution ($\phi$) is related to the first differential of $G_{ex}/w_wRT$ with respect to $w_w$, following [P91](../../refs/#p), Eq. (35):
+
+$$\phi = 1 - \frac{\partial G_{ex}/\partial w_w}{RT} \sum_x m_x$$
+
+where $x$ includes all ions and neutral components.
+
+The solvent (i.e. water) activity ($a_w$) is related to the osmotic coefficient by [P91](../../refs/#p), Eq. (28):
+
+$$\phi = - \frac{\ln a_w}{M_w \sum_x m_x}$$
+
+where $M_w$ is the molar mass of water, in kg·mol<sup>−1</sup>.
+
+To evaluate $\gamma_x$ and $\phi$, Pytzer evaluates the appropriate differentials of $G_{ex}/w_wRT$ by using Autograd to differentiate the `Gex_nRT` function.
+
+<br />
+
+### `.acfs` and `.ln_acfs` - solute activity coefficients
+
+Returns a matrix of activity coefficients ($\gamma_x$, `acfs`) or their natural logarithm ($\ln \gamma_x$, `ln_acfs`) of the same size and shape as input `mols`. Each activity coefficient is for the same ion and solution composition as the corresponding input molality.
+
+**Syntax:**
+
+<div class="highlight"><pre><span></span><code><span class="n">ln_acfs</span> <span class="o">=</span> <span class="n">pz</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">ln_acfs</span><span class="p">(</span><span class="n">mols</span><span class="p">,</span> <span class="n">ions</span><span class="p">,</span> <span class="n">tempK</span><span class="p">,</span> <span class="n">pres</span><span class="p">,</span>
+    <span class="n">prmlib</span><span class="o">=</span><span class="n">pz</span><span class="o">.</span><span class="n">libraries</span><span class="o">.</span><span class="n">Seawater</span><span class="p">,</span> <span class="n">Izero</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">acfs</span> <span class="o">=</span> <span class="n">pz</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">acfs</span><span class="p">(</span><span class="n">mols</span><span class="p">,</span> <span class="n">ions</span><span class="p">,</span> <span class="n">tempK</span><span class="p">,</span> <span class="n">pres</span><span class="p">,</span>
+    <span class="n">prmlib</span><span class="o">=</span><span class="n">pz</span><span class="o">.</span><span class="n">libraries</span><span class="o">.</span><span class="n">Seawater</span><span class="p">,</span> <span class="n">Izero</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</code></pre></div>
+
+<br />
+
+### `.ln_acf2ln_acf_MX` - mean activity coefficient
+
+Combines the natural logarithms of the activity coefficients of a cation ($\ln \gamma_c$, `ln_acfM`) and anion ($\ln \gamma_a$, `ln_acfX`) into a mean activity coefficient of an electrolyte ($\ln \gamma_\pm$, `ln_acf_MX`) with stoichiometric ratio between cation and anion of `nM`:`nX`.
+
+**Syntax:**
+
+<div class="highlight"><pre><span></span><code><span class="n">ln_acf_MX</span> <span class="o">=</span> <span class="n">pz</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">ln_acf2ln_acf_MX</span><span class="p">(</span><span class="n">ln_acfM</span><span class="p">,</span> <span class="n">ln_acfX</span><span class="p">,</span> <span class="n">nM</span><span class="p">,</span> <span class="n">nX</span><span class="p">)</span>
+</code></pre></div>
+
+<br />
+
+### `.osm` - osmotic coefficient
+
+Calculates the osmotic coefficient ($\phi$) for each input solution composition.
+
+**Syntax:**
+
+<div class="highlight"><pre><span></span><code><span class="n">osm</span> <span class="o">=</span> <span class="n">pz</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">osm</span><span class="p">(</span><span class="n">mols</span><span class="p">,</span> <span class="n">ions</span><span class="p">,</span> <span class="n">tempK</span><span class="p">,</span> <span class="n">pres</span><span class="p">,</span>
+    <span class="n">prmlib</span><span class="o">=</span><span class="n">pz</span><span class="o">.</span><span class="n">libraries</span><span class="o">.</span><span class="n">Seawater</span><span class="p">,</span> <span class="n">Izero</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</code></pre></div>
+
+<br />
+
+### `.aw` and `.lnaw` - water activity
+
+Calculates the water activity ($a_w$) or its natural logarithm for each input solution composition.
+
+**Syntax:**
+
+<div class="highlight"><pre><span></span><code><span class="n">lnaw</span> <span class="o">=</span> <span class="n">pz</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">lnaw</span><span class="p">(</span><span class="n">mols</span><span class="p">,</span> <span class="n">ions</span><span class="p">,</span> <span class="n">tempK</span><span class="p">,</span> <span class="n">pres</span><span class="p">,</span>
+    <span class="n">prmlib</span><span class="o">=</span><span class="n">pz</span><span class="o">.</span><span class="n">libraries</span><span class="o">.</span><span class="n">Seawater</span><span class="p">,</span> <span class="n">Izero</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">aw</span> <span class="o">=</span> <span class="n">pz</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">aw</span><span class="p">(</span><span class="n">mols</span><span class="p">,</span> <span class="n">ions</span><span class="p">,</span> <span class="n">tempK</span><span class="p">,</span> <span class="n">pres</span><span class="p">,</span>
+    <span class="n">prmlib</span><span class="o">=</span><span class="n">pz</span><span class="o">.</span><span class="n">libraries</span><span class="o">.</span><span class="n">Seawater</span><span class="p">,</span> <span class="n">Izero</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</code></pre></div>
+
+<br />
+
+### `.osm2aw` - convert osmotic coefficient to water activity
+
+Converts an osmotic coefficient ($\phi$, `osm`) into a water activity ($a_w$, `aw`).
+
+**Syntax:**
+
+<div class="highlight"><pre><span></span><code><span class="n">aw</span> <span class="o">=</span> <span class="n">pz</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">osm2aw</span><span class="p">(</span><span class="n">mols</span><span class="p">,</span> <span class="n">osm</span><span class="p">)</span>
+</code></pre></div>
+
+<br />
+
+### `.aw2osm` - convert water activity to osmotic coefficient
+
+Converts a water activity ($a_w$, `aw`) into an osmotic coefficient ($\phi$, `osm`).
+
+**Syntax:**
+
+<div class="highlight"><pre><span></span><code><span class="n">osm</span> <span class="o">=</span> <span class="n">pz</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">aw2osm</span><span class="p">(</span><span class="n">mols</span><span class="p">,</span> <span class="n">aw</span><span class="p">)</span>
+</code></pre></div>
+
+---
+
+## Pitzer model subfunctions
+
+The full Pitzer model equation is broken down into some component subfunctions for clarity.
+
+### `.Istr` - ionic strength
+
+Calculates the ionic strength of the solution ($I$, `I`), following [P91](../../refs/#p), Eq. (11):
+
+$$I = \frac{1}{2} \sum_i m_i z_i^2$$
+
+**Syntax:**
+
+<div class="highlight"><pre><span></span><code><span class="n">I</span> <span class="o">=</span> <span class="n">pz</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">Istr</span><span class="p">(</span><span class="n">mols</span><span class="p">,</span> <span class="n">zs</span><span class="p">)</span>
+</code></pre></div>
+
+Input `zs` is a list of the charge on each ion, which can be generated from `ions` using the [solute properties functions](../properties).
+
+<br />
+
+### `.fG` - Debye-Hückel approximation
+
+The Debye-Hückel approximation of the excess Gibbs energy. From [P91](../../refs/#p), Eq. (48):
+
+$$f_G = \frac{4 I A_\phi}{-b} \ln (1 + b\sqrt{I})$$
+
+where $b$, here and hereafter, is equal to 1.2 (mol·K<sup>−1</sup>)<sup>1/2</sup>.
+
+**Syntax:**
+
+<div class="highlight"><pre><span></span><code><span class="n">fG</span> <span class="o">=</span> <span class="n">pz</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fG</span><span class="p">(</span><span class="n">tempK</span><span class="p">,</span> <span class="n">pres</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">prmlib</span><span class="p">)</span>
+</code></pre></div>
+<br />
+
+### `.g` - binary interaction subfunction
+
+The function $g$, following [P91](../../refs/#p), Eq. (50):
+
+$$g = 2[1 - (1 + x) \exp(-x)] / x^2$$
+
+**Syntax:**
+
+<div class="highlight"><pre><span></span><code><span class="n">g</span> <span class="o">=</span> <span class="n">pz</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</code></pre></div>
+
+<br />
+
+### `.h` - binary interaction subfunction
+
+The function $h$, following [CRP94](../../refs/#c), Eq. (AI15):
+
+$$h = \\{ 6 - [6 + x (6 + 3x + x^2)] \exp(-x) \\} / x^4$$
+
+**Syntax:**
+
+<div class="highlight"><pre><span></span><code><span class="n">h</span> <span class="o">=</span> <span class="n">pz</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</code></pre></div>
+
+<br />
+
+### `.B` - binary interaction subfunction
+
+The function $B_{ca}$, following [P91](../../refs/#p), Eq. (49):
+
+$$B_{ca} = \beta_0 + \beta_1 g(\alpha_1 \sqrt{I}) + \beta_2 g(\alpha_2 \sqrt{I})$$
+
+where $\beta_0$, $\beta_1$, $\beta_2$, $\alpha_1$ and $\alpha_2$ take different values for each $ca$ combination, as defined by the functions in **pytzer.parameters**.
+
+**Syntax:**
+
+<div class="highlight"><pre><span></span><code><span class="n">B</span> <span class="o">=</span> <span class="n">pz</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">B</span><span class="p">(</span><span class="n">I</span><span class="p">,</span> <span class="n">b0</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">b2</span><span class="p">,</span> <span class="n">alph1</span><span class="p">,</span> <span class="n">alph2</span><span class="p">)</span>
+</code></pre></div>
+
+<br />
+
+### `.CT` - binary interaction subfunction
+
+The function $C_{ca}^T$, following [CRP94](../../refs/#c) Eq. (AI10):
+
+$$C_{ca}^T = C_0 + 4 C_1 h(\omega \sqrt{I})$$
+
+where $C_0$, $C_1$ and $\omega$ take different values for each $ca$ combination, as defined by the functions in **pytzer.parameters**.
+
+**Syntax:**
+
+<div class="highlight"><pre><span></span><code><span class="n">CT</span> <span class="o">=</span> <span class="n">pz</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">CT</span><span class="p">(</span><span class="n">I</span><span class="p">,</span> <span class="n">C0</span><span class="p">,</span> <span class="n">C1</span><span class="p">,</span> <span class="n">omega</span><span class="p">)</span>
+</code></pre></div>
+
+<br />
+
+### `.xij` - unsymmetrical mixing subfunction
+
+The variable $x_{ii'}$, following [P91](../../refs/#p), Eq. (B-14):
+
+$$x_{ii'} = 6 z_i z_{i'} A_\phi \sqrt{I}$$
+
+**Syntax:**
+
+<div class="highlight"><pre><span></span><code><span class="n">xij</span> <span class="o">=</span> <span class="n">pz</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">xij</span><span class="p">(</span><span class="n">tempK</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">z0</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">prmlib</span><span class="p">)</span>
+</code></pre></div>
+
+where `z0` and `z1` are the charges on ions $i$ and $i'$ respectively (i.e. $z_i$ and $z_{i'}$).
+
+<br />
+
+### `.etheta` - unsymmetrical mixing term
+
+The function $^E\theta_{ii'}$, following [P91](../../refs/#p), Eq. (B-15):
+
+$$^E\theta_{ii'} = \frac{z_i z_i'}{4 I} \Bigl[J(x_{ii'}) - \frac{1}{2} J(x_{ii}) - \frac{1}{2} J(x_{i'i'})\Bigr]$$
+
+**Syntax:**
+
+<div class="highlight"><pre><span></span><code><span class="n">etheta</span> <span class="o">=</span> <span class="n">pz</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">etheta</span><span class="p">(</span><span class="n">tempK</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">z0</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">prmlib</span><span class="p">)</span>
+</code></pre></div>
+
+This is only evaluated when $z_i \neq z_{i'}$. Otherwise, it is equal to zero.
+
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2019-2024 M.P. Humphreys (GNU GPLv3).
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.instant", "navigation.expand", "navigation.top"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+      
+        <script src="../javascripts/config.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

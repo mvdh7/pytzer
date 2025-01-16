@@ -1,0 +1,1338 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Pytzer: the Pitzer model for chemical activities in aqueous solutions in Python">
+      
+      
+        <meta name="author" content="M.P. Humphreys">
+      
+      
+      
+        <link rel="prev" href="../refs/">
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
+    
+    
+      
+        <title>Version history - Pytzer</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.6f8fc17f.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto Slab";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="pink" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#version-history" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Pytzer" class="md-header__button md-logo" aria-label="Pytzer" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Pytzer
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Version history
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/mvdh7/pytzer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1M480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2m-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3m-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1"/></svg>
+  </div>
+  <div class="md-source__repository">
+    mvdh7/pytzer
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Pytzer" class="md-nav__button md-logo" aria-label="Pytzer" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Pytzer
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/mvdh7/pytzer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512"><!--! Font Awesome Free 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1M480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2m-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3m-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1"/></svg>
+  </div>
+  <div class="md-source__repository">
+    mvdh7/pytzer
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../libraries/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Model parameters
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    The Pitzer model
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../equilibrate/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Solving equilibria
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../refs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    References
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Version history
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Version history
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#06-beta" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.6 [beta]
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.6 [beta]">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#060-10-dec-2024" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.6.0 (10 Dec 2024)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#05-beta" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.5 [beta]
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5 [beta]">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#053-24-oct-2023" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.5.3 (24 Oct 2023)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#052-31-aug-2021" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.5.2 (31 Aug 2021)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#051-17-aug-2021" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.5.1 (17 Aug 2021)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#050-9-aug-2021" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.5.0 (9 Aug 2021)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#04-beta" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.4 [beta]
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.4 [beta]">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#043-11-sep-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.4.3 (11 Sep 2019)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#042-6-sep-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.4.2 (6 Sep 2019)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#041-13-aug-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.4.1 (13 Aug 2019)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#040-3-aug-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.4.0 (3 Aug 2019)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#03-beta" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.3 [beta]
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.3 [beta]">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#031-16-jul-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.3.1 (16 Jul 2019)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#030-12-apr-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.3.0 (12 Apr 2019)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#02-beta" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2 [beta]
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.2 [beta]">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#027-4-mar-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2.7 (4 Mar 2019)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#026-20-feb-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2.6 (20 Feb 2019)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#025-6-feb-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2.5 (6 Feb 2019)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#024-31-jan-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2.4 (31 Jan 2019)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#023-30-jan-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2.3 (30 Jan 2019)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#022-28-jan-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2.2 (28 Jan 2019)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#021-24-jan-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2.1 (24 Jan 2019)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#020-23-jan-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2.0 (23 Jan 2019)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#01-alpha" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.1 [alpha]
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.1 [alpha]">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#01x" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.1.X
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#06-beta" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.6 [beta]
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.6 [beta]">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#060-10-dec-2024" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.6.0 (10 Dec 2024)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#05-beta" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.5 [beta]
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5 [beta]">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#053-24-oct-2023" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.5.3 (24 Oct 2023)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#052-31-aug-2021" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.5.2 (31 Aug 2021)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#051-17-aug-2021" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.5.1 (17 Aug 2021)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#050-9-aug-2021" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.5.0 (9 Aug 2021)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#04-beta" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.4 [beta]
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.4 [beta]">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#043-11-sep-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.4.3 (11 Sep 2019)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#042-6-sep-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.4.2 (6 Sep 2019)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#041-13-aug-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.4.1 (13 Aug 2019)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#040-3-aug-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.4.0 (3 Aug 2019)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#03-beta" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.3 [beta]
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.3 [beta]">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#031-16-jul-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.3.1 (16 Jul 2019)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#030-12-apr-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.3.0 (12 Apr 2019)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#02-beta" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2 [beta]
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.2 [beta]">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#027-4-mar-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2.7 (4 Mar 2019)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#026-20-feb-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2.6 (20 Feb 2019)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#025-6-feb-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2.5 (6 Feb 2019)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#024-31-jan-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2.4 (31 Jan 2019)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#023-30-jan-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2.3 (30 Jan 2019)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#022-28-jan-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2.2 (28 Jan 2019)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#021-24-jan-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2.1 (24 Jan 2019)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#020-23-jan-2019" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2.0 (23 Jan 2019)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#01-alpha" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.1 [alpha]
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.1 [alpha]">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#01x" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.1.X
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="version-history">Version history</h1>
+<h2 id="06-beta">0.6 [beta]</h2>
+<p>Increases the range of properties that can be computed, especially those requiring temperature and pressure derivatives.</p>
+<h3 id="060-10-dec-2024">0.6.0 (10 Dec 2024)</h3>
+<div class="admonition new-version">
+<p class="admonition-title">Changes in v0.6.0</p>
+<ul>
+<li>Rewrote central excess Gibbs energy and equilibrium solver functions so they are differentiable with respect to temperature and pressure.</li>
+<li>Structure of parameter libraries revised and mechanism for switching between them updated.</li>
+</ul>
+</div>
+<h2 id="05-beta">0.5 [beta]</h2>
+<p>Switches from Autograd to <a href="https://jax.readthedocs.io/en/latest/">JAX</a> for faster automatic differentiation and JIT compilation.</p>
+<h3 id="053-24-oct-2023">0.5.3 (24 Oct 2023)</h3>
+<div class="admonition new-version">
+<p class="admonition-title">Changes in v0.5.3</p>
+<ul>
+<li>Created new <code>Humphreys22</code> parameter library and validated its calculations against <a href="../refs/#h">HWT22</a>.</li>
+<li>Created new <code>Clegg22</code> parameter library (but its calculations against <a href="../refs/#c">CHW22</a> still need validating).</li>
+<li>Created new <code>Clegg23</code> parameter library and validated its calculations against <a href="../refs/#c">CWTD23</a>.</li>
+<li>Renamed <code>io</code> module as <code>get</code>.</li>
+</ul>
+</div>
+<h3 id="052-31-aug-2021">0.5.2 (31 Aug 2021)</h3>
+<div class="admonition new-version">
+<p class="admonition-title">Changes in v0.5.2</p>
+<ul>
+<li>Fixed calculation error in <code>convert.solvent_to_solution</code>.</li>
+<li>Added more ions in <code>properties.ion_to_mass.</code></li>
+</ul>
+</div>
+<h3 id="051-17-aug-2021">0.5.1 (17 Aug 2021)</h3>
+<div class="admonition new-version">
+<p class="admonition-title">Changes in v0.5.1</p>
+<ul>
+<li>Fixed <code>pz.convert.solvent_to_solution</code> to take and return p<em>K</em> values instead of <em>K</em> values, and to replace any NaNs in the input with 0.</li>
+<li>Added <code>pz.equilibrate.stoichiometric.get_constants()</code> to calculate stoichiometric equilibrium constants for the carbonic acid equilibria when total dissolved inorganic carbon is zero.</li>
+</ul>
+</div>
+<h3 id="050-9-aug-2021">0.5.0 (9 Aug 2021)</h3>
+<div class="admonition new-version">
+<p class="admonition-title">Changes in v0.5.0</p>
+<ul>
+<li>Switched from Autograd to <a href="https://jax.readthedocs.io/en/latest/">JAX</a> for faster automatic differentiation and JIT compilation.</li>
+<li>Renamed and reorganised virtually everything.</li>
+</ul>
+</div>
+<h2 id="04-beta">0.4 [beta]</h2>
+<p>Adds solvers to determine the equilibrium composition of aqueous solutions.  This version was demonstrated at the AGU/ASLO/TOS Ocean Sciences Meeting (San Diego, Feb 2020).</p>
+<h3 id="043-11-sep-2019">0.4.3 (11 Sep 2019)</h3>
+<div class="admonition new-version">
+<p class="admonition-title">Changes in v0.4.3</p>
+<ul>
+<li>Added <code>osm</code> function for osmotic coefficient to <strong>matrix</strong> module;</li>
+<li>Added <strong>io</strong> module functions to roughly convert between molinity (mol/kg-solution) and molality (mol/kg-H<sub>2</sub>O);</li>
+<li>Added <code>salinity2mols</code> function in <strong>io</strong> module to estimate molalities from salinity for <a href="../refs/#m">MZF93</a> artificial seawater;</li>
+<li>Switched <code>assemble</code> function in <strong>matrix</strong> module to use the MarChemSpec parameter library by default.</li>
+</ul>
+</div>
+<h3 id="042-6-sep-2019">0.4.2 (6 Sep 2019)</h3>
+<div class="admonition new-version">
+<p class="admonition-title">Changes in v0.4.2</p>
+<ul>
+<li>Removed pressure input from thermodynamic equilibrium constant functions;</li>
+<li>Converted copies from shallow to deep in parameter library modules;</li>
+<li>Added <strong>plot</strong> module with some meta-analytical visualisation tools (not yet documented).</li>
+</ul>
+</div>
+<h3 id="041-13-aug-2019">0.4.1 (13 Aug 2019)</h3>
+<div class="admonition new-version">
+<p class="admonition-title">Changes in v0.4.1</p>
+<ul>
+<li>Added carbonic acid and boric acid equilibrium solving;</li>
+<li>Eliminated module <strong>tables</strong>;</li>
+<li>Updated functions and parameter libraries noting that <code>['Cl', 'CO3']</code> gets sorted to <code>['CO3', 'Cl']</code>;</li>
+<li>Fixed incorrect <code>alph1</code> values for all HMW 1:(&gt;1) electrolytes;</li>
+<li>Added several new interaction parameter functions;</li>
+<li>Testing MIAMI parameter library against PM16's model:<ul>
+<li>Adjusted numerical values to fix errors in some parameter functions:<ul>
+<li><code>bC_Ca_BOH4_SRM87</code>;</li>
+<li><code>bC_K_OH_MP98</code>;</li>
+<li><code>bC_Mg_BOH4_SRM87</code>;</li>
+<li><code>bC_Na_Br_MP98</code>;</li>
+<li><code>bC_Na_F_MP98</code>;</li>
+<li><code>bC_Na_HSO4_MP98</code>;</li>
+<li><code>bC_Sr_Cl_MP98</code>;</li>
+<li><code>theta_K_Sr_MP98</code>;</li>
+</ul>
+</li>
+<li>Added new MP98 functions until numerical conflicts can be resolved:</li>
+<li><code>bC_K_CO3_MP98</code> should follow SRG87;</li>
+<li><code>theta_H_K_MP98</code> and <code>theta_H_Na_MP98</code> should follow CMR93.</li>
+</ul>
+</li>
+</ul>
+</div>
+<h3 id="040-3-aug-2019">0.4.0 (3 Aug 2019)</h3>
+<div class="admonition new-version">
+<p class="admonition-title">Changes in v0.4.0</p>
+<ul>
+<li>Module <strong>dissociation</strong> added with functions to evaluate thermodynamic dissociation constants;</li>
+<li>Module <strong>equilibrate</strong> added with an equilibrium solver and associated functions;</li>
+<li>Added <strong>blackbox_equilibrate</strong> function to demonstrate equilibration procedure;</li>
+<li>Fixed indexing error in <strong>matrix.assemble</strong> for the <em>zeta</em> coefficient matrix;</li>
+<li>Module <strong>jfuncs</strong> renamed as <strong>unsymmetrical</strong>;</li>
+<li>As a general terminology change, the Pitzer model interaction <em>coefficients</em> are now instead referred to as <em>parameters</em>, for better consistency with the published literature. As a consequence:<ul>
+<li>Module <strong>coefficients</strong> renamed as <strong>parameters</strong>;</li>
+<li>Module <strong>cflibs</strong> renamed as <strong>libraries</strong>;</li>
+<li>Class <strong>CoefficientLibrary</strong> renamed as <strong>ParameterLibrary</strong>, and its abbreviation <strong>cflib</strong> to <strong>prmlib</strong>;</li>
+</ul>
+</li>
+<li>Parameter libraries can now be stored in separate script files.</li>
+<li>Added complete <a href="../refs/#h">HMW84</a> parameter library;</li>
+<li>Added all interaction coefficients to <a href="../refs/#m">MIAMI</a> parameter library - but its calculation results have not yet been tested;</li>
+<li>Fixed multiplier error for <code>Cphi</code> values in <code>PM73_TableVI</code> in <strong>tables</strong> module;</li>
+<li>Added presumably missing <code>*1e-3</code> multiplier to <code>Cphi</code> values in all SRRJ87 binary interaction functions;</li>
+<li>Added meta-analysis functions in <strong>meta</strong> module.</li>
+</ul>
+</div>
+<h2 id="03-beta">0.3 [beta]</h2>
+<p>Adds pressure as an input variable.  However, most of the interaction coefficients are still not yet pressure-sensitive.</p>
+<h3 id="031-16-jul-2019">0.3.1 (16 Jul 2019)</h3>
+<div class="admonition new-version">
+<p class="admonition-title">Changes in v0.3.1</p>
+<ul>
+<li>Module <strong>props</strong> renamed as <strong>properties</strong>;</li>
+<li>Module <strong>coeffs</strong> renamed as <strong>coefficients</strong>;</li>
+<li>Class <strong>CoeffLib</strong> renamed as <strong>CoefficientLibrary</strong>;</li>
+<li>Added docstrings to all functions in <strong>coefficients</strong> module;</li>
+<li>Added <strong>matrix</strong> module with alternative, matrix-based Pitzer model implementation;</li>
+<li>Added <strong>none</strong> function to <strong>jfuncs</strong> module to ignore unsymmetrical mixing;</li>
+<li>Fixed <i>A<sub>ϕ</sub></i> bug in <strong>CoefficientLibrary</strong> method <code>print_coeffs</code>;</li>
+<li>In preparation for equilibration calculations:<ul>
+<li>Added <code>gettots</code> function to <strong>io</strong> module.</li>
+</ul>
+</li>
+</ul>
+</div>
+<h3 id="030-12-apr-2019">0.3.0 (12 Apr 2019)</h3>
+<div class="admonition new-version">
+<p class="admonition-title">Changes in v0.3.0</p>
+<ul>
+<li>Moved Debye-Hückel functions (for <i>A<sub>ϕ</sub></i>) from <strong>coeffs</strong> into new module <strong>debyehueckel</strong>;</li>
+<li>Added Archer and Wang (1990) calculation of <i>A<sub>ϕ</sub></i>;</li>
+<li>Added pressure input (<code>pres</code> in dbar) to all relevant functions in <strong>coeffs</strong>, <strong>debyehueckel</strong>, <strong>model</strong>, <strong>io</strong> and <strong>blackbox</strong> functions;</li>
+<li>Added <strong>teos10</strong> module to calculate various properties of pure water;</li>
+<li>Added <strong>Seawater</strong> coefficient library - like <strong>MarChemSpec</strong>, but with pressure-dependent <i>A<sub>ϕ</sub></i> term (following Archer and Wang, 1990), and other general improvements;</li>
+<li>Made <code>cflib</code> input optional for all <strong>model</strong> functions (default = Seawater);</li>
+<li>Fixed loop index correction for n-n' interactions;</li>
+<li>Eliminated unnecessary arrays for constant values in <strong>coeffs</strong>;</li>
+<li>Adjusted <strong>model.B</strong> and <strong>model.CT</strong> function inputs to reduce number of <strong>cflib</strong> function calls;</li>
+<li>Rewrote CRP94 <code>Aosm</code> function to make it autograd-able;</li>
+<li>Added docstrings throughout (except for functions in <strong>coeffs</strong>).</li>
+</ul>
+</div>
+<h2 id="02-beta">0.2 [beta]</h2>
+<p>Includes calculation of solute activity coefficients, water activity and osmotic coefficients, as a function of temperature and composition, at a constant pressure of 1 atmosphere.</p>
+<h3 id="027-4-mar-2019">0.2.7 (4 Mar 2019)</h3>
+<div class="admonition new-version">
+<p class="admonition-title">Changes in v0.2.7</p>
+<ul>
+<li>Transposed all inputs to the excess Gibbs energy function and its derivatives, giving about a 5× speed-up;</li>
+<li>For consistency with <strong>Pitzer.jl</strong>:<ul>
+<li>Simplified osmotic coefficient calculation approach;</li>
+<li>Added direct calculation of water activity by differentiation;</li>
+<li>Changed both <code>T</code> and <code>temp</code> to <code>tempK</code> in input files and all functions;</li>
+<li>Renamed coefficient "dictionary" as "library":<ul>
+<li><strong>CoefficientDictionary</strong> class becomes <strong>CoeffLib</strong>;</li>
+<li><strong>cfdict</strong> function inputs become <strong>cflib</strong>;</li>
+</ul>
+</li>
+<li>Updated documentation to reflect these changes;</li>
+</ul>
+</li>
+<li>Added <strong>io.saveall</strong> function to create CSV file for results;</li>
+<li>Switched <strong>CoeffLib.get_contents()</strong> to use dict key names, not function names, to find ions.</li>
+</ul>
+</div>
+<h3 id="026-20-feb-2019">0.2.6 (20 Feb 2019)</h3>
+<div class="admonition new-version">
+<p class="admonition-title">Changes in v0.2.6</p>
+<ul>
+<li>Continuing to build MIAMI (i.e. MP98) coefficient dictionary:<ul>
+<li>Added <code>bC_</code> functions for borate interactions from SRM87;</li>
+<li>Added <code>bC_</code> functions for bisulfide interactions from HPM88;</li>
+<li>Added new tables of PM73 data, and a new type of coefficient function in <code>bC_PM73(T,iset)</code> to use them (not yet compatible with all <strong>CoefficientDictionary</strong> methods);</li>
+</ul>
+</li>
+<li>Updated <strong>pytzer.blackbox</strong>:<ul>
+<li>Changed output filename extension to <strong>_py</strong>;</li>
+<li>Saving results to file now optional (with default behaviour to save);</li>
+<li>Can also optionally use a different <strong>CoefficientDictionary</strong> (default remains <strong>MarChemSpec</strong>);</li>
+</ul>
+</li>
+<li>Added numerical integral approach for unsymmetrical mixing <em>J</em> function to <strong>jfuncs</strong> (not yet differentiable by autograd).</li>
+</ul>
+</div>
+<h3 id="025-6-feb-2019">0.2.5 (6 Feb 2019)</h3>
+<div class="admonition new-version">
+<p class="admonition-title">Changes in v0.2.5</p>
+<ul>
+<li><u>Testing <strong>MarChemSpec05</strong> against <strong>FastPitz</strong> at 278.15 K - perfect agreement to 6 significant figures</u>;</li>
+<li>Added <code>theta_Ca_H_MarChemSpec</code> to combine RGO82 and WM13 equations;</li>
+<li>Added new module <strong>pytzer.tables</strong> to store long lists of coefficients found in tables;</li>
+<li>Added basic <strong>tables</strong> page to documentation, and new ions to the name conventions lists;</li>
+<li>Updated <code>bC_</code> functions for <code>Ca-SO4</code>, <code>Ca-HSO4</code> and <code>K-HSO4</code>:<ul>
+<li>Used data from new <strong>pytzer.tables</strong> module;</li>
+<li>Relabelled from <code>P91</code> to <code>WM13</code>, to better reflect their provenance;</li>
+</ul>
+</li>
+<li>Added <code>Aosm_MarChemSpec</code>, which adds a small offset to <code>Aosm_CRP94</code> to make it consistent with AW90 and FastPitz;</li>
+<li>Created new <strong>MarChemSpec</strong> <strong>CoefficientDictionary</strong>, with temperature-varying <code>Aosm_MarChemSpec</code>;</li>
+<li>Added equations and usage examples to documentation for <strong>pytzer.model</strong>;</li>
+<li>Wrote <strong>pytzer.blackbox</strong> function and quick-start documentation, for easy end-user testing.</li>
+</ul>
+</div>
+<h3 id="024-31-jan-2019">0.2.4 (31 Jan 2019)</h3>
+<div class="admonition new-version">
+<p class="admonition-title">Changes in v0.2.4</p>
+<ul>
+<li>Testing activity coefficients against Prof D.R. Turner's and Prof S.L. Clegg's implementations (GIVAKT and FastPitz respectively):<ul>
+<li>Assembled new <strong>CoefficientDictionary</strong> WM13_MarChemSpec25 for testing;</li>
+<li>Corrected <code>alph1</code> for <strong>bC_Ca_OH_HMW84</strong> to 2;</li>
+<li>Fixed temperature units for <strong>theta_H_Na_CMR93</strong> and <strong>theta_H_K_CMR93</strong>;</li>
+<li>Deleted duplicate MP98 functions in <strong>coeffs</strong>;</li>
+<li>Added functions with temporary values for 298.15 K for <em>λ</em>(tris, tris), <em>ζ</em>(tris, Na, Cl) and <em>μ</em>(tris, tris, tris) to <strong>MarChemSpec25</strong> <strong>CoefficientDictionary</strong>;</li>
+<li><u><strong>pytzer</strong> activity and osmotic coefficients agree perfectly (to 6 significant figures) with FastPitz at 298.15 K with the <strong>MarChemSpec25</strong> <strong>CoefficientDictionary</strong></u>;</li>
+</ul>
+</li>
+<li>Continued adding coefficient functions to <strong>cfdicts.MIAMI</strong>:<ul>
+<li>All from PP82 (<code>Na-CO3</code> and <code>Na-HCO3</code> interactions);</li>
+</ul>
+</li>
+<li>Added equations for neutral-neutral interactions (lambda coefficient) to <strong>model.Gex_nRT</strong> and also to <strong>cfdicts.add_zeros</strong> method;</li>
+<li>Changed to evaluating all neutral interactions (including with ions) even at zero ionic strength;</li>
+<li>Updated nomenclature for consistency with P91, MP98 and others: <code>eta</code> (<em>η</em>) is now <code>zeta</code> (<em>ζ</em>).</li>
+</ul>
+</div>
+<h3 id="023-30-jan-2019">0.2.3 (30 Jan 2019)</h3>
+<p><em>The build of v0.2.3 had errors that prevented installation. These were fixed by v0.2.3.3, which is otherwise identical.</em></p>
+<div class="admonition new-version">
+<p class="admonition-title">Changes in v0.2.3</p>
+<ul>
+<li>Verified both <strong>jfuncs.P75_eq47</strong> and <strong>jfuncs.Harvie</strong>, and their derivatives, against Prof D.R. Turner's and Prof S.L. Clegg's implementations (GIVAKT and FastPitz respectively):<ul>
+<li><u><strong>P75_eq47</strong> returns identical results (to &gt;10 significant figures) in every case</u>;</li>
+<li><u><strong>Harvie</strong> agrees perfectly (to &gt;10 significant figures) with GIVAKT, but FastPitz differs from both by up to 5%</u>;</li>
+</ul>
+</li>
+<li>Began assembling MIAMI <strong>CoefficientDictionary</strong> following MP98;</li>
+<li>Added constant <i>A<sub>ϕ</sub></i> function for 25 °C following P91 to <strong>coeffs.Aosm_25</strong> for MarChemSpec project testing.</li>
+</ul>
+</div>
+<h3 id="022-28-jan-2019">0.2.2 (28 Jan 2019)</h3>
+<div class="admonition new-version">
+<p class="admonition-title">Changes in v0.2.2</p>
+<ul>
+<li>Added temperature to the file produced by <strong>print_coeffs</strong>;</li>
+<li>Improved documentation:<ul>
+<li>Added neutrals, and made other updates, for <strong>pytzer.coeffs</strong>;</li>
+<li>Updated for <strong>pytzer.cfdicts</strong>;</li>
+<li>Added <strong>pytzer.meta</strong> page;</li>
+<li>Updated installation instructions;</li>
+<li>Documented new <code>Izero=False</code> input to <strong>model.Gex_nRT</strong>;</li>
+</ul>
+</li>
+<li>Fixed zero ionic strength error for <strong>model.Gex_nRT</strong>;</li>
+<li>Removed <code>Jp</code> outputs from all <strong>jfuncs</strong>, and set up correct differentiation for <code>Harvie</code>;</li>
+<li>Corrected functions in <strong>CoefficientDictionary</strong> <code>WM13</code> following intercomparison with Prof S.L. Clegg's Fortran implementation:<ul>
+<li><code>bC_Mg_SO4_PP86ii</code>: eliminated <em>difference of two large numbers</em> error, by substitution;</li>
+<li><code>bC_Na_HSO4_HPR93</code>: fixed incorrect charge for HSO<sub>4</sub><sup>−</sup>;</li>
+<li><code>bC_Na_OH_PP87i</code>: fixed typos in coefficients;</li>
+</ul>
+</li>
+<li>Switched <strong>MarChemSpec</strong> <strong>CoefficientDictionary</strong> to <em>not</em> use <strong>GT17simopt</strong> for <code>Na-Cl</code> interaction (stick with M88 instead);</li>
+<li>Fixed function for <code>H-Na-HSO4</code> interaction in <strong>WM13</strong> <strong>CoefficientDictionary</strong>;</li>
+<li>Added external package requirements (i.e. <strong>numpy</strong> and <strong>autograd</strong>) to the <strong>setup.py</strong>;</li>
+<li>Fixed <strong>CoefficientDictionary.get_contents</strong> to include neutral species;</li>
+<li>Added input <code>Izero=False</code> to <strong>model.Gex_nRT</strong> and its derivatives, to allow calculations for solutions with zero ionic strength.</li>
+</ul>
+</div>
+<h3 id="021-24-jan-2019">0.2.1 (24 Jan 2019)</h3>
+<div class="admonition new-version">
+<p class="admonition-title">Changes in v0.2.1</p>
+<ul>
+<li>Fixed fatal indexing error in <strong>model.Gex_nRT</strong>;</li>
+<li>Added <strong>CoefficientDictionary</strong> <code>WM13</code> for the Waters and Millero (2013) model;</li>
+<li>Added <strong>CoefficientDictionary</strong> <code>MarChemSpec</code> for MarChemSpec project testing;</li>
+<li>Added <em>some</em> coefficient values from Gallego-Urrea and Turner (2017);</li>
+<li>Added equations for neutral solute interactions to <strong>model.Gex_nRT</strong>, along with supporting functions in <strong>pytzer.cfdicts</strong>;</li>
+<li>Added <strong>CoefficientDictionary</strong> methods:<ul>
+<li><strong>print_coeffs</strong>, to evaluate all model coefficients at a given temperature, and print them to file;</li>
+<li><strong>get_contents</strong>, to generate lists of all ions and all references within the dictionary;</li>
+</ul>
+</li>
+<li>Updated documentation on coefficient dictionaries to reflect these changes;</li>
+<li>Added <strong>meta</strong> module as single-source-of-truth for package version;</li>
+<li>Updated documentation with basic information on neutral solutes.</li>
+</ul>
+</div>
+<h3 id="020-23-jan-2019">0.2.0 (23 Jan 2019)</h3>
+<p>The first beta release, including full documentation on <a href="https://pytzer.readthedocs.io">pytzer.readthedocs.io</a>.</p>
+<h2 id="01-alpha">0.1 [alpha]</h2>
+<h3 id="01x">0.1.X</h3>
+<p>Versions 0.1.X were used for alpha development. Changes are not documented.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2019-2024 M.P. Humphreys (GNU GPLv3).
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.instant", "navigation.expand", "navigation.top"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+      
+        <script src="../javascripts/config.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
