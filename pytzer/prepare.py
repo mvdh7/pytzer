@@ -46,7 +46,7 @@ def salinity_to_molalities_MZF93(salinity, MgOH=False):
     return solute_molalities
 
 
-def salinity_to_molalities_MFWM08(salinity=35):
+def salinity_to_molalities_MFWM08(salinity=35, custom=None):
     """Convert salinity (g/kg-sw) to molality for standard seawater following MFWM08."""
     solute_molalities = {
         "Na": 0.4860597,
@@ -69,10 +69,12 @@ def salinity_to_molalities_MFWM08(salinity=35):
         solute: molality * salinity / 35
         for solute, molality in solute_molalities.items()
     }
+    if custom:
+        solute_molalities = solute_molalities | custom
     return solute_molalities
 
 
-def salinity_to_totals_MFWM08(salinity=35):
+def salinity_to_totals_MFWM08(salinity=35, custom=None):
     """Convert salinity (g/kg-sw) to total molality for standard seawater following
     MFWM08.
     """
@@ -92,6 +94,8 @@ def salinity_to_totals_MFWM08(salinity=35):
     total_molalities = {
         total: molality * salinity / 35 for total, molality in total_molalities.items()
     }
+    if custom:
+        total_molalities = total_molalities | custom
     return total_molalities
 
 
@@ -129,7 +133,7 @@ salt_to_solutes = {  # used for conversions in subsequent functions
 }
 
 
-def salinity_to_totals_RRV93(salinity=35):
+def salinity_to_totals_RRV93(salinity=35, custom=None):
     """Convert salinity (g/kg-sw) to total molality for synthetic seawater following
     RRV93.
     """
@@ -153,10 +157,12 @@ def salinity_to_totals_RRV93(salinity=35):
     total_molalities = {
         total: molality * salinity / 35 for total, molality in total_molalities.items()
     }
+    if custom:
+        total_molalities = total_molalities | custom
     return total_molalities
 
 
-def salinity_to_totals_GP89(salinity=35):
+def salinity_to_totals_GP89(salinity=35, custom=None):
     """Convert salinity (g/kg-sw) to total molality for synthetic seawater following
     GP89.
     """
@@ -214,10 +220,12 @@ def salinity_to_totals_GP89(salinity=35):
     total_molalities = {
         total: molality * salinity / 35 for total, molality in total_molalities.items()
     }
+    if custom:
+        total_molalities = total_molalities | custom
     return total_molalities
 
 
-def salinity_to_totals_H73(salinity=35):
+def salinity_to_totals_H73(salinity=35, custom=None):
     """Convert salinity (g/kg-sw) to total molality for synthetic seawater following
     H73.
     """
@@ -264,10 +272,12 @@ def salinity_to_totals_H73(salinity=35):
     total_molalities = {
         total: molality * salinity / 35 for total, molality in total_molalities.items()
     }
+    if custom:
+        total_molalities = total_molalities | custom
     return total_molalities
 
 
-def salinity_to_totals_D90(salinity=35):
+def salinity_to_totals_D90(salinity=35, custom=None):
     """Convert salinity (g/kg-sw) to total molality for synthetic seawater following
     D90.
     """
@@ -291,10 +301,12 @@ def salinity_to_totals_D90(salinity=35):
     total_molalities = {
         total: molality * salinity / 35 for total, molality in total_molalities.items()
     }
+    if custom:
+        total_molalities = total_molalities | custom
     return total_molalities
 
 
-def salinity_to_totals_KRCB77(salinity=35):
+def salinity_to_totals_KRCB77(salinity=35, custom=None):
     """Convert salinity (g/kg-sw) to total molality for synthetic seawater following
     KRCB77.
     """
@@ -318,10 +330,12 @@ def salinity_to_totals_KRCB77(salinity=35):
     total_molalities = {
         total: molality * salinity / 35 for total, molality in total_molalities.items()
     }
+    if custom:
+        total_molalities = total_molalities | custom
     return total_molalities
 
 
-def salinity_to_totals_DR79(salinity=35):
+def salinity_to_totals_DR79(salinity=35, custom=None):
     """Convert salinity (g/kg-sw) to total molality for synthetic seawater following
     DR79.
     """
@@ -341,4 +355,6 @@ def salinity_to_totals_DR79(salinity=35):
     total_molalities = {
         total: molality * salinity / 35 for total, molality in total_molalities.items()
     }
+    if custom:
+        total_molalities = total_molalities | custom
     return total_molalities
