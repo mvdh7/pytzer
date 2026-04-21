@@ -74,6 +74,36 @@ SolveResultRaw = namedtuple(
 )
 SolveStoichResultRaw = namedtuple("SolveStoichResultRaw", ["stoich", "stoich_adjust"])
 
+def warn_stoich(stoich_adjust, warn_cutoff):
+    cond = np.any(np.abs(stoich_adjust) > warn_cutoff)
+
+    def do_print(_):
+        jax.debug.print(
+            "Solver did not converge below `warn_cutoff` (stoich). max={}-"+ " try increasing `iter_stoich`.",
+            np.max(np.abs(stoich_adjust)),
+        )
+        return None
+
+    def no_print(_):
+        return None
+
+    return jax.lax.cond(cond, do_print, no_print, operand=None)
+
+
+def warn_thermo(thermo_adjust, warn_cutoff):
+    cond = np.any(np.abs(thermo_adjust) > warn_cutoff)
+
+    def do_print(_):
+        jax.debug.print(
+            "Solver did not converge below `warn_cutoff` (thermo). max={}-"+ " try increasing `iter_thermo`.",
+            np.max(np.abs(thermo_adjust)),
+        )
+        return None
+
+    def no_print(_):
+        return None
+
+    return jax.lax.cond(cond, do_print, no_print, operand=None)
 
 def _solve(
     totals,
@@ -155,17 +185,10 @@ def _solve(
             print("THERMO", _t + 1)
             print(thermo_adjust)
         thermo = thermo + thermo_adjust
-    if np.any(np.abs(stoich_adjust) > warn_cutoff):
-        warnings.warn(
-            "Solver did not converge below `warn_cutoff` - "
-            + "try increasing `iter_stoich_per_thermo`."
-        )
-    if np.any(np.abs(thermo_adjust) > warn_cutoff):
-        warnings.warn(
-            "Solver did not converge below `warn_cutoff` - "
-            + "try increasing `iter_thermo`."
-        )
+    warn_stoich(stoich_adjust, warn_cutoff)
+    warn_thermo(thermo_adjust, warn_cutoff)
     return SolveResultRaw(stoich, thermo, stoich_adjust, thermo_adjust)
+
 
 
 def solve(
@@ -281,11 +304,7 @@ def solve_stoich(
             print("STOICH", _s + 1)
             print(stoich_adjust)
         stoich = stoich + stoich_adjust
-    if np.any(np.abs(stoich_adjust) > warn_cutoff):
-        warnings.warn(
-            "Solver did not converge below `warn_cutoff` - "
-            + "try increasing `iter_stoich`."
-        )
+    warn_stoich(stoich_adjust, warn_cutoff)
     return SolveStoichResultRaw(stoich, stoich_adjust)
 
 
